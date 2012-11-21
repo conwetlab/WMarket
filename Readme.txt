@@ -1,13 +1,7 @@
-Marketplace-RI
-==============
-
-Reference implementation of the Marketplace Generic Enabler
-
-
 1) Install MySQL and create a database "marketplace" for user root. Alternatively you can change the properties\database.properties file
 2) Update properties\marketplace.properties according to your environment
 3) Run the database\ddl_mysql5.sql script
-4) For development in Eclipse use " mvn eclipse:eclipse -Dwtpversion=2.0 "
+
 
 
 Basic Operations for Browsing:

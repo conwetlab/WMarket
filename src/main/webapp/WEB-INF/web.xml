@@ -1,0 +1,113 @@
+<web-app id="WebApp_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>Fiware Repository</display-name>
+	<!-- <context-param> <param-name>resteasy.scan</param-name> <param-value>true</param-value> 
+		</context-param> -->
+		
+			<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<!-- The CORS filter with parameters -->
+		<filter-name>CORS</filter-name>
+		<filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
+
+		<!-- Note: All parameters are options, if ommitted CORS Filter will fall 
+			back to the respective default values. -->
+		<init-param>
+			<param-name>cors.allowGenericHttpRequests</param-name>
+			<param-value>true</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>cors.allowOrigin</param-name>
+			<param-value>*</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>cors.supportedMethods</param-name>
+			<param-value>GET, HEAD, POST, OPTIONS</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>cors.supportedHeaders</param-name>
+			<param-value>Content-Type, X-Requested-With</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>cors.exposedHeaders</param-name>
+			<param-value>X-Test-1, X-Test-2</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>cors.supportsCredentials</param-name>
+			<param-value>true</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>cors.maxAge</param-name>
+			<param-value>3600</param-value>
+		</init-param>
+
+	</filter>
+	<filter-mapping>
+		<filter-name>CORS</filter-name>
+		<servlet-name>*</servlet-name>
+	</filter-mapping>
+
+	<context-param>
+		<param-name>resteasy.resources</param-name>
+		<param-value>org.fiware.apps.marketplace.rest.StoreRegistrationService,
+			org.fiware.apps.marketplace.rest.SearchService,
+			org.fiware.apps.marketplace.rest.UserRegistrationService,
+			org.fiware.apps.marketplace.rest.OfferingService,
+			org.fiware.apps.marketplace.rest.CompareService,
+			org.fiware.apps.marketplace.rest.ServiceManifestationIndexerService
+		</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/v1</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>
+			org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
+		</listener-class>
+	</listener>
+	<servlet>
+		<servlet-name>resteasy-servlet</servlet-name>
+		<servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>resteasy-servlet</servlet-name>
+		<url-pattern>/v1/*</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+		/WEB-INF/classes/spring/config/BeanLocations.xml
+		/WEB-INF/classes/spring/config/security.xml
+		</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+
+</web-app>

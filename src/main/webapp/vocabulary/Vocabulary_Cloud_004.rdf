@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:gr="http://purl.org/goodrelations/v1#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:genVoc="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<skos:ConceptScheme rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004">
+		<skos:prefLabel xml:lang="en">General service resource/property vocabulary</skos:prefLabel>
+		<skos:altLabel xml:lang="en">General vocabulary</skos:altLabel>
+		<skos:definition>Specification of the vocabulary for cloud services.</skos:definition>
+		<dcterms:contributor>
+			<foaf:Person>
+				<foaf:name>Florian Heberle</foaf:name>
+				<foaf:firstName>Florian</foaf:firstName>
+				<foaf:lastName>Heberle</foaf:lastName>
+			</foaf:Person>
+		</dcterms:contributor>
+		<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-04-17</dcterms:created>
+		<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-06-20</dcterms:modified>
+		<owl:versionInfo>004</owl:versionInfo>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CPU">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<skos:prefLabel>CPU</skos:prefLabel>
+				<skos:related>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#NumberOfCores">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+						<skos:prefLabel xml:lang="en">Number of cores</skos:prefLabel>
+					</rdfs:Class>
+				</skos:related>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DiskStorage">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<skos:prefLabel xml:lang="en">Disk storage</skos:prefLabel>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#PersistentDiskStorage">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+						<skos:prefLabel xml:lang="en">Persistent disk storage</skos:prefLabel>
+						<skos:broader rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DiskStorage" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#TransientDiskStorage">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+						<skos:prefLabel xml:lang="en">Transient disk storage</skos:prefLabel>
+						<skos:broader rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DiskStorage" />
+					</rdfs:Class>
+				</skos:narrower>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#MainMemory">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<skos:prefLabel xml:lang="en">Main memory</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#Traffic">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<skos:prefLabel xml:lang="en">Traffic up/down</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#IPAddress">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<skos:prefLabel xml:lang="en">IP address</skos:prefLabel>
+				<skos:relatedTo>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#PrivateIPAddress">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Private IP address</skos:prefLabel>
+					</rdfs:Class>
+				</skos:relatedTo>
+				<skos:relatedTo>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#PublicIPAddress">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Public IP address</skos:prefLabel>
+					</rdfs:Class>
+				</skos:relatedTo>
+				<skos:relatedTo>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#StaticIPAddress">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Static IP address</skos:prefLabel>
+					</rdfs:Class>
+				</skos:relatedTo>
+				<skos:relatedTo>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DynamicIPAddress">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Dynamic IP address</skos:prefLabel>
+					</rdfs:Class>
+				</skos:relatedTo>
+				<skos:relatedTo>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#V4IPAddress">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">IPv4</skos:prefLabel>
+					</rdfs:Class>
+				</skos:relatedTo>
+				<skos:relatedTo>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#V6IPAddress">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">IPv6</skos:prefLabel>
+					</rdfs:Class>
+				</skos:relatedTo>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentre">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<skos:prefLabel xml:lang="en">Data centre</skos:prefLabel>
+				<skos:related>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentreTier1">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Data centre tier 1</skos:prefLabel>
+						<genVoc:hasRightSibling rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentreTier2" />
+					</rdfs:Class>
+				</skos:related>
+				<skos:related>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentreTier2">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Data centre tier 2</skos:prefLabel>
+						<genVoc:hasLeftSibling rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentreTier1" />
+						<genVoc:hasRightSibling rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentreTier3" />
+					</rdfs:Class>
+				</skos:related>
+				<skos:related>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentreTier3">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Data centre tier 3</skos:prefLabel>
+						<genVoc:hasLeftSibling rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentreTier2" />
+						<genVoc:hasRightSibling rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentreTier4" />
+					</rdfs:Class>
+				</skos:related>
+				<skos:related>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentreTier4">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Data centre tier 4</skos:prefLabel>
+						<genVoc:hasLeftSibling rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DataCentreTier3" />
+					</rdfs:Class>
+				</skos:related>
+				<skos:related rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#GeoReference" />
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#Availability">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<skos:prefLabel xml:lang="en">Availability</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodStart">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#GenericPointInTime" />
+				<skos:prefLabel xml:lang="en">Abstract point in time when credited period starts</skos:prefLabel>
+				<skos:editorialNote xml:lang="en">Use narrower concepts or implement your own.</skos:editorialNote>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#ReportOfDowntime">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#GenericPointInTime" />
+						<skos:prefLabel xml:lang="en">Point in time when downtime is reported</skos:prefLabel>
+						<skos:broader rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodStart" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#DiscoveryOfDowntime">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#GenericPointInTime" />
+						<skos:prefLabel xml:lang="en">Point in time when downtime is discovered</skos:prefLabel>
+						<skos:broader rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodStart" />
+					</rdfs:Class>
+				</skos:narrower>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodOffset">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#AbsoluteTimePeriod" />
+				<skos:prefLabel xml:lang="en">Credit period offset</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodMinimum">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#AbsoluteTimePeriod" />
+				<skos:prefLabel xml:lang="en">Credit period minimum</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodSlice">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#AbsoluteTimePeriod" />
+				<skos:prefLabel xml:lang="en">Credit period slice</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodEnd">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#GenericPointInTime" />
+				<skos:prefLabel xml:lang="en">Abstract point in time when credited period ends</skos:prefLabel>
+				<skos:editorialNote xml:lang="en">Use narrower concepts or implement your own.</skos:editorialNote>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#EndOfDowntime">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#GenericPointInTime" />
+						<skos:prefLabel xml:lang="en">Point in time when service returns to a normal state</skos:prefLabel>
+						<skos:broader rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodEnd" />
+					</rdfs:Class>
+				</skos:narrower>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#AvailabilityExclusion">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<skos:prefLabel xml:lang="en">Time period excluded from availability</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CreditSuspensionReason" />
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#CreditRequestPeriod">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#AbsoluteTimePeriod" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<skos:prefLabel xml:lang="en">Credit request period</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#FailureReactionTime">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#AbsoluteTimePeriod" />
+				<skos:prefLabel xml:lang="en">Failure reaction time</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#PreannouncementOfMaintenance">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#AbsoluteTimePeriod" />
+				<skos:prefLabel xml:lang="en">Preannouncement of maintenance</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#RecoveryTimeObjective">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#AbsoluteTimePeriod" />
+				<skos:prefLabel xml:lang="en">RTO</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#RecoveryPointObjective">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<rdfs:subClassOf rdf:resource="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#AbsoluteTimePeriod" />
+				<skos:prefLabel xml:lang="en">RPO</skos:prefLabel>
+			</rdfs:Class>
+		</skos:topConceptOf>
+	</skos:ConceptScheme>
+	<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#Upstream">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+		<skos:prefLabel xml:lang="en">Upstream</skos:prefLabel>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#Downstream">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+		<skos:prefLabel xml:lang="en">Downstream</skos:prefLabel>
+	</rdfs:Class>
+</rdf:RDF>

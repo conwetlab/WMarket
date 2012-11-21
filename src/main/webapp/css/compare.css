@@ -1,0 +1,362 @@
+body {
+	background-image: linear-gradient(left, rgb(182, 207, 237) 0%,
+		rgb(87, 105, 145) 35% );
+	background-image: -o-linear-gradient(left, rgb(182, 207, 237) 0%,
+		rgb(87, 105, 145) 35% );
+	background-image: -moz-linear-gradient(left, rgb(182, 207, 237) 0%,
+		rgb(87, 105, 145) 35% );
+	background-image: -webkit-linear-gradient(left, rgb(182, 207, 237) 0%,
+		rgb(87, 105, 145) 35% );
+	background-image: -ms-linear-gradient(left, rgb(182, 207, 237) 0%,
+		rgb(87, 105, 145) 35% );
+	background-image: -webkit-gradient(linear, left bottom, right bottom, color-stop(0, rgb(182
+		, 207, 237) ), color-stop(0.20, rgb(87, 105, 145) ) );
+	background-repeat: repeat-y;
+	background-color: #566991;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 80%;
+	color: white;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+}
+
+body:before {
+	background-image: url('../images/Logo_FI-WARE.png');
+	background-repeat: no-repeat;
+	background-position: bottom right;
+	background-size: 90px;
+	z-index: -1;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	content: "";
+	width: 145px;
+	height: 145px;
+	opacity: 0.65;
+	margin-right: 15px;
+	margin-bottom: 30px;
+}
+
+#header {
+	width: 100%;
+	height: 14px;
+	position: fixed;
+	top: 0;
+	font-size: 65%;
+	background: #506288;
+	border-bottom: 1px solid #cfcfcf;
+	z-index: 2;
+}
+
+#header_info {
+	position: relative;
+	right: 2px;
+	top: 2px;
+	text-align: right;
+}
+
+#footer {
+	width: 100%;
+	height: 14px;
+	position: fixed;
+	bottom: 0;
+	font-size: 65%;
+	background: #506288;
+	border-top: 1px solid #cfcfcf;
+	z-index: 2;
+}
+
+#footer_info {
+	position: relative;
+	left: 2px;
+	top: 2px;
+}
+
+#body {
+	position: absolute;
+ 	top: 25px; 
+ 	bottom: 25px;
+  	left: 10px;  
+	right: 10px; 
+    overflow: hidden;
+	z-index: 1;
+}
+
+#comparison_form {
+	margin: auto;
+	width: 900px;
+	height: 100px;
+	position: relative;
+}
+
+#comparison_sourceId, #comparison_targetId {
+	visibility: collapse;
+}
+
+#comparison_sourceContainer, #comparison_targetContainer, #comparison_submit {
+	font-size: 80%;
+	height: 100px;
+	/*shadow */
+	-moz-box-shadow: 2px 2px 2px #333;
+	-webkit-box-shadow: 2px 2px 2px #333;
+	box-shadow: 2px 2px 2px #333;
+	/*border*/
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	border: 1px solid #cfcfcf;
+}
+
+#comparison_sourceContainer, #comparison_targetContainer {
+	width: 400px;
+	overflow: auto;
+	background: rgba(128, 128, 128, 0.4);
+	font-size: 9px;  
+}
+
+#comparison_sourceContainer {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+#comparison_targetContainer {
+	position: absolute;
+	top: 0px;
+	left: 500px;
+}
+
+#comparison_submit {
+	position: absolute;
+	top: 0px;
+	left: 410px;
+	width: 80px;
+	height: 100px;
+	text-align: center;
+	white-space: pre-line;
+	background-image: linear-gradient(top, rgb(222, 224, 224) 27%,
+		rgb(166, 168, 171) 100% );
+	background-image: -o-linear-gradient(top, rgb(222, 224, 224) 27%,
+		rgb(166, 168, 171) 100% );
+	background-image: -moz-linear-gradient(top, rgb(222, 224, 224) 27%,
+		rgb(166, 168, 171) 100% );
+	background-image: -webkit-linear-gradient(top, rgb(222, 224, 224) 27%,
+		rgb(166, 168, 171) 100% );
+	background-image: -ms-linear-gradient(top, rgb(222, 224, 224) 27%,
+		rgb(166, 168, 171) 100% );
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.27, rgb(222
+		, 224, 224) ), color-stop(1, rgb(166, 168, 171) ) );
+}
+
+#comparison_submit[disabled] {
+	opacity: 0.75;
+}
+
+#comparison_submit:not([disabled]):hover {
+	color: #fff;
+}
+
+#comparison_submit:not([disabled]):active {
+	background-image: linear-gradient(bottom, rgb(222, 224, 224) 27%,
+		rgb(166, 168, 171) 100% );
+	background-image: -o-linear-gradient(bottom, rgb(222, 224, 224) 27%,
+		rgb(166, 168, 171) 100% );
+	background-image: -moz-linear-gradient(bottom, rgb(222, 224, 224) 27%,
+		rgb(166, 168, 171) 100% );
+	background-image: -webkit-linear-gradient(bottom, rgb(222, 224, 224) 27%,
+		rgb(166, 168, 171) 100% );
+	background-image: -ms-linear-gradient(bottom, rgb(222, 224, 224) 27%,
+		rgb(166, 168, 171) 100% );
+	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.27, rgb(222
+		, 224, 224) ), color-stop(1, rgb(166, 168, 171) ) );
+}
+
+#comparison_resultWrapper {
+	position: absolute;
+	top: 110px;
+	bottom: 5px;
+	right: 5px;
+	left: 5px;
+	text-align:center;
+}
+
+#comparison_result {
+ 	max-height: 100%;
+ 	max-width: 100%; 
+ 	overflow: auto;
+	display: inline-block;
+}
+
+#comparison_result:not(:empty) {
+	border: 1px solid black;
+	-moz-box-shadow: 2px 2px 2px #333;
+	-webkit-box-shadow: 2px 2px 2px #333;
+	box-shadow: 2px 2px 2px #333;
+	background-color: black; 
+}
+
+table {
+    overflow: hidden;
+    border-collapse: collapse;
+ 	border: hidden; 
+	color: black;
+	font-size: 75%;
+}
+
+thead {
+	background-color: #888888;
+}
+
+tbody {
+	border-bottom: 1px solid #333333;
+}
+
+.comparisonRow {
+	position:relative;
+	background-color: #FBFDF6;
+	border-bottom: 1px dotted white;
+    overflow: hidden;    
+}
+
+.comparisonRow:nth-child(2n - 1) {
+	background-color: #F1F0EF;
+}
+
+.comparisonRow:hover {
+	background-color: #CDCDD7;
+}
+
+th {
+	height: 60px;
+	min-height: 60px;
+	max-height: 60px;
+	border-bottom: 1px solid black;
+	background-color: #888888;
+	font-weight: bold;
+	color: white;
+}
+
+th, td {
+	border-right: 1px dotted white;
+}
+
+.comparisonHeadCell, .comparisonCell {
+	width: 200px;
+	min-width: 165px;
+	max-width: 400px;
+}
+
+.comparison_HeadCellScore {
+	font-size: 85%;
+	margin-top: 3px;
+}
+
+.attrValueRef {
+	visibility: collapse;
+}
+
+.attr {
+ 	position: relative;
+	text-align: left;
+	min-height: 60px;
+ 	max-height: 60px;
+	margin: 0px;
+	padding: 3px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.attrTypeLabel {
+	font-weight: bold;
+	font-size: 115%;
+	margin-bottom: 2px; 
+}
+
+.attrUnit {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+
+.attrLable {
+	margin-bottom: 2px;
+}
+
+.attrVal, .attrMinVal, .attrMaxVal, .attrUnit {
+	font-style: italic;
+}
+
+.attrVal:before {
+	content: "Value: "
+}
+
+.attrMinVal:before {
+	content: "Minimum: "
+}
+
+.attrMaxVal:before {
+	content: "Maximum: "
+}
+
+.attrHasRefs:after {
+	background-image: url('../images/magnifier.png');
+	background-repeat: no-repeat;
+	background-position: top right;
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin-top: 2px;
+	margin-right: 2px;
+	content: "";
+	width: 10px;
+	height: 10px;	
+}
+
+.rowAnchor {
+	width: 10px;
+	height: 10px;
+	margin-left: 2px;
+	margin-right: 2px;
+	border: 1px solid #444444;
+	border-radius: 2px;
+}
+
+#valueRefTT {
+	border: 1px solid #666666;
+	border-radius: 4px;
+	-moz-box-shadow: 2px 2px 2px #333;
+	-webkit-box-shadow: 2px 2px 2px #333;
+	box-shadow: 2px 2px 2px #333;
+	color: black;
+	font-size: 9px;
+	background: rgb(221, 236, 247);
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.valueRefTTElement {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.valueRefTTElement:first-child {
+	border-top: 0px;
+}
+
+.rowAnchor:hover {
+	-moz-box-shadow: 1px 1px 1px #333;
+	-webkit-box-shadow: 1px 1px 1px #333;
+	box-shadow: 1px 1px 1px #333;
+}
+
+.moveUpAnchor {
+	background-image: url('../images/up.png');
+	margin-bottom: 3px;
+}
+
+.moveDownAnchor {
+	background-image: url('../images/down.png');
+	margin-top: 3px;
+}
