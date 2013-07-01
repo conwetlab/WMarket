@@ -4,7 +4,7 @@
 	<groupId>org.fiware.apps.marketplace</groupId>
 	<artifactId>FiwareMarketplace</artifactId>
 	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>2.3.1-SNAPSHOT</version>
 	<name>FiwareMarketplace Webapp</name>
 	<url>http://maven.apache.org</url>
 

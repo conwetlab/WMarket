@@ -13,7 +13,7 @@ import org.junit.Test;
 
 public class OfferingResolverTest {
 
-	private static final String uri = "http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/cloudServices/Amazon_EC2_001";
+	private static final String uri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
 
 	@Test
 	public void testResolveOfferingsFromServiceDescription_Basic() {

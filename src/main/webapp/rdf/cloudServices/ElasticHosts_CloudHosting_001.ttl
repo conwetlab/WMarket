@@ -1,0 +1,824 @@
+@base <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001> .
+@prefix : <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#> .
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dctypes: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix blueprint: <http://bizweb.sap.com/TR/blueprint#> .
+@prefix ctag: <http://commontag.org/ns#> .
+@prefix msm: <http://cms-wg.sti2.org/ns/minimal-service-model#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix sawsdl: <http://www.w3.org/ns/sawsdl#> .
+@prefix sarest: <http://www.knoesis.org/research/srl/standards/sa-rest/#> .
+@prefix wl: <http://www.wsmo.org/ns/wsmo-lite#> .
+@prefix http: <http://www.w3.org/2011/http#> .
+
+@prefix usdl: <http://www.linked-usdl.org/ns/usdl-core#> .
+@prefix legal: <http://www.linked-usdl.org/ns/usdl-legal#> .
+@prefix price: <http://www.linked-usdl.org/ns/usdl-pricing#> .
+@prefix sla: <http://www.linked-usdl.org/ns/usdl-sla#> .
+
+@prefix gn: <http://www.geonames.org/ontology#> .
+@prefix genVoc: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#> .
+@prefix cloud: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#> .
+@prefix os: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#> .
+@prefix support: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#> .
+
+<>  rdf:type usdl:ServiceDescription ;
+	dcterms:title "Cloud Hosting service description" ;
+	dcterms:description "Description of ElasticHosts's Cloud Hosting IaaS service" ;
+	dcterms:contributor 
+		[ a foaf:Person ;
+			foaf:name "Florian Heberle" ;
+			foaf:firstName "Florian" ;
+			foaf:lastName "Heberle" ] ;
+	dcterms:created "2012-05-21"^^xsd:date ;
+	dcterms:modified "2012-06-20"^^xsd:date ;
+	owl:versionInfo "001" .
+
+#************************************************************************************
+#	Legal												
+#************************************************************************************
+
+:legal_ElasticHosts a legal:TermsAndConditions ;
+	dcterms:title "ElasticHosts's legal statements"@en ;
+	dcterms:description "ElasticHosts's legal statements are accessible online via 'http://www.elastichosts.com/cloud-hosting/terms-of-service'."@en .
+
+#************************************************************************************
+#	Company data											
+#************************************************************************************
+
+:provider_ElasticHosts a gr:BusinessEntity ;
+	foaf:name "Elastic Hosts" ;
+	foaf:homepage <http://www.elastichosts.com/> ;
+	foaf:logo <http://www.elastichosts.com//images/elastichosts.jpg> ;
+	usdl:legalForm "Ltd." ;
+	vcard:adr
+		[ a vcard:Work ;
+			vcard:tel "+44 (0)845 686 8642" ;
+			vcard:email "sales@elastichosts.com" ;
+			vcard:locality "Meadowbank" ; 
+			vcard:postal-code "DY14 0HP" ;
+			vcard:country-name "GB"@en ] .
+
+#************************************************************************************
+#	Customizing											
+#************************************************************************************
+
+:ElasticHosts_PrivateVLAN a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Private network VLAN"@en .
+
+:ElasticHosts_Firewall a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Firewall"@en .
+
+:ElasticHosts_WindowsWebServer2008R2 a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Windows Web Server 2008 R2"@en .
+
+:ElasticHosts_SQLServer2008WebEdition a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Microsoft SQL Server 2008 Web Edition"@en .
+
+:ElasticHosts_SQLServer2008Standard a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Microsoft SQL Server 2008 Standard"@en .
+
+:ElasticHosts_RemoteDesktopServicesCAL a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Windows Remote Desktop Services CALs"@en .
+
+#************************************************************************************
+#	SLAs														
+#************************************************************************************
+
+:slp_CloudHosting a usdl:ServiceLevelProfile ;
+	dcterms:title "Service Level Profile of Elastic Hosts Cloud Hosting service"@en ;
+	dcterms:description "All information integrated here are not legally binding. Please consult the SLA section in the terms-of-service under 'http://www.elastichosts.com/cloud-hosting/terms-of-service' for a detailed description."@en ;
+	sla:hasServiceLevel 
+		:slo_CloudHosting_AvailabilityGuarantee ,
+		:slo_CloudHosting_AvailibilityExclusions ,
+		:slo_CloudHosting_AvailibilityCalculation ,
+		:slo_CloudHosting_DataLoss ,
+		:slo_CloudHosting_CreditRequest .
+
+#____________________________________________________________________________________
+:slo_CloudHosting_AvailabilityGuarantee a sla:GuaranteedState ;
+	dcterms:title "Availibility"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "We guarantee that your stored data and running virtual servers will be available over the internet for 100% of the time in any given calendar month"@en ;
+			sla:hasVariable 
+				:var_CloudHosting_AvailabilityGuarantee_Value , 
+				:var_CloudHosting_AvailabilityGuarantee_MeasurementPeriod ] .
+
+:var_CloudHosting_AvailabilityGuarantee_Value a sla:Variable ;
+	rdfs:label "Percentage Value"@en ;
+	sla:hasDefault 
+		[ a cloud:Availability ;
+			gr:hasValue "100" ;
+			gr:hasUnitOfMeasurement "P1" ] .
+
+:var_CloudHosting_AvailabilityGuarantee_MeasurementPeriod a sla:Variable ;
+	rdfs:label "Measurment period"@en ;
+	sla:hasDefault 
+		[ a genVoc:MeasurementPeriod ;
+			gr:hasValue "1" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+#____________________________________________________________________________________
+:slo_CloudHosting_AvailabilityExclusions a sla:GuaranteedState ;
+	dcterms:title "Availibility exclusions" ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Periods of unavailability due to the following cases are excluded from availibility calculation."@en ;
+			sla:hasVariable 
+				:var_CloudHosting_AvailabilityExclusions_Payments ,
+				:var_CloudHosting_AvailabilityExclusions_ActsOrOmissions ,
+				:var_CloudHosting_AvailabilityExclusions_Software ,
+				:var_CloudHosting_AvailabilityExclusions_ScheduledMaintenance ,
+				:var_CloudHosting_AvailabilityExclusions_ForceMajeure ,
+				:var_CloudHosting_AvailabilityExclusions_ThirdParties ,
+				:var_CloudHosting_AvailabilityExclusions_Violations ,
+				:var_CloudHosting_AvailabilityExclusions_LawEnforcement ] .
+
+:var_CloudHosting_AvailabilityExclusions_Payments a sla:Variable ;
+	rdfs:label "Payments not covered."@en ;
+	dcterms:description "Your payments are not covering your use, including but not limited to when your subscriptions or prepaid balance run out."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudHosting_AvailabilityExclusions_ActsOrOmissions a sla:Variable ;
+	rdfs:label "Acts or omissions"@en ;
+	dcterms:description "Acts or omissions of you or your users."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudHosting_AvailabilityExclusions_Software a sla:Variable ;
+	rdfs:label "Software"@en ;
+	dcterms:description "Software running within your virtual servers."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudHosting_AvailabilityExclusions_ScheduledMaintenance a sla:Variable ;
+	rdfs:label "Scheduled maintenance"@en ;
+	dcterms:description "Scheduled maintenance which we have announced at least 24 hours in advance."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudHosting_AvailabilityExclusions_ForceMajeure a sla:Variable ;
+	rdfs:label "Factors outside control"@en ;
+	dcterms:description "Factors outside our control, including but not limited to any force majeure events; failures, acts or omissions of our upstream providers or failures of the internet."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudHosting_AvailabilityExclusions_ThirdParties a sla:Variable ;
+	rdfs:label "Third party actions"@en ;
+	dcterms:description "Actions of third parties, including but not limited to security compromises, denial of service attacks and viruses."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudHosting_AvailabilityExclusions_Violations a sla:Variable ;
+	rdfs:label "Policy violations"@en ;
+	dcterms:description "Violations of our Acceptable Use Policy."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudHosting_AvailabilityExclusions_LawEnforcement a sla:Variable ;
+	rdfs:label "Law enforcement activity"@en ;
+	dcterms:description "Law enforcement activity."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+#____________________________________________________________________________________
+:slo_CloudHosting_AvailibilityCalculation a sla:GuaranteedState ;
+	dcterms:title "Availibility calculation" ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "If we fail to meet the guarantee availibility, then you will be able to request a credit up to a maximum of 100% of your fee for capacity used during the previous 30 calendar days. You are eligible for a credit of 100 times the fees for any period of unavailability lasting more than 15 minutes, measured from the time at which you validly inform us at support@elastichosts.com of the unavailability or the time at which our monitoring systems detect the unavailability, whichever is earlier. In the event that we fail to meet the guarantee on more than one occasion within a period of 30 calendar days, then the credit that you may claim for any incident will be limited to the maximum of 100% of your fee for capacity used since the previous incident or 100% of your fee for capacity used during the previous 30 calendar days, whichever fee is lower."@en ;
+			sla:hasVariable 
+				:var_CloudHosting_AvailibilityCalculation_CreditPeriodStart ,
+				:var_CloudHosting_AvailibilityCalculation_CreditPeriodMin ] .
+
+:var_CloudHosting_AvailibilityCalculation_CreditPeriodStart a sla:Variable ;
+	rdfs:label "Credit period start"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditPeriodStart ;
+			gr:valueReference 
+				[ a genVoc:GenericPointInTime ;
+					skos:prefLabel "Information via 'support@elastichosts.com'." ;
+					skos:broader cloud:CreditPeriodStart ] ,
+				[ a genVoc:GenericPointInTime ;
+					skos:prefLabel "Detection via monitoring system." ;
+					skos:broader cloud:CreditPeriodStart ] ] .
+
+:var_CloudHosting_AvailibilityCalculation_CreditPeriodMin a sla:Variable ;
+	rdfs:label "Minimal credit period"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditPeriodMinimum ;
+			gr:hasValue "15" ;
+			gr:hasUnitOfMeasurement "MIN" ] .
+
+#____________________________________________________________________________________
+:slo_CloudHosting_DataLoss a sla:GuaranteedState ;
+	dcterms:title "Permanent data loss" ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "In the case of permanent loss of your stored data, you are eligible for a credit of your entire fee for the previous 30 calendar days."@en ] .
+
+#____________________________________________________________________________________
+:slo_CloudHosting_CreditRequest a sla:GuaranteedAction ;
+	dcterms:title "Credit request"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "To receive a credit, you must submit a request by sending an e-mail message to support@elastichosts.com including the necessary information within 30 calender days"@en ;
+			sla:hasVariable 
+				:var_CloudHosting_CreditRequest_StartTime ,
+				:var_CloudHosting_CreditRequest_Date ,
+				:var_CloudHosting_CreditRequest_Duration ,
+				:var_CloudHosting_CreditRequest_CreditRequestPeriod ] .
+
+:var_CloudHosting_CreditRequest_StartTime a sla:Variable ;
+	rdfs:label "The email must contain the start time of the period of unavailability."@en .
+
+:var_CloudHosting_CreditRequest_Date a sla:Variable ;
+	rdfs:label "The email must contain the date of the period of unavailability."@en .
+
+:var_CloudHosting_CreditRequest_Duration a sla:Variable ;
+	rdfs:label "The email must contain the duration of the period of unavailability."@en .
+
+:var_CloudHosting_CreditRequest_CreditRequestPeriod a sla:Variable ;
+	rdfs:label "Request period"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditRequestPeriod ;
+			gr:hasValue "30" ;
+			gr:hasUnitOfMeasurement "DAY" ] .
+
+#************************************************************************************
+#	Service															
+#************************************************************************************
+
+<#service_CloudHosting> a usdl:Service ;
+	dcterms:created "2012-05-21"^^xsd:date ;
+	dcterms:modified "2012-05-21"^^xsd:date ;
+	dcterms:title "ElasticHosts Cloud Hosting"@en ;
+	usdl:hasNature usdl:Automated ;
+	usdl:hasProvider :provider_ElasicHosts ;
+	usdl:hasLegalCondition :legal_ElasticHosts ;
+	gr:quantitativeProductOrServiceProperty 
+		:resource_CloudHosting_CPU ,
+		:resource_CloudHosting_MainMemory ,
+		:resource_CloudHosting_Disk ,
+		:resource_CloudHosting_DataTransfer ;
+	gr:qualitativeProductOrServiceProperty
+		:resource_CloudHosting_StaticPublicIP ,
+		:resource_CloudHosting_PrivateNetworkVLAN ,
+		:resource_CloudHosting_Firewall  ,
+		:resource_CloudHosting_WindowsWebServer2008R2 ,
+		:resource_CloudHosting_OS_WindowsServer2008R2Standard  ,
+		:resource_CloudHosting_OS_WindowsServer2008R2Enterprise  ,
+		:resource_CloudHosting_MicrosoftSQLServer2008WebEdition ,
+		:resource_CloudHosting_MicrosoftSQLServer2008Standard ,
+		:resource_CloudHosting_WindowsRemoteDesktopServicesCALs .
+
+:resource_CloudHosting_CPU a cloud:CPU ;
+	gr:hasUnitOfMeasurement "A86" ;
+	gr:hasMinValue "2" ;
+	gr:hasMaxValue "20" .
+
+:resource_CloudHosting_MainMemory a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasMinValue "1024" ;
+	gr:hasMaxValue "16384" .
+
+:resource_CloudHosting_Disk a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasMinValue "1024" ;
+	gr:hasMaxValue "16384" .
+
+:resource_CloudHosting_DataTransfer a cloud:Traffic ;
+	gr:hasUnitOfMeasurement "E35" ;
+	gr:hasMinValue "0" ;
+	gr:hasMaxValue "1000" .
+
+:resource_CloudHosting_StaticPublicIP a cloud:IPAddress ;
+	gr:valueReference 
+		[ a cloud:StaticIPAddress ] ,
+		[ a cloud:PublicIPAddress ] ,  
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ] .
+
+:resource_CloudHosting_PrivateNetworkVLAN a :ElasticHosts_PrivateVLAN ;
+	gr:valueReference 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ;
+			gr:hasMaxValue "1" ] .
+
+:resource_CloudHosting_Firewall a :ElasticHosts_Firewall ;
+	gr:valueReference 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ;
+			gr:hasMaxValue "1" ] .
+
+:resource_CloudHosting_WindowsWebServer2008R2 a :ElasticHosts_WindowsWebServer2008R2 ;
+	gr:valueReference 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ;
+			gr:hasMaxValue "1" ] .
+
+:resource_CloudHosting_OS_WindowsServer2008R2Standard a os:WindowsServer2008R2Standard ;
+	gr:valueReference 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ;
+			gr:hasMaxValue "1" ] .
+
+:resource_CloudHosting_OS_WindowsServer2008R2Enterprise a os:WindowsServer2008R2Enterprise ;
+	rdfs:label "Windows Server 2008 R2 Enterprise"@en ;
+	gr:valueReference 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ;
+			gr:hasMaxValue "1" ] .
+
+:resource_CloudHosting_MicrosoftSQLServer2008WebEdition a :ElasticHosts_SQLServer2008WebEdition ;
+	gr:valueReference 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ;
+			gr:hasMaxValue "1" ] .
+
+:resource_CloudHosting_MicrosoftSQLServer2008Standard a :ElasticHosts_SQLServer2008Standard ;
+	gr:valueReference 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ;
+			gr:hasMaxValue "1" ] .
+
+:resource_CloudHosting_WindowsRemoteDesktopServicesCALs a :ElasticHosts_RemoteDesktopServicesCAL ;
+	gr:valueReference 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ;
+			gr:hasMaxValue "1" ] .
+
+#====================================================================================
+
+:offering_CloudHosting_Hourly_US a usdl:ServiceOffering ;
+	dcterms:title "ElasticHosts CloudHosting US/Canada"@en ;
+	dcterms:description ""@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;
+	usdl:includes <#service_CloudHosting> ;			
+	usdl:hasPricePlan 
+		:pricing_CloudHosting_Hourly_US  ,
+		:pricing_CloudHosting_Monthly_US  ,
+		:pricing_CloudHosting_Yearly_US  ;
+	usdl:hasServiceLevelProfile :slp_CloudHosting .			
+		
+#====================================================================================
+
+:pricing_CloudHosting_Hourly_US a price:PricePlan ;
+	dcterms:title "Hourly US/Canada"@en ;
+	dcterms:description "The pricing for hourly cloud servers is twice the rates of monthly charging."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_CloudHosting_Hourly_US_CPU ,
+		:priceComponent_CloudHosting_Hourly_US_MainMemory ,
+		:priceComponent_CloudHosting_Hourly_US_Disk ,
+		:priceComponent_CloudHosting_Hourly_US_DataCommitted ,
+		:priceComponent_CloudHosting_Hourly_US_DataAboveComitted ,
+		:priceComponent_CloudHosting_US_StaticPublicIP ,
+		:priceComponent_CloudHosting_US_PrivateNetworkVLAN ,
+		:priceComponent_CloudHosting_US_Firewall ,
+		:priceComponent_CloudHosting_US_WindowsWebServer2008R2 ,
+		:priceComponent_CloudHosting_US_WindowsServer2008R2Standard ,
+		:priceComponent_CloudHosting_US_WindowsServer2008R2Enterprise ,
+		:priceComponent_CloudHosting_US_MicrosoftSQLServer2008WebEdition ,
+		:priceComponent_CloudHosting_US_MicrosoftSQLServer2008Standard ,
+		:priceComponent_CloudHosting_US_WindowsRemoteDesktopServicesCALs ,
+		:priceComponent_CloudHosting_US_DataCentres ,
+		:deduction_CloudHosting_Availability ,
+		:deduction_CloudHosting_DataLoss .	
+
+:priceComponent_CloudHosting_Hourly_US_CPU a price:PriceComponent ;
+	dcterms:title "CPU"@en ;
+	dcterms:description "CPU per core-GHz-hour"@en ;
+	price:isLinkedTo :resource_CloudHosting_CPU ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.036" ;
+			gr:hasUnitOfMeasurement "A86" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_CloudHosting_Hourly_US_MainMemory a price:PriceComponent ;
+	dcterms:title "Memory"@en ;
+	dcterms:description "MainMemory per GB-hour"@en ;
+	price:isLinkedTo :resource_CloudHosting_MainMemory ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.050" ;
+			gr:hasUnitOfMeasurement "E34" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_CloudHosting_Hourly_US_Disk a price:PriceComponent ;
+	dcterms:title "Disk"@en ;
+	dcterms:description "Disk storage per GB-month"@en ;
+	price:isLinkedTo :resource_CloudHosting_Disk ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.2" ;
+			gr:hasUnitOfMeasurement "E34" ] .
+
+:priceComponent_CloudHosting_Hourly_US_DataCommitted a price:PriceComponent ;
+	dcterms:title "Data (committed in advance)"@en ;
+	dcterms:description "Data traffic which is committed in advance per GB"@en ;
+	price:isLinkedTo :resource_CloudHosting_DataTransfer ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.3" ;
+			gr:hasUnitOfMeasurement "E34" ] .
+
+:priceComponent_CloudHosting_Hourly_US_DataComittedAbove a price:PriceComponent ;
+	dcterms:title "Data (burst above committed level"@en ;
+	dcterms:description "Data traffic which is above the committed level per GB"@en ;
+	price:isLinkedTo :resource_CloudHosting_DataTransfer ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.6" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_CloudHosting_US_StaticPublicIP a price:PriceComponent ;
+	dcterms:title "Static public IP address"@en ;
+	dcterms:description "Static public IP address monthly admin fee"@en ;
+	price:isLinkedTo :resource_CloudHosting_StaticPublicIP ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "3" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:priceComponent_CloudHosting_US_PrivateNetworkVLAN a price:PriceComponent ;
+	dcterms:title "Private Network VLAN"@en ;
+	dcterms:description ""@en ;
+	price:isLinkedTo :resource_CloudHosting_PrivateNetworkVLAN ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "7.5" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:priceComponent_CloudHosting_US_Firewall a price:PriceComponent ;
+	dcterms:title "Firewall"@en ;
+	dcterms:description ""@en ;
+	price:isLinkedTo :resource_CloudHosting_Firewall ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "7.5" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:priceComponent_CloudHosting_US_WindowsWebServer2008R2 a price:PriceComponent ;
+	dcterms:title "Windows Web Server 2008 R2"@en ;
+	dcterms:description ""@en ;
+	price:isLinkedTo :resource_CloudHosting_WindowsWebServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "15" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:priceComponent_CloudHosting_US_WindowsServer2008R2Standard a price:PriceComponent ;
+	dcterms:title "Windows Server 2008 R2 Standard"@en ;
+	dcterms:description ""@en ;
+	price:isLinkedTo :resource_CloudHosting_OS_WindowsServer2008R2Standard ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "30" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:priceComponent_CloudHosting_US_WindowsServer2008R2Enterprise a price:PriceComponent ;
+	dcterms:title "Windows Server 2008 R2 Enterprise"@en ;
+	dcterms:description ""@en ;
+	price:isLinkedTo :resource_CloudHosting_OS_WindowsServer2008R2Enterprise ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "75" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:priceComponent_CloudHosting_US_MicrosoftSQLServer2008WebEdition a price:PriceComponent ;
+	dcterms:title "Microsoft SQL Server 2008 Web Edition"@en ;
+	dcterms:description ""@en ;
+	price:isLinkedTo :resource_CloudHosting_MicrosoftSQLServer2008WebEdition ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "22.5" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:priceComponent_CloudHosting_US_MicrosoftSQLServer2008Standard a price:PriceComponent ;
+	dcterms:title "Microsoft SQL Server 2008 Standard"@en ;
+	dcterms:description ""@en ;
+	price:isLinkedTo :resource_CloudHosting_MicrosoftSQLServer2008Standard ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "385" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:priceComponent_CloudHosting_US_WindowsRemoteDesktopServicesCALs a price:PriceComponent ;
+	dcterms:title "Windows Remote Desktop Services CALs"@en ;
+	dcterms:description ""@en ;
+	price:isLinkedTo :resource_CloudHosting_WindowsRemoteDesktopServicesCALs ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "5.5" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:resource_CloudHosting_DataCentre_US_LosAngeles a cloud:DataCentre ;
+	rdfs:label "Los Angeles, CA" ;
+	gn:locatedIn <http://sws.geonames.org/5025219> .
+
+:resource_CloudHosting_DataCentre_US_SanAntonio a cloud:DataCentre ;
+	rdfs:label "San Antonio, TX" ;
+	gn:locatedIn <http://sws.geonames.org/5025219> .
+
+:resource_CloudHosting_DataCentre_CA_Toronto a cloud:DataCentre ;
+	rdfs:label "Toronto, Canada" ;
+	gn:locatedIn <http://sws.geonames.org/5025219> .
+
+:priceComponent_CloudHosting_US_DataCentres a price:PriceComponent ;
+	dcterms:title "Data Centres"@en ;
+	dcterms:description "The service is located in one of the specified data centre locations."@en ;
+	price:isLinkedTo 
+		:resource_CloudHosting_DataCentre_US_LosAngeles ,
+		:resource_CloudHosting_DataCentre_US_SanAntonio ,
+		:resource_CloudHosting_DataCentre_CA_Toronto ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:deduction_CloudHosting_Availability a price:Deduction ;
+	dcterms:title "Compensation for Unavailability"@en ;
+	dcterms:description ""@en ;
+	price:hasDeductionSource :slo_CloudHosting_AvailabilityGuarantee ;
+	price:hasRelativeDeductionValue "100" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+:deduction_CloudHosting_DataLoss a price:Deduction ;
+	dcterms:title "Compensation for permanent data loss"@en ;
+	dcterms:description ""@en ;
+	price:hasDeductionSource :slo_CloudHosting_DataLoss ;
+	price:hasRelativeDeductionValue "100" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_CloudHosting_Monthly_US a price:PricePlan ;
+	dcterms:title "Monthly US/Canada"@en ;
+	dcterms:description "The pricing for monthly pre paid cloud servers."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_CloudHosting_Monthly_US_CPU ,
+		:priceComponent_CloudHosting_Monthly_US_MainMemory ,
+		:priceComponent_CloudHosting_Monthly_US_Disk ,
+		:priceComponent_CloudHosting_Monthly_US_DataCommitted ,
+		:priceComponent_CloudHosting_Monthly_US_DataAboveComitted ,
+		:priceComponent_CloudHosting_US_StaticPublicIP ,
+		:priceComponent_CloudHosting_US_PrivateNetworkVLAN ,
+		:priceComponent_CloudHosting_US_Firewall ,
+		:priceComponent_CloudHosting_US_WindowsWebServer2008R2 ,
+		:priceComponent_CloudHosting_US_WindowsServer2008R2Standard ,
+		:priceComponent_CloudHosting_US_WindowsServer2008R2Enterprise ,
+		:priceComponent_CloudHosting_US_MicrosoftSQLServer2008WebEdition ,
+		:priceComponent_CloudHosting_US_MicrosoftSQLServer2008Standard ,
+		:priceComponent_CloudHosting_US_WindowsRemoteDesktopServicesCALs ,
+		:deduction_CloudHosting_Availability ,
+		:deduction_CloudHosting_DataLoss .	
+
+:priceComponent_CloudHosting_Monthly_US_CPU a price:PriceComponent ;
+	dcterms:title "CPU"@en ;
+	dcterms:description "CPU per core-GHz-hour"@en ;
+	price:isLinkedTo :resource_CloudHosting_CPU ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.018" ;
+			gr:hasUnitOfMeasurement "A86" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_CloudHosting_Monthly_US_MainMemory a price:PriceComponent ;
+	dcterms:title "Memory"@en ;
+	dcterms:description "MainMemory per GB-hour"@en ;
+	price:isLinkedTo :resource_CloudHosting_MainMemory ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.025" ;
+			gr:hasUnitOfMeasurement "E34" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_CloudHosting_Monthly_US_Disk a price:PriceComponent ;
+	dcterms:title "Disk"@en ;
+	dcterms:description "Disk storage per GB-month"@en ;
+	price:isLinkedTo :resource_CloudHosting_Disk ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.1" ;
+			gr:hasUnitOfMeasurement "E34" ] .
+
+:priceComponent_CloudHosting_Monthly_US_DataCommitted a price:PriceComponent ;
+	dcterms:title "Data (committed in advance)"@en ;
+	dcterms:description "Data traffic which is committed in advance per GB"@en ;
+	price:isLinkedTo :resource_CloudHosting_DataTransfer ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.15" ;
+			gr:hasUnitOfMeasurement "E34" ] .
+
+:priceComponent_CloudHosting_Monthly_US_DataComittedAbove a price:PriceComponent ;
+	dcterms:title "Data (burst above committed level"@en ;
+	dcterms:description "Data traffic which is above the committed level per GB"@en ;
+	price:isLinkedTo :resource_CloudHosting_DataTransfer ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.3" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudHosting_Yearly_US a price:PricePlan ;
+	dcterms:title "Yearly US/Canada"@en ;
+	dcterms:description "The pricing for yearly pre paid cloud servers."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasPriceComponent
+		:priceComponent_CloudHosting_Yearly_US_CPU ,
+		:priceComponent_CloudHosting_Yearly_US_MainMemory ,
+		:priceComponent_CloudHosting_Yearly_US_Disk ,
+		:priceComponent_CloudHosting_Yearly_US_DataCommitted ,
+		:priceComponent_CloudHosting_Yearly_US_DataAboveComitted ,
+		:priceComponent_CloudHosting_US_StaticPublicIP ,
+		:priceComponent_CloudHosting_US_PrivateNetworkVLAN ,
+		:priceComponent_CloudHosting_US_Firewall ,
+		:priceComponent_CloudHosting_US_WindowsWebServer2008R2 ,
+		:priceComponent_CloudHosting_US_WindowsServer2008R2Standard ,
+		:priceComponent_CloudHosting_US_WindowsServer2008R2Enterprise ,
+		:priceComponent_CloudHosting_US_MicrosoftSQLServer2008WebEdition ,
+		:priceComponent_CloudHosting_US_MicrosoftSQLServer2008Standard ,
+		:priceComponent_CloudHosting_US_WindowsRemoteDesktopServicesCALs ,
+		:deduction_CloudHosting_Availability ,
+		:deduction_CloudHosting_DataLoss .	
+
+:priceComponent_CloudHosting_Yearly_US_CPU a price:PriceComponent ;
+	dcterms:title "CPU"@en ;
+	dcterms:description "CPU per core-GHz-hour"@en ;
+	price:isLinkedTo :resource_CloudHosting_CPU ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.015" ;
+			gr:hasUnitOfMeasurement "A86" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_CloudHosting_Yearly_US_MainMemory a price:PriceComponent ;
+	dcterms:title "Memory"@en ;
+	dcterms:description "MainMemory per GB-hour"@en ;
+	price:isLinkedTo :resource_CloudHosting_MainMemory ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.021" ;
+			gr:hasUnitOfMeasurement "E34" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_CloudHosting_Yearly_US_Disk a price:PriceComponent ;
+	dcterms:title "Disk"@en ;
+	dcterms:description "Disk storage per GB-month"@en ;
+	price:isLinkedTo :resource_CloudHosting_Disk ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.08" ;
+			gr:hasUnitOfMeasurement "E34" ] .
+
+:priceComponent_CloudHosting_Yearly_US_DataCommitted a price:PriceComponent ;
+	dcterms:title "Data (committed in advance)"@en ;
+	dcterms:description "Data traffic which is committed in advance per GB"@en ;
+	price:isLinkedTo :resource_CloudHosting_DataTransfer ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.125" ;
+			gr:hasUnitOfMeasurement "E34" ] .
+
+:priceComponent_CloudHosting_Yearly_US_DataComittedAbove a price:PriceComponent ;
+	dcterms:title "Data (burst above committed level"@en ;
+	dcterms:description "Data traffic which is above the committed level per GB"@en ;
+	price:isLinkedTo :resource_CloudHosting_DataTransfer ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.25" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#************************************************************************************
+#	Support service										
+#************************************************************************************
+
+<#service_Support> a usdl:Service ;
+	dcterms:modified "2012-05-21"^^xsd:date ;
+	dcterms:created "2012-05-21"^^xsd:date ;
+	dcterms:title "Cloud Hosting support service"@en ;
+	usdl:versionInfo "001" ;
+	usdl:hasNature usdl:Manual ;
+	usdl:hasProvider :provider_ElasticHosts ;
+	usdl:hasLegalCondition :legal_ElasticHosts;
+	gr:qualitativeProductOrServiceProperty :resource_Support_Basic_TechSupport .
+
+:resource_Support_Basic_TechSupport a support:TechSupport ;
+	gr:valueReference 
+		[ a support:EmailSupport ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] ,
+		[ a support:PhoneSupport ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo09:00..Mo18:00" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Tu09:00..Tu18:00" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mi09:00..Mi18:00" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Th09:00..Th18:00" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Fr09:00..Fr18:00" ] ] .
+
+#====================================================================================
+
+:offering_Support a usdl:ServiceOffering ;
+	dcterms:title "Cloud Hosting support service"@en ;
+	dcterms:description "Cloud Hosting support service coming for free."@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;
+	usdl:includes <#service_Support> ;			
+	usdl:hasPricePlan :pricing_Support .
+
+#====================================================================================
+
+:pricing_Support a price:PricePlan ;
+	dcterms:title "Support service price plan"@en ;
+	dcterms:description "The support service is free of charge."@en .
+
+
+
+

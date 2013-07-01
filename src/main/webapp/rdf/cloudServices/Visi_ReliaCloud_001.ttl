@@ -1,0 +1,1149 @@
+@base <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001> .
+@prefix : <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#> .
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dctypes: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix blueprint: <http://bizweb.sap.com/TR/blueprint#> .
+@prefix ctag: <http://commontag.org/ns#> .
+@prefix msm: <http://cms-wg.sti2.org/ns/minimal-service-model#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix sawsdl: <http://www.w3.org/ns/sawsdl#> .
+@prefix sarest: <http://www.knoesis.org/research/srl/standards/sa-rest/#> .
+@prefix wl: <http://www.wsmo.org/ns/wsmo-lite#> .
+@prefix http: <http://www.w3.org/2011/http#> .
+
+@prefix usdl: <http://www.linked-usdl.org/ns/usdl-core#> .
+@prefix legal: <http://www.linked-usdl.org/ns/usdl-legal#> .
+@prefix price: <http://www.linked-usdl.org/ns/usdl-pricing#> .
+@prefix sla: <http://www.linked-usdl.org/ns/usdl-sla#> .
+
+@prefix gn: <http://www.geonames.org/ontology#> .
+@prefix genVoc: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#> .
+@prefix cloud: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#> .
+@prefix os: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#> .
+@prefix support: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#> .
+
+<>  rdf:type usdl:ServiceDescription ;
+	dcterms:title "ReliaCloud Cloud Server service description" ;
+	dcterms:description "Description of ReliaCloud Cloud Server service" ;
+	dcterms:contributor 
+		[ a foaf:Person ;
+			foaf:name "Florian Heberle" ;
+			foaf:firstName "Florian" ;
+			foaf:lastName "Heberle" ] ;
+	dcterms:created "2012-05-22"^^xsd:date ;
+	dcterms:modified "2012-06-20"^^xsd:date ;
+	owl:versionInfo "001" .
+
+#************************************************************************************
+#	Legal												
+#************************************************************************************
+
+:legal_ReliaCloud a legal:TermsAndConditions ;
+	dcterms:title "ReliaCloud's legal statements"@en ;
+	dcterms:description "ReliaCloud's legal statements are accessible online via 'http://www.reliacloud.com/legal/'."@en .
+
+#************************************************************************************
+#	Company data											
+#************************************************************************************
+
+:provider_ReliaCloud a gr:BusinessEntity ;
+	foaf:name "ReliaCloud" ;
+	foaf:homepage <http://www.reliacloud.com/> ;
+	foaf:logo <http://www.reliacloud.com/images/reliaCloudLogo255x125alt.png> ;
+	usdl:legalForm "" ;
+	vcard:adr 
+		[ a vcard:Work ;
+			vcard:country-name "U.S."@en ] .
+
+#************************************************************************************
+#	Customizing												
+#************************************************************************************
+
+:CloudServer_EndOfDowntime a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf 
+		gr:QualitativeValue ,
+		genVoc:GenericPointInTime ;
+	skos:prefLabel "Point in time when ReliaCloud support staff dertermine that the downtime is finished, based on ReliaCloud's log files."@en ;
+	skos:broader :CreditPeriodEnd .
+
+:CloudServer_SQLServer2005 a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Microsofts SQL Server 2005" .
+
+#************************************************************************************
+#	SLAs														
+#************************************************************************************
+
+:slp_ReliaCloud a usdl:ServiceLevelProfile ;
+	dcterms:title "ReliaCloud SLA"@en ;
+	dcterms:description "ReliaCloud SLA v1.1 (Feb 8th 2010), c.f. 'http://www.reliacloud.com/legal/sla/ '. The remedies in the SLA are your sole and exclusive remedies for any Incident or other failure of the Service."@en ;
+	sla:hasServiceLevel 
+		:slo_CloudServer_Availability ,
+		:slo_CloudServer_Availability_Exclusions ,
+		:slo_CloudServer_UnavailabilityReport ,
+		:slo_CloudServer_Credit_Calculation ,
+		:slo_CloudServer_Credit_Suspension ,
+		:slo_CloudServer_Credit_Request .
+
+#____________________________________________________________________________________
+:slo_CloudServer_Availability a sla:GuaranteedState ;
+	dcterms:title "Availability"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "ReliaCloud Cloud Server guarantees a 100% availability of network, instrastructure and host servers."@en ;
+			sla:hasVariable 
+				:var_CloudServer_Availability_Value , 
+				:var_CloudServer_Availability_MeasurementPeriod ,
+				:var_CloudServer_Availability_Network ,
+				:var_CloudServer_Availability_Infrastructure , 
+				:var_CloudServer_Availability_HostServer ] .
+
+:var_CloudServer_Availability_Value a sla:Variable ;
+	rdfs:label "100% Availability"@en ;
+	sla:hasDefault 
+		[ a cloud:Availability ;
+			gr:hasValue "100" ;
+			gr:hasUnitOfMeasurement "P1" ] .
+
+:var_CloudServer_Availability_MeasurementPeriod a sla:Variable ;
+	rdfs:label "Availability measurment period"@en ;
+	sla:hasDefault 
+		[ a genVoc:MeasurementPeriod ;
+			gr:hasValue "1" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:var_CloudServer_Availability_Network a sla:Variable ;
+	rdfs:label "Definition unavailability: Network"@en ;
+	dcterms:description "The Network is considered 'not available' if data cannot be transmitted and received across the Network in the normal course of operation. By 'Network' we mean the portion of the ReliaCloud Server system extending from the network egress point of your Host Server (as defined below) to the outbound port of the ReliaCloud data center border router."@en .
+
+:var_CloudServer_Availability_Infrastructure a sla:Variable ;
+	rdfs:label "Definition unavailability: Network"@en ;
+	dcterms:description "The Infrastructure is considered 'not available' if the Infrastructure is not functioning at a reasonable capacity as a result of power or cabling. By 'Infrastructure' we mean ReliaCloud's power (including UPS equipment, generator and cabling) systems and HVAC for the data center."@en .
+
+:var_CloudServer_Availability_HostServer a sla:Variable ;
+	rdfs:label "Definition unavailability: Network"@en ;
+	dcterms:description "The Host Servers are considered 'not available' if they fail to function properly as a result of hardware and hypervisor layer problems on the Host Servers. By 'Host Server' we mean the hardware, computing and storage nodes, and software hypervisor of the physical servers which are used to host your Cloud Server(s). By 'Cloud Server' we mean specific and unique virtual machine instances which you have purchased through the ReliaCloud Server Product as specified in your particular Order."@en .
+
+#____________________________________________________________________________________
+:slo_CloudServer_Availability_Exclusions a sla:GuaranteedState ;
+	dcterms:title "Availability exclusions"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Notwithstanding any provision to the contrary in this SLA, the following do not constitute Incidents:"@en ;
+			sla:hasVariable 
+				:var_CloudServer_Availability_Exclusion_ScheduledMaintenance ,
+				:var_CloudServer_Availability_Exclusion_Negligence ,
+				:var_CloudServer_Availability_Exclusion_Hackers ,
+				:var_CloudServer_Availability_Exclusion_DNS ,
+				:var_CloudServer_Availability_Exclusion_InternetAnomalies ,
+				:var_CloudServer_Availability_Exclusion_DesasterEvents ,
+				:var_CloudServer_Availability_Exclusion_InvalidReportOrRequest ,
+				:var_CloudServer_Availability_Exclusion_BetaTests ] .
+
+:var_CloudServer_Availability_Exclusion_ScheduledMaintenance a sla:Variable ;
+	rdfs:label "Scheduled Maintenance"@en ;
+	dcterms:description "Unavailability occurring during scheduled maintenance periods. 'Maintenance' means: (i) maintenance on ReliaCloud equipment that ReliaCloud has planned in advance; or (ii) any emergency maintenance, corrective action intended to remedy conditions likely to cause severe Service degradation, as designated by ReliaCloud in its sole discretion."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudServer_Availability_Exclusion_Negligence a sla:Variable ;
+	rdfs:label "Negligence"@en ;
+	dcterms:description "Unavailability caused by negligent acts or omissions of you or your representatives, or by any of your applications, equipment, or facilities."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudServer_Availability_Exclusion_Hackers a sla:Variable ;
+	rdfs:label "Hackers and similar"@en ;
+	dcterms:description "Outages caused by hackers, sabotage, viruses, worms, or other third party wrongful actions."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudServer_Availability_Exclusion_DNS a sla:Variable ;
+	rdfs:label "DNS issues"@en ;
+	dcterms:description "DNS issues outside of ReliaCloud's control."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudServer_Availability_Exclusion_InternetAnomalies a sla:Variable ;
+	rdfs:label "Internet anomalies"@en ;
+	dcterms:description "Outages resulting from Internet anomalies outside of ReliaCloud's control"@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudServer_Availability_Exclusion_DesasterEvents a sla:Variable ;
+	rdfs:label "Desaster events"@en ;
+	dcterms:description "Outages resulting from fires, explosions, or force majeure"@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudServer_Availability_Exclusion_InvalidReportOrRequest a sla:Variable ;
+	rdfs:label "Invalid report or request"@en ;
+	dcterms:description "Your failure to abide by the requirements of reporting an incident or requesting a credit as specified in the SLA."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_CloudServer_Availability_Exclusion_BetaTests a sla:Variable ;
+	rdfs:label "Beta tests"@en ;
+	dcterms:description "Unavailability related to a Service under 'beta test'."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+#____________________________________________________________________________________
+:slo_CloudServer_UnavailabilityReport a sla:GuaranteedState ;
+	dcterms:title "Report of unavailability"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "If you become aware that any of your Services are not available, you must promptly give ReliaCloud notice of the problem. You must reasonably cooperate with the ReliaCloud support staff by providing reasonable and timely responses to questions and other information needs the support staff may have in resolving the problem."@en ;
+			sla:hasVariable 
+				:var_CloudServer_UnavailabilityReport_Contact ,
+				:var_CloudServer_UnavailabilityReport_Content_AccUsername ,
+				:var_CloudServer_UnavailabilityReport_Content_InstanceID ,
+				:var_CloudServer_UnavailabilityReport_Content_DateTime ,
+				:var_CloudServer_UnavailabilityReport_Content_Estimates ,
+				:var_CloudServer_UnavailabilityReport_CreditEligibility ] .
+
+:var_CloudServer_UnavailabilityReport_Contact a sla:Variable ;
+	rdfs:label "Request contact"@en ;
+	sla:hasDefault 
+		[ a gr:QualitativeValue ;
+			rdfs:label "Send your report via email to sla@reliacloud.com."@en ] .
+ 
+:var_CloudServer_UnavailabilityReport_Content_AccUsername a sla:Variable ;
+	rdfs:label "Report content: Username"@en ;
+	sla:hasDefault 
+		[ a gr:QualitativeValue ;
+			rdfs:label "Your report must contain your ReliaCloud account username."@en ] .
+
+:var_CloudServer_UnavailabilityReport_Content_InstanceID a sla:Variable ;
+	rdfs:label "Report content: Instance ID"@en ;
+	sla:hasDefault 
+		[ a gr:QualitativeValue ;
+			rdfs:label "Your report must contain the ID of the cloud instance affected."@en ] .
+
+:var_CloudServer_UnavailabilityReport_Content_DateTime a sla:Variable ;
+	rdfs:label "Report content: Date and Time"@en ;
+	sla:hasDefault 
+		[ a gr:QualitativeValue ;
+			rdfs:label "Your report must contain the date(s) and time(s) of the Incident(s)."@en ] .
+
+:var_CloudServer_UnavailabilityReport_CreditEligibility a sla:Variable ;
+	rdfs:label "Credit Eligibility"@en ;
+	dcterms:description "To be eligible for credits, the Incident must have been reported to ReliaCloud as described above, either while happening or promptly (within one hour) after the close of the Incident."@en ;
+	sla:hasDefault 
+		[ a genVoc:AbsoluteTimePeriod ;
+			gr:hasMaxValue "1" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#____________________________________________________________________________________
+:slo_CloudServer_Credit_Calculation a sla:GuaranteedState ;
+	dcterms:title "Credit calculation"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "A period of non-availability will be deemed to have started at the time we log when you first contact us about the problem. The end of the period of non-availability will be determined by ReliaCloud support staff based on ReliaCloud log files. Any period of time ReliaCloud does not meet the SLA availability requirements described above will be considered an 'Incident'. Incidents will be measured by the minute."@en ;
+			sla:hasVariable 
+				:var_CloudServer_Credit_Calculation_Start ,
+				:var_CloudServer_Credit_Calculation_Slice ,
+				:var_CloudServer_Credit_Calculation_End ] .
+
+:var_CloudServer_Credit_Calculation_Start a sla:Variable ;
+	rdfs:label "Credit period start on report"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditPeriodStart ;
+			gr:valueReference [ a cloud:ReportOfDowntime ] ] .
+
+:var_CloudServer_Credit_Calculation_Slice a sla:Variable ;
+	rdfs:label "Credit period is measured per minute"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditPeriodSlice ;
+			gr:hasValue "1" ;
+			gr:hasUnitOfMeasurement "MIN" ] .
+
+:var_CloudServer_Credit_Calculation_End a sla:Variable ;
+	rdfs:label "Credit period end is dertermined by ReliaCloud support staff"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditPeriodEnd ;
+			gr:valueReference [ a :CloudServer_EndOfDowntime] ] .
+
+#____________________________________________________________________________________
+:slo_CloudServer_Credit_Suspension a sla:GuaranteedState ;
+	dcterms:title "Credit suspension"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Reasons for the suspension of credit entitlement."@en ;
+			sla:hasVariable 
+				:var_CloudServer_Credit_Suspension_BreachTermsOfService ,
+				:var_CloudServer_Credit_Suspension_BreachAcceptableUsePolicy ] .
+
+:var_CloudServer_Credit_Suspension_BreachTermsOfService a sla:Variable ;
+	rdfs:label "Breach of the Terms of Service during the period of an Incident."@en ;
+	sla:hasDefault [ a cloud:CreditSuspensionReason ] .
+
+:var_CloudServer_Credit_Suspension_BreachAcceptableUsePolicy a sla:Variable ;
+	rdfs:label "Breach of the Acceptable Use Policy during the period of an Incident."@en ;
+	sla:hasDefault [ a cloud:CreditSuspensionReason ] .
+
+#____________________________________________________________________________________
+:slo_CloudServer_Credit_Request a sla:GuaranteedAction ;
+	dcterms:title "Credit request"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "To obtain a credit for a particular Incident, you must submit a request for credit within five business days after the conclusion of the Incident."@en ;
+			sla:hasVariable 
+				:var_CloudServer_Credit_Request_Period ,
+				:var_CloudServer_Credit_Request_Contact ,
+				:var_CloudServer_Credit_Request_Content_AccUsername ,
+				:var_CloudServer_Credit_Request_Content_InstanceID ,
+				:var_CloudServer_Credit_Request_Content_DateTime ,
+				:var_CloudServer_Credit_Request_Content_Estimates ] .
+
+:var_CloudServer_Credit_Request_Period a sla:Variable ;
+	rdfs:label "Request period"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditRequestPeriod ;
+			gr:hasValue "30" ;
+			gr:hasUnitOfMeasurement "E49" ] . # Working day
+
+:var_CloudServer_Credit_Request_Contact a sla:Variable ;
+	rdfs:label "Request contact"@en ;
+	sla:hasDefault 
+		[ a gr:QualitativeValue ;
+			rdfs:label "Send your credit request via email to sla@reliacloud.com."@en ] .
+ 
+:var_CloudServer_Credit_Request_Content_AccUsername a sla:Variable ;
+	rdfs:label "Request content: Username"@en ;
+	sla:hasDefault 
+		[ a gr:QualitativeValue ;
+			rdfs:label "Your request must contain your ReliaCloud account username."@en ] .
+
+:var_CloudServer_Credit_Request_Content_InstanceID a sla:Variable ;
+	rdfs:label "Request content: Instance ID"@en ;
+	sla:hasDefault 
+		[ a gr:QualitativeValue ;
+			rdfs:label "Your request must contain the ID of the cloud instance affected."@en ] .
+
+:var_CloudServer_Credit_Request_Content_DateTime a sla:Variable ;
+	rdfs:label "Request content: Date and Time"@en ;
+	sla:hasDefault 
+		[ a gr:QualitativeValue ;
+			rdfs:label "Your request must contain the date(s) and time(s) of the Incident(s)."@en ] .
+
+:var_CloudServer_Credit_Request_Content_Estimates a sla:Variable ;
+	rdfs:label "Request content: Request and estimates"@en ;
+	sla:hasDefault 
+		[ a gr:QualitativeValue ;
+			rdfs:label "Your request must contain  a request for a credit under this SLA and any estimates you have for the credit amount."@en ] .
+
+#************************************************************************************
+#	Shared resources															
+#************************************************************************************
+
+:resource_CloudServer_Memory_1 a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "500" .
+
+:resource_CloudServer_Memory_2 a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "1000" .
+
+:resource_CloudServer_Memory_3 a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "2000" .
+
+:resource_CloudServer_Memory_4 a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "4000" .
+
+:resource_CloudServer_Memory_5 a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "8000" .
+
+#____________________________________________________________________________________
+:resource_CloudServer_Disk_1 a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "50" .
+
+:resource_CloudServer_Disk_2 a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "100" .
+
+:resource_CloudServer_Disk_3 a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "200" .
+
+:resource_CloudServer_Disk_4 a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "400" .
+
+:resource_CloudServer_Disk_5 a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "800" .
+
+#____________________________________________________________________________________
+:resource_CloudServer_CPU_1 a cloud:CPU ;
+	rdfs:label "" ;
+	gr:hasUnitOfMeasurement "A86";
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "1" ] .
+
+:resource_CloudServer_CPU_2 a cloud:CPU ;
+	rdfs:label "" ;	
+	gr:hasUnitOfMeasurement "A86";
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "2" ] .
+
+:resource_CloudServer_CPU_3 a cloud:CPU ;
+	rdfs:label "" ;
+	gr:hasUnitOfMeasurement "A86";
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "4" ] .
+
+:resource_CloudServer_CPU_4 a cloud:CPU ;
+	rdfs:label "" ;
+	gr:hasUnitOfMeasurement "A86";
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "8" ] .
+
+#____________________________________________________________________________________
+:resource_CloudServer_StaticPublicIP a cloud:IPAddress ;
+	gr:valueReference  
+		[ a cloud:StaticIPAddress ] ,
+		[ a cloud:PublicIPAddress ] , 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "1" ] .
+
+:resource_CloudServer_OptionalStaticPublicIP a cloud:IPAddress ;
+	gr:valueReference  
+		[ a cloud:StaticIPAddress ] ,
+		[ a cloud:PublicIPAddress ] , 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ] .
+
+#____________________________________________________________________________________
+:resource_CloudServer_WindowsServer2003_32Bit a os:WindowsServer2003 ;
+	gr:valueReference
+		[ a os:OS32Bit ] .
+
+:resource_CloudServer_WindowsServer2003_64Bit a os:WindowsServer2003 ;
+	gr:valueReference
+		[ a os:OS64Bit ] .
+
+:resource_CloudServer_WindowsServer2008 a os:WindowsServer2008 ;
+	gr:valueReference
+		[ a os:OS32Bit ] ,
+		[ a os:OS64Bit ] .
+
+:resource_CloudServer_WindowsServer2008R2 a os:WindowsServer2008R2 ;
+	gr:valueReference
+		[ a os:OS32Bit ] ,
+		[ a os:OS64Bit ] .
+
+:resource_CloudServer_SQLServer2005 a :CloudServer_SQLServer2005 .
+
+#____________________________________________________________________________________
+:resource_CloudServer_FreeBSD8 a os:Unix ;
+	gr:valueReference 
+		[ a os:OS32Bit ] ,
+		[ a os:OS64Bit ] .
+
+#____________________________________________________________________________________
+:resource_CloudServer_CentOS a os:CentOS_5_3 ;
+	gr:valueReference 
+		[ a os:OS32Bit ] ,
+		[ a os:OS64Bit ] .
+
+:resource_CloudServer_Debian a os:Debian_5_0 ;
+	gr:valueReference 
+		[ a os:OS32Bit ] ,
+		[ a os:OS64Bit ] .
+
+:resource_CloudServer_Ubuntu8 a os:Ubuntu_8_04_LTS ;
+	gr:valueReference 
+		[ a os:OS32Bit ] ,
+		[ a os:OS64Bit ] .
+
+:resource_CloudServer_Ubuntu11 a os:Ubuntu_10_04_LTS ;
+	gr:valueReference 
+		[ a os:OS32Bit ] ,
+		[ a os:OS64Bit ] .
+
+#____________________________________________________________________________________
+:resource_CloudServer_DataCentre_EdenPrairie a cloud:DataCentre ;
+	rdfs:label "Eden Prairie, Minnesota"@en ;
+	dcterms:description "Data Center Specifications: Fire suppression system, Technical staff onsite 24x7x365, SAS 70 Type II Certification, Biometric handscan for security and Multiple UPS and generator units"@en ;
+	gn:locatedIn <http://sws.geonames.org/5025219> . #preliminiary
+
+:resource_CloudServer_DataCentre_StPaul a cloud:DataCentre ;
+	rdfs:label "St. Paul, Minnesota"@en ;
+	dcterms:description "Data Center Specifications: Fire suppression system, Technical staff onsite 24x7x365, SAS 70 Type II Certification, Biometric handscan for security and Multiple UPS and generator units"@en ;
+	gn:locatedIn <http://sws.geonames.org/5025219> . #preliminiary
+
+#____________________________________________________________________________________
+:resource_CloudServer_Bandwidth_Out a cloud:Upstream ;	
+	gr:hasUnitOfMeasurement "Mbit/s" .
+		
+:resource_CloudServer_Bandwidth_In a cloud:Downstream ;	
+	gr:hasUnitOfMeasurement "Mbit/s" .
+ 
+#************************************************************************************
+#	Service Cloud Servers															
+#************************************************************************************
+
+<#service_CloudServer> a usdl:Service ;
+	dcterms:created "2012-05-22"^^xsd:date ;
+	dcterms:modified "2012-05-22"^^xsd:date ;
+	dcterms:title "ReliaCloud Cloud Server"@en ;
+	usdl:hasNature usdl:Automated ;
+	usdl:hasProvider :provider_ReliaCloud ;
+	usdl:hasLegalCondition :legal_ReliaCloud ;
+	usdl:hasPartMandatory <#service_Support> ;
+	gr:quantitativeProductOrServiceProperty 
+		:resource_CloudServer_StaticPublicIP ,
+		:resource_CloudServer_OptionalStaticPublicIP ;
+	gr:qualitativeProductOrServiceProperty
+		:resource_CloudServer_DataCentre_EdenPrairie ,
+		:resource_CloudServer_DataCentre_StPaul .
+
+#====================================================================================
+
+:offering_CloudServer a usdl:ServiceOffering ;
+	dcterms:title "ReliaCloud's Cloud Server"@en ;
+	dcterms:description "ReliaCloud's Cloud Server service has three seperate billing parts: Server hours according to package, software hours according to software package and outbound data transfer ."@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;
+	usdl:includes <#service_CloudServer> ;		
+	usdl:hasPricePlan 
+		:pricing_CloudServers_ResourcePackage1_Linux ,
+		:pricing_CloudServers_ResourcePackage2_Linux ,
+		:pricing_CloudServers_ResourcePackage3_Linux ,
+		:pricing_CloudServers_ResourcePackage4_Linux ,
+		:pricing_CloudServers_ResourcePackage5_Linux ,
+		:pricing_CloudServers_ResourcePackage1_FreeBSD ,
+		:pricing_CloudServers_ResourcePackage2_FreeBSD ,
+		:pricing_CloudServers_ResourcePackage3_FreeBSD ,
+		:pricing_CloudServers_ResourcePackage4_FreeBSD ,
+		:pricing_CloudServers_ResourcePackage5_FreeBSD ,
+		:pricing_CloudServers_ResourcePackage1_Windows ,
+		:pricing_CloudServers_ResourcePackage2_Windows ,
+		:pricing_CloudServers_ResourcePackage3_Windows ,
+		:pricing_CloudServers_ResourcePackage4_Windows ,
+		:pricing_CloudServers_ResourcePackage5_Windows ,
+		:pricing_CloudServers_ResourcePackage1_Windows2003_SQL2005 ,
+		:pricing_CloudServers_ResourcePackage2_Windows2003_SQL2005 ,
+		:pricing_CloudServers_ResourcePackage3_Windows2003_SQL2005 ,
+		:pricing_CloudServers_ResourcePackage4_Windows2003_SQL2005 ,
+		:pricing_CloudServers_ResourcePackage5_Windows2003_SQL2005 ;
+	usdl:hasServiceLevelProfile :slp_ReliaCloud .			
+
+#====================================================================================
+
+:pricing_CloudServers_ResourcePackage1_Linux a price:PricePlan ;
+	dcterms:title "Package 1 Linux"@en ;
+	dcterms:description "Resource package 1 with Linux"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_1_On ,
+		:priceComponent_ResourcePackage_1_Off ,
+		:priceComponent_SoftwarePackage_Linux ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage2_Linux a price:PricePlan ;
+	dcterms:title "Package 2 Linux"@en ;
+	dcterms:description "Resource package 2 with Linux"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_2_On ,
+		:priceComponent_ResourcePackage_2_Off ,
+		:priceComponent_SoftwarePackage_Linux ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage3_Linux a price:PricePlan ;
+	dcterms:title "Package 3 Linux"@en ;
+	dcterms:description "Resource package 3 with Linux"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_3_On ,
+		:priceComponent_ResourcePackage_3_Off ,
+		:priceComponent_SoftwarePackage_Linux ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage4_Linux a price:PricePlan ;
+	dcterms:title "Package 4 Linux"@en ;
+	dcterms:description "Resource package 4 with Linux"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_4_On ,
+		:priceComponent_ResourcePackage_4_Off ,
+		:priceComponent_SoftwarePackage_Linux ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage5_Linux a price:PricePlan ;
+	dcterms:title "Package 5 Linux"@en ;
+	dcterms:description "Resource package 5 with Linux"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_5_On ,
+		:priceComponent_ResourcePackage_5_Off ,
+		:priceComponent_SoftwarePackage_Linux ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+#____________________________________________________________________________________
+:pricing_CloudServers_ResourcePackage1_FreeBSD a price:PricePlan ;
+	dcterms:title "Package 1 FreeBSD"@en ;
+	dcterms:description "Resource package 1 with FreeBSD"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_1_On ,
+		:priceComponent_ResourcePackage_1_Off ,
+		:priceComponent_SoftwarePackage_FreeBSD ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage2_FreeBSD a price:PricePlan ;
+	dcterms:title "Package 2 FreeBSD"@en ;
+	dcterms:description "Resource package 2 with FreeBSD"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_2_On ,
+		:priceComponent_ResourcePackage_2_Off ,
+		:priceComponent_SoftwarePackage_FreeBSD ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage3_FreeBSD a price:PricePlan ;
+	dcterms:title "Package 3 FreeBSD"@en ;
+	dcterms:description "Resource package 3 with FreeBSD"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_3_On ,
+		:priceComponent_ResourcePackage_3_Off ,
+		:priceComponent_SoftwarePackage_FreeBSD ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage4_FreeBSD a price:PricePlan ;
+	dcterms:title "Package 4 FreeBSD"@en ;
+	dcterms:description "Resource package 4 with FreeBSD"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_4_On ,
+		:priceComponent_ResourcePackage_4_Off ,
+		:priceComponent_SoftwarePackage_FreeBSD ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage5_FreeBSD a price:PricePlan ;
+	dcterms:title "Package 5 FreeBSD"@en ;
+	dcterms:description "Resource package 5 with FreeBSD"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_1_On ,
+		:priceComponent_ResourcePackage_1_Off ,
+		:priceComponent_SoftwarePackage_FreeBSD ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+#____________________________________________________________________________________
+:pricing_CloudServers_ResourcePackage1_Windows a price:PricePlan ;
+	dcterms:title "Package 1 Windows"@en ;
+	dcterms:description "Resource package 1 with Windows"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_1_On ,
+		:priceComponent_ResourcePackage_1_Off ,
+		:priceComponent_SoftwarePackage_Windows ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage2_Windows a price:PricePlan ;
+	dcterms:title "Package 2 Windows"@en ;
+	dcterms:description "Resource package 2 with Windows"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_2_On ,
+		:priceComponent_ResourcePackage_2_Off ,
+		:priceComponent_SoftwarePackage_Windows ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage3_Windows a price:PricePlan ;
+	dcterms:title "Package 3 Windows"@en ;
+	dcterms:description "Resource package 3 with Windows"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_3_On ,
+		:priceComponent_ResourcePackage_3_Off ,
+		:priceComponent_SoftwarePackage_Windows ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage4_Windows a price:PricePlan ;
+	dcterms:title "Package 4 Windows"@en ;
+	dcterms:description "Resource package 4 with Windows"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_4_On ,
+		:priceComponent_ResourcePackage_4_Off ,
+		:priceComponent_SoftwarePackage_Windows ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage5_Windows a price:PricePlan ;
+	dcterms:title "Package 5 Windows"@en ;
+	dcterms:description "Resource package 5 with Windows"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_1_On ,
+		:priceComponent_ResourcePackage_1_Off ,
+		:priceComponent_SoftwarePackage_Windows ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+#____________________________________________________________________________________
+:pricing_CloudServers_ResourcePackage1_Windows2003_SQL2005 a price:PricePlan ;
+	dcterms:title "Package 1 Windows extended"@en ;
+	dcterms:description "Resource package 1 with Windows 2003 64-bit and SQL Server 2005"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_1_On ,
+		:priceComponent_ResourcePackage_1_Off ,
+		:priceComponent_SoftwarePackage_Windows_SQLServer2005 ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage2_Windows2003_SQL2005 a price:PricePlan ;
+	dcterms:title "Package 2 Windows extended"@en ;
+	dcterms:description "Resource package 2 with Windows 2003 64-bit and SQL Server 2005"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_2_On ,
+		:priceComponent_ResourcePackage_2_Off ,
+		:priceComponent_SoftwarePackage_Windows_SQLServer2005 ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage3_Windows2003_SQL2005 a price:PricePlan ;
+	dcterms:title "Package 3 Windows extended"@en ;
+	dcterms:description "Resource package 3 with Windows 2003 64-bit and SQL Server 2005"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_3_On ,
+		:priceComponent_ResourcePackage_3_Off ,
+		:priceComponent_SoftwarePackage_Windows_SQLServer2005 ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage4_Windows2003_SQL2005 a price:PricePlan ;
+	dcterms:title "Package 4 Windows extended"@en ;
+	dcterms:description "Resource package 4 with Windows 2003 64-bit and SQL Server 2005"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_4_On ,
+		:priceComponent_ResourcePackage_4_Off ,
+		:priceComponent_SoftwarePackage_Windows_SQLServer2005 ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+:pricing_CloudServers_ResourcePackage5_Windows2003_SQL2005 a price:PricePlan ;
+	dcterms:title "Package 5 Windows extended"@en ;
+	dcterms:description "Resource package 5 with Windows 2003 64-bit and SQL Server 2005"@en ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_ResourcePackage_5_On ,
+		:priceComponent_ResourcePackage_5_Off ,
+		:priceComponent_SoftwarePackage_Windows_SQLServer2005 ,
+		:priceComponent_OutboundTraffic ,
+		:priceComponent_InboundTraffic ,
+		:deduction_Availability .
+
+#====================================================================================
+
+:priceComponent_ResourcePackage_1_On a price:PriceComponent ;
+	dcterms:title "Cloud Server Package 1 (on)"@en ;
+	dcterms:description "Fee for the hardware resources of the server while powered on."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_Memory_1 ,
+		:resource_CloudServer_Disk_1 ,
+		:resource_CloudServer_CPU_1 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.05" ;
+			gr:hasUnitOfMeasurement "HUR" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Instance is on" ] .
+
+:priceComponent_ResourcePackage_1_Off a price:PriceComponent ;
+	dcterms:title "Cloud Server Package 1 (off)"@en ;
+	dcterms:description "Fee for the hardware resources of the server while powered off."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_Memory_1 ,
+		:resource_CloudServer_Disk_1 ,
+		:resource_CloudServer_CPU_1 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.025" ;
+			gr:hasUnitOfMeasurement "HUR" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Instance is off" ] .
+
+#____________________________________________________________________________________
+:priceComponent_ResourcePackage_2_On a price:PriceComponent ;
+	dcterms:title "Cloud Server Package 2 (on)"@en ;
+	dcterms:description "Fee for the hardware resources of the server while powered on."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_Memory_2 ,
+		:resource_CloudServer_Disk_2 ,
+		:resource_CloudServer_CPU_1 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.08" ;
+			gr:hasUnitOfMeasurement "HUR" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Instance is on" ] .
+
+:priceComponent_ResourcePackage_2_Off a price:PriceComponent ;
+	dcterms:title "Cloud Server Package 2 (off)"@en ;
+	dcterms:description "Fee for the hardware resources of the server while powered off."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_Memory_2 ,
+		:resource_CloudServer_Disk_2 ,
+		:resource_CloudServer_CPU_1 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.04" ;
+			gr:hasUnitOfMeasurement "HUR" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Instance is off" ] .
+
+#____________________________________________________________________________________
+:priceComponent_ResourcePackage_3_On a price:PriceComponent ;
+	dcterms:title "Cloud Server Package 3 (on)"@en ;
+	dcterms:description "Fee for the hardware resources of the server while powered on."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_Memory_3 ,
+		:resource_CloudServer_Disk_3 ,
+		:resource_CloudServer_CPU_2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.16" ;
+			gr:hasUnitOfMeasurement "HUR" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Instance is on" ] .
+
+:priceComponent_ResourcePackage_3_Off a price:PriceComponent ;
+	dcterms:title "Cloud Server Package 3 (off)"@en ;
+	dcterms:description "Fee for the hardware resources of the server while powered off."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_Memory_3 ,
+		:resource_CloudServer_Disk_3 ,
+		:resource_CloudServer_CPU_2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.08" ;
+			gr:hasUnitOfMeasurement "HUR" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Instance is off" ] .
+
+#____________________________________________________________________________________
+:priceComponent_ResourcePackage_4_On a price:PriceComponent ;
+	dcterms:title "Cloud Server Package 4 (on)"@en ;
+	dcterms:description "Fee for the hardware resources of the server while powered on."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_Memory_4 ,
+		:resource_CloudServer_Disk_4 ,
+		:resource_CloudServer_CPU_3 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.32" ;
+			gr:hasUnitOfMeasurement "HUR" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Instance is on" ] .
+
+:priceComponent_ResourcePackage_4_Off a price:PriceComponent ;
+	dcterms:title "Cloud Server Package 4 (off)"@en ;
+	dcterms:description "Fee for the hardware resources of the server while powered off."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_Memory_4 ,
+		:resource_CloudServer_Disk_4 ,
+		:resource_CloudServer_CPU_3 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.16" ;
+			gr:hasUnitOfMeasurement "HUR" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Instance is off" ] .
+
+#____________________________________________________________________________________
+:priceComponent_ResourcePackage_5_On a price:PriceComponent ;
+	dcterms:title "Cloud Server Package 5 (on)"@en ;
+	dcterms:description "Fee for the hardware resources of the server while powered on."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_Memory_5 ,
+		:resource_CloudServer_Disk_5 ,
+		:resource_CloudServer_CPU_4 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.64" ;
+			gr:hasUnitOfMeasurement "HUR" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Instance is on" ] .
+
+:priceComponent_ResourcePackage_5_Off a price:PriceComponent ;
+	dcterms:title "Cloud Server Package 5 (off)"@en ;
+	dcterms:description "Fee for the hardware resources of the server while powered off."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_Memory_5 ,
+		:resource_CloudServer_Disk_5 ,
+		:resource_CloudServer_CPU_4 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.32" ;
+			gr:hasUnitOfMeasurement "HUR" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Instance is off" ] .
+
+#____________________________________________________________________________________
+:priceComponent_SoftwarePackage_Linux a price:PriceComponent ;
+	dcterms:title "Linux"@en ;
+	dcterms:description "Usage of a Linux instance is free."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_CentOS ,
+		:resource_CloudServer_Debian ,
+		:resource_CloudServer_Ubuntu8 ,
+		:resource_CloudServer_Ubuntu11 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.0" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#____________________________________________________________________________________
+:priceComponent_SoftwarePackage_FreeBSD a price:PriceComponent ;
+	dcterms:title "FreeBSD"@en ;
+	dcterms:description "Usage of a FreeBSD instance is free."@en ;
+	price:isLinkedTo :resource_CloudServer_FreeBSD8 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.0" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#____________________________________________________________________________________
+:priceComponent_SoftwarePackage_Windows a price:PriceComponent ;
+	dcterms:title "Windows"@en ;
+	dcterms:description "Fee for the usage of a Windows instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServer_WindowsServer2003_32Bit ,		
+		:resource_CloudServer_WindowsServer2003_64Bit ,
+		:resource_CloudServer_WindowsServer2008 ,
+		:resource_CloudServer_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.05" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#____________________________________________________________________________________
+:priceComponent_SoftwarePackage_Windows2003_SQL2005 a price:PriceComponent ;
+	dcterms:title "Windows 2003 64-bit with SQL Server 2005"@en ;
+	dcterms:description "Fee for the usage of Windows 2003 64-bit with SQL Server 2005."@en ;
+	price:isLinkedTo 		
+		:resource_CloudServer_WindowsServer2003_64Bit ,
+		:resource_CloudServer_SQLServer2005 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.65" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+#____________________________________________________________________________________
+:priceComponent_OutboundTraffic a price:PriceComponent ;
+	dcterms:title "Outbound Transfer"@en ;
+	dcterms:description "Fee for outgoing data transfer."@en ;
+	price:isLinkedTo :resource_CloudServer_Bandwidth_Out ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.12" ;
+			gr:hasUnitOfMeasurement "E34" ] .
+
+:priceComponent_InboundTraffic a price:PriceComponent ;
+	dcterms:title "Inbound Transfer"@en ;
+	dcterms:description "Fee for incoming data transfer."@en ;
+	price:isLinkedTo :resource_CloudServer_Bandwidth_In ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.0" ;
+			gr:hasUnitOfMeasurement "E34" ] .
+
+#____________________________________________________________________________________
+:deduction_Availability a price:Deduction ;
+	dcterms:title "Compensation for unavailability"@en ;
+	dcterms:description "Your credit for eligible Incidents in a particular billing period is equal to the aggregate total time for the Incidents which have affected particular Cloud Service Instances in that billing period (measured to the closest minute) times the service fees paid by you for those same Cloud Service Instances over that same amount of time times thirty. For example, if you are paying $0.16 per hour for a Cloud Server and there is a 2-hour Incident, you would be eligible for a $9.60 credit ($0.16 x 2.0 x 30). Or, for example, if you are paying $0.16 per hour for a Cloud Server and there is an 18-minute Incident, you would be eligible for a $1.44 credit ($0.16 x 0.3 x 30). The maximum total credit you may accrue in any one billing period (as determined by your contract for Services) for any particular Cloud Service Instance is 100% of the amount you actually paid for Services for that Cloud Service Instance in the month the Incidents occurred. Credits that would be available, but for this limitation, will not be carried forward to future billing periods."@en ;
+	price:hasDeductionSource :slo_CloudServer_Availability ;
+	price:hasRelativeDeductionValue "3000" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#************************************************************************************
+#	Cloud Server Support 						
+#************************************************************************************
+
+<#service_Support> a usdl:Service ;
+	dcterms:modified "2012-05-22"^^xsd:date ;
+	dcterms:created "2012-05-22"^^xsd:date ;
+	dcterms:title "Support"@en ;
+	usdl:versionInfo "001" ;
+	usdl:hasNature usdl:Manual ;
+	usdl:hasProvider :provider_ReliaCloud ;
+	usdl:hasLegalCondition :legal_ReliaCloud;
+	gr:qualitativeProductOrServiceProperty :resource_ReliaCloud_TechSupport .
+
+:resource_ReliaCloud_TechSupport a support:TechSupport ;
+	gr:valueReference 
+		[ a support:ChatSupport ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] ,
+		[ a support:PhoneSupport ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] .
+
+#====================================================================================
+
+:offering_Support a usdl:ServiceOffering ;
+	dcterms:title "ReliaCloud Tech Support"@en ;
+	dcterms:description "ReliaCloud Tech Support includes chat and phone support"@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;
+	usdl:includes <#service_Support> ;			
+	usdl:hasPricePlan :pricing_Support .
+
+#====================================================================================
+
+:pricing_Support a price:PricePlan ;
+	dcterms:title "Free Support"@en ;
+	dcterms:description "Support comes free with every account."@en .
+

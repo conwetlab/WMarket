@@ -1,0 +1,983 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:legal="http://www.linked-usdl.org/ns/usdl-legal#" xmlns:usdl="http://www.linked-usdl.org/ns/usdl-core#" xmlns:gn="http://www.geonames.org/ontology#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:gr="http://purl.org/goodrelations/v1#" xmlns:cloud="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#" xmlns:vcard="http://www.w3.org/2006/vcard/ns#" xmlns:support="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#" xmlns:genVoc="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sla="http://www.linked-usdl.org/ns/usdl-sla#" xmlns:os="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#" xmlns:price="http://www.linked-usdl.org/ns/usdl-pricing#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:ElasticHostsCloudHosting="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#">
+	<usdl:ServiceDescription rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001">
+		<dcterms:title>Cloud Hosting service description</dcterms:title>
+		<dcterms:description>Description of ElasticHosts's Cloud Hosting IaaS service</dcterms:description>
+		<dcterms:contributor>
+			<foaf:Person>
+				<foaf:name>Florian Heberle</foaf:name>
+				<foaf:firstName>Florian</foaf:firstName>
+				<foaf:lastName>Heberle</foaf:lastName>
+			</foaf:Person>
+		</dcterms:contributor>
+		<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-21</dcterms:created>
+		<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-06-20</dcterms:modified>
+		<owl:versionInfo>001</owl:versionInfo>
+	</usdl:ServiceDescription>
+	<legal:TermsAndConditions rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#legal_ElasticHosts">
+		<dcterms:title xml:lang="en">ElasticHosts's legal statements</dcterms:title>
+		<dcterms:description xml:lang="en">ElasticHosts's legal statements are accessible online via 'http://www.elastichosts.com/cloud-hosting/terms-of-service'.</dcterms:description>
+	</legal:TermsAndConditions>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#ElasticHosts_PrivateVLAN">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">Private network VLAN</skos:prefLabel>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#ElasticHosts_Firewall">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">Firewall</skos:prefLabel>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#ElasticHosts_WindowsWebServer2008R2">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">Windows Web Server 2008 R2</skos:prefLabel>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#ElasticHosts_SQLServer2008WebEdition">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">Microsoft SQL Server 2008 Web Edition</skos:prefLabel>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#ElasticHosts_SQLServer2008Standard">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">Microsoft SQL Server 2008 Standard</skos:prefLabel>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#ElasticHosts_RemoteDesktopServicesCAL">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">Windows Remote Desktop Services CALs</skos:prefLabel>
+	</rdfs:Class>
+	<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#slo_CloudHosting_AvailabilityExclusions">
+		<dcterms:title>Availibility exclusions</dcterms:title>
+		<sla:serviceLevelExpression>
+			<sla:ServiceLevelExpression>
+				<dcterms:description xml:lang="en">Periods of unavailability due to the following cases are excluded from availibility calculation.</dcterms:description>
+				<sla:hasVariable>
+					<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailabilityExclusions_Payments">
+						<rdfs:label xml:lang="en">Payments not covered.</rdfs:label>
+						<dcterms:description xml:lang="en">Your payments are not covering your use, including but not limited to when your subscriptions or prepaid balance run out.</dcterms:description>
+						<sla:hasDefault>
+							<cloud:AvailabilityExclusion />
+						</sla:hasDefault>
+					</sla:Variable>
+				</sla:hasVariable>
+				<sla:hasVariable>
+					<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailabilityExclusions_ActsOrOmissions">
+						<rdfs:label xml:lang="en">Acts or omissions</rdfs:label>
+						<dcterms:description xml:lang="en">Acts or omissions of you or your users.</dcterms:description>
+						<sla:hasDefault>
+							<cloud:AvailabilityExclusion />
+						</sla:hasDefault>
+					</sla:Variable>
+				</sla:hasVariable>
+				<sla:hasVariable>
+					<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailabilityExclusions_Software">
+						<rdfs:label xml:lang="en">Software</rdfs:label>
+						<dcterms:description xml:lang="en">Software running within your virtual servers.</dcterms:description>
+						<sla:hasDefault>
+							<cloud:AvailabilityExclusion />
+						</sla:hasDefault>
+					</sla:Variable>
+				</sla:hasVariable>
+				<sla:hasVariable>
+					<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailabilityExclusions_ScheduledMaintenance">
+						<rdfs:label xml:lang="en">Scheduled maintenance</rdfs:label>
+						<dcterms:description xml:lang="en">Scheduled maintenance which we have announced at least 24 hours in advance.</dcterms:description>
+						<sla:hasDefault>
+							<cloud:AvailabilityExclusion />
+						</sla:hasDefault>
+					</sla:Variable>
+				</sla:hasVariable>
+				<sla:hasVariable>
+					<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailabilityExclusions_ForceMajeure">
+						<rdfs:label xml:lang="en">Factors outside control</rdfs:label>
+						<dcterms:description xml:lang="en">Factors outside our control, including but not limited to any force majeure events; failures, acts or omissions of our upstream providers or failures of the internet.</dcterms:description>
+						<sla:hasDefault>
+							<cloud:AvailabilityExclusion />
+						</sla:hasDefault>
+					</sla:Variable>
+				</sla:hasVariable>
+				<sla:hasVariable>
+					<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailabilityExclusions_ThirdParties">
+						<rdfs:label xml:lang="en">Third party actions</rdfs:label>
+						<dcterms:description xml:lang="en">Actions of third parties, including but not limited to security compromises, denial of service attacks and viruses.</dcterms:description>
+						<sla:hasDefault>
+							<cloud:AvailabilityExclusion />
+						</sla:hasDefault>
+					</sla:Variable>
+				</sla:hasVariable>
+				<sla:hasVariable>
+					<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailabilityExclusions_Violations">
+						<rdfs:label xml:lang="en">Policy violations</rdfs:label>
+						<dcterms:description xml:lang="en">Violations of our Acceptable Use Policy.</dcterms:description>
+						<sla:hasDefault>
+							<cloud:AvailabilityExclusion />
+						</sla:hasDefault>
+					</sla:Variable>
+				</sla:hasVariable>
+				<sla:hasVariable>
+					<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailabilityExclusions_LawEnforcement">
+						<rdfs:label xml:lang="en">Law enforcement activity</rdfs:label>
+						<dcterms:description xml:lang="en">Law enforcement activity.</dcterms:description>
+						<sla:hasDefault>
+							<cloud:AvailabilityExclusion />
+						</sla:hasDefault>
+					</sla:Variable>
+				</sla:hasVariable>
+			</sla:ServiceLevelExpression>
+		</sla:serviceLevelExpression>
+	</sla:GuaranteedState>
+	<usdl:ServiceOffering rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#offering_CloudHosting_Hourly_US">
+		<dcterms:title xml:lang="en">ElasticHosts CloudHosting US/Canada</dcterms:title>
+		<dcterms:description xml:lang="en">
+		</dcterms:description>
+		<usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-03-01</usdl:validFrom>
+		<usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-08-31</usdl:validThrough>
+		<usdl:includes>
+			<usdl:Service rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#service_CloudHosting">
+				<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-21</dcterms:created>
+				<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-21</dcterms:modified>
+				<dcterms:title xml:lang="en">ElasticHosts Cloud Hosting</dcterms:title>
+				<usdl:hasNature rdf:resource="http://www.linked-usdl.org/ns/usdl-core#Automated" />
+				<usdl:hasProvider rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#provider_ElasicHosts" />
+				<usdl:hasLegalCondition rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#legal_ElasticHosts" />
+				<gr:quantitativeProductOrServiceProperty>
+					<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_CPU">
+						<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
+						<gr:hasMinValue>2</gr:hasMinValue>
+						<gr:hasMaxValue>20</gr:hasMaxValue>
+					</cloud:CPU>
+				</gr:quantitativeProductOrServiceProperty>
+				<gr:quantitativeProductOrServiceProperty>
+					<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_MainMemory">
+						<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
+						<gr:hasMinValue>1024</gr:hasMinValue>
+						<gr:hasMaxValue>16384</gr:hasMaxValue>
+					</cloud:MainMemory>
+				</gr:quantitativeProductOrServiceProperty>
+				<gr:quantitativeProductOrServiceProperty>
+					<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_Disk">
+						<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+						<gr:hasMinValue>1024</gr:hasMinValue>
+						<gr:hasMaxValue>16384</gr:hasMaxValue>
+					</cloud:PersistentDiskStorage>
+				</gr:quantitativeProductOrServiceProperty>
+				<gr:quantitativeProductOrServiceProperty>
+					<cloud:Traffic rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_DataTransfer">
+						<gr:hasUnitOfMeasurement>E35</gr:hasUnitOfMeasurement>
+						<gr:hasMinValue>0</gr:hasMinValue>
+						<gr:hasMaxValue>1000</gr:hasMaxValue>
+					</cloud:Traffic>
+				</gr:quantitativeProductOrServiceProperty>
+				<gr:qualitativeProductOrServiceProperty>
+					<cloud:IPAddress rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_StaticPublicIP">
+						<gr:valueReference>
+							<cloud:StaticIPAddress />
+						</gr:valueReference>
+						<gr:valueReference>
+							<cloud:PublicIPAddress />
+						</gr:valueReference>
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasMinValue>0</gr:hasMinValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</cloud:IPAddress>
+				</gr:qualitativeProductOrServiceProperty>
+				<gr:qualitativeProductOrServiceProperty>
+					<ElasticHostsCloudHosting:ElasticHosts_PrivateVLAN rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_PrivateNetworkVLAN">
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasMinValue>0</gr:hasMinValue>
+								<gr:hasMaxValue>1</gr:hasMaxValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</ElasticHostsCloudHosting:ElasticHosts_PrivateVLAN>
+				</gr:qualitativeProductOrServiceProperty>
+				<gr:qualitativeProductOrServiceProperty>
+					<ElasticHostsCloudHosting:ElasticHosts_Firewall rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_Firewall">
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasMinValue>0</gr:hasMinValue>
+								<gr:hasMaxValue>1</gr:hasMaxValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</ElasticHostsCloudHosting:ElasticHosts_Firewall>
+				</gr:qualitativeProductOrServiceProperty>
+				<gr:qualitativeProductOrServiceProperty>
+					<ElasticHostsCloudHosting:ElasticHosts_WindowsWebServer2008R2 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_WindowsWebServer2008R2">
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasMinValue>0</gr:hasMinValue>
+								<gr:hasMaxValue>1</gr:hasMaxValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</ElasticHostsCloudHosting:ElasticHosts_WindowsWebServer2008R2>
+				</gr:qualitativeProductOrServiceProperty>
+				<gr:qualitativeProductOrServiceProperty>
+					<os:WindowsServer2008R2Standard rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_OS_WindowsServer2008R2Standard">
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasMinValue>0</gr:hasMinValue>
+								<gr:hasMaxValue>1</gr:hasMaxValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</os:WindowsServer2008R2Standard>
+				</gr:qualitativeProductOrServiceProperty>
+				<gr:qualitativeProductOrServiceProperty>
+					<os:WindowsServer2008R2Enterprise rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_OS_WindowsServer2008R2Enterprise">
+						<rdfs:label xml:lang="en">Windows Server 2008 R2 Enterprise</rdfs:label>
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasMinValue>0</gr:hasMinValue>
+								<gr:hasMaxValue>1</gr:hasMaxValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</os:WindowsServer2008R2Enterprise>
+				</gr:qualitativeProductOrServiceProperty>
+				<gr:qualitativeProductOrServiceProperty>
+					<ElasticHostsCloudHosting:ElasticHosts_SQLServer2008WebEdition rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_MicrosoftSQLServer2008WebEdition">
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasMinValue>0</gr:hasMinValue>
+								<gr:hasMaxValue>1</gr:hasMaxValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</ElasticHostsCloudHosting:ElasticHosts_SQLServer2008WebEdition>
+				</gr:qualitativeProductOrServiceProperty>
+				<gr:qualitativeProductOrServiceProperty>
+					<ElasticHostsCloudHosting:ElasticHosts_SQLServer2008Standard rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_MicrosoftSQLServer2008Standard">
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasMinValue>0</gr:hasMinValue>
+								<gr:hasMaxValue>1</gr:hasMaxValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</ElasticHostsCloudHosting:ElasticHosts_SQLServer2008Standard>
+				</gr:qualitativeProductOrServiceProperty>
+				<gr:qualitativeProductOrServiceProperty>
+					<ElasticHostsCloudHosting:ElasticHosts_RemoteDesktopServicesCAL rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_WindowsRemoteDesktopServicesCALs">
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasMinValue>0</gr:hasMinValue>
+								<gr:hasMaxValue>1</gr:hasMaxValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</ElasticHostsCloudHosting:ElasticHosts_RemoteDesktopServicesCAL>
+				</gr:qualitativeProductOrServiceProperty>
+			</usdl:Service>
+		</usdl:includes>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#pricing_CloudHosting_Hourly_US">
+				<dcterms:title xml:lang="en">Hourly US/Canada</dcterms:title>
+				<dcterms:description xml:lang="en">The pricing for hourly cloud servers is twice the rates of monthly charging.</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Hourly_US_CPU">
+						<dcterms:title xml:lang="en">CPU</dcterms:title>
+						<dcterms:description xml:lang="en">CPU per core-GHz-hour</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_CPU" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.036</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Hourly_US_MainMemory">
+						<dcterms:title xml:lang="en">Memory</dcterms:title>
+						<dcterms:description xml:lang="en">MainMemory per GB-hour</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_MainMemory" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.050</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Hourly_US_Disk">
+						<dcterms:title xml:lang="en">Disk</dcterms:title>
+						<dcterms:description xml:lang="en">Disk storage per GB-month</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_Disk" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.2</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Hourly_US_DataCommitted">
+						<dcterms:title xml:lang="en">Data (committed in advance)</dcterms:title>
+						<dcterms:description xml:lang="en">Data traffic which is committed in advance per GB</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_DataTransfer" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.3</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Hourly_US_DataAboveComitted" />
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_StaticPublicIP">
+						<dcterms:title xml:lang="en">Static public IP address</dcterms:title>
+						<dcterms:description xml:lang="en">Static public IP address monthly admin fee</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_StaticPublicIP" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>3</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_PrivateNetworkVLAN">
+						<dcterms:title xml:lang="en">Private Network VLAN</dcterms:title>
+						<dcterms:description xml:lang="en">
+						</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_PrivateNetworkVLAN" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>7.5</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_Firewall">
+						<dcterms:title xml:lang="en">Firewall</dcterms:title>
+						<dcterms:description xml:lang="en">
+						</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_Firewall" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>7.5</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsWebServer2008R2">
+						<dcterms:title xml:lang="en">Windows Web Server 2008 R2</dcterms:title>
+						<dcterms:description xml:lang="en">
+						</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_WindowsWebServer2008R2" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>15</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsServer2008R2Standard">
+						<dcterms:title xml:lang="en">Windows Server 2008 R2 Standard</dcterms:title>
+						<dcterms:description xml:lang="en">
+						</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_OS_WindowsServer2008R2Standard" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>30</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsServer2008R2Enterprise">
+						<dcterms:title xml:lang="en">Windows Server 2008 R2 Enterprise</dcterms:title>
+						<dcterms:description xml:lang="en">
+						</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_OS_WindowsServer2008R2Enterprise" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>75</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_MicrosoftSQLServer2008WebEdition">
+						<dcterms:title xml:lang="en">Microsoft SQL Server 2008 Web Edition</dcterms:title>
+						<dcterms:description xml:lang="en">
+						</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_MicrosoftSQLServer2008WebEdition" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>22.5</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_MicrosoftSQLServer2008Standard">
+						<dcterms:title xml:lang="en">Microsoft SQL Server 2008 Standard</dcterms:title>
+						<dcterms:description xml:lang="en">
+						</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_MicrosoftSQLServer2008Standard" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>385</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsRemoteDesktopServicesCALs">
+						<dcterms:title xml:lang="en">Windows Remote Desktop Services CALs</dcterms:title>
+						<dcterms:description xml:lang="en">
+						</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_WindowsRemoteDesktopServicesCALs" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>5.5</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_DataCentres">
+						<dcterms:title xml:lang="en">Data Centres</dcterms:title>
+						<dcterms:description xml:lang="en">The service is located in one of the specified data centre locations.</dcterms:description>
+						<price:isLinkedTo>
+							<cloud:DataCentre rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_DataCentre_US_LosAngeles">
+								<rdfs:label>Los Angeles, CA</rdfs:label>
+								<gn:locatedIn rdf:resource="http://sws.geonames.org/5025219" />
+							</cloud:DataCentre>
+						</price:isLinkedTo>
+						<price:isLinkedTo>
+							<cloud:DataCentre rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_DataCentre_US_SanAntonio">
+								<rdfs:label>San Antonio, TX</rdfs:label>
+								<gn:locatedIn rdf:resource="http://sws.geonames.org/5025219" />
+							</cloud:DataCentre>
+						</price:isLinkedTo>
+						<price:isLinkedTo>
+							<cloud:DataCentre rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_DataCentre_CA_Toronto">
+								<rdfs:label>Toronto, Canada</rdfs:label>
+								<gn:locatedIn rdf:resource="http://sws.geonames.org/5025219" />
+							</cloud:DataCentre>
+						</price:isLinkedTo>
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:Deduction rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#deduction_CloudHosting_Availability">
+						<dcterms:title xml:lang="en">Compensation for Unavailability</dcterms:title>
+						<dcterms:description xml:lang="en">
+						</dcterms:description>
+						<price:hasDeductionSource rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#slo_CloudHosting_AvailabilityGuarantee" />
+						<price:hasRelativeDeductionValue>100</price:hasRelativeDeductionValue>
+						<price:hasFence>
+							<price:PriceFence>
+								<price:fenceExpression>x&lt;=100</price:fenceExpression>
+								<price:fenceUnit>P1</price:fenceUnit>
+							</price:PriceFence>
+						</price:hasFence>
+					</price:Deduction>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:Deduction rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#deduction_CloudHosting_DataLoss">
+						<dcterms:title xml:lang="en">Compensation for permanent data loss</dcterms:title>
+						<dcterms:description xml:lang="en">
+						</dcterms:description>
+						<price:hasDeductionSource rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#slo_CloudHosting_DataLoss" />
+						<price:hasRelativeDeductionValue>100</price:hasRelativeDeductionValue>
+						<price:hasFence>
+							<price:PriceFence>
+								<price:fenceExpression>x&lt;=100</price:fenceExpression>
+								<price:fenceUnit>P1</price:fenceUnit>
+							</price:PriceFence>
+						</price:hasFence>
+					</price:Deduction>
+				</price:hasPriceComponent>
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#pricing_CloudHosting_Monthly_US">
+				<dcterms:title xml:lang="en">Monthly US/Canada</dcterms:title>
+				<dcterms:description xml:lang="en">The pricing for monthly pre paid cloud servers.</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Monthly_US_CPU">
+						<dcterms:title xml:lang="en">CPU</dcterms:title>
+						<dcterms:description xml:lang="en">CPU per core-GHz-hour</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_CPU" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.018</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Monthly_US_MainMemory">
+						<dcterms:title xml:lang="en">Memory</dcterms:title>
+						<dcterms:description xml:lang="en">MainMemory per GB-hour</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_MainMemory" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.025</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Monthly_US_Disk">
+						<dcterms:title xml:lang="en">Disk</dcterms:title>
+						<dcterms:description xml:lang="en">Disk storage per GB-month</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_Disk" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.1</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Monthly_US_DataCommitted">
+						<dcterms:title xml:lang="en">Data (committed in advance)</dcterms:title>
+						<dcterms:description xml:lang="en">Data traffic which is committed in advance per GB</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_DataTransfer" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.15</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Monthly_US_DataAboveComitted" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_StaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_PrivateNetworkVLAN" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_Firewall" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsWebServer2008R2" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsServer2008R2Standard" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsServer2008R2Enterprise" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_MicrosoftSQLServer2008WebEdition" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_MicrosoftSQLServer2008Standard" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsRemoteDesktopServicesCALs" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#deduction_CloudHosting_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#deduction_CloudHosting_DataLoss" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#pricing_CloudHosting_Yearly_US">
+				<dcterms:title xml:lang="en">Yearly US/Canada</dcterms:title>
+				<dcterms:description xml:lang="en">The pricing for yearly pre paid cloud servers.</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Yearly_US_CPU">
+						<dcterms:title xml:lang="en">CPU</dcterms:title>
+						<dcterms:description xml:lang="en">CPU per core-GHz-hour</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_CPU" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.015</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Yearly_US_MainMemory">
+						<dcterms:title xml:lang="en">Memory</dcterms:title>
+						<dcterms:description xml:lang="en">MainMemory per GB-hour</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_MainMemory" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.021</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Yearly_US_Disk">
+						<dcterms:title xml:lang="en">Disk</dcterms:title>
+						<dcterms:description xml:lang="en">Disk storage per GB-month</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_Disk" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.08</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Yearly_US_DataCommitted">
+						<dcterms:title xml:lang="en">Data (committed in advance)</dcterms:title>
+						<dcterms:description xml:lang="en">Data traffic which is committed in advance per GB</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_DataTransfer" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.125</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Yearly_US_DataAboveComitted" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_StaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_PrivateNetworkVLAN" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_Firewall" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsWebServer2008R2" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsServer2008R2Standard" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsServer2008R2Enterprise" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_MicrosoftSQLServer2008WebEdition" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_MicrosoftSQLServer2008Standard" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_US_WindowsRemoteDesktopServicesCALs" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#deduction_CloudHosting_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#deduction_CloudHosting_DataLoss" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasServiceLevelProfile>
+			<usdl:ServiceLevelProfile rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#slp_CloudHosting">
+				<dcterms:title xml:lang="en">Service Level Profile of Elastic Hosts Cloud Hosting service</dcterms:title>
+				<dcterms:description xml:lang="en">All information integrated here are not legally binding. Please consult the SLA section in the terms-of-service under 'http://www.elastichosts.com/cloud-hosting/terms-of-service' for a detailed description.</dcterms:description>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#slo_CloudHosting_AvailabilityGuarantee">
+						<dcterms:title xml:lang="en">Availibility</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">We guarantee that your stored data and running virtual servers will be available over the internet for 100% of the time in any given calendar month</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailabilityGuarantee_Value">
+										<rdfs:label xml:lang="en">Percentage Value</rdfs:label>
+										<sla:hasDefault>
+											<cloud:Availability>
+												<gr:hasValue>100</gr:hasValue>
+												<gr:hasUnitOfMeasurement>P1</gr:hasUnitOfMeasurement>
+											</cloud:Availability>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailabilityGuarantee_MeasurementPeriod">
+										<rdfs:label xml:lang="en">Measurment period</rdfs:label>
+										<sla:hasDefault>
+											<genVoc:MeasurementPeriod>
+												<gr:hasValue>1</gr:hasValue>
+												<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+											</genVoc:MeasurementPeriod>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#slo_CloudHosting_AvailibilityExclusions" />
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#slo_CloudHosting_AvailibilityCalculation">
+						<dcterms:title>Availibility calculation</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">If we fail to meet the guarantee availibility, then you will be able to request a credit up to a maximum of 100% of your fee for capacity used during the previous 30 calendar days. You are eligible for a credit of 100 times the fees for any period of unavailability lasting more than 15 minutes, measured from the time at which you validly inform us at support@elastichosts.com of the unavailability or the time at which our monitoring systems detect the unavailability, whichever is earlier. In the event that we fail to meet the guarantee on more than one occasion within a period of 30 calendar days, then the credit that you may claim for any incident will be limited to the maximum of 100% of your fee for capacity used since the previous incident or 100% of your fee for capacity used during the previous 30 calendar days, whichever fee is lower.</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailibilityCalculation_CreditPeriodStart">
+										<rdfs:label xml:lang="en">Credit period start</rdfs:label>
+										<sla:hasDefault>
+											<cloud:CreditPeriodStart>
+												<gr:valueReference>
+													<genVoc:GenericPointInTime>
+														<skos:prefLabel>Information via 'support@elastichosts.com'.</skos:prefLabel>
+														<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodStart" />
+													</genVoc:GenericPointInTime>
+												</gr:valueReference>
+												<gr:valueReference>
+													<genVoc:GenericPointInTime>
+														<skos:prefLabel>Detection via monitoring system.</skos:prefLabel>
+														<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodStart" />
+													</genVoc:GenericPointInTime>
+												</gr:valueReference>
+											</cloud:CreditPeriodStart>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_AvailibilityCalculation_CreditPeriodMin">
+										<rdfs:label xml:lang="en">Minimal credit period</rdfs:label>
+										<sla:hasDefault>
+											<cloud:CreditPeriodMinimum>
+												<gr:hasValue>15</gr:hasValue>
+												<gr:hasUnitOfMeasurement>MIN</gr:hasUnitOfMeasurement>
+											</cloud:CreditPeriodMinimum>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#slo_CloudHosting_DataLoss">
+						<dcterms:title>Permanent data loss</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">In the case of permanent loss of your stored data, you are eligible for a credit of your entire fee for the previous 30 calendar days.</dcterms:description>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedAction rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#slo_CloudHosting_CreditRequest">
+						<dcterms:title xml:lang="en">Credit request</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">To receive a credit, you must submit a request by sending an e-mail message to support@elastichosts.com including the necessary information within 30 calender days</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_CreditRequest_StartTime">
+										<rdfs:label xml:lang="en">The email must contain the start time of the period of unavailability.</rdfs:label>
+									</sla:Variable>
+								</sla:hasVariable>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_CreditRequest_Date">
+										<rdfs:label xml:lang="en">The email must contain the date of the period of unavailability.</rdfs:label>
+									</sla:Variable>
+								</sla:hasVariable>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_CreditRequest_Duration">
+										<rdfs:label xml:lang="en">The email must contain the duration of the period of unavailability.</rdfs:label>
+									</sla:Variable>
+								</sla:hasVariable>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#var_CloudHosting_CreditRequest_CreditRequestPeriod">
+										<rdfs:label xml:lang="en">Request period</rdfs:label>
+										<sla:hasDefault>
+											<cloud:CreditRequestPeriod>
+												<gr:hasValue>30</gr:hasValue>
+												<gr:hasUnitOfMeasurement>DAY</gr:hasUnitOfMeasurement>
+											</cloud:CreditRequestPeriod>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedAction>
+				</sla:hasServiceLevel>
+			</usdl:ServiceLevelProfile>
+		</usdl:hasServiceLevelProfile>
+	</usdl:ServiceOffering>
+	<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Hourly_US_DataComittedAbove">
+		<dcterms:title xml:lang="en">Data (burst above committed level</dcterms:title>
+		<dcterms:description xml:lang="en">Data traffic which is above the committed level per GB</dcterms:description>
+		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_DataTransfer" />
+		<price:hasPrice>
+			<gr:UnitPriceSpecification>
+				<gr:hasCurrency>USD</gr:hasCurrency>
+				<gr:hasCurrencyValue>0.6</gr:hasCurrencyValue>
+				<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+			</gr:UnitPriceSpecification>
+		</price:hasPrice>
+	</price:PriceComponent>
+	<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Monthly_US_DataComittedAbove">
+		<dcterms:title xml:lang="en">Data (burst above committed level</dcterms:title>
+		<dcterms:description xml:lang="en">Data traffic which is above the committed level per GB</dcterms:description>
+		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_DataTransfer" />
+		<price:hasPrice>
+			<gr:UnitPriceSpecification>
+				<gr:hasCurrency>USD</gr:hasCurrency>
+				<gr:hasCurrencyValue>0.3</gr:hasCurrencyValue>
+				<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+			</gr:UnitPriceSpecification>
+		</price:hasPrice>
+	</price:PriceComponent>
+	<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#priceComponent_CloudHosting_Yearly_US_DataComittedAbove">
+		<dcterms:title xml:lang="en">Data (burst above committed level</dcterms:title>
+		<dcterms:description xml:lang="en">Data traffic which is above the committed level per GB</dcterms:description>
+		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_CloudHosting_DataTransfer" />
+		<price:hasPrice>
+			<gr:UnitPriceSpecification>
+				<gr:hasCurrency>USD</gr:hasCurrency>
+				<gr:hasCurrencyValue>0.25</gr:hasCurrencyValue>
+				<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+			</gr:UnitPriceSpecification>
+		</price:hasPrice>
+	</price:PriceComponent>
+	<usdl:ServiceOffering rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#offering_Support">
+		<dcterms:title xml:lang="en">Cloud Hosting support service</dcterms:title>
+		<dcterms:description xml:lang="en">Cloud Hosting support service coming for free.</dcterms:description>
+		<usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-03-01</usdl:validFrom>
+		<usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-08-31</usdl:validThrough>
+		<usdl:includes>
+			<usdl:Service rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#service_Support">
+				<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-21</dcterms:modified>
+				<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-21</dcterms:created>
+				<dcterms:title xml:lang="en">Cloud Hosting support service</dcterms:title>
+				<usdl:versionInfo>001</usdl:versionInfo>
+				<usdl:hasNature rdf:resource="http://www.linked-usdl.org/ns/usdl-core#Manual" />
+				<usdl:hasProvider>
+					<gr:BusinessEntity rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#provider_ElasticHosts">
+						<foaf:name>Elastic Hosts</foaf:name>
+						<foaf:homepage rdf:resource="http://www.elastichosts.com/" />
+						<foaf:logo rdf:resource="http://www.elastichosts.com//images/elastichosts.jpg" />
+						<usdl:legalForm>Ltd.</usdl:legalForm>
+						<vcard:adr>
+							<vcard:Work>
+								<vcard:tel>+44 (0)845 686 8642</vcard:tel>
+								<vcard:email>sales@elastichosts.com</vcard:email>
+								<vcard:locality>Meadowbank</vcard:locality>
+								<vcard:postal-code>DY14 0HP</vcard:postal-code>
+								<vcard:country-name xml:lang="en">GB</vcard:country-name>
+							</vcard:Work>
+						</vcard:adr>
+					</gr:BusinessEntity>
+				</usdl:hasProvider>
+				<usdl:hasLegalCondition rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#legal_ElasticHosts" />
+				<gr:qualitativeProductOrServiceProperty>
+					<support:TechSupport rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#resource_Support_Basic_TechSupport">
+						<gr:valueReference>
+							<support:EmailSupport>
+								<gr:valueReference>
+									<genVoc:LanguageReference>
+										<rdfs:label>en</rdfs:label>
+									</genVoc:LanguageReference>
+								</gr:valueReference>
+								<gr:valueReference>
+									<support:ContactHours>
+										<rdfs:label>Mo00:00..So24:00</rdfs:label>
+									</support:ContactHours>
+								</gr:valueReference>
+							</support:EmailSupport>
+						</gr:valueReference>
+						<gr:valueReference>
+							<support:PhoneSupport>
+								<gr:valueReference>
+									<genVoc:LanguageReference>
+										<rdfs:label>en</rdfs:label>
+									</genVoc:LanguageReference>
+								</gr:valueReference>
+								<gr:valueReference>
+									<support:ContactHours>
+										<rdfs:label>Mo09:00..Mo18:00</rdfs:label>
+									</support:ContactHours>
+								</gr:valueReference>
+								<gr:valueReference>
+									<support:ContactHours>
+										<rdfs:label>Tu09:00..Tu18:00</rdfs:label>
+									</support:ContactHours>
+								</gr:valueReference>
+								<gr:valueReference>
+									<support:ContactHours>
+										<rdfs:label>Mi09:00..Mi18:00</rdfs:label>
+									</support:ContactHours>
+								</gr:valueReference>
+								<gr:valueReference>
+									<support:ContactHours>
+										<rdfs:label>Th09:00..Th18:00</rdfs:label>
+									</support:ContactHours>
+								</gr:valueReference>
+								<gr:valueReference>
+									<support:ContactHours>
+										<rdfs:label>Fr09:00..Fr18:00</rdfs:label>
+									</support:ContactHours>
+								</gr:valueReference>
+							</support:PhoneSupport>
+						</gr:valueReference>
+					</support:TechSupport>
+				</gr:qualitativeProductOrServiceProperty>
+			</usdl:Service>
+		</usdl:includes>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#pricing_Support">
+				<dcterms:title xml:lang="en">Support service price plan</dcterms:title>
+				<dcterms:description xml:lang="en">The support service is free of charge.</dcterms:description>
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+	</usdl:ServiceOffering>
+</rdf:RDF>

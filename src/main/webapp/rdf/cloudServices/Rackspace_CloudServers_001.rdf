@@ -1,0 +1,1586 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:legal="http://www.linked-usdl.org/ns/usdl-legal#" xmlns:usdl="http://www.linked-usdl.org/ns/usdl-core#" xmlns:gn="http://www.geonames.org/ontology#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:gr="http://purl.org/goodrelations/v1#" xmlns:cloud="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#" xmlns:vcard="http://www.w3.org/2006/vcard/ns#" xmlns:support="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#" xmlns:genVoc="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sla="http://www.linked-usdl.org/ns/usdl-sla#" xmlns:os="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#" xmlns:price="http://www.linked-usdl.org/ns/usdl-pricing#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:RackspaceCloudServers="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#">
+	<usdl:ServiceDescription rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001">
+		<dcterms:title>Cloud Servers service description</dcterms:title>
+		<dcterms:description>Description of Rackspace's Cloud Servers service</dcterms:description>
+		<dcterms:contributor>
+			<foaf:Person>
+				<foaf:name>Florian Heberle</foaf:name>
+				<foaf:firstName>Florian</foaf:firstName>
+				<foaf:lastName>Heberle</foaf:lastName>
+			</foaf:Person>
+		</dcterms:contributor>
+		<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-22</dcterms:created>
+		<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-06-20</dcterms:modified>
+		<owl:versionInfo>001</owl:versionInfo>
+	</usdl:ServiceDescription>
+	<gr:BusinessEntity rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#provider_Rackspace">
+		<foaf:name>Rackspace</foaf:name>
+		<foaf:homepage rdf:resource="http://www.rackspace.com/" />
+		<foaf:logo rdf:resource="http://www.owasp.org/images/3/39/Rackspace_logo.png" />
+		<usdl:legalForm>Inc.</usdl:legalForm>
+		<vcard:adr>
+			<vcard:Work>
+				<vcard:country-name xml:lang="en">U.S.</vcard:country-name>
+			</vcard:Work>
+		</vcard:adr>
+	</gr:BusinessEntity>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#Rackspace_NetworkAvailability_Exclusion">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">Network availability exclusion</skos:prefLabel>
+		<dcterms:description xml:lang="en">Exclusion to availability of the data center network</dcterms:description>
+		<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#AvailabilityExclusion" />
+		<skos:related>
+			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#Rackspace_NetworkAvailability">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<skos:prefLabel xml:lang="en">Network availability</skos:prefLabel>
+				<dcterms:description xml:lang="en">Availability of the data center network</dcterms:description>
+				<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#Availability" />
+			</rdfs:Class>
+		</skos:related>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#Rackspace_DataCenterInfrastructureAvailability_Exclusion">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">Data center infrastructure availability exclusion</skos:prefLabel>
+		<dcterms:description xml:lang="en">Exclusion to availability of the data center infrastructure</dcterms:description>
+		<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#AvailabilityExclusion" />
+		<skos:related>
+			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#Rackspace_DataCenterInfrastructureAvailability">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+				<skos:prefLabel xml:lang="en">Data center infrastructure availability</skos:prefLabel>
+				<dcterms:description xml:lang="en">Availability of the data center infrastructure</dcterms:description>
+				<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#Availability" />
+			</rdfs:Class>
+		</skos:related>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#Rackspace_CreditPeriodSlice_Network">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+		<skos:prefLabel xml:lang="en">Credit calculation interval for network downtime</skos:prefLabel>
+		<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodSlice" />
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#Rackspace_CreditPeriodSlice_DataCenterInfrastructure">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+		<skos:prefLabel xml:lang="en">Credit calculation interval for infrastructure downtime</skos:prefLabel>
+		<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodSlice" />
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#Rackspace_CreditPeriodSlice_CloudServerHosts">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+		<skos:prefLabel xml:lang="en">Credit calculation interval for additional downtime of Cloud Server Hosts RTO</skos:prefLabel>
+		<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodSlice" />
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#Rackspace_CreditPeriodSlice_Migration">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
+		<skos:prefLabel xml:lang="en">Credit calculation interval for additional downtime of server migration</skos:prefLabel>
+		<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#CreditPeriodSlice" />
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#Rackspace_SQL2008R2Standard">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel>SQL 2008 R2 Standard Edition</skos:prefLabel>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#Rackspace_SQL2008R2Web">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel>SQL 2008 R2 Web Edition</skos:prefLabel>
+	</rdfs:Class>
+	<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_Availability_DataCentreInfrastructure_Exclusion_ScheduledMaintenance">
+		<rdfs:label xml:lang="en">Scheduled Maintenance</rdfs:label>
+		<sla:hasDefault>
+			<RackspaceCloudServers:Rackspace_DataCentreInfrastructure_Exclusion />
+		</sla:hasDefault>
+	</sla:Variable>
+	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size3_Memory">
+		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
+		<gr:hasValue>1024</gr:hasValue>
+	</cloud:MainMemory>
+	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size4_Memory">
+		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
+		<gr:hasValue>2048</gr:hasValue>
+	</cloud:MainMemory>
+	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size5_Memory">
+		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
+		<gr:hasValue>4096</gr:hasValue>
+	</cloud:MainMemory>
+	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size6_Memory">
+		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
+		<gr:hasValue>8192</gr:hasValue>
+	</cloud:MainMemory>
+	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size7_Memory">
+		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
+		<gr:hasValue>15872</gr:hasValue>
+	</cloud:MainMemory>
+	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size8_Memory">
+		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
+		<gr:hasValue>30720</gr:hasValue>
+	</cloud:MainMemory>
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size3_Disk">
+		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+		<gr:hasValue>40</gr:hasValue>
+	</cloud:PersistentDiskStorage>
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size4_Disk">
+		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+		<gr:hasValue>80</gr:hasValue>
+	</cloud:PersistentDiskStorage>
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size5_Disk">
+		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+		<gr:hasValue>160</gr:hasValue>
+	</cloud:PersistentDiskStorage>
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size6_Disk">
+		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+		<gr:hasValue>320</gr:hasValue>
+	</cloud:PersistentDiskStorage>
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size7_Disk">
+		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+		<gr:hasValue>620</gr:hasValue>
+	</cloud:PersistentDiskStorage>
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size8_Disk">
+		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+		<gr:hasValue>1200</gr:hasValue>
+	</cloud:PersistentDiskStorage>
+	<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Linux1">
+		<rdfs:label>Four virtual core Linux Cloud Servers up to 15GB</rdfs:label>
+		<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
+		<gr:valueReference>
+			<cloud:NumberOfCores>
+				<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+				<gr:hasValue>4</gr:hasValue>
+			</cloud:NumberOfCores>
+		</gr:valueReference>
+	</cloud:CPU>
+	<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Windows2">
+		<rdfs:label>Two virtual core for 2GB and 4GB Windows Cloud Servers</rdfs:label>
+		<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
+		<gr:valueReference>
+			<cloud:NumberOfCores>
+				<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+				<gr:hasValue>2</gr:hasValue>
+			</cloud:NumberOfCores>
+		</gr:valueReference>
+	</cloud:CPU>
+	<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Windows3">
+		<rdfs:label>Four virtual core for 8GB and 15.5GB Windows Cloud Servers</rdfs:label>
+		<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
+		<gr:valueReference>
+			<cloud:NumberOfCores>
+				<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+				<gr:hasValue>4</gr:hasValue>
+			</cloud:NumberOfCores>
+		</gr:valueReference>
+	</cloud:CPU>
+	<cloud:IPAddress rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OptionalStaticPublicIP">
+		<gr:valueReference>
+			<cloud:StaticIPAddress />
+		</gr:valueReference>
+		<gr:valueReference>
+			<cloud:PublicIPAddress />
+		</gr:valueReference>
+		<gr:valueReference>
+			<genVoc:Quantity>
+				<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+				<gr:hasMinValue>0</gr:hasMinValue>
+			</genVoc:Quantity>
+		</gr:valueReference>
+	</cloud:IPAddress>
+	<os:WindowsServer2008R2Enterprise rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2Enterprise">
+		<gr:valueReference>
+			<os:OS64Bit />
+		</gr:valueReference>
+	</os:WindowsServer2008R2Enterprise>
+	<os:WindowsServer2008SP2Enterprise rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008SP2Enterprise">
+		<gr:valueReference>
+			<os:OS32Bit />
+		</gr:valueReference>
+		<gr:valueReference>
+			<os:OS64Bit />
+		</gr:valueReference>
+	</os:WindowsServer2008SP2Enterprise>
+	<os:WindowsServer2008 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008">
+		<gr:valueReference>
+			<os:OS32Bit />
+		</gr:valueReference>
+		<gr:valueReference>
+			<os:OS64Bit />
+		</gr:valueReference>
+	</os:WindowsServer2008>
+	<os:WindowsServer2008R2 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2" />
+	<os:Arch_2011_10 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Arch" />
+	<os:CentOS_6_0 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS60" />
+	<os:CentOS_5_6 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS56" />
+	<os:Debian_6_0 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian60" />
+	<os:Debian_5_0 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian50" />
+	<os:Fedora_16 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora16" />
+	<os:Fedora_15 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora15" />
+	<os:Gentoo_11 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Gentoo11" />
+	<os:OpenSUSE_12_1 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OpenSUSE121" />
+	<os:RedHatEL_6_1 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL61" />
+	<os:RedHatEL_5_5 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL55" />
+	<os:Ubuntu_11_10 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1110" />
+	<os:Ubuntu_11_04 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1104" />
+	<os:Ubuntu_10_04_LTS rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1004LTS" />
+	<cloud:Upstream rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Bandwidth_Out">
+		<gr:hasUnitOfMeasurement>Mbit/s</gr:hasUnitOfMeasurement>
+	</cloud:Upstream>
+	<cloud:Downstream rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Bandwidth_In">
+		<gr:hasUnitOfMeasurement>Mbit/s</gr:hasUnitOfMeasurement>
+	</cloud:Downstream>
+	<usdl:ServiceOffering rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#offering_CloudServers">
+		<dcterms:title xml:lang="en">Rackspace's Cloud Servers</dcterms:title>
+		<dcterms:description xml:lang="en">Rackspace's Cloud Servers have eight different resource sizings and further differentiate between Linux and Windows as operating system.</dcterms:description>
+		<usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-03-01</usdl:validFrom>
+		<usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-08-31</usdl:validThrough>
+		<usdl:includes>
+			<usdl:Service rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#service_CloudServers">
+				<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-22</dcterms:created>
+				<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-22</dcterms:modified>
+				<dcterms:title xml:lang="en">Rackspace Cloud Servers</dcterms:title>
+				<usdl:hasNature rdf:resource="http://www.linked-usdl.org/ns/usdl-core#Automated" />
+				<usdl:hasProvider rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#provider_Rackspace" />
+				<usdl:hasLegalCondition>
+					<legal:TermsAndConditions rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#legal_Rackspace">
+						<dcterms:title xml:lang="en">Rackspace's legal statements</dcterms:title>
+						<dcterms:description xml:lang="en">Rackspace's legal statements are accessible online via 'http://www.rackspace.com/information/legal/websiteterms/'.</dcterms:description>
+					</legal:TermsAndConditions>
+				</usdl:hasLegalCondition>
+				<gr:quantitativeProductOrServiceProperty>
+					<cloud:IPAddress rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_StaticPublicIP">
+						<gr:valueReference>
+							<cloud:StaticIPAddress />
+						</gr:valueReference>
+						<gr:valueReference>
+							<cloud:PublicIPAddress />
+						</gr:valueReference>
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasValue>1</gr:hasValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</cloud:IPAddress>
+				</gr:quantitativeProductOrServiceProperty>
+				<gr:quantitativeProductOrServiceProperty>
+					<cloud:IPAddress rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_StaticPrivateIP">
+						<gr:valueReference>
+							<cloud:StaticIPAddress />
+						</gr:valueReference>
+						<gr:valueReference>
+							<cloud:PrivateIPAddress />
+						</gr:valueReference>
+						<gr:valueReference>
+							<genVoc:Quantity>
+								<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+								<gr:hasValue>1</gr:hasValue>
+							</genVoc:Quantity>
+						</gr:valueReference>
+					</cloud:IPAddress>
+				</gr:quantitativeProductOrServiceProperty>
+				<gr:quantitativeProductOrServiceProperty rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OptionalStaticPublicIP" />
+				<gr:qualitativeProductOrServiceProperty>
+					<cloud:DataCentre rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_DataCentre_EU">
+						<rdfs:label>UK</rdfs:label>
+						<gn:locatedIn rdf:resource="http://sws.geonames.org/5025219" />
+					</cloud:DataCentre>
+				</gr:qualitativeProductOrServiceProperty>
+				<gr:qualitativeProductOrServiceProperty>
+					<cloud:DataCentre rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_DataCentre_US">
+						<rdfs:label>US</rdfs:label>
+						<gn:locatedIn rdf:resource="http://sws.geonames.org/5025219" />
+					</cloud:DataCentre>
+				</gr:qualitativeProductOrServiceProperty>
+			</usdl:Service>
+		</usdl:includes>
+		<usdl:hasPartMandatory>
+			<usdl:Service rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#service_FanaticSupport">
+				<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-22</dcterms:modified>
+				<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-22</dcterms:created>
+				<dcterms:title xml:lang="en">Fanatic Support</dcterms:title>
+				<usdl:versionInfo>001</usdl:versionInfo>
+				<usdl:hasNature rdf:resource="http://www.linked-usdl.org/ns/usdl-core#Manual" />
+				<usdl:hasProvider rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#provider_Rackspace" />
+				<usdl:hasLegalCondition rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#legal_Rackspance" />
+				<gr:qualitativeProductOrServiceProperty>
+					<support:TechSupport rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_FanaticSupport_TechSupport">
+						<gr:valueReference>
+							<support:ChatSupport>
+								<gr:valueReference>
+									<genVoc:LanguageReference>
+										<rdfs:label>en</rdfs:label>
+									</genVoc:LanguageReference>
+								</gr:valueReference>
+								<gr:valueReference>
+									<support:ContactHours>
+										<rdfs:label>Mo00:00..So24:00</rdfs:label>
+									</support:ContactHours>
+								</gr:valueReference>
+							</support:ChatSupport>
+						</gr:valueReference>
+						<gr:valueReference>
+							<support:PhoneSupport>
+								<gr:valueReference>
+									<genVoc:LanguageReference>
+										<rdfs:label>en</rdfs:label>
+									</genVoc:LanguageReference>
+								</gr:valueReference>
+								<gr:valueReference>
+									<support:ContactHours>
+										<rdfs:label>Mo00:00..So24:00</rdfs:label>
+									</support:ContactHours>
+								</gr:valueReference>
+							</support:PhoneSupport>
+						</gr:valueReference>
+						<gr:valueReference>
+							<support:TicketSupport>
+								<gr:valueReference>
+									<genVoc:LanguageReference>
+										<rdfs:label>en</rdfs:label>
+									</genVoc:LanguageReference>
+								</gr:valueReference>
+								<gr:valueReference>
+									<support:ContactHours>
+										<rdfs:label>Mo00:00..So24:00</rdfs:label>
+									</support:ContactHours>
+								</gr:valueReference>
+							</support:TicketSupport>
+						</gr:valueReference>
+					</support:TechSupport>
+				</gr:qualitativeProductOrServiceProperty>
+			</usdl:Service>
+		</usdl:hasPartMandatory>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size1_Linux">
+				<dcterms:title xml:lang="en">Size 1 (Linux)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size1_Linux">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo>
+							<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size1_Memory">
+								<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
+								<gr:hasValue>256</gr:hasValue>
+							</cloud:MainMemory>
+						</price:isLinkedTo>
+						<price:isLinkedTo>
+							<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size1_Disk">
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+								<gr:hasValue>10</gr:hasValue>
+							</cloud:PersistentDiskStorage>
+						</price:isLinkedTo>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Linux1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Arch" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS56" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian50" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora16" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora15" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Gentoo11" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OpenSUSE121" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL61" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL55" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1110" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1104" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1004LTS" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.015</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP">
+						<dcterms:title xml:lang="en">Optional additionl IPs</dcterms:title>
+						<dcterms:description xml:lang="en">Additional public IP addresses can be purchased for $2 / month. Please consult 'http://www.rackspace.com/knowledge_center/node/1967/' for more details.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OptionalStaticPublicIP" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>2</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_RedHatELLicence">
+						<dcterms:title xml:lang="en">Red Hat EL Licence</dcterms:title>
+						<dcterms:description xml:lang="en">If you choose Red Hat Enterprise Linux (RHEL), the licensing fee is not included in the general pricing. In addition to the hourly charge, a $20 flat, monthly fee will be charged per server calculated based on the maximum number of RHEL Cloud Servers active at any point in time during the billing cycle. These fees will not be prorated based on usage.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OptionalStaticPublicIP" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>20</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+						<price:hasFence>
+							<price:PriceFence>
+								<price:fenceExpression>Usage of Red Hat Enterprise Linux</price:fenceExpression>
+							</price:PriceFence>
+						</price:hasFence>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out">
+						<dcterms:title xml:lang="en">Bandwidth out</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for outgoing data transfer.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Bandwidth_Out" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.18</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In">
+						<dcterms:title xml:lang="en">Bandwidth in</dcterms:title>
+						<dcterms:description xml:lang="en">Incoming data transfer is free.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Bandwidth_Out" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.0</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:Deduction rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network">
+						<dcterms:title xml:lang="en">Compensation for unavailality of network</dcterms:title>
+						<dcterms:description xml:lang="en">Five percent (5%) of the fees for each 30 minutes of network downtime, up to 100% of the fees;</dcterms:description>
+						<price:hasDeductionSource rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_AvailibilityCalculation_Network" />
+						<price:hasRelativeDeductionValue>5</price:hasRelativeDeductionValue>
+						<price:hasFence>
+							<price:PriceFence>
+								<price:fenceExpression>x&lt;=100</price:fenceExpression>
+								<price:fenceUnit>P1</price:fenceUnit>
+							</price:PriceFence>
+						</price:hasFence>
+					</price:Deduction>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:Deduction rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure">
+						<dcterms:title xml:lang="en">Compensation for unavailality of infrastructure</dcterms:title>
+						<dcterms:description xml:lang="en">Five percent (5%) of fees for each 30 minutes of infrastructure downtime, up to 100% of the fees.</dcterms:description>
+						<price:hasDeductionSource rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_AvailibilityCalculation_DataCenterInfrastructure" />
+						<price:hasRelativeDeductionValue>5</price:hasRelativeDeductionValue>
+						<price:hasFence>
+							<price:PriceFence>
+								<price:fenceExpression>x&lt;=100</price:fenceExpression>
+								<price:fenceUnit>P1</price:fenceUnit>
+							</price:PriceFence>
+						</price:hasFence>
+					</price:Deduction>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:Deduction rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts">
+						<dcterms:title xml:lang="en">Compensation for additional downtime of Cloud Server Hosts RTO</dcterms:title>
+						<dcterms:description xml:lang="en">Five percent (5%) of the fees for each additional hour of downtime for Cloud Server Hosts RTO, up to 100% of the fees.</dcterms:description>
+						<price:hasDeductionSource rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_AvailibilityCalculation_CloudServerHosts" />
+						<price:hasRelativeDeductionValue>5</price:hasRelativeDeductionValue>
+						<price:hasFence>
+							<price:PriceFence>
+								<price:fenceExpression>x&lt;=100</price:fenceExpression>
+								<price:fenceUnit>P1</price:fenceUnit>
+							</price:PriceFence>
+						</price:hasFence>
+					</price:Deduction>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:Deduction rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration">
+						<dcterms:title xml:lang="en">Compensation for additional downtime of migration</dcterms:title>
+						<dcterms:description xml:lang="en">Five percent (5%) of the fees for each additional hour of downtime for migration, up to 100% of the fees.</dcterms:description>
+						<price:hasDeductionSource rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_AvailibilityCalculation_Migration" />
+						<price:hasRelativeDeductionValue>5</price:hasRelativeDeductionValue>
+						<price:hasFence>
+							<price:PriceFence>
+								<price:fenceExpression>x&lt;=100</price:fenceExpression>
+								<price:fenceUnit>P1</price:fenceUnit>
+							</price:PriceFence>
+						</price:hasFence>
+					</price:Deduction>
+				</price:hasPriceComponent>
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size2_Linux">
+				<dcterms:title xml:lang="en">Size 2 (Linux)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size2_Linux">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo>
+							<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size2_Memory">
+								<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
+								<gr:hasValue>512</gr:hasValue>
+							</cloud:MainMemory>
+						</price:isLinkedTo>
+						<price:isLinkedTo>
+							<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size2_Disk">
+								<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
+								<gr:hasValue>20</gr:hasValue>
+							</cloud:PersistentDiskStorage>
+						</price:isLinkedTo>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Linux1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Arch" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS56" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian50" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora16" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora15" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Gentoo11" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OpenSUSE121" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL61" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL55" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1110" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1104" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1004LTS" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.03</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_RedHatELLicence" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size3_Linux">
+				<dcterms:title xml:lang="en">Size 3 (Linux)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size3_Linux">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size3_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size3_Disk" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Linux1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Arch" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS56" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian50" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora16" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora15" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Gentoo11" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OpenSUSE121" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL61" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL55" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1110" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1104" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1004LTS" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.06</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_RedHatELLicence" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size4_Linux">
+				<dcterms:title xml:lang="en">Size 4 (Linux)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size4_Linux">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size4_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size4_Disk" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Linux1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Arch" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS56" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian50" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora16" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora15" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Gentoo11" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OpenSUSE121" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL61" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL55" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1110" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1104" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1004LTS" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.12</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_RedHatELLicence" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size5_Linux">
+				<dcterms:title xml:lang="en">Size 5 (Linux)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size5_Linux">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size5_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size5_Disk" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Linux1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Arch" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS56" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian50" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora16" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora15" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Gentoo11" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OpenSUSE121" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL61" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL55" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1110" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1104" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1004LTS" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.24</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_RedHatELLicence" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size6_Linux">
+				<dcterms:title xml:lang="en">Size 6 (Linux)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size6_Linux">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size6_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size6_Disk" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Linux1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Arch" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS56" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian50" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora16" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora15" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Gentoo11" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OpenSUSE121" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL61" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL55" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1110" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1104" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1004LTS" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.48</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_RedHatELLicence" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size7_Linux">
+				<dcterms:title xml:lang="en">Size 7 (Linux)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size7_Linux">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size7_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size7_Disk" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Linux1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Arch" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS56" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian50" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora16" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora15" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Gentoo11" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OpenSUSE121" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL61" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL55" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1110" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1104" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1004LTS" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.96</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_RedHatELLicence" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size8_Linux">
+				<dcterms:title xml:lang="en">Size 8 (Linux)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size8_Linux">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size8_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size8_Disk" />
+						<price:isLinkedTo>
+							<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Linux2">
+								<rdfs:label>Eight virtual core 30GB Linux Cloud Servers</rdfs:label>
+								<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
+								<gr:valueReference>
+									<cloud:NumberOfCores>
+										<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+										<gr:hasValue>8</gr:hasValue>
+									</cloud:NumberOfCores>
+								</gr:valueReference>
+							</cloud:CPU>
+						</price:isLinkedTo>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Arch" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CentOS56" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian60" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Debian50" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora16" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Fedora15" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Gentoo11" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_OpenSUSE121" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL61" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_RedHatEL55" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1110" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1104" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Ubuntu1004LTS" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>1.80</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_RedHatELLicence" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size3_Windows">
+				<dcterms:title xml:lang="en">Size 3 (Windows)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size3_Windows">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size3_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size3_Disk" />
+						<price:isLinkedTo>
+							<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Windows1">
+								<rdfs:label>One virtual core for 1GB Windows Cloud Servers</rdfs:label>
+								<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
+								<gr:valueReference>
+									<cloud:NumberOfCores>
+										<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+										<gr:hasValue>1</gr:hasValue>
+									</cloud:NumberOfCores>
+								</gr:valueReference>
+							</cloud:CPU>
+						</price:isLinkedTo>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2Enterprise" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008SP2Enterprise" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.08</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+						<rdf:type rdf:resource="http://www.linked-usdl.org/ns/usdl-pricing#PriceComponent" />
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size4_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size4_Disk" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Windows2" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2Enterprise" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008SP2Enterprise" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.16</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Standard">
+						<dcterms:title xml:lang="en">SQL Server 2008 R2 Standard</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for SQL Server 2008 R2 Standard.</dcterms:description>
+						<price:isLinkedTo>
+							<RackspaceCloudServers:Rackspace_SQL2008R2Standard rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_SQL2008R2Standard">
+								<gr:valueReference>
+									<genVoc:Quantity>
+										<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+										<gr:hasMinValue>0</gr:hasMinValue>
+									</genVoc:Quantity>
+								</gr:valueReference>
+							</RackspaceCloudServers:Rackspace_SQL2008R2Standard>
+						</price:isLinkedTo>
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.72</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Web">
+						<dcterms:title xml:lang="en">SQL Server 2008 R2 Web</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for SQL Server 2008 R2 Web.</dcterms:description>
+						<price:isLinkedTo>
+							<RackspaceCloudServers:Rackspace_SQL2008R2Web rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_SQL2008R2Web">
+								<gr:valueReference>
+									<genVoc:Quantity>
+										<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+										<gr:hasMinValue>0</gr:hasMinValue>
+									</genVoc:Quantity>
+								</gr:valueReference>
+							</RackspaceCloudServers:Rackspace_SQL2008R2Web>
+						</price:isLinkedTo>
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.06</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size4_Windows">
+				<dcterms:title xml:lang="en">Size 4 (Windows)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size4_Windows" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Standard" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Web" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size5_Windows">
+				<dcterms:title xml:lang="en">Size 5 (Windows)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size5_Windows">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size5_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size5_Disk" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Windows2" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2Enterprise" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008SP2Enterprise" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.32</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Standard" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Web" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size6_Windows">
+				<dcterms:title xml:lang="en">Size 6 (Windows)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size6_Windows">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size6_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size6_Disk" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Windows3" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2Enterprise" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008SP2Enterprise" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>0.58</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Standard" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Web" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size7_Windows">
+				<dcterms:title xml:lang="en">Size 7 (Windows)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size4_Windows" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Standard" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Web" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_CloudServers_Size8_Windows">
+				<dcterms:title xml:lang="en">Size 8 (Windows)</dcterms:title>
+				<dcterms:description xml:lang="en">
+				</dcterms:description>
+				<price:hasContractDuration>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>0</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>ANN</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasContractDuration>
+				<price:hasBillingCycle>
+					<gr:QuantitativeValue>
+						<gr:hasValueInteger>1</gr:hasValueInteger>
+						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
+					</gr:QuantitativeValue>
+				</price:hasBillingCycle>
+				<price:hasPriceComponent>
+					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size8_Windows">
+						<dcterms:title xml:lang="en">General costs</dcterms:title>
+						<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size8_Memory" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size8_Disk" />
+						<price:isLinkedTo>
+							<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Windows4">
+								<rdfs:label>Eight virtual core for 30GB Windows Cloud Servers</rdfs:label>
+								<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
+								<gr:valueReference>
+									<cloud:NumberOfCores>
+										<gr:hasUnitOfMeasurement>C62</gr:hasUnitOfMeasurement>
+										<gr:hasValue>8</gr:hasValue>
+									</cloud:NumberOfCores>
+								</gr:valueReference>
+							</cloud:CPU>
+						</price:isLinkedTo>
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2Enterprise" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008SP2Enterprise" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2" />
+						<price:hasPrice>
+							<gr:UnitPriceSpecification>
+								<gr:hasCurrency>USD</gr:hasCurrency>
+								<gr:hasCurrencyValue>2.16</gr:hasCurrencyValue>
+								<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+							</gr:UnitPriceSpecification>
+						</price:hasPrice>
+					</price:PriceComponent>
+				</price:hasPriceComponent>
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Standard" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_SQLServer2008R2_Web" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_OptionalStaticPublicIP" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_Out" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Bandwidth_In" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Network" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_DataCenterInfrastructure" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_CloudServerHosts" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#deduction_Availability_Migration" />
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+		<usdl:hasServiceLevelProfile>
+			<usdl:ServiceLevelProfile rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slp_Rackspace">
+				<dcterms:title xml:lang="en">Service Level Profile for Rackspace's Cloud Servers</dcterms:title>
+				<dcterms:description xml:lang="en">All information integrated here are not legally binding. SLAs can be accessed on our website under 'http://www.rackspace.com/cloud/legal/sla/'. This Service Level Guaranty is your sole and exclusive remedy for Cloud Servers unavailability. Notwithstanding anything in this Service Level Guaranty to the contrary, the maximum total credit for the monthly billing period, including all guaranties, shall not exceed 100% of your fee for that billing period. Credits that would be available but for this limitation will not be carried forward to future billing periods. This Service Level Guaranty is part of your Agreement with The Rackspace Cloud, along with The Rackspace Cloud Terms of Service and the AUP, and is subject to the terms and conditions stated in those documents.</dcterms:description>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_Availability_Network">
+						<dcterms:title xml:lang="en">Availability: Network</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">We guaranty that our data center network will be available 100% of the time in any given monthly billing period.</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_Availability_Network_Value">
+										<rdfs:label xml:lang="en">Network availability value</rdfs:label>
+										<sla:hasDefault>
+											<RackspaceCloudServers:Rackspace_NetworkAvailability>
+												<gr:hasValue>100</gr:hasValue>
+												<gr:hasUnitOfMeasurement>P1</gr:hasUnitOfMeasurement>
+											</RackspaceCloudServers:Rackspace_NetworkAvailability>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_Availability_Network_Exclusion">
+						<dcterms:title xml:lang="en">Availability exclusion: Network</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">Data center network availability is not influenced by scheduled maintenance.</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_Availability_Network_Exclusion_ScheduledMaintenance">
+										<rdfs:label xml:lang="en">Scheduled Maintenance</rdfs:label>
+										<sla:hasDefault>
+											<RackspaceCloudServers:Rackspace_NetworkAvailability_Exclusion />
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_Availability_DataCentreInfrastructure">
+						<dcterms:title xml:lang="en">Availability: Data centre infrastructure</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">We guaranty that data center HVAC and power will be functioning 100% of the time in any given monthly billing period, excluding scheduled maintenance. Infrastructure downtime exists when Cloud Servers downtime occurs as a result of power or heat problems.</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_Availability_DataCentreInfrastructure_Value">
+										<rdfs:label xml:lang="en">Data centre infrastructure availability value</rdfs:label>
+										<sla:hasDefault>
+											<RackspaceCloudServers:Rackspace_DataCenterInfrastructureAvailability>
+												<gr:hasValue>100</gr:hasValue>
+												<gr:hasUnitOfMeasurement>P1</gr:hasUnitOfMeasurement>
+											</RackspaceCloudServers:Rackspace_DataCenterInfrastructureAvailability>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_Availability_DataCentreInfrastructure_Exclusion">
+						<dcterms:title xml:lang="en">Availability exclusion: Data centre infrastructure</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">Data center infrastructure availability is not influenced by scheduled maintenance.</dcterms:description>
+								<sla:hasVariable rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_Availability_Network_Exclusion_ScheduledMaintenance" />
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_CloudServerHostsRTO">
+						<dcterms:title xml:lang="en">Cloud Server Hosts RTO</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">We guaranty the functioning of all cloud server hosts including compute, storage, and hypervisor. If a cloud server host fails, we guaranty that restoration or repair will be complete within one hour of problem identification.</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_CloudServerHostsRTO_Value">
+										<rdfs:label xml:lang="en">Cloud Server Hosts recovery time objective (RTO)</rdfs:label>
+										<sla:hasDefault>
+											<cloud:RecoveryTimeObjective>
+												<gr:hasValue>1</gr:hasValue>
+												<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+											</cloud:RecoveryTimeObjective>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_Migration">
+						<dcterms:title xml:lang="en">Migration</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">If a cloud server migration is required because of cloud server host degradation, we will notify you at least 24 hours in advance of beginning the migration, unless we determine in our reasonable judgment, that we must begin the migration sooner to protect your cloud server data. Either way, we guaranty that the migration will be complete within three hours of the time that we begin the migration.</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_Migration_Notification">
+										<rdfs:label xml:lang="en">Notification at least 24h in advance</rdfs:label>
+										<sla:hasDefault>
+											<genVoc:AbsoluteTimePeriod>
+												<gr:hasMinValue>24</gr:hasMinValue>
+												<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+											</genVoc:AbsoluteTimePeriod>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_Migration_Duration">
+										<rdfs:label xml:lang="en">Duration of migration max 3h</rdfs:label>
+										<sla:hasDefault>
+											<genVoc:AbsoluteTimePeriod>
+												<gr:hasMaxValue>3</gr:hasMaxValue>
+												<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+											</genVoc:AbsoluteTimePeriod>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_AvailibilityCalculation_Network">
+						<dcterms:title xml:lang="en">Crediting: Network</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">If we fail to meet a guaranty for network availability, you will be eligible for a credit. Credits will be calculated as a percentage of the fees for the Cloud Servers adversely affected by the failure for the current monthly billing period during which the failure occurred (to be applied at the end of the billing cycle).</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_AvailibilityCalculation_Network_Slice">
+										<rdfs:label xml:lang="en">Credit equal to 5% credit of the fees for each 30 minutes of downtime, up to 100%.</rdfs:label>
+										<sla:hasDefault>
+											<RackspaceCloudServers:Rackspace_CreditPeriodSlice_Network>
+												<gr:hasValue>30</gr:hasValue>
+												<gr:hasUnitOfMeasurement>MIN</gr:hasUnitOfMeasurement>
+											</RackspaceCloudServers:Rackspace_CreditPeriodSlice_Network>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_AvailibilityCalculation_DataCenterInfrastructure">
+						<dcterms:title xml:lang="en">Crediting: Data center infrastructure</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">If we fail to meet a guaranty for infrastructure availability, you will be eligible for a credit. Credits will be calculated as a percentage of the fees for the Cloud Servers adversely affected by the failure for the current monthly billing period during which the failure occurred (to be applied at the end of the billing cycle).</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_AvailibilityCalculation_DataCenterInfrastructure_Slice">
+										<rdfs:label xml:lang="en">Credit equal to 5% credit of the fees for each 30 minutes of downtime, up to 100%.</rdfs:label>
+										<sla:hasDefault>
+											<RackspaceCloudServers:Rackspace_CreditPeriodSlice_DataCenterInfrastructure>
+												<gr:hasValue>30</gr:hasValue>
+												<gr:hasUnitOfMeasurement>MIN</gr:hasUnitOfMeasurement>
+											</RackspaceCloudServers:Rackspace_CreditPeriodSlice_DataCenterInfrastructure>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_AvailibilityCalculation_CloudServerHosts">
+						<dcterms:title xml:lang="en">Crediting: Cloud Server Hosts RTO</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">If we fail to meet a guaranty for Cloud Server Hosts RTO, you will be eligible for a credit. Credits will be calculated as a percentage of the fees for the Cloud Servers adversely affected by the failure for the current monthly billing period during which the failure occurred (to be applied at the end of the billing cycle).</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_AvailibilityCalculation_CloudServerHosts_Value">
+										<rdfs:label xml:lang="en">Credit equal to 5% of the fees for each additional hour of downtime, up to 100%.</rdfs:label>
+										<sla:hasDefault>
+											<RackspaceCloudServers:Rackspace_CreditPeriodSlice_CloudServerHosts>
+												<gr:hasValue>1</gr:hasValue>
+												<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+											</RackspaceCloudServers:Rackspace_CreditPeriodSlice_CloudServerHosts>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_AvailibilityCalculation_Migration">
+						<dcterms:title xml:lang="en">Crediting: Migration</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">If we fail to meet a guaranty for duration of migration, you will be eligible for a credit. Credits will be calculated as a percentage of the fees for the Cloud Servers adversely affected by the failure for the current monthly billing period during which the failure occurred (to be applied at the end of the billing cycle).</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_AvailibilityCalculation_Migration_Value">
+										<rdfs:label xml:lang="en">Credit equal to 5% of the fees for each additional hour of downtime, up to 100%.</rdfs:label>
+										<sla:hasDefault>
+											<RackspaceCloudServers:Rackspace_CreditPeriodSlice_Migration>
+												<gr:hasValue>1</gr:hasValue>
+												<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+											</RackspaceCloudServers:Rackspace_CreditPeriodSlice_Migration>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_CreditSuspension">
+						<dcterms:title xml:lang="en">Credit suspension</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">Reasons for the suspension of credit entitlement.</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_CreditSuspension_SLABreach">
+										<rdfs:label xml:lang="en">You are not entitled to a credit if you are in breach of your services agreement with The Rackspace Cloud (including your payment obligations to us) until you have cured the breach.</rdfs:label>
+										<sla:hasDefault>
+											<cloud:CreditSuspensionReason />
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_CreditSuspension_AgreementBreach">
+										<rdfs:label xml:lang="en">You are not entitled to a credit if downtime would not have occurred but for your breach of your agreement with The Rackspace Cloud.</rdfs:label>
+										<sla:hasDefault>
+											<cloud:CreditSuspensionReason />
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_CreditSuspension_Misuese">
+										<rdfs:label xml:lang="en">You are not entitled to a credit if downtime would not have occurred but for your misuse of Cloud Servers system.</rdfs:label>
+										<sla:hasDefault>
+											<cloud:CreditSuspensionReason />
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedState>
+				</sla:hasServiceLevel>
+				<sla:hasServiceLevel>
+					<sla:GuaranteedAction rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#slo_Rackspace_CreditRequest">
+						<dcterms:title xml:lang="en">Credit request</dcterms:title>
+						<sla:serviceLevelExpression>
+							<sla:ServiceLevelExpression>
+								<dcterms:description xml:lang="en">To receive a credit, you must contact your The Rackspace Cloud account team within thirty (30) days following the end of the downtime. You must show that your use of the Cloud Servers was adversely affected in some way as a result of the downtime to be eligible for the credit.</dcterms:description>
+								<sla:hasVariable>
+									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#var_Rackspace_CreditRequest_CreditRequestPeriod">
+										<rdfs:label xml:lang="en">Request period</rdfs:label>
+										<sla:hasDefault>
+											<cloud:CreditRequestPeriod>
+												<gr:hasValue>30</gr:hasValue>
+												<gr:hasUnitOfMeasurement>DAY</gr:hasUnitOfMeasurement>
+											</cloud:CreditRequestPeriod>
+										</sla:hasDefault>
+									</sla:Variable>
+								</sla:hasVariable>
+							</sla:ServiceLevelExpression>
+						</sla:serviceLevelExpression>
+					</sla:GuaranteedAction>
+				</sla:hasServiceLevel>
+			</usdl:ServiceLevelProfile>
+		</usdl:hasServiceLevelProfile>
+	</usdl:ServiceOffering>
+	<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#priceComponent_Size7_Windows">
+		<dcterms:title xml:lang="en">General costs</dcterms:title>
+		<dcterms:description xml:lang="en">Fee for general usage of the instance.</dcterms:description>
+		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_Size7_Memory" />
+		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloutServers_Size7_Disk" />
+		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_CPU_Windows3" />
+		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2Enterprise" />
+		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008SP2Enterprise" />
+		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008" />
+		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#resource_CloudServers_WindowsServer2008R2" />
+		<price:hasPrice>
+			<gr:UnitPriceSpecification>
+				<gr:hasCurrency>USD</gr:hasCurrency>
+				<gr:hasCurrencyValue>1.08</gr:hasCurrencyValue>
+				<gr:hasUnitOfMeasurement>HUR</gr:hasUnitOfMeasurement>
+			</gr:UnitPriceSpecification>
+		</price:hasPrice>
+	</price:PriceComponent>
+	<usdl:ServiceOffering rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#offering_FanaticSupport">
+		<dcterms:title xml:lang="en">Fanatic Support</dcterms:title>
+		<dcterms:description xml:lang="en">Rackspace's FanaticSupport.</dcterms:description>
+		<usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-03-01</usdl:validFrom>
+		<usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-08-31</usdl:validThrough>
+		<usdl:includes rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#service_FanaticSupport" />
+		<usdl:hasPricePlan>
+			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#pricing_FanaticSupport">
+				<dcterms:title xml:lang="en">Fanatic Support</dcterms:title>
+				<dcterms:description xml:lang="en">Fanatic Support comes free with every account.</dcterms:description>
+			</price:PricePlan>
+		</usdl:hasPricePlan>
+	</usdl:ServiceOffering>
+</rdf:RDF>

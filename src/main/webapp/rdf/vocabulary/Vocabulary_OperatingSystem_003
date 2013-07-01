@@ -1,0 +1,547 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:gr="http://purl.org/goodrelations/v1#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:dcterms="http://purl.org/dc/terms/">
+	<skos:ConceptScheme rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003">
+		<skos:prefLabel xml:lang="en">USDL operating system vocabulary</skos:prefLabel>
+		<skos:altLabel xml:lang="en">USDL OS vocabulary</skos:altLabel>
+		<skos:altLabel xml:lang="en">Operating system vocabulary</skos:altLabel>
+		<skos:altLabel xml:lang="en">OS vocabulary</skos:altLabel>
+		<skos:definition>This document specifies the vocabulary to describe an operating system in USDL.</skos:definition>
+		<dcterms:contributor>
+			<foaf:Person>
+				<foaf:name>Florian Heberle</foaf:name>
+				<foaf:firstName>Florian</foaf:firstName>
+				<foaf:lastName>Heberle</foaf:lastName>
+			</foaf:Person>
+		</dcterms:contributor>
+		<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-04-17</dcterms:created>
+		<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-21</dcterms:modified>
+		<owl:versionInfo>003</owl:versionInfo>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Windows">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<skos:prefLabel xml:lang="en">Operating system family Windows</skos:prefLabel>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Windows Server</skos:prefLabel>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2003">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Windows Server 2003</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2003R2">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Windows Server 2003 R2</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Windows Server 2008</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008R2">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Windows Server 2008 R2</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008R2Standard">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Windows Server 2008 R2 Standard</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008R2" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008R2Enterprise">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Windows Server 2008 R2 Enterprise</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008R2" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008SP2">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Windows Server 2008 SP2</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008SP2Standard">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Windows Server 2008 SP2 Standard</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008SP2" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008SP2Enterprise">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Windows Server 2008 SP2 Enterprise</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#WindowsServer2008SP2" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Windows" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+				<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Unix">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<skos:prefLabel xml:lang="en">Operating system family Unix</skos:prefLabel>
+				<skos:narrower rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Linux" />
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#FreeBSD">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Operating system FreeBSD</skos:prefLabel>
+						<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Unix" />
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#FreeBSD_8">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">FreeBSD 8</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#FreeBSD" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+				<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+			</rdfs:Class>
+		</skos:topConceptOf>
+		<skos:topConceptOf>
+			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Linux">
+				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+				<skos:prefLabel xml:lang="en">Operating system family Linux</skos:prefLabel>
+				<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Unix" />
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Arch">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Arch</skos:prefLabel>
+						<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Linux" />
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Arch_2011">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Arch 2011</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Arch" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Arch_2011_10">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Arch 2011.10</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Arch_2011" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">CentOS</skos:prefLabel>
+						<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Linux" />
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS_5">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">CentOS 5</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS_5_3">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">CentOS 5.3</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS_5" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS_5_6">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">CentOS 5.6</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS_5" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS_6">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">CentOS 6</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS_6_0">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">CentOS 6.0</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#CentOS_6" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Debian">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Debian</skos:prefLabel>
+						<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Linux" />
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Debian_5">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Debian 5</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Debian" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Debian_5_0">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Debian 5.0</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Debian_5" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Debian_6">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Debian 6</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Debian" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Debian_6_0">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Debian 6.0</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Debian_6" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Fedora">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Gentoo</skos:prefLabel>
+						<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Linux" />
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Fedora_15">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Fedora 15</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Fedora" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Fedora_16">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Fedora 16</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Fedora" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Gentoo">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Gentoo</skos:prefLabel>
+						<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Linux" />
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Gentoo_11">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Gentoo 11</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Gentoo" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OpenSUSE">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">openSUSE</skos:prefLabel>
+						<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Linux" />
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OpenSUSE_12">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">openSUSE 12</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OpenSUSE" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OpenSUSE_12_1">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">openSUSE 12.1</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OpenSUSE_12" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#RedHatEL">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Rad Hat EL</skos:prefLabel>
+						<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Linux" />
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#RedHatEL_6">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Red Hat EL 6</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#RedHatEL" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#RedHatEL_6_1">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Red Hat EL 6.1</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#RedHatEL_6" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#RedHatEL_5">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Red Hat EL 5</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#RedHatEL" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:narrower>
+					<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu">
+						<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+						<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+						<skos:prefLabel xml:lang="en">Ubuntu</skos:prefLabel>
+						<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Linux" />
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_8">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Ubuntu 8</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_8_04_LTS">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Ubuntu 8.04 LTS (Long Term Support)</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_10" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_10">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Ubuntu 10 Lucid Lynx</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_10_04_LTS">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Ubuntu 10.04 Lucid Lynx LTS (Long Term Support)</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_10" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_11">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Ubuntu 11</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_11_04">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Ubuntu 11.04 Natty Narwahl</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_11" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_11_10">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Ubuntu 11.10 Oneiric Ocelot</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_11" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:narrower>
+							<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_12">
+								<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+								<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+								<skos:prefLabel xml:lang="en">Ubuntu 12 Precise Pangolin</skos:prefLabel>
+								<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu" />
+								<skos:narrower>
+									<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_12_04">
+										<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+										<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+										<skos:prefLabel xml:lang="en">Ubuntu 12.04 Precise Pangolin</skos:prefLabel>
+										<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#Ubuntu_12" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+										<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+									</rdfs:Class>
+								</skos:narrower>
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+								<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+							</rdfs:Class>
+						</skos:narrower>
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+						<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+					</rdfs:Class>
+				</skos:narrower>
+				<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+				<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+			</rdfs:Class>
+		</skos:topConceptOf>
+	</skos:ConceptScheme>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">64 Bit system architecture support</skos:prefLabel>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">32 Bit system architecture support</skos:prefLabel>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#RedHatEL_5_5">
+		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
+		<skos:prefLabel xml:lang="en">Red Hat EL 5.5</skos:prefLabel>
+		<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#RedHatEL_5" />
+		<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS64Bit" />
+		<skos:related rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#OS32Bit" />
+	</rdfs:Class>
+</rdf:RDF>

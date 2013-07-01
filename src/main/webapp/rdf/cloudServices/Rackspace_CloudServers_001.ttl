@@ -1,0 +1,1416 @@
+@base <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001> .
+@prefix : <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001#> .
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dctypes: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix blueprint: <http://bizweb.sap.com/TR/blueprint#> .
+@prefix ctag: <http://commontag.org/ns#> .
+@prefix msm: <http://cms-wg.sti2.org/ns/minimal-service-model#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix sawsdl: <http://www.w3.org/ns/sawsdl#> .
+@prefix sarest: <http://www.knoesis.org/research/srl/standards/sa-rest/#> .
+@prefix wl: <http://www.wsmo.org/ns/wsmo-lite#> .
+@prefix http: <http://www.w3.org/2011/http#> .
+
+@prefix usdl: <http://www.linked-usdl.org/ns/usdl-core#> .
+@prefix legal: <http://www.linked-usdl.org/ns/usdl-legal#> .
+@prefix price: <http://www.linked-usdl.org/ns/usdl-pricing#> .
+@prefix sla: <http://www.linked-usdl.org/ns/usdl-sla#> .
+
+@prefix gn: <http://www.geonames.org/ontology#> .
+@prefix genVoc: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#> .
+@prefix cloud: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#> .
+@prefix os: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#> .
+@prefix support: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#> .
+
+<>  rdf:type usdl:ServiceDescription ;
+	dcterms:title "Cloud Servers service description" ;
+	dcterms:description "Description of Rackspace's Cloud Servers service" ;
+	dcterms:contributor 
+		[ a foaf:Person ;
+			foaf:name "Florian Heberle" ;
+			foaf:firstName "Florian" ;
+			foaf:lastName "Heberle" ] ;
+	dcterms:created "2012-05-22"^^xsd:date ;
+	dcterms:modified "2012-06-20"^^xsd:date ;
+	owl:versionInfo "001" .
+
+#************************************************************************************
+#	Legal												
+#************************************************************************************
+
+:legal_Rackspace a legal:TermsAndConditions ;
+	dcterms:title "Rackspace's legal statements"@en ;
+	dcterms:description "Rackspace's legal statements are accessible online via 'http://www.rackspace.com/information/legal/websiteterms/'."@en .
+
+#************************************************************************************
+#	Company data											
+#************************************************************************************
+
+:provider_Rackspace a gr:BusinessEntity ;
+	foaf:name "Rackspace" ;
+	foaf:homepage <http://www.rackspace.com/> ;
+	foaf:logo <http://www.owasp.org/images/3/39/Rackspace_logo.png> ;
+	usdl:legalForm "Inc." ;
+	vcard:adr 
+		[ a vcard:Work ;
+			vcard:country-name "U.S."@en ] .
+
+#************************************************************************************
+#	Customizing											
+#************************************************************************************
+
+:Rackspace_NetworkAvailability a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QuantitativeValue ;
+	skos:prefLabel "Network availability"@en ;
+	dcterms:description "Availability of the data center network"@en ;
+	skos:broader cloud:Availability .
+
+:Rackspace_NetworkAvailability_Exclusion a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Network availability exclusion"@en ;
+	dcterms:description "Exclusion to availability of the data center network"@en ;
+	skos:broader cloud:AvailabilityExclusion ;
+	skos:related :Rackspace_NetworkAvailability .
+
+:Rackspace_DataCenterInfrastructureAvailability a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QuantitativeValue ;
+	skos:prefLabel "Data center infrastructure availability"@en ;
+	dcterms:description "Availability of the data center infrastructure"@en ;
+	skos:broader cloud:Availability .
+
+:Rackspace_DataCenterInfrastructureAvailability_Exclusion a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Data center infrastructure availability exclusion"@en ;
+	dcterms:description "Exclusion to availability of the data center infrastructure"@en ;
+	skos:broader cloud:AvailabilityExclusion ;
+	skos:related :Rackspace_DataCenterInfrastructureAvailability .
+
+:Rackspace_CreditPeriodSlice_Network a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QuantitativeValue ;
+	skos:prefLabel "Credit calculation interval for network downtime"@en ;
+	skos:broader cloud:CreditPeriodSlice .
+
+:Rackspace_CreditPeriodSlice_DataCenterInfrastructure a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QuantitativeValue ;
+	skos:prefLabel "Credit calculation interval for infrastructure downtime"@en ;
+	skos:broader cloud:CreditPeriodSlice .
+
+:Rackspace_CreditPeriodSlice_CloudServerHosts a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QuantitativeValue ;
+	skos:prefLabel "Credit calculation interval for additional downtime of Cloud Server Hosts RTO"@en ;
+	skos:broader cloud:CreditPeriodSlice .
+
+:Rackspace_CreditPeriodSlice_Migration a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QuantitativeValue ;
+	skos:prefLabel "Credit calculation interval for additional downtime of server migration"@en ;
+	skos:broader cloud:CreditPeriodSlice .
+
+:Rackspace_SQL2008R2Standard a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "SQL 2008 R2 Standard Edition" .
+
+:Rackspace_SQL2008R2Web a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "SQL 2008 R2 Web Edition" .
+
+#************************************************************************************
+#	SLAs														
+#************************************************************************************
+
+:slp_Rackspace a usdl:ServiceLevelProfile ;
+	dcterms:title "Service Level Profile for Rackspace's Cloud Servers"@en ;
+	dcterms:description "All information integrated here are not legally binding. SLAs can be accessed on our website under 'http://www.rackspace.com/cloud/legal/sla/'. This Service Level Guaranty is your sole and exclusive remedy for Cloud Servers unavailability. Notwithstanding anything in this Service Level Guaranty to the contrary, the maximum total credit for the monthly billing period, including all guaranties, shall not exceed 100% of your fee for that billing period. Credits that would be available but for this limitation will not be carried forward to future billing periods. This Service Level Guaranty is part of your Agreement with The Rackspace Cloud, along with The Rackspace Cloud Terms of Service and the AUP, and is subject to the terms and conditions stated in those documents."@en ;
+	sla:hasServiceLevel 
+		:slo_Rackspace_Availability_Network ,
+		:slo_Rackspace_Availability_Network_Exclusion ,
+		:slo_Rackspace_Availability_DataCentreInfrastructure ,
+		:slo_Rackspace_Availability_DataCentreInfrastructure_Exclusion ,
+		:slo_Rackspace_CloudServerHostsRTO ,
+		:slo_Rackspace_Migration ,
+		:slo_Rackspace_AvailibilityCalculation_Network ,
+		:slo_Rackspace_AvailibilityCalculation_DataCenterInfrastructure ,
+		:slo_Rackspace_AvailibilityCalculation_CloudServerHosts ,
+		:slo_Rackspace_AvailibilityCalculation_Migration ,
+		:slo_Rackspace_CreditSuspension ,
+		:slo_Rackspace_CreditRequest .
+
+#____________________________________________________________________________________
+:slo_Rackspace_Availability_Network a sla:GuaranteedState ;
+	dcterms:title "Availability: Network"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "We guaranty that our data center network will be available 100% of the time in any given monthly billing period."@en ;
+			sla:hasVariable :var_Rackspace_Availability_Network_Value ] .
+
+:var_Rackspace_Availability_Network_Value a sla:Variable ;
+	rdfs:label "Network availability value"@en ;
+	sla:hasDefault 
+		[ a :Rackspace_NetworkAvailability ;
+			gr:hasValue "100" ;
+
+			gr:hasUnitOfMeasurement "P1" ] .
+
+#____________________________________________________________________________________
+:slo_Rackspace_Availability_Network_Exclusion a sla:GuaranteedState ;
+	dcterms:title "Availability exclusion: Network"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Data center network availability is not influenced by scheduled maintenance."@en ;
+			sla:hasVariable :var_Rackspace_Availability_Network_Exclusion_ScheduledMaintenance ] .
+
+:var_Rackspace_Availability_Network_Exclusion_ScheduledMaintenance a sla:Variable ;
+	rdfs:label "Scheduled Maintenance"@en ;
+	sla:hasDefault [ a :Rackspace_NetworkAvailability_Exclusion ] .
+
+#____________________________________________________________________________________
+:slo_Rackspace_Availability_DataCentreInfrastructure a sla:GuaranteedState ;
+	dcterms:title "Availability: Data centre infrastructure"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "We guaranty that data center HVAC and power will be functioning 100% of the time in any given monthly billing period, excluding scheduled maintenance. Infrastructure downtime exists when Cloud Servers downtime occurs as a result of power or heat problems."@en ;
+			sla:hasVariable :var_Rackspace_Availability_DataCentreInfrastructure_Value ] .
+
+:var_Rackspace_Availability_DataCentreInfrastructure_Value a sla:Variable ;
+	rdfs:label "Data centre infrastructure availability value"@en ;
+	sla:hasDefault 
+		[ a :Rackspace_DataCenterInfrastructureAvailability ;
+			gr:hasValue "100" ;
+			gr:hasUnitOfMeasurement "P1" ] .
+
+#____________________________________________________________________________________
+:slo_Rackspace_Availability_DataCentreInfrastructure_Exclusion a sla:GuaranteedState ;
+	dcterms:title "Availability exclusion: Data centre infrastructure"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Data center infrastructure availability is not influenced by scheduled maintenance."@en ;
+			sla:hasVariable :var_Rackspace_Availability_Network_Exclusion_ScheduledMaintenance ] .
+
+:var_Rackspace_Availability_DataCentreInfrastructure_Exclusion_ScheduledMaintenance a sla:Variable ;
+	rdfs:label "Scheduled Maintenance"@en ;
+	sla:hasDefault [ a :Rackspace_DataCentreInfrastructure_Exclusion ] .
+
+#____________________________________________________________________________________
+:slo_Rackspace_CloudServerHostsRTO a sla:GuaranteedState ;
+	dcterms:title "Cloud Server Hosts RTO"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "We guaranty the functioning of all cloud server hosts including compute, storage, and hypervisor. If a cloud server host fails, we guaranty that restoration or repair will be complete within one hour of problem identification."@en ;
+			sla:hasVariable :var_Rackspace_CloudServerHostsRTO_Value ] .
+
+:var_Rackspace_CloudServerHostsRTO_Value a sla:Variable ;
+	rdfs:label "Cloud Server Hosts recovery time objective (RTO)"@en ;
+	sla:hasDefault 
+		[ a cloud:RecoveryTimeObjective ;
+			gr:hasValue "1" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#____________________________________________________________________________________
+:slo_Rackspace_Migration a sla:GuaranteedState ;
+	dcterms:title "Migration"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "If a cloud server migration is required because of cloud server host degradation, we will notify you at least 24 hours in advance of beginning the migration, unless we determine in our reasonable judgment, that we must begin the migration sooner to protect your cloud server data. Either way, we guaranty that the migration will be complete within three hours of the time that we begin the migration."@en ;
+			sla:hasVariable 
+				:var_Rackspace_Migration_Notification , 
+				:var_Rackspace_Migration_Duration ] .
+
+:var_Rackspace_Migration_Notification a sla:Variable ;
+	rdfs:label "Notification at least 24h in advance"@en ;
+	sla:hasDefault 
+		[ a genVoc:AbsoluteTimePeriod ;
+			gr:hasMinValue "24" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:var_Rackspace_Migration_Duration a sla:Variable ;
+	rdfs:label "Duration of migration max 3h"@en ;
+	sla:hasDefault 
+		[ a genVoc:AbsoluteTimePeriod ;
+			gr:hasMaxValue "3" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#____________________________________________________________________________________
+:slo_Rackspace_AvailibilityCalculation_Network a sla:GuaranteedState ;
+	dcterms:title "Crediting: Network"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "If we fail to meet a guaranty for network availability, you will be eligible for a credit. Credits will be calculated as a percentage of the fees for the Cloud Servers adversely affected by the failure for the current monthly billing period during which the failure occurred (to be applied at the end of the billing cycle)."@en ;
+			sla:hasVariable	:var_Rackspace_AvailibilityCalculation_Network_Slice ] .
+				
+:var_Rackspace_AvailibilityCalculation_Network_Slice a sla:Variable ;
+	rdfs:label "Credit equal to 5% credit of the fees for each 30 minutes of downtime, up to 100%."@en ;
+	sla:hasDefault 
+		[ a :Rackspace_CreditPeriodSlice_Network ;
+			gr:hasValue "30" ;
+			gr:hasUnitOfMeasurement "MIN" ] .
+
+#____________________________________________________________________________________
+:slo_Rackspace_AvailibilityCalculation_DataCenterInfrastructure a sla:GuaranteedState ;
+	dcterms:title "Crediting: Data center infrastructure"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "If we fail to meet a guaranty for infrastructure availability, you will be eligible for a credit. Credits will be calculated as a percentage of the fees for the Cloud Servers adversely affected by the failure for the current monthly billing period during which the failure occurred (to be applied at the end of the billing cycle)."@en ;
+			sla:hasVariable :var_Rackspace_AvailibilityCalculation_DataCenterInfrastructure_Slice ] .
+				
+:var_Rackspace_AvailibilityCalculation_DataCenterInfrastructure_Slice a sla:Variable ;
+	rdfs:label "Credit equal to 5% credit of the fees for each 30 minutes of downtime, up to 100%."@en ;
+	sla:hasDefault 
+		[ a :Rackspace_CreditPeriodSlice_DataCenterInfrastructure ;
+			gr:hasValue "30" ;
+			gr:hasUnitOfMeasurement "MIN" ] .
+
+#____________________________________________________________________________________
+:slo_Rackspace_AvailibilityCalculation_CloudServerHosts a sla:GuaranteedState ;
+	dcterms:title "Crediting: Cloud Server Hosts RTO"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "If we fail to meet a guaranty for Cloud Server Hosts RTO, you will be eligible for a credit. Credits will be calculated as a percentage of the fees for the Cloud Servers adversely affected by the failure for the current monthly billing period during which the failure occurred (to be applied at the end of the billing cycle)."@en ;
+			sla:hasVariable	:var_Rackspace_AvailibilityCalculation_CloudServerHosts_Value ] .
+							
+:var_Rackspace_AvailibilityCalculation_CloudServerHosts_Value a sla:Variable ;
+	rdfs:label "Credit equal to 5% of the fees for each additional hour of downtime, up to 100%."@en ;
+	sla:hasDefault 
+		[ a :Rackspace_CreditPeriodSlice_CloudServerHosts ;
+			gr:hasValue "1" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#____________________________________________________________________________________	
+:slo_Rackspace_AvailibilityCalculation_Migration a sla:GuaranteedState ;
+	dcterms:title "Crediting: Migration"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "If we fail to meet a guaranty for duration of migration, you will be eligible for a credit. Credits will be calculated as a percentage of the fees for the Cloud Servers adversely affected by the failure for the current monthly billing period during which the failure occurred (to be applied at the end of the billing cycle)."@en ;
+			sla:hasVariable :var_Rackspace_AvailibilityCalculation_Migration_Value ] .
+				
+:var_Rackspace_AvailibilityCalculation_Migration_Value a sla:Variable ;
+	rdfs:label "Credit equal to 5% of the fees for each additional hour of downtime, up to 100%."@en ;
+	sla:hasDefault 
+		[ a :Rackspace_CreditPeriodSlice_Migration ;
+			gr:hasValue "1" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#____________________________________________________________________________________	
+:slo_Rackspace_CreditSuspension a sla:GuaranteedState ;
+	dcterms:title "Credit suspension"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Reasons for the suspension of credit entitlement."@en ;
+			sla:hasVariable 
+				:var_Rackspace_CreditSuspension_SLABreach ,
+				:var_Rackspace_CreditSuspension_AgreementBreach ,
+				:var_Rackspace_CreditSuspension_Misuese ] .
+
+:var_Rackspace_CreditSuspension_SLABreach a sla:Variable ;
+	rdfs:label "You are not entitled to a credit if you are in breach of your services agreement with The Rackspace Cloud (including your payment obligations to us) until you have cured the breach."@en ;
+	sla:hasDefault [ a cloud:CreditSuspensionReason ] .
+
+:var_Rackspace_CreditSuspension_AgreementBreach a sla:Variable ;
+	rdfs:label "You are not entitled to a credit if downtime would not have occurred but for your breach of your agreement with The Rackspace Cloud."@en ;
+	sla:hasDefault [ a cloud:CreditSuspensionReason ] .
+
+:var_Rackspace_CreditSuspension_Misuese a sla:Variable ;
+	rdfs:label "You are not entitled to a credit if downtime would not have occurred but for your misuse of Cloud Servers system."@en ;
+	sla:hasDefault [ a cloud:CreditSuspensionReason ] .
+
+#____________________________________________________________________________________
+:slo_Rackspace_CreditRequest a sla:GuaranteedAction ;
+	dcterms:title "Credit request"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "To receive a credit, you must contact your The Rackspace Cloud account team within thirty (30) days following the end of the downtime. You must show that your use of the Cloud Servers was adversely affected in some way as a result of the downtime to be eligible for the credit."@en ;
+			sla:hasVariable 
+				:var_Rackspace_CreditRequest_CreditRequestPeriod ] .
+
+:var_Rackspace_CreditRequest_CreditRequestPeriod a sla:Variable ;
+	rdfs:label "Request period"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditRequestPeriod ;
+			gr:hasValue "30" ;
+			gr:hasUnitOfMeasurement "DAY" ] . 
+
+#************************************************************************************
+#	Shared resources															
+#************************************************************************************
+
+:resource_CloudServers_Size1_Memory a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "256" .
+
+:resource_CloudServers_Size2_Memory a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "512" .
+
+:resource_CloudServers_Size3_Memory a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "1024" .
+
+:resource_CloudServers_Size4_Memory a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "2048" .
+
+:resource_CloudServers_Size5_Memory a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "4096" .
+
+:resource_CloudServers_Size6_Memory a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "8192" .
+
+:resource_CloudServers_Size7_Memory a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "15872" .
+
+:resource_CloudServers_Size8_Memory a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "30720" .
+
+#____________________________________________________________________________________
+:resource_CloutServers_Size1_Disk a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "10" .
+
+:resource_CloutServers_Size2_Disk a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "20" .
+
+:resource_CloutServers_Size3_Disk a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "40" .
+
+:resource_CloutServers_Size4_Disk a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "80" .
+
+:resource_CloutServers_Size5_Disk a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "160" .
+
+:resource_CloutServers_Size6_Disk a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "320" .
+
+:resource_CloutServers_Size7_Disk a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "620" .
+
+:resource_CloutServers_Size8_Disk a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "1200" .
+
+#____________________________________________________________________________________
+:resource_CloudServers_CPU_Linux1 a cloud:CPU ;
+	rdfs:label "Four virtual core Linux Cloud Servers up to 15GB" ;
+	gr:hasUnitOfMeasurement "A86";
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "4" ] .
+
+:resource_CloudServers_CPU_Linux2 a cloud:CPU ;
+	rdfs:label "Eight virtual core 30GB Linux Cloud Servers" ;
+	gr:hasUnitOfMeasurement "A86";
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "8" ] .
+
+#____________________________________________________________________________________
+:resource_CloudServers_CPU_Windows1 a cloud:CPU ;
+	rdfs:label "One virtual core for 1GB Windows Cloud Servers" ;
+	gr:hasUnitOfMeasurement "A86";
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "1" ] .
+
+:resource_CloudServers_CPU_Windows2 a cloud:CPU ;
+	rdfs:label "Two virtual core for 2GB and 4GB Windows Cloud Servers" ;
+	gr:hasUnitOfMeasurement "A86";
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "2" ] .
+
+:resource_CloudServers_CPU_Windows3 a cloud:CPU ;
+	rdfs:label "Four virtual core for 8GB and 15.5GB Windows Cloud Servers" ;
+	gr:hasUnitOfMeasurement "A86";
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "4" ] .
+
+:resource_CloudServers_CPU_Windows4 a cloud:CPU ;
+	rdfs:label "Eight virtual core for 30GB Windows Cloud Servers" ;
+	gr:hasUnitOfMeasurement "A86";
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "8" ] .
+
+#____________________________________________________________________________________
+:resource_CloudServers_StaticPublicIP a cloud:IPAddress ;
+	gr:valueReference  
+		[ a cloud:StaticIPAddress ] ,
+		[ a cloud:PublicIPAddress ] , 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "1" ] .
+
+:resource_CloudServers_StaticPrivateIP a cloud:IPAddress ;
+	gr:valueReference 
+		[ a cloud:StaticIPAddress ] , 
+		[ a cloud:PrivateIPAddress ] , 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "1" ] .
+
+:resource_CloudServers_OptionalStaticPublicIP a cloud:IPAddress ;
+	gr:valueReference  
+		[ a cloud:StaticIPAddress ] ,
+		[ a cloud:PublicIPAddress ] , 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ] .
+
+#____________________________________________________________________________________
+:resource_CloudServers_WindowsServer2008R2Enterprise a os:WindowsServer2008R2Enterprise ;
+	gr:valueReference [ a os:OS64Bit ] .
+
+:resource_CloudServers_WindowsServer2008SP2Enterprise a os:WindowsServer2008SP2Enterprise ;
+	gr:valueReference 
+		[ a os:OS32Bit ] ,
+		[ a os:OS64Bit ] .
+
+:resource_CloudServers_WindowsServer2008 a os:WindowsServer2008;
+	gr:valueReference 
+		[ a os:OS32Bit ] ,
+		[ a os:OS64Bit ] .
+
+:resource_CloudServers_WindowsServer2008R2 a os:WindowsServer2008R2 .
+
+:resource_CloudServers_SQL2008R2Standard a :Rackspace_SQL2008R2Standard;
+	gr:valueReference  
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ] .
+
+:resource_CloudServers_SQL2008R2Web a :Rackspace_SQL2008R2Web ;
+	gr:valueReference  
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasMinValue "0" ] .
+
+#____________________________________________________________________________________
+:resource_CloudServers_Arch a os:Arch_2011_10 .
+
+:resource_CloudServers_CentOS60 a os:CentOS_6_0 .
+
+:resource_CloudServers_CentOS56 a os:CentOS_5_6 .
+
+:resource_CloudServers_Debian60 a os:Debian_6_0 .
+
+:resource_CloudServers_Debian50 a os:Debian_5_0 .
+
+:resource_CloudServers_Fedora16 a os:Fedora_16 .
+
+:resource_CloudServers_Fedora15 a os:Fedora_15 .
+
+:resource_CloudServers_Gentoo11 a os:Gentoo_11 .
+
+:resource_CloudServers_OpenSUSE121 a os:OpenSUSE_12_1 .
+
+:resource_CloudServers_RedHatEL61 a os:RedHatEL_6_1 .
+
+:resource_CloudServers_RedHatEL55 a os:RedHatEL_5_5 .
+
+:resource_CloudServers_Ubuntu1110 a os:Ubuntu_11_10 .
+
+:resource_CloudServers_Ubuntu1104 a os:Ubuntu_11_04 .
+
+:resource_CloudServers_Ubuntu1004LTS a os:Ubuntu_10_04_LTS .
+
+#____________________________________________________________________________________
+:resource_CloudServers_DataCentre_EU a cloud:DataCentre ;
+	rdfs:label "UK" ;
+	gn:locatedIn <http://sws.geonames.org/5025219> . #preliminiary
+
+:resource_CloudServers_DataCentre_US a cloud:DataCentre ;
+	rdfs:label "US" ;
+	gn:locatedIn <http://sws.geonames.org/5025219> . #preliminiary
+
+#____________________________________________________________________________________
+:resource_CloudServers_Bandwidth_Out a cloud:Upstream ;	
+	gr:hasUnitOfMeasurement "Mbit/s" .
+
+:resource_CloudServers_Bandwidth_In a cloud:Downstream ;	
+	gr:hasUnitOfMeasurement "Mbit/s" . 
+
+#************************************************************************************
+#	Service Cloud Servers															
+#************************************************************************************
+
+<#service_CloudServers> a usdl:Service ;
+	dcterms:created "2012-05-22"^^xsd:date ;
+	dcterms:modified "2012-05-22"^^xsd:date ;
+	dcterms:title "Rackspace Cloud Servers"@en ;
+	usdl:hasNature usdl:Automated ;
+	usdl:hasProvider :provider_Rackspace ;
+	usdl:hasLegalCondition :legal_Rackspace ;
+	gr:quantitativeProductOrServiceProperty 
+		:resource_CloudServers_StaticPublicIP ,
+		:resource_CloudServers_StaticPrivateIP ,
+		:resource_CloudServers_OptionalStaticPublicIP;
+	gr:qualitativeProductOrServiceProperty
+		:resource_CloudServers_DataCentre_EU ,
+		:resource_CloudServers_DataCentre_US .
+
+#====================================================================================
+
+:offering_CloudServers a usdl:ServiceOffering ;
+	dcterms:title "Rackspace's Cloud Servers"@en ;
+	dcterms:description "Rackspace's Cloud Servers have eight different resource sizings and further differentiate between Linux and Windows as operating system."@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;
+	usdl:includes <#service_CloudServers> ;	
+	usdl:hasPartMandatory <#service_FanaticSupport> ;		
+	usdl:hasPricePlan 
+		:pricing_CloudServers_Size1_Linux ,
+		:pricing_CloudServers_Size2_Linux ,
+		:pricing_CloudServers_Size3_Linux ,
+		:pricing_CloudServers_Size4_Linux ,
+		:pricing_CloudServers_Size5_Linux ,
+		:pricing_CloudServers_Size6_Linux ,
+		:pricing_CloudServers_Size7_Linux ,
+		:pricing_CloudServers_Size8_Linux ,
+		:pricing_CloudServers_Size3_Windows ,
+		:pricing_CloudServers_Size4_Windows ,
+		:pricing_CloudServers_Size5_Windows ,
+		:pricing_CloudServers_Size6_Windows ,
+		:pricing_CloudServers_Size7_Windows ,
+		:pricing_CloudServers_Size8_Windows ;
+	usdl:hasServiceLevelProfile :slp_Rackspace .			
+
+#====================================================================================
+
+:pricing_CloudServers_Size1_Linux a price:PricePlan ;
+	dcterms:title "Size 1 (Linux)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size1_Linux ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_RedHatELLicence ,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size1_Linux a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size1_Memory ,
+		:resource_CloutServers_Size1_Disk ,
+		:resource_CloudServers_CPU_Linux1 ,
+		:resource_CloudServers_Arch ,
+		:resource_CloudServers_CentOS60 ,
+		:resource_CloudServers_CentOS56 ,
+		:resource_CloudServers_Debian60 ,
+		:resource_CloudServers_Debian50 ,
+		:resource_CloudServers_Fedora16 ,
+		:resource_CloudServers_Fedora15 ,
+		:resource_CloudServers_Gentoo11 ,
+		:resource_CloudServers_OpenSUSE121 ,
+		:resource_CloudServers_RedHatEL61 ,
+		:resource_CloudServers_RedHatEL55 ,
+		:resource_CloudServers_Ubuntu1110 ,
+		:resource_CloudServers_Ubuntu1104 ,
+		:resource_CloudServers_Ubuntu1004LTS ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.015" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_OptionalStaticPublicIP a price:PriceComponent ;
+	dcterms:title "Optional additionl IPs"@en ;
+	dcterms:description "Additional public IP addresses can be purchased for $2 / month. Please consult 'http://www.rackspace.com/knowledge_center/node/1967/' for more details."@en ;
+	price:isLinkedTo :resource_CloudServers_OptionalStaticPublicIP ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "2" ;
+			gr:hasUnitOfMeasurement "MON" ] .
+
+:priceComponent_RedHatELLicence a price:PriceComponent ;
+	dcterms:title "Red Hat EL Licence"@en ;
+	dcterms:description "If you choose Red Hat Enterprise Linux (RHEL), the licensing fee is not included in the general pricing. In addition to the hourly charge, a $20 flat, monthly fee will be charged per server calculated based on the maximum number of RHEL Cloud Servers active at any point in time during the billing cycle. These fees will not be prorated based on usage."@en ;
+	price:isLinkedTo :resource_CloudServers_OptionalStaticPublicIP ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "20" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "Usage of Red Hat Enterprise Linux" ] .
+
+:priceComponent_Bandwidth_Out a price:PriceComponent ;
+	dcterms:title "Bandwidth out"@en ;
+	dcterms:description "Fee for outgoing data transfer."@en ;
+	price:isLinkedTo :resource_CloudServers_Bandwidth_Out ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.18" ;
+			gr:hasUnitOfMeasurement "E34" ] .
+
+:priceComponent_Bandwidth_In a price:PriceComponent ;
+	dcterms:title "Bandwidth in"@en ;
+	dcterms:description "Incoming data transfer is free."@en ;
+	price:isLinkedTo :resource_CloudServers_Bandwidth_Out ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.0" ;
+			gr:hasUnitOfMeasurement "E34" ] .
+
+:deduction_Availability_Network a price:Deduction ;
+	dcterms:title "Compensation for unavailality of network"@en ;
+	dcterms:description "Five percent (5%) of the fees for each 30 minutes of network downtime, up to 100% of the fees;"@en ;
+	price:hasDeductionSource :slo_Rackspace_AvailibilityCalculation_Network ;
+	price:hasRelativeDeductionValue "5" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+:deduction_Availability_DataCenterInfrastructure a price:Deduction ;
+	dcterms:title "Compensation for unavailality of infrastructure"@en ;
+	dcterms:description "Five percent (5%) of fees for each 30 minutes of infrastructure downtime, up to 100% of the fees."@en ;
+	price:hasDeductionSource :slo_Rackspace_AvailibilityCalculation_DataCenterInfrastructure ;
+	price:hasRelativeDeductionValue "5" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+:deduction_Availability_CloudServerHosts a price:Deduction ;
+	dcterms:title "Compensation for additional downtime of Cloud Server Hosts RTO"@en ;
+	dcterms:description "Five percent (5%) of the fees for each additional hour of downtime for Cloud Server Hosts RTO, up to 100% of the fees."@en ;
+	price:hasDeductionSource :slo_Rackspace_AvailibilityCalculation_CloudServerHosts ;
+	price:hasRelativeDeductionValue "5" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+:deduction_Availability_Migration a price:Deduction ;
+	dcterms:title "Compensation for additional downtime of migration"@en ;
+	dcterms:description "Five percent (5%) of the fees for each additional hour of downtime for migration, up to 100% of the fees."@en ;
+	price:hasDeductionSource :slo_Rackspace_AvailibilityCalculation_Migration ;
+	price:hasRelativeDeductionValue "5" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size2_Linux a price:PricePlan ;
+	dcterms:title "Size 2 (Linux)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size2_Linux ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_RedHatELLicence ,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size2_Linux a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size2_Memory ,
+		:resource_CloutServers_Size2_Disk ,
+		:resource_CloudServers_CPU_Linux1 ,
+		:resource_CloudServers_Arch ,
+		:resource_CloudServers_CentOS60 ,
+		:resource_CloudServers_CentOS56 ,
+		:resource_CloudServers_Debian60 ,
+		:resource_CloudServers_Debian50 ,
+		:resource_CloudServers_Fedora16 ,
+		:resource_CloudServers_Fedora15 ,
+		:resource_CloudServers_Gentoo11 ,
+		:resource_CloudServers_OpenSUSE121 ,
+		:resource_CloudServers_RedHatEL61 ,
+		:resource_CloudServers_RedHatEL55 ,
+		:resource_CloudServers_Ubuntu1110 ,
+		:resource_CloudServers_Ubuntu1104 ,
+		:resource_CloudServers_Ubuntu1004LTS ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.03" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size3_Linux a price:PricePlan ;
+	dcterms:title "Size 3 (Linux)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size3_Linux ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_RedHatELLicence ,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size3_Linux a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size3_Memory ,
+		:resource_CloutServers_Size3_Disk ,
+		:resource_CloudServers_CPU_Linux1 ,
+		:resource_CloudServers_Arch ,
+		:resource_CloudServers_CentOS60 ,
+		:resource_CloudServers_CentOS56 ,
+		:resource_CloudServers_Debian60 ,
+		:resource_CloudServers_Debian50 ,
+		:resource_CloudServers_Fedora16 ,
+		:resource_CloudServers_Fedora15 ,
+		:resource_CloudServers_Gentoo11 ,
+		:resource_CloudServers_OpenSUSE121 ,
+		:resource_CloudServers_RedHatEL61 ,
+		:resource_CloudServers_RedHatEL55 ,
+		:resource_CloudServers_Ubuntu1110 ,
+		:resource_CloudServers_Ubuntu1104 ,
+		:resource_CloudServers_Ubuntu1004LTS ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.06" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size4_Linux a price:PricePlan ;
+	dcterms:title "Size 4 (Linux)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size4_Linux ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_RedHatELLicence ,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size4_Linux a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size4_Memory ,
+		:resource_CloutServers_Size4_Disk ,
+		:resource_CloudServers_CPU_Linux1 ,
+		:resource_CloudServers_Arch ,
+		:resource_CloudServers_CentOS60 ,
+		:resource_CloudServers_CentOS56 ,
+		:resource_CloudServers_Debian60 ,
+		:resource_CloudServers_Debian50 ,
+		:resource_CloudServers_Fedora16 ,
+		:resource_CloudServers_Fedora15 ,
+		:resource_CloudServers_Gentoo11 ,
+		:resource_CloudServers_OpenSUSE121 ,
+		:resource_CloudServers_RedHatEL61 ,
+		:resource_CloudServers_RedHatEL55 ,
+		:resource_CloudServers_Ubuntu1110 ,
+		:resource_CloudServers_Ubuntu1104 ,
+		:resource_CloudServers_Ubuntu1004LTS ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.12" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size5_Linux a price:PricePlan ;
+	dcterms:title "Size 5 (Linux)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size5_Linux ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_RedHatELLicence ,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size5_Linux a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size5_Memory ,
+		:resource_CloutServers_Size5_Disk ,
+		:resource_CloudServers_CPU_Linux1 ,
+		:resource_CloudServers_Arch ,
+		:resource_CloudServers_CentOS60 ,
+		:resource_CloudServers_CentOS56 ,
+		:resource_CloudServers_Debian60 ,
+		:resource_CloudServers_Debian50 ,
+		:resource_CloudServers_Fedora16 ,
+		:resource_CloudServers_Fedora15 ,
+		:resource_CloudServers_Gentoo11 ,
+		:resource_CloudServers_OpenSUSE121 ,
+		:resource_CloudServers_RedHatEL61 ,
+		:resource_CloudServers_RedHatEL55 ,
+		:resource_CloudServers_Ubuntu1110 ,
+		:resource_CloudServers_Ubuntu1104 ,
+		:resource_CloudServers_Ubuntu1004LTS ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.24" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size6_Linux a price:PricePlan ;
+	dcterms:title "Size 6 (Linux)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size6_Linux ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_RedHatELLicence ,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size6_Linux a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size6_Memory ,
+		:resource_CloutServers_Size6_Disk ,
+		:resource_CloudServers_CPU_Linux1 ,
+		:resource_CloudServers_Arch ,
+		:resource_CloudServers_CentOS60 ,
+		:resource_CloudServers_CentOS56 ,
+		:resource_CloudServers_Debian60 ,
+		:resource_CloudServers_Debian50 ,
+		:resource_CloudServers_Fedora16 ,
+		:resource_CloudServers_Fedora15 ,
+		:resource_CloudServers_Gentoo11 ,
+		:resource_CloudServers_OpenSUSE121 ,
+		:resource_CloudServers_RedHatEL61 ,
+		:resource_CloudServers_RedHatEL55 ,
+		:resource_CloudServers_Ubuntu1110 ,
+		:resource_CloudServers_Ubuntu1104 ,
+		:resource_CloudServers_Ubuntu1004LTS ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.48" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size7_Linux a price:PricePlan ;
+	dcterms:title "Size 7 (Linux)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size7_Linux ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_RedHatELLicence ,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size7_Linux a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size7_Memory ,
+		:resource_CloutServers_Size7_Disk ,
+		:resource_CloudServers_CPU_Linux1 ,
+		:resource_CloudServers_Arch ,
+		:resource_CloudServers_CentOS60 ,
+		:resource_CloudServers_CentOS56 ,
+		:resource_CloudServers_Debian60 ,
+		:resource_CloudServers_Debian50 ,
+		:resource_CloudServers_Fedora16 ,
+		:resource_CloudServers_Fedora15 ,
+		:resource_CloudServers_Gentoo11 ,
+		:resource_CloudServers_OpenSUSE121 ,
+		:resource_CloudServers_RedHatEL61 ,
+		:resource_CloudServers_RedHatEL55 ,
+		:resource_CloudServers_Ubuntu1110 ,
+		:resource_CloudServers_Ubuntu1104 ,
+		:resource_CloudServers_Ubuntu1004LTS ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.96" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size8_Linux a price:PricePlan ;
+	dcterms:title "Size 8 (Linux)"@en ;
+
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size8_Linux ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_RedHatELLicence ,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size8_Linux a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size8_Memory ,
+		:resource_CloutServers_Size8_Disk ,
+		:resource_CloudServers_CPU_Linux2 ,
+		:resource_CloudServers_Arch ,
+		:resource_CloudServers_CentOS60 ,
+		:resource_CloudServers_CentOS56 ,
+		:resource_CloudServers_Debian60 ,
+		:resource_CloudServers_Debian50 ,
+		:resource_CloudServers_Fedora16 ,
+		:resource_CloudServers_Fedora15 ,
+		:resource_CloudServers_Gentoo11 ,
+		:resource_CloudServers_OpenSUSE121 ,
+		:resource_CloudServers_RedHatEL61 ,
+		:resource_CloudServers_RedHatEL55 ,
+		:resource_CloudServers_Ubuntu1110 ,
+		:resource_CloudServers_Ubuntu1104 ,
+		:resource_CloudServers_Ubuntu1004LTS ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "1.80" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size3_Windows a price:PricePlan ;
+	dcterms:title "Size 3 (Windows)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size3_Windows ,
+		:priceComponent_SQLServer2008R2_Standard ,
+		:priceComponent_SQLServer2008R2_Web ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size3_Windows a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size3_Memory ,
+		:resource_CloutServers_Size3_Disk ,
+		:resource_CloudServers_CPU_Windows1 ,
+		:resource_CloudServers_WindowsServer2008R2Enterprise ,
+		:resource_CloudServers_WindowsServer2008SP2Enterprise ,
+		:resource_CloudServers_WindowsServer2008 ,
+		:resource_CloudServers_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.08" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_SQLServer2008R2_Standard a price:PriceComponent ;
+	dcterms:title "SQL Server 2008 R2 Standard"@en ;
+	dcterms:description "Fee for SQL Server 2008 R2 Standard."@en ;
+	price:isLinkedTo :resource_CloudServers_SQL2008R2Standard ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.72" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_SQLServer2008R2_Web a price:PriceComponent ;
+	dcterms:title "SQL Server 2008 R2 Web"@en ;
+	dcterms:description "Fee for SQL Server 2008 R2 Web."@en ;
+	price:isLinkedTo :resource_CloudServers_SQL2008R2Web  ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.06" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size4_Windows a price:PricePlan ;
+	dcterms:title "Size 4 (Windows)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size4_Windows ,
+		:priceComponent_SQLServer2008R2_Standard ,
+		:priceComponent_SQLServer2008R2_Web ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size3_Windows a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size4_Memory ,
+		:resource_CloutServers_Size4_Disk ,
+		:resource_CloudServers_CPU_Windows2 ,
+		:resource_CloudServers_WindowsServer2008R2Enterprise ,
+		:resource_CloudServers_WindowsServer2008SP2Enterprise ,
+		:resource_CloudServers_WindowsServer2008 ,
+		:resource_CloudServers_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.16" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size5_Windows a price:PricePlan ;
+	dcterms:title "Size 5 (Windows)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size5_Windows ,
+		:priceComponent_SQLServer2008R2_Standard ,
+		:priceComponent_SQLServer2008R2_Web ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size5_Windows a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size5_Memory ,
+		:resource_CloutServers_Size5_Disk ,
+		:resource_CloudServers_CPU_Windows2 ,
+		:resource_CloudServers_WindowsServer2008R2Enterprise ,
+		:resource_CloudServers_WindowsServer2008SP2Enterprise ,
+		:resource_CloudServers_WindowsServer2008 ,
+		:resource_CloudServers_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.32" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size6_Windows a price:PricePlan ;
+	dcterms:title "Size 6 (Windows)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size6_Windows ,
+		:priceComponent_SQLServer2008R2_Standard ,
+		:priceComponent_SQLServer2008R2_Web ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size6_Windows a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size6_Memory ,
+		:resource_CloutServers_Size6_Disk ,
+		:resource_CloudServers_CPU_Windows3 ,
+		:resource_CloudServers_WindowsServer2008R2Enterprise ,
+		:resource_CloudServers_WindowsServer2008SP2Enterprise ,
+		:resource_CloudServers_WindowsServer2008 ,
+		:resource_CloudServers_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.58" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size7_Windows a price:PricePlan ;
+	dcterms:title "Size 7 (Windows)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size4_Windows ,
+		:priceComponent_SQLServer2008R2_Standard ,
+		:priceComponent_SQLServer2008R2_Web ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size7_Windows a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size7_Memory ,
+		:resource_CloutServers_Size7_Disk ,
+		:resource_CloudServers_CPU_Windows3 ,
+		:resource_CloudServers_WindowsServer2008R2Enterprise ,
+		:resource_CloudServers_WindowsServer2008SP2Enterprise ,
+		:resource_CloudServers_WindowsServer2008 ,
+		:resource_CloudServers_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "1.08" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_CloudServers_Size8_Windows a price:PricePlan ;
+	dcterms:title "Size 8 (Windows)"@en ;
+	dcterms:description ""@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Size8_Windows ,
+		:priceComponent_SQLServer2008R2_Standard ,
+		:priceComponent_SQLServer2008R2_Web ,
+		:priceComponent_OptionalStaticPublicIP,
+		:priceComponent_Bandwidth_Out ,
+		:priceComponent_Bandwidth_In ,
+		:deduction_Availability_Network ,
+		:deduction_Availability_DataCenterInfrastructure ,
+		:deduction_Availability_CloudServerHosts ,
+		:deduction_Availability_Migration .
+
+:priceComponent_Size8_Windows a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_CloudServers_Size8_Memory ,
+		:resource_CloutServers_Size8_Disk ,
+		:resource_CloudServers_CPU_Windows4 ,
+		:resource_CloudServers_WindowsServer2008R2Enterprise ,
+		:resource_CloudServers_WindowsServer2008SP2Enterprise ,
+		:resource_CloudServers_WindowsServer2008 ,
+		:resource_CloudServers_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "2.16" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#************************************************************************************
+#	Rackspace Support "Fanatic Support"								
+#************************************************************************************
+
+<#service_FanaticSupport> a usdl:Service ;
+	dcterms:modified "2012-05-22"^^xsd:date ;
+	dcterms:created "2012-05-22"^^xsd:date ;
+	dcterms:title "Fanatic Support"@en ;
+	usdl:versionInfo "001" ;
+	usdl:hasNature usdl:Manual ;
+	usdl:hasProvider :provider_Rackspace ;
+	usdl:hasLegalCondition :legal_Rackspance;
+	gr:qualitativeProductOrServiceProperty :resource_FanaticSupport_TechSupport .
+
+:resource_FanaticSupport_TechSupport a support:TechSupport ;
+	gr:valueReference 
+		[ a support:ChatSupport ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] ,
+		[ a support:PhoneSupport ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] ,
+		[ a support:TicketSupport ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] .
+
+#====================================================================================
+
+:offering_FanaticSupport a usdl:ServiceOffering ;
+	dcterms:title "Fanatic Support"@en ;
+	dcterms:description "Rackspace's FanaticSupport."@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;
+	usdl:includes <#service_FanaticSupport> ;			
+	usdl:hasPricePlan :pricing_FanaticSupport .
+
+#====================================================================================
+
+:pricing_FanaticSupport a price:PricePlan ;
+	dcterms:title "Fanatic Support"@en ;
+	dcterms:description "Fanatic Support comes free with every account."@en .
+

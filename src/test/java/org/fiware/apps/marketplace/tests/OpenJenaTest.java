@@ -32,8 +32,8 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 public class OpenJenaTest {
 	// some definitions
-	static String serviceURI    = "http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/WarrantyManagementSolution_Master.rdf";
-	static String serviceURIN3    = "http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/WarrantyManagementSolution_Master.n3";
+	static String serviceURI    = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/WarrantyManagementSolution_Master.rdf";
+	static String serviceURIN3    = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/WarrantyManagementSolution_Master.n3";
 
 	public static void main(String[] args) { 
 

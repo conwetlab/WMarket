@@ -1,0 +1,1900 @@
+@base <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001> .
+@prefix : <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001#> .
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dctypes: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix blueprint: <http://bizweb.sap.com/TR/blueprint#> .
+@prefix ctag: <http://commontag.org/ns#> .
+@prefix msm: <http://cms-wg.sti2.org/ns/minimal-service-model#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix sawsdl: <http://www.w3.org/ns/sawsdl#> .
+@prefix sarest: <http://www.knoesis.org/research/srl/standards/sa-rest/#> .
+@prefix wl: <http://www.wsmo.org/ns/wsmo-lite#> .
+@prefix http: <http://www.w3.org/2011/http#> .
+
+@prefix usdl: <http://www.linked-usdl.org/ns/usdl-core#> .
+@prefix legal: <http://www.linked-usdl.org/ns/usdl-legal#> .
+@prefix price: <http://www.linked-usdl.org/ns/usdl-pricing#> .
+@prefix sla: <http://www.linked-usdl.org/ns/usdl-sla#> .
+
+@prefix gn: <http://www.geonames.org/ontology#> .
+@prefix genVoc: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#> .
+@prefix cloud: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#> .
+@prefix os: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#> .
+@prefix support: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#> .
+
+<>  rdf:type usdl:ServiceDescription ;
+	rdfs:label "EC2 service descriptions" ;
+	dcterms:title "EC2 service descriptions" ;
+	dcterms:description "Collection of European Amazon EC2 service descriptions for reasearch purposes." ;
+	dcterms:contributor 
+		[ a foaf:Person ;
+			foaf:name "Florian Heberle" ;
+			foaf:firstName "Florian" ;
+			foaf:lastName "Heberle" ] ;
+	dcterms:created "2012-05-18"^^xsd:date ;
+	dcterms:modified "2012-06-20"^^xsd:date ;
+	owl:versionInfo "001" .
+
+#************************************************************************************
+#	Customizing															
+#************************************************************************************
+
+:Amazon_EC2_IOPerformance a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "I/O performance" ;
+	skos:editorialNote "Amazon declares their I/O statements as qualitative measure in the categories: low, moderate, high and very high." ;
+	skos:broader cloud:Traffic ;
+	skos:related 
+		:Amazon_EC2_IOPerformance_Low ,
+		:Amazon_EC2_IOPerformance_Moderate ,
+		:Amazon_EC2_IOPerformance_High ,
+		:Amazon_EC2_IOPerformance_VeryHigh .
+
+:Amazon_EC2_IOPerformance_Low a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "I/O performance category low" ;
+	genVoc:hasRightSibling :Amazon_EC2_IOPerformance_Moderate .
+
+:Amazon_EC2_IOPerformance_Moderate a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "I/O performance category moderate" ;
+	genVoc:hasLeftSibling :Amazon_EC2_IOPerformance_Low ;
+	genVoc:hasRightSibling :Amazon_EC2_IOPerformance_High .
+
+:Amazon_EC2_IOPerformance_High a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "I/O performance category high" ;
+	genVoc:hasLeftSibling :Amazon_EC2_IOPerformance_Moderate ;
+	genVoc:hasRightSibling :Amazon_EC2_IOPerformance_VeryHigh .
+
+:Amazon_EC2_IOPerformance_VeryHigh a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "I/O performance category very high" ;
+	genVoc:hasLeftSibling :Amazon_EC2_IOPerformance_High .
+
+:Amazon_EC2_CreditPeriodStart a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf 
+		gr:QualitativeValue ,
+		genVoc:GenericPointInTime ;
+	skos:prefLabel "Point in time when EC2 started being in the state of 'Region Unavailable'." ;
+	skos:broader cloud:CreditPeriodStart .
+	
+:Amazon_EC2_CreditPeriodEnd a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf 
+		gr:QualitativeValue ,
+		genVoc:GenericPointInTime ;
+	skos:prefLabel "Point in time when EC2 stopped being in the state of 'Region Unavailable'." ;
+	skos:broader cloud:CreditPeriodEnd .
+
+:Amazon_Support_NamedContacts a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QuantitativeValue ;
+	skos:prefLabel "Named contacts"@en ;
+	dcterms:description "Add names to your company's account so that more people can contact us...instead of asking their questions through you."@en .
+
+:Amazon_Support_ArchitectureSupport_BuildingBlocks a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Architecture Support - Building Blocks"@en ;
+	dcterms:description "Guidance on how to use all AWS products, features, and services together. Includes guidance on best practices and generalized architectural advice."@en ;
+	genVoc:hasRightSibling :Amazon_Support_ArchitectureSupport_ServiceReviews .
+
+:Amazon_Support_ArchitectureSupport_ServiceReviews a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Architecture Support - Service Reviews"@en ;
+	dcterms:description "Review of specific AWS products, features, and services being used. Includes basic guidance on aligning your current AWS usage to best practices."@en ;
+	genVoc:hasLeftSibling :Amazon_Support_ArchitectureSupport_BuildingBlocks ;
+	genVoc:hasRightSibling :Amazon_Support_ArchitectureSupport_UseCaseGuidance .
+
+:Amazon_Support_ArchitectureSupport_UseCaseGuidance a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Architecture Support - Use Case Guidance"@en ;
+	dcterms:description "Guidance on what AWS products, features, and services to use to best support your specific use cases. Includes guidance on optimizing AWS products and configuration to meet your specific needs."@en ;
+	genVoc:hasLeftSibling :Amazon_Support_ArchitectureSupport_ServiceReviews ;
+	genVoc:hasRightSibling :Amazon_Support_ArchitectureSupport_ApplicationArchitecture .
+
+:Amazon_Support_ArchitectureSupport_ApplicationArchitecture a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Architecture Support - Application Architecture"@en ;
+	dcterms:description "Consultative partnership supporting specific use cases and applications. Includes design reviews and architectural guidance. Platinum customers support team includes a dedicated Technical Account Manager, and access to an AWS Solutions Architect."@en ;
+	genVoc:hasLeftSibling :Amazon_Support_ArchitectureSupport_UseCaseGuidance .
+
+:Amazon_Support_SpecialFeature_ResolutionOfAwsIssues a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Resolution for AWS-owned issues"@en .
+
+:Amazon_Support_SpecialFeature_ClientSideDiagnosticTools a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Client side diagnostic tools"@en .
+
+:Amazon_Support_SpecialFeature_BestPracticeGuidance a rdfs:Class , skos:Concept ;
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Best practice guidance"@en .
+
+:Amazon_Support_SpecialFeature_ThirdPartySoftware a rdfs:Class , skos:Concept ;	
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "3rd Party Software Support - Beta"@en .
+
+:Amazon_Support_SpecialFeature_TrustedAdvisor a rdfs:Class , skos:Concept ;	
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "AWS Trusted Advisor - Beta"@en .
+
+:Amazon_Support_SpecialFeature_TechAccountManager a rdfs:Class , skos:Concept ;	
+	rdfs:subClassOf gr:QualitativeValue ;	
+	skos:prefLabel "Technical Account Manager"@en ;
+	dcterms:description "Your Technical Account Manager (TAM) provides technical expertise for the full range of AWS services and obtains a detailed understanding of your use case and technology architecture. TAMs work with AWS Solution Architects to help you launch new projects and give best practices recommendations throughout the implementation life cycle. Your TAM will act as the primary point of contact for ongoing support needs, and you will have a direct telephone line to your TAM (Platinum Customers Only)."@en .
+
+:Amazon_Support_SpecialFeature_WhiteGlove a rdfs:Class , skos:Concept ;	
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "White-glove case routing "@en ;
+	dcterms:description "Cases submitted by Platinum customers will be recognized and routed directly to specially trained engineers to ensure fast, accurate resolution to critical issues."@en .
+
+:Amazon_Support_SpecialFeature_ManagementBusinessReviews a rdfs:Class , skos:Concept ;	
+	rdfs:subClassOf gr:QualitativeValue ;
+	skos:prefLabel "Management business reviews "@en ;
+	dcterms:description "Get help with infrastructure planning. Your Technical Account Manager conducts performance reviews, reports metrics, collaborates on launches, and connects you with solutions architects."@en .
+
+#************************************************************************************
+#	Legal												
+#************************************************************************************
+
+:legal_Amazon a legal:TermsAndConditions ;
+	dcterms:title "Amazon Web Services LLC's legal statements"@en ;
+	dcterms:description "Amazon Web Services LLC's legal statements are accessible at 'http://aws.amazon.com/legal/'. Please consult this website for further information"@en ;
+	legal:hasClause 
+		[ a legal:Clause ;
+			legal:name "AWS Customer Agreement" ;
+			legal:text "http://aws.amazon.com/agreement"@en ] ,
+		[ a legal:Clause ;
+			legal:name "AWS Services" ;
+			legal:text "http://aws.amazon.com/serviceterms"@en ] ,
+		[ a legal:Clause ;
+			legal:name "AWS Acceptable Use Policy" ;
+			legal:text "http://aws.amazon.com/aup"@en ] ,
+		[ a legal:Clause ;
+			legal:name "AWS Trademark Guidelines" ;
+			legal:text "http://aws.amazon.com/trademark-guidelines"@en ] ,
+		[ a legal:Clause ;
+			legal:name "AWS Sites" ;
+			legal:text "http://aws.amazon.com/terms"@en ] ,
+		[ a legal:Clause ;
+			legal:name "Privacy Policy" ;
+			legal:text "http://aws.amazon.com/privacy"@en ] ,
+		[ a legal:Clause ;
+			legal:name "AWS Tax Help" ;
+			legal:text "http://aws.amazon.com/tax-help"@en ] .
+
+#************************************************************************************
+#	AWS Company data											
+#************************************************************************************
+
+:provider_Amazon a gr:BusinessEntity ;
+	foaf:name "Amazon Web Services LLC" ;
+	foaf:homepage <http://aws.amazon.com/> ;
+	foaf:logo <http://d36cz9buwru1tt.cloudfront.net/logo_aws.gif> ;
+	usdl:legalForm "LLC" ;
+	vcard:adr 
+		[ a vcard:Work ;
+			vcard:country-name "U.S."@en ] .
+
+#************************************************************************************
+#	SLAs EC2															
+#************************************************************************************
+
+:slp_EC2 a usdl:ServiceLevelProfile ;
+	dcterms:title "Amazon Web Services EC2 Service Level Profile"@en ;
+	dcterms:description "The Amazon Web Services EC2 Service Level Profile is accessible via 'http://aws.amazon.com/ec2-sla/'. All information integrated here are not legally binding." ;
+	sla:hasServiceLevel 
+		:slo_EC2_AvailabilityGuarantee , 
+		:slo_EC2_AvailibilityCalculation , 
+		:slo_EC2_AvailabilityExclusions , 
+		:slo_EC2_CreditSuspension , 
+		:slo_EC2_CreditRequest .
+
+#____________________________________________________________________________________
+:slo_EC2_AvailabilityGuarantee a sla:GuaranteedState ;
+	dcterms:title "Annual Uptime Percentage"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "AWS will use commercially reasonable efforts to make Amazon EC2 available with an 'Annual Uptime Percentage' of at least 99.95% during the 'Service Year'."@en ;
+			sla:hasVariable 
+				:var_EC2_AvailabilityGuarantee_Value , 
+				:var_EC2_AvailabilityGuarantee_MeasurementPeriod ] .
+
+:var_EC2_AvailabilityGuarantee_Value a sla:Variable ;
+	rdfs:label "Annual Uptime Percentage"@en ;
+	sla:hasDefault 
+		[ a cloud:Availability ;
+			gr:hasValue "99.95" ;
+			gr:hasUnitOfMeasurement "P1" ] .
+
+:var_EC2_AvailabilityGuarantee_MeasurementPeriod a sla:Variable ;
+	rdfs:label "Annual Uptime Percentage measurment period"@en ;
+	sla:hasDefault 
+		[ a genVoc:MeasurementPeriod ;
+			gr:hasValue "365" ;
+			gr:hasUnitOfMeasurement "DAY" ] .
+
+#____________________________________________________________________________________
+:slo_EC2_AvailibilityCalculation a sla:GuaranteedState ;
+	dcterms:title "Annual Uptime Percentage calculation"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "'Annual Uptime Percentage' is calculated by subtracting from 100% the percentage of 5 minute periods during the 'Service Year' in which Amazon EC2 was in the state of 'Region Unavailable'."@en;
+			sla:hasVariable 
+				:var_EC2_AvailibilityCalculation_CreditPeriodStart ,
+				:var_EC2_AvailibilityCalculation_CreditPeriodSlice ,
+				:var_EC2_AvailibilityCalculation_CreditPeriodEnd ] .
+
+:var_EC2_AvailibilityCalculation_CreditPeriodStart a sla:Variable ;
+	rdfs:label "Credit period start"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditPeriodStart ;
+			gr:valueReference 
+				[ a :Amazon_EC2_CreditPeriodStart ] ] .
+
+:var_EC2_AvailibilityCalculation_CreditPeriodSlice a sla:Variable ;
+	rdfs:label "Credit period slice"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditPeriodSlice ;
+			gr:hasValue "5" ;
+			gr:hasUnitOfMeasurement "MIN" ] .
+
+:var_EC2_AvailibilityCalculation_CreditPeriodEnd a sla:Variable ;
+	rdfs:label "Credit period end"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditPeriodEnd ;
+			gr:valueReference 
+				[ a :Amazon_EC2_CreditPeriodEnd ] ] .
+
+#____________________________________________________________________________________
+:slo_EC2_AvailabilityExclusions a sla:GuaranteedState ;
+	dcterms:title "Exceptions to Annual Uptime Percentage calculation" ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Timespans not considered in calculating Annual Uptime Percentage."@en ;
+			sla:hasVariable 
+				:var_EC2_AvailabilityExclusions_Suspension , 
+				:var_EC2_AvailabilityExclusions_OutsideControl , 
+				:var_EC2_AvailabilityExclusions_ActionsAndInactions ,
+				:var_EC2_AvailibilityExclusions_EquipmentNotInDirectControl ,
+				:var_EC2_AvailibilityExclusions_FailuresOfIndividualInstances ] .
+
+:var_EC2_AvailabilityExclusions_Suspension a sla:Variable ;
+	rdfs:label "Downtime resulting from suspensions."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_EC2_AvailabilityExclusions_OutsideControl a sla:Variable ;
+	rdfs:label "Downtime caused by factors outside AWS's reasonable control, including force majeure or Internet access or related problems beyond the demarcation point of Amazon EC2."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_EC2_AvailabilityExclusions_ActionsAndInactions a sla:Variable ;
+	rdfs:label "Downtime resulting from any actions or inactions of the customer or any third party."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_EC2_AvailabilityExclusions_EquipmentNotInDirectControl a sla:Variable ;
+	rdfs:label "Downtime resulting from the customer's equipment, software or other technology and/or third party equipment, software or other technology (other than third party equipment within AWS's direct control). "@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+:var_EC2_AvailabilityExclusions_FailuresOfIndividualInstances a sla:Variable ;
+	rdfs:label "Downtime resulting from failures of individual instances not attributable to Region Unavailability."@en ;
+	sla:hasDefault [ a cloud:AvailabilityExclusion ] .
+
+#____________________________________________________________________________________
+:slo_EC2_CreditSuspension a sla:GuaranteedState ;
+	dcterms:title "Full credit suspension"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Full suspension of credit eligibility in the following cases."@en ;
+			sla:hasVariable 
+				:var_EC2_CreditSuspension_RequestNotInTime ,
+				:var_EC2_CreditSuspension_SuspensionOrTermination ] .
+
+:var_EC2_CreditSuspension_RequestNotInTime a sla:Variable ;
+	rdfs:label "The customer did not send the request in time."@en ;
+	sla:hasDefault [ a cloud:CreditSuspensionReason ] .
+
+:var_EC2_CreditSuspension_SuspensionOrTermination a sla:Variable ;
+	rdfs:label "The customer's right to use EC2 was suspended orinated."@en ;
+	sla:hasDefault [ a cloud:CreditSuspensionReason ] .
+
+#____________________________________________________________________________________
+:slo_EC2_CreditRequest a sla:GuaranteedAction ;
+	dcterms:title "Credit request"@en ;
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "To receive a credit, the customer must submit a request by sending an e-mail message to aws-sla-request@amazon.com including the necessary information within 30 business days"@en ;
+			sla:hasVariable 
+				:var_EC2_CreditRequest_AccountNumber ,
+				:var_EC2_CreditRequest_DatesAndTimes ,
+				:var_EC2_CreditRequest_Logs ,
+				:var_EC2_CreditRequest_CreditRequestPeriod ] .
+
+:var_EC2_CreditRequest_AccountNumber a sla:Variable ;
+	rdfs:label "The subject of the e-mail must contain the customer's account number."@en .
+
+:var_EC2_CreditRequest_DatesAndTimes a sla:Variable ;
+	rdfs:label "The body of the e-mail must contain the dates and times of each incident."@en .
+
+:var_EC2_CreditRequest_Logs a sla:Variable ;
+	rdfs:label "The e-mail must contain the customer's server request logs thatdocument the errors."@en .
+
+:var_EC2_CreditRequest_CreditRequestPeriod a sla:Variable ;
+	rdfs:label "Request period"@en ;
+	sla:hasDefault 
+		[ a cloud:CreditRequestPeriod ;
+			gr:hasValue "30" ;
+			gr:hasUnitOfMeasurement "E49" ] . # Common Code for Working day
+
+#************************************************************************************
+#	EC2 shared resource descriptions
+#************************************************************************************
+
+:resource_EC2_PrivateIP a cloud:IPAddress ;
+	gr:valueReference 
+		[ a cloud:PrivateIPAddress ] , 
+		[ a cloud:StaticIPAddress ] , 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "1" ] .
+
+:resource_EC2_PublicIP a cloud:IPAddress ;
+	gr:valueReference 
+		[ a cloud:PublicIPAddress ] , 
+		[ a cloud:StaticIPAddress ] , 
+		[ a genVoc:Quantity ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "1" ] .
+
+:resource_EC2_WindowsServer2003R2 a os:WindowsServer2003R2 ;
+	gr:valueReference 
+	[ a os:OS32Bit ] ,
+	[ a os:OS64Bit ] .
+
+:resource_EC2_WindowsServer2008 a os:WindowsServer2008 ;
+	gr:valueReference 
+	[ a os:OS32Bit ] ,
+	[ a os:OS64Bit ] .
+
+:resource_EC2_WindowsServer2008R2 a os:WindowsServer2008R2 ;
+	gr:valueReference 
+	[ a os:OS32Bit ] ,
+	[ a os:OS64Bit ] .
+
+:resource_EC2_Linux a os:Linux ;
+	gr:valueReference 
+		[ a os:OS32Bit ] ,
+		[ a os:OS64Bit ] .
+
+:resource_EC2_DataCentre_EU a cloud:DataCentre ;
+	rdfs:label "Dublin, Ireland" ;
+	gn:locatedIn <http://sws.geonames.org/5025219> . #preliminiary
+
+#************************************************************************************
+#	EC2 instance type: Small															
+#************************************************************************************
+
+<#service_EC2_Small> a usdl:Service ;
+	dcterms:created "2012-05-18"^^xsd:date ;
+	dcterms:modified "2012-05-22"^^xsd:date ;
+	dcterms:title "EC2 instance 'small'"@en ;
+	usdl:hasNature usdl:Automated ;
+	usdl:hasProvider :provider_Amazon ;
+	usdl:hasLegalCondition :legal_Amazon ;
+	usdl:hasPartMandatory <#service_Support_Basic> ;
+	usdl:hasPartOptional 
+		<#service_Support_Bronze> ,
+		<#service_Support_Silver> ,
+		<#service_Support_Gold> ,
+		<#service_Support_Premium> ;
+	gr:quantitativeProductOrServiceProperty 
+		:resource_EC2_Small_MainMemory ,
+		:resource_EC2_Small_ComputeUnit ,
+		:resource_EC2_Small_Storage ;
+	gr:qualitativeProductOrServiceProperty 
+		:resource_EC2_Small_IO ,
+		:resource_EC2_PrivateIP ,	
+		:resource_EC2_PublicIP .
+
+:resource_EC2_Small_MainMemory a cloud:MainMemory ;
+	gr:hasUnitOfMeasurement "4L" ;
+	gr:hasValue "1700" .
+	
+:resource_EC2_Small_ComputeUnit a cloud:CPU ;
+	gr:hasUnitOfMeasurement "A86" ;
+	gr:hasMinValue "1.0" ;
+	gr:hasMaxValue "1.2" ;
+	gr:valueReference
+		[ a cloud:NumberOfCores ;
+			gr:hasUnitOfMeasurement "C62" ;
+			gr:hasValue "1" ] .
+
+:resource_EC2_Small_Storage a cloud:PersistentDiskStorage ;
+	gr:hasUnitOfMeasurement "E34" ;
+	gr:hasValue "160" .
+
+:resource_EC2_Small_IO a :Amazon_EC2_IOPerformance ;
+	gr:valueReference
+		[ a :Amazon_EC2_IOPerformance_Moderate ] .
+
+#====================================================================================
+
+:offering_EC2_Small a usdl:ServiceOffering ;
+	dcterms:title "Amazon EC2"@en ;
+	dcterms:description "Offering for a 'Small' EC2 Instance."@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;
+	usdl:includes <#service_EC2_Small> ;			
+	usdl:hasPricePlan 
+		:pricing_EC2_Small_EU_Windows_OnDemand ,
+		:pricing_EC2_Small_EU_Linux_OnDemand ,
+		:pricing_EC2_Small_EU_Windows_ReservedInstance_Light_1yr ,
+		:pricing_EC2_Small_EU_Windows_ReservedInstance_Light_3yr ,
+		:pricing_EC2_Small_EU_Windows_ReservedInstance_Medium_1yr ,
+		:pricing_EC2_Small_EU_Windows_ReservedInstance_Medium_3yr ,
+		:pricing_EC2_Small_EU_Windows_ReservedInstance_Heavy_1yr ,
+		:pricing_EC2_Small_EU_Windows_ReservedInstance_Heavy_3yr ,
+		:pricing_EC2_Small_EU_Linux_ReservedInstance_Light_1yr ,
+		:pricing_EC2_Small_EU_Linux_ReservedInstance_Light_3yr ,
+		:pricing_EC2_Small_EU_Linux_ReservedInstance_Medium_1yr ,
+		:pricing_EC2_Small_EU_Linux_ReservedInstance_Medium_3yr ,
+		:pricing_EC2_Small_EU_Linux_ReservedInstance_Heavy_1yr ,
+		:pricing_EC2_Small_EU_Linux_ReservedInstance_Heavy_3yr ;
+	usdl:hasServiceLevelProfile :slp_EC2 .			
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Windows_OnDemand a price:PricePlan ;
+	dcterms:title "Small OnDemand Windows EU"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 European Windows On-Demand Instance."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "DAY" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Windows_OnDemand_General ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_OnDemand .	
+
+:priceComponent_Small_EU_Windows_OnDemand_General a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.115" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:priceComponent_DataTransferOut_1 a price:PriceComponent ;
+	dcterms:title "Data Transfer OUT, 1GB-10TB"@en ;
+	dcterms:description "Fee for outgoing data transfer between 1GB and 10TB per month."@en ;
+	price:isLinkedTo :resource_EC2_Small_IO ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.120" ;
+			gr:hasUnitOfMeasurement "E34" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "0.001<x<=10" ;
+			price:fenceUnit "E35" ] .
+
+:priceComponent_DataTransferOut_2 a price:PriceComponent ;
+	dcterms:title "Data Transfer OUT, 10TB-50TB"@en ;
+	dcterms:description "Fee for outgoing data transfer between 10TB and 50TB per month."@en ;
+	price:isLinkedTo :resource_EC2_Small_IO ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.090" ;
+			gr:hasUnitOfMeasurement "E34" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "10<x<=50" ;
+			price:fenceUnit "E35" ] .
+
+:priceComponent_DataTransferOut_3 a price:PriceComponent ;
+	dcterms:title "Data Transfer OUT, 50TB-150TB"@en ;
+	dcterms:description "Fee for outgoing data transfer between 50TB and 150TB per month."@en ;
+	price:isLinkedTo :resource_EC2_Small_IO ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.070" ;
+			gr:hasUnitOfMeasurement "E34" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "50<x<=150" ;
+			price:fenceUnit "E35" ] .
+
+:priceComponent_DataTransferOut_4 a price:PriceComponent ;
+	dcterms:title "Data Transfer OUT, 150TB-500TB"@en ;
+	dcterms:description "Fee for outgoing data transfer between 150TB and 500TB per month."@en ;
+	price:isLinkedTo :resource_EC2_Small_IO ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.050" ;
+			gr:hasUnitOfMeasurement "E34" ] ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "150<x<=500" ;
+			price:fenceUnit "E35" ] .
+
+:priceComponent_DataTransferOut_5 a price:PriceComponent ;
+	dcterms:title "Data Transfer OUT, above 500TB-1024TB"@en ;
+	dcterms:description "Fee for outgoing data transfer above 500TB is not generally defined. Please contact us via 'http://aws.amazon.com/contact-us/aws-sales/'."@en ;
+	price:isLinkedTo :resource_EC2_Small_IO ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "500<x" ;
+			price:fenceUnit "E35" ] .
+
+:deduction_Unavailability_OnDemand a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_General ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Linux_OnDemand a price:PricePlan ;
+	dcterms:title "Small OnDemand Linux EU"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 On-Demand European Linux Instance."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "0" ;
+			gr:hasUnitOfMeasurement "DAY" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Linux_OnDemand_General ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_OnDemand .	
+
+:priceComponent_Small_EU_Linux_OnDemand_General a price:PriceComponent ;
+	dcterms:title "General costs"@en ;
+	dcterms:description "Fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.090" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Windows_ReservedInstance_Light_1yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Windows EU Light Utilization 1 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Windows, light utilization and a one year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Windows_ReservedInstance_Light_1yr_General_Upfront ,
+		:priceComponent_Small_EU_Windows_ReservedInstance_Light_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_ReservedInstance .	
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Light_1yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "69" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Light_1yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.069" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Light_1yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Windows_ReservedInstance_Light_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Windows_ReservedInstance_Light_3yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Windows EU Light Utilization 3 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Windows, light utilization and a three year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "3" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Windows_ReservedInstance_Light_3yr_General_Upfront ,
+		:priceComponent_Small_EU_Windows_ReservedInstance_Light_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Light_3yr .	
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Light_3yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "106.30" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Light_3yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.059" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Light_3yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Windows_ReservedInstance_Light_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Windows_ReservedInstance_Medium_1yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Windows EU Medium Utilization 1 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Windows, medium utilization and a one year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Windows_ReservedInstance_Medium_1yr_General_Upfront ,
+		:priceComponent_Small_EU_Windows_ReservedInstance_Medium_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Medium_1yr .	
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Medium_1yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "160" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Medium_1yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.051" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Medium_1yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Windows_ReservedInstance_Medium_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Windows_ReservedInstance_Medium_3yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Windows EU Medium Utilization 3 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Windows, light utilization and a three year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "3" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Windows_ReservedInstance_Medium_3yr_General_Upfront ,
+		:priceComponent_Small_EU_Windows_ReservedInstance_Medium_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Medium_3yr .	
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Medium_3yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "250" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Medium_3yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.045" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Medium_3yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Windows_ReservedInstance_Medium_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Windows_ReservedInstance_Heavy_1yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Windows EU Heavy Utilization 1 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Windows, heavy utilization and a one year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Windows_ReservedInstance_Heavy_1yr_General_Upfront ,
+		:priceComponent_Small_EU_Windows_ReservedInstance_Heavy_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Heavy_1yr .	
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Heavy_1yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "195" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Heavy_1yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.045" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Heavy_1yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Windows_ReservedInstance_Heavy_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Windows_ReservedInstance_Heavy_3yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Windows EU Heavy Utilization 3 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Windows, heavy utilization and a three year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "3" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Windows_ReservedInstance_Heavy_3yr_General_Upfront ,
+		:priceComponent_Small_EU_Windows_ReservedInstance_Heavy_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Heavy_3yr .	
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Heavy_3yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "300" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Windows_ReservedInstance_Heavy_3yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_WindowsServer2003R2 ,
+		:resource_EC2_WindowsServer2008 ,
+		:resource_EC2_WindowsServer2008R2 ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.04" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Windows_ReservedInstance_Heavy_3yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Windows_ReservedInstance_Heavy_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Linux_ReservedInstance_Light_1yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Linux EU Light Utilization 1 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Linux, light utilization and a one year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Linux_ReservedInstance_Light_1yr_General_Upfront ,
+		:priceComponent_Small_EU_Linux_ReservedInstance_Light_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Light_1yr .	
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Light_1yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "69" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Light_1yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.049" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Light_1yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Linux_ReservedInstance_Light_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Linux_ReservedInstance_Light_3yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Linux EU Light Utilization 3 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Linux, light utilization and a three year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "3" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Linux_ReservedInstance_Light_3yr_General_Upfront ,
+		:priceComponent_Small_EU_Linux_ReservedInstance_Light_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Light_3yr .	
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Light_3yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "106.30" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Light_3yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.039" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Light_3yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Linux_ReservedInstance_Light_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Linux_ReservedInstance_Medium_1yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Linux EU Medium Utilization 1 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Linux, medium utilization and a one year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Linux_ReservedInstance_Medium_1yr_General_Upfront ,
+		:priceComponent_Small_EU_Linux_ReservedInstance_Medium_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Medium_1yr .	
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Medium_1yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "160" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Medium_1yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.031" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Medium_1yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Linux_ReservedInstance_Medium_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Linux_ReservedInstance_Medium_3yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Linux EU Medium Utilization 3 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Linux, light utilization and a three year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "3" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Linux_ReservedInstance_Medium_3yr_General_Upfront ,
+		:priceComponent_Small_EU_Linux_ReservedInstance_Medium_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Medium_3yr .	
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Medium_3yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "250" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Medium_3yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.025" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Medium_3yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Linux_ReservedInstance_Medium_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Linux_ReservedInstance_Heavy_1yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Linux EU Heavy Utilization 1 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Linux, heavy utilization and a one year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Linux_ReservedInstance_Heavy_1yr_General_Upfront ,
+		:priceComponent_Small_EU_Linux_ReservedInstance_Heavy_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Heavy_1yr .	
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Heavy_1yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "195" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Heavy_1yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.025" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Heavy_1yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Linux_ReservedInstance_Heavy_1yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#====================================================================================
+
+:pricing_EC2_Small_EU_Linux_ReservedInstance_Heavy_3yr a price:PricePlan ;
+	dcterms:title "Small Reserved Instance Linux EU Heavy Utilization 3 year"@en ;
+	dcterms:description "Price plan for a 'Small' EC2 Reserved Instance in Europe with Linux, heavy utilization and a three year contract duration."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "3" ;
+			gr:hasUnitOfMeasurement "ANN" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent
+		:priceComponent_Small_EU_Linux_ReservedInstance_Heavy_3yr_General_Upfront ,
+		:priceComponent_Small_EU_Linux_ReservedInstance_Heavy_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ,
+		:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Heavy_3yr .	
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Heavy_3yr_General_Upfront a price:PriceComponent ;
+	dcterms:title "General costs upfront"@en ;
+	dcterms:description "One-time fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "300" ;
+			gr:hasUnitOfMeasurement "C62" ] .
+
+:priceComponent_Small_EU_Linux_ReservedInstance_Heavy_3yr_General_Hourly a price:PriceComponent ;
+	dcterms:title "General costs hourly"@en ;
+	dcterms:description "Hourly fee for general usage of the instance."@en ;
+	price:isLinkedTo 
+		:resource_EC2_DataCentre_EU ,
+		:resource_EC2_Linux ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "0.02" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+:deduction_Unavailability_Small_EU_Linux_ReservedInstance_Heavy_3yr a price:Deduction ;
+	dcterms:title "Compensation for unavailality"@en ;
+	dcterms:description "If the Annual Uptime Percentage drops below 99.95%, the customer is eligible for a credit equal to 10% for the eligible credit period."@en ;
+	price:hasDeductionSource :slo_AvailabilityGuarantee ;
+	price:hasDeductionTarget 
+		:priceComponent_Small_EU_Linux_ReservedInstance_Heavy_3yr_General_Hourly ,
+		:priceComponent_DataTransferOut_1 ,
+		:priceComponent_DataTransferOut_2 ,
+		:priceComponent_DataTransferOut_3 ,
+		:priceComponent_DataTransferOut_4 ,
+		:priceComponent_DataTransferOut_5 ;
+	price:hasRelativeDeductionValue "10" ;
+	price:hasFence 
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=100" ;
+			price:fenceUnit "P1" ] .
+
+#************************************************************************************
+#	EC2 support level basic													
+#************************************************************************************
+
+<#service_Support_Basic> a usdl:Service ;
+	dcterms:modified "2012-05-21"^^xsd:date ;
+	dcterms:created "2012-05-18"^^xsd:date ;
+	dcterms:title "EC2 basic support service"@en ;
+	usdl:versionInfo "001" ;
+	usdl:hasNature usdl:Manual ;
+	usdl:hasProvider :provider_Amazon ;
+	usdl:hasLegalCondition :legal_Amazon;
+	gr:qualitativeProductOrServiceProperty :resource_Support_Basic_TechSupport .
+
+:resource_Support_Basic_TechSupport a support:TechSupport ;
+	gr:valueReference 
+		[ a support:ForumSupport ;
+			rdfs:label "Discussion Forums"@en ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] .
+
+#====================================================================================
+
+:offering_Support_Basic a usdl:ServiceOffering ;
+	dcterms:title "EC2 basic support service"@en ;
+	dcterms:description "EC2 basic support service coming for free with every EC2 account."@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;
+	usdl:includes <#service_Support_Basic> ;			
+	usdl:hasPricePlan :pricing_Support_Basic .
+
+#====================================================================================
+
+:pricing_Support_Basic a price:PricePlan ;
+	dcterms:title "Basic support service price plan"@en ;
+	dcterms:description "The basic support service is free of charge."@en .
+
+#************************************************************************************
+#	EC2 support level Bronze													
+#************************************************************************************
+
+<#service_Support_Bronze> a usdl:Service ;
+	dcterms:modified "2012-05-21"^^xsd:date ;
+	dcterms:created "2012-05-18"^^xsd:date ;
+	dcterms:title "EC2 bronze support service"@en ;
+	usdl:versionInfo "001" ;
+	usdl:hasNature usdl:Manual ;
+	usdl:hasProvider :provider_Amazon ;
+	usdl:hasLegalCondition :legal_Amazon;
+	gr:qualitativeProductOrServiceProperty 
+		:resource_Support_Bronze_TechSupport ,
+		:resource_Support_ResolutionAwsIssues ,
+		:resource_Support_BestPracticeGuidance ,
+		:resource_Support_ClientSideDiagnosticTools ,
+		:resource_Support_Bronze_NamedContacts ,
+		:resource_Support_ArchitectureSupport_BuildingBlocks .
+
+:resource_Support_Bronze_TechSupport a support:TechSupport ;
+	gr:valueReference 
+		[ a support:ForumSupport ;
+			rdfs:label "Discussion Forums" ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] ,
+		[ a support:ForumSupport ;
+			rdfs:label "Community forums"@en ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] ,
+		[ a support:ChatSupport ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo08:00..Mo18:00" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Tu08:00..Tu18:00" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mi08:00..Mi18:00" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Th08:00..Th18:00" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Fr08:00..Fr18:00" ] ] .
+
+:resource_Support_ResolutionAwsIssues a :Amazon_Support_SpecialFeature_ResolutionOfAwsIssues .
+
+:resource_Support_ClientSideDiagnosticTools a :Amazon_Support_SpecialFeature_ClientSideDiagnosticTools .
+
+:resource_Support_BestPracticeGuidance a :Amazon_Support_SpecialFeature_BestPracticeGuidance .
+
+:resource_Support_Bronze_NamedContacts a :Amazon_Support_NamedContacts ;
+	gr:hasUnitOfMeasurement "C62" ;
+	gr:hasValue "1" .
+
+:resource_Support_ArchitectureSupport_BuildingBlocks a :Amazon_Support_ArchitectureSupport_BuildingBlocks .
+
+#====================================================================================
+
+:offering_Support_Bronze a usdl:ServiceOffering ;
+	dcterms:title "EC2 bronze support service"@en ;
+	dcterms:description ""@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;
+	usdl:includes <#service_Support_Bronze> ;			
+	usdl:hasPricePlan :pricing_Support_Bronze ;					
+	usdl:hasServiceLevelProfile :slp_Support_Bronze .
+
+#====================================================================================
+
+:pricing_Support_Bronze a price:PricePlan ;
+	dcterms:title "Bronze support service price plan"@en ;
+	dcterms:description "The bronze support service costs only a monthly fee."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent	:priceComponent_Support_Bronze .
+
+:priceComponent_Support_Bronze a price:PriceComponent ;
+	dcterms:title "Monthly fee"@en ;
+	dcterms:description "Monthly fixed fee of $49."@en ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasCurrencyValue "49" ] .
+
+#====================================================================================
+
+:slp_Support_Bronze a usdl:ServiceLevelProfile ;
+	dcterms:title "Bronze support service level profile" ;
+	sla:hasServiceLevel :slo_Support_Bronze_ResponseTime .
+
+:slo_Support_Bronze_ResponseTime a sla:GuaranteedState ;
+	dcterms:title "Response time" ; 
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Maximum period in which response is sent."@en ;
+			sla:hasVariable :var_Support_Bronze_ResponseTime ] .
+
+:var_Support_Bronze_ResponseTime a sla:Variable ;
+	rdfs:label "Fastest guaranteed response" ;
+	sla:hasDefault 
+		[ a support:ResponseTime ;
+			gr:hasValue "12" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#************************************************************************************
+#	EC2 support level Silver													
+#************************************************************************************
+
+<#service_Support_Silver> a usdl:Service ;
+	dcterms:modified "2012-05-21"^^xsd:date ;
+	dcterms:created "2012-05-18"^^xsd:date ;
+	dcterms:title "EC2 silver support service"@en ;
+	usdl:versionInfo "001" ;
+	usdl:hasNature usdl:Manual ;
+	usdl:hasProvider :provider_Amazon ;
+	usdl:hasLegalCondition :legal_Amazon;
+	gr:qualitativeProductOrServiceProperty 
+		:resource_Support_Bronze_TechSupport ,
+		:resource_Support_ResolutionAwsIssues ,
+		:resource_Support_BestPracticeGuidance ,
+		:resource_Support_ClientSideDiagnosticTools ,
+		:resource_Support_Silver_NamedContacts ,
+		:resource_Support_ArchitectureSupport_ServiceReviews .
+
+:resource_Support_Silver_NamedContacts a :Amazon_Support_NamedContacts ;
+	gr:hasUnitOfMeasurement "C62" ;
+	gr:hasValue "2" .
+
+:resource_Support_ArchitectureSupport_ServiceReviews a :Amazon_Support_ArchitectureSupport_ServiceReviews .
+
+#====================================================================================
+
+:offering_Support_Silver a usdl:ServiceOffering ;
+	dcterms:title "EC2 silver support service"@en ;
+	dcterms:description ""@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;
+	usdl:includes <#service_Support_Silver> ;			
+	usdl:hasPricePlan :pricing_Support_Silver ;					
+	usdl:hasServiceLevelProfile :slp_Support_Silver .
+
+#====================================================================================
+
+:pricing_Support_Silver a price:PricePlan ;
+	dcterms:title "Silver support service price plan"@en ;
+	dcterms:description "The silver support service costs a minimum of $100 or 5% of the monthly AWS usage costs."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent	
+		:priceComponent_Support_Silver .
+
+:priceComponent_Support_Silver a price:PriceComponent ;
+	dcterms:title "Relative fee"@en ;
+	dcterms:description "$100 or 5% of monthly AWS usage"@en ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasMinCurrencyValue "100" ] ,
+		[ a gr:QuantitativeValue ;
+			gr:hasValue "5" ;
+			gr:hasUnitOfMeasurement "P1" ] .
+
+#====================================================================================
+
+:slp_Support_Silver a usdl:ServiceLevelProfile ;
+	dcterms:title "Bronze support service level profile" ;
+	sla:hasServiceLevel :slo_Support_Silver_ResponseTime .
+
+:slo_Support_Silver_ResponseTime a sla:GuaranteedState ;
+	dcterms:title "Response time" ; 
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Maximum period in which response is sent."@en ;
+			sla:hasVariable :var_Support_Silver_ResponseTime ] .
+
+:var_Support_Silver_ResponseTime a sla:Variable ;
+	rdfs:label "Fastest guaranteed response" ;
+	sla:hasDefault 
+		[ a support:ResponseTime ;
+			gr:hasValue "4" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#************************************************************************************
+#	EC2 support level Gold													
+#************************************************************************************
+
+<#service_Support_Gold> a usdl:Service ;
+	dcterms:modified "2012-05-21"^^xsd:date ;
+	dcterms:created "2012-05-18"^^xsd:date ;
+	dcterms:title "EC2 gold support service"@en ;
+	usdl:versionInfo "001" ;
+	usdl:hasNature usdl:Manual ;
+	usdl:hasProvider :provider_Amazon ;
+	usdl:hasLegalCondition :legal_Amazon;
+	gr:qualitativeProductOrServiceProperty 
+		:resource_Support_Gold_TechSupport ,
+		:resource_Support_ResolutionAwsIssues ,
+		:resource_Support_BestPracticeGuidance ,
+		:resource_Support_ClientSideDiagnosticTools ,
+		:resource_Support_Gold_NamedContacts ,
+		:resource_Support_ArchitectureSupport_UseCaseGuidance ,
+		:resource_Support_ThirdPartySoftware ,
+		:resource_Support_TrustedAdvisor .
+
+:resource_Support_Gold_TechSupport a support:TechSupport ;
+	gr:valueReference 
+		[ a support:ForumSupport ;
+			rdfs:label "Discussion forums" ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] ,
+		[ a support:ForumSupport ;
+			rdfs:label "Community forums"@en ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] ,
+		[ a support:ChatSupport ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] ,
+		[ a support:PhoneSupport ;
+			gr:valueReference 
+				[ a genVoc:LanguageReference ;
+					rdfs:label "en" ] ,
+				[ a support:ContactHours ;
+					rdfs:label "Mo00:00..So24:00" ] ] .
+
+:resource_Support_Gold_NamedContacts a :Amazon_Support_NamedContacts ;
+	gr:hasUnitOfMeasurement "C62" ;
+	gr:hasValue "3" .
+
+:resource_Support_ArchitectureSupport_UseCaseGuidance a :Amazon_Support_ArchitectureSupport_UseCaseGuidance .
+
+:resource_Support_ThirdPartySoftware a :Amazon_Support_SpecialFeature_ThirdPartySoftware .
+
+:resource_Support_TrustedAdvisor a :Amazon_Support_SpecialFeature_TrustedAdvisor .
+
+#====================================================================================
+
+:offering_Support_Gold a usdl:ServiceOffering ;
+	dcterms:title "EC2 gold support service"@en ;
+	dcterms:description ""@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;	
+	usdl:includes <#service_Support_Gold> ;		
+	usdl:hasPricePlan :pricing_Support_Gold ;					
+	usdl:hasServiceLevelProfile :slp_Support_Gold .
+
+#====================================================================================
+
+:pricing_Support_Gold a price:PricePlan ;
+	dcterms:title "Gold support service price plan"@en ;
+	dcterms:description "The gold support service costs a minimum of $400 or relative to the monthly AWS usage costs."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent	
+		:priceComponent_Support_Gold_till10K ,
+		:priceComponent_Support_Gold_10Kto80K ,
+		:priceComponent_Support_Gold_80Kplus .
+
+:priceComponent_Support_Gold_till10K a price:PriceComponent ;
+	dcterms:title "Relative fee"@en ;
+	dcterms:description "$400 or 10% of monthly AWS usage for the first $0-$10K"@en ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasMinCurrencyValue "400" ] ,
+		[ a gr:QuantitativeValue ;
+			gr:hasValue "10" ;
+			gr:hasUnitOfMeasurement "P1" ] ;
+	price:hasFence
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=10000" ;
+			price:fenceUnit "USD" ] .
+
+:priceComponent_Support_Gold_10Kto80K a price:PriceComponent ;
+	dcterms:title "Relative fee"@en ;
+	dcterms:description "7% of monthly AWS usage from $10K-$80K"@en ;
+	price:hasPrice 
+		[ a gr:QuantitativeValue ;
+			gr:hasValue "7" ;
+			gr:hasUnitOfMeasurement "P1" ] ;
+	price:hasFence
+		[ a price:PriceFence ;
+			price:fenceExpression "10000=<x<=80000" ;
+			price:fenceUnit "USD" ] .
+
+:priceComponent_Support_Gold_Gold_80Kplus a price:PriceComponent ;
+	dcterms:title "Relative fee"@en ;
+	dcterms:description "5% of monthly AWS usage from $80K+"@en ;
+	price:hasPrice 
+		[ a gr:QuantitativeValue ;
+			gr:hasValue "5" ;
+			gr:hasUnitOfMeasurement "P1" ] ;
+	price:hasFence
+		[ a price:PriceFence ;
+			price:fenceExpression "x<=80000" ;
+			price:fenceUnit "USD" ] .
+
+#====================================================================================
+
+:slp_Support_Gold a usdl:ServiceLevelProfile ;
+	dcterms:title "Gold support service level profile" ;
+	sla:hasServiceLevel :slo_Support_Gold_ResponseTime .
+
+:slo_Support_Gold_ResponseTime a sla:GuaranteedState ;
+	dcterms:title "Response time" ; 
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Maximum period in which response is sent."@en ;
+			sla:hasVariable :var_Support_Gold_ResponseTime ] .
+
+:var_Support_Gold_ResponseTime a sla:Variable ;
+	rdfs:label "Fastest guaranteed response" ;
+	sla:hasDefault 
+		[ a support:ResponseTime ;
+			gr:hasValue "1" ;
+			gr:hasUnitOfMeasurement "HUR" ] .
+
+#************************************************************************************
+#	EC2 support level Premium													
+#************************************************************************************
+
+<#service_Support_Premium> a usdl:Service ;
+	dcterms:modified "2012-05-21"^^xsd:date ;
+	dcterms:created "2012-05-18"^^xsd:date ;
+	dcterms:title "EC2 premium support service"@en ;
+	usdl:versionInfo "001" ;
+	usdl:hasNature usdl:Manual ;
+	usdl:hasProvider :provider_Amazon ;
+	usdl:hasLegalCondition :legal_Amazon;
+	gr:qualitativeProductOrServiceProperty 
+		:resource_Support_Gold_TechSupport ,
+		:resource_Support_ResolutionAwsIssues ,
+		:resource_Support_BestPracticeGuidance ,
+		:resource_Support_ClientSideDiagnosticTools ,
+		:resource_Support_Premium_NamedContacts ,
+		:resource_Support_ArchitectureSupport_ApplicationArchitecture ,
+		:resource_Support_ThirdPartySoftware ,
+		:resource_Support_TrustedAdvisor ,
+		:resource_Support_TechAccountManager ,
+		:resource_Support_WhiteGlove ,
+		:resource_Support_ManagementBusinessReviews .
+
+:resource_Support_Premium_NamedContacts a :Amazon_Support_NamedContacts ;
+	gr:hasUnitOfMeasurement "C62" ;
+	gr:hasValue "Double.MAX_VALUE" .
+
+:resource_Support_ArchitectureSupport_ApplicationArchitecture a :Amazon_Support_ArchitectureSupport_ApplicationArchitecture .
+
+:resource_Support_TechAccountManager a :Amazon_Support_SpecialFeature_TechAccountManager  .
+
+:resource_Support_WhiteGlove a :Amazon_Support_SpecialFeature_WhiteGlove .
+
+:resource_Support_ManagementBusinessReviews a :Amazon_Support_SpecialFeature_ManagementBusinessReviews .
+
+#====================================================================================
+
+:offering_Support_Premium a usdl:ServiceOffering ;
+	dcterms:title "EC2 premium support service"@en ;
+	dcterms:description ""@en ;
+	usdl:validFrom "2012-03-01"^^xsd:date;
+	usdl:validThrough "2012-08-31"^^xsd:date;	
+	usdl:includes <#service_Support_Premium> ;		
+	usdl:hasPricePlan :pricing_Support_Premium ;					
+	usdl:hasServiceLevelProfile :slp_Support_Premium .
+
+#====================================================================================
+
+:pricing_Support_Premium a price:PricePlan ;
+	dcterms:title "Premium support service price plan"@en ;
+	dcterms:description "The premium support service costs a minimum of $15000 or relative to the monthly AWS usage costs."@en ;
+	price:hasContractDuration 
+		[ a gr:QuantitativeValue ; 
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasBillingCycle 
+		[ a gr:QuantitativeValue ;
+			gr:hasValueInteger "1" ;
+			gr:hasUnitOfMeasurement "MON" ] ;
+	price:hasPriceComponent	:priceComponent_Support_Premium .
+
+:priceComponent_Support_Premium a price:PriceComponent ;
+	dcterms:title "Premium fee"@en ;
+	dcterms:description "$15000 or 10% of monthly AWS usage"@en ;
+	price:hasPrice 
+		[ a gr:UnitPriceSpecification ;
+			gr:hasCurrency "USD" ;
+			gr:hasMinCurrencyValue "15000" ] ,
+		[ a gr:QuantitativeValue ;
+			gr:hasValue "10" ;
+			gr:hasUnitOfMeasurement "P1" ] .
+
+#====================================================================================
+
+:slp_Support_Premium a usdl:ServiceLevelProfile ;
+	dcterms:title "Premium support service level profile" ;
+	sla:hasServiceLevel :slo_Support_Premium_ResponseTime .
+
+:slo_Support_Premium_ResponseTime a sla:GuaranteedState ;
+	dcterms:title "Response time" ; 
+	sla:serviceLevelExpression 
+		[ a sla:ServiceLevelExpression ;
+			dcterms:description "Maximum period in which response is sent."@en ;
+			sla:hasVariable :var_Support_Premium_ResponseTime ] .
+
+:var_Support_Premium_ResponseTime a sla:Variable ;
+	rdfs:label "Fastest guaranteed response" ;
+	sla:hasDefault 
+		[ a support:ResponseTime ;
+			gr:hasValue "15" ;
+			gr:hasUnitOfMeasurement "MIN" ] .
+

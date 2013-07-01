@@ -100,10 +100,10 @@ public class RdfHelper {
 			+ "PREFIX sla: <http://www.linked-usdl.org/ns/usdl-sla#> "
 			+ "PREFIX gn: <http://www.geonames.org/ontology#> "
 			+ "PREFIX dcterms: <http://purl.org/dc/terms/> "
-			+ "PREFIX genVoc: <http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_General_001#> "
-			+ "PREFIX cloud: <http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Cloud_004#> "
-			+ "PREFIX os: <http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_OperatingSystem_003#> "
-			+ "PREFIX support: <http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/vocabulary/Vocabulary_Support_003#> ";
+			+ "PREFIX genVoc: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#> "
+			+ "PREFIX cloud: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#> "
+			+ "PREFIX os: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#> "
+			+ "PREFIX support: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#> ";
 
 	/**
 	 * Returns a list of URIs which are found via the given query.

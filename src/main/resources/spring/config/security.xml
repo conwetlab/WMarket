@@ -10,6 +10,7 @@
 	<http auto-config='true'>
 		<intercept-url pattern="/**" access="ROLE_USER" />
 		<intercept-url pattern="/vocabulary/**" filters="none"/>
+		<intercept-url pattern="/demoservices/**" filters="none"/>
 	</http>
 
 	<authentication-manager>
