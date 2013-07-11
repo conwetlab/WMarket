@@ -16,9 +16,9 @@ import org.junit.Test;
 
 public class AttributeTypeResolverTest {
 
-	private static final String amazonUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
-	private static final String cloudVocUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004";
-	private static final String generalVocUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001";
+	private static final String amazonUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
+	private static final String cloudVocUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004";
+	private static final String generalVocUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001";
 
 	@Test
 	public void testResolveAttributeTypesFromUri_GeneralVoc() {

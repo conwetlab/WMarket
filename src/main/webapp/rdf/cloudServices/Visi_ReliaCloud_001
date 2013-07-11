@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:legal="http://www.linked-usdl.org/ns/usdl-legal#" xmlns:usdl="http://www.linked-usdl.org/ns/usdl-core#" xmlns:gn="http://www.geonames.org/ontology#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:gr="http://purl.org/goodrelations/v1#" xmlns:cloud="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#" xmlns:vcard="http://www.w3.org/2006/vcard/ns#" xmlns:support="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#" xmlns:genVoc="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sla="http://www.linked-usdl.org/ns/usdl-sla#" xmlns:os="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#" xmlns:price="http://www.linked-usdl.org/ns/usdl-pricing#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:VisiReliaCloud="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#">
-	<usdl:ServiceDescription rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001">
+<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:legal="http://www.linked-usdl.org/ns/usdl-legal#" xmlns:usdl="http://www.linked-usdl.org/ns/usdl-core#" xmlns:gn="http://www.geonames.org/ontology#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:gr="http://purl.org/goodrelations/v1#" xmlns:cloud="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#" xmlns:vcard="http://www.w3.org/2006/vcard/ns#" xmlns:support="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#" xmlns:genVoc="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sla="http://www.linked-usdl.org/ns/usdl-sla#" xmlns:os="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#" xmlns:price="http://www.linked-usdl.org/ns/usdl-pricing#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:VisiReliaCloud="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#">
+	<usdl:ServiceDescription rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001">
 		<dcterms:title>ReliaCloud Cloud Server service description</dcterms:title>
 		<dcterms:description>Description of ReliaCloud Cloud Server service</dcterms:description>
 		<dcterms:contributor>
@@ -14,11 +14,11 @@
 		<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-06-20</dcterms:modified>
 		<owl:versionInfo>001</owl:versionInfo>
 	</usdl:ServiceDescription>
-	<legal:TermsAndConditions rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#legal_ReliaCloud">
+	<legal:TermsAndConditions rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#legal_ReliaCloud">
 		<dcterms:title xml:lang="en">ReliaCloud's legal statements</dcterms:title>
 		<dcterms:description xml:lang="en">ReliaCloud's legal statements are accessible online via 'http://www.reliacloud.com/legal/'.</dcterms:description>
 	</legal:TermsAndConditions>
-	<gr:BusinessEntity rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#provider_ReliaCloud">
+	<gr:BusinessEntity rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#provider_ReliaCloud">
 		<foaf:name>ReliaCloud</foaf:name>
 		<foaf:homepage rdf:resource="http://www.reliacloud.com/" />
 		<foaf:logo rdf:resource="http://www.reliacloud.com/images/reliaCloudLogo255x125alt.png" />
@@ -30,59 +30,59 @@
 			</vcard:Work>
 		</vcard:adr>
 	</gr:BusinessEntity>
-	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#CloudServer_EndOfDowntime">
+	<rdfs:Class rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#CloudServer_EndOfDowntime">
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
 		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
-		<rdfs:subClassOf rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#GenericPointInTime" />
+		<rdfs:subClassOf rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#GenericPointInTime" />
 		<skos:prefLabel xml:lang="en">Point in time when ReliaCloud support staff dertermine that the downtime is finished, based on ReliaCloud's log files.</skos:prefLabel>
-		<skos:broader rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#CreditPeriodEnd" />
+		<skos:broader rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#CreditPeriodEnd" />
 	</rdfs:Class>
-	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#CloudServer_SQLServer2005">
+	<rdfs:Class rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#CloudServer_SQLServer2005">
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
 		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
 		<skos:prefLabel>Microsofts SQL Server 2005</skos:prefLabel>
 	</rdfs:Class>
-	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_1">
+	<cloud:MainMemory rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_1">
 		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
 		<gr:hasValue>500</gr:hasValue>
 	</cloud:MainMemory>
-	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_2">
+	<cloud:MainMemory rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_2">
 		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
 		<gr:hasValue>1000</gr:hasValue>
 	</cloud:MainMemory>
-	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_3">
+	<cloud:MainMemory rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_3">
 		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
 		<gr:hasValue>2000</gr:hasValue>
 	</cloud:MainMemory>
-	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_4">
+	<cloud:MainMemory rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_4">
 		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
 		<gr:hasValue>4000</gr:hasValue>
 	</cloud:MainMemory>
-	<cloud:MainMemory rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_5">
+	<cloud:MainMemory rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_5">
 		<gr:hasUnitOfMeasurement>4L</gr:hasUnitOfMeasurement>
 		<gr:hasValue>8000</gr:hasValue>
 	</cloud:MainMemory>
-	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_1">
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_1">
 		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
 		<gr:hasValue>50</gr:hasValue>
 	</cloud:PersistentDiskStorage>
-	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_2">
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_2">
 		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
 		<gr:hasValue>100</gr:hasValue>
 	</cloud:PersistentDiskStorage>
-	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_3">
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_3">
 		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
 		<gr:hasValue>200</gr:hasValue>
 	</cloud:PersistentDiskStorage>
-	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_4">
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_4">
 		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
 		<gr:hasValue>400</gr:hasValue>
 	</cloud:PersistentDiskStorage>
-	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_5">
+	<cloud:PersistentDiskStorage rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_5">
 		<gr:hasUnitOfMeasurement>E34</gr:hasUnitOfMeasurement>
 		<gr:hasValue>800</gr:hasValue>
 	</cloud:PersistentDiskStorage>
-	<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_1">
+	<cloud:CPU rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_1">
 		<rdfs:label>
 		</rdfs:label>
 		<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
@@ -93,7 +93,7 @@
 			</cloud:NumberOfCores>
 		</gr:valueReference>
 	</cloud:CPU>
-	<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_2">
+	<cloud:CPU rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_2">
 		<rdfs:label>
 		</rdfs:label>
 		<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
@@ -104,7 +104,7 @@
 			</cloud:NumberOfCores>
 		</gr:valueReference>
 	</cloud:CPU>
-	<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_3">
+	<cloud:CPU rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_3">
 		<rdfs:label>
 		</rdfs:label>
 		<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
@@ -115,7 +115,7 @@
 			</cloud:NumberOfCores>
 		</gr:valueReference>
 	</cloud:CPU>
-	<cloud:CPU rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_4">
+	<cloud:CPU rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_4">
 		<rdfs:label>
 		</rdfs:label>
 		<gr:hasUnitOfMeasurement>A86</gr:hasUnitOfMeasurement>
@@ -126,35 +126,35 @@
 			</cloud:NumberOfCores>
 		</gr:valueReference>
 	</cloud:CPU>
-	<os:WindowsServer2003 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2003_64Bit">
+	<os:WindowsServer2003 rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2003_64Bit">
 		<gr:valueReference>
 			<os:OS64Bit />
 		</gr:valueReference>
 	</os:WindowsServer2003>
-	<usdl:ServiceOffering rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#offering_CloudServer">
+	<usdl:ServiceOffering rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#offering_CloudServer">
 		<dcterms:title xml:lang="en">ReliaCloud's Cloud Server</dcterms:title>
 		<dcterms:description xml:lang="en">ReliaCloud's Cloud Server service has three seperate billing parts: Server hours according to package, software hours according to software package and outbound data transfer .</dcterms:description>
 		<usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-03-01</usdl:validFrom>
 		<usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-08-31</usdl:validThrough>
 		<usdl:includes>
-			<usdl:Service rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#service_CloudServer">
+			<usdl:Service rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#service_CloudServer">
 				<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-22</dcterms:created>
 				<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-22</dcterms:modified>
 				<dcterms:title xml:lang="en">ReliaCloud Cloud Server</dcterms:title>
 				<usdl:hasNature rdf:resource="http://www.linked-usdl.org/ns/usdl-core#Automated" />
-				<usdl:hasProvider rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#provider_ReliaCloud" />
-				<usdl:hasLegalCondition rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#legal_ReliaCloud" />
+				<usdl:hasProvider rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#provider_ReliaCloud" />
+				<usdl:hasLegalCondition rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#legal_ReliaCloud" />
 				<usdl:hasPartMandatory>
-					<usdl:Service rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#service_Support">
+					<usdl:Service rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#service_Support">
 						<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-22</dcterms:modified>
 						<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-22</dcterms:created>
 						<dcterms:title xml:lang="en">Support</dcterms:title>
 						<usdl:versionInfo>001</usdl:versionInfo>
 						<usdl:hasNature rdf:resource="http://www.linked-usdl.org/ns/usdl-core#Manual" />
-						<usdl:hasProvider rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#provider_ReliaCloud" />
-						<usdl:hasLegalCondition rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#legal_ReliaCloud" />
+						<usdl:hasProvider rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#provider_ReliaCloud" />
+						<usdl:hasLegalCondition rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#legal_ReliaCloud" />
 						<gr:qualitativeProductOrServiceProperty>
-							<support:TechSupport rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_ReliaCloud_TechSupport">
+							<support:TechSupport rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_ReliaCloud_TechSupport">
 								<gr:valueReference>
 									<support:ChatSupport>
 										<gr:valueReference>
@@ -188,7 +188,7 @@
 					</usdl:Service>
 				</usdl:hasPartMandatory>
 				<gr:quantitativeProductOrServiceProperty>
-					<cloud:IPAddress rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_StaticPublicIP">
+					<cloud:IPAddress rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_StaticPublicIP">
 						<gr:valueReference>
 							<cloud:StaticIPAddress />
 						</gr:valueReference>
@@ -204,7 +204,7 @@
 					</cloud:IPAddress>
 				</gr:quantitativeProductOrServiceProperty>
 				<gr:quantitativeProductOrServiceProperty>
-					<cloud:IPAddress rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_OptionalStaticPublicIP">
+					<cloud:IPAddress rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_OptionalStaticPublicIP">
 						<gr:valueReference>
 							<cloud:StaticIPAddress />
 						</gr:valueReference>
@@ -220,14 +220,14 @@
 					</cloud:IPAddress>
 				</gr:quantitativeProductOrServiceProperty>
 				<gr:qualitativeProductOrServiceProperty>
-					<cloud:DataCentre rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_DataCentre_EdenPrairie">
+					<cloud:DataCentre rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_DataCentre_EdenPrairie">
 						<rdfs:label xml:lang="en">Eden Prairie, Minnesota</rdfs:label>
 						<dcterms:description xml:lang="en">Data Center Specifications: Fire suppression system, Technical staff onsite 24x7x365, SAS 70 Type II Certification, Biometric handscan for security and Multiple UPS and generator units</dcterms:description>
 						<gn:locatedIn rdf:resource="http://sws.geonames.org/5025219" />
 					</cloud:DataCentre>
 				</gr:qualitativeProductOrServiceProperty>
 				<gr:qualitativeProductOrServiceProperty>
-					<cloud:DataCentre rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_DataCentre_StPaul">
+					<cloud:DataCentre rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_DataCentre_StPaul">
 						<rdfs:label xml:lang="en">St. Paul, Minnesota</rdfs:label>
 						<dcterms:description xml:lang="en">Data Center Specifications: Fire suppression system, Technical staff onsite 24x7x365, SAS 70 Type II Certification, Biometric handscan for security and Multiple UPS and generator units</dcterms:description>
 						<gn:locatedIn rdf:resource="http://sws.geonames.org/5025219" />
@@ -236,7 +236,7 @@
 			</usdl:Service>
 		</usdl:includes>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage1_Linux">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage1_Linux">
 				<dcterms:title xml:lang="en">Package 1 Linux</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 1 with Linux</dcterms:description>
 				<price:hasBillingCycle>
@@ -246,12 +246,12 @@
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On">
 						<dcterms:title xml:lang="en">Cloud Server Package 1 (on)</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the hardware resources of the server while powered on.</dcterms:description>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_1" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_1" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_1" />
 						<price:hasPrice>
 							<gr:UnitPriceSpecification>
 								<gr:hasCurrency>USD</gr:hasCurrency>
@@ -267,12 +267,12 @@
 					</price:PriceComponent>
 				</price:hasPriceComponent>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off">
 						<dcterms:title xml:lang="en">Cloud Server Package 1 (off)</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the hardware resources of the server while powered off.</dcterms:description>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_1" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_1" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_1" />
 						<price:hasPrice>
 							<gr:UnitPriceSpecification>
 								<gr:hasCurrency>USD</gr:hasCurrency>
@@ -288,11 +288,11 @@
 					</price:PriceComponent>
 				</price:hasPriceComponent>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Linux">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Linux">
 						<dcterms:title xml:lang="en">Linux</dcterms:title>
 						<dcterms:description xml:lang="en">Usage of a Linux instance is free.</dcterms:description>
 						<price:isLinkedTo>
-							<os:CentOS_5_3 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CentOS">
+							<os:CentOS_5_3 rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CentOS">
 								<gr:valueReference>
 									<os:OS32Bit />
 								</gr:valueReference>
@@ -302,7 +302,7 @@
 							</os:CentOS_5_3>
 						</price:isLinkedTo>
 						<price:isLinkedTo>
-							<os:Debian_5_0 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Debian">
+							<os:Debian_5_0 rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Debian">
 								<gr:valueReference>
 									<os:OS32Bit />
 								</gr:valueReference>
@@ -312,7 +312,7 @@
 							</os:Debian_5_0>
 						</price:isLinkedTo>
 						<price:isLinkedTo>
-							<os:Ubuntu_8_04_LTS rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Ubuntu8">
+							<os:Ubuntu_8_04_LTS rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Ubuntu8">
 								<gr:valueReference>
 									<os:OS32Bit />
 								</gr:valueReference>
@@ -322,7 +322,7 @@
 							</os:Ubuntu_8_04_LTS>
 						</price:isLinkedTo>
 						<price:isLinkedTo>
-							<os:Ubuntu_10_04_LTS rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Ubuntu11">
+							<os:Ubuntu_10_04_LTS rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Ubuntu11">
 								<gr:valueReference>
 									<os:OS32Bit />
 								</gr:valueReference>
@@ -341,11 +341,11 @@
 					</price:PriceComponent>
 				</price:hasPriceComponent>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic">
 						<dcterms:title xml:lang="en">Outbound Transfer</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for outgoing data transfer.</dcterms:description>
 						<price:isLinkedTo>
-							<cloud:Upstream rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Bandwidth_Out">
+							<cloud:Upstream rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Bandwidth_Out">
 								<gr:hasUnitOfMeasurement>Mbit/s</gr:hasUnitOfMeasurement>
 							</cloud:Upstream>
 						</price:isLinkedTo>
@@ -359,11 +359,11 @@
 					</price:PriceComponent>
 				</price:hasPriceComponent>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic">
 						<dcterms:title xml:lang="en">Inbound Transfer</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for incoming data transfer.</dcterms:description>
 						<price:isLinkedTo>
-							<cloud:Downstream rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Bandwidth_In">
+							<cloud:Downstream rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Bandwidth_In">
 								<gr:hasUnitOfMeasurement>Mbit/s</gr:hasUnitOfMeasurement>
 							</cloud:Downstream>
 						</price:isLinkedTo>
@@ -377,10 +377,10 @@
 					</price:PriceComponent>
 				</price:hasPriceComponent>
 				<price:hasPriceComponent>
-					<price:Deduction rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability">
+					<price:Deduction rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability">
 						<dcterms:title xml:lang="en">Compensation for unavailability</dcterms:title>
 						<dcterms:description xml:lang="en">Your credit for eligible Incidents in a particular billing period is equal to the aggregate total time for the Incidents which have affected particular Cloud Service Instances in that billing period (measured to the closest minute) times the service fees paid by you for those same Cloud Service Instances over that same amount of time times thirty. For example, if you are paying $0.16 per hour for a Cloud Server and there is a 2-hour Incident, you would be eligible for a $9.60 credit ($0.16 x 2.0 x 30). Or, for example, if you are paying $0.16 per hour for a Cloud Server and there is an 18-minute Incident, you would be eligible for a $1.44 credit ($0.16 x 0.3 x 30). The maximum total credit you may accrue in any one billing period (as determined by your contract for Services) for any particular Cloud Service Instance is 100% of the amount you actually paid for Services for that Cloud Service Instance in the month the Incidents occurred. Credits that would be available, but for this limitation, will not be carried forward to future billing periods.</dcterms:description>
-						<price:hasDeductionSource rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Availability" />
+						<price:hasDeductionSource rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Availability" />
 						<price:hasRelativeDeductionValue>3000</price:hasRelativeDeductionValue>
 						<price:hasFence>
 							<price:PriceFence>
@@ -393,7 +393,7 @@
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage2_Linux">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage2_Linux">
 				<dcterms:title xml:lang="en">Package 2 Linux</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 2 with Linux</dcterms:description>
 				<price:hasBillingCycle>
@@ -403,12 +403,12 @@
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_On">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_On">
 						<dcterms:title xml:lang="en">Cloud Server Package 2 (on)</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the hardware resources of the server while powered on.</dcterms:description>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_2" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_2" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_2" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_2" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_1" />
 						<price:hasPrice>
 							<gr:UnitPriceSpecification>
 								<gr:hasCurrency>USD</gr:hasCurrency>
@@ -424,12 +424,12 @@
 					</price:PriceComponent>
 				</price:hasPriceComponent>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_Off">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_Off">
 						<dcterms:title xml:lang="en">Cloud Server Package 2 (off)</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the hardware resources of the server while powered off.</dcterms:description>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_2" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_2" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_1" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_2" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_2" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_1" />
 						<price:hasPrice>
 							<gr:UnitPriceSpecification>
 								<gr:hasCurrency>USD</gr:hasCurrency>
@@ -444,14 +444,14 @@
 						</price:hasFence>
 					</price:PriceComponent>
 				</price:hasPriceComponent>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Linux" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Linux" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage3_Linux">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage3_Linux">
 				<dcterms:title xml:lang="en">Package 3 Linux</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 3 with Linux</dcterms:description>
 				<price:hasBillingCycle>
@@ -461,12 +461,12 @@
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_On">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_On">
 						<dcterms:title xml:lang="en">Cloud Server Package 3 (on)</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the hardware resources of the server while powered on.</dcterms:description>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_3" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_3" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_2" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_3" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_3" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_2" />
 						<price:hasPrice>
 							<gr:UnitPriceSpecification>
 								<gr:hasCurrency>USD</gr:hasCurrency>
@@ -482,12 +482,12 @@
 					</price:PriceComponent>
 				</price:hasPriceComponent>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_Off">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_Off">
 						<dcterms:title xml:lang="en">Cloud Server Package 3 (off)</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the hardware resources of the server while powered off.</dcterms:description>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_3" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_3" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_2" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_3" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_3" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_2" />
 						<price:hasPrice>
 							<gr:UnitPriceSpecification>
 								<gr:hasCurrency>USD</gr:hasCurrency>
@@ -502,14 +502,14 @@
 						</price:hasFence>
 					</price:PriceComponent>
 				</price:hasPriceComponent>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Linux" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Linux" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage4_Linux">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage4_Linux">
 				<dcterms:title xml:lang="en">Package 4 Linux</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 4 with Linux</dcterms:description>
 				<price:hasBillingCycle>
@@ -519,12 +519,12 @@
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_On">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_On">
 						<dcterms:title xml:lang="en">Cloud Server Package 4 (on)</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the hardware resources of the server while powered on.</dcterms:description>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_4" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_4" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_3" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_4" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_4" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_3" />
 						<price:hasPrice>
 							<gr:UnitPriceSpecification>
 								<gr:hasCurrency>USD</gr:hasCurrency>
@@ -540,12 +540,12 @@
 					</price:PriceComponent>
 				</price:hasPriceComponent>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_Off">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_Off">
 						<dcterms:title xml:lang="en">Cloud Server Package 4 (off)</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the hardware resources of the server while powered off.</dcterms:description>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_4" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_4" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_3" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_4" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_4" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_3" />
 						<price:hasPrice>
 							<gr:UnitPriceSpecification>
 								<gr:hasCurrency>USD</gr:hasCurrency>
@@ -560,14 +560,14 @@
 						</price:hasFence>
 					</price:PriceComponent>
 				</price:hasPriceComponent>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Linux" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Linux" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage5_Linux">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage5_Linux">
 				<dcterms:title xml:lang="en">Package 5 Linux</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 5 with Linux</dcterms:description>
 				<price:hasBillingCycle>
@@ -577,12 +577,12 @@
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_5_On">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_5_On">
 						<dcterms:title xml:lang="en">Cloud Server Package 5 (on)</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the hardware resources of the server while powered on.</dcterms:description>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_5" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_5" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_4" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_5" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_5" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_4" />
 						<price:hasPrice>
 							<gr:UnitPriceSpecification>
 								<gr:hasCurrency>USD</gr:hasCurrency>
@@ -598,12 +598,12 @@
 					</price:PriceComponent>
 				</price:hasPriceComponent>
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_5_Off">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_5_Off">
 						<dcterms:title xml:lang="en">Cloud Server Package 5 (off)</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the hardware resources of the server while powered off.</dcterms:description>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_5" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_5" />
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_4" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Memory_5" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_Disk_5" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_CPU_4" />
 						<price:hasPrice>
 							<gr:UnitPriceSpecification>
 								<gr:hasCurrency>USD</gr:hasCurrency>
@@ -618,14 +618,14 @@
 						</price:hasFence>
 					</price:PriceComponent>
 				</price:hasPriceComponent>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Linux" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Linux" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage1_FreeBSD">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage1_FreeBSD">
 				<dcterms:title xml:lang="en">Package 1 FreeBSD</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 1 with FreeBSD</dcterms:description>
 				<price:hasBillingCycle>
@@ -634,14 +634,14 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off" />
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_FreeBSD">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_FreeBSD">
 						<dcterms:title xml:lang="en">FreeBSD</dcterms:title>
 						<dcterms:description xml:lang="en">Usage of a FreeBSD instance is free.</dcterms:description>
 						<price:isLinkedTo>
-							<os:Unix rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_FreeBSD8">
+							<os:Unix rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_FreeBSD8">
 								<gr:valueReference>
 									<os:OS32Bit />
 								</gr:valueReference>
@@ -659,13 +659,13 @@
 						</price:hasPrice>
 					</price:PriceComponent>
 				</price:hasPriceComponent>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage2_FreeBSD">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage2_FreeBSD">
 				<dcterms:title xml:lang="en">Package 2 FreeBSD</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 2 with FreeBSD</dcterms:description>
 				<price:hasBillingCycle>
@@ -674,16 +674,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_FreeBSD" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_FreeBSD" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage3_FreeBSD">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage3_FreeBSD">
 				<dcterms:title xml:lang="en">Package 3 FreeBSD</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 3 with FreeBSD</dcterms:description>
 				<price:hasBillingCycle>
@@ -692,16 +692,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_FreeBSD" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_FreeBSD" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage4_FreeBSD">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage4_FreeBSD">
 				<dcterms:title xml:lang="en">Package 4 FreeBSD</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 4 with FreeBSD</dcterms:description>
 				<price:hasBillingCycle>
@@ -710,16 +710,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_FreeBSD" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_FreeBSD" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage5_FreeBSD">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage5_FreeBSD">
 				<dcterms:title xml:lang="en">Package 5 FreeBSD</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 5 with FreeBSD</dcterms:description>
 				<price:hasBillingCycle>
@@ -728,16 +728,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_FreeBSD" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_FreeBSD" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage1_Windows">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage1_Windows">
 				<dcterms:title xml:lang="en">Package 1 Windows</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 1 with Windows</dcterms:description>
 				<price:hasBillingCycle>
@@ -746,22 +746,22 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off" />
 				<price:hasPriceComponent>
-					<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows">
+					<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows">
 						<dcterms:title xml:lang="en">Windows</dcterms:title>
 						<dcterms:description xml:lang="en">Fee for the usage of a Windows instance.</dcterms:description>
 						<price:isLinkedTo>
-							<os:WindowsServer2003 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2003_32Bit">
+							<os:WindowsServer2003 rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2003_32Bit">
 								<gr:valueReference>
 									<os:OS32Bit />
 								</gr:valueReference>
 							</os:WindowsServer2003>
 						</price:isLinkedTo>
-						<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2003_64Bit" />
+						<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2003_64Bit" />
 						<price:isLinkedTo>
-							<os:WindowsServer2008 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2008">
+							<os:WindowsServer2008 rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2008">
 								<gr:valueReference>
 									<os:OS32Bit />
 								</gr:valueReference>
@@ -771,7 +771,7 @@
 							</os:WindowsServer2008>
 						</price:isLinkedTo>
 						<price:isLinkedTo>
-							<os:WindowsServer2008R2 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2008R2">
+							<os:WindowsServer2008R2 rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2008R2">
 								<gr:valueReference>
 									<os:OS32Bit />
 								</gr:valueReference>
@@ -789,13 +789,13 @@
 						</price:hasPrice>
 					</price:PriceComponent>
 				</price:hasPriceComponent>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage2_Windows">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage2_Windows">
 				<dcterms:title xml:lang="en">Package 2 Windows</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 2 with Windows</dcterms:description>
 				<price:hasBillingCycle>
@@ -804,16 +804,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage3_Windows">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage3_Windows">
 				<dcterms:title xml:lang="en">Package 3 Windows</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 3 with Windows</dcterms:description>
 				<price:hasBillingCycle>
@@ -822,16 +822,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage4_Windows">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage4_Windows">
 				<dcterms:title xml:lang="en">Package 4 Windows</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 4 with Windows</dcterms:description>
 				<price:hasBillingCycle>
@@ -840,16 +840,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage5_Windows">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage5_Windows">
 				<dcterms:title xml:lang="en">Package 5 Windows</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 5 with Windows</dcterms:description>
 				<price:hasBillingCycle>
@@ -858,16 +858,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage1_Windows2003_SQL2005">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage1_Windows2003_SQL2005">
 				<dcterms:title xml:lang="en">Package 1 Windows extended</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 1 with Windows 2003 64-bit and SQL Server 2005</dcterms:description>
 				<price:hasBillingCycle>
@@ -876,16 +876,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows_SQLServer2005" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_1_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows_SQLServer2005" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage2_Windows2003_SQL2005">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage2_Windows2003_SQL2005">
 				<dcterms:title xml:lang="en">Package 2 Windows extended</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 2 with Windows 2003 64-bit and SQL Server 2005</dcterms:description>
 				<price:hasBillingCycle>
@@ -894,16 +894,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows_SQLServer2005" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_2_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows_SQLServer2005" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage3_Windows2003_SQL2005">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage3_Windows2003_SQL2005">
 				<dcterms:title xml:lang="en">Package 3 Windows extended</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 3 with Windows 2003 64-bit and SQL Server 2005</dcterms:description>
 				<price:hasBillingCycle>
@@ -912,16 +912,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows_SQLServer2005" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_3_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows_SQLServer2005" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage4_Windows2003_SQL2005">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage4_Windows2003_SQL2005">
 				<dcterms:title xml:lang="en">Package 4 Windows extended</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 4 with Windows 2003 64-bit and SQL Server 2005</dcterms:description>
 				<price:hasBillingCycle>
@@ -930,16 +930,16 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows_SQLServer2005" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_4_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows_SQLServer2005" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage5_Windows2003_SQL2005">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_CloudServers_ResourcePackage5_Windows2003_SQL2005">
 				<dcterms:title xml:lang="en">Package 5 Windows extended</dcterms:title>
 				<dcterms:description xml:lang="en">Resource package 5 with Windows 2003 64-bit and SQL Server 2005</dcterms:description>
 				<price:hasBillingCycle>
@@ -948,26 +948,26 @@
 						<gr:hasUnitOfMeasurement>MON</gr:hasUnitOfMeasurement>
 					</gr:QuantitativeValue>
 				</price:hasBillingCycle>
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_5_On" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_5_Off" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows_SQLServer2005" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
-				<price:hasPriceComponent rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_5_On" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_ResourcePackage_5_Off" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows_SQLServer2005" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_OutboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_InboundTraffic" />
+				<price:hasPriceComponent rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#deduction_Availability" />
 			</price:PricePlan>
 		</usdl:hasPricePlan>
 		<usdl:hasServiceLevelProfile>
-			<usdl:ServiceLevelProfile rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slp_ReliaCloud">
+			<usdl:ServiceLevelProfile rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slp_ReliaCloud">
 				<dcterms:title xml:lang="en">ReliaCloud SLA</dcterms:title>
 				<dcterms:description xml:lang="en">ReliaCloud SLA v1.1 (Feb 8th 2010), c.f. 'http://www.reliacloud.com/legal/sla/ '. The remedies in the SLA are your sole and exclusive remedies for any Incident or other failure of the Service.</dcterms:description>
 				<sla:hasServiceLevel>
-					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Availability">
+					<sla:GuaranteedState rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Availability">
 						<dcterms:title xml:lang="en">Availability</dcterms:title>
 						<sla:serviceLevelExpression>
 							<sla:ServiceLevelExpression>
 								<dcterms:description xml:lang="en">ReliaCloud Cloud Server guarantees a 100% availability of network, instrastructure and host servers.</dcterms:description>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Value">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Value">
 										<rdfs:label xml:lang="en">100% Availability</rdfs:label>
 										<sla:hasDefault>
 											<cloud:Availability>
@@ -978,7 +978,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_MeasurementPeriod">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_MeasurementPeriod">
 										<rdfs:label xml:lang="en">Availability measurment period</rdfs:label>
 										<sla:hasDefault>
 											<genVoc:MeasurementPeriod>
@@ -989,19 +989,19 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Network">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Network">
 										<rdfs:label xml:lang="en">Definition unavailability: Network</rdfs:label>
 										<dcterms:description xml:lang="en">The Network is considered 'not available' if data cannot be transmitted and received across the Network in the normal course of operation. By 'Network' we mean the portion of the ReliaCloud Server system extending from the network egress point of your Host Server (as defined below) to the outbound port of the ReliaCloud data center border router.</dcterms:description>
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Infrastructure">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Infrastructure">
 										<rdfs:label xml:lang="en">Definition unavailability: Network</rdfs:label>
 										<dcterms:description xml:lang="en">The Infrastructure is considered 'not available' if the Infrastructure is not functioning at a reasonable capacity as a result of power or cabling. By 'Infrastructure' we mean ReliaCloud's power (including UPS equipment, generator and cabling) systems and HVAC for the data center.</dcterms:description>
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_HostServer">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_HostServer">
 										<rdfs:label xml:lang="en">Definition unavailability: Network</rdfs:label>
 										<dcterms:description xml:lang="en">The Host Servers are considered 'not available' if they fail to function properly as a result of hardware and hypervisor layer problems on the Host Servers. By 'Host Server' we mean the hardware, computing and storage nodes, and software hypervisor of the physical servers which are used to host your Cloud Server(s). By 'Cloud Server' we mean specific and unique virtual machine instances which you have purchased through the ReliaCloud Server Product as specified in your particular Order.</dcterms:description>
 									</sla:Variable>
@@ -1011,13 +1011,13 @@
 					</sla:GuaranteedState>
 				</sla:hasServiceLevel>
 				<sla:hasServiceLevel>
-					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Availability_Exclusions">
+					<sla:GuaranteedState rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Availability_Exclusions">
 						<dcterms:title xml:lang="en">Availability exclusions</dcterms:title>
 						<sla:serviceLevelExpression>
 							<sla:ServiceLevelExpression>
 								<dcterms:description xml:lang="en">Notwithstanding any provision to the contrary in this SLA, the following do not constitute Incidents:</dcterms:description>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_ScheduledMaintenance">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_ScheduledMaintenance">
 										<rdfs:label xml:lang="en">Scheduled Maintenance</rdfs:label>
 										<dcterms:description xml:lang="en">Unavailability occurring during scheduled maintenance periods. 'Maintenance' means: (i) maintenance on ReliaCloud equipment that ReliaCloud has planned in advance; or (ii) any emergency maintenance, corrective action intended to remedy conditions likely to cause severe Service degradation, as designated by ReliaCloud in its sole discretion.</dcterms:description>
 										<sla:hasDefault>
@@ -1026,7 +1026,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_Negligence">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_Negligence">
 										<rdfs:label xml:lang="en">Negligence</rdfs:label>
 										<dcterms:description xml:lang="en">Unavailability caused by negligent acts or omissions of you or your representatives, or by any of your applications, equipment, or facilities.</dcterms:description>
 										<sla:hasDefault>
@@ -1035,7 +1035,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_Hackers">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_Hackers">
 										<rdfs:label xml:lang="en">Hackers and similar</rdfs:label>
 										<dcterms:description xml:lang="en">Outages caused by hackers, sabotage, viruses, worms, or other third party wrongful actions.</dcterms:description>
 										<sla:hasDefault>
@@ -1044,7 +1044,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_DNS">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_DNS">
 										<rdfs:label xml:lang="en">DNS issues</rdfs:label>
 										<dcterms:description xml:lang="en">DNS issues outside of ReliaCloud's control.</dcterms:description>
 										<sla:hasDefault>
@@ -1053,7 +1053,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_InternetAnomalies">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_InternetAnomalies">
 										<rdfs:label xml:lang="en">Internet anomalies</rdfs:label>
 										<dcterms:description xml:lang="en">Outages resulting from Internet anomalies outside of ReliaCloud's control</dcterms:description>
 										<sla:hasDefault>
@@ -1062,7 +1062,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_DesasterEvents">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_DesasterEvents">
 										<rdfs:label xml:lang="en">Desaster events</rdfs:label>
 										<dcterms:description xml:lang="en">Outages resulting from fires, explosions, or force majeure</dcterms:description>
 										<sla:hasDefault>
@@ -1071,7 +1071,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_InvalidReportOrRequest">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_InvalidReportOrRequest">
 										<rdfs:label xml:lang="en">Invalid report or request</rdfs:label>
 										<dcterms:description xml:lang="en">Your failure to abide by the requirements of reporting an incident or requesting a credit as specified in the SLA.</dcterms:description>
 										<sla:hasDefault>
@@ -1080,7 +1080,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_BetaTests">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Availability_Exclusion_BetaTests">
 										<rdfs:label xml:lang="en">Beta tests</rdfs:label>
 										<dcterms:description xml:lang="en">Unavailability related to a Service under 'beta test'.</dcterms:description>
 										<sla:hasDefault>
@@ -1093,13 +1093,13 @@
 					</sla:GuaranteedState>
 				</sla:hasServiceLevel>
 				<sla:hasServiceLevel>
-					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_UnavailabilityReport">
+					<sla:GuaranteedState rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_UnavailabilityReport">
 						<dcterms:title xml:lang="en">Report of unavailability</dcterms:title>
 						<sla:serviceLevelExpression>
 							<sla:ServiceLevelExpression>
 								<dcterms:description xml:lang="en">If you become aware that any of your Services are not available, you must promptly give ReliaCloud notice of the problem. You must reasonably cooperate with the ReliaCloud support staff by providing reasonable and timely responses to questions and other information needs the support staff may have in resolving the problem.</dcterms:description>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_Contact">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_Contact">
 										<rdfs:label xml:lang="en">Request contact</rdfs:label>
 										<sla:hasDefault>
 											<gr:QualitativeValue>
@@ -1109,7 +1109,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_Content_AccUsername">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_Content_AccUsername">
 										<rdfs:label xml:lang="en">Report content: Username</rdfs:label>
 										<sla:hasDefault>
 											<gr:QualitativeValue>
@@ -1119,7 +1119,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_Content_InstanceID">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_Content_InstanceID">
 										<rdfs:label xml:lang="en">Report content: Instance ID</rdfs:label>
 										<sla:hasDefault>
 											<gr:QualitativeValue>
@@ -1129,7 +1129,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_Content_DateTime">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_Content_DateTime">
 										<rdfs:label xml:lang="en">Report content: Date and Time</rdfs:label>
 										<sla:hasDefault>
 											<gr:QualitativeValue>
@@ -1138,9 +1138,9 @@
 										</sla:hasDefault>
 									</sla:Variable>
 								</sla:hasVariable>
-								<sla:hasVariable rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_Content_Estimates" />
+								<sla:hasVariable rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_Content_Estimates" />
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_CreditEligibility">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_UnavailabilityReport_CreditEligibility">
 										<rdfs:label xml:lang="en">Credit Eligibility</rdfs:label>
 										<dcterms:description xml:lang="en">To be eligible for credits, the Incident must have been reported to ReliaCloud as described above, either while happening or promptly (within one hour) after the close of the Incident.</dcterms:description>
 										<sla:hasDefault>
@@ -1156,13 +1156,13 @@
 					</sla:GuaranteedState>
 				</sla:hasServiceLevel>
 				<sla:hasServiceLevel>
-					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Credit_Calculation">
+					<sla:GuaranteedState rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Credit_Calculation">
 						<dcterms:title xml:lang="en">Credit calculation</dcterms:title>
 						<sla:serviceLevelExpression>
 							<sla:ServiceLevelExpression>
 								<dcterms:description xml:lang="en">A period of non-availability will be deemed to have started at the time we log when you first contact us about the problem. The end of the period of non-availability will be determined by ReliaCloud support staff based on ReliaCloud log files. Any period of time ReliaCloud does not meet the SLA availability requirements described above will be considered an 'Incident'. Incidents will be measured by the minute.</dcterms:description>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Calculation_Start">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Calculation_Start">
 										<rdfs:label xml:lang="en">Credit period start on report</rdfs:label>
 										<sla:hasDefault>
 											<cloud:CreditPeriodStart>
@@ -1174,7 +1174,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Calculation_Slice">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Calculation_Slice">
 										<rdfs:label xml:lang="en">Credit period is measured per minute</rdfs:label>
 										<sla:hasDefault>
 											<cloud:CreditPeriodSlice>
@@ -1185,7 +1185,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Calculation_End">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Calculation_End">
 										<rdfs:label xml:lang="en">Credit period end is dertermined by ReliaCloud support staff</rdfs:label>
 										<sla:hasDefault>
 											<cloud:CreditPeriodEnd>
@@ -1201,13 +1201,13 @@
 					</sla:GuaranteedState>
 				</sla:hasServiceLevel>
 				<sla:hasServiceLevel>
-					<sla:GuaranteedState rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Credit_Suspension">
+					<sla:GuaranteedState rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Credit_Suspension">
 						<dcterms:title xml:lang="en">Credit suspension</dcterms:title>
 						<sla:serviceLevelExpression>
 							<sla:ServiceLevelExpression>
 								<dcterms:description xml:lang="en">Reasons for the suspension of credit entitlement.</dcterms:description>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Suspension_BreachTermsOfService">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Suspension_BreachTermsOfService">
 										<rdfs:label xml:lang="en">Breach of the Terms of Service during the period of an Incident.</rdfs:label>
 										<sla:hasDefault>
 											<cloud:CreditSuspensionReason />
@@ -1215,7 +1215,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Suspension_BreachAcceptableUsePolicy">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Suspension_BreachAcceptableUsePolicy">
 										<rdfs:label xml:lang="en">Breach of the Acceptable Use Policy during the period of an Incident.</rdfs:label>
 										<sla:hasDefault>
 											<cloud:CreditSuspensionReason />
@@ -1227,13 +1227,13 @@
 					</sla:GuaranteedState>
 				</sla:hasServiceLevel>
 				<sla:hasServiceLevel>
-					<sla:GuaranteedAction rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Credit_Request">
+					<sla:GuaranteedAction rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#slo_CloudServer_Credit_Request">
 						<dcterms:title xml:lang="en">Credit request</dcterms:title>
 						<sla:serviceLevelExpression>
 							<sla:ServiceLevelExpression>
 								<dcterms:description xml:lang="en">To obtain a credit for a particular Incident, you must submit a request for credit within five business days after the conclusion of the Incident.</dcterms:description>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Period">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Period">
 										<rdfs:label xml:lang="en">Request period</rdfs:label>
 										<sla:hasDefault>
 											<cloud:CreditRequestPeriod>
@@ -1244,7 +1244,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Contact">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Contact">
 										<rdfs:label xml:lang="en">Request contact</rdfs:label>
 										<sla:hasDefault>
 											<gr:QualitativeValue>
@@ -1254,7 +1254,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Content_AccUsername">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Content_AccUsername">
 										<rdfs:label xml:lang="en">Request content: Username</rdfs:label>
 										<sla:hasDefault>
 											<gr:QualitativeValue>
@@ -1264,7 +1264,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Content_InstanceID">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Content_InstanceID">
 										<rdfs:label xml:lang="en">Request content: Instance ID</rdfs:label>
 										<sla:hasDefault>
 											<gr:QualitativeValue>
@@ -1274,7 +1274,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Content_DateTime">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Content_DateTime">
 										<rdfs:label xml:lang="en">Request content: Date and Time</rdfs:label>
 										<sla:hasDefault>
 											<gr:QualitativeValue>
@@ -1284,7 +1284,7 @@
 									</sla:Variable>
 								</sla:hasVariable>
 								<sla:hasVariable>
-									<sla:Variable rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Content_Estimates">
+									<sla:Variable rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#var_CloudServer_Credit_Request_Content_Estimates">
 										<rdfs:label xml:lang="en">Request content: Request and estimates</rdfs:label>
 										<sla:hasDefault>
 											<gr:QualitativeValue>
@@ -1300,12 +1300,12 @@
 			</usdl:ServiceLevelProfile>
 		</usdl:hasServiceLevelProfile>
 	</usdl:ServiceOffering>
-	<price:PriceComponent rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows2003_SQL2005">
+	<price:PriceComponent rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#priceComponent_SoftwarePackage_Windows2003_SQL2005">
 		<dcterms:title xml:lang="en">Windows 2003 64-bit with SQL Server 2005</dcterms:title>
 		<dcterms:description xml:lang="en">Fee for the usage of Windows 2003 64-bit with SQL Server 2005.</dcterms:description>
-		<price:isLinkedTo rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2003_64Bit" />
+		<price:isLinkedTo rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_WindowsServer2003_64Bit" />
 		<price:isLinkedTo>
-			<VisiReliaCloud:CloudServer_SQLServer2005 rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_SQLServer2005" />
+			<VisiReliaCloud:CloudServer_SQLServer2005 rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#resource_CloudServer_SQLServer2005" />
 		</price:isLinkedTo>
 		<price:hasPrice>
 			<gr:UnitPriceSpecification>
@@ -1315,14 +1315,14 @@
 			</gr:UnitPriceSpecification>
 		</price:hasPrice>
 	</price:PriceComponent>
-	<usdl:ServiceOffering rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#offering_Support">
+	<usdl:ServiceOffering rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#offering_Support">
 		<dcterms:title xml:lang="en">ReliaCloud Tech Support</dcterms:title>
 		<dcterms:description xml:lang="en">ReliaCloud Tech Support includes chat and phone support</dcterms:description>
 		<usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-03-01</usdl:validFrom>
 		<usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-08-31</usdl:validThrough>
-		<usdl:includes rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#service_Support" />
+		<usdl:includes rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#service_Support" />
 		<usdl:hasPricePlan>
-			<price:PricePlan rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_Support">
+			<price:PricePlan rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001#pricing_Support">
 				<dcterms:title xml:lang="en">Free Support</dcterms:title>
 				<dcterms:description xml:lang="en">Support comes free with every account.</dcterms:description>
 			</price:PricePlan>

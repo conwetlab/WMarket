@@ -30,7 +30,7 @@ public class RegisterServiceTest extends TestCase {
 		
 		Service service = new Service();
 		service.setName("myService");
-		service.setUrl("http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/WarrantyManagementSolution_Master.rdf");
+		service.setUrl("http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/WarrantyManagementSolution_Master.rdf");
 		
 		assertTrue(serviceClient.save("testStore", service));
 		

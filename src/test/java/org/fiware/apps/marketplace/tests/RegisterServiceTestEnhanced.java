@@ -26,10 +26,10 @@ public class RegisterServiceTestEnhanced {
 		String VISIReliaCloudName = "VISI_ReliaCloud";
 		
 		String storeURL = "http://www.test.de";
-		String amazonEC2URL = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001.rdf";
-		String ElasticHostsCloudHostingURL = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001.rdf";
-		String RackspaceCloudServersURL = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001.rdf";
-		String VISIReliaCloudURL = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001.rdf";
+		String amazonEC2URL = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001.rdf";
+		String ElasticHostsCloudHostingURL = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001.rdf";
+		String RackspaceCloudServersURL = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001.rdf";
+		String VISIReliaCloudURL = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001.rdf";
 
 		//Delete if already existing
 		serviceClient.delete(storeName, amazonEC2Name);

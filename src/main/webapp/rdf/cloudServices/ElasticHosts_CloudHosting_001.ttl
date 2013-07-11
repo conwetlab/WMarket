@@ -1,5 +1,5 @@
-@base <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001> .
-@prefix : <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#> .
+@base <http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001> .
+@prefix : <http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001#> .
 
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -27,10 +27,10 @@
 @prefix sla: <http://www.linked-usdl.org/ns/usdl-sla#> .
 
 @prefix gn: <http://www.geonames.org/ontology#> .
-@prefix genVoc: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#> .
-@prefix cloud: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#> .
-@prefix os: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#> .
-@prefix support: <http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#> .
+@prefix genVoc: <http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#> .
+@prefix cloud: <http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004#> .
+@prefix os: <http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#> .
+@prefix support: <http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#> .
 
 <>  rdf:type usdl:ServiceDescription ;
 	dcterms:title "Cloud Hosting service description" ;

@@ -20,14 +20,14 @@ import org.junit.Test;
 
 public class AttributeTypeStatisticsResolverTest {
 
-	private static final String amazonUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
-	private static final String rackspaceUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001";
-	private static final String elasticHostsUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001";
-	private static final String reliaCloudUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001";
-	private static final String cloudVocUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004";
-	private static final String supportVocUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003";
-	private static final String osVocUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003";
-	private static final String generalVocUri = "http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001";
+	private static final String amazonUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
+	private static final String rackspaceUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001";
+	private static final String elasticHostsUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001";
+	private static final String reliaCloudUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001";
+	private static final String cloudVocUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004";
+	private static final String supportVocUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003";
+	private static final String osVocUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003";
+	private static final String generalVocUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001";
 	private static final double epsilon = 1.0 / 1000000000.0;
 
 	private static HashMap<String, ServiceAttributeType> types = new HashMap<String, ServiceAttributeType>();

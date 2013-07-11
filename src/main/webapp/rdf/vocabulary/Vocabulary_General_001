@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <rdf:RDF xmlns:gr="http://purl.org/goodrelations/v1#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dcterms="http://purl.org/dc/terms/">
-	<skos:ConceptScheme rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001">
+	<skos:ConceptScheme rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001">
 		<skos:prefLabel xml:lang="en">General service resource/property vocabulary</skos:prefLabel>
 		<skos:altLabel xml:lang="en">General vocabulary</skos:altLabel>
 		<skos:definition>Specification of the general vocabulary to describe service resources and properties.</skos:definition>
@@ -15,7 +15,7 @@
 		<dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2012-05-18</dcterms:modified>
 		<owl:versionInfo>001</owl:versionInfo>
 		<skos:topConceptOf>
-			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#AbsoluteTimePeriod">
+			<rdfs:Class rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#AbsoluteTimePeriod">
 				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
 				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
 				<skos:prefLabel xml:lang="en">Time period</skos:prefLabel>
@@ -23,7 +23,7 @@
 			</rdfs:Class>
 		</skos:topConceptOf>
 		<skos:topConceptOf>
-			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#RecurringTimePeriod">
+			<rdfs:Class rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#RecurringTimePeriod">
 				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
 				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
 				<skos:prefLabel xml:lang="en">Recurring time period</skos:prefLabel>
@@ -31,7 +31,7 @@
 			</rdfs:Class>
 		</skos:topConceptOf>
 		<skos:topConceptOf>
-			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#Quantity">
+			<rdfs:Class rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#Quantity">
 				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
 				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QuantitativeValue" />
 				<skos:prefLabel xml:lang="en">Quantity</skos:prefLabel>
@@ -39,7 +39,7 @@
 			</rdfs:Class>
 		</skos:topConceptOf>
 		<skos:topConceptOf>
-			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#AbsolutePointInTime">
+			<rdfs:Class rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#AbsolutePointInTime">
 				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
 				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
 				<skos:prefLabel xml:lang="en">Absolute point in time</skos:prefLabel>
@@ -47,7 +47,7 @@
 			</rdfs:Class>
 		</skos:topConceptOf>
 		<skos:topConceptOf>
-			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#GenericPointInTime">
+			<rdfs:Class rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#GenericPointInTime">
 				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
 				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
 				<skos:prefLabel xml:lang="en">Generic point in time</skos:prefLabel>
@@ -55,26 +55,26 @@
 			</rdfs:Class>
 		</skos:topConceptOf>
 		<skos:topConceptOf>
-			<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#GeoReference">
+			<rdfs:Class rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#GeoReference">
 				<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
 				<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
 				<skos:prefLabel xml:lang="en">Geo-Reference</skos:prefLabel>
 				<skos:editorialNote xml:lang="en">Used for the specification of any kind of geographic reference. Insert the geo-reference via the usage of the http://www.geonames.org/ontology namespace. To get the reference use the URL  http://api.geonames.org/search?q=LOCATION&amp;maxRows=10&amp;username=demo&amp;type=rdf and replace 'LOCATION' with the searched location.</skos:editorialNote>
 			</rdfs:Class>
 		</skos:topConceptOf>
-		<skos:topConceptOf rdf:resource="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#MeasurementPeriod" />
+		<skos:topConceptOf rdf:resource="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#MeasurementPeriod" />
 	</skos:ConceptScheme>
-	<rdfs:Class rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#LanguageReference">
+	<rdfs:Class rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#LanguageReference">
 		<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
 		<rdfs:subClassOf rdf:resource="http://purl.org/goodrelations/v1#QualitativeValue" />
 		<skos:prefLabel xml:lang="en">Language</skos:prefLabel>
 		<skos:editorialNote xml:lang="en">Specification of an available language via rdfs:label with the language code.</skos:editorialNote>
 	</rdfs:Class>
-	<rdf:Property rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#hasLeftSibling">
+	<rdf:Property rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#hasLeftSibling">
 		<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#related" />
 		<rdfs:label xml:lang="en">Definition of the left sibling, meaning less or worse than the subject.</rdfs:label>
 	</rdf:Property>
-	<rdf:Property rdf:about="http://appsnserv.lab.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#hasRightSibling">
+	<rdf:Property rdf:about="http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_General_001#hasRightSibling">
 		<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#related" />
 		<rdfs:label xml:lang="en">Definition of the right sibling, meaning more or better than the subject.</rdfs:label>
 	</rdf:Property>
