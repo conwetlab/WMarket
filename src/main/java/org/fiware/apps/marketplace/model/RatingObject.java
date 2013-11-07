@@ -2,7 +2,6 @@ package org.fiware.apps.marketplace.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -23,14 +22,14 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @XmlRootElement(name = "ratingObject")
-public class RatingObject {
+public class RatingObject implements Comparable<RatingObject> {
 
 	private Integer id;
 	String objectId;
 	private Set<Rating> ratings;
 	private RatingObjectCategory ratingObjectCategory;
 	private float average;
-	
+
 	public static final int MAX_RATING = 5;
 	public static final int MIN_RATING = 1;	
 
@@ -83,14 +82,22 @@ public class RatingObject {
 			if(r.getOverallRating()>=MIN_RATING &&r.getOverallRating()<=MAX_RATING){
 				result += r.getOverallRating();  
 				ratingCount++;
-			
+
 			}
 		}
-		
+
 		return result/ratingCount;
 	}
 	public void setAverage(float average) {
 		this.average = average;
 	}
-
+	@Override
+	public int compareTo(RatingObject o) {
+		if (getAverage() < o.getAverage()) 
+			return 1; 
+		else if (getAverage() == o.getAverage()) 
+			return 0; 
+		else
+			return -1; 
+	}
 }

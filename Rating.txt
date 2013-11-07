@@ -66,3 +66,12 @@ curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u  "demo1234:demo1
 
 Delete a new Rating Object Category:
 curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u  "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA
+
+
+RECOMMENDATION
+
+Get available Object Categories:
+http://localhost:8080/FiwareMarketplace/v1/recommendation/objectCategories
+
+Get Recommendations for an Object Category:
+http://localhost:8080/FiwareMarketplace/v1/recommendation/objectCategory/newCatA/
