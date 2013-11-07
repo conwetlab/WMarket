@@ -269,22 +269,17 @@ ____________________________________________________________
 
 ### CREATE Operations:
 
-Create a new Rating Object Category:
+Create a new Rating Object Category:  
 curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA
-
-Create a new Rating Object:
+Create a new Rating Object:  
 curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
-
-Create a new Rating Category:
+Create a new Rating Category:  
 curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
-
-Create a new Rating:
+Create a new Rating:  
 curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/
-
-Create Rating for Category:
+Create Rating for Category:  
 curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39/category/Quality/stars/4
-
-Create Textual Review:
+Create Textual Review:  
 curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39/textualReview/Very Good Service
 
 ____________________________________________________________
@@ -292,45 +287,45 @@ ____________________________________________________________
 ### GET Operations:
 
 
-Get a Rating:
+Get a Rating:  
 curl.exe url -v -H "Content-Type: application/xml" -X GET -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39
 
-Get a Category:
+Get a Category:  
 curl.exe url -v -H "Content-Type: application/xml" -X GET -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
 
-Get a new Rating Object:
+Get a new Rating Object:  
 curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
 
-Get a new Rating Object Category:
+Get a new Rating Object Category:  
 curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA
 
-All Ratings for an Object:
+All Ratings for an Object:  
 curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/ratings
 
 
-All Objects for an Object Category:
+All Objects for an Object Category:  
 curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/objects
 
-All Categories for an Object Category:
+All Categories for an Object Category:  
 curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/categories
 
 
-All available Object Categories:
+All available Object Categories:  
 curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password"  http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategories
 
 ____________________________________________________________
 
 ### DELETE Operations:
 
-Delete a Rating:
+Delete a Rating:  
 curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39
 
-Delete a Category:
+Delete a Category:  
 curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
 
-Delete a new Rating Object:
+Delete a new Rating Object:  
 curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
 
-Delete a new Rating Object Category:
+Delete a new Rating Object Category:   
 curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA
 
