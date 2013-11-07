@@ -100,10 +100,13 @@ public class Rating {
 	@Transient
 	public float getOverallRating() {
 		float result = 0;
-		for (RatingCategoryEntry r : ratingCategoryEntries){
-			result += r.getValue();
+		if(ratingCategoryEntries!=null){
+			for (RatingCategoryEntry r : ratingCategoryEntries){
+				result += r.getValue();
+			}
+			return result/ratingCategoryEntries.size();
 		}
-		return result/ratingCategoryEntries.size();
+		return Float.NaN;
 	}
 	public void setOverallRating(float overallRating) {
 		this.overallRating = overallRating;
