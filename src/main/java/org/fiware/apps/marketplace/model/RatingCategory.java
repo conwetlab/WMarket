@@ -24,11 +24,10 @@ import javax.xml.bind.annotation.XmlTransient;
 public class RatingCategory {
 	
 	private Integer id;
-	private RatingSystem ratingSystem;
 	private String name;
-	private String description;
-	private Float weight;
 	private List <RatingCategoryEntry> ratingCategoryEntries;
+	private RatingObjectCategory ratingObjectCategory;
+	
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -43,7 +42,7 @@ public class RatingCategory {
 	
 	@XmlID
 	@XmlAttribute 
-	@Column(name = "RATING_CATEGORY_NAME", unique = true, nullable = false)
+	@Column(name = "RATING_CATEGORY_NAME", unique = false, nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -51,34 +50,7 @@ public class RatingCategory {
 		this.name = name;
 	}
 	
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "RATING_SYTEM", nullable=false)
-	public RatingSystem getRatingSystem() {
-		return ratingSystem;
-	}
-	public void setRatingSystem(RatingSystem ratingSystem) {
-		this.ratingSystem = ratingSystem;
-	}
-	
-	@XmlElement
-	@Column(name = "RATING_CATEGORY_DESCRIPTION", unique = false, nullable = true)
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	@XmlElement
-	@Column(name = "RATING_CATEGORY_WEIGHT", unique = false, nullable = false)
-	public Float getWeight() {
-		return weight;
-	}
-	public void setWeight(Float weight) {
-		this.weight = weight;
-	}
-	
-	
+		
 	@XmlTransient
 	@OneToMany(mappedBy="ratingCategory",  cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	public List<RatingCategoryEntry> getRatingCategoryEntries() {
@@ -89,4 +61,14 @@ public class RatingCategory {
 		this.ratingCategoryEntries = ratingCategoryEntries;
 	}
 	
+	@XmlTransient
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "RATING_OBJ_CAT_ID", nullable=false)
+	public RatingObjectCategory getRatingObjectCategory() {
+		return ratingObjectCategory;
+	}
+	public void setRatingObjectCategory(RatingObjectCategory ratingObjectCategory) {
+		this.ratingObjectCategory = ratingObjectCategory;
+	}
+
 }

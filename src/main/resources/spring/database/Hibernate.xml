@@ -20,6 +20,12 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 				<value>org.fiware.apps.marketplace.model.Service</value>
 				<value>org.fiware.apps.marketplace.model.Store</value>
 				<value>org.fiware.apps.marketplace.model.Localuser</value>
+				<value>org.fiware.apps.marketplace.model.Rating</value>
+				<value>org.fiware.apps.marketplace.model.RatingCategory</value>
+				<value>org.fiware.apps.marketplace.model.RatingCategoryEntry</value>
+				<value>org.fiware.apps.marketplace.model.RatingObject</value>
+				<value>org.fiware.apps.marketplace.model.RatingObjectCategory</value>
+				
 			</list>
 		</property>
     </bean>

@@ -17,16 +17,16 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @XmlRootElement(name = "ratingCategoryEntry")
 public class RatingCategoryEntry {
-	
+
 	private Integer id;
 	private Integer value;
 	private RatingCategory ratingCategory;
 	private Rating rating;
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "RATING_CATEGORY_ENTRY_ID", unique = true, nullable = false)
-	@XmlID
+
 	@XmlAttribute 
 	public Integer getId() {
 		return id;
@@ -34,7 +34,7 @@ public class RatingCategoryEntry {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	@XmlElement
 	@Column(name = "RATING_CATEGORY_ENTRY_VALUE", unique = false, nullable = false)
 	public Integer getValue() {
@@ -43,7 +43,7 @@ public class RatingCategoryEntry {
 	public void setValue(Integer value) {
 		this.value = value;
 	}
-	
+
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "RATING_CATEGORY_ID", nullable=false)
@@ -53,8 +53,9 @@ public class RatingCategoryEntry {
 	public void setRatingCategory(RatingCategory ratingCategory) {
 		this.ratingCategory = ratingCategory;
 	}
-	
-	
+
+
+	@XmlTransient
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "RATING_ID", nullable=false)
 	public Rating getRating() {
@@ -63,7 +64,6 @@ public class RatingCategoryEntry {
 	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
-	
-	
+
 
 }

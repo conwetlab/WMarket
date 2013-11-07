@@ -2,7 +2,9 @@ package org.fiware.apps.marketplace.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,27 +15,28 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @XmlRootElement(name = "rating")
 public class Rating {
 		
 	private Integer id;
-	private String feedback;
-	private Localuser user;
-	private Boolean anonym = true;
-	private List<RatingCategoryEntry> ratingCategoryEntries;
+	private String name;	
+	private String feedback;	
+	private Set<RatingCategoryEntry> ratingCategoryEntries;	
 	private RatingObject ratingObject;
+	private Date date;
+	private float overallRating;
 	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "RATING_ID", unique = true, nullable = false)
-	@XmlID
 	@XmlAttribute 
 	public Integer getId() {
 		return id;
@@ -42,6 +45,17 @@ public class Rating {
 		this.id = id;
 	}
 	
+	
+	@XmlElement
+	@Column(name = "RATING_NAME", unique = false, nullable = true )
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
 	@XmlElement
 	@Column(name = "RATING_FEEDBACK", unique = false, nullable = true)
 	public String getFeedback() {
@@ -49,25 +63,7 @@ public class Rating {
 	}
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;
-	}
-	
-	@ManyToOne(optional = true)
-	@JoinColumn(name = "RATING_USER", nullable=true)
-	public Localuser getUser() {
-		return user;
-	}
-	public void setUser(Localuser user) {
-		this.user = user;
-	}
-	
-	@XmlElement
-	@Column(name = "RATING_ANONYM", unique = false, nullable = false)
-	public Boolean getAnonym() {
-		return anonym;
-	}
-	public void setAnonym(Boolean anonym) {
-		this.anonym = anonym;
-	}
+	}	
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "RATING_OBJECT_ID", nullable=false)
@@ -78,14 +74,40 @@ public class Rating {
 		this.ratingObject = ratingObject;
 	}
 	
-	@XmlTransient
-	@OneToMany(mappedBy="rating",  cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-	public List<RatingCategoryEntry> getRatingCategoryEntries() {
+	@XmlElementWrapper
+	@XmlElement(name = "ratingCategoryEntry") 
+	@OneToMany(mappedBy="rating",  cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	public Set<RatingCategoryEntry> getRatingCategoryEntries() {
 		return ratingCategoryEntries;
 	}
 	public void setRatingCategoryEntries(
-			List<RatingCategoryEntry> ratingCategoryEntries) {
+			Set<RatingCategoryEntry> ratingCategoryEntries) {
 		this.ratingCategoryEntries = ratingCategoryEntries;
 	}
+	
+	@XmlElement
+	@Column(name = "RATING_DATE", nullable = false)
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
+	
+	
+	@XmlElement
+	@Transient
+	public float getOverallRating() {
+		float result = 0;
+		for (RatingCategoryEntry r : ratingCategoryEntries){
+			result += r.getValue();
+		}
+		return result/ratingCategoryEntries.size();
+	}
+	public void setOverallRating(float overallRating) {
+		this.overallRating = overallRating;
+	}
+	
 
 }

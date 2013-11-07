@@ -1,0 +1,68 @@
+CREATE:
+
+Create a new Rating Object Category:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA
+
+Create a new Rating Object:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
+
+Create a new Rating Category:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
+
+Create a new Rating:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/
+
+Create Rating for Category:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39/category/Quality/stars/4
+
+Create Textual Review:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39/textualReview/Very Good Service
+
+
+
+GET:
+
+
+Get a Rating:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39
+
+Get a Category:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
+
+Get a new Rating Object:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
+
+Get a new Rating Object Category:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA
+
+All Ratings for an Object:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/ratings
+
+
+All Objects for an Object Category:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/objects
+
+All Categories for an Object Category:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/categories
+
+
+All available Object Categories:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "demo1234:demo1234"  http://localhost:8080/FiwareMarketplace/v1/rating/objectCategories
+
+
+
+
+
+DELETE:
+
+Delete a Rating:
+curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39
+
+Delete a Category:
+curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
+
+Delete a new Rating Object:
+curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u  "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
+
+Delete a new Rating Object Category:
+curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u  "demo1234:demo1234" http://localhost:8080/FiwareMarketplace/v1/rating/objectCategory/newCatA
