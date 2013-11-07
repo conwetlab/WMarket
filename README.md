@@ -15,11 +15,11 @@ Basic Operations for Browsing:
 User: 		demo1234
 Password: 	demo1234
 
-All stores: 					[GET] http://localhost:8080/FiwareMarketplace/v1/registration/stores/
-Specific store: 				[GET] http://localhost:8080/FiwareMarketplace/v1/offering/store/[StoreName]
-All services for a given store:	[GET] http://localhost:8080/FiwareMarketplace/v1/offering/store/testStore/offerings/
-Specific Offering:				[GET] http://localhost:8080/FiwareMarketplace/v1/offering/store/[StoreName]/offering/[OfferingName]
-Fulltext Search: 				[GET] http://localhost:8080/FiwareMarketplace/v1/search/offerings/fulltext/[SearchString]
+All stores: 					[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/stores/
+Specific store: 				[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/[StoreName]
+All services for a given store:	[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offerings/
+Specific Offering:				[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/[StoreName]/offering/[OfferingName]
+Fulltext Search: 				[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/search/offerings/fulltext/[SearchString]
 
 
 CRUD Operations
@@ -28,13 +28,13 @@ User: 		demo1234
 Password: 	demo1234
 
 ____________________________________________________________
-Save User
+### Save User
  
 Save User Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/registration/userManagement/user
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/userManagement/user
 Header:
 {Accept-Encoding=[gzip, deflate]}
 Body:
@@ -47,13 +47,13 @@ Response Status:
 ____________________________________________________________
 
 
-Find User
+### Find User
 
 Find User Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/registration/userManagement/user/demoCompany
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/userManagement/user/demoCompany
 Header:
 {Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
 Body:
@@ -66,13 +66,13 @@ Response Status:
 ____________________________________________________________
 
 
-Update User
+### Update User
 
 Update User Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/registration/userManagement/user/demoCompany
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/userManagement/user/demoCompany
 Header:
 {Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
 Body:
@@ -84,13 +84,13 @@ Response Status:
 200
 ____________________________________________________________
 
-Delete User
+### Delete User
 
 Delete User Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/registration/userManagement/user/demoCompany
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/userManagement/user/demoCompany
 Header:
 {Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
 Body:
@@ -104,14 +104,14 @@ ________________________________________________________________________________
 
 
 
-Save Store
+### Save Store
 
 
 Save Store Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/registration/store
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/store
 Header:
 {Accept-Encoding=[gzip, deflate]}
 Body:
@@ -124,14 +124,14 @@ Response Status:
 ____________________________________________________________
 
 
-Find Store
+### Find Store
 
 
 Find Store Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/registration/store/testName12356
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/store/testName12356
 Header:
 {Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
 Body:
@@ -144,14 +144,14 @@ Response Status:
 ____________________________________________________________
 
 
-Update Store
+### Update Store
 
 
 Update Store Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/registration/store/testName12356
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/store/testName12356
 Header:
 {Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
 Body:
@@ -168,11 +168,11 @@ ____________________________________________________________
 Delete Store
 
 
-Delete Store Request:
+### Delete Store Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/registration/store/testName12356
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/store/testName12356
 Header:
 {Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
 Body:
@@ -184,14 +184,14 @@ Response Status:
 200
 ________________________________________________________________________________________________________________________
 ________________________________________________________________________________________________________________________
-Save Service
+### Save Service
 
 
 Save Service Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/offering/store/testStore/offering
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offering
 Header:
 {Accept-Encoding=[gzip, deflate]}
 Body:
@@ -204,14 +204,14 @@ Response Status:
 ____________________________________________________________
 
 
-Find Service
+### Find Service
 
 
 Find Service Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/offering/store/testStore/offering/myService
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offering/myService
 Header:
 {Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
 Body:
@@ -224,14 +224,14 @@ Response Status:
 ____________________________________________________________
 
 
-Update Service
+### Update Service
 
 
 Update Service Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/offering/store/testStore/offering/myService
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offering/myService
 Header:
 {Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
 Body:
@@ -244,14 +244,14 @@ Response Status:
 ____________________________________________________________
 
 
-Delete Service
+### Delete Service
 
 
 Delete Service Request:
 
 
 Resource URL:
-http://localhost:8080/FiwareMarketplace/v1/offering/store/testStore/offering/myService2
+http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offering/myService2
 Header:
 {Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
 Body:
@@ -263,4 +263,74 @@ Response Status:
 200
 ____________________________________________________________
 
+____________________________________________________________
+
+## Rating System Operations
+
+### CREATE Operations:
+
+Create a new Rating Object Category:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA
+
+Create a new Rating Object:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
+
+Create a new Rating Category:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
+
+Create a new Rating:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/
+
+Create Rating for Category:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39/category/Quality/stars/4
+
+Create Textual Review:
+curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39/textualReview/Very Good Service
+
+____________________________________________________________
+
+### GET Operations:
+
+
+Get a Rating:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39
+
+Get a Category:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
+
+Get a new Rating Object:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
+
+Get a new Rating Object Category:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA
+
+All Ratings for an Object:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/ratings
+
+
+All Objects for an Object Category:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/objects
+
+All Categories for an Object Category:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/categories
+
+
+All available Object Categories:
+curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password"  http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategories
+
+____________________________________________________________
+
+### DELETE Operations:
+
+Delete a Rating:
+curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39
+
+Delete a Category:
+curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
+
+Delete a new Rating Object:
+curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
+
+Delete a new Rating Object Category:
+curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA
 
