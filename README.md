@@ -20,7 +20,7 @@ Specific store: 				[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/sto
 All services for a given store:	[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offerings/
 Specific Offering:				[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/[StoreName]/offering/[OfferingName]
 Fulltext Search: 				[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/search/offerings/fulltext/[SearchString]
-
+ 
 
 CRUD Operations
 

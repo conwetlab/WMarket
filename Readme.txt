@@ -159,7 +159,7 @@ Response Status:
 ____________________________________________________________
 
 
-Delete Store
+Delete Store 
 
 
 Delete Store Request:

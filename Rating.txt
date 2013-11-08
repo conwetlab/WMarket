@@ -20,7 +20,7 @@ curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "demo1234:demo1234"
 
 
 
-GET:
+GET: 
 
 
 Get a Rating:

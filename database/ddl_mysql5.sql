@@ -1,4 +1,4 @@
-alter table Rating drop foreign key FK917A9DBDC96A3395;
+alter table Rating drop foreign key FK917A9DBDC96A3395; 
 alter table RatingCategory drop foreign key FKECF0B1DBE096C108;
 alter table RatingCategoryEntry drop foreign key FK2C8B5757BD17C475;
 alter table RatingCategoryEntry drop foreign key FK2C8B57575DC536FA;
