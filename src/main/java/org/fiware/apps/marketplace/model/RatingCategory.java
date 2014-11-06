@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -28,7 +27,6 @@ public class RatingCategory {
 	private List <RatingCategoryEntry> ratingCategoryEntries;
 	private RatingObjectCategory ratingObjectCategory;
 	
-	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "RATING_CATEGORY_ID", unique = true, nullable = false)
@@ -36,6 +34,7 @@ public class RatingCategory {
 	public Integer getId() {
 		return id;
 	}
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -46,16 +45,17 @@ public class RatingCategory {
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 		
 	@XmlTransient
 	@OneToMany(mappedBy="ratingCategory",  cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	public List<RatingCategoryEntry> getRatingCategoryEntries() {
 		return ratingCategoryEntries;
 	}
+	
 	public void setRatingCategoryEntries(
 			List<RatingCategoryEntry> ratingCategoryEntries) {
 		this.ratingCategoryEntries = ratingCategoryEntries;
@@ -67,6 +67,7 @@ public class RatingCategory {
 	public RatingObjectCategory getRatingObjectCategory() {
 		return ratingObjectCategory;
 	}
+	
 	public void setRatingObjectCategory(RatingObjectCategory ratingObjectCategory) {
 		this.ratingObjectCategory = ratingObjectCategory;
 	}

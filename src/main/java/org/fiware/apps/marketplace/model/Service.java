@@ -20,9 +20,9 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "SERVICE_NAME", "STORE_ID" }) }) // each service name has to unique for a store context
-
 @XmlRootElement(name = "resource")
 public class Service {
+	
 	private Integer  id;
 	private String url;
 	private String name;
@@ -38,6 +38,7 @@ public class Service {
 	public Integer  getId() {
 		return id;
 	}
+	
 	public void setId(Integer  id) {
 		this.id = id;
 	}
@@ -48,6 +49,7 @@ public class Service {
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -57,6 +59,7 @@ public class Service {
 	public String getUrl() {
 		return url;
 	}
+	
 	public void setUrl(String url) {
 		this.url = url;
 	}
@@ -67,6 +70,7 @@ public class Service {
 	public String getDescription() {
 		return Description;
 	}
+	
 	public void setDescription(String description) {
 		Description = description;
 	}
@@ -76,6 +80,7 @@ public class Service {
 	public Date getRegistrationDate() {
 		return registrationDate;
 	}
+	
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
 	}
@@ -87,6 +92,7 @@ public class Service {
 	public Store getStore() {
 		return store;
 	}
+	
 	public void setStore(Store store) {
 		this.store = store;
 	}
@@ -98,6 +104,7 @@ public class Service {
 	public Localuser getLasteditor() {
 		return lasteditor;
 	}
+	
 	public void setLasteditor(Localuser lasteditor) {
 		this.lasteditor = lasteditor;
 	}
@@ -109,6 +116,7 @@ public class Service {
 	public Localuser getCreator() {
 		return creator;
 	}
+	
 	public void setCreator(Localuser creator) {
 		this.creator = creator;
 	}

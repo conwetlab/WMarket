@@ -20,10 +20,13 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 
 @Entity
 @XmlRootElement(name = "resource")
 public class Store {
+	
 	private Integer  id;
 	private String url;
 	private String name;
@@ -40,6 +43,7 @@ public class Store {
 	public Integer getId() {
 		return id;
 	}
+	
 	public void setId(Integer  id) {
 		this.id = id;
 	}
@@ -50,6 +54,7 @@ public class Store {
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -59,17 +64,17 @@ public class Store {
 	public String getUrl() {
 		return url;
 	}
+	
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
-	
 	
 	@XmlElement
 	@Column(name = "STORE_DESC")
 	public String getDescription() {
 		return Description;
 	}
+	
 	public void setDescription(String description) {
 		Description = description;
 	}
@@ -79,6 +84,7 @@ public class Store {
 	public Date getRegistrationDate() {
 		return registrationDate;
 	}
+	
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
 	}
@@ -89,6 +95,7 @@ public class Store {
 	public List<Service> getServices() {
 		return services;
 	}
+	
 	public void setServices(List<Service> services) {
 		this.services = services;
 	}
@@ -99,6 +106,7 @@ public class Store {
 	public Localuser getLasteditor() {
 		return lasteditor;
 	}
+	
 	public void setLasteditor(Localuser lasteditor) {
 		this.lasteditor = lasteditor;
 	}
@@ -109,6 +117,7 @@ public class Store {
 	public Localuser getCreator() {
 		return creator;
 	}
+	
 	public void setCreator(Localuser creator) {
 		this.creator = creator;
 	}

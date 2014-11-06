@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "match")
 public class SearchResultEntryMatch {
+	
 	private String text;
 	private float luceneScore;
 	private String literal;
@@ -17,7 +18,6 @@ public class SearchResultEntryMatch {
 		this.text = text;
 		this.luceneScore = luceneScore;
 	}
-	
 	
 	@XmlElement
 	public String getText() {
@@ -35,7 +35,6 @@ public class SearchResultEntryMatch {
 	public void setLuceneScore(float luceneScore) {
 		this.luceneScore = luceneScore;
 	}
-	
 	
 	@XmlElement
 	public String getLiteral() {

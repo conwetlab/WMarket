@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -26,11 +25,11 @@ public class RatingCategoryEntry {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "RATING_CATEGORY_ENTRY_ID", unique = true, nullable = false)
-
 	@XmlAttribute 
 	public Integer getId() {
 		return id;
 	}
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -40,20 +39,20 @@ public class RatingCategoryEntry {
 	public Integer getValue() {
 		return value;
 	}
+	
 	public void setValue(Integer value) {
 		this.value = value;
 	}
-
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "RATING_CATEGORY_ID", nullable=false)
 	public RatingCategory getRatingCategory() {
 		return ratingCategory;
 	}
+	
 	public void setRatingCategory(RatingCategory ratingCategory) {
 		this.ratingCategory = ratingCategory;
 	}
-
 
 	@XmlTransient
 	@ManyToOne(optional = false)
@@ -61,9 +60,9 @@ public class RatingCategoryEntry {
 	public Rating getRating() {
 		return rating;
 	}
+	
 	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
-
 
 }

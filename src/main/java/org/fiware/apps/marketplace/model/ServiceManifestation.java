@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = "serviceManifestation")
 public class ServiceManifestation {
+	
 	private Integer id;
 	private String offeringUri;
 	private String offeringTitle;

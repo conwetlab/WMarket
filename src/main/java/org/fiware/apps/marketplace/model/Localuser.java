@@ -8,23 +8,23 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+
 @Entity
 @XmlRootElement(name = "user")
 public class Localuser {
+	
 	private Integer id;
 	private String username;
 	private String password;
 	private String email;
 	private Date registrationDate;
 	private String company;
-
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -33,6 +33,7 @@ public class Localuser {
 	public Integer getId() {
 		return id;
 	}
+	
 	public void setId(Integer  id) {
 		this.id = id;
 	}
@@ -43,24 +44,27 @@ public class Localuser {
 	public String getUsername() {
 		return username;
 	}
+	
 	public void setUsername(String username) {
 		this.username = username;
 	}
 	
-	@XmlElement
+	@XmlTransient
 	@Column(name = "LOCALUSER_PASSWORD", nullable = false)
 	public String getPassword() {
 		return password;
 	}
+	
 	public void setPassword(String password) {
 		this.password = password;
 	}
 	
-	@XmlElement
+	@XmlTransient
 	@Column(name = "LOCALUSER_EMAIL", unique = true, nullable = false)
 	public String getEmail() {
 		return email;
 	}
+	
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -69,7 +73,8 @@ public class Localuser {
 	@Column(name = "LOCALUSER_REGISTRATION_DATE", nullable = false)
 	public Date getRegistrationDate() {
 		return registrationDate;
-	}	
+	}
+	
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
 	}
@@ -79,6 +84,7 @@ public class Localuser {
 	public String getCompany() {
 		return company;
 	}
+	
 	public void setCompany(String company) {
 		this.company = company;
 	}

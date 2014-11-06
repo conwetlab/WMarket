@@ -14,8 +14,6 @@ public class SearchResultEntry {
 
 	private Service service;
 	private Store store;
-	
-	
 
 	public SearchResultEntry (){
 	}
@@ -56,8 +54,5 @@ public class SearchResultEntry {
 	public void addMatch(SearchResultEntryMatch match){		
 		matches.add(match);
 	}
-	
-	
-	
 	
 }

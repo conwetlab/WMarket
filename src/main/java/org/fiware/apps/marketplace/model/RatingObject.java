@@ -28,7 +28,7 @@ public class RatingObject implements Comparable<RatingObject> {
 	String objectId;
 	private Set<Rating> ratings;
 	private RatingObjectCategory ratingObjectCategory;
-	private float average;
+	//private float average;
 
 	public static final int MAX_RATING = 5;
 	public static final int MIN_RATING = 1;	
@@ -40,6 +40,7 @@ public class RatingObject implements Comparable<RatingObject> {
 	public Integer getId() {
 		return id;
 	}
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -50,6 +51,7 @@ public class RatingObject implements Comparable<RatingObject> {
 	public String getObjectId() {
 		return objectId;
 	}
+	
 	public void setObjectId(String objectId) {
 		this.objectId = objectId;
 	}
@@ -59,6 +61,7 @@ public class RatingObject implements Comparable<RatingObject> {
 	public Set<Rating> getRatings() {
 		return ratings;
 	}
+	
 	public void setRatings(Set<Rating> ratings) {
 		this.ratings = ratings;
 	}
@@ -69,6 +72,7 @@ public class RatingObject implements Comparable<RatingObject> {
 	public RatingObjectCategory getRatingObjectCategory() {
 		return ratingObjectCategory;
 	}
+	
 	public void setRatingObjectCategory(RatingObjectCategory ratingObjectCategory) {
 		this.ratingObjectCategory = ratingObjectCategory;
 	}
@@ -76,21 +80,24 @@ public class RatingObject implements Comparable<RatingObject> {
 	@XmlElement
 	@Transient
 	public float getAverage() {
+		//FIXME: Average should be stored
+		
 		float result = (float) 0.0;
 		int ratingCount= 0;
 		for (Rating r : ratings){
-			if(r.getOverallRating()>=MIN_RATING &&r.getOverallRating()<=MAX_RATING){
+			if(r.getOverallRating() >= MIN_RATING && r.getOverallRating() <= MAX_RATING){
 				result += r.getOverallRating();  
 				ratingCount++;
-
 			}
 		}
 
 		return result/ratingCount;
 	}
-	public void setAverage(float average) {
+	
+	/*public void setAverage(float average) {
 		this.average = average;
-	}
+	}*/
+	
 	@Override
 	public int compareTo(RatingObject o) {
 		if (getAverage() < o.getAverage()) 

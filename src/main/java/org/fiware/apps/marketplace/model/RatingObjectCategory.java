@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -34,6 +33,7 @@ public class RatingObjectCategory {
 	public Integer getId() {
 		return id;
 	}
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -44,6 +44,7 @@ public class RatingObjectCategory {
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -53,6 +54,7 @@ public class RatingObjectCategory {
 	public List<RatingObject> getRatingObjects() {
 		return ratingObjects;
 	}
+
 	public void setRatingObjects(List<RatingObject> ratingObjects) {
 		this.ratingObjects = ratingObjects;
 	}
@@ -63,6 +65,7 @@ public class RatingObjectCategory {
 	public List<RatingCategory> getRatingCategorys() {
 		return ratingCategorys;
 	}
+	
 	public void setRatingCategorys(List<RatingCategory> ratingCategorys) {
 		this.ratingCategorys = ratingCategorys;
 	}
