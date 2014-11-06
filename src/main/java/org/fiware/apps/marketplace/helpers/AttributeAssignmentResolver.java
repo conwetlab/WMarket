@@ -74,7 +74,7 @@ public abstract class AttributeAssignmentResolver {
 
 	protected static class HungarianAlgorithm {
 		// Implementation of the Hungarian a.k.a. Munkres-Kuhn algorithm
-		// Solves the maximum weighted bipartite matching problem (a.k.a. marriage problem) in O(n³)
+		// Solves the maximum weighted bipartite matching problem (a.k.a. marriage problem) in O(n)
 
 		// Based on the following source, but strongly refactored
 		// http://www.koders.com/java/fid2C93F1FAE2F786A091D64ED84F2A67D2659EC4F2.aspx?s=249#L29
@@ -465,8 +465,8 @@ public abstract class AttributeAssignmentResolver {
 				List<Integer> eliminatedRows = new ArrayList<Integer>();
 				List<Integer> eliminatedCols = new ArrayList<Integer>();
 
-				// Suche eine Kombination von Nullen derart, dass in jeder Zeile und in jeder Spalte nur eine Null ausgewählt ist.
-				// Steht in einer Zeile oder Spalte nur eine einzige Null, so muss sie natürlich in die Lösung.
+				// Suche eine Kombination von Nullen derart, dass in jeder Zeile und in jeder Spalte nur eine Null ausgewhlt ist.
+				// Steht in einer Zeile oder Spalte nur eine einzige Null, so muss sie natrlich in die Lsung.
 
 				// This does not seem to work properly...
 
