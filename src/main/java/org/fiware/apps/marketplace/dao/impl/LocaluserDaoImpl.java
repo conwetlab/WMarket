@@ -13,7 +13,6 @@ public class LocaluserDaoImpl  extends MarketplaceHibernateDao implements Localu
 	@Override
 	public void save(Localuser store) {
 		getHibernateTemplate().saveOrUpdate(store);	
-		
 	}
 
 	@Override
@@ -24,8 +23,7 @@ public class LocaluserDaoImpl  extends MarketplaceHibernateDao implements Localu
 
 	@Override
 	public void delete(Localuser store) {
-		getHibernateTemplate().delete(store);		
-		
+		getHibernateTemplate().delete(store);
 	}
 
 	@Override

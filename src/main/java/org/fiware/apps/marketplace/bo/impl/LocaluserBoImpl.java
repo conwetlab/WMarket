@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.bo.LocaluserBo;
 import org.fiware.apps.marketplace.dao.LocaluserDao;
-import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.model.Localuser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("localuserBo")
 public class LocaluserBoImpl implements LocaluserBo{
@@ -20,27 +20,26 @@ public class LocaluserBoImpl implements LocaluserBo{
 	}
 	
 	@Override
+	@Transactional(readOnly=false)
 	public void save(Localuser localuser) {
 		localuserDao.save(localuser);
-		
 	}
 
 	@Override
+	@Transactional(readOnly=false)
 	public void update(Localuser localuser) {
 		localuserDao.update(localuser);
-		
 	}
 
 	@Override
+	@Transactional(readOnly=false)
 	public void delete(Localuser localuser) {
 		localuserDao.delete(localuser);
-		
 	}
 
 	@Override
 	public Localuser findByName(String username) {
 		return localuserDao.findByName(username);
-		
 	}
 
 	@Override
