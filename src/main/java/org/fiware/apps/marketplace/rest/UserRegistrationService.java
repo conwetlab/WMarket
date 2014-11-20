@@ -86,15 +86,14 @@ public class UserRegistrationService {
 		Localuser localuser = localuserBo.findByName(username);
 		Response response;
 		
-		if (userRegistrationAuth.canGet(localuser)) {
-			// If the user does not exist, we should raise a 404 Not Found Error
-			if (localuser == null){
-				response = Response.status(Status.NOT_FOUND).build();
-			} else {
-				response = Response.status(Status.OK).entity(localuser).build();		
-			}
+		if (localuser == null) {
+			response = Response.status(Status.NOT_FOUND).build();
 		} else {
-			response = Response.status(Status.FORBIDDEN).build();
+			if (userRegistrationAuth.canGet(localuser)) {
+				response = Response.status(Status.OK).entity(localuser).build();
+			} else {
+				response = Response.status(Status.FORBIDDEN).build();
+			}
 		}
 		
 		return response;
