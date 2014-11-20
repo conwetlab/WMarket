@@ -20,7 +20,7 @@ import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
-import org.fiware.apps.marketplace.util.ApplicationContextProvider;
+import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

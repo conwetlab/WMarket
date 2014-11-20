@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 import org.fiware.apps.marketplace.bo.RatingBo;
 import org.fiware.apps.marketplace.model.RatingObject;
 import org.fiware.apps.marketplace.model.RatingObjectCategory;
-import org.fiware.apps.marketplace.util.ApplicationContextProvider;
+import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
 
 

@@ -5,7 +5,7 @@ import org.fiware.apps.marketplace.dao.ServiceDao;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.rdf.RdfHelper;
 import org.fiware.apps.marketplace.rdf.RdfIndexer;
-import org.fiware.apps.marketplace.util.PropertiesUtil;
+import org.fiware.apps.marketplace.utils.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hp.hpl.jena.rdf.model.Model;

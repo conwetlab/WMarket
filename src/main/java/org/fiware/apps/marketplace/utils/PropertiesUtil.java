@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.util;
+package org.fiware.apps.marketplace.utils;
 
 import java.util.HashMap;
 import java.util.HashSet;

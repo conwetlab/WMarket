@@ -13,8 +13,8 @@ import org.fiware.apps.marketplace.model.SearchResult;
 import org.fiware.apps.marketplace.model.SearchResultEntryMatch;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.rdf.IndexBuilderStringExtended;
-import org.fiware.apps.marketplace.util.ApplicationContextProvider;
-import org.fiware.apps.marketplace.util.PropertiesUtil;
+import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
+import org.fiware.apps.marketplace.utils.PropertiesUtil;
 import org.springframework.context.ApplicationContext;
 
 import com.hp.hpl.jena.graph.Node;

@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
 
 import org.fiware.apps.marketplace.bo.SearchBo;
 import org.fiware.apps.marketplace.model.SearchResult;
-import org.fiware.apps.marketplace.util.ApplicationContextProvider;
+import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
 
 @Path("/search")

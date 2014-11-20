@@ -125,6 +125,12 @@
 			<artifactId>spring-orm</artifactId>
 			<version>4.1.1.RELEASE</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>4.1.1.RELEASE</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.codehaus.spring-security-oauth</groupId>

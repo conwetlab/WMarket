@@ -9,7 +9,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 		</property>
 	</bean>
 	
-	<bean class="org.fiware.apps.marketplace.util.PropertiesUtil">
+	<bean class="org.fiware.apps.marketplace.utils.PropertiesUtil">
 		<property name="location">
 			<value>/WEB-INF/classes/properties/marketplace.properties</value>
 		</property>
@@ -21,5 +21,5 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 		<property name="username" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
 	</bean>
-	<bean id="applicationContextProvider" class="org.fiware.apps.marketplace.util.ApplicationContextProvider"></bean>
+	<bean id="applicationContextProvider" class="org.fiware.apps.marketplace.utils.ApplicationContextProvider"></bean>
 </beans>

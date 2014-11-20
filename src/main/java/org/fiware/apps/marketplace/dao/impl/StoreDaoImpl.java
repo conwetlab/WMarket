@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.model.Store;
-import org.fiware.apps.marketplace.util.MarketplaceHibernateDao;
+import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.stereotype.Repository;
 
 @Repository("storeDao")

@@ -10,7 +10,7 @@ import org.fiware.apps.marketplace.bo.ServiceManifestationBo;
 import org.fiware.apps.marketplace.helpers.ServiceManifestationComparator;
 import org.fiware.apps.marketplace.model.ComparisonResult;
 import org.fiware.apps.marketplace.model.ServiceManifestation;
-import org.fiware.apps.marketplace.util.ApplicationContextProvider;
+import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
 
 import com.mysql.jdbc.StringUtils;

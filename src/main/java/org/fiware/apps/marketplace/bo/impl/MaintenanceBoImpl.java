@@ -19,7 +19,7 @@ import org.fiware.apps.marketplace.model.ServiceAttributeType;
 import org.fiware.apps.marketplace.model.ServiceAttributeTypeStatistics;
 import org.fiware.apps.marketplace.model.ServiceManifestation;
 import org.fiware.apps.marketplace.model.Store;
-import org.fiware.apps.marketplace.util.ApplicationContextProvider;
+import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
 
 @org.springframework.stereotype.Service("maintenanceBo")

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.VocabularyBo;
-import org.fiware.apps.marketplace.util.PropertiesUtil;
+import org.fiware.apps.marketplace.utils.PropertiesUtil;
 import org.springframework.stereotype.Service;
 
 @Service("vocabularyBo")

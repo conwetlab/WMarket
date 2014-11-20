@@ -13,7 +13,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.fiware.apps.marketplace.utils.HiddenFieldsXMLAdapter;
 
 @Entity
 @XmlRootElement(name = "user")
@@ -25,7 +27,7 @@ public class Localuser {
 	private String email;
 	private Date registrationDate;
 	private String company;
-
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "LOCALUSER_ID", unique = true, nullable = false)
@@ -49,7 +51,8 @@ public class Localuser {
 		this.username = username;
 	}
 	
-	@XmlTransient
+	@XmlElement
+	@XmlJavaTypeAdapter(HiddenFieldsXMLAdapter.class)	//Avoid returning the Password in the XML, JSON
 	@Column(name = "LOCALUSER_PASSWORD", nullable = false)
 	public String getPassword() {
 		return password;
@@ -59,7 +62,8 @@ public class Localuser {
 		this.password = password;
 	}
 	
-	@XmlTransient
+	@XmlElement
+	@XmlJavaTypeAdapter(HiddenFieldsXMLAdapter.class)	//Avoid returning the Mail in the XML, JSON
 	@Column(name = "LOCALUSER_EMAIL", unique = true, nullable = false)
 	public String getEmail() {
 		return email;
@@ -87,6 +91,17 @@ public class Localuser {
 	
 	public void setCompany(String company) {
 		this.company = company;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.id == null ? 0 : this.id;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Localuser other = (Localuser) obj;
+		return other.id == this.id;
 	}
 
 }

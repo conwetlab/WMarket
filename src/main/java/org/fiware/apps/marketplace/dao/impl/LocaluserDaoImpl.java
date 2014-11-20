@@ -4,43 +4,45 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.dao.LocaluserDao;
 import org.fiware.apps.marketplace.model.Localuser;
-import org.fiware.apps.marketplace.util.MarketplaceHibernateDao;
+import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.stereotype.Repository;
 
 @Repository("localuserDao")
 public class LocaluserDaoImpl  extends MarketplaceHibernateDao implements LocaluserDao {
 
 	@Override
-	public void save(Localuser store) {
-		getHibernateTemplate().saveOrUpdate(store);	
+	public void save(Localuser user) {
+		getHibernateTemplate().saveOrUpdate(user);	
 	}
 
 	@Override
-	public void update(Localuser store) {
-		getHibernateTemplate().update(store);	
+	public void update(Localuser user) {
+		getHibernateTemplate().update(user);	
 		
 	}
 
 	@Override
-	public void delete(Localuser store) {
-		getHibernateTemplate().delete(store);
+	public void delete(Localuser user) {
+		getHibernateTemplate().delete(user);
 	}
 
 	@Override
 	public Localuser findByName(String username) {
-		List list = getHibernateTemplate().find(
-				"from Localuser where username=?",username
-				);
-		if (list.size()!=0){
-			return (Localuser)list.get(0);
-		}		
+		List<?> list = getHibernateTemplate().find("from Localuser where username=?", username);
+		
+		if (list.size() != 0){
+			return (Localuser) list.get(0);
+		}
+		//FIXME: Else -> Throw UserNotFoundException
+		
 		return null;
 	}
 
 	@Override
 	public List<Localuser> findLocalusers() {
-		List list = getHibernateTemplate().loadAll(Localuser.class);
-		if (list.size()==0){
+		List<Localuser> list = getHibernateTemplate().loadAll(Localuser.class);
+		
+		if (list.size() == 0){
 			return null;
 		}		
 		

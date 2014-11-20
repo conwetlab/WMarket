@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import org.fiware.apps.marketplace.bo.MaintenanceBo;
 import org.fiware.apps.marketplace.bo.ServiceManifestationBo;
 import org.fiware.apps.marketplace.model.ServiceManifestation;
-import org.fiware.apps.marketplace.util.ApplicationContextProvider;
+import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
 
 @Path("/serviceManifestationIndex")

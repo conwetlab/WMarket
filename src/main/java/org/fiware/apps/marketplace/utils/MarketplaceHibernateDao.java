@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.util;
+package org.fiware.apps.marketplace.utils;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

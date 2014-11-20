@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 import org.fiware.apps.marketplace.bo.CompareBo;
 import org.fiware.apps.marketplace.bo.MaintenanceBo;
 import org.fiware.apps.marketplace.model.ComparisonResult;
-import org.fiware.apps.marketplace.util.ApplicationContextProvider;
+import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
 
 @Path("/compare")
