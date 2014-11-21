@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthUtils {
 	
-	// Avoid users to instanciate this class
+	// Avoid users to instantiate this class
 	private AuthUtils() {
 		this.localuserBo = (LocaluserBo) ApplicationContextProvider.getApplicationContext().getBean("localuserBo");
 	}
@@ -27,7 +27,8 @@ public class AuthUtils {
 		try {
 			return localuserBo.findByName(SecurityContextHolder.getContext().getAuthentication().getName());
 		} catch (UserNotFoundException ex) {
-			//This exception should never happen: a logged user should be found in the database...
+			//Maybe the user is not logged in
+			//Maybe the user is not registered in the database
 			return null;
 		}
 	}

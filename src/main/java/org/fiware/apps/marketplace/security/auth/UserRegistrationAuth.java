@@ -8,7 +8,10 @@ public class UserRegistrationAuth {
 	
 	private boolean isTheSameUser(Localuser user) {
 		boolean canAccess = false;
-		if (AuthUtils.getAuthUtils().getLoggedUser().equals(user)) {
+		Localuser loggedUser = AuthUtils.getAuthUtils().getLoggedUser();
+		
+		// logged User can be null if the user is not logged in...
+		if (loggedUser != null && loggedUser.equals(user)) {
 			canAccess = true;
 		}
 		
