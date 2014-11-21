@@ -3,6 +3,7 @@ package org.fiware.apps.marketplace.dao.impl;
 import java.util.List;
 
 import org.fiware.apps.marketplace.dao.LocaluserDao;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Localuser;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.stereotype.Repository;
@@ -27,15 +28,14 @@ public class LocaluserDaoImpl  extends MarketplaceHibernateDao implements Localu
 	}
 
 	@Override
-	public Localuser findByName(String username) {
+	public Localuser findByName(String username) throws UserNotFoundException{
 		List<?> list = getHibernateTemplate().find("from Localuser where username=?", username);
 		
-		if (list.size() != 0){
+		if (list.size() == 0) {
+			throw new UserNotFoundException(username + " not found");
+		} else {
 			return (Localuser) list.get(0);
 		}
-		//FIXME: Else -> Throw UserNotFoundException
-		
-		return null;
 	}
 
 	@Override

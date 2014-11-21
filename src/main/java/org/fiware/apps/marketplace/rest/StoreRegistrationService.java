@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response.Status;
 import org.fiware.apps.marketplace.bo.LocaluserBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
@@ -40,7 +41,8 @@ public class StoreRegistrationService {
 	@PUT
 	@Consumes({"application/xml", "application/json"})
 	@Path("/store")	
-	public Response saveStore(Store store) {	
+	public Response saveStore(Store store) throws UserNotFoundException {
+		//FIXME: Temporal solution. Exception should be caught
 		store.setRegistrationDate(new Date());
 		store.setCreator(localuserBo.findByName(actUser));
 		store.setLasteditor(localuserBo.findByName(actUser));
@@ -52,7 +54,8 @@ public class StoreRegistrationService {
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/store/{storeName}")	
-	public Response updateStore(@PathParam("storeName") String storeName, Store store) {
+	public Response updateStore(@PathParam("storeName") String storeName, Store store) throws UserNotFoundException {
+		//FIXME: Temporal solution. Exception should be caught
 
 		Store storeDB = storeBo.findByName(storeName);		
 		storeDB.setName(store.getName());

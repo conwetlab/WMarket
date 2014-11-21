@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.bo.LocaluserBo;
 import org.fiware.apps.marketplace.dao.LocaluserDao;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Localuser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class LocaluserBoImpl implements LocaluserBo{
 	}
 
 	@Override
-	public Localuser findByName(String username) {
+	public Localuser findByName(String username) throws UserNotFoundException {
 		return localuserDao.findByName(username);
 	}
 

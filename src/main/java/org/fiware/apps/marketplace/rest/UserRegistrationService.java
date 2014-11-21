@@ -16,7 +16,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.LocaluserBo;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Localuser;
+import org.fiware.apps.marketplace.model.Users;
 import org.fiware.apps.marketplace.security.auth.UserRegistrationAuth;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
@@ -49,33 +51,48 @@ public class UserRegistrationService {
 	@Path("/{username}")	
 	public Response updateUser(@PathParam("username") String username, Localuser localUser) {
 		//FIXME: Catch exceptions
-		Localuser userToBeUpdated = localuserBo.findByName(username);
+		Response response;
 		
-		if (userRegistrationAuth.canUpdate(userToBeUpdated)) {
-			userToBeUpdated.setCompany(localUser.getCompany());
-			userToBeUpdated.setPassword(localUser.getPassword());
-			userToBeUpdated.setEmail(localUser.getEmail());
-			userToBeUpdated.setUsername(localUser.getUsername());		
-			localuserBo.update(userToBeUpdated);
-			return Response.status(Status.OK).build();	
-		} else {
-			return Response.status(Status.FORBIDDEN).build();
+		try {
+			Localuser userToBeUpdated = localuserBo.findByName(username);
+			
+			if (userRegistrationAuth.canUpdate(userToBeUpdated)) {
+				userToBeUpdated.setCompany(localUser.getCompany());
+				userToBeUpdated.setPassword(localUser.getPassword());
+				userToBeUpdated.setEmail(localUser.getEmail());
+				userToBeUpdated.setUsername(localUser.getUsername());		
+				localuserBo.update(userToBeUpdated);
+				response = Response.status(Status.OK).build();	
+			} else {
+				response = Response.status(Status.FORBIDDEN).build();
+			}
+		} catch (UserNotFoundException ex) {
+			response = Response.status(Status.NOT_FOUND).build();
 		}
+		
+		return response;
 	}
 
 	@DELETE
 	@Path("/{username}")	
 	public Response deleteUser(@PathParam("username") String username) {
 		//FIXME: Catch exceptions
-		Localuser userToBeDeleted = localuserBo.findByName(username);
-
-		// Only a user can delete his/her account
-		if (userRegistrationAuth.canDelete(userToBeDeleted)) {
-			localuserBo.delete(userToBeDeleted);
-			return Response.status(Status.OK).build();	
-		} else {
-			return Response.status(Status.FORBIDDEN).build();
+		Response response;
+		
+		try {
+			Localuser userToBeDeleted = localuserBo.findByName(username);
+			// Only a user can delete his/her account
+			if (userRegistrationAuth.canDelete(userToBeDeleted)) {
+				localuserBo.delete(userToBeDeleted);
+				response = Response.status(Status.OK).build();	
+			} else {
+				response = Response.status(Status.FORBIDDEN).build();
+			}
+		} catch (UserNotFoundException ex) {
+			response = Response.status(Status.NOT_FOUND).build();
 		}
+		
+		return response;
 	}
 
 	@GET
@@ -83,17 +100,18 @@ public class UserRegistrationService {
 	@Path("/{username}")	
 	public Response findUser(@PathParam("username") String username) {	
 		//FIXME: Catch exceptions
-		Localuser localuser = localuserBo.findByName(username);
 		Response response;
 		
-		if (localuser == null) {
-			response = Response.status(Status.NOT_FOUND).build();
-		} else {
+		try {
+			Localuser localuser = localuserBo.findByName(username);
+
 			if (userRegistrationAuth.canGet(localuser)) {
 				response = Response.status(Status.OK).entity(localuser).build();
 			} else {
 				response = Response.status(Status.FORBIDDEN).build();
 			}
+		} catch (UserNotFoundException ex) {
+			response = Response.status(Status.NOT_FOUND).build();
 		}
 		
 		return response;
@@ -102,9 +120,8 @@ public class UserRegistrationService {
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
-	public Response getList() {		
+	public Response getList() {
 		//FIXME: Catch Exceptions
-		//FIXME: It does not work if the user ask for an XML response
 		if (userRegistrationAuth.canList()) {
 			List<Localuser> users = localuserBo.findLocalusers();
 			
@@ -113,7 +130,7 @@ public class UserRegistrationService {
 				users = new ArrayList<Localuser>();
 			}
 			
-			return Response.status(Status.OK).entity(users).build();
+			return Response.status(Status.OK).entity(new Users(users)).build();
 		} else {
 			return Response.status(Status.FORBIDDEN).build();
 		}

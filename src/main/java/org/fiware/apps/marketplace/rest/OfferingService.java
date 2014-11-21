@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response.Status;
 import org.fiware.apps.marketplace.bo.LocaluserBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
@@ -41,7 +42,9 @@ public class OfferingService {
 	@PUT
 	@Consumes({"application/xml", "application/json"})
 	@Path("/store/{storeName}/offering")	
-	public Response saveService(@PathParam("storeName") String storeName, Service service) {	
+	public Response saveService(@PathParam("storeName") String storeName, Service service) throws UserNotFoundException {	
+		//FIXME: Temporal solution. Exception should be caught
+
 		Store store = storeBo.findByName(storeName);
 		if (store==null){
 			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Not Found").build());
@@ -59,7 +62,8 @@ public class OfferingService {
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/store/{storeName}/offering/{serviceName}")	
-	public Response updateService(@PathParam("storeName") String storeName, @PathParam("serviceName") String serviceName, Service service) {
+	public Response updateService(@PathParam("storeName") String storeName, @PathParam("serviceName") String serviceName, Service service) throws UserNotFoundException {
+		//FIXME: Temporal solution. Exception should be caught
 		Service serviceDB = serviceBo.findByNameAndStore(serviceName, storeName);		
 
 		serviceDB.setName(service.getName());

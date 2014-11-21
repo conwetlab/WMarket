@@ -1,6 +1,7 @@
 package org.fiware.apps.marketplace.security.auth;
 
 import org.fiware.apps.marketplace.bo.LocaluserBo;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Localuser;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,12 @@ public class AuthUtils {
 	private LocaluserBo localuserBo;
 
 	public Localuser getLoggedUser() {
-		return localuserBo.findByName(SecurityContextHolder.getContext().getAuthentication().getName());
+		try {
+			return localuserBo.findByName(SecurityContextHolder.getContext().getAuthentication().getName());
+		} catch (UserNotFoundException ex) {
+			//This exception should never happen: a logged user should be found in the database...
+			return null;
+		}
 	}
 	
 }

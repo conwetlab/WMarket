@@ -1,6 +1,7 @@
 package org.fiware.apps.marketplace.security;
 
 import org.fiware.apps.marketplace.bo.LocaluserBo;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Localuser;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,13 @@ public class UserManagementService implements UserDetailsService{
 	@Override
     public UserDetails loadUserByUsername(String username)
     	     throws UsernameNotFoundException, DataAccessException {
-
-        Localuser userEntity = localuserBo.findByName(username);
-        if (userEntity == null)
+		
+		try {
+	        Localuser userEntity = localuserBo.findByName(username);
+	        return assembler.buildUserFromUserEntity(userEntity);
+		} catch (UserNotFoundException ex) {
         	throw new UsernameNotFoundException("user not found");
-
-        return assembler.buildUserFromUserEntity(userEntity);
+		}
 	}
 
 }
