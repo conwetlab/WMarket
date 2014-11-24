@@ -17,8 +17,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.fiware.apps.marketplace.utils.xmladapters.HiddenFieldsXMLAdapter;
 import org.fiware.apps.marketplace.utils.xmladapters.PasswordXMLAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @XmlRootElement(name = "user")
