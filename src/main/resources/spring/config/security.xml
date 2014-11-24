@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
@@ -21,11 +20,6 @@
 	<authentication-manager>
 		<authentication-provider user-service-ref="userManagementService">
 			<password-encoder ref="encoder" />
-		</authentication-provider>
-		<authentication-provider>
-			<user-service>
-				<user name="demo1234" password="demo1234" authorities="ROLE_USER" />
-			</user-service>
 		</authentication-provider>
 	</authentication-manager>
 
