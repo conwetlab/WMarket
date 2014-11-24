@@ -15,7 +15,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.fiware.apps.marketplace.utils.HiddenFieldsXMLAdapter;
+import org.fiware.apps.marketplace.utils.xmladapters.HiddenFieldsXMLAdapter;
+import org.fiware.apps.marketplace.utils.xmladapters.PasswordXMLAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @XmlRootElement(name = "user")
@@ -27,7 +30,7 @@ public class Localuser {
 	private String email;
 	private Date registrationDate;
 	private String company;
-	
+		
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "LOCALUSER_ID", unique = true, nullable = false)
@@ -52,18 +55,22 @@ public class Localuser {
 	}
 	
 	@XmlElement
-	@XmlJavaTypeAdapter(HiddenFieldsXMLAdapter.class)	//Avoid returning the Password in the XML, JSON
+	// Avoid returning the password in the API
+	// Encrypt the password received through the API
+	@XmlJavaTypeAdapter(PasswordXMLAdapter.class)
 	@Column(name = "LOCALUSER_PASSWORD", nullable = false)
 	public String getPassword() {
 		return password;
 	}
 	
 	public void setPassword(String password) {
+		// The password is encoded using the user name as salt
 		this.password = password;
 	}
 	
 	@XmlElement
-	@XmlJavaTypeAdapter(HiddenFieldsXMLAdapter.class)	//Avoid returning the Mail in the XML, JSON
+	// Avoid returning the mail in the API
+	@XmlJavaTypeAdapter(HiddenFieldsXMLAdapter.class)
 	@Column(name = "LOCALUSER_EMAIL", unique = true, nullable = false)
 	public String getEmail() {
 		return email;

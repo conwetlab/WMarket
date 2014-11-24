@@ -11,7 +11,7 @@ import org.apache.lucene.index.StaleReaderException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.fiware.apps.marketplace.model.Service;
-import org.fiware.apps.marketplace.util.PropertiesUtil;
+import org.fiware.apps.marketplace.utils.PropertiesUtil;
 
 import com.hp.hpl.jena.query.larq.IndexLARQ;
 import com.hp.hpl.jena.query.larq.LARQ;

@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.utils;
+package org.fiware.apps.marketplace.utils.xmladapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 

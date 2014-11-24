@@ -7,14 +7,19 @@
                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
                            http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
-	<http auto-config='true'>
+	<http auto-config="true">
+		<intercept-url pattern="/v1/user/**" access="ROLE_ANONYMOUS"/>
 		<intercept-url pattern="/**" access="ROLE_USER" />
-		<intercept-url pattern="/vocabulary/**" filters="none" />
-		<intercept-url pattern="/demoservices/**" filters="none" />
+		<!-- <intercept-url pattern="/vocabulary/**" filters="none" /> <intercept-url 
+			pattern="/demoservices/**" filters="none" /> -->
 	</http>
 
+	<beans:bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
 	<authentication-manager>
-		<authentication-provider user-service-ref='userManagementService' />
+		<authentication-provider user-service-ref='userManagementService'>
+			<password-encoder ref="encoder" />
+		</authentication-provider>
 		<authentication-provider>
 			<user-service>
 				<user name="demo1234" password="demo1234" authorities="ROLE_USER" />
