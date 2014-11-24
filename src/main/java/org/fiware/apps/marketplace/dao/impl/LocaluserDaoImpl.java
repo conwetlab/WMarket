@@ -1,5 +1,6 @@
 package org.fiware.apps.marketplace.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fiware.apps.marketplace.dao.LocaluserDao;
@@ -32,7 +33,7 @@ public class LocaluserDaoImpl  extends MarketplaceHibernateDao implements Localu
 		List<?> list = getHibernateTemplate().find("from Localuser where username=?", username);
 		
 		if (list.size() == 0) {
-			throw new UserNotFoundException(username + " not found");
+			throw new UserNotFoundException("User " + username + " not found");
 		} else {
 			return (Localuser) list.get(0);
 		}
@@ -43,7 +44,7 @@ public class LocaluserDaoImpl  extends MarketplaceHibernateDao implements Localu
 		List<Localuser> list = getHibernateTemplate().loadAll(Localuser.class);
 		
 		if (list.size() == 0){
-			return null;
+			list = new ArrayList<Localuser>();
 		}		
 		
 		return list;

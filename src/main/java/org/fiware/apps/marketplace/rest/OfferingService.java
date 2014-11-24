@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response.Status;
 import org.fiware.apps.marketplace.bo.LocaluserBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
@@ -42,7 +43,7 @@ public class OfferingService {
 	@PUT
 	@Consumes({"application/xml", "application/json"})
 	@Path("/store/{storeName}/offering")	
-	public Response saveService(@PathParam("storeName") String storeName, Service service) throws UserNotFoundException {	
+	public Response saveService(@PathParam("storeName") String storeName, Service service) throws UserNotFoundException, StoreNotFoundException {	
 		//FIXME: Temporal solution. Exception should be caught
 
 		Store store = storeBo.findByName(storeName);
@@ -97,7 +98,7 @@ public class OfferingService {
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/store/{storeName}/offerings/")	
-	public List<Service> findServices(@PathParam("storeName") String storeName) {		
+	public List<Service> findServices(@PathParam("storeName") String storeName) throws StoreNotFoundException {		
 		Store store = storeBo.findByName(storeName);
 		if (store==null){
 			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Service Not Found").build());

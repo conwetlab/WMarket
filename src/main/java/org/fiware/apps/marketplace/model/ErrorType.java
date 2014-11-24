@@ -7,6 +7,6 @@ public enum ErrorType {
 	FORBIDDEN,
 	NOT_FOUND,
 	SERVICE_UNAVAILABLE,
-	
+	INTERNAL_SERVER_ERROR
 
 }

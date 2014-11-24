@@ -1,8 +1,10 @@
 package org.fiware.apps.marketplace.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fiware.apps.marketplace.dao.StoreDao;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.stereotype.Repository;
@@ -14,47 +16,35 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	public void save(Store store) {
 		getHibernateTemplate().saveOrUpdate(store);				
 	}
-
-	
 	
 	@Override
 	public void update(Store store) {
 		getHibernateTemplate().update(store);		
-		
 	}
-	
-	
-	
 
 	@Override
 	public void delete(Store store) {
 		getHibernateTemplate().delete(store);		
-		
 	}
-	
-	
 
 	@Override
-	public Store findByName(String name) {	
-		List list = getHibernateTemplate().find(
-                "from Store where name=?",name
-           );	
+	public Store findByName(String name) throws StoreNotFoundException {	
+		List<?> list = getHibernateTemplate().find("from Store where name=?", name);	
 		
-		System.out.println(list.size());
-		
-		
-		if (list.size()!=0){
+		if (list.size() != 0){
 			return (Store)list.get(0);
-		}		
-		return null;
+		} else {
+			throw new StoreNotFoundException("Store " + name + " not found");
+		}
 			
 	}
 	
 	@Override
 	public List <Store> findStores() {
-		List list = getHibernateTemplate().loadAll(Store.class);
+		List<Store> list = getHibernateTemplate().loadAll(Store.class);
+		
 		if (list.size()==0){
-			return null;
+			list = new ArrayList<Store>();
 		}		
 		
 		return list;

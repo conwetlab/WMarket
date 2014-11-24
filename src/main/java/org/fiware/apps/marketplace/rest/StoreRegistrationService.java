@@ -11,96 +11,172 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.LocaluserBo;
-import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.Localuser;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.Stores;
+import org.fiware.apps.marketplace.security.auth.StoreRegistrationAuth;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.core.Authentication;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-@Path("/registration")
+
+@Path("/store")
 public class StoreRegistrationService {
 
-	ApplicationContext appContext = ApplicationContextProvider.getApplicationContext();	
+	// OBJECT ATTRIBUTES //
+	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
+	private StoreBo storeBo = (StoreBo) context.getBean("storeBo");
+	private LocaluserBo localuserBo = (LocaluserBo) context.getBean("localuserBo");
+	private StoreRegistrationAuth storeRegistrationAuth = (StoreRegistrationAuth) context.getBean("storeRegistrationAuth");
+	
+	// CLASS ATTRIBUTES //
+	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
+			"There is already a Store with that name/URL registered in the system");
 
-	StoreBo storeBo = (StoreBo)appContext.getBean("storeBo");
-	ServiceBo serviceBo = (ServiceBo)appContext.getBean("serviceBo");
-	LocaluserBo localuserBo = (LocaluserBo)appContext.getBean("localuserBo");
+	private Localuser getCurrentUser() throws UserNotFoundException {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		return localuserBo.findByName(username);		
+	}
 
-	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	String actUser = auth.getName(); 
+	// OBJECT METHODS //
+	@POST
+	@Consumes({"application/xml", "application/json"})
+	@Path("/")	
+	public Response createStore(Store store) {
+		Response response;
+		
+		if (storeRegistrationAuth.canCreate()) {
+			try {
+				// Get the current user
+				Localuser currentUser = this.getCurrentUser();
+				
+				store.setRegistrationDate(new Date());
+				store.setCreator(currentUser);
+				store.setLasteditor(currentUser);
+				
+				// Save the new Store and return CREATED
+				storeBo.save(store);
+				response = Response.status(Status.CREATED).build();
+			} catch (UserNotFoundException ex) {
+				response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
+			} catch (DataAccessException ex) {
+				response = ERROR_UTILS.badRequestResponse(ex);
+			} catch (Exception ex) {
+				response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			}
+		} else {
+			 response = ERROR_UTILS.unauthorizedResponse("create store");
+		}
+				
+		return response;	
+	}
+
 
 	@PUT
 	@Consumes({"application/xml", "application/json"})
-	@Path("/store")	
-	public Response saveStore(Store store) throws UserNotFoundException {
-		//FIXME: Temporal solution. Exception should be caught
-		store.setRegistrationDate(new Date());
-		store.setCreator(localuserBo.findByName(actUser));
-		store.setLasteditor(localuserBo.findByName(actUser));
-		storeBo.save(store);
-		return Response.status(Status.CREATED).build();		
-	}
-
-
-	@POST
-	@Consumes({"application/xml", "application/json"})
-	@Path("/store/{storeName}")	
+	@Path("/{storeName}")	
 	public Response updateStore(@PathParam("storeName") String storeName, Store store) throws UserNotFoundException {
-		//FIXME: Temporal solution. Exception should be caught
-
-		Store storeDB = storeBo.findByName(storeName);		
-		storeDB.setName(store.getName());
-		storeDB.setUrl(store.getUrl());
-		store.setLasteditor(localuserBo.findByName(actUser));
+		Response response;
 		
-		storeBo.update(storeDB);
-		return Response.status(Status.OK).build();		
+		try {
+			Store storeDB = storeBo.findByName(storeName);				
+			if (storeRegistrationAuth.canUpdate(storeDB)) {
+				storeDB.setName(store.getName());
+				storeDB.setUrl(store.getUrl());
+				store.setLasteditor(this.getCurrentUser());
+				
+				// Save the new Store and Return OK
+				storeBo.update(storeDB);
+				response = Response.status(Status.OK).build();
+			} else {
+				 response = ERROR_UTILS.unauthorizedResponse("update store " + storeName);
+			}
+		} catch (UserNotFoundException ex) {
+			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
+		} catch (DataAccessException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex);
+		} catch (StoreNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+		}
+		
+		return response;
 	}
 
 	@DELETE
-	@Path("/store/{storeName}")	
-	public Response deleteStore(@PathParam("storeName") String storeName) {	
-		Store store = storeBo.findByName(storeName);
-		storeBo.delete(store);
-		return Response.status(Status.OK).build();		
+	@Path("/{storeName}")	
+	public Response deleteStore(@PathParam("storeName") String storeName) {
+		Response response;
+		
+		try {
+			//Retrieve the Store from the database
+			Store store = storeBo.findByName(storeName);
+			
+			if (storeRegistrationAuth.canDelete(store)) {
+				storeBo.delete(store);
+				response = Response.status(Status.OK).build();		// Return OK
+			} else {
+				 response = ERROR_UTILS.unauthorizedResponse("delete store " + storeName);
+			}
+		} catch (StoreNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+		}
+
+		return response;
 	}
 
 	@GET
 	@Produces({"application/xml", "application/json"})
-	@Path("/store/{storeName}")	
-	public Store findStore(@PathParam("storeName") String storeName) {		
-		Store store = storeBo.findByName(storeName);
-		if (store==null){
-			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Not Found").build());
+	@Path("/{storeName}")	
+	public Response getStore(@PathParam("storeName") String storeName) {
+		Response response;
+		
+		try {
+			// Retrieve the Store from the database
+			Store store = storeBo.findByName(storeName);
+			
+			if (storeRegistrationAuth.canGet(store)) {
+				response = Response.status(Status.OK).entity(store).build(); 	//Return the Store
+			} else {
+				response = ERROR_UTILS.unauthorizedResponse("get store " + storeName);
+			}
+		} catch (StoreNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
-		return store;		
-
+		
+		return response;
 	}
 
 	@GET
 	@Produces({"application/xml", "application/json"})
-	@Path("/stores/")	
-	public List<Store> findStores() {				
-		List<Store> stores = storeBo.findStores();
-		if (stores==null){
-			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Not Found").build());
+	@Path("/")	
+	public Response listStores() {
+		Response response;
+		
+		try {
+			if (storeRegistrationAuth.canList()) {
+				List<Store> stores = storeBo.findStores();
+				response = Response.status(Status.OK).entity(new Stores(stores)).build();
+			} else {
+				response = ERROR_UTILS.unauthorizedResponse("list stores");
+			}
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
-
-
-		return stores;		
-
+		
+		return response;
 	}
-
-
-
-	
 }

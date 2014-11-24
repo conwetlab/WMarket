@@ -8,9 +8,10 @@
                            http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
 	<http auto-config="true">
-		<intercept-url pattern="/vocabulary/**" access="ROLE_ANONYMOUS" />
-		<intercept-url pattern="/demoservices/**" access="ROLE_ANONYMOUS" />
-		<intercept-url pattern="/v1/user/**" access="ROLE_ANONYMOUS" />
+		<intercept-url pattern="/vocabulary/**" access="ROLE_ANONYMOUS,ROLE_USER" />
+		<intercept-url pattern="/demoservices/**" access="ROLE_ANONYMOUS,ROLE_USER" />
+		<!-- This URL can be accessed anonymously to create a new account -->
+		<intercept-url pattern="/v1/user/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 		<intercept-url pattern="/**" access="ROLE_USER" />
 	</http>
 
