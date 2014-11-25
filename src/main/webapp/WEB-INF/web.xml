@@ -70,7 +70,7 @@
 		<param-value>org.fiware.apps.marketplace.rest.StoreRegistrationService,
 			org.fiware.apps.marketplace.rest.SearchService,
 			org.fiware.apps.marketplace.rest.UserRegistrationService,
-			org.fiware.apps.marketplace.rest.OfferingService,
+			org.fiware.apps.marketplace.rest.OfferingRegistrationService,
 			org.fiware.apps.marketplace.rest.RatingService,
 			org.fiware.apps.marketplace.rest.RecommendationService,
 			org.fiware.apps.marketplace.rest.CompareService,

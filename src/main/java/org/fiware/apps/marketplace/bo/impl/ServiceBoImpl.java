@@ -2,14 +2,12 @@ package org.fiware.apps.marketplace.bo.impl;
 
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.dao.ServiceDao;
+import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Service;
-import org.fiware.apps.marketplace.rdf.RdfHelper;
 import org.fiware.apps.marketplace.rdf.RdfIndexer;
-import org.fiware.apps.marketplace.utils.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.hp.hpl.jena.rdf.model.Model;
-
+import org.springframework.transaction.annotation.Transactional;
 
 @org.springframework.stereotype.Service("serviceBo")
 public class ServiceBoImpl implements ServiceBo{
@@ -22,12 +20,14 @@ public class ServiceBoImpl implements ServiceBo{
 	}
 	
 	@Override
+	@Transactional(readOnly=false)
 	public void save(Service service) {		
 		serviceDao.save(service);	
 		RdfIndexer.indexService(service);	
 	}
 
 	@Override
+	@Transactional(readOnly=false)
 	public void update(Service service) {
 		serviceDao.update(service);
 		RdfIndexer.deleteService(service);
@@ -35,23 +35,24 @@ public class ServiceBoImpl implements ServiceBo{
 	}
 
 	@Override
+	@Transactional(readOnly=false)
 	public void delete(Service service) {
 		serviceDao.delete(service);
 		RdfIndexer.deleteService(service);
 	}
 
 	@Override
-	public Service findById(Integer id) {
+	public Service findById(Integer id) throws ServiceNotFoundException{
 		return serviceDao.findById(id);
 	}
 	
 	@Override
-	public Service findByName(String name) {
+	public Service findByName(String name) throws ServiceNotFoundException {
 		return serviceDao.findByName(name);
 	}
 
 	@Override
-	public Service findByNameAndStore(String name, String store) {
+	public Service findByNameAndStore(String name, String store) throws ServiceNotFoundException, StoreNotFoundException {
 		return serviceDao.findByNameAndStore(name, store);
 	}
 

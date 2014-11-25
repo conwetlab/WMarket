@@ -21,12 +21,12 @@ public class App
     	serviceBo.save(service);
  
     	/** select **/
-    	Service service2 = serviceBo.findByName("testurl");
-    	System.out.println(service2);
+    	//Service service2 = serviceBo.findByName("testurl");
+    	//System.out.println(service2);
  
     	/** update **/
-    	service2.setName("HAIO-1");
-    	serviceBo.update(service2);
+    	//service2.setName("HAIO-1");
+    	//serviceBo.update(service2);
  
     	/** delete **/
     	//serviceBo.delete(service2);

@@ -14,18 +14,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.LocaluserBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Localuser;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
+import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.StoreRegistrationAuth;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 
 @Path("/store")
@@ -34,17 +33,12 @@ public class StoreRegistrationService {
 	// OBJECT ATTRIBUTES //
 	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
 	private StoreBo storeBo = (StoreBo) context.getBean("storeBo");
-	private LocaluserBo localuserBo = (LocaluserBo) context.getBean("localuserBo");
 	private StoreRegistrationAuth storeRegistrationAuth = (StoreRegistrationAuth) context.getBean("storeRegistrationAuth");
 	
 	// CLASS ATTRIBUTES //
+	private static final AuthUtils AUTH_UTILS = AuthUtils.getAuthUtils();
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
 			"There is already a Store with that name/URL registered in the system");
-
-	private Localuser getCurrentUser() throws UserNotFoundException {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		return localuserBo.findByName(username);		
-	}
 
 	// OBJECT METHODS //
 	@POST
@@ -56,7 +50,7 @@ public class StoreRegistrationService {
 		if (storeRegistrationAuth.canCreate()) {
 			try {
 				// Get the current user
-				Localuser currentUser = this.getCurrentUser();
+				Localuser currentUser = AUTH_UTILS.getLoggedUser();
 				
 				store.setRegistrationDate(new Date());
 				store.setCreator(currentUser);
@@ -91,7 +85,7 @@ public class StoreRegistrationService {
 			if (storeRegistrationAuth.canUpdate(storeDB)) {
 				storeDB.setName(store.getName());
 				storeDB.setUrl(store.getUrl());
-				store.setLasteditor(this.getCurrentUser());
+				store.setLasteditor(AUTH_UTILS.getLoggedUser());
 				
 				// Save the new Store and Return OK
 				storeBo.update(storeDB);

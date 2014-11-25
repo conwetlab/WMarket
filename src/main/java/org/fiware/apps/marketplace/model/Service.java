@@ -98,7 +98,6 @@ public class Service {
 	}
 	
 	@XmlElement
-	//@XmlTransient
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "LOCALUSER_LAST_EDITOR_ID", nullable=false)
 	public Localuser getLasteditor() {
@@ -110,7 +109,6 @@ public class Service {
 	}
 	
 	@XmlElement
-	//@XmlTransient
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "LOCALUSER_CREATOR_ID", nullable=false)
 	public Localuser getCreator() {

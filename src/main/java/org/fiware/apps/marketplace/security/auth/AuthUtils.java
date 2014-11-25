@@ -23,14 +23,8 @@ public class AuthUtils {
 	//Instance attributes
 	private LocaluserBo localuserBo;
 
-	public Localuser getLoggedUser() {
-		try {
-			return localuserBo.findByName(SecurityContextHolder.getContext().getAuthentication().getName());
-		} catch (UserNotFoundException ex) {
-			//Maybe the user is not logged in
-			//Maybe the user is not registered in the database
-			return null;
-		}
+	public Localuser getLoggedUser() throws UserNotFoundException {
+		return localuserBo.findByName(SecurityContextHolder.getContext().getAuthentication().getName());
 	}
 	
 }

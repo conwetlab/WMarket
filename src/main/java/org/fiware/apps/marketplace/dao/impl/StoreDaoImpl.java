@@ -31,10 +31,10 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	public Store findByName(String name) throws StoreNotFoundException {	
 		List<?> list = getHibernateTemplate().find("from Store where name=?", name);	
 		
-		if (list.size() != 0){
-			return (Store)list.get(0);
-		} else {
+		if (list.size() == 0){
 			throw new StoreNotFoundException("Store " + name + " not found");
+		} else {
+			return (Store) list.get(0);
 		}
 			
 	}
