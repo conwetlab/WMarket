@@ -4,16 +4,16 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "error")
-public class ServiceError {
+public class APIError {
 	
 	private ErrorType errorType;
 	private String errorMessage;
 	
-	public ServiceError() {
+	public APIError() {
 		
 	}
 	
-	public ServiceError(ErrorType errorType, String errorMessage) {
+	public APIError(ErrorType errorType, String errorMessage) {
 		this.errorType = errorType;
 		this.errorMessage = errorMessage;
 	}
