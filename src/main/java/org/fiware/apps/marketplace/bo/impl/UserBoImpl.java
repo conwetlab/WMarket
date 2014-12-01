@@ -42,10 +42,15 @@ public class UserBoImpl implements UserBo {
 	public User findByName(String username) throws UserNotFoundException {
 		return userDao.findByName(username);
 	}
+	
+	@Override
+	public List<User> getUsersPage(int offset, int max) {
+		return userDao.getUsersPage(offset, max);
+	}
 
 	@Override
-	public List<User> findLocalusers() {
-		return userDao.findLocalusers();
+	public List<User> listUsers() {
+		return userDao.getAllUsers();
 	}
 
 }

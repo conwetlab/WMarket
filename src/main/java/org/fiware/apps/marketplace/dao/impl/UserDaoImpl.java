@@ -1,15 +1,11 @@
 package org.fiware.apps.marketplace.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.mail.Session;
 
 import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
-import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 
@@ -41,6 +37,13 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 		} else {
 			return (User) list.get(0);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUsersPage(int offset, int max) {
+		return (List<User>) getHibernateTemplate().findByCriteria(
+				DetachedCriteria.forClass(User.class), offset, max);
 	}
 
 	@Override

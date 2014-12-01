@@ -5,12 +5,14 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -140,12 +142,13 @@ public class UserRegistrationService {
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
-	public Response listUsers() {
+	public Response listUsers(@DefaultValue("0") @QueryParam("offset") int offset,
+			@DefaultValue("100") @QueryParam("max") int max) {
 		
 		Response response;
 		try {
 			if (userRegistrationAuth.canList()) {
-				List<User> users = userBo.findLocalusers();
+				List<User> users = userBo.getUsersPage(offset, max);
 				return Response.status(Status.OK).entity(new Users(users)).build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("list users");
