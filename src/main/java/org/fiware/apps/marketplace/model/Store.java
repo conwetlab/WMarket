@@ -14,31 +14,31 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 
 @Entity
+@Table(name = "Stores")
 @XmlRootElement(name = "resource")
 public class Store {
 	
 	private Integer  id;
 	private String url;
 	private String name;
-	private String Description;
+	private String description;
 	private Date registrationDate;
 	private List <Service> services;
-	private Localuser lasteditor;	
-	private Localuser creator;
+	private User lasteditor;	
+	private User creator;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "STORE_ID", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	@XmlTransient
 	public Integer getId() {
 		return id;
@@ -50,7 +50,7 @@ public class Store {
 	
 	@XmlID
 	@XmlAttribute 
-	@Column(name = "STORE_NAME", unique = true, nullable = false)
+	@Column(name = "name", unique = true, nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -60,7 +60,7 @@ public class Store {
 	}
 	
 	@XmlElement
-	@Column(name = "STORE_URL", unique = true, nullable = false)
+	@Column(name = "url", unique = true, nullable = false)
 	public String getUrl() {
 		return url;
 	}
@@ -70,17 +70,39 @@ public class Store {
 	}
 	
 	@XmlElement
-	@Column(name = "STORE_DESC")
+	@Column(name = "description")
 	public String getDescription() {
-		return Description;
+		return description;
 	}
 	
 	public void setDescription(String description) {
-		Description = description;
+		this.description = description;
 	}
 	
 	@XmlElement
-	@Column(name = "STORE_DATE")
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "creator", nullable=false)
+	public User getCreator() {
+		return creator;
+	}
+	
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
+	
+	@XmlElement
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "last_editor", nullable=false)
+	public User getLasteditor() {
+		return lasteditor;
+	}
+	
+	public void setLasteditor(User lasteditor) {
+		this.lasteditor = lasteditor;
+	}
+	
+	@XmlElement
+	@Column(name = "registration_date")
 	public Date getRegistrationDate() {
 		return registrationDate;
 	}
@@ -89,7 +111,6 @@ public class Store {
 		this.registrationDate = registrationDate;
 	}
 	
-
 	@XmlTransient
 	@OneToMany(mappedBy="store",  cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	public List<Service> getServices() {
@@ -98,28 +119,6 @@ public class Store {
 	
 	public void setServices(List<Service> services) {
 		this.services = services;
-	}
-	
-	@XmlElement
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "LOCALUSER_LAST_EDITOR_ID", nullable=false)
-	public Localuser getLasteditor() {
-		return lasteditor;
-	}
-	
-	public void setLasteditor(Localuser lasteditor) {
-		this.lasteditor = lasteditor;
-	}
-	
-	@XmlElement
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "LOCALUSER_CREATOR_ID", nullable=false)
-	public Localuser getCreator() {
-		return creator;
-	}
-	
-	public void setCreator(Localuser creator) {
-		this.creator = creator;
 	}
 
 }

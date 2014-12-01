@@ -1,6 +1,6 @@
 package org.fiware.apps.marketplace.security.auth;
 
-import org.fiware.apps.marketplace.model.Localuser;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Service;
 
 
@@ -8,7 +8,7 @@ import org.fiware.apps.marketplace.model.Service;
 public class OfferingRegistrationAuth extends RegistrationAuth<Service> {
 
 	@Override
-	protected Localuser getEntityOwner(Service service) {
+	protected User getEntityOwner(Service service) {
 		return service.getCreator();
 	}
 

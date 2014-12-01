@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response.Status;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Localuser;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
@@ -50,7 +50,7 @@ public class StoreRegistrationService {
 		if (storeRegistrationAuth.canCreate()) {
 			try {
 				// Get the current user
-				Localuser currentUser = AUTH_UTILS.getLoggedUser();
+				User currentUser = AUTH_UTILS.getLoggedUser();
 				
 				store.setRegistrationDate(new Date());
 				store.setCreator(currentUser);

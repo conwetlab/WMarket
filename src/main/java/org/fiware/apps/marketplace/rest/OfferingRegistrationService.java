@@ -18,7 +18,7 @@ import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Localuser;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Services;
 import org.fiware.apps.marketplace.model.Store;
@@ -51,7 +51,7 @@ public class OfferingRegistrationService {
 
 		if (offeringRegistrationAuth.canCreate()) {
 			try {
-				Localuser user = AUTH_UTILS.getLoggedUser();
+				User user = AUTH_UTILS.getLoggedUser();
 				Store store = storeBo.findByName(storeName);
 				service.setRegistrationDate(new Date());
 				service.setStore(store);

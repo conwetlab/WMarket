@@ -1,8 +1,8 @@
 package org.fiware.apps.marketplace.security.auth;
 
-import org.fiware.apps.marketplace.bo.LocaluserBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Localuser;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -10,7 +10,7 @@ public class AuthUtils {
 	
 	// Avoid users to instantiate this class
 	private AuthUtils() {
-		this.localuserBo = (LocaluserBo) ApplicationContextProvider.getApplicationContext().getBean("localuserBo");
+		this.localuserBo = (UserBo) ApplicationContextProvider.getApplicationContext().getBean("userBo");
 	}
 	
 	public static AuthUtils getAuthUtils() {
@@ -21,9 +21,9 @@ public class AuthUtils {
 	private static AuthUtils singleton = new AuthUtils();
 	
 	//Instance attributes
-	private LocaluserBo localuserBo;
+	private UserBo localuserBo;
 
-	public Localuser getLoggedUser() throws UserNotFoundException {
+	public User getLoggedUser() throws UserNotFoundException {
 		return localuserBo.findByName(SecurityContextHolder.getContext().getAuthentication().getName());
 	}
 	

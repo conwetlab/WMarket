@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
@@ -19,11 +20,13 @@ import org.fiware.apps.marketplace.utils.xmladapters.HiddenFieldsXMLAdapter;
 import org.fiware.apps.marketplace.utils.xmladapters.PasswordXMLAdapter;
 
 @Entity
+@Table(name = "Users")
 @XmlRootElement(name = "user")
-public class Localuser {
+public class User {
 	
 	private Integer id;
-	private String username;
+	private String userName;
+	private String displayName;
 	private String password;
 	private String email;
 	private Date registrationDate;
@@ -31,7 +34,7 @@ public class Localuser {
 		
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "LOCALUSER_ID", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	@XmlTransient
 	public Integer getId() {
 		return id;
@@ -43,20 +46,42 @@ public class Localuser {
 	
 	@XmlID
 	@XmlAttribute 
-	@Column(name = "LOCALUSER_USERNAME", unique = true, nullable = false)
-	public String getUsername() {
-		return username;
+	@Column(name = "user_name", unique = true, nullable = false)
+	public String getUserName() {
+		return userName;
 	}
 	
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+	@XmlElement
+	@Column(name = "display_name")
+	public String getDisplayName() {
+		return this.displayName;
+	}
+	
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	
+	@XmlElement
+	// Avoid returning the mail in the API
+	@XmlJavaTypeAdapter(HiddenFieldsXMLAdapter.class)
+	@Column(name = "email", unique = true, nullable = false)
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	@XmlElement
 	// Avoid returning the password in the API
 	// Encrypt the password received through the API
 	@XmlJavaTypeAdapter(PasswordXMLAdapter.class)
-	@Column(name = "LOCALUSER_PASSWORD", nullable = false)
+	@Column(name = "password", nullable = false)
 	public String getPassword() {
 		return password;
 	}
@@ -67,19 +92,7 @@ public class Localuser {
 	}
 	
 	@XmlElement
-	// Avoid returning the mail in the API
-	@XmlJavaTypeAdapter(HiddenFieldsXMLAdapter.class)
-	@Column(name = "LOCALUSER_EMAIL", unique = true, nullable = false)
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	@XmlElement
-	@Column(name = "LOCALUSER_REGISTRATION_DATE", nullable = false)
+	@Column(name = "registration_date", nullable = false)
 	public Date getRegistrationDate() {
 		return registrationDate;
 	}
@@ -89,7 +102,7 @@ public class Localuser {
 	}
 	
 	@XmlElement
-	@Column(name = "LOCALUSER_COMPANY")
+	@Column(name = "company")
 	public String getCompany() {
 		return company;
 	}
@@ -105,7 +118,7 @@ public class Localuser {
 	
 	@Override
 	public boolean equals(Object obj) {
-		Localuser other = (Localuser) obj;
+		User other = (User) obj;
 		return other.id == this.id;
 	}
 

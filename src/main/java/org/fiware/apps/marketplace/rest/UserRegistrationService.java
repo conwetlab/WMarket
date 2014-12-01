@@ -14,9 +14,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.LocaluserBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Localuser;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
 import org.fiware.apps.marketplace.security.auth.UserRegistrationAuth;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
@@ -29,7 +29,7 @@ public class UserRegistrationService {
 		
 	// OBJECT ATTRIBUTES //
 	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
-	private LocaluserBo localuserBo = (LocaluserBo) context.getBean("localuserBo");
+	private UserBo userBo = (UserBo) context.getBean("userBo");
 	private UserRegistrationAuth userRegistrationAuth = (UserRegistrationAuth) context.getBean("userRegistrationAuth");
 	
 	// CLASS ATTRIBUTES //
@@ -40,13 +40,13 @@ public class UserRegistrationService {
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/")	
-	public Response createUser(Localuser localUser) {
+	public Response createUser(User localUser) {
 		
 		Response response;
 		try {
 			if (userRegistrationAuth.canCreate()) {
 				localUser.setRegistrationDate(new Date());
-				localuserBo.save(localUser);
+				userBo.save(localUser);
 				response = Response.status(Status.CREATED).build();		
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("create user");
@@ -64,18 +64,18 @@ public class UserRegistrationService {
 	@PUT
 	@Consumes({"application/xml", "application/json"})
 	@Path("/{username}")	
-	public Response updateUser(@PathParam("username") String username, Localuser localUser) {
+	public Response updateUser(@PathParam("username") String username, User localUser) {
 		
 		Response response;
 		try {
-			Localuser userToBeUpdated = localuserBo.findByName(username);
+			User userToBeUpdated = userBo.findByName(username);
 			
 			if (userRegistrationAuth.canUpdate(userToBeUpdated)) {
 				userToBeUpdated.setCompany(localUser.getCompany());
 				userToBeUpdated.setPassword(localUser.getPassword());
 				userToBeUpdated.setEmail(localUser.getEmail());
-				userToBeUpdated.setUsername(localUser.getUsername());		
-				localuserBo.update(userToBeUpdated);
+				userToBeUpdated.setUserName(localUser.getUserName());		
+				userBo.update(userToBeUpdated);
 				response = Response.status(Status.OK).build();	
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("update user " + username);
@@ -97,10 +97,10 @@ public class UserRegistrationService {
 
 		Response response;
 		try {
-			Localuser userToBeDeleted = localuserBo.findByName(username);
+			User userToBeDeleted = userBo.findByName(username);
 			// Only a user can delete his/her account
 			if (userRegistrationAuth.canDelete(userToBeDeleted)) {
-				localuserBo.delete(userToBeDeleted);
+				userBo.delete(userToBeDeleted);
 				response = Response.status(Status.OK).build();	
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("delete user " + username);
@@ -121,7 +121,7 @@ public class UserRegistrationService {
 
 		Response response;
 		try {
-			Localuser localuser = localuserBo.findByName(username);
+			User localuser = userBo.findByName(username);
 
 			if (userRegistrationAuth.canGet(localuser)) {
 				response = Response.status(Status.OK).entity(localuser).build();
@@ -145,7 +145,7 @@ public class UserRegistrationService {
 		Response response;
 		try {
 			if (userRegistrationAuth.canList()) {
-				List<Localuser> users = localuserBo.findLocalusers();
+				List<User> users = userBo.findLocalusers();
 				return Response.status(Status.OK).entity(new Users(users)).build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("list users");

@@ -1,7 +1,7 @@
 package org.fiware.apps.marketplace.db;
 
 
-import org.fiware.apps.marketplace.model.Localuser;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Rating;
 import org.fiware.apps.marketplace.model.RatingCategory;
 import org.fiware.apps.marketplace.model.RatingCategoryEntry;
@@ -18,7 +18,7 @@ public class HibernateDDLGenerator {
 	 * @param args
 	 */
 	public static void main(String[] args) { 
-		new HibernateDDLGenerator().execute(Dialect.MYSQL5,  Store.class, Service.class, Localuser.class, Rating.class, RatingCategory.class, RatingCategoryEntry.class, RatingObject.class, RatingObjectCategory.class);
+		new HibernateDDLGenerator().execute(Dialect.MYSQL5,  Store.class, Service.class, User.class, Rating.class, RatingCategory.class, RatingCategoryEntry.class, RatingObject.class, RatingObjectCategory.class);
 	}
 	private void execute(Dialect dialect, Class<?>... classes) {
 		AnnotationConfiguration configuration = new AnnotationConfiguration();

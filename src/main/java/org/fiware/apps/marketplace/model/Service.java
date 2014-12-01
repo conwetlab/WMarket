@@ -19,22 +19,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "SERVICE_NAME", "STORE_ID" }) }) // each service name has to unique for a store context
+@Table(name = "Services", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "store" }) }) // each service name has to unique for a store context
 @XmlRootElement(name = "resource")
 public class Service {
 	
-	private Integer  id;
+	private Integer id;
 	private String url;
 	private String name;
-	private String Description;
+	private String description;
 	private Date registrationDate;
 	private Store store;
-	private Localuser lasteditor;	
-	private Localuser creator;
+	private User lasteditor;	
+	private User creator;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "SERVICE_ID", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer  getId() {
 		return id;
 	}
@@ -45,7 +45,7 @@ public class Service {
 	
 	@XmlID
 	@XmlAttribute 
-	@Column(name = "SERVICE_NAME",  nullable = false)
+	@Column(name = "name", nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -55,7 +55,7 @@ public class Service {
 	}
 	
 	@XmlElement
-	@Column(name = "SERVICE_URL", unique = true, nullable = false)
+	@Column(name = "url", unique = true, nullable = false)
 	public String getUrl() {
 		return url;
 	}
@@ -63,32 +63,20 @@ public class Service {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-			
 	
 	@XmlElement
-	@Column(name = "SERVICE_DESC")
+	@Column(name = "description")
 	public String getDescription() {
-		return Description;
+		return description;
 	}
 	
 	public void setDescription(String description) {
-		Description = description;
+		this.description = description;
 	}
-	
-	@XmlElement
-	@Column(name = "SERVICE_REG_DATE")
-	public Date getRegistrationDate() {
-		return registrationDate;
-	}
-	
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
-	}
-	
 
 	@XmlTransient
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "STORE_ID", nullable=false)
+	@JoinColumn(name = "store", nullable=false)
 	public Store getStore() {
 		return store;
 	}
@@ -99,24 +87,33 @@ public class Service {
 	
 	@XmlElement
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "LOCALUSER_LAST_EDITOR_ID", nullable=false)
-	public Localuser getLasteditor() {
-		return lasteditor;
+	@JoinColumn(name = "creator", nullable=false)
+	public User getCreator() {
+		return creator;
 	}
 	
-	public void setLasteditor(Localuser lasteditor) {
-		this.lasteditor = lasteditor;
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
 	
 	@XmlElement
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "LOCALUSER_CREATOR_ID", nullable=false)
-	public Localuser getCreator() {
-		return creator;
+	@JoinColumn(name = "last_editor", nullable=false)
+	public User getLasteditor() {
+		return lasteditor;
 	}
 	
-	public void setCreator(Localuser creator) {
-		this.creator = creator;
+	public void setLasteditor(User lasteditor) {
+		this.lasteditor = lasteditor;
 	}
 	
+	@XmlElement
+	@Column(name = "registration_date")
+	public Date getRegistrationDate() {
+		return registrationDate;
+	}
+	
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
+	}
 }

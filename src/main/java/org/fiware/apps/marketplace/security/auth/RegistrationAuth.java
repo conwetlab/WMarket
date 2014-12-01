@@ -1,7 +1,7 @@
 package org.fiware.apps.marketplace.security.auth;
 
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Localuser;
+import org.fiware.apps.marketplace.model.User;
 
 public abstract class RegistrationAuth<T> {
 	
@@ -10,7 +10,7 @@ public abstract class RegistrationAuth<T> {
 	 * @param entity The entity whose owner the developer wants to know
 	 * @return The owner of the entity
 	 */
-	protected abstract Localuser getEntityOwner(T entity);
+	protected abstract User getEntityOwner(T entity);
 	
 	/**
 	 * Method to know if the logged user is the owner of the entity
@@ -21,7 +21,7 @@ public abstract class RegistrationAuth<T> {
 		boolean canAccess = false;
 
 		try {
-			Localuser loggedUser = AuthUtils.getAuthUtils().getLoggedUser();
+			User loggedUser = AuthUtils.getAuthUtils().getLoggedUser();
 			// logged User can be null if the user is not logged in...
 			if (loggedUser != null && loggedUser.equals(this.getEntityOwner(entity))) {
 				canAccess = true;

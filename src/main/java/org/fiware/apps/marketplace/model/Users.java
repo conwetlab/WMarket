@@ -9,22 +9,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "users")
 public class Users {
 	
-    private List<Localuser> users = null;
+    private List<User> users = null;
     
     public Users() {
-    	this.setUsers(new ArrayList<Localuser>());
+    	this.setUsers(new ArrayList<User>());
     }
     
-    public Users(List<Localuser> users) {
+    public Users(List<User> users) {
     	this.setUsers(users);
     }
  
     @XmlElement(name = "user")
-    public List<Localuser> getUsers() {
+    public List<User> getUsers() {
         return this.users;
     }
  
-    public void setUsers(List<Localuser> users) {
+    public void setUsers(List<User> users) {
     	this.users = users;
     }
 }
