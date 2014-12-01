@@ -1,6 +1,5 @@
 package org.fiware.apps.marketplace.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.fiware.apps.marketplace.dao.StoreDao;
@@ -41,13 +40,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	
 	@Override
 	public List <Store> findStores() {
-		List<Store> list = getHibernateTemplate().loadAll(Store.class);
-		
-		if (list.size()==0){
-			list = new ArrayList<Store>();
-		}		
-		
-		return list;
+		return getHibernateTemplate().loadAll(Store.class);
 	}
 
 }

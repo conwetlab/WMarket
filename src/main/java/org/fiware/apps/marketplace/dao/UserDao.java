@@ -10,5 +10,5 @@ public interface UserDao {
 	void update(User localuser);
 	void delete(User localuser);
 	User findByName(String username) throws UserNotFoundException;
-	List <User> findLocalusers();
+	List <User> getAllUsers();
 }
