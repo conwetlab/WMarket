@@ -12,6 +12,6 @@ public interface UserBo {
 	void delete(User localuser);
 	User findByName(String username) throws UserNotFoundException;
 	List<User> getUsersPage(int offset, int max);
-	List<User> listUsers();
+	List<User> getAllUsers();
 	
 }

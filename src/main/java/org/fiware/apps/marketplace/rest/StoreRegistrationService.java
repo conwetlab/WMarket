@@ -5,12 +5,14 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -34,7 +36,7 @@ public class StoreRegistrationService {
 	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
 	private StoreBo storeBo = (StoreBo) context.getBean("storeBo");
 	private StoreRegistrationAuth storeRegistrationAuth = (StoreRegistrationAuth) context.getBean("storeRegistrationAuth");
-	
+
 	// CLASS ATTRIBUTES //
 	private static final AuthUtils AUTH_UTILS = AuthUtils.getAuthUtils();
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
@@ -46,16 +48,16 @@ public class StoreRegistrationService {
 	@Path("/")	
 	public Response createStore(Store store) {
 		Response response;
-		
+
 		if (storeRegistrationAuth.canCreate()) {
 			try {
 				// Get the current user
 				User currentUser = AUTH_UTILS.getLoggedUser();
-				
+
 				store.setRegistrationDate(new Date());
 				store.setCreator(currentUser);
 				store.setLasteditor(currentUser);
-				
+
 				// Save the new Store and return CREATED
 				storeBo.save(store);
 				response = Response.status(Status.CREATED).build();
@@ -67,9 +69,9 @@ public class StoreRegistrationService {
 				response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 			}
 		} else {
-			 response = ERROR_UTILS.unauthorizedResponse("create store");
+			response = ERROR_UTILS.unauthorizedResponse("create store");
 		}
-				
+
 		return response;	
 	}
 
@@ -79,19 +81,19 @@ public class StoreRegistrationService {
 	@Path("/{storeName}")	
 	public Response updateStore(@PathParam("storeName") String storeName, Store store) throws UserNotFoundException {
 		Response response;
-		
+
 		try {
 			Store storeDB = storeBo.findByName(storeName);				
 			if (storeRegistrationAuth.canUpdate(storeDB)) {
 				storeDB.setName(store.getName());
 				storeDB.setUrl(store.getUrl());
 				store.setLasteditor(AUTH_UTILS.getLoggedUser());
-				
+
 				// Save the new Store and Return OK
 				storeBo.update(storeDB);
 				response = Response.status(Status.OK).build();
 			} else {
-				 response = ERROR_UTILS.unauthorizedResponse("update store " + storeName);
+				response = ERROR_UTILS.unauthorizedResponse("update store " + storeName);
 			}
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
@@ -102,7 +104,7 @@ public class StoreRegistrationService {
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
-		
+
 		return response;
 	}
 
@@ -110,16 +112,16 @@ public class StoreRegistrationService {
 	@Path("/{storeName}")	
 	public Response deleteStore(@PathParam("storeName") String storeName) {
 		Response response;
-		
+
 		try {
 			//Retrieve the Store from the database
 			Store store = storeBo.findByName(storeName);
-			
+
 			if (storeRegistrationAuth.canDelete(store)) {
 				storeBo.delete(store);
 				response = Response.status(Status.OK).build();		// Return OK
 			} else {
-				 response = ERROR_UTILS.unauthorizedResponse("delete store " + storeName);
+				response = ERROR_UTILS.unauthorizedResponse("delete store " + storeName);
 			}
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
@@ -135,11 +137,11 @@ public class StoreRegistrationService {
 	@Path("/{storeName}")	
 	public Response getStore(@PathParam("storeName") String storeName) {
 		Response response;
-		
+
 		try {
 			// Retrieve the Store from the database
 			Store store = storeBo.findByName(storeName);
-			
+
 			if (storeRegistrationAuth.canGet(store)) {
 				response = Response.status(Status.OK).entity(store).build(); 	//Return the Store
 			} else {
@@ -150,27 +152,33 @@ public class StoreRegistrationService {
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
-		
+
 		return response;
 	}
 
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
-	public Response listStores() {
+	public Response listStores(@DefaultValue("0") @QueryParam("offset") int offset,
+			@DefaultValue("100") @QueryParam("max") int max) {
 		Response response;
-		
-		try {
-			if (storeRegistrationAuth.canList()) {
-				List<Store> stores = storeBo.findStores();
-				response = Response.status(Status.OK).entity(new Stores(stores)).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("list stores");
+
+		if (offset < 0 || max <= 0) {
+			// Offset and Max should be checked
+			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
+		} else {
+			try {
+				if (storeRegistrationAuth.canList()) {
+					List<Store> stores = storeBo.getStoresPage(offset, max);
+					response = Response.status(Status.OK).entity(new Stores(stores)).build();
+				} else {
+					response = ERROR_UTILS.unauthorizedResponse("list stores");
+				}
+			} catch (Exception ex) {
+				response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 			}
-		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
-		
+
 		return response;
 	}
 }

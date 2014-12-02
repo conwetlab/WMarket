@@ -71,7 +71,7 @@ public class MaintenanceBoImpl implements MaintenanceBo {
 					attributeTypeBo.save(attributeType);
 				}
 			}
-			for (Store store : storeBo.findStores()) {
+			for (Store store : storeBo.getAllStores()) {
 				for (Service service : store.getServices()) {
 					for (ServiceAttributeType attributeType : AttributeTypeResolver.resolveAttributeTypesFromUri(service.getUrl())) {
 						attributeTypeBo.save(attributeType);
@@ -90,7 +90,7 @@ public class MaintenanceBoImpl implements MaintenanceBo {
 	private boolean initializeOfferings() {
 		try {
 			long start = System.currentTimeMillis();
-			for (Offering offering : OfferingResolver.resolveOfferingsFromStores(storeBo.findStores())) {
+			for (Offering offering : OfferingResolver.resolveOfferingsFromStores(storeBo.getAllStores())) {
 				offeringBo.save(offering);
 			}
 			long end = System.currentTimeMillis();

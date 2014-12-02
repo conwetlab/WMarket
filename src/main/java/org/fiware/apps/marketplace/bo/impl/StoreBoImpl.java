@@ -47,7 +47,12 @@ public class StoreBoImpl implements StoreBo{
 	}
 	
 	@Override
-	public List<Store> findStores() {
-		return storeDao.findStores();
+	public List<Store> getStoresPage(int offset, int max) {
+		return storeDao.getStoresPage(offset, max);
+	}
+	
+	@Override
+	public List<Store> getAllStores() {
+		return storeDao.getAllStores();
 	}
 }

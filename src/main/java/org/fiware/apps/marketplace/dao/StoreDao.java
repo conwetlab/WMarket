@@ -10,6 +10,7 @@ public interface StoreDao {
 	void update(Store store);
 	void delete(Store store);
 	Store findByName(String url) throws StoreNotFoundException;
-	List <Store> findStores();
+	List<Store> getStoresPage(int offset, int max);
+	List <Store> getAllStores();
 
 }

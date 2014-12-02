@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserBoImpl implements UserBo {
 
 	@Autowired
-	UserDao userDao;
+	private UserDao userDao;
 	
 	public void setStoreDao (UserDao localuser){
 		this.userDao = localuser;
@@ -49,7 +49,7 @@ public class UserBoImpl implements UserBo {
 	}
 
 	@Override
-	public List<User> listUsers() {
+	public List<User> getAllUsers() {
 		return userDao.getAllUsers();
 	}
 

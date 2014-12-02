@@ -11,6 +11,7 @@ public interface StoreBo {
 	void update(Store store);
 	void delete(Store store);
 	Store findByName(String name) throws StoreNotFoundException;
-	List <Store> findStores();
+	List<Store> getStoresPage(int offset, int max);
+	List <Store> getAllStores();
 	
 }

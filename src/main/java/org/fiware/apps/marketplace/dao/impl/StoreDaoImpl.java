@@ -6,6 +6,7 @@ import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 
 @Repository("storeDao")
@@ -38,8 +39,15 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 			
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public List <Store> findStores() {
+	public List<Store> getStoresPage(int offset, int max) {
+		return (List<Store>) getHibernateTemplate().findByCriteria(
+				DetachedCriteria.forClass(Store.class), offset, max);
+	}
+	
+	@Override
+	public List <Store> getAllStores() {
 		return getHibernateTemplate().loadAll(Store.class);
 	}
 
