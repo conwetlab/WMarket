@@ -29,6 +29,11 @@ public class ErrorUtils {
 				new APIError(ErrorType.BAD_REQUEST, message)).build();
 	}
 	
+	public Response badRequestResponse(String message) {
+		return Response.status(Status.BAD_REQUEST).entity(
+				new APIError(ErrorType.BAD_REQUEST, message)).build();
+	}
+	
 	public Response entityNotFoundResponse(Exception ex) {
 		return Response.status(Status.NOT_FOUND).entity(
 				new APIError(ErrorType.NOT_FOUND, ex.getMessage())).build();

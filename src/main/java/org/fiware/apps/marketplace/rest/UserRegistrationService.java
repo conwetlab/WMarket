@@ -144,17 +144,22 @@ public class UserRegistrationService {
 	@Path("/")	
 	public Response listUsers(@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max) {
-		
 		Response response;
-		try {
-			if (userRegistrationAuth.canList()) {
-				List<User> users = userBo.getUsersPage(offset, max);
-				return Response.status(Status.OK).entity(new Users(users)).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("list users");
-			}
-		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+		
+		if (offset < 0 || max <= 0) {
+			// Offset and Max should be checked
+			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
+		} else {
+			try {
+				if (userRegistrationAuth.canList()) {
+					List<User> users = userBo.getUsersPage(offset, max);
+					return Response.status(Status.OK).entity(new Users(users)).build();
+				} else {
+					response = ERROR_UTILS.unauthorizedResponse("list users");
+				}
+			} catch (Exception ex) {
+				response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			}	
 		}
 		
 		return response;
