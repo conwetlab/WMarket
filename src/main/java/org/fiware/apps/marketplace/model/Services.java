@@ -6,6 +6,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 @XmlRootElement(name = "services")
 public class Services {
 	
@@ -20,6 +22,7 @@ public class Services {
     }
  
     @XmlElement(name = "service")
+    @JsonProperty("services")
     public List<Service> getServices() {
         return this.services;
     }
