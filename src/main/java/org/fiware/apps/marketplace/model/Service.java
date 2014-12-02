@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
-@Table(name = "Services", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "store" }) }) // each service name has to unique for a store context
+@Table(name = "Services", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "store", "url" }) }) // each service name has to unique for a store context
 @XmlRootElement(name = "resource")
 public class Service {
 	
@@ -55,7 +55,7 @@ public class Service {
 	}
 	
 	@XmlElement
-	@Column(name = "url", unique = true, nullable = false)
+	@Column(name = "url", nullable = false)
 	public String getUrl() {
 		return url;
 	}
