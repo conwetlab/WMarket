@@ -18,8 +18,10 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
+import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.fiware.apps.marketplace.security.auth.UserRegistrationAuth;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
@@ -28,37 +30,40 @@ import org.springframework.dao.DataAccessException;
 
 @Path("/user")
 public class UserRegistrationService {
-		
+
 	// OBJECT ATTRIBUTES //
 	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
 	private UserBo userBo = (UserBo) context.getBean("userBo");
 	private UserRegistrationAuth userRegistrationAuth = (UserRegistrationAuth) context.getBean("userRegistrationAuth");
-	
+	private UserValidator usersValidator = (UserValidator) context.getBean("usersValidator");
+
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
 			"The user and/or the email introduced are already registered in the system");
-	
+
 	// OBJECT METHODS //
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/")	
-	public Response createUser(User localUser) {
-		
+	public Response createUser(User user) {
+
 		Response response;
 		try {
-			if (userRegistrationAuth.canCreate()) {
-				localUser.setRegistrationDate(new Date());
-				userBo.save(localUser);
+			if (userRegistrationAuth.canCreate() && usersValidator.validateUser(user)) {
+				user.setRegistrationDate(new Date());
+				userBo.save(user);
 				response = Response.status(Status.CREATED).build();		
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("create user");
 			}
+		} catch (ValidationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (DataAccessException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
-		
+
 		return response;
 
 	}
@@ -66,22 +71,43 @@ public class UserRegistrationService {
 	@PUT
 	@Consumes({"application/xml", "application/json"})
 	@Path("/{username}")	
-	public Response updateUser(@PathParam("username") String username, User localUser) {
-		
+	public Response updateUser(@PathParam("username") String username, User user) {
+
 		Response response;
 		try {
 			User userToBeUpdated = userBo.findByName(username);
-			
-			if (userRegistrationAuth.canUpdate(userToBeUpdated)) {
-				userToBeUpdated.setCompany(localUser.getCompany());
-				userToBeUpdated.setPassword(localUser.getPassword());
-				userToBeUpdated.setEmail(localUser.getEmail());
-				userToBeUpdated.setUserName(localUser.getUserName());		
+
+			if (userRegistrationAuth.canUpdate(userToBeUpdated) 
+					&& usersValidator.validateUser(user)) {
+				if (user.getCompany() != null) {
+					userToBeUpdated.setCompany(user.getCompany());
+				}
+				
+				if (user.getPassword() != null) {
+					userToBeUpdated.setPassword(user.getPassword());
+				}
+				
+				if (user.getEmail() != null) {
+					userToBeUpdated.setEmail(user.getEmail());
+				}
+				
+				if (user.getDisplayName() != null) {
+					userToBeUpdated.setDisplayName(user.getDisplayName());
+				}
+				
+				// At this moment, user name cannot be changed to avoid error with sessions...
+				// userToBeUpdated.setUserName(user.getUserName());
+				if (user.getUserName() != null && user.getUserName() != userToBeUpdated.getUserName()) {
+					throw new ValidationException("userName cannot be changed");
+				}
+				
 				userBo.update(userToBeUpdated);
 				response = Response.status(Status.OK).build();	
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("update user " + username);
 			}
+		} catch (ValidationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (DataAccessException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (UserNotFoundException ex) {
@@ -89,7 +115,7 @@ public class UserRegistrationService {
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
-		
+
 		return response;
 	}
 
@@ -112,7 +138,7 @@ public class UserRegistrationService {
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
-		
+
 		return response;
 	}
 
@@ -135,7 +161,7 @@ public class UserRegistrationService {
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
-		
+
 		return response;
 	}
 
@@ -145,7 +171,7 @@ public class UserRegistrationService {
 	public Response listUsers(@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max) {
 		Response response;
-		
+
 		if (offset < 0 || max <= 0) {
 			// Offset and Max should be checked
 			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
@@ -161,7 +187,7 @@ public class UserRegistrationService {
 				response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 			}	
 		}
-		
+
 		return response;
 	}
 }
