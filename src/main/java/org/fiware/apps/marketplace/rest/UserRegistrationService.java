@@ -79,6 +79,13 @@ public class UserRegistrationService {
 
 			if (userRegistrationAuth.canUpdate(userToBeUpdated) 
 					&& userValidator.validateUser(user)) {
+				
+				// At this moment, user name cannot be changed to avoid error with sessions...
+				// userToBeUpdated.setUserName(user.getUserName());
+				if (user.getUserName() != null && user.getUserName() != userToBeUpdated.getUserName()) {
+					throw new ValidationException("userName cannot be changed");
+				}
+				
 				if (user.getCompany() != null) {
 					userToBeUpdated.setCompany(user.getCompany());
 				}
@@ -93,12 +100,6 @@ public class UserRegistrationService {
 				
 				if (user.getDisplayName() != null) {
 					userToBeUpdated.setDisplayName(user.getDisplayName());
-				}
-				
-				// At this moment, user name cannot be changed to avoid error with sessions...
-				// userToBeUpdated.setUserName(user.getUserName());
-				if (user.getUserName() != null && user.getUserName() != userToBeUpdated.getUserName()) {
-					throw new ValidationException("userName cannot be changed");
 				}
 				
 				userBo.update(userToBeUpdated);
