@@ -4,7 +4,7 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.stereotype.Service;
 
-@Service("usersValidator")
+@Service("userValidator")
 public class UserValidator {
 
 	private static final int COMPANY_MIN_LENGTH = 3;	//For example: UPM, TID, SAP, ENG,...

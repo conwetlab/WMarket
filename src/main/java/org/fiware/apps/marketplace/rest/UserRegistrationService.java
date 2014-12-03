@@ -35,7 +35,7 @@ public class UserRegistrationService {
 	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
 	private UserBo userBo = (UserBo) context.getBean("userBo");
 	private UserRegistrationAuth userRegistrationAuth = (UserRegistrationAuth) context.getBean("userRegistrationAuth");
-	private UserValidator usersValidator = (UserValidator) context.getBean("usersValidator");
+	private UserValidator userValidator = (UserValidator) context.getBean("userValidator");
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
@@ -49,7 +49,7 @@ public class UserRegistrationService {
 
 		Response response;
 		try {
-			if (userRegistrationAuth.canCreate() && usersValidator.validateUser(user)) {
+			if (userRegistrationAuth.canCreate() && userValidator.validateUser(user)) {
 				user.setRegistrationDate(new Date());
 				userBo.save(user);
 				response = Response.status(Status.CREATED).build();		
@@ -78,7 +78,7 @@ public class UserRegistrationService {
 			User userToBeUpdated = userBo.findByName(username);
 
 			if (userRegistrationAuth.canUpdate(userToBeUpdated) 
-					&& usersValidator.validateUser(user)) {
+					&& userValidator.validateUser(user)) {
 				if (user.getCompany() != null) {
 					userToBeUpdated.setCompany(user.getCompany());
 				}
