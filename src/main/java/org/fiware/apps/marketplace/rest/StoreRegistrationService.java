@@ -19,9 +19,11 @@ import javax.ws.rs.core.Response.Status;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
+import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.StoreRegistrationAuth;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
@@ -36,11 +38,14 @@ public class StoreRegistrationService {
 	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
 	private StoreBo storeBo = (StoreBo) context.getBean("storeBo");
 	private StoreRegistrationAuth storeRegistrationAuth = (StoreRegistrationAuth) context.getBean("storeRegistrationAuth");
+	private StoreValidator storeValidator = (StoreValidator) context.getBean("storeValidator");
+
 
 	// CLASS ATTRIBUTES //
 	private static final AuthUtils AUTH_UTILS = AuthUtils.getAuthUtils();
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
 			"There is already a Store with that name/URL registered in the system");
+
 
 	// OBJECT METHODS //
 	@POST
@@ -49,8 +54,8 @@ public class StoreRegistrationService {
 	public Response createStore(Store store) {
 		Response response;
 
-		if (storeRegistrationAuth.canCreate()) {
-			try {
+		try {
+			if (storeRegistrationAuth.canCreate() && storeValidator.validateStore(store)) {
 				// Get the current user
 				User currentUser = AUTH_UTILS.getLoggedUser();
 
@@ -61,15 +66,17 @@ public class StoreRegistrationService {
 				// Save the new Store and return CREATED
 				storeBo.save(store);
 				response = Response.status(Status.CREATED).build();
-			} catch (UserNotFoundException ex) {
-				response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
-			} catch (DataAccessException ex) {
-				response = ERROR_UTILS.badRequestResponse(ex);
-			} catch (Exception ex) {
-				response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			} else {
+				response = ERROR_UTILS.unauthorizedResponse("create store");
 			}
-		} else {
-			response = ERROR_UTILS.unauthorizedResponse("create store");
+		} catch (ValidationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+		} catch (UserNotFoundException ex) {
+			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
+		} catch (DataAccessException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
 
 		return response;	
@@ -84,9 +91,19 @@ public class StoreRegistrationService {
 
 		try {
 			Store storeDB = storeBo.findByName(storeName);				
-			if (storeRegistrationAuth.canUpdate(storeDB)) {
-				storeDB.setName(store.getName());
-				storeDB.setUrl(store.getUrl());
+			if (storeRegistrationAuth.canUpdate(storeDB) && storeValidator.validateStore(store)) {
+				if (store.getName() != null) {
+					storeDB.setName(store.getName());
+				}
+
+				if (store.getUrl() != null) {
+					storeDB.setUrl(store.getUrl());
+				}
+
+				if (store.getDescription() != null) {
+					storeDB.setDescription(store.getDescription());
+				}
+
 				store.setLasteditor(AUTH_UTILS.getLoggedUser());
 
 				// Save the new Store and Return OK
@@ -95,6 +112,8 @@ public class StoreRegistrationService {
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("update store " + storeName);
 			}
+		} catch (ValidationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
 		} catch (DataAccessException ex) {
