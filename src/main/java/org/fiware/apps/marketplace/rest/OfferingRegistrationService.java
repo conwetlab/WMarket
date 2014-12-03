@@ -1,15 +1,18 @@
 package org.fiware.apps.marketplace.rest;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -18,9 +21,9 @@ import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.model.Services;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Service;
-import org.fiware.apps.marketplace.model.Services;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.OfferingRegistrationAuth;
@@ -176,22 +179,43 @@ public class OfferingRegistrationService {
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
-	public Response listServices(@PathParam("storeName") String storeName) {
+	public Response listServices(@PathParam("storeName") String storeName, 
+			@DefaultValue("0") @QueryParam("offset") int offset,
+			@DefaultValue("100") @QueryParam("max") int max) {
 		Response response;
-		
-		if (offeringRegistrationAuth.canList()) {
-			try {
-				Store store = storeBo.findByName(storeName);
-				response = Response.status(Status.OK).entity(new Services(store.getServices())).build();
-			} catch (StoreNotFoundException ex) {
-				response = ERROR_UTILS.entityNotFoundResponse(ex);
-			} catch (Exception ex) {
-				response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
-			}
+
+		if (offset < 0 || max <= 0) {
+			// Offset and Max should be checked
+			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
 		} else {
-			response = ERROR_UTILS.unauthorizedResponse("list offerings");
+			if (offeringRegistrationAuth.canList()) {
+				try {
+					int toIndex;
+					Store store = storeBo.findByName(storeName);
+					Services returnedServices = new Services();
+					List<Service> allServices = store.getServices();
+
+					// Otherwise (if offset > allServices.size() - 1) an empty list will be returned
+					if (offset <= allServices.size() - 1) {
+						if (offset + max > allServices.size()) {
+							toIndex = allServices.size();
+						} else {
+							toIndex = offset + max;
+						}	
+						returnedServices.setServices(store.getServices().subList(offset, toIndex));
+					}
+
+					response = Response.status(Status.OK).entity(returnedServices).build();
+				} catch (StoreNotFoundException ex) {
+					response = ERROR_UTILS.entityNotFoundResponse(ex);
+				} catch (Exception ex) {
+					response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+				}
+			} else {
+				response = ERROR_UTILS.unauthorizedResponse("list offerings");
+			}
 		}
-		
+
 		return response;
 
 	}

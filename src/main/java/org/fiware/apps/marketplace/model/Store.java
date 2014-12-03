@@ -24,10 +24,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "Stores")
-@XmlRootElement(name = "resource")
+@XmlRootElement(name = "store")
 public class Store {
 	
-	private Integer  id;
+	private Integer id;
 	private String url;
 	private String name;
 	private String description;
