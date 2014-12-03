@@ -17,6 +17,11 @@ public class UserValidator {
 
 	private static final GenericValidator GENERIC_VALIDATOR = GenericValidator.getInstance();
 
+	/**
+	 * @param user User to be checked
+	 * @return True if the user is valid. Otherwise <code>ValidationException</code> will be thrown
+	 * @throws ValidationException If user is not valid
+	 */
 	public boolean validateUser(User user) throws ValidationException {
 		
 		if (user.getUserName() != null && !GENERIC_VALIDATOR.validateName(user.getUserName())) {

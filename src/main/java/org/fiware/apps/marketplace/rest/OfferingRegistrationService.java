@@ -21,10 +21,12 @@ import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Services;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.validators.ServiceValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.OfferingRegistrationAuth;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
@@ -40,6 +42,7 @@ public class OfferingRegistrationService {
 	private ServiceBo serviceBo = (ServiceBo) context.getBean("serviceBo");
 	private OfferingRegistrationAuth offeringRegistrationAuth = (OfferingRegistrationAuth) 
 			context.getBean("offeringRegistrationAuth");
+	private ServiceValidator serviceValidator = (ServiceValidator) context.getBean("serviceValidator");
 
 	// CLASS ATTRIBUTES //
 	private static final AuthUtils AUTH_UTILS = AuthUtils.getAuthUtils();
@@ -52,8 +55,9 @@ public class OfferingRegistrationService {
 	public Response saveService(@PathParam("storeName") String storeName, Service service) {	
 		Response response;
 
-		if (offeringRegistrationAuth.canCreate()) {
-			try {
+		try {
+			if (offeringRegistrationAuth.canCreate() && serviceValidator.validateService(service)) {
+
 				User user = AUTH_UTILS.getLoggedUser();
 				Store store = storeBo.findByName(storeName);
 				service.setRegistrationDate(new Date());
@@ -63,19 +67,22 @@ public class OfferingRegistrationService {
 
 				serviceBo.save(service);
 				response = Response.status(Status.CREATED).build();
-			} catch (StoreNotFoundException ex) {
-				//The Store is an URL... If the Store does not exist a 404
-				//should be returned instead of a 400
-				response = ERROR_UTILS.entityNotFoundResponse(ex);
-			} catch (UserNotFoundException ex) {
-				response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
-			} catch (DataAccessException ex) {
-				response = ERROR_UTILS.badRequestResponse(ex);
-			} catch (Exception ex) {
-				response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			} else {
+				response = ERROR_UTILS.unauthorizedResponse("create offering");
 			}
-		} else {
-			response = ERROR_UTILS.unauthorizedResponse("create offering");
+		} catch (ValidationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+		} catch (StoreNotFoundException ex) {
+			//The Store is an URL... If the Store does not exist a 404
+			//should be returned instead of a 400
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (UserNotFoundException ex) {
+			response = ERROR_UTILS.internalServerError(
+					"There was an error retrieving the user from the database");
+		} catch (DataAccessException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
 
 		return response;
@@ -95,23 +102,38 @@ public class OfferingRegistrationService {
 			Store store = storeBo.findByName(storeName);	//Check that the Store exists
 			Service service = serviceBo.findByNameAndStore(serviceName, storeName);
 
-			if (offeringRegistrationAuth.canUpdate(service)) {
-				service.setName(serviceInfo.getName());
-				service.setUrl(serviceInfo.getUrl());
+			if (offeringRegistrationAuth.canUpdate(service)
+					&& serviceValidator.validateService(serviceInfo)) {
+				
+				if (serviceInfo.getName() != null) {
+					service.setName(serviceInfo.getName());
+				}
+				
+				if (serviceInfo.getUrl() != null) {
+					service.setUrl(serviceInfo.getUrl());
+				}
+				
+				if (serviceInfo.getDescription() != null) {
+					service.setDescription(serviceInfo.getDescription());
+				}
+				
 				service.setLasteditor(AUTH_UTILS.getLoggedUser());
-				//TODO: merger in model
 
 				serviceBo.update(service);
 				response = Response.status(Status.OK).build();
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("update offering " + serviceName);
+				response = ERROR_UTILS.unauthorizedResponse(
+						"update offering " + serviceName);
 			}
+		} catch (ValidationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (ServiceNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (UserNotFoundException ex) {
-			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
+			response = ERROR_UTILS.internalServerError(
+					"There was an error retrieving the user from the database");
 		} catch (DataAccessException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
@@ -123,7 +145,8 @@ public class OfferingRegistrationService {
 
 	@DELETE
 	@Path("/{serviceName}")	
-	public Response deleteService(@PathParam("storeName") String storeName, @PathParam("serviceName") String serviceName) {
+	public Response deleteService(@PathParam("storeName") String storeName, 
+			@PathParam("serviceName") String serviceName) {
 		Response response;
 
 		try {
@@ -219,6 +242,4 @@ public class OfferingRegistrationService {
 		return response;
 
 	}
-
-
 }
