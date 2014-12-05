@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider ref="clientProvider" />
+	</security:authentication-manager>
+
+	<!-- urls and security configuration -->
+	<security:http auto-config="true" entry-point-ref="fiwareEntryPoint" use-expressions="true">
+        <security:custom-filter after="CAS_FILTER" ref="clientFilter" />
+        
+        <!-- Default URLs that are visible for everyone -->
+        <security:intercept-url pattern="/vocabulary/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/demoservices/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
+		
+		<!-- When the IdM is working, users cannot be created or modified -->
+		<security:intercept-url pattern="/api/user/**" method="POST" access="denyAll" />
+		<security:intercept-url pattern="/api/user/**" method="PUT" access="denyAll" />
+		<security:intercept-url pattern="/api/user/**" method="DELETE" access="denyAll" />
+		<security:intercept-url pattern="/api/user/**" method="GET" access="hasRole('ROLE_USER')" />
+		
+		<!-- Security rule for the rest of URLs -->
+    	<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+	</security:http>
+
+	<!-- entry points -->
+	<bean id="fiwareEntryPoint"
+		class="org.pac4j.springframework.security.web.ClientAuthenticationEntryPoint">
+		<property name="client" ref="fiwareClient" />
+	</bean>
+
+	<!-- clients definition -->
+	<bean id="fiwareClient" class="org.fiware.apps.marketplace.oauth2.FIWAREClient">
+		<property name="key" value="KEY" />
+		<property name="secret" value="SECRET" />
+	</bean>
+
+	<bean id="clients" class="org.pac4j.core.client.Clients">
+		<property name="callbackUrl" value="http://localhost:8080/FiwareMarketplace/callback" />
+		<property name="clients">
+			<list>
+				<ref bean="fiwareClient" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- common to all clients -->
+	<bean id="clientFilter"
+		class="org.pac4j.springframework.security.web.ClientAuthenticationFilter">
+		<constructor-arg value="/callback" />
+		<property name="clients" ref="clients" />
+		<property name="sessionAuthenticationStrategy" ref="sas" />
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+
+	<bean id="clientProvider"
+		class="org.pac4j.springframework.security.authentication.ClientAuthenticationProvider">
+		<property name="clients" ref="clients" />
+	</bean>
+
+	<bean id="httpSessionRequestCache"
+		class="org.springframework.security.web.savedrequest.HttpSessionRequestCache" />
+
+	<bean id="sas"
+		class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy" />
+	
+	<!-- Just to hide the password field -->	
+	<bean id="encoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+</beans>

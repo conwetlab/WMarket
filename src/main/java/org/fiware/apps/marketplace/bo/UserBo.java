@@ -7,9 +7,9 @@ import org.fiware.apps.marketplace.model.User;
 
 public interface UserBo {
 	
-	void save(User localuser);
-	void update(User localuser);
-	void delete(User localuser);
+	void save(User user);
+	void update(User user);
+	void delete(User luser);
 	User findByName(String username) throws UserNotFoundException;
 	List<User> getUsersPage(int offset, int max);
 	List<User> getAllUsers();
