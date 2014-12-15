@@ -54,7 +54,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 		
 		final JsonNode json = JsonHelper.getFirstNode(body);
         if (json != null) {
-            profile.setId(JsonHelper.get(json, "id"));
+            profile.setId(JsonHelper.get(json, "nickName"));
             for (final String attribute : new FIWAREAttributesDefinition().getPrincipalAttributes()) {
                 profile.addAttribute(attribute, JsonHelper.get(json, attribute));
             }
@@ -65,13 +65,15 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
         
         // User information should be stored in the local users table //
         User user;
-        String username = (String) profile.getAttribute(profile.getUsername());
-        String email = (String) profile.getAttribute(profile.getEmail());
-        String displayName = (String) profile.getAttribute(profile.getDisplayName());
+        String username = (String) profile.getUsername();
+        String email = (String) profile.getEmail();
+        String displayName = (String) profile.getDisplayName();
 
         try {
+        	// Modify the existing user
 			user = userBo.findByName(username);
 		} catch (UserNotFoundException e) {
+			// Create a new user
 			user = new User();
 			user.setRegistrationDate(new Date());
 		}

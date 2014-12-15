@@ -16,6 +16,10 @@ public class StoreValidator {
 	 */
 	public boolean validateStore(Store store) throws ValidationException {
 		
+		if (store.getName() == null || store.getUrl() == null) {
+			throw new ValidationException("name and/or url cannot be null");
+		}
+		
 		if (store.getName() != null && !GENERIC_VALIDATOR.validateName(store.getName())) {
 			int minNameLength = GenericValidator.getNameMinLength();
 			int maxNameLength = GenericValidator.getNameMaxLength();

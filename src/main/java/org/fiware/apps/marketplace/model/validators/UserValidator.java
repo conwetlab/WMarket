@@ -24,6 +24,10 @@ public class UserValidator {
 	 */
 	public boolean validateUser(User user) throws ValidationException {
 		
+		if (user.getUserName() == null || user.getEmail() == null || user.getPassword() == null) {
+			throw new ValidationException("name, email and/or password cannot be null");
+		}
+		
 		if (user.getUserName() != null && !GENERIC_VALIDATOR.validateName(user.getUserName())) {
 			int minUserNameLength = GenericValidator.getNameMinLength();
 			int maxUserNameLength = GenericValidator.getNameMaxLength();

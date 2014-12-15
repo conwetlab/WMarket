@@ -43,9 +43,9 @@ public class OfferingRegistrationService {
 	private OfferingRegistrationAuth offeringRegistrationAuth = (OfferingRegistrationAuth) 
 			context.getBean("offeringRegistrationAuth");
 	private ServiceValidator serviceValidator = (ServiceValidator) context.getBean("serviceValidator");
+	private AuthUtils authUtils = (AuthUtils) context.getBean("authUtils");
 
 	// CLASS ATTRIBUTES //
-	private static final AuthUtils AUTH_UTILS = AuthUtils.getAuthUtils();
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
 			"There is already an Offering in this Store with that name/URL");	
 
@@ -58,7 +58,7 @@ public class OfferingRegistrationService {
 		try {
 			if (offeringRegistrationAuth.canCreate() && serviceValidator.validateService(service)) {
 
-				User user = AUTH_UTILS.getLoggedUser();
+				User user = authUtils.getLoggedUser();
 				Store store = storeBo.findByName(storeName);
 				service.setRegistrationDate(new Date());
 				service.setStore(store);
@@ -117,7 +117,7 @@ public class OfferingRegistrationService {
 					service.setDescription(serviceInfo.getDescription());
 				}
 				
-				service.setLasteditor(AUTH_UTILS.getLoggedUser());
+				service.setLasteditor(authUtils.getLoggedUser());
 
 				serviceBo.update(service);
 				response = Response.status(Status.OK).build();

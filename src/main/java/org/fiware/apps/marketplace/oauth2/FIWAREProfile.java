@@ -8,17 +8,17 @@ public class FIWAREProfile extends OAuth20Profile{
 	
 	@Override
 	public String getDisplayName() {
-		return "displayName";
-	}
-	
-	@Override
-	public String getEmail() {
-		return "email";
+		return (String) this.getAttribute("displayName");
 	}
 	
 	@Override
 	public String getUsername() {
-		return "nickName";
+		return (String) this.getAttribute("nickName");
+	}
+	
+	@Override
+	public String getTypedId() {
+		return super.getTypedId();
 	}
 
 }

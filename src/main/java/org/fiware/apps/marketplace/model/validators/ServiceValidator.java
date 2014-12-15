@@ -15,6 +15,10 @@ public class ServiceValidator {
 	 */
 	public boolean validateService(org.fiware.apps.marketplace.model.Service service) throws ValidationException {
 		
+		if (service.getName() == null || service.getUrl() == null) {
+			throw new ValidationException("name and/or url cannot be null");
+		}
+		
 		if (service.getName() != null && !GENERIC_VALIDATOR.validateName(service.getName())) {
 			int minNameLength = GenericValidator.getNameMinLength();
 			int maxNameLength = GenericValidator.getNameMaxLength();

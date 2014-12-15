@@ -4,27 +4,29 @@ import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
+import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
+@Service("authUtils")
 public class AuthUtils {
 	
-	// Avoid users to instantiate this class
-	private AuthUtils() {
-		this.localuserBo = (UserBo) ApplicationContextProvider.getApplicationContext().getBean("userBo");
-	}
-	
-	public static AuthUtils getAuthUtils() {
-		return singleton;
-	}
-	
-	//Singleton
-	private static AuthUtils singleton = new AuthUtils();
-	
 	//Instance attributes
-	private UserBo localuserBo;
+	private UserBo localuserBo = (UserBo) ApplicationContextProvider.getApplicationContext().getBean("userBo");
 
 	public User getLoggedUser() throws UserNotFoundException {
-		return localuserBo.findByName(SecurityContextHolder.getContext().getAuthentication().getName());
+		String userName;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		// When OAuth2 is being used, we should cast the authentication to read the correct user name
+		if (authentication instanceof ClientAuthenticationToken) {
+			userName = ((ClientAuthenticationToken) authentication).getUserProfile().getId();
+		} else {
+			userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		}
+		
+		return localuserBo.findByName(userName);
 	}
 	
 }

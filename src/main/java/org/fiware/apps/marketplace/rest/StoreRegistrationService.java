@@ -27,6 +27,7 @@ import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.StoreRegistrationAuth;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
 
@@ -39,13 +40,12 @@ public class StoreRegistrationService {
 	private StoreBo storeBo = (StoreBo) context.getBean("storeBo");
 	private StoreRegistrationAuth storeRegistrationAuth = (StoreRegistrationAuth) context.getBean("storeRegistrationAuth");
 	private StoreValidator storeValidator = (StoreValidator) context.getBean("storeValidator");
-
+	private AuthUtils authUtils = (AuthUtils) context.getBean("authUtils");
 
 	// CLASS ATTRIBUTES //
-	private static final AuthUtils AUTH_UTILS = AuthUtils.getAuthUtils();
+	@Autowired
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
 			"There is already a Store with that name/URL registered in the system");
-
 
 	// OBJECT METHODS //
 	@POST
@@ -57,7 +57,7 @@ public class StoreRegistrationService {
 		try {
 			if (storeRegistrationAuth.canCreate() && storeValidator.validateStore(store)) {
 				// Get the current user
-				User currentUser = AUTH_UTILS.getLoggedUser();
+				User currentUser = authUtils.getLoggedUser();
 
 				store.setRegistrationDate(new Date());
 				store.setCreator(currentUser);
@@ -104,7 +104,7 @@ public class StoreRegistrationService {
 					storeDB.setDescription(store.getDescription());
 				}
 
-				store.setLasteditor(AUTH_UTILS.getLoggedUser());
+				store.setLasteditor(authUtils.getLoggedUser());
 
 				// Save the new Store and Return OK
 				storeBo.update(storeDB);

@@ -2,8 +2,12 @@ package org.fiware.apps.marketplace.security.auth;
 
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class RegistrationAuth<T> {
+	
+	@Autowired
+	private AuthUtils authUtils;
 	
 	/**
 	 * Method to return the Localuser who is owner of the entity
@@ -21,7 +25,7 @@ public abstract class RegistrationAuth<T> {
 		boolean canAccess = false;
 
 		try {
-			User loggedUser = AuthUtils.getAuthUtils().getLoggedUser();
+			User loggedUser = authUtils.getLoggedUser();
 			// logged User can be null if the user is not logged in...
 			if (loggedUser != null && loggedUser.equals(this.getEntityOwner(entity))) {
 				canAccess = true;
@@ -42,7 +46,7 @@ public abstract class RegistrationAuth<T> {
 		boolean isLoggedIn = false;
 
 		try {
-			isLoggedIn = AuthUtils.getAuthUtils().getLoggedUser() != null;
+			isLoggedIn = authUtils.getLoggedUser() != null;
 		} catch (UserNotFoundException ex) {
 			//Nothing to do... False will be returned
 		}
