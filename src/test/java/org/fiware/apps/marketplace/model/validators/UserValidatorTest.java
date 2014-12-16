@@ -11,7 +11,7 @@ public class UserValidatorTest {
 	private UserValidator userValidator = new UserValidator();
 	
 	private static final String MISSING_FILEDS_MSG = "name, email and/or password cannot be null";
-	private static final String INVALID_LENGTH_BASIC = "%s is not valid. (min length: %d, max length: %d)";
+	private static final String INVALID_LENGTH_PATTERN = "%s is not valid. (min length: %d, max length: %d)";
 	
 	private User generateValidUser() {
 		User user = new User();
@@ -81,7 +81,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setUserName("a");
 		
-		assertInvalidUser(user, String.format(INVALID_LENGTH_BASIC, "userName", 5, 15));
+		assertInvalidUser(user, String.format(INVALID_LENGTH_PATTERN, "userName", 5, 15));
 	}
 	
 	@Test
@@ -89,7 +89,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setUserName("1234567890123456");
 		
-		assertInvalidUser(user, String.format(INVALID_LENGTH_BASIC, "userName", 5, 15));
+		assertInvalidUser(user, String.format(INVALID_LENGTH_PATTERN, "userName", 5, 15));
 	}
 	
 	@Test
@@ -97,7 +97,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setDisplayName("a");
 		
-		assertInvalidUser(user, String.format(INVALID_LENGTH_BASIC, "displayName", 5, 30));
+		assertInvalidUser(user, String.format(INVALID_LENGTH_PATTERN, "displayName", 5, 30));
 	}
 	
 	@Test
@@ -105,7 +105,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setDisplayName("1234567890123456789012345678901");
 		
-		assertInvalidUser(user, String.format(INVALID_LENGTH_BASIC, "displayName", 5, 30));
+		assertInvalidUser(user, String.format(INVALID_LENGTH_PATTERN, "displayName", 5, 30));
 	}
 	
 	@Test
@@ -137,7 +137,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setCompany("a");
 		
-		assertInvalidUser(user, String.format(INVALID_LENGTH_BASIC, "company", 3, 30));
+		assertInvalidUser(user, String.format(INVALID_LENGTH_PATTERN, "company", 3, 30));
 	}
 	
 	@Test
@@ -145,6 +145,6 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setCompany("1234567890123456789012345678901");
 		
-		assertInvalidUser(user, String.format(INVALID_LENGTH_BASIC, "company", 3, 30));
+		assertInvalidUser(user, String.format(INVALID_LENGTH_PATTERN, "company", 3, 30));
 	}
 }
