@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,12 +14,12 @@ import org.mockito.MockitoAnnotations;
 
 
 
-public class OfferingRegistrationAuthTest {
+public class StoreRegistrationAuthTest {
 
-	public static class OfferingAuthTest extends OfferingRegistrationAuthTest {
+	public static class StoreAuthTest extends StoreRegistrationAuthTest {
 
 		@Mock private AuthUtils authUtils;
-		@InjectMocks private static OfferingRegistrationAuth authHelper;
+		@InjectMocks private static StoreRegistrationAuth authHelper;
 		
 		///////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////// BASIC METHODS ////////////////////////////////////
@@ -31,10 +31,10 @@ public class OfferingRegistrationAuthTest {
 			return user;
 		}
 		
-		private Service setUpTestUpdateAndDelete(User creator, User updater) {
+		private Store setUpTestUpdateAndDelete(User creator, User updater) {
 			// Set up the test		
-			Service service = new Service();
-			service.setCreator(creator);
+			Store store = new Store();
+			store.setCreator(creator);
 
 			try {
 				when(authUtils.getLoggedUser()).thenReturn(updater);
@@ -42,7 +42,7 @@ public class OfferingRegistrationAuthTest {
 				// never happens
 			}
 			
-			return service;
+			return store;
 		}
 		
 		
@@ -51,13 +51,13 @@ public class OfferingRegistrationAuthTest {
 		///////////////////////////////////////////////////////////////////////////////////////
 		
 		@Test
-		public void canCreateOffering() throws UserNotFoundException {
+		public void canCreateStore() throws UserNotFoundException {
 			when(authUtils.getLoggedUser()).thenReturn(new User());
 			assertThat(authHelper.canCreate()).isTrue();
 		}
 
 		@Test
-		public void canNotCreateOffering() throws UserNotFoundException {
+		public void canNotCreateStore() throws UserNotFoundException {
 			doThrow(new UserNotFoundException("")).when(authUtils).getLoggedUser();
 			assertThat(authHelper.canCreate()).isFalse();
 		}
@@ -68,10 +68,10 @@ public class OfferingRegistrationAuthTest {
 		///////////////////////////////////////////////////////////////////////////////////////
 		
 		private void testUpdate(User creator, User updater, boolean canUpdate)  {
-			Service service = setUpTestUpdateAndDelete(creator, updater);
+			Store store = setUpTestUpdateAndDelete(creator, updater);
 
 			// Execute the test
-			boolean result = authHelper.canUpdate(service);
+			boolean result = authHelper.canUpdate(store);
 
 			// Check the result
 			assertThat(result).isEqualTo(canUpdate);
@@ -79,27 +79,27 @@ public class OfferingRegistrationAuthTest {
 		}
 
 		@Test
-		public void canUpdateOfferingSameUser() throws UserNotFoundException {
+		public void canUpdateStoreSameUser() throws UserNotFoundException {
 			User creator = createBasicUser(1);
 			testUpdate(creator, creator, true);
 		}
 		
 		@Test
-		public void canUpdateOffering() throws UserNotFoundException {
+		public void canUpdateStore() throws UserNotFoundException {
 			User creator = createBasicUser(1);
 			User updater = createBasicUser(1);
 			testUpdate(creator, updater, true);
 		}
 
 		@Test
-		public void canNotUpdateOfferingNotSameUser() throws UserNotFoundException {			
+		public void canNotUpdateStoreNotSameUser() throws UserNotFoundException {			
 			User creator = createBasicUser(1);
 			User updater = createBasicUser(2);
 			testUpdate(creator, updater, false);
 		}
 		
 		@Test
-		public void canNotUpdateOfferingNotLoggedIn() throws UserNotFoundException {			
+		public void canNotUpdateStoreNotLoggedIn() throws UserNotFoundException {			
 			User creator = createBasicUser(1);
 			User updater = null;
 			testUpdate(creator, updater, false);
@@ -110,10 +110,10 @@ public class OfferingRegistrationAuthTest {
 		///////////////////////////////////// TEST DELETE /////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////
 		private void testDelete(User creator, User updater, boolean canDelete)  {
-			Service service = setUpTestUpdateAndDelete(creator, updater);
+			Store store = setUpTestUpdateAndDelete(creator, updater);
 
 			// Execute the test
-			boolean result = authHelper.canDelete(service);
+			boolean result = authHelper.canDelete(store);
 
 			// Check the result
 			assertThat(result).isEqualTo(canDelete);
@@ -121,27 +121,27 @@ public class OfferingRegistrationAuthTest {
 		}
 		
 		@Test
-		public void canDeleteOfferingSameUser() {
+		public void canDeleteStoreSameUser() {
 			User creator = createBasicUser(1);
 			testDelete(creator, creator, true);
 		}
 		
 		@Test
-		public void canDeleteOffering() {
+		public void canDeleteStore() {
 			User creator = createBasicUser(1);
 			User updater = createBasicUser(1);
 			testDelete(creator, updater, true);
 		}
 
 		@Test
-		public void canNotDeleteOfferingNotSameUser() {			
+		public void canNotDeleteStoreNotSameUser() {			
 			User creator = createBasicUser(1);
 			User updater = createBasicUser(2);
 			testDelete(creator, updater, false);
 		}
 		
 		@Test
-		public void canNotDeleteOfferingNotLoggedIn() {			
+		public void canNotDeleteStoreNotLoggedIn() {			
 			User creator = createBasicUser(1);
 			User updater = null;
 			testDelete(creator, updater, false);
