@@ -12,8 +12,9 @@ public class UserValidatorTest {
 	
 	private static final String MISSING_FILEDS_MSG = "name, email and/or password cannot be null";
 	private static final String INVALID_LENGTH_PATTERN = "%s is not valid. (min length: %d, max length: %d)";
+	private static final String INVALID_EMAIL = "email is not valid";
 	
-	private User generateValidUser() {
+	private static User generateValidUser() {
 		User user = new User();
 		user.setUserName("userName");
 		user.setPassword("1234");
@@ -77,6 +78,24 @@ public class UserValidatorTest {
 	}
 	
 	@Test
+	public void testMissingDisplayName() throws ValidationException {
+		User user = generateValidUser();
+		user.setDisplayName(null);
+		
+		// Display name can be set to null
+		assertThat(userValidator.validateUser(user)).isTrue();
+	}
+	
+	@Test
+	public void testMissingCompany() throws ValidationException {
+		User user = generateValidUser();
+		user.setCompany(null);
+		
+		// Company name can be set to null
+		assertThat(userValidator.validateUser(user)).isTrue();
+	}
+	
+	@Test
 	public void testUserNameTooShort() {
 		User user = generateValidUser();
 		user.setUserName("a");
@@ -113,7 +132,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setEmail("test");
 		
-		assertInvalidUser(user, "email is not valid");
+		assertInvalidUser(user, INVALID_EMAIL);
 	}
 	
 	@Test
@@ -121,7 +140,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setEmail("test@test");
 		
-		assertInvalidUser(user, "email is not valid");
+		assertInvalidUser(user, INVALID_EMAIL);
 	}
 	
 	@Test
@@ -129,7 +148,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setEmail("@test.com");
 		
-		assertInvalidUser(user, "email is not valid");
+		assertInvalidUser(user, INVALID_EMAIL);
 	}
 	
 	@Test
