@@ -55,7 +55,10 @@ public class OfferingRegistrationService {
 		Response response;
 
 		try {
-			if (offeringRegistrationAuth.canCreate() && serviceValidator.validateService(service)) {
+			if (offeringRegistrationAuth.canCreate()) {
+				
+				// Validate service (exception is thrown if the service is not valid) 
+				serviceValidator.validateService(service);
 
 				User user = authUtils.getLoggedUser();
 				Store store = storeBo.findByName(storeName);
@@ -101,8 +104,10 @@ public class OfferingRegistrationService {
 			Store store = storeBo.findByName(storeName);	//Check that the Store exists
 			Service service = serviceBo.findByNameAndStore(serviceName, storeName);
 
-			if (offeringRegistrationAuth.canUpdate(service)
-					&& serviceValidator.validateService(serviceInfo)) {
+			if (offeringRegistrationAuth.canUpdate(service)) {
+				
+				// Validate service (exception is thrown if the service is not valid) 
+				serviceValidator.validateService(serviceInfo);
 				
 				if (serviceInfo.getName() != null) {
 					service.setName(serviceInfo.getName());

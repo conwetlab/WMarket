@@ -48,7 +48,10 @@ public class UserRegistrationService {
 
 		Response response;
 		try {
-			if (userRegistrationAuth.canCreate() && userValidator.validateUser(user)) {
+			if (userRegistrationAuth.canCreate()) {
+				// Validate the user (exception is thrown if the user is not valid)
+				userValidator.validateUser(user); 		
+				
 				user.setRegistrationDate(new Date());
 				userBo.save(user);
 				response = Response.status(Status.CREATED).build();		
@@ -76,8 +79,9 @@ public class UserRegistrationService {
 		try {
 			User userToBeUpdated = userBo.findByName(username);
 
-			if (userRegistrationAuth.canUpdate(userToBeUpdated) 
-					&& userValidator.validateUser(user)) {
+			if (userRegistrationAuth.canUpdate(userToBeUpdated)) {
+				// Validate the user (exception is thrown when the user is not valid)
+				userValidator.validateUser(user);
 				
 				// At this moment, user name cannot be changed to avoid error with sessions...
 				// userToBeUpdated.setUserName(user.getUserName());
