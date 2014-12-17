@@ -58,6 +58,7 @@
 			<version>20090617</version>
 		</dependency>
 
+		<!-- Test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -105,9 +106,10 @@
 
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-oauth</artifactId>
+			<artifactId>resteasy-spring</artifactId>
 			<version>3.0.10.Final</version>
 		</dependency>
+
 
 		<!-- APACHE -->
 		<dependency>

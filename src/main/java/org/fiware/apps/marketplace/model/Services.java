@@ -7,8 +7,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @XmlRootElement(name = "services")
+@IgnoreMediaTypes("application/*+json")
 public class Services {
 	
     private List<Service> services = null;

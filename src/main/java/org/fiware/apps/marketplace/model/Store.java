@@ -21,10 +21,13 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
+
 
 @Entity
 @Table(name = "Stores")
 @XmlRootElement(name = "store")
+@IgnoreMediaTypes("application/*+json")
 public class Store {
 	
 	private Integer id;

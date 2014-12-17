@@ -29,21 +29,20 @@ import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.validators.ServiceValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.OfferingRegistrationAuth;
-import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Component;
 
+@Component
 @Path("/store/{storeName}/offering")
 public class OfferingRegistrationService {
 
 	// OBJECT ATTRIBUTES //
-	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
-	private StoreBo storeBo = (StoreBo) context.getBean("storeBo");
-	private ServiceBo serviceBo = (ServiceBo) context.getBean("serviceBo");
-	private OfferingRegistrationAuth offeringRegistrationAuth = (OfferingRegistrationAuth) 
-			context.getBean("offeringRegistrationAuth");
-	private ServiceValidator serviceValidator = (ServiceValidator) context.getBean("serviceValidator");
-	private AuthUtils authUtils = (AuthUtils) context.getBean("authUtils");
+	@Autowired private StoreBo storeBo;
+	@Autowired private ServiceBo serviceBo;
+	@Autowired private OfferingRegistrationAuth offeringRegistrationAuth;
+	@Autowired private ServiceValidator serviceValidator;
+	@Autowired private AuthUtils authUtils;
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(

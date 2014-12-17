@@ -18,10 +18,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.fiware.apps.marketplace.utils.xmladapters.HiddenFieldsXMLAdapter;
 import org.fiware.apps.marketplace.utils.xmladapters.PasswordXMLAdapter;
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
 @Table(name = "Users")
 @XmlRootElement(name = "user")
+@IgnoreMediaTypes("application/*+json")
 public class User {
 	
 	private Integer id;

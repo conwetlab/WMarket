@@ -26,24 +26,21 @@ import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.StoreRegistrationAuth;
-import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Component;
 
-
+@Component
 @Path("/store")
 public class StoreRegistrationService {
 
 	// OBJECT ATTRIBUTES //
-	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
-	private StoreBo storeBo = (StoreBo) context.getBean("storeBo");
-	private StoreRegistrationAuth storeRegistrationAuth = (StoreRegistrationAuth) context.getBean("storeRegistrationAuth");
-	private StoreValidator storeValidator = (StoreValidator) context.getBean("storeValidator");
-	private AuthUtils authUtils = (AuthUtils) context.getBean("authUtils");
+	@Autowired private StoreBo storeBo;
+	@Autowired private StoreRegistrationAuth storeRegistrationAuth;
+	@Autowired private StoreValidator storeValidator;
+	@Autowired private AuthUtils authUtils;
 
 	// CLASS ATTRIBUTES //
-	@Autowired
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
 			"There is already a Store with that name/URL registered in the system");
 

@@ -23,19 +23,18 @@ import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
 import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.fiware.apps.marketplace.security.auth.UserRegistrationAuth;
-import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Component;
 
-
+@Component
 @Path("/user")
 public class UserRegistrationService {
 
 	// OBJECT ATTRIBUTES //
-	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
-	private UserBo userBo = (UserBo) context.getBean("userBo");
-	private UserRegistrationAuth userRegistrationAuth = (UserRegistrationAuth) context.getBean("userRegistrationAuth");
-	private UserValidator userValidator = (UserValidator) context.getBean("userValidator");
+	@Autowired private UserBo userBo;
+	@Autowired private UserRegistrationAuth userRegistrationAuth;
+	@Autowired private UserValidator userValidator;
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
