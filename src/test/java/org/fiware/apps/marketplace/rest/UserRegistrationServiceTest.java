@@ -11,7 +11,6 @@ import javax.ws.rs.core.Response;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.APIError;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
@@ -30,7 +29,7 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 public class UserRegistrationServiceTest {
 
 	@Mock private UserBo userBoMock;
-	@Mock private UserRegistrationAuth userRegistrationAuhtMock;
+	@Mock private UserRegistrationAuth userRegistrationAuthMock;
 	@Mock private UserValidator userValidator;
 	@Mock private PasswordEncoder encoder;
 
@@ -68,13 +67,6 @@ public class UserRegistrationServiceTest {
 		user.setDisplayName(DISPLAY_NAME);
 	}
 	
-	private void checkAPIError(Response res, int status, ErrorType type, String message) {
-		assertThat(res.getStatus()).isEqualTo(status);
-		APIError error = (APIError) res.getEntity();
-		assertThat(error.getErrorType()).isEqualTo(type);
-		assertThat(error.getErrorMessage()).isEqualTo(message);
-	}
-
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// CREATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -92,13 +84,13 @@ public class UserRegistrationServiceTest {
 	@Test
 	public void testCreateNotAllowed() {
 		// Mocks
-		when(userRegistrationAuhtMock.canCreate()).thenReturn(false);
+		when(userRegistrationAuthMock.canCreate()).thenReturn(false);
 
 		// Call the method
 		Response res = userRegistrationService.createUser(user);
 
 		// Assertions
-		checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to create user");
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to create user");
 
 		// Verify mocks
 		verify(encoder, never()).encode(PASSWORD);
@@ -109,7 +101,7 @@ public class UserRegistrationServiceTest {
 	@Test
 	public void testCreateNoErrors() throws ValidationException {
 		// Mocks
-		when(userRegistrationAuhtMock.canCreate()).thenReturn(true);
+		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
 
 		//Call the method
@@ -132,7 +124,7 @@ public class UserRegistrationServiceTest {
 	@Test
 	public void testCreateValidationError() throws ValidationException {
 		// Mock
-		when(userRegistrationAuhtMock.canCreate()).thenReturn(true);
+		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
 		doThrow(new ValidationException(VALIDATION_ERROR)).when(userValidator).validateUser(user, true);
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
 
@@ -142,12 +134,12 @@ public class UserRegistrationServiceTest {
 		// Check
 		verify(userValidator).validateUser(user, true);
 		checkMocksCreateNotCalled();
-		checkAPIError(res, 400, ErrorType.BAD_REQUEST, VALIDATION_ERROR);
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, VALIDATION_ERROR);
 	}
 	
 	private void testCreateDataAccessException(Exception exception, String message) throws ValidationException {
 		// Mock
-		when(userRegistrationAuhtMock.canCreate()).thenReturn(true);
+		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
 		doThrow(new DataIntegrityViolationException("", exception)).when(userBoMock).save(isA(User.class));
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
 
@@ -157,7 +149,7 @@ public class UserRegistrationServiceTest {
 		// Checks
 		verify(userValidator).validateUser(user, true);
 		checkMocksCreateCalledOnce();
-		checkAPIError(res, 400, ErrorType.BAD_REQUEST, message);
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, message);
 	}
 
 	@Test
@@ -176,7 +168,7 @@ public class UserRegistrationServiceTest {
 	public void testCreteNotKnowException() throws ValidationException {
 		// Mock
 		String exceptionMsg = "SERVER ERROR";
-		when(userRegistrationAuhtMock.canCreate()).thenReturn(true);
+		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).save(user);
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
 
@@ -186,7 +178,7 @@ public class UserRegistrationServiceTest {
 		// Checks
 		verify(userValidator).validateUser(user, true);
 		checkMocksCreateCalledOnce();
-		checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
+		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
 	}
 	
 	
@@ -200,13 +192,13 @@ public class UserRegistrationServiceTest {
 		
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuhtMock.canUpdate(user)).thenReturn(false);
+		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(false);
 
 		// Call the method
 		Response res = userRegistrationService.updateUser(USER_NAME, newUser);
 
 		// Assertions
-		checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to update user " + USER_NAME);
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to update user " + USER_NAME);
 
 		// Verify mocks
 		verify(userBoMock).findByName(USER_NAME);
@@ -217,7 +209,7 @@ public class UserRegistrationServiceTest {
 	private void testUpdateGenericUserNoErrors(User newUser) {
 		// Mocks
 		String NEW_ENCODED_PASSWORD = "NEW_PASSWORD";
-		when(userRegistrationAuhtMock.canUpdate(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
 		when(encoder.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
 		when(encoder.encode(newUser.getPassword())).thenReturn(NEW_ENCODED_PASSWORD);
 
@@ -286,7 +278,7 @@ public class UserRegistrationServiceTest {
 		newUser.setUserName("new_user_name");
 		
 		// Mocks
-		when(userRegistrationAuhtMock.canUpdate(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
 
 		try {
 			when(userBoMock.findByName(USER_NAME)).thenReturn(user);
@@ -300,7 +292,7 @@ public class UserRegistrationServiceTest {
 		// Checks
 		verify(userBoMock).findByName(USER_NAME);
 		verify(userBoMock, never()).update(user);
-		checkAPIError(res, 400, ErrorType.BAD_REQUEST, "userName cannot be changed");
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, "userName cannot be changed");
 	}
 	
 	@Test
@@ -336,7 +328,7 @@ public class UserRegistrationServiceTest {
 		User newUser = new User();
 		
 		// Mock
-		when(userRegistrationAuhtMock.canUpdate(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
 		doThrow(new ValidationException(VALIDATION_ERROR)).when(userValidator).validateUser(newUser, false);
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
 
@@ -349,7 +341,7 @@ public class UserRegistrationServiceTest {
 		verify(userBoMock, never()).update(user);
 		
 		//checkMocksUpdateNotCalled();
-		checkAPIError(res, 400, ErrorType.BAD_REQUEST, VALIDATION_ERROR);
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, VALIDATION_ERROR);
 	}
 	
 	@Test
@@ -358,7 +350,7 @@ public class UserRegistrationServiceTest {
 		String userNotFoundMsg = "user_name does not exist";
 		
 		// Mock
-		when(userRegistrationAuhtMock.canUpdate(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
 		doThrow(new UserNotFoundException(userNotFoundMsg)).when(userBoMock).findByName(USER_NAME);
 		
 		// Call the method
@@ -368,14 +360,14 @@ public class UserRegistrationServiceTest {
 		verify(userBoMock).findByName(USER_NAME);
 		verify(userValidator, never()).validateUser(newUser, false);
 		verify(userBoMock, never()).update(user);
-		checkAPIError(res, 404, ErrorType.NOT_FOUND, userNotFoundMsg);
+		GenericRestTestUtils.checkAPIError(res, 404, ErrorType.NOT_FOUND, userNotFoundMsg);
 	}
 	
 	private void testDataAccessException(Exception exception, String message) {
 		User newUser = new User();
 		
 		// Mock
-		when(userRegistrationAuhtMock.canUpdate(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
 		doThrow(new DataIntegrityViolationException("",
 				exception)).when(userBoMock).update(user);
 		
@@ -393,7 +385,7 @@ public class UserRegistrationServiceTest {
 			verify(userValidator).validateUser(user, false);
 			verify(userBoMock).findByName(USER_NAME);
 			verify(userBoMock).update(user);
-			checkAPIError(res, 400, ErrorType.BAD_REQUEST, message);
+			GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, message);
 		} catch (Exception e) {
 			// It isn't going to happen
 		}
@@ -418,7 +410,7 @@ public class UserRegistrationServiceTest {
 	public void testUpdateNotKnowException() throws ValidationException, UserNotFoundException {
 		// Mock
 		String exceptionMsg = "SERVER ERROR";
-		when(userRegistrationAuhtMock.canUpdate(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).update(user);
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
 		
@@ -429,7 +421,7 @@ public class UserRegistrationServiceTest {
 		verify(userBoMock).findByName(USER_NAME);
 		verify(userValidator).validateUser(user, false);
 		verify(userBoMock).update(user);
-		checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
+		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
 	}
 	
 	
@@ -441,13 +433,13 @@ public class UserRegistrationServiceTest {
 	public void testDeleteNotAllowed() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuhtMock.canDelete(user)).thenReturn(false);
+		when(userRegistrationAuthMock.canDelete(user)).thenReturn(false);
 
 		// Call the method
 		Response res = userRegistrationService.deleteUser(USER_NAME);
 
 		// Assertions
-		checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to delete user " + USER_NAME);
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to delete user " + USER_NAME);
 
 		// Verify mocks
 		verify(userBoMock).findByName(USER_NAME);
@@ -458,7 +450,7 @@ public class UserRegistrationServiceTest {
 	public void testDeleteNoErrors() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuhtMock.canDelete(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canDelete(user)).thenReturn(true);
 
 		// Call the method
 		Response res = userRegistrationService.deleteUser(USER_NAME);
@@ -476,13 +468,13 @@ public class UserRegistrationServiceTest {
 		// Mocks
 		String msg = "User user_name not found";
 		doThrow(new UserNotFoundException(msg)).when(userBoMock).findByName(USER_NAME);
-		when(userRegistrationAuhtMock.canDelete(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canDelete(user)).thenReturn(true);
 		
 		// Call the method
 		Response res = userRegistrationService.deleteUser(USER_NAME);
 		
 		// Assertions
-		checkAPIError(res, 404, ErrorType.NOT_FOUND, msg);
+		GenericRestTestUtils.checkAPIError(res, 404, ErrorType.NOT_FOUND, msg);
 		
 		//Verify mocks
 		verify(userBoMock).findByName(USER_NAME);
@@ -495,13 +487,13 @@ public class UserRegistrationServiceTest {
 		String exceptionMsg = "DB is down!";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).delete(user);
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuhtMock.canDelete(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canDelete(user)).thenReturn(true);
 
 		// Call the method
 		Response res = userRegistrationService.deleteUser(USER_NAME);
 
 		// Assertions
-		checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
+		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
 		
 		// Verify mocks
 		verify(userBoMock).findByName(USER_NAME);
@@ -517,20 +509,20 @@ public class UserRegistrationServiceTest {
 	public void testGetNotAllowed() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuhtMock.canGet(user)).thenReturn(false);
+		when(userRegistrationAuthMock.canGet(user)).thenReturn(false);
 
 		// Call the method
 		Response res = userRegistrationService.getUser(USER_NAME);
 
 		// Assertions
-		checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to get user " + USER_NAME);
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to get user " + USER_NAME);
 	}
 	
 	@Test
 	public void testGetNoErrors() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuhtMock.canGet(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canGet(user)).thenReturn(true);
 
 		// Call the method
 		Response res = userRegistrationService.getUser(USER_NAME);
@@ -545,13 +537,13 @@ public class UserRegistrationServiceTest {
 		// Mocks
 		String msg = "User user_name not found";
 		doThrow(new UserNotFoundException(msg)).when(userBoMock).findByName(USER_NAME);
-		when(userRegistrationAuhtMock.canGet(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canGet(user)).thenReturn(true);
 		
 		// Call the method
 		Response res = userRegistrationService.deleteUser(USER_NAME);
 		
 		// Assertions
-		checkAPIError(res, 404, ErrorType.NOT_FOUND, msg);
+		GenericRestTestUtils.checkAPIError(res, 404, ErrorType.NOT_FOUND, msg);
 	}
 	
 	@Test
@@ -559,13 +551,13 @@ public class UserRegistrationServiceTest {
 		// Mocks
 		String exceptionMsg = "DB is down!";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).findByName(USER_NAME);
-		when(userRegistrationAuhtMock.canGet(user)).thenReturn(true);
+		when(userRegistrationAuthMock.canGet(user)).thenReturn(true);
 
 		// Call the method
 		Response res = userRegistrationService.getUser(USER_NAME);
 
 		// Assertions
-		checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
+		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
 		
 		// Verify
 		verify(userBoMock).findByName(USER_NAME);
@@ -579,24 +571,24 @@ public class UserRegistrationServiceTest {
 	@Test
 	public void testListNotAllowed() {
 		// Mocks
-		when(userRegistrationAuhtMock.canList()).thenReturn(false);
+		when(userRegistrationAuthMock.canList()).thenReturn(false);
 
 		// Call the method
 		Response res = userRegistrationService.listUsers(0, 100);
 
 		// Assertions
-		checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to list users");
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to list users");
 	}
 	
 	private void testListInvalidParams(int offset, int max) {
 		// Mocks
-		when(userRegistrationAuhtMock.canList()).thenReturn(true);
+		when(userRegistrationAuthMock.canList()).thenReturn(true);
 
 		// Call the method
 		Response res = userRegistrationService.listUsers(offset, max);
 
 		// Assertions
-		checkAPIError(res, 400, ErrorType.BAD_REQUEST, OFFSET_MAX_INVALID);
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, OFFSET_MAX_INVALID);
 	}
 	
 	@Test
@@ -624,7 +616,7 @@ public class UserRegistrationServiceTest {
 		}
 		
 		// Mocks
-		when(userRegistrationAuhtMock.canList()).thenReturn(true);
+		when(userRegistrationAuthMock.canList()).thenReturn(true);
 		when(userBoMock.getUsersPage(anyInt(), anyInt())).thenReturn(users);
 		
 		// Call the method
@@ -645,7 +637,7 @@ public class UserRegistrationServiceTest {
 		// Mocks
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).getUsersPage(anyInt(), anyInt());
-		when(userRegistrationAuhtMock.canList()).thenReturn(true);
+		when(userRegistrationAuthMock.canList()).thenReturn(true);
 
 		// Call the method
 		int offset = 0;
@@ -656,7 +648,7 @@ public class UserRegistrationServiceTest {
 		verify(userBoMock).getUsersPage(offset, max);
 		
 		// Check exception
-		checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
+		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
 	}
 	
 }
