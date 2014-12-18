@@ -69,7 +69,7 @@ public class UserRegistrationService {
 		} catch (DataAccessException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;
@@ -123,7 +123,7 @@ public class UserRegistrationService {
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;
@@ -139,14 +139,14 @@ public class UserRegistrationService {
 			// Only a user can delete his/her account
 			if (userRegistrationAuth.canDelete(userToBeDeleted)) {
 				userBo.delete(userToBeDeleted);
-				response = Response.status(Status.OK).build();	
+				response = Response.status(Status.NO_CONTENT).build();	
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("delete user " + username);
 			}
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;
@@ -155,7 +155,7 @@ public class UserRegistrationService {
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/{username}")	
-	public Response findUser(@PathParam("username") String username) {	
+	public Response getUser(@PathParam("username") String username) {	
 
 		Response response;
 		try {
@@ -169,7 +169,7 @@ public class UserRegistrationService {
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;
@@ -194,7 +194,7 @@ public class UserRegistrationService {
 					response = ERROR_UTILS.unauthorizedResponse("list users");
 				}
 			} catch (Exception ex) {
-				response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+				response = ERROR_UTILS.internalServerError(ex);
 			}	
 		}
 

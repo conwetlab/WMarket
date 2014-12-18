@@ -44,6 +44,14 @@ public class ErrorUtils {
 				new APIError(ErrorType.UNAUTHORIZED, "You are not authorized to " + action)).build();
 	}
 	
+	public Response internalServerError(Exception exception) {
+		if (exception.getCause() != null) {
+			return internalServerError(exception.getCause().getMessage());
+		} else {
+			return internalServerError(exception.getMessage());
+		}
+	}
+	
 	public Response internalServerError(String cause) {
 		return Response.status(Status.INTERNAL_SERVER_ERROR).entity(
 				new APIError(ErrorType.INTERNAL_SERVER_ERROR, cause)).build();
