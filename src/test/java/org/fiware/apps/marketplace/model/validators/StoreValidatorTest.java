@@ -29,9 +29,9 @@ public class StoreValidatorTest {
 		return store;
 	}
 
-	private void assertInvalidStore(Store store, String expectedMsg) {
+	private void assertInvalidStore(Store store, String expectedMsg, boolean creating) {
 		try {
-			storeValidator.validateStore(store);
+			storeValidator.validateStore(store, creating);
 			failBecauseExceptionWasNotThrown(ValidationException.class);
 		} catch (ValidationException ex) {
 			assertThat(ex).hasMessage(expectedMsg);
@@ -44,37 +44,61 @@ public class StoreValidatorTest {
 		store.setName("store");
 		store.setUrl("https://store.lab.fi-ware.org");
 
-		assertThat(storeValidator.validateStore(store)).isTrue();
+		assertThat(storeValidator.validateStore(store, true)).isTrue();
 	}
 
 	@Test
 	public void testValidComplexStore() throws ValidationException {
 		Store store = generateValidStore();
-		assertThat(storeValidator.validateStore(store)).isTrue();
+		assertThat(storeValidator.validateStore(store, true)).isTrue();
 	}
 
 	@Test
-	public void testMissingName() {
+	public void testMissingNameOnCreation() {
 		Store store = generateValidStore();
 		store.setName(null);
 
-		assertInvalidStore(store, MISSING_FIELDS);
+		assertInvalidStore(store, MISSING_FIELDS, true);
+	}
+	
+	@Test
+	public void testMissingNameOnUpdate() throws ValidationException {
+		Store store = generateValidStore();
+		store.setName(null);
+
+		assertThat(storeValidator.validateStore(store, false)).isTrue();
 	}
 
 	@Test
-	public void testMissingUrl() {
+	public void testMissingUrlOnCreation() {
 		Store store = generateValidStore();
 		store.setUrl(null);
 
-		assertInvalidStore(store, MISSING_FIELDS);
+		assertInvalidStore(store, MISSING_FIELDS, true);
+	}
+	
+	@Test
+	public void testMissingUrlOnUpdate() throws ValidationException {
+		Store store = generateValidStore();
+		store.setUrl(null);
+
+		assertThat(storeValidator.validateStore(store, false)).isTrue();
 	}
 
 	@Test
-	public void testMissingDescription() throws ValidationException {
+	public void testMissingDescriptionOnCreation() throws ValidationException {
 		Store store = generateValidStore();
 		store.setDescription(null);
 
-		assertThat(storeValidator.validateStore(store)).isTrue();
+		assertThat(storeValidator.validateStore(store, true)).isTrue();
+	}
+	
+	@Test
+	public void testMissingDescriptionOnUpdate() throws ValidationException {
+		Store store = generateValidStore();
+		store.setDescription(null);
+
+		assertThat(storeValidator.validateStore(store, false)).isTrue();
 	}
 
 	@Test
@@ -82,7 +106,7 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setName("a");
 
-		assertInvalidStore(store, String.format(INVALID_LENGTH_PATTERN, "name", 5, 15));
+		assertInvalidStore(store, String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
 	}
 
 	@Test
@@ -90,7 +114,7 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setName("1234567890123456");
 
-		assertInvalidStore(store, String.format(INVALID_LENGTH_PATTERN, "name", 5, 15));
+		assertInvalidStore(store, String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
 	}
 
 	@Test
@@ -98,7 +122,7 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setUrl("http://");
 
-		assertInvalidStore(store, INVALID_URL);
+		assertInvalidStore(store, INVALID_URL, false);
 	}
 
 	@Test
@@ -106,7 +130,7 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setUrl("store.lab.fi-ware.org");
 
-		assertInvalidStore(store, INVALID_URL);
+		assertInvalidStore(store, INVALID_URL, false);
 	}
 
 	@Test
@@ -114,7 +138,7 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setUrl("https://store.lab.fi-ware.org:222222");
 
-		assertInvalidStore(store, INVALID_URL);
+		assertInvalidStore(store, INVALID_URL, false);
 	}
 
 	@Test
@@ -122,7 +146,7 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setUrl("store");
 
-		assertInvalidStore(store, INVALID_URL);
+		assertInvalidStore(store, INVALID_URL, false);
 	}
 
 	@Test
@@ -131,7 +155,7 @@ public class StoreValidatorTest {
 		store.setDescription("");
 
 		// Empty descriptions are allowed
-		assertThat(storeValidator.validateStore(store)).isTrue();
+		assertThat(storeValidator.validateStore(store, false)).isTrue();
 	}
 
 	@Test
@@ -144,7 +168,7 @@ public class StoreValidatorTest {
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890");	
 
 		// Empty descriptions are allowed
-		assertInvalidStore(store, String.format(INVALID_LENGTH_PATTERN, "description", 0, 200));	
+		assertInvalidStore(store, String.format(INVALID_LENGTH_PATTERN, "description", 0, 200),false);	
 	}
 
 }

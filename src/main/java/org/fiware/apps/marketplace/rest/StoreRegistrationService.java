@@ -54,7 +54,7 @@ public class StoreRegistrationService {
 		try {
 			if (storeRegistrationAuth.canCreate()) {
 				//Validate the Store (exception is thrown if the Store is not valid)
-				storeValidator.validateStore(store);
+				storeValidator.validateStore(store, true);
 				
 				// Get the current user
 				User currentUser = authUtils.getLoggedUser();
@@ -93,7 +93,7 @@ public class StoreRegistrationService {
 			Store storeDB = storeBo.findByName(storeName);				
 			if (storeRegistrationAuth.canUpdate(storeDB)) {
 				//Validate the Store (exception is thrown if the Store is not valid)
-				storeValidator.validateStore(store);
+				storeValidator.validateStore(store, false);
 				
 				if (store.getName() != null) {
 					storeDB.setName(store.getName());

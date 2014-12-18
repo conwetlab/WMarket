@@ -58,7 +58,7 @@ public class OfferingRegistrationService {
 			if (offeringRegistrationAuth.canCreate()) {
 				
 				// Validate service (exception is thrown if the service is not valid) 
-				serviceValidator.validateService(service);
+				serviceValidator.validateService(service, true);
 
 				User user = authUtils.getLoggedUser();
 				Store store = storeBo.findByName(storeName);
@@ -107,7 +107,7 @@ public class OfferingRegistrationService {
 			if (offeringRegistrationAuth.canUpdate(service)) {
 				
 				// Validate service (exception is thrown if the service is not valid) 
-				serviceValidator.validateService(serviceInfo);
+				serviceValidator.validateService(serviceInfo, false);
 				
 				if (serviceInfo.getName() != null) {
 					service.setName(serviceInfo.getName());

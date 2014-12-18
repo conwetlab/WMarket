@@ -22,7 +22,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
 @Table(name = "Services", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "store", "url" }) }) // each service name has to unique for a store context
-@XmlRootElement(name = "resource")
+@XmlRootElement(name = "service")
 @IgnoreMediaTypes("application/*+json")
 public class Service {
 	

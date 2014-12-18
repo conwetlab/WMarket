@@ -11,13 +11,17 @@ public class StoreValidator {
 	
 	/**
 	 * @param store Store to be checked
+	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
+	 * the basic fields (name, url) are included.
 	 * @return True if the store is valid. Otherwise <code>ValidationException</code> will be thrown
 	 * @throws ValidationException If store is not valid
 	 */
-	public boolean validateStore(Store store) throws ValidationException {
+	public boolean validateStore(Store store, boolean isBeingCreated) throws ValidationException {
 		
-		if (store.getName() == null || store.getUrl() == null) {
-			throw new ValidationException("name and/or url cannot be null");
+		if (isBeingCreated) {
+			if (store.getName() == null || store.getUrl() == null) {
+				throw new ValidationException("name and/or url cannot be null");
+			}
 		}
 		
 		if (store.getName() != null && !GENERIC_VALIDATOR.validateName(store.getName())) {

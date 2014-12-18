@@ -36,9 +36,9 @@ public class ServiceValidatorTest {
 	}
 	
 	
-	private void assertInvalidService(Service service, String expectedMsg) {
+	private void assertInvalidService(Service service, String expectedMsg, boolean creating) {
 		try {
-			serviceValidator.validateService(service);
+			serviceValidator.validateService(service, creating);
 			failBecauseExceptionWasNotThrown(ValidationException.class);
 		} catch (ValidationException ex) {
 			assertThat(ex).hasMessage(expectedMsg);
@@ -51,41 +51,71 @@ public class ServiceValidatorTest {
 		service.setName("service1");
 		service.setUrl("https://repo.lab.fi-ware.org/services/service1.rdf");
 		
-		assertThat(serviceValidator.validateService(service)).isTrue();
+		assertThat(serviceValidator.validateService(service, true)).isTrue();
 	}
 	
 	@Test
 	public void testValidComplexService() throws ValidationException {
 		Service service = generateValidService();
-		assertThat(serviceValidator.validateService(service)).isTrue();
+		assertThat(serviceValidator.validateService(service, true)).isTrue();
 	}
 	
 	@Test
-	public void testMissingName() {
+	public void testMissingNameOnCreation() {
 		Service service = generateValidService();
 		service.setName(null);
-		assertInvalidService(service, MISSING_FIELDS);
+		assertInvalidService(service, MISSING_FIELDS, true);
 	}
 	
 	@Test
-	public void testMissingUrl() {
+	public void testMissingNameOnUpdate() throws ValidationException {
+		Service service = generateValidService();
+		service.setName(null);
+		assertThat(serviceValidator.validateService(service, false)).isTrue();
+	}
+	
+	@Test
+	public void testMissingUrlOnCreation() {
 		Service service = generateValidService();
 		service.setUrl(null);
-		assertInvalidService(service, MISSING_FIELDS);
+		assertInvalidService(service, MISSING_FIELDS, true);
+	}
+	
+	@Test
+	public void testMissingUrlOnUpdate() throws ValidationException {
+		Service service = generateValidService();
+		service.setUrl(null);
+		assertThat(serviceValidator.validateService(service, false)).isTrue();
+	}
+	
+	@Test
+	public void testMissingDescriptionOnCreation() throws ValidationException {
+		Service service = generateValidService();
+		service.setDescription(null);
+
+		assertThat(serviceValidator.validateService(service, true)).isTrue();
+	}
+	
+	@Test
+	public void testMissingDescriptionOnUpdate() throws ValidationException {
+		Service service = generateValidService();
+		service.setDescription(null);
+
+		assertThat(serviceValidator.validateService(service, false)).isTrue();
 	}
 	
 	@Test
 	public void testNameTooShort() {
 		Service service = generateValidService();
 		service.setName("a");
-		assertInvalidService(service, String.format(INVALID_LENGTH_PATTERN, "name", 5, 15));
+		assertInvalidService(service, String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
 	}
 	
 	@Test
 	public void testNameTooLong() {
 		Service service = generateValidService();
 		service.setName("1234567890123456");
-		assertInvalidService(service, String.format(INVALID_LENGTH_PATTERN, "name", 5, 15));
+		assertInvalidService(service, String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
 	}
 	
 	@Test
@@ -93,7 +123,7 @@ public class ServiceValidatorTest {
 		Service service = generateValidService();
 		service.setUrl("http://");
 
-		assertInvalidService(service, INVALID_URL);
+		assertInvalidService(service, INVALID_URL, false);
 	}
 
 	@Test
@@ -101,7 +131,7 @@ public class ServiceValidatorTest {
 		Service service = generateValidService();
 		service.setUrl("repo.lab.fi-ware.org/services/service1.rdf");
 
-		assertInvalidService(service, INVALID_URL);
+		assertInvalidService(service, INVALID_URL, false);
 	}
 
 	@Test
@@ -109,7 +139,7 @@ public class ServiceValidatorTest {
 		Service service = generateValidService();
 		service.setUrl("https://repo.lab.fi-ware.org:222222/services/service1.rdf");
 
-		assertInvalidService(service, INVALID_URL);
+		assertInvalidService(service, INVALID_URL, false);
 	}
 
 	@Test
@@ -117,7 +147,7 @@ public class ServiceValidatorTest {
 		Service service = generateValidService();
 		service.setUrl("service");
 
-		assertInvalidService(service, INVALID_URL);
+		assertInvalidService(service, INVALID_URL, false);
 	}
 	
 	@Test
@@ -126,7 +156,7 @@ public class ServiceValidatorTest {
 		service.setDescription("");
 
 		// Empty descriptions are allowed
-		assertThat(serviceValidator.validateService(service)).isTrue();
+		assertThat(serviceValidator.validateService(service, false)).isTrue();
 	}
 
 	@Test
@@ -139,6 +169,6 @@ public class ServiceValidatorTest {
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890");	
 
 		// Empty descriptions are allowed
-		assertInvalidService(service, String.format(INVALID_LENGTH_PATTERN, "description", 0, 200));	
+		assertInvalidService(service, String.format(INVALID_LENGTH_PATTERN, "description", 0, 200), false);	
 	}
 }

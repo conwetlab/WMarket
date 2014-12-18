@@ -25,6 +25,7 @@ import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.fiware.apps.marketplace.security.auth.UserRegistrationAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,6 +36,8 @@ public class UserRegistrationService {
 	@Autowired private UserBo userBo;
 	@Autowired private UserRegistrationAuth userRegistrationAuth;
 	@Autowired private UserValidator userValidator;
+	// Encoder must be the same in all the platform: use the bean
+	@Autowired private PasswordEncoder enconder;
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
@@ -50,9 +53,12 @@ public class UserRegistrationService {
 		try {
 			if (userRegistrationAuth.canCreate()) {
 				// Validate the user (exception is thrown if the user is not valid)
-				userValidator.validateUser(user); 		
+				userValidator.validateUser(user, true); 		
 				
+				// Encode password. Set registration date...
+				user.setPassword(enconder.encode(user.getPassword()));
 				user.setRegistrationDate(new Date());
+				
 				userBo.save(user);
 				response = Response.status(Status.CREATED).build();		
 			} else {
@@ -81,7 +87,7 @@ public class UserRegistrationService {
 
 			if (userRegistrationAuth.canUpdate(userToBeUpdated)) {
 				// Validate the user (exception is thrown when the user is not valid)
-				userValidator.validateUser(user);
+				userValidator.validateUser(user, false);
 				
 				// At this moment, user name cannot be changed to avoid error with sessions...
 				// userToBeUpdated.setUserName(user.getUserName());
@@ -94,7 +100,7 @@ public class UserRegistrationService {
 				}
 				
 				if (user.getPassword() != null) {
-					userToBeUpdated.setPassword(user.getPassword());
+					userToBeUpdated.setPassword(enconder.encode(user.getPassword()));
 				}
 				
 				if (user.getEmail() != null) {

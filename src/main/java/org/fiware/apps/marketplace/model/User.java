@@ -17,7 +17,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.fiware.apps.marketplace.utils.xmladapters.HiddenFieldsXMLAdapter;
-import org.fiware.apps.marketplace.utils.xmladapters.PasswordXMLAdapter;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
@@ -82,7 +81,7 @@ public class User {
 	@XmlElement
 	// Avoid returning the password in the API
 	// Encrypt the password received through the API
-	@XmlJavaTypeAdapter(PasswordXMLAdapter.class)
+	@XmlJavaTypeAdapter(HiddenFieldsXMLAdapter.class)
 	@Column(name = "password", nullable = false)
 	public String getPassword() {
 		return password;

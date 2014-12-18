@@ -10,8 +10,8 @@ public class UserValidator {
 	private static final int COMPANY_MIN_LENGTH = 3;	//For example: UPM, TID, SAP, ENG,...
 	private static final int COMPANY_MAX_LENGTH = 30;
 	//Just for the future...
-	//private static final int PASSWORD_MIN_LENGTH = 5;
-	//private static final int PASSWORD_MAX_LENGTH = 30;
+	private static final int PASSWORD_MIN_LENGTH = 8;
+	private static final int PASSWORD_MAX_LENGTH = 30;
 	private static final int DISPLAY_NAME_MIN_LENGTH = 5;
 	private static final int DISPLAY_NAME_MAX_LENGTH = 30;
 
@@ -19,13 +19,17 @@ public class UserValidator {
 
 	/**
 	 * @param user User to be checked
+	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
+	 * the basic fields (name, mail, pass) are included.
 	 * @return True if the user is valid. Otherwise <code>ValidationException</code> will be thrown
 	 * @throws ValidationException If user is not valid
 	 */
-	public boolean validateUser(User user) throws ValidationException {
+	public boolean validateUser(User user, boolean isBeingCreated) throws ValidationException {
 		
-		if (user.getUserName() == null || user.getEmail() == null || user.getPassword() == null) {
-			throw new ValidationException("name, email and/or password cannot be null");
+		if (isBeingCreated) {
+			if (user.getUserName() == null || user.getEmail() == null || user.getPassword() == null) {
+				throw new ValidationException("name, email and/or password cannot be null");
+			}
 		}
 		
 		if (user.getUserName() != null && !GENERIC_VALIDATOR.validateName(user.getUserName())) {
@@ -39,6 +43,12 @@ public class UserValidator {
 				DISPLAY_NAME_MIN_LENGTH, DISPLAY_NAME_MAX_LENGTH)) {
 			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("displayName", 
 					DISPLAY_NAME_MIN_LENGTH, DISPLAY_NAME_MAX_LENGTH));
+		}
+		
+		if (user.getPassword() != null && !GENERIC_VALIDATOR.validateLength(user.getPassword(), 
+				PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH)) {
+			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("password", 
+					PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH));
 		}
 		
 		if (user.getEmail() != null && !GENERIC_VALIDATOR.validateEMail(user.getEmail())) {
