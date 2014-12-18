@@ -76,7 +76,7 @@ public class StoreRegistrationService {
 		} catch (DataAccessException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;	
@@ -124,7 +124,7 @@ public class StoreRegistrationService {
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;
@@ -141,7 +141,7 @@ public class StoreRegistrationService {
 
 			if (storeRegistrationAuth.canDelete(store)) {
 				storeBo.delete(store);
-				response = Response.status(Status.OK).build();		// Return OK
+				response = Response.status(Status.NO_CONTENT).build();		// Return 204 No Content
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("delete store " + storeName);
 			}
@@ -172,7 +172,7 @@ public class StoreRegistrationService {
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;
@@ -197,7 +197,7 @@ public class StoreRegistrationService {
 					response = ERROR_UTILS.unauthorizedResponse("list stores");
 				}
 			} catch (Exception ex) {
-				response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+				response = ERROR_UTILS.internalServerError(ex);
 			}
 		}
 

@@ -84,7 +84,7 @@ public class OfferingRegistrationService {
 		} catch (DataAccessException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;
@@ -141,7 +141,7 @@ public class OfferingRegistrationService {
 		} catch (DataAccessException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;
@@ -160,7 +160,7 @@ public class OfferingRegistrationService {
 
 			if (offeringRegistrationAuth.canUpdate(service)) {
 				serviceBo.delete(service);
-				response = Response.status(Status.OK).build();
+				response = Response.status(Status.NO_CONTENT).build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("update offering " + serviceName);
 			}
@@ -169,7 +169,7 @@ public class OfferingRegistrationService {
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;
@@ -197,7 +197,7 @@ public class OfferingRegistrationService {
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 
 		return response;
@@ -236,7 +236,7 @@ public class OfferingRegistrationService {
 				} catch (StoreNotFoundException ex) {
 					response = ERROR_UTILS.entityNotFoundResponse(ex);
 				} catch (Exception ex) {
-					response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
+					response = ERROR_UTILS.internalServerError(ex);
 				}
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("list offerings");
