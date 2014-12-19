@@ -86,7 +86,7 @@ public class StoreRegistrationService {
 	@PUT
 	@Consumes({"application/xml", "application/json"})
 	@Path("/{storeName}")	
-	public Response updateStore(@PathParam("storeName") String storeName, Store store) throws UserNotFoundException {
+	public Response updateStore(@PathParam("storeName") String storeName, Store store) {
 		Response response;
 
 		try {

@@ -82,7 +82,7 @@ public class UserRegistrationServiceTest {
 	}
 
 	@Test
-	public void testCreateNotAllowed() {
+	public void testCreateUserNotAllowed() {
 		// Mocks
 		when(userRegistrationAuthMock.canCreate()).thenReturn(false);
 
@@ -99,7 +99,7 @@ public class UserRegistrationServiceTest {
 	}
 
 	@Test
-	public void testCreateNoErrors() throws ValidationException {
+	public void testCreateUserNoErrors() throws ValidationException {
 		// Mocks
 		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
@@ -122,7 +122,7 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testCreateValidationError() throws ValidationException {
+	public void testCreateUserValidationError() throws ValidationException {
 		// Mock
 		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
 		doThrow(new ValidationException(VALIDATION_ERROR)).when(userValidator).validateUser(user, true);
@@ -137,7 +137,7 @@ public class UserRegistrationServiceTest {
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, VALIDATION_ERROR);
 	}
 	
-	private void testCreateDataAccessException(Exception exception, String message) throws ValidationException {
+	private void testCreateUserDataAccessException(Exception exception, String message) throws ValidationException {
 		// Mock
 		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
 		doThrow(new DataIntegrityViolationException("", exception)).when(userBoMock).save(isA(User.class));
@@ -153,19 +153,19 @@ public class UserRegistrationServiceTest {
 	}
 
 	@Test
-	public void testNotAllowedToCreateUserAlreadyExists() throws ValidationException {
-		testCreateDataAccessException(new MySQLIntegrityConstraintViolationException(), 
+	public void testCreateUserAlreadyExists() throws ValidationException {
+		testCreateUserDataAccessException(new MySQLIntegrityConstraintViolationException(), 
 				"The user and/or the email introduced are already registered in the system");
 	}
 	
 	@Test
-	public void testNotAllowedToCreateUserOtherDataException() throws ValidationException {
+	public void testCreateUserOtherDataException() throws ValidationException {
 		Exception exception = new Exception("Too much content");
-		testCreateDataAccessException(exception, exception.getMessage());
+		testCreateUserDataAccessException(exception, exception.getMessage());
 	}
 	
 	@Test
-	public void testCreteNotKnowException() throws ValidationException {
+	public void testCreteUpdateNotKnowException() throws ValidationException {
 		// Mock
 		String exceptionMsg = "SERVER ERROR";
 		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
@@ -187,7 +187,7 @@ public class UserRegistrationServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void testUpdateNotAllowed() throws UserNotFoundException {
+	public void testUpdateUserNotAllowed() throws UserNotFoundException {
 		User newUser = new User();
 		
 		// Mocks
@@ -296,7 +296,7 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testUpdateDisplayName() {
+	public void testUpdateUserDisplayName() {
 		User newUser = new User();
 		newUser.setDisplayName("New Display Name");
 		testUpdateGenericUserNoErrors(newUser);
@@ -310,21 +310,21 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testUpdateComapmy() {
+	public void testUpdateUserComapmy() {
 		User newUser = new User();
 		newUser.setEmail("New Awesome Company");
 		testUpdateGenericUserNoErrors(newUser);
 	}
 	
 	@Test
-	public void testUpdatePassword() {
+	public void testUpdateUserPassword() {
 		User newUser = new User();
 		newUser.setPassword("my_new_super_secure_password123456789");
 		testUpdateGenericUserNoErrors(newUser);
 	}
 	
 	@Test
-	public void testUpdateValidationError() throws ValidationException, UserNotFoundException {
+	public void testUpdateUserValidationError() throws ValidationException, UserNotFoundException {
 		User newUser = new User();
 		
 		// Mock
@@ -345,7 +345,7 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testUpdateNonExistingUser() throws UserNotFoundException, ValidationException {
+	public void testUpdateUserNonExistingUser() throws UserNotFoundException, ValidationException {
 		User newUser = new User();
 		String userNotFoundMsg = "user_name does not exist";
 		
@@ -363,7 +363,7 @@ public class UserRegistrationServiceTest {
 		GenericRestTestUtils.checkAPIError(res, 404, ErrorType.NOT_FOUND, userNotFoundMsg);
 	}
 	
-	private void testDataAccessException(Exception exception, String message) {
+	private void testUpdateUserDataAccessException(Exception exception, String message) {
 		User newUser = new User();
 		
 		// Mock
@@ -394,20 +394,20 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testUpdateViolationIntegration() throws ValidationException {
-		testDataAccessException(new MySQLIntegrityConstraintViolationException(), 
+	public void testUpdateUserViolationIntegration() throws ValidationException {
+		testUpdateUserDataAccessException(new MySQLIntegrityConstraintViolationException(), 
 				"The user and/or the email introduced are already registered in the system");
 	}
 	
 	
 	@Test
-	public void testUpdateOtherDataException() throws ValidationException {
+	public void testUpdateUserOtherDataException() throws ValidationException {
 		Exception exception = new Exception("Too much content");
-		testDataAccessException(exception, exception.getMessage());
+		testUpdateUserDataAccessException(exception, exception.getMessage());
 	}
 	
 	@Test
-	public void testUpdateNotKnowException() throws ValidationException, UserNotFoundException {
+	public void testUpdateUserNotKnowException() throws ValidationException, UserNotFoundException {
 		// Mock
 		String exceptionMsg = "SERVER ERROR";
 		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
@@ -430,7 +430,7 @@ public class UserRegistrationServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void testDeleteNotAllowed() throws UserNotFoundException {
+	public void testDeleteUserNotAllowed() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
 		when(userRegistrationAuthMock.canDelete(user)).thenReturn(false);
@@ -447,7 +447,7 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testDeleteNoErrors() throws UserNotFoundException {
+	public void testDeleteUserNoErrors() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
 		when(userRegistrationAuthMock.canDelete(user)).thenReturn(true);
@@ -464,7 +464,7 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testDeleteNotExisting() throws UserNotFoundException {
+	public void testDeleteUserNotExisting() throws UserNotFoundException {
 		// Mocks
 		String msg = "User user_name not found";
 		doThrow(new UserNotFoundException(msg)).when(userBoMock).findByName(USER_NAME);
@@ -482,7 +482,7 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testDeleteException() throws UserNotFoundException {
+	public void testDeleteUserException() throws UserNotFoundException {
 		// Mocks
 		String exceptionMsg = "DB is down!";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).delete(user);
@@ -506,7 +506,7 @@ public class UserRegistrationServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void testGetNotAllowed() throws UserNotFoundException {
+	public void testGetUserNotAllowed() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
 		when(userRegistrationAuthMock.canGet(user)).thenReturn(false);
@@ -519,7 +519,7 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testGetNoErrors() throws UserNotFoundException {
+	public void testGetUserNoErrors() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
 		when(userRegistrationAuthMock.canGet(user)).thenReturn(true);
@@ -533,7 +533,7 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testGetUserNotFound() throws UserNotFoundException {
+	public void testGetUserUserNotFound() throws UserNotFoundException {
 		// Mocks
 		String msg = "User user_name not found";
 		doThrow(new UserNotFoundException(msg)).when(userBoMock).findByName(USER_NAME);
@@ -547,7 +547,7 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testGetException() throws UserNotFoundException {
+	public void testGetUserException() throws UserNotFoundException {
 		// Mocks
 		String exceptionMsg = "DB is down!";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).findByName(USER_NAME);
@@ -569,7 +569,7 @@ public class UserRegistrationServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void testListNotAllowed() {
+	public void testListUsersNotAllowed() {
 		// Mocks
 		when(userRegistrationAuthMock.canList()).thenReturn(false);
 
@@ -580,7 +580,7 @@ public class UserRegistrationServiceTest {
 		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to list users");
 	}
 	
-	private void testListInvalidParams(int offset, int max) {
+	private void testListUsersInvalidParams(int offset, int max) {
 		// Mocks
 		when(userRegistrationAuthMock.canList()).thenReturn(true);
 
@@ -592,22 +592,22 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testListInvalidOffset() {
-		testListInvalidParams(-1, 100);
+	public void testListUsersInvalidOffset() {
+		testListUsersInvalidParams(-1, 100);
 	}
 	
 	@Test
-	public void testListInvalidMax() {
-		testListInvalidParams(0, -1);
+	public void testListUsersInvalidMax() {
+		testListUsersInvalidParams(0, -1);
 	}
 	
 	@Test
-	public void testListInvalidOffsetMax() {
-		testListInvalidParams(-1, -1);
+	public void testListUsersInvalidOffsetMax() {
+		testListUsersInvalidParams(-1, -1);
 	}
 	
 	@Test
-	public void testListGetNoErrors() {
+	public void testListUsersGetNoErrors() {
 		List<User> users = new ArrayList<User>();
 		for (int i = 0; i < 3; i++) {
 			User user = new User();
@@ -633,7 +633,7 @@ public class UserRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testListException() {
+	public void testListUsersException() {
 		// Mocks
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).getUsersPage(anyInt(), anyInt());
