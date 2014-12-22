@@ -614,6 +614,7 @@ public class OfferingRegistrationServiceTest {
 		List<Service> services = new ArrayList<Service>();
 		for (int i = 0; i < 10; i++) {
 			Service service = new Service();
+			service.setId(i);
 			services.add(service);
 		}
 		
