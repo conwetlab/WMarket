@@ -159,10 +159,15 @@ public class UserRegistrationService {
 
 		Response response;
 		try {
-			User localuser = userBo.findByName(username);
+			User user = userBo.findByName(username);
 
-			if (userRegistrationAuth.canGet(localuser)) {
-				response = Response.status(Status.OK).entity(localuser).build();
+			if (userRegistrationAuth.canGet(user)) {
+				// If the value of the attribute is null, the 
+				// attribute won't be returned in the response
+				// Note: We are not saving the user, otherwise the information will be lost
+				user.setPassword(null);
+				user.setEmail(null);
+				response = Response.status(Status.OK).entity(user).build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("get user " + username);
 			}
@@ -189,6 +194,15 @@ public class UserRegistrationService {
 			try {
 				if (userRegistrationAuth.canList()) {
 					List<User> users = userBo.getUsersPage(offset, max);
+					
+					// If the value of the attribute is null, the 
+					// attribute won't be returned in the response
+					// Note: We are not saving the users, otherwise the information will be lost
+					for (User user: users) {
+						user.setPassword(null);
+						user.setEmail(null);
+					}
+					
 					return Response.status(Status.OK).entity(new Users(users)).build();
 				} else {
 					response = ERROR_UTILS.unauthorizedResponse("list users");
