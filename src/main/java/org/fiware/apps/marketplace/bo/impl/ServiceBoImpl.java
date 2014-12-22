@@ -1,5 +1,7 @@
 package org.fiware.apps.marketplace.bo.impl;
 
+import java.util.List;
+
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.dao.ServiceDao;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
@@ -54,6 +56,16 @@ public class ServiceBoImpl implements ServiceBo{
 	@Override
 	public Service findByNameAndStore(String name, String store) throws ServiceNotFoundException, StoreNotFoundException {
 		return serviceDao.findByNameAndStore(name, store);
+	}
+	
+	@Override
+	public List<Service> getAllServices() {
+		return serviceDao.getAllServices();
+	}
+	
+	@Override
+	public List<Service> getServicesPage(int offset, int max) {
+		return serviceDao.getServicesPage(offset, max);
 	}
 
 }

@@ -34,7 +34,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 @Component
-@Path("/store/{storeName}/offering")
+@Path("/store/{storeName}/offering/")	
 public class OfferingRegistrationService {
 
 	// OBJECT ATTRIBUTES //
@@ -46,7 +46,7 @@ public class OfferingRegistrationService {
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			"There is already an Offering in this Store with that name/URL");	
+			"There is already an Offering in this Store with that name/URL");
 
 	@POST
 	@Consumes({"application/xml", "application/json"})
@@ -206,7 +206,7 @@ public class OfferingRegistrationService {
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
-	public Response listServices(@PathParam("storeName") String storeName, 
+	public Response listServicesInStore(@PathParam("storeName") String storeName, 
 			@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max) {
 		Response response;
@@ -215,10 +215,11 @@ public class OfferingRegistrationService {
 			// Offset and Max should be checked
 			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
 		} else {
-			if (offeringRegistrationAuth.canList()) {
-				try {
-					int toIndex;
-					Store store = storeBo.findByName(storeName);
+			try {
+				int toIndex;
+				Store store = storeBo.findByName(storeName);
+				
+				if (offeringRegistrationAuth.canList(store)) {
 					Services returnedServices = new Services();
 					List<Service> allServices = store.getServices();
 
@@ -233,17 +234,18 @@ public class OfferingRegistrationService {
 					}
 
 					response = Response.status(Status.OK).entity(returnedServices).build();
-				} catch (StoreNotFoundException ex) {
-					response = ERROR_UTILS.entityNotFoundResponse(ex);
-				} catch (Exception ex) {
-					response = ERROR_UTILS.internalServerError(ex);
+				} else {
+					response = ERROR_UTILS.unauthorizedResponse("list offerings");
 				}
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("list offerings");
+				
+
+			} catch (StoreNotFoundException ex) {
+				response = ERROR_UTILS.entityNotFoundResponse(ex);
+			} catch (Exception ex) {
+				response = ERROR_UTILS.internalServerError(ex);
 			}
 		}
 
 		return response;
-
 	}
 }

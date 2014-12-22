@@ -6,6 +6,7 @@ import org.fiware.apps.marketplace.dao.ServiceDao;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 
 @Repository("serviceDao")
@@ -52,6 +53,18 @@ public class ServiceDaoImpl extends MarketplaceHibernateDao implements ServiceDa
 	public Service findByNameAndStore(String name, String store) throws ServiceNotFoundException {
 		Object[] params  = {name , store};
 		return this.findByQuery("from Service where name = ? and store.name = ?", params);				
+	}
+	
+	@Override
+	public List<Service> getAllServices() {
+		return getHibernateTemplate().loadAll(Service.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Service> getServicesPage(int offset, int max) {
+		return (List<Service>) getHibernateTemplate().findByCriteria(
+				DetachedCriteria.forClass(Service.class), offset, max);
 	}
 
 }

@@ -563,7 +563,7 @@ public class StoreRegistrationServiceTest {
 		// Verify
 		verify(storeBoMock).getStoresPage(offset, max);
 		
-		// Assertations
+		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
 		assertThat(((Stores) res.getEntity()).getStores()).isEqualTo(stores);
 	}

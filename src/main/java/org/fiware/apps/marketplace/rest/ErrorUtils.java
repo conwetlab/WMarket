@@ -13,13 +13,18 @@ public class ErrorUtils {
 	
 	private String contraintViolationMessage;
 	
+	public ErrorUtils() {
+		this.contraintViolationMessage = null;
+	}
+	
 	public ErrorUtils(String contraintViolationMessage) {
 		this.contraintViolationMessage = contraintViolationMessage;
 	}
 	
 	public Response badRequestResponse(DataAccessException ex) {
 		String message;
-		if (ex.getRootCause() instanceof MySQLIntegrityConstraintViolationException)  {
+		if (ex.getRootCause() instanceof MySQLIntegrityConstraintViolationException 
+				&& this.contraintViolationMessage != null)  {
 			message = this.contraintViolationMessage;
 		} else {
 			message = ex.getRootCause().getMessage();

@@ -554,10 +554,10 @@ public class OfferingRegistrationServiceTest {
 	@Test
 	public void testListServicesNotAllowed() {
 		// Mocks
-		when(offeringRegistrationAuthMock.canList()).thenReturn(false);
+		when(offeringRegistrationAuthMock.canList(store)).thenReturn(false);
 
 		// Call the method
-		Response res = offeringRegistrationService.listServices(STORE_NAME, 0, 100);
+		Response res = offeringRegistrationService.listServicesInStore(STORE_NAME, 0, 100);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to list offerings");
@@ -565,10 +565,10 @@ public class OfferingRegistrationServiceTest {
 	
 	private void testListServicesInvalidParams(int offset, int max) {
 		// Mocks
-		when(offeringRegistrationAuthMock.canList()).thenReturn(true);
+		when(offeringRegistrationAuthMock.canList(store)).thenReturn(true);
 
 		// Call the method
-		Response res = offeringRegistrationService.listServices(STORE_NAME, offset, max);
+		Response res = offeringRegistrationService.listServicesInStore(STORE_NAME, offset, max);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, OFFSET_MAX_INVALID);
@@ -596,16 +596,16 @@ public class OfferingRegistrationServiceTest {
 		// Mocks
 		try {
 			when(storeBoMock.findByName(STORE_NAME)).thenReturn(store);
-			when(offeringRegistrationAuthMock.canList()).thenReturn(true);
+			when(offeringRegistrationAuthMock.canList(store)).thenReturn(true);
 			store.setServices(storeServices);
 		} catch(Exception ex) {
 			fail ("Exception " + ex + " not expected");
 		}
 		
 		// Call the method
-		Response res = offeringRegistrationService.listServices(STORE_NAME, offset, max);
+		Response res = offeringRegistrationService.listServicesInStore(STORE_NAME, offset, max);
 		
-		// Assertations
+		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
 		assertThat(((Services) res.getEntity()).getServices()).isEqualTo(returnedServices);
 	}
