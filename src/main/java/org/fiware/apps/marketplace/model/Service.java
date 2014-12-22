@@ -16,8 +16,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.fiware.apps.marketplace.utils.xmladapters.StoreXMLAdapter;
+import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
@@ -77,7 +79,8 @@ public class Service {
 		this.description = description;
 	}
 
-	@XmlTransient
+	@XmlElement
+	@XmlJavaTypeAdapter(StoreXMLAdapter.class)
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "store", nullable=false)
 	public Store getStore() {
@@ -89,6 +92,7 @@ public class Service {
 	}
 	
 	@XmlElement
+	@XmlJavaTypeAdapter(UserXMLAdapter.class)
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "creator", nullable=false)
 	public User getCreator() {
@@ -100,6 +104,7 @@ public class Service {
 	}
 	
 	@XmlElement
+	@XmlJavaTypeAdapter(UserXMLAdapter.class)
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "last_editor", nullable=false)
 	public User getLasteditor() {
