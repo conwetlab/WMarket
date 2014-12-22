@@ -51,7 +51,7 @@ public class OfferingRegistrationService {
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/")	
-	public Response saveService(@PathParam("storeName") String storeName, Service service) {	
+	public Response createService(@PathParam("storeName") String storeName, Service service) {	
 		Response response;
 
 		try {
@@ -158,11 +158,11 @@ public class OfferingRegistrationService {
 			Store store = storeBo.findByName(storeName);	//Check that the Store exists
 			Service service = serviceBo.findByNameAndStore(serviceName, storeName);
 
-			if (offeringRegistrationAuth.canUpdate(service)) {
+			if (offeringRegistrationAuth.canDelete(service)) {
 				serviceBo.delete(service);
 				response = Response.status(Status.NO_CONTENT).build();
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("update offering " + serviceName);
+				response = ERROR_UTILS.unauthorizedResponse("delete offering " + serviceName);
 			}
 		} catch (ServiceNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);

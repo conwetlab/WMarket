@@ -68,6 +68,7 @@ public class StoreRegistrationServiceTest {
 
 	@Before
 	public void initAuthUtils() throws UserNotFoundException {
+		user = new User();
 		when(authUtilsMock.getLoggedUser()).thenReturn(user);
 	}
 
