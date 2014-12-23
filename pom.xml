@@ -45,18 +45,6 @@
 	</repositories>
 
 	<dependencies>
-		<!-- Basic Dependencies -->
-		<dependency>
-			<groupId>net.oauth.core</groupId>
-			<artifactId>oauth</artifactId>
-			<version>20090825</version>
-		</dependency>
-
-		<dependency>
-			<groupId>net.oauth.core</groupId>
-			<artifactId>oauth-httpclient4</artifactId>
-			<version>20090617</version>
-		</dependency>
 
 		<!-- Test dependencies -->
 		<dependency>
@@ -284,6 +272,12 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
 				<version>2.6</version>
+				<configuration>
+					<formats>
+						<format>html</format>
+						<format>xml</format>
+					</formats>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
