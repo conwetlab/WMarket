@@ -35,8 +35,8 @@ package org.fiware.apps.marketplace.security.auth;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -45,7 +45,7 @@ import org.springframework.stereotype.Service;
 public class AuthUtils {
 	
 	//Instance attributes
-	private UserBo localuserBo = (UserBo) ApplicationContextProvider.getApplicationContext().getBean("userBo");
+	@Autowired private UserBo localuserBo;
 
 	public User getLoggedUser() throws UserNotFoundException {
 		String userName;
@@ -55,7 +55,7 @@ public class AuthUtils {
 		if (authentication instanceof ClientAuthenticationToken) {
 			userName = ((ClientAuthenticationToken) authentication).getUserProfile().getId();
 		} else {
-			userName = SecurityContextHolder.getContext().getAuthentication().getName();
+			userName = authentication.getName();
 		}
 		
 		return localuserBo.findByName(userName);
