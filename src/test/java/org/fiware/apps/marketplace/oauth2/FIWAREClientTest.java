@@ -114,6 +114,16 @@ public class FIWAREClientTest {
 	public void testExtractUserProfileUserDoesNotExist() {
 		testExtractUserProfile(false);
 	}
+	
+	@Test
+	public void testExtractUserProfileNull() {
+		// Call the function
+		FIWAREProfile profile = client.extractUserProfile(null);
+		
+		// Assertions
+		assertThat(profile).isNull();
+		verify(userBoMock, never()).save(isA(User.class));
+	}
 
 	@Test
 	public void testGetProfileUrl() {
