@@ -52,8 +52,7 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 
 	@Override
 	public void update(User user) {
-		getHibernateTemplate().update(user);	
-		
+		getHibernateTemplate().update(user);
 	}
 
 	@Override

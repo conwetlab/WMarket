@@ -37,7 +37,6 @@ import java.util.Date;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.pac4j.core.client.BaseClient;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.oauth.client.BaseOAuth20Client;
@@ -48,16 +47,14 @@ import org.scribe.model.OAuthConfig;
 import org.scribe.model.Token;
 import org.scribe.model.SignatureType;
 import org.scribe.oauth.ProxyOAuth20ServiceImpl;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
 
 public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 	// To store users information
-	private ApplicationContext context = ApplicationContextProvider.getApplicationContext();	
-	private UserBo userBo = (UserBo) context.getBean("userBo");
+	@Autowired private UserBo userBo;
 
 	private String scopeValue = "";
 

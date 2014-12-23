@@ -32,20 +32,44 @@ package org.fiware.apps.marketplace.oauth2;
  * #L%
  */
 
-import org.pac4j.oauth.profile.OAuth20Profile;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class FIWAREProfile extends OAuth20Profile{
+import org.junit.Test;
+import org.scribe.extractors.JsonTokenExtractor;
+import org.scribe.model.OAuthConfig;
+import org.scribe.model.Verb;
+import org.scribe.utils.OAuthEncoder;
 
-	private static final long serialVersionUID = 1L;
+public class FIWAREApiTest {
 	
-	@Override
-	public String getDisplayName() {
-		return (String) this.getAttribute("displayName");
+	private FIWAREApi api = new FIWAREApi();
+	
+	@Test
+	public void testGetAuthorizationUrl() {
+		String clientId = "1";
+		String redirectURI = "http://fi-ware.org";
+		String scope = "profile,store";
+		OAuthConfig config = new OAuthConfig(clientId, null, redirectURI, null, scope, null);		
+		String expectedURL = "https://account.lab.fi-ware.org/authorize?client_id=" + clientId + 
+				"&redirect_uri=" + OAuthEncoder.encode(redirectURI) + "&scope=" + 
+				OAuthEncoder.encode(scope) + "&response_type=code";
+		
+		assertThat(api.getAuthorizationUrl(config)).isEqualTo(expectedURL);
 	}
 	
-	@Override
-	public String getUsername() {
-		return (String) this.getAttribute("nickName");
+	@Test
+	public void testGetAccessTokenEndpoint() {
+		assertThat(api.getAccessTokenEndpoint()).isEqualTo("https://account.lab.fi-ware.org/token");
+	}
+	
+	@Test
+	public void testGetAccessTokenVerb() {
+		assertThat(api.getAccessTokenVerb()).isEqualTo(Verb.POST);
+	}
+	
+	@Test
+	public void testGetAccessTokenExtractor() {
+		assertThat(api.getAccessTokenExtractor()).isInstanceOf(JsonTokenExtractor.class);
 	}
 
 }

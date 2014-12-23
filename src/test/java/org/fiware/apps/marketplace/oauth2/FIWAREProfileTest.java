@@ -32,20 +32,33 @@ package org.fiware.apps.marketplace.oauth2;
  * #L%
  */
 
-import org.pac4j.oauth.profile.OAuth20Profile;
 
-public class FIWAREProfile extends OAuth20Profile{
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-	private static final long serialVersionUID = 1L;
+import org.junit.Test;
+
+
+public class FIWAREProfileTest {
 	
-	@Override
-	public String getDisplayName() {
-		return (String) this.getAttribute("displayName");
+	private FIWAREProfile profile = spy(new FIWAREProfile());
+	
+	@Test
+	public void testGetDisplayName() {
+		String displayName = "Display Name";
+		when(profile.getAttribute(anyString())).thenReturn(displayName);
+		assertThat(profile.getDisplayName()).isEqualTo(displayName);
+		verify(profile).getAttribute("displayName");
 	}
 	
-	@Override
-	public String getUsername() {
-		return (String) this.getAttribute("nickName");
+	@Test
+	public void testUserName() {
+		String userName = "userName";
+		when(profile.getAttribute(anyString())).thenReturn(userName);
+		assertThat(profile.getUsername()).isEqualTo(userName);
+		verify(profile).getAttribute("nickName");
 	}
+	
+	
 
 }
