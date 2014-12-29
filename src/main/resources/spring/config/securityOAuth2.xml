@@ -12,9 +12,10 @@
 	</security:authentication-manager>
 
 	<!-- urls and security configuration -->
-	<security:http auto-config="true" entry-point-ref="fiwareEntryPoint" use-expressions="true">
-        <security:custom-filter after="CAS_FILTER" ref="clientFilter" />
-        
+	<security:http auto-config="true" entry-point-ref="fiwareEntryPoint" use-expressions="true" disable-url-rewriting="true">
+	    <security:custom-filter before="CAS_FILTER" ref="apiHeaderFilter" />
+	    <security:custom-filter after="CAS_FILTER" ref="clientFilter" />
+                        
         <!-- Default URLs that are visible for everyone -->
         <security:intercept-url pattern="/vocabulary/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/demoservices/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
@@ -56,6 +57,14 @@
 		<constructor-arg value="/callback" />
 		<property name="clients" ref="clients" />
 		<property name="sessionAuthenticationStrategy" ref="sas" />
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+	
+	<bean id="apiHeaderFilter"
+		class="org.fiware.apps.marketplace.oauth2.FIWAREHeaderAuthenticationFilter">
+		<constructor-arg name="baseUrl" value="/api/" />
+		<constructor-arg name="headerName" value="X-Auth-Token" />
+		<property name="client" ref="fiwareClient" />
 		<property name="authenticationManager" ref="authenticationManager" />
 	</bean>
 
