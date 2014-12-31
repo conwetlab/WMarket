@@ -99,6 +99,13 @@
 			<version>3.0.10.Final</version>
 		</dependency>
 
+		<!-- Java Servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- APACHE -->
 		<dependency>
@@ -257,7 +264,7 @@
 	<build>
 		<finalName>FiwareMarketplace</finalName>
 		<plugins>
-			
+
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -266,12 +273,12 @@
 				</configuration>
 				<version>3.2</version>
 			</plugin>
-			
+
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.9</version>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>

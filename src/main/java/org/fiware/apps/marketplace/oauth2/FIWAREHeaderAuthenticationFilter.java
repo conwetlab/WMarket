@@ -96,10 +96,9 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 			auth = new ClientAuthenticationToken(credentials, client.getName(), profile, authorities);
 
 		} catch (Exception ex) {
+			// This exception should be risen in order to return a 401
 			throw new BadCredentialsException("The provided token is invalid or the system was not able to check it");
-			// Nothing to do...
 		}
-
 
 		return auth;
 	}
@@ -163,6 +162,7 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 	 * Actions to be carried out when the authentication is successful. In this case
 	 * no actions are required.
 	 * @author aitor
+	 * 
 	 */
 	private static class FIWAREHeaderAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -175,7 +175,7 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 	}
 	
 	/**
-	 * Set the session in the context when the Authorization token is valid
+	 * Set the Session in the Security Context when the Authorization token is valid
 	 * @author aitor
 	 *
 	 */
