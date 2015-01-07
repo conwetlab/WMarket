@@ -89,7 +89,7 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 		setContinueChainBeforeSuccessfulAuthentication(true);
 
 		// Set the authentication in the context
-		setSessionAuthenticationStrategy(new FIWAREHeaderAuthenticationAuthenticationStrategy());
+		setSessionAuthenticationStrategy(new FIWAREHeaderAuthenticationStrategy());
 
 		// This handler doesn't do anything but it's required to replace the default one
 		setAuthenticationSuccessHandler(new FIWAREHeaderAuthenticationSuccessHandler());
@@ -211,7 +211,7 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 	 * @author aitor
 	 *
 	 */
-	static class FIWAREHeaderAuthenticationAuthenticationStrategy implements SessionAuthenticationStrategy {
+	static class FIWAREHeaderAuthenticationStrategy implements SessionAuthenticationStrategy {
 
 		@Override
 		public void onAuthentication(Authentication authentication,
