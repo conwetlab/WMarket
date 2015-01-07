@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.oauth2;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,16 +43,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.oauth.credentials.OAuthCredentials;
 import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
-import org.pac4j.springframework.security.authentication.CopyRolesUserDetailsService;
-import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
@@ -68,10 +64,6 @@ import org.springframework.util.StringUtils;
 public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProcessingFilter{
 
 	private String headerName;
-	private UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
-	private AuthenticationUserDetailsService<ClientAuthenticationToken> userDetailsService =
-			new CopyRolesUserDetailsService();
-
 	private FIWAREClient client;
 
 	protected FIWAREHeaderAuthenticationFilter() {
@@ -108,20 +100,11 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 			// In this case, the exception is caught and the correct exceptions is thrown...
 			UserProfile profile = client.getUserProfile(authToken);
 
-			// by default, no authorities
-			Collection<? extends GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-
-			// get user details and check them
-			if (this.userDetailsService != null) {
-				final ClientAuthenticationToken tmpToken = new ClientAuthenticationToken(null, 
-						client.getName(), profile, null);
-				final UserDetails userDetails = this.userDetailsService.loadUserDetails(tmpToken);
-
-				if (userDetails != null) {
-					this.userDetailsChecker.check(userDetails);
-					authorities = userDetails.getAuthorities();
-				}
-			}
+			// Define authorities
+			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+	        for (String role: profile.getRoles()) {
+	            authorities.add(new SimpleGrantedAuthority(role));
+	        }
 
 			// new token with credentials (like previously) and user profile and authorities
 			OAuthCredentials credentials = new OAuthCredentials(null, authToken, "", client.getName());
