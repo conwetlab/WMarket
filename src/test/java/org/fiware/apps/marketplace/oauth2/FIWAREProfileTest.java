@@ -58,7 +58,4 @@ public class FIWAREProfileTest {
 		assertThat(profile.getUsername()).isEqualTo(userName);
 		verify(profile).getAttribute("nickName");
 	}
-	
-	
-
 }
