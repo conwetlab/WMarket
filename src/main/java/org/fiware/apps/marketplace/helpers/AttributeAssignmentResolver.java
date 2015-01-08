@@ -1,5 +1,37 @@
 package org.fiware.apps.marketplace.helpers;
 
+/*
+ * #%L
+ * FiwareMarketplace
+ * %%
+ * Copyright (C) 2012 SAP
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of copyright holders nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software 
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * #L%
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,7 +106,7 @@ public abstract class AttributeAssignmentResolver {
 
 	protected static class HungarianAlgorithm {
 		// Implementation of the Hungarian a.k.a. Munkres-Kuhn algorithm
-		// Solves the maximum weighted bipartite matching problem (a.k.a. marriage problem) in O(n³)
+		// Solves the maximum weighted bipartite matching problem (a.k.a. marriage problem) in O(n)
 
 		// Based on the following source, but strongly refactored
 		// http://www.koders.com/java/fid2C93F1FAE2F786A091D64ED84F2A67D2659EC4F2.aspx?s=249#L29
@@ -465,8 +497,8 @@ public abstract class AttributeAssignmentResolver {
 				List<Integer> eliminatedRows = new ArrayList<Integer>();
 				List<Integer> eliminatedCols = new ArrayList<Integer>();
 
-				// Suche eine Kombination von Nullen derart, dass in jeder Zeile und in jeder Spalte nur eine Null ausgewählt ist.
-				// Steht in einer Zeile oder Spalte nur eine einzige Null, so muss sie natürlich in die Lösung.
+				// Suche eine Kombination von Nullen derart, dass in jeder Zeile und in jeder Spalte nur eine Null ausgewhlt ist.
+				// Steht in einer Zeile oder Spalte nur eine einzige Null, so muss sie natrlich in die Lsung.
 
 				// This does not seem to work properly...
 
