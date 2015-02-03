@@ -57,13 +57,30 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 	@Autowired private UserBo userBo;
 
 	private String scopeValue = "";
-
+	private String serverURL;
+	
+	/**
+	 * Method to get the FIWARE IdM that is being in used
+	 * @return The FIWARE IdM that is being used to authenticate the users
+	 */
+	public String getServerURL() {
+		return this.serverURL;
+	}
+	
+	/**
+	 * Method to set the FIWARE IdM that will be use to authenticate the users
+	 * @param serverURL The FIWARE IdM that will be use to authenticate the users
+	 */
+	public void setServerURL(String serverURL) {
+		this.serverURL = serverURL;
+	}
+	
 	@Override
 	protected void internalInit() {
 		super.internalInit();
 
 		this.scopeValue = "";
-		this.service = new ProxyOAuth20ServiceImpl(new FIWAREApi(), 
+		this.service = new ProxyOAuth20ServiceImpl(new FIWAREApi(this.serverURL), 
 				new OAuthConfig(this.key, this.secret,
 						this.callbackUrl,
 						SignatureType.Header,
@@ -87,7 +104,6 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 			for (final String attribute : new FIWAREAttributesDefinition().getPrincipalAttributes()) {
 				profile.addAttribute(attribute, JsonHelper.get(json, attribute));
 			}
-
 
 			// FIXME: By default, we are adding the default Role...
 			profile.addRole("ROLE_USER");
@@ -124,7 +140,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 	@Override
 	protected String getProfileUrl(Token arg0) {
-		return "https://account.lab.fi-ware.org/user";
+		return String.format("%s/user", this.serverURL);
 	}
 
 	@Override

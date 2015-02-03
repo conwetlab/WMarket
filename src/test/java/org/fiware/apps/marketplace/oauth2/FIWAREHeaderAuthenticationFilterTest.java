@@ -137,9 +137,6 @@ public class FIWAREHeaderAuthenticationFilterTest {
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected");
 		}
-		
-		
-		
 	}
 
 }

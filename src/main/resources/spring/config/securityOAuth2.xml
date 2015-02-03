@@ -38,6 +38,7 @@
 
 	<!-- clients definition -->
 	<bean id="fiwareClient" class="org.fiware.apps.marketplace.oauth2.FIWAREClient">
+		<property name="serverURL" value="https://account.lab.fiware.org" />
 		<property name="key" value="KEY" />
 		<property name="secret" value="SECRET" />
 	</bean>

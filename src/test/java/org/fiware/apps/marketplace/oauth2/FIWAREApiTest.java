@@ -42,7 +42,8 @@ import org.scribe.utils.OAuthEncoder;
 
 public class FIWAREApiTest {
 	
-	private FIWAREApi api = new FIWAREApi();
+	private static final String SERVER_URL = "https://account.lab.fiware.org";
+	private FIWAREApi api = new FIWAREApi(SERVER_URL);
 	
 	@Test
 	public void testGetAuthorizationUrl() {
@@ -50,7 +51,7 @@ public class FIWAREApiTest {
 		String redirectURI = "http://fi-ware.org";
 		String scope = "profile,store";
 		OAuthConfig config = new OAuthConfig(clientId, null, redirectURI, null, scope, null);		
-		String expectedURL = "https://account.lab.fi-ware.org/authorize?client_id=" + clientId + 
+		String expectedURL = SERVER_URL + "/authorize?client_id=" + clientId + 
 				"&redirect_uri=" + OAuthEncoder.encode(redirectURI) + "&scope=" + 
 				OAuthEncoder.encode(scope) + "&response_type=code";
 		
@@ -59,7 +60,7 @@ public class FIWAREApiTest {
 	
 	@Test
 	public void testGetAccessTokenEndpoint() {
-		assertThat(api.getAccessTokenEndpoint()).isEqualTo("https://account.lab.fi-ware.org/token");
+		assertThat(api.getAccessTokenEndpoint()).isEqualTo(SERVER_URL + "/token");
 	}
 	
 	@Test

@@ -48,6 +48,7 @@ import org.pac4j.core.context.WebContext;
 
 public class FIWAREClientTest {
 
+	private final static String SERVER_URL = "https://account.lab.fiware.org";
 	@Mock private UserBo userBoMock;
 	@InjectMocks private FIWAREClient client = new FIWAREClient();
 
@@ -55,6 +56,7 @@ public class FIWAREClientTest {
 	@Before 
 	public void initMocks() {
 		MockitoAnnotations.initMocks(this);
+		this.client.setServerURL(SERVER_URL);
 	}
 
 	@Test
@@ -127,7 +129,7 @@ public class FIWAREClientTest {
 
 	@Test
 	public void testGetProfileUrl() {
-		assertThat(client.getProfileUrl(null)).isEqualTo("https://account.lab.fi-ware.org/user");
+		assertThat(client.getProfileUrl(null)).isEqualTo(SERVER_URL + "/user");
 	}
 
 	private void testHasBeenCancelled(String error, boolean cancelled) {
