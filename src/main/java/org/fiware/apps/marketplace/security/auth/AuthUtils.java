@@ -36,6 +36,8 @@ import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,6 +45,8 @@ import org.springframework.stereotype.Service;
 
 @Service("authUtils")
 public class AuthUtils {
+	
+    private static Logger logger = LoggerFactory.getLogger(AuthUtils.class);
 	
 	//Instance attributes
 	@Autowired private UserBo localuserBo;
@@ -58,6 +62,7 @@ public class AuthUtils {
 			userName = authentication.getName();
 		}
 		
+		logger.warn("User: {}", userName);
 		return localuserBo.findByName(userName);
 	}
 	

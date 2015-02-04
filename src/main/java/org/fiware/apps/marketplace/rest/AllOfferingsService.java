@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.rest;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,16 +49,19 @@ import org.fiware.apps.marketplace.security.auth.OfferingRegistrationAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.LoggerFactory;
+
 @Component
 @Path("/offerings")	
 public class AllOfferingsService {
-	
+		
 	// OBJECT ATTRIBUTES //
 	@Autowired private ServiceBo serviceBo;
 	@Autowired private OfferingRegistrationAuth offeringRegistrationAuth;
 	
 	// CLASS ATTRIBUTES //
-	private static final ErrorUtils ERROR_UTILS = new ErrorUtils();
+	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
+			LoggerFactory.getLogger(AllOfferingsService.class));
 
 	
 	@GET
@@ -70,7 +73,8 @@ public class AllOfferingsService {
 
 		if (offset < 0 || max <= 0) {
 			// Offset and Max should be checked
-			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
+			response = ERROR_UTILS.badRequestResponse(String.format(
+					"offset (%d) and/or max (%d) are not valid", offset, max));
 		} else {
 			if (offeringRegistrationAuth.canList()) {
 				try {

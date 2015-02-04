@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.rest;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -65,6 +65,7 @@ import org.fiware.apps.marketplace.security.auth.OfferingRegistrationAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
+import org.slf4j.LoggerFactory;
 
 @Component
 @Path("/store/{storeName}/offering/")	
@@ -79,6 +80,7 @@ public class OfferingRegistrationService {
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
+			LoggerFactory.getLogger(OfferingRegistrationService.class), 
 			"There is already an Offering in this Store with that name/URL");
 
 	@POST
@@ -87,7 +89,7 @@ public class OfferingRegistrationService {
 	public Response createService(@PathParam("storeName") String storeName, Service service) {	
 		Response response;
 
-		try {
+		try {			
 			if (offeringRegistrationAuth.canCreate()) {
 				
 				// Validate service (exception is thrown if the service is not valid) 
@@ -174,6 +176,7 @@ public class OfferingRegistrationService {
 		} catch (DataAccessException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
+
 			response = ERROR_UTILS.internalServerError(ex);
 		}
 

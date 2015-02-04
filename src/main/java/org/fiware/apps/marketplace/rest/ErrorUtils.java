@@ -39,17 +39,22 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.APIError;
 import org.springframework.dao.DataAccessException;
 
+import org.slf4j.Logger;
+
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 public class ErrorUtils {
 	
 	private String contraintViolationMessage;
+	private Logger logger;
 	
-	public ErrorUtils() {
+	public ErrorUtils(Logger logger) {
+		this.logger = logger;
 		this.contraintViolationMessage = null;
 	}
 	
-	public ErrorUtils(String contraintViolationMessage) {
+	public ErrorUtils(Logger logger, String contraintViolationMessage) {
+		this.logger = logger;
 		this.contraintViolationMessage = contraintViolationMessage;
 	}
 	
@@ -57,8 +62,10 @@ public class ErrorUtils {
 		String message;
 		if (ex.getRootCause() instanceof MySQLIntegrityConstraintViolationException 
 				&& this.contraintViolationMessage != null)  {
+			logger.warn("Constraint Violation", ex);
 			message = this.contraintViolationMessage;
 		} else {
+			logger.error("Data Access Error", ex);
 			message = ex.getRootCause().getMessage();
 		}
 		
@@ -67,21 +74,25 @@ public class ErrorUtils {
 	}
 	
 	public Response badRequestResponse(String message) {
+		logger.warn("Bad Request {}", message);
 		return Response.status(Status.BAD_REQUEST).entity(
 				new APIError(ErrorType.BAD_REQUEST, message)).build();
 	}
 	
 	public Response entityNotFoundResponse(Exception ex) {
+		logger.warn("Not Found", ex);
 		return Response.status(Status.NOT_FOUND).entity(
 				new APIError(ErrorType.NOT_FOUND, ex.getMessage())).build();
 	}
 	
 	public Response unauthorizedResponse(String action) {
+		logger.warn("User is not authorized to {}", action);
 		return Response.status(Status.UNAUTHORIZED).entity(
 				new APIError(ErrorType.UNAUTHORIZED, "You are not authorized to " + action)).build();
 	}
 	
 	public Response internalServerError(Exception exception) {
+		logger.error("Unexpected exception", exception);
 		if (exception.getCause() != null) {
 			return internalServerError(exception.getCause().getMessage());
 		} else {
@@ -90,11 +101,13 @@ public class ErrorUtils {
 	}
 	
 	public Response internalServerError(String cause) {
+		logger.error("Unexpected exception {}", cause);
 		return Response.status(Status.INTERNAL_SERVER_ERROR).entity(
 				new APIError(ErrorType.INTERNAL_SERVER_ERROR, cause)).build();
 	}
 	
 	public Response serviceUnavailableResponse(String cause) {
+		logger.warn("Service unavailable {}", cause);
 		return Response.status(Status.SERVICE_UNAVAILABLE).entity(
 				new APIError(ErrorType.SERVICE_UNAVAILABLE, cause)).build();
 	}

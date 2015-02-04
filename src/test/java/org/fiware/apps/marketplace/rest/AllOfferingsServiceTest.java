@@ -61,7 +61,7 @@ public class AllOfferingsServiceTest {
 	
 	@InjectMocks private AllOfferingsService allOfferingsService;
 	
-	private static final String OFFSET_MAX_INVALID = "offset and/or max are not valid";
+	private static final String OFFSET_MAX_INVALID = "offset (%d) and/or max (%d) are not valid";
 	
 	@Before 
 	public void initMocks() {
@@ -89,7 +89,8 @@ public class AllOfferingsServiceTest {
 		Response res = allOfferingsService.listServices(offset, max);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, OFFSET_MAX_INVALID);
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
+				String.format(OFFSET_MAX_INVALID, offset, max));
 	}
 	
 	@Test

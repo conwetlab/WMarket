@@ -59,6 +59,7 @@ import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.StoreRegistrationAuth;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
@@ -75,6 +76,7 @@ public class StoreRegistrationService {
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
+			LoggerFactory.getLogger(StoreRegistrationService.class),
 			"There is already a Store with that name/URL registered in the system");
 
 	// OBJECT METHODS //
