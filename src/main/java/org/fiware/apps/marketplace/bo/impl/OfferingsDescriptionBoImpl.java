@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.bo.impl;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,70 +35,70 @@ package org.fiware.apps.marketplace.bo.impl;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.bo.ServiceBo;
-import org.fiware.apps.marketplace.dao.ServiceDao;
-import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
+import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
+import org.fiware.apps.marketplace.dao.OfferingsDescriptionDao;
+import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.rdf.RdfIndexer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-@org.springframework.stereotype.Service("serviceBo")
-public class ServiceBoImpl implements ServiceBo{
+@org.springframework.stereotype.Service("offeringsDescriptionBo")
+public class OfferingsDescriptionBoImpl implements OfferingsDescriptionBo{
 	
-	@Autowired
-	ServiceDao serviceDao;
+	@Autowired private OfferingsDescriptionDao offeringsDescriptionDao;
 	
-	public void setServiceDao (ServiceDao serviceDao){
-		this.serviceDao = serviceDao;
+	public void setOfferingsDescriptionDao (OfferingsDescriptionDao offeringsDescriptionDao){
+		this.offeringsDescriptionDao = offeringsDescriptionDao;
 	}
 	
 	@Override
 	@Transactional(readOnly=false)
-	public void save(Service service) {		
-		serviceDao.save(service);	
-		RdfIndexer.indexService(service);	
+	public void save(OfferingsDescription offeringsDescription) {		
+		offeringsDescriptionDao.save(offeringsDescription);	
+		RdfIndexer.indexService(offeringsDescription);	
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(Service service) {
-		serviceDao.update(service);
-		RdfIndexer.deleteService(service);
-		RdfIndexer.indexService(service);
+	public void update(OfferingsDescription offeringsDescription) {
+		offeringsDescriptionDao.update(offeringsDescription);
+		RdfIndexer.deleteService(offeringsDescription);
+		RdfIndexer.indexService(offeringsDescription);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(Service service) {
-		serviceDao.delete(service);
-		RdfIndexer.deleteService(service);
+	public void delete(OfferingsDescription offeringsDescription) {
+		offeringsDescriptionDao.delete(offeringsDescription);
+		RdfIndexer.deleteService(offeringsDescription);
 	}
 
 	@Override
-	public Service findById(Integer id) throws ServiceNotFoundException{
-		return serviceDao.findById(id);
+	public OfferingsDescription findById(Integer id) throws OfferingDescriptionNotFoundException{
+		return offeringsDescriptionDao.findById(id);
 	}
 	
 	@Override
-	public Service findByName(String name) throws ServiceNotFoundException {
-		return serviceDao.findByName(name);
+	public OfferingsDescription findByName(String name) throws OfferingDescriptionNotFoundException {
+		return offeringsDescriptionDao.findByName(name);
 	}
 
 	@Override
-	public Service findByNameAndStore(String name, String store) throws ServiceNotFoundException, StoreNotFoundException {
-		return serviceDao.findByNameAndStore(name, store);
+	public OfferingsDescription findByNameAndStore(String name, String store) 
+			throws OfferingDescriptionNotFoundException, StoreNotFoundException {
+		return offeringsDescriptionDao.findByNameAndStore(name, store);
 	}
 	
 	@Override
-	public List<Service> getAllServices() {
-		return serviceDao.getAllServices();
+	public List<OfferingsDescription> getAllOfferingsDescriptions() {
+		return offeringsDescriptionDao.getAllOfferingsDescriptions();
 	}
 	
 	@Override
-	public List<Service> getServicesPage(int offset, int max) {
-		return serviceDao.getServicesPage(offset, max);
+	public List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max) {
+		return offeringsDescriptionDao.getOfferingsDescriptionsPage(offset, max);
 	}
 
 }

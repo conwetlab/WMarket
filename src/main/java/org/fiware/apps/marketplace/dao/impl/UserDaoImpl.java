@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.dao.impl;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,6 +44,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository("userDao")
 public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
+	
+	private static final String TABLE_NAME = User.class.getName();
 
 	@Override
 	public void save(User user) {
@@ -62,7 +64,8 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 
 	@Override
 	public User findByName(String username) throws UserNotFoundException{
-		List<?> list = getHibernateTemplate().find("from User where userName=?", username);
+		String query = String.format("from %s where userName=?", TABLE_NAME);
+		List<?> list = getHibernateTemplate().find(query, username);
 		
 		if (list.size() == 0) {
 			throw new UserNotFoundException("User " + username + " not found");

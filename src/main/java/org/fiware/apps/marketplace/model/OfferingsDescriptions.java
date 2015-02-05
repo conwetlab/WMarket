@@ -1,10 +1,9 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.model;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
  * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
@@ -33,19 +32,36 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
-import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
-import org.fiware.apps.marketplace.model.Service;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-public interface ServiceBo {
-	void save(Service service);
-	void update(Service service);
-	void delete(Service service);
-	Service findByName(String name) throws ServiceNotFoundException;
-	Service findByNameAndStore(String name, String store) throws ServiceNotFoundException, StoreNotFoundException;
-	Service findById(Integer id) throws ServiceNotFoundException;
-	List<Service> getAllServices();
-	List<Service> getServicesPage(int offset, int max);
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
+
+@XmlRootElement(name = "offerings_descriptions")
+@IgnoreMediaTypes("application/*+json")
+public class OfferingsDescriptions {
+	
+    private List<OfferingsDescription> offeringsDescriptions = null;
+    
+    public OfferingsDescriptions() {
+    	this.setOfferingsDescriptions(new ArrayList<OfferingsDescription>());
+    }
+    
+    public OfferingsDescriptions(List<OfferingsDescription> offeringsDescriptions) {
+    	this.setOfferingsDescriptions(offeringsDescriptions);
+    }
+ 
+    @XmlElement(name = "offering_description")
+    @JsonProperty("offering_descriptions")
+    public List<OfferingsDescription> getOfferingsDescriptions() {
+        return this.offeringsDescriptions;
+    }
+ 
+    public void setOfferingsDescriptions(List<OfferingsDescription> offeringsDescriptions) {
+    	this.offeringsDescriptions = offeringsDescriptions;
+    }
 }

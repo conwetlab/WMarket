@@ -42,7 +42,7 @@ import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 

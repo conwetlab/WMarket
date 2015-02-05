@@ -1,9 +1,10 @@
-package org.fiware.apps.marketplace.model;
+package org.fiware.apps.marketplace.dao;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
+ * Copyright (C) 2012 SAP
  * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
@@ -32,36 +33,18 @@ package org.fiware.apps.marketplace.model;
  * #L%
  */
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
-
-@XmlRootElement(name = "services")
-@IgnoreMediaTypes("application/*+json")
-public class Services {
-	
-    private List<Service> services = null;
-    
-    public Services() {
-    	this.setServices(new ArrayList<Service>());
-    }
-    
-    public Services(List<Service> services) {
-    	this.setServices(services);
-    }
- 
-    @XmlElement(name = "service")
-    @JsonProperty("services")
-    public List<Service> getServices() {
-        return this.services;
-    }
- 
-    public void setServices(List<Service> services) {
-    	this.services = services;
-    }
+public interface OfferingsDescriptionDao {
+	void save(OfferingsDescription offeringsDescription);
+	void update(OfferingsDescription offeringsDescription);
+	void delete(OfferingsDescription offeringsDescription);
+	OfferingsDescription findByName(String name) throws OfferingDescriptionNotFoundException;
+	OfferingsDescription findByNameAndStore(String name, String store) throws OfferingDescriptionNotFoundException;
+	OfferingsDescription findById(Integer id);
+	List<OfferingsDescription> getAllOfferingsDescriptions();
+	List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max);
 }

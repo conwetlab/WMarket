@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.rdf.RdfHelper;
 
@@ -70,7 +70,7 @@ public abstract class OfferingResolver {
 	 * @return
 	 */
 	public static List<Offering> resolveOfferingsFromStore(Store store) {
-		return resolveOfferingsFromServiceDescriptions(store.getServices(), store.getUrl());
+		return resolveOfferingsFromServiceDescriptions(store.getOfferingsDescriptions(), store.getUrl());
 	}
 
 	/**
@@ -78,9 +78,9 @@ public abstract class OfferingResolver {
 	 * @param services
 	 * @return
 	 */
-	public static List<Offering> resolveOfferingsFromServiceDescriptions(List<Service> services, String storeUrl) {
+	public static List<Offering> resolveOfferingsFromServiceDescriptions(List<OfferingsDescription> services, String storeUrl) {
 		List<Offering> offerings = new ArrayList<Offering>();
-		for (Service service : services) {
+		for (OfferingsDescription service : services) {
 			offerings.addAll(resolveOfferingsFromServiceDescription(service, storeUrl));
 		}
 		return offerings;
@@ -91,7 +91,7 @@ public abstract class OfferingResolver {
 	 * @param service
 	 * @return
 	 */
-	public static List<Offering> resolveOfferingsFromServiceDescription(Service service, String storeUrl) {
+	public static List<Offering> resolveOfferingsFromServiceDescription(OfferingsDescription service, String storeUrl) {
 		return resolveOfferingsFromServiceDescription(service.getUrl(), storeUrl);
 	}
 

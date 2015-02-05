@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.security.auth;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
@@ -47,11 +47,11 @@ import org.mockito.MockitoAnnotations;
 
 
 
-public class OfferingRegistrationAuthTest {
+public class OfferingsDescriptionRegistrationAuthTest {
 
 
 	@Mock private AuthUtils authUtils;
-	@InjectMocks private static OfferingRegistrationAuth authHelper;
+	@InjectMocks private static OfferingsDescriptionRegistrationAuth authHelper;
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// BASIC METHODS ////////////////////////////////////
@@ -63,10 +63,10 @@ public class OfferingRegistrationAuthTest {
 		return user;
 	}
 
-	private Service setUpTestUpdateAndDelete(User creator, User updater) {
+	private OfferingsDescription setUpTestUpdateAndDelete(User creator, User updater) {
 		// Set up the test		
-		Service service = new Service();
-		service.setCreator(creator);
+		OfferingsDescription offeringsDescription = new OfferingsDescription();
+		offeringsDescription.setCreator(creator);
 
 		try {
 			when(authUtils.getLoggedUser()).thenReturn(updater);
@@ -74,7 +74,7 @@ public class OfferingRegistrationAuthTest {
 			// never happens
 		}
 
-		return service;
+		return offeringsDescription;
 	}
 
 	@Before 
@@ -105,10 +105,10 @@ public class OfferingRegistrationAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	private void testUpdate(User creator, User updater, boolean canUpdate)  {
-		Service service = setUpTestUpdateAndDelete(creator, updater);
+		OfferingsDescription offeringsDescription = setUpTestUpdateAndDelete(creator, updater);
 
 		// Execute the test
-		boolean result = authHelper.canUpdate(service);
+		boolean result = authHelper.canUpdate(offeringsDescription);
 
 		// Check the result
 		assertThat(result).isEqualTo(canUpdate);
@@ -147,10 +147,10 @@ public class OfferingRegistrationAuthTest {
 	///////////////////////////////////// TEST DELETE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	private void testDelete(User creator, User updater, boolean canDelete)  {
-		Service service = setUpTestUpdateAndDelete(creator, updater);
+		OfferingsDescription offeringsDescription = setUpTestUpdateAndDelete(creator, updater);
 
 		// Execute the test
-		boolean result = authHelper.canDelete(service);
+		boolean result = authHelper.canDelete(offeringsDescription);
 
 		// Check the result
 		assertThat(result).isEqualTo(canDelete);

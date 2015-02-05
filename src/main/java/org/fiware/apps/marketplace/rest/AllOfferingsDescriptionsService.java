@@ -42,10 +42,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.ServiceBo;
-import org.fiware.apps.marketplace.model.Service;
-import org.fiware.apps.marketplace.model.Services;
-import org.fiware.apps.marketplace.security.auth.OfferingRegistrationAuth;
+import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.model.OfferingsDescriptions;
+import org.fiware.apps.marketplace.security.auth.OfferingsDescriptionRegistrationAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,21 +53,21 @@ import org.slf4j.LoggerFactory;
 
 @Component
 @Path("/offerings")	
-public class AllOfferingsService {
+public class AllOfferingsDescriptionsService {
 		
 	// OBJECT ATTRIBUTES //
-	@Autowired private ServiceBo serviceBo;
-	@Autowired private OfferingRegistrationAuth offeringRegistrationAuth;
+	@Autowired private OfferingsDescriptionBo offeringsDescriptionBo;
+	@Autowired private OfferingsDescriptionRegistrationAuth offeringRegistrationAuth;
 	
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(AllOfferingsService.class));
+			LoggerFactory.getLogger(AllOfferingsDescriptionsService.class));
 
 	
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
-	public Response listServices(@DefaultValue("0") @QueryParam("offset") int offset,
+	public Response listOfferingsDescriptions(@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max) {
 		Response response;
 
@@ -78,10 +78,11 @@ public class AllOfferingsService {
 		} else {
 			if (offeringRegistrationAuth.canList()) {
 				try {
-					List<Service> servicesPage = serviceBo.getServicesPage(offset, max);
-					Services returnedServices = new Services();
-					returnedServices.setServices(servicesPage);
-					response = Response.status(Status.OK).entity(returnedServices).build();
+					List<OfferingsDescription> offeringsDescriptionsPage = 
+							offeringsDescriptionBo.getOfferingsDescriptionsPage(offset, max);
+					OfferingsDescriptions returnedOfferingsDescriptions = new OfferingsDescriptions();
+					returnedOfferingsDescriptions.setOfferingsDescriptions(offeringsDescriptionsPage);
+					response = Response.status(Status.OK).entity(returnedOfferingsDescriptions).build();
 				} catch (Exception ex) {
 					response = ERROR_UTILS.internalServerError(ex);
 				}

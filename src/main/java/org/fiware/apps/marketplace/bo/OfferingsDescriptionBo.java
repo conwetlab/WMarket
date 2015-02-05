@@ -1,10 +1,11 @@
-package org.fiware.apps.marketplace.security.auth;
+package org.fiware.apps.marketplace.bo;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2012 SAP
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,26 +33,19 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
-import org.fiware.apps.marketplace.model.Store;
-import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.Service;
+import java.util.List;
 
+import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 
-@org.springframework.stereotype.Service("offeringRegistrationAuth")
-public class OfferingRegistrationAuth extends RegistrationAuth<Service> {
-
-	@Override
-	protected User getEntityOwner(Service service) {
-		return service.getCreator();
-	}
-	
-	/**
-	 * Method to know if a user can list the offerings belonging to a Store
-	 * @param store The store whose offerings will be listed
-	 * @return By default it returns true
-	 */
-	public boolean canList(Store store) {
-		return true;
-	}
-
+public interface OfferingsDescriptionBo {
+	void save(OfferingsDescription offeringsDescription);
+	void update(OfferingsDescription offeringsDescription);
+	void delete(OfferingsDescription offeringsDescription);
+	OfferingsDescription findByName(String name) throws OfferingDescriptionNotFoundException;
+	OfferingsDescription findByNameAndStore(String name, String store) throws OfferingDescriptionNotFoundException, StoreNotFoundException;
+	OfferingsDescription findById(Integer id) throws OfferingDescriptionNotFoundException;
+	List<OfferingsDescription> getAllOfferingsDescriptions();
+	List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max);
 }

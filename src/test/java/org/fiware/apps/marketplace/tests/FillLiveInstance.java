@@ -39,7 +39,7 @@ import org.fiware.apps.marketplace.client.ServiceClient;
 import org.fiware.apps.marketplace.client.StoreClient;
 import org.fiware.apps.marketplace.client.UserClient;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.model.Store;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -74,7 +74,7 @@ public class FillLiveInstance {
 		//assertTrue(storeClient.save(store));
 		
 
-		Service service = new Service();
+		OfferingsDescription service = new OfferingsDescription();
 		service.setName("integrationOffering");
 		service.setUrl("http://130.206.81.36:8080/FiwareRepository/v1/integrationCollection/IntegrationService.usdl");
 		

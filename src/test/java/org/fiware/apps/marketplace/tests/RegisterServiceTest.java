@@ -36,7 +36,7 @@ import junit.framework.TestCase;
 
 import org.fiware.apps.marketplace.client.ServiceClient;
 import org.fiware.apps.marketplace.client.StoreClient;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.model.Store;
 import org.junit.Ignore;
 import org.junit.Test;

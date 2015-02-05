@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.exceptions;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,11 +32,11 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
-public class ServiceNotFoundException extends Exception {
+public class OfferingDescriptionNotFoundException extends Exception {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public ServiceNotFoundException(String message) {
+	public OfferingDescriptionNotFoundException(String message) {
 		super(message);
 	}
 

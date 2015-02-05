@@ -53,7 +53,7 @@ import org.fiware.apps.marketplace.utils.xmladapters.HiddenFieldsXMLAdapter;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 @XmlRootElement(name = "user")
 @IgnoreMediaTypes("application/*+json")
 public class User {

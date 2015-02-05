@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.dao.impl;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,69 +35,73 @@ package org.fiware.apps.marketplace.dao.impl;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.dao.ServiceDao;
-import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.dao.OfferingsDescriptionDao;
+import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 
-@Repository("serviceDao")
-public class ServiceDaoImpl extends MarketplaceHibernateDao implements ServiceDao {
+@Repository("offeringsDescriptionDao")
+public class OfferingsDescriptionDaoImpl extends MarketplaceHibernateDao implements OfferingsDescriptionDao {
+	
+	private final static String TABLE_NAME = OfferingsDescription.class.getName();
 
 	@Override
-	public void save(Service service) {
-		getHibernateTemplate().saveOrUpdate(service);		
+	public void save(OfferingsDescription offeringsDescription) {
+		getHibernateTemplate().saveOrUpdate(offeringsDescription);		
 	}
 
 	@Override
-	public void update(Service service) {
-		getHibernateTemplate().update(service);		
+	public void update(OfferingsDescription offeringsDescription) {
+		getHibernateTemplate().update(offeringsDescription);		
 	}
 
 	@Override
-	public void delete(Service service) {
-		getHibernateTemplate().delete(service);		
+	public void delete(OfferingsDescription offeringsDescription) {
+		getHibernateTemplate().delete(offeringsDescription);		
 	}
 
 	@Override
-	public Service findById(Integer id) {
-		Object res = getHibernateTemplate().get(Service.class, id);
-		return (Service) res;
+	public OfferingsDescription findById(Integer id) {
+		Object res = getHibernateTemplate().get(OfferingsDescription.class, id);
+		return (OfferingsDescription) res;
 	}
 	
-	private Service findByQuery(String query, Object[] params) throws ServiceNotFoundException {
+	private OfferingsDescription findByQuery(String query, Object[] params) throws OfferingDescriptionNotFoundException {
 		List<?> list = getHibernateTemplate().find(query, params);
 		
 		if (list.size() == 0) {
-			throw new ServiceNotFoundException("Service " + params[0] + " not found");
+			throw new OfferingDescriptionNotFoundException("Offerings Description " + params[0] + " not found");
 		} else {
-			return (Service) list.get(0);
+			return (OfferingsDescription) list.get(0);
 		}
 	}
 	
 	@Override
-	public Service findByName(String name) throws ServiceNotFoundException {
+	public OfferingsDescription findByName(String name) throws OfferingDescriptionNotFoundException {
 		Object[] params = {name};
-		return this.findByQuery("from Service where name = ?", params);
+		String query = String.format("from %s where name = ?", TABLE_NAME);
+		return this.findByQuery(query, params);
 	}
 
 	@Override
-	public Service findByNameAndStore(String name, String store) throws ServiceNotFoundException {
+	public OfferingsDescription findByNameAndStore(String name, String store) throws OfferingDescriptionNotFoundException {
 		Object[] params  = {name , store};
-		return this.findByQuery("from Service where name = ? and store.name = ?", params);				
+		String query = String.format("from %s where name = ? and store.name = ?", TABLE_NAME);
+		return this.findByQuery(query, params);				
 	}
 	
 	@Override
-	public List<Service> getAllServices() {
-		return getHibernateTemplate().loadAll(Service.class);
+	public List<OfferingsDescription> getAllOfferingsDescriptions() {
+		return getHibernateTemplate().loadAll(OfferingsDescription.class);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Service> getServicesPage(int offset, int max) {
-		return (List<Service>) getHibernateTemplate().findByCriteria(
-				DetachedCriteria.forClass(Service.class), offset, max);
+	public List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max) {
+		return (List<OfferingsDescription>) getHibernateTemplate().findByCriteria(
+				DetachedCriteria.forClass(OfferingsDescription.class), offset, max);
 	}
 
 }

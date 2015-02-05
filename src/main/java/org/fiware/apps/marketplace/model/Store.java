@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.model;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,7 +60,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 
 @Entity
-@Table(name = "Stores")
+@Table(name = "stores")
 @XmlRootElement(name = "store")
 @IgnoreMediaTypes("application/*+json")
 public class Store {
@@ -70,7 +70,7 @@ public class Store {
 	private String name;
 	private String description;
 	private Date registrationDate;
-	private List <Service> services;
+	private List <OfferingsDescription> offeringsDescriptions;
 	private User lasteditor;	
 	private User creator;
 	
@@ -153,12 +153,12 @@ public class Store {
 	
 	@XmlTransient
 	@OneToMany(mappedBy="store",  cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	public List<Service> getServices() {
-		return services;
+	public List<OfferingsDescription> getOfferingsDescriptions() {
+		return offeringsDescriptions;
 	}
 	
-	public void setServices(List<Service> services) {
-		this.services = services;
+	public void setOfferingsDescriptions(List<OfferingsDescription> offeringsDescriptions) {
+		this.offeringsDescriptions = offeringsDescriptions;
 	}
 
 }

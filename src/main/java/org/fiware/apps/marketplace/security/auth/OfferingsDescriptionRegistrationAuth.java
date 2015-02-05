@@ -1,10 +1,9 @@
-package org.fiware.apps.marketplace.dao;
+package org.fiware.apps.marketplace.security.auth;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
  * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
@@ -33,18 +32,26 @@ package org.fiware.apps.marketplace.dao;
  * #L%
  */
 
-import java.util.List;
+import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 
-import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
-import org.fiware.apps.marketplace.model.Service;
 
-public interface ServiceDao {
-	void save(Service service);
-	void update(Service service);
-	void delete(Service service);
-	Service findByName(String name) throws ServiceNotFoundException;
-	Service findByNameAndStore(String name, String store) throws ServiceNotFoundException;
-	Service findById(Integer id);
-	List<Service> getAllServices();
-	List<Service> getServicesPage(int offset, int max);
+@org.springframework.stereotype.Service("offeringsDescriptionRegistrationAuth")
+public class OfferingsDescriptionRegistrationAuth extends RegistrationAuth<OfferingsDescription> {
+
+	@Override
+	protected User getEntityOwner(OfferingsDescription service) {
+		return service.getCreator();
+	}
+	
+	/**
+	 * Method to know if a user can list the offerings belonging to a Store
+	 * @param store The store whose offerings will be listed
+	 * @return By default it returns true
+	 */
+	public boolean canList(Store store) {
+		return true;
+	}
+
 }

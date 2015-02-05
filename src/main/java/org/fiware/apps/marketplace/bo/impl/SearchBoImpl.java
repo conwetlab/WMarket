@@ -5,6 +5,7 @@ package org.fiware.apps.marketplace.bo.impl;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,10 +41,10 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.fiware.apps.marketplace.bo.SearchBo;
-import org.fiware.apps.marketplace.bo.ServiceBo;
+import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
 import org.fiware.apps.marketplace.model.SearchResult;
 import org.fiware.apps.marketplace.model.SearchResultEntryMatch;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.rdf.IndexBuilderStringExtended;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.fiware.apps.marketplace.utils.PropertiesUtil;
@@ -58,7 +59,8 @@ import com.hp.hpl.jena.query.larq.LARQ;
 public class SearchBoImpl implements SearchBo {
 
 	ApplicationContext appContext = ApplicationContextProvider.getApplicationContext();	
-	ServiceBo serviceBo = (ServiceBo)appContext.getBean("serviceBo");
+	OfferingsDescriptionBo offeringsDescriptionBo = 
+			(OfferingsDescriptionBo) appContext.getBean("offeringsDescriptionBo");
 
 	@Override
 	public SearchResult searchByKeyword(String searchstring) {
@@ -85,7 +87,7 @@ public class SearchBoImpl implements SearchBo {
 			try {
 				Document doc = reader.document(hitlarq.getLuceneDocId());
 				Field val = doc.getField("docId");
-				Service s = serviceBo.findById(Integer.parseInt(val.stringValue()));
+				OfferingsDescription s = offeringsDescriptionBo.findById(Integer.parseInt(val.stringValue()));
 
 				SearchResultEntryMatch match = new SearchResultEntryMatch(node.toString(), hitlarq.getScore());
 

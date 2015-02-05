@@ -46,7 +46,7 @@ import org.fiware.apps.marketplace.helpers.AttributeTypeStatisticsResolver;
 import org.fiware.apps.marketplace.helpers.OfferingResolver;
 import org.fiware.apps.marketplace.helpers.ServiceManifestationResolver;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.model.ServiceAttributeType;
 import org.fiware.apps.marketplace.model.ServiceAttributeTypeStatistics;
 import org.fiware.apps.marketplace.model.ServiceManifestation;
@@ -104,7 +104,7 @@ public class MaintenanceBoImpl implements MaintenanceBo {
 				}
 			}
 			for (Store store : storeBo.getAllStores()) {
-				for (Service service : store.getServices()) {
+				for (OfferingsDescription service : store.getOfferingsDescriptions()) {
 					for (ServiceAttributeType attributeType : AttributeTypeResolver.resolveAttributeTypesFromUri(service.getUrl())) {
 						attributeTypeBo.save(attributeType);
 					}

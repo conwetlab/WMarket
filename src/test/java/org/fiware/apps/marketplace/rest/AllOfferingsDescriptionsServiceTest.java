@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.rest;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,23 +43,23 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
-import org.fiware.apps.marketplace.bo.ServiceBo;
+import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
 import org.fiware.apps.marketplace.model.ErrorType;
-import org.fiware.apps.marketplace.model.Service;
-import org.fiware.apps.marketplace.model.Services;
-import org.fiware.apps.marketplace.security.auth.OfferingRegistrationAuth;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.model.OfferingsDescriptions;
+import org.fiware.apps.marketplace.security.auth.OfferingsDescriptionRegistrationAuth;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class AllOfferingsServiceTest {
+public class AllOfferingsDescriptionsServiceTest {
 	
-	@Mock private ServiceBo serviceBoMock;
-	@Mock private OfferingRegistrationAuth offeringRegistrationAuthMock;
+	@Mock private OfferingsDescriptionBo offeringsDescriptionBoMock;
+	@Mock private OfferingsDescriptionRegistrationAuth offeringRegistrationAuthMock;
 	
-	@InjectMocks private AllOfferingsService allOfferingsService;
+	@InjectMocks private AllOfferingsDescriptionsService allOfferingsDescriptionsService;
 	
 	private static final String OFFSET_MAX_INVALID = "offset (%d) and/or max (%d) are not valid";
 	
@@ -69,24 +69,25 @@ public class AllOfferingsServiceTest {
 	}
 
 	@Test
-	public void testListAllServicesNotAllowed() {
+	public void testListAllOfferingsDescriptionsNotAllowed() {
 		// Mocks
 		when(offeringRegistrationAuthMock.canList()).thenReturn(false);
 
 		// Call the method
-		Response res = allOfferingsService.listServices(0, 100);
+		Response res = allOfferingsDescriptionsService.listOfferingsDescriptions(0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to list offerings");
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
+				"You are not authorized to list offerings");
 	}
 	
 	
-	private void testListAllServicesInvalidParams(int offset, int max) {
+	private void testListAllOfferingsDescriptionsInvalidParams(int offset, int max) {
 		// Mocks
 		when(offeringRegistrationAuthMock.canList()).thenReturn(true);
 
 		// Call the method
-		Response res = allOfferingsService.listServices(offset, max);
+		Response res = allOfferingsDescriptionsService.listOfferingsDescriptions(offset, max);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -94,60 +95,63 @@ public class AllOfferingsServiceTest {
 	}
 	
 	@Test
-	public void testListAllServicesInvalidOffset() {
-		testListAllServicesInvalidParams(-1, 100);
+	public void testListAllOfferingsDescriptionsInvalidOffset() {
+		testListAllOfferingsDescriptionsInvalidParams(-1, 100);
 	}
 	
 	@Test
-	public void testListAllServicesInvalidMax() {
-		testListAllServicesInvalidParams(0, -1);
+	public void testListAllOfferingsDescriptionsInvalidMax() {
+		testListAllOfferingsDescriptionsInvalidParams(0, -1);
 	}
 	
 	@Test
-	public void testListAllServicesInvalidOffsetMax() {
-		testListAllServicesInvalidParams(-1, -1);
+	public void testListAllOfferingsDescriptionsInvalidOffsetMax() {
+		testListAllOfferingsDescriptionsInvalidParams(-1, -1);
 	}
 	
 	@Test
-	public void testListAllServicesGetNoErrors() {
-		List<Service> services = new ArrayList<Service>();
+	public void testListAllOfferingsDescriptionsGetNoErrors() {
+		List<OfferingsDescription> oferringsDescriptions = new ArrayList<OfferingsDescription>();
 		for (int i = 0; i < 3; i++) {
-			Service service = new Service();
-			service.setId(i);
-			services.add(service);
+			OfferingsDescription offeringDescription = new OfferingsDescription();
+			offeringDescription.setId(i);
+			oferringsDescriptions.add(offeringDescription);
 		}
 		
 		// Mocks
 		when(offeringRegistrationAuthMock.canList()).thenReturn(true);
-		when(serviceBoMock.getServicesPage(anyInt(), anyInt())).thenReturn(services);
+		when(offeringsDescriptionBoMock.getOfferingsDescriptionsPage(anyInt(), anyInt())).
+				thenReturn(oferringsDescriptions);
 		
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsService.listServices(offset, max);
+		Response res = allOfferingsDescriptionsService.listOfferingsDescriptions(offset, max);
 		
 		// Verify
-		verify(serviceBoMock).getServicesPage(offset, max);
+		verify(offeringsDescriptionBoMock).getOfferingsDescriptionsPage(offset, max);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
-		assertThat(((Services) res.getEntity()).getServices()).isEqualTo(services);
+		assertThat(((OfferingsDescriptions) res.getEntity()).
+				getOfferingsDescriptions()).isEqualTo(oferringsDescriptions);
 	}
 	
 	@Test
-	public void testListAllServicesException() {
+	public void testListAllOfferingsDescriptionsException() {
 		// Mocks
 		String exceptionMsg = "exception";
-		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(serviceBoMock).getServicesPage(anyInt(), anyInt());
+		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(offeringsDescriptionBoMock).
+				getOfferingsDescriptionsPage(anyInt(), anyInt());
 		when(offeringRegistrationAuthMock.canList()).thenReturn(true);
 
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsService.listServices(offset, max);
+		Response res = allOfferingsDescriptionsService.listOfferingsDescriptions(offset, max);
 		
 		// Verify
-		verify(serviceBoMock).getServicesPage(offset, max);
+		verify(offeringsDescriptionBoMock).getOfferingsDescriptionsPage(offset, max);
 		
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);

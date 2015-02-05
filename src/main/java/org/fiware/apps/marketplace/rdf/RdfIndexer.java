@@ -42,7 +42,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.StaleReaderException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.LockObtainFailedException;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.utils.PropertiesUtil;
 
 import com.hp.hpl.jena.query.larq.IndexLARQ;
@@ -52,7 +52,7 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 public class RdfIndexer {
-	public static void indexService(Service service){
+	public static void indexService(OfferingsDescription service){
 
 		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
 
@@ -71,7 +71,7 @@ public class RdfIndexer {
 	}
 
 
-	public static void deleteService(Service service){
+	public static void deleteService(OfferingsDescription service){
 
 
 		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
