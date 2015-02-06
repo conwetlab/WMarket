@@ -5,6 +5,7 @@ package org.fiware.apps.marketplace.rdf;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,73 +38,67 @@ import java.io.IOException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.StaleReaderException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.utils.PropertiesUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
-import com.hp.hpl.jena.query.larq.IndexLARQ;
-import com.hp.hpl.jena.query.larq.LARQ;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
+@Service("rdfIndexer")
 public class RdfIndexer {
-	public static void indexService(OfferingsDescription service){
+	
+	private static final Logger logger = LoggerFactory.getLogger(RdfIndexer.class);
+	
+	public void indexService(OfferingsDescription service){
 
 		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
-
 		Model model = RdfHelper.loadModel(service.getUrl());
-
-		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath) ;	
+		String serviceId = service.getId().toString();
+		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath, serviceId);	
 
 		StmtIterator indexModel = model.listStatements();
-		for ( ; indexModel.hasNext() ; ){	  			  
-			Statement a = indexModel.next() ;	
-			larqBuilder.indexStatement(a, service.getId().toString());		
+		while(indexModel.hasNext()) {	  			  
+			Statement statement = indexModel.next();	
+			larqBuilder.indexStatement(statement);
 		}
 
 		larqBuilder.closeWriter();
 
 	}
 
-
-	public static void deleteService(OfferingsDescription service){
-
+	public void deleteService(OfferingsDescription service){
 
 		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
 		Analyzer analyzer = new StandardAnalyzer();
 		IndexWriter indexWriter = null;
+		
 		try {
-
 			indexWriter = new IndexWriter(lucenePath, analyzer);
 			indexWriter.deleteDocuments(new Term ("docId", service.getId().toString()));
-
-
 		} catch (StaleReaderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Deleting Service from Index - StaleReaderException", e);
 		} catch (CorruptIndexException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Deleting Service from Index - CorruptIndexException", e);
 		} catch (LockObtainFailedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Deleting Service from Index - LockObtainFailedException", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Deleting Service from Index - IOException", e);
 		}
 
 		try {
 			indexWriter.optimize();
 			indexWriter.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Deleting Service form Index (Optimizing) - IOException", e);
 		}
-
 
 	}
 

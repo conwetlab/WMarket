@@ -56,7 +56,9 @@ import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
 import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.fiware.apps.marketplace.security.auth.UserRegistrationAuth;
+
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;

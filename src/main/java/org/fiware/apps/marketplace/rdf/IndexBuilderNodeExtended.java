@@ -5,6 +5,7 @@ package org.fiware.apps.marketplace.rdf;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -53,19 +54,19 @@ public class IndexBuilderNodeExtended extends IndexBuilderNode {
 		super(path);
 	}
 	
-	public void index(Node node, String indexStr, String docId)
-	{
+	public void index(Node node, String indexStr, String docId) {
 		try {
-			Document doc = new Document() ;
-			LARQ.store(doc, node) ;
-			LARQ.index(doc, indexStr) ;
-
+			Document doc = new Document();
+			LARQ.store(doc, node);
+			LARQ.index(doc, indexStr);
+			
 			Field field = new Field("docId", docId, Field.Store.YES, Field.Index.TOKENIZED);	    
 			doc.add(field);
 
-			getIndexWriter().addDocument(doc) ;
-		} catch (IOException ex)
-		{ throw new ARQLuceneException("index", ex) ; }
+			getIndexWriter().addDocument(doc);
+		} catch (IOException ex) { 
+			throw new ARQLuceneException("index", ex);
+		}
 	}
 
 

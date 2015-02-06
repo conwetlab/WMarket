@@ -45,22 +45,23 @@ import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
 import org.fiware.apps.marketplace.model.SearchResult;
 import org.fiware.apps.marketplace.model.SearchResultEntryMatch;
 import org.fiware.apps.marketplace.model.OfferingsDescription;
-import org.fiware.apps.marketplace.rdf.IndexBuilderStringExtended;
-import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.fiware.apps.marketplace.utils.PropertiesUtil;
-import org.springframework.context.ApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.larq.HitLARQ;
+import com.hp.hpl.jena.query.larq.IndexBuilderString;
 import com.hp.hpl.jena.query.larq.IndexLARQ;
 import com.hp.hpl.jena.query.larq.LARQ;
 
 @org.springframework.stereotype.Service("searchBo")
 public class SearchBoImpl implements SearchBo {
+	
+	private final static Logger logger = LoggerFactory.getLogger(SearchBoImpl.class);
 
-	ApplicationContext appContext = ApplicationContextProvider.getApplicationContext();	
-	OfferingsDescriptionBo offeringsDescriptionBo = 
-			(OfferingsDescriptionBo) appContext.getBean("offeringsDescriptionBo");
+	@Autowired private OfferingsDescriptionBo offeringsDescriptionBo;
 
 	@Override
 	public SearchResult searchByKeyword(String searchstring) {
@@ -68,7 +69,7 @@ public class SearchBoImpl implements SearchBo {
 		SearchResult result = new SearchResult();
 		
 		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
-		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath) ;	
+		IndexBuilderString larqBuilder = new IndexBuilderString(lucenePath) ;	
 		larqBuilder.closeWriter() ;
 		IndexLARQ index = larqBuilder.getIndex() ;		
 		LARQ.setDefaultIndex(index);
@@ -77,37 +78,33 @@ public class SearchBoImpl implements SearchBo {
 		IndexReader reader = index.getLuceneReader();
 		
 		
-		for ( ; hitLARQIter.hasNext() ; )
-		{	  			  
+		while (hitLARQIter.hasNext()) {	  			  
 
-			HitLARQ hitlarq = hitLARQIter.next() ;	
+			HitLARQ hitlarq = hitLARQIter.next();	
 			Node node = hitlarq.getNode();			
-
 			
 			try {
 				Document doc = reader.document(hitlarq.getLuceneDocId());
 				Field val = doc.getField("docId");
-				OfferingsDescription s = offeringsDescriptionBo.findById(Integer.parseInt(val.stringValue()));
+				OfferingsDescription offeringDescription = 
+						offeringsDescriptionBo.findById(Integer.parseInt(val.stringValue()));
 
 				SearchResultEntryMatch match = new SearchResultEntryMatch(node.toString(), hitlarq.getScore());
 
-				if ( node.isLiteral() ){
+				if (node.isLiteral()) {
 					match.setLiteral(node.getLiteral().getLexicalForm());					
 				}
 				
-				if(s!=null){
-					result.addSearchResult(s, match);	
+				if(offeringDescription != null) {
+					result.addSearchResult(offeringDescription, match);	
 				}
 
-
 			} catch (CorruptIndexException e) {
-
-				e.printStackTrace();
+				logger.error("Search By Keyword - CorruptIndexException", e);
 			} catch (IOException e) {
-
-				e.printStackTrace();
+				logger.error("Search By Keyword - IOException", e);
 			} catch (Exception e){
-				System.out.println(e.getMessage());
+				logger.error("Search By Keyword - Exception", e);
 			}
 		
 		}
@@ -115,13 +112,10 @@ public class SearchBoImpl implements SearchBo {
 		try {
 			reader.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Search By Keyword - IOException", e);
 		}
+		
 		return result;
 
-
 	}
-
-
 }

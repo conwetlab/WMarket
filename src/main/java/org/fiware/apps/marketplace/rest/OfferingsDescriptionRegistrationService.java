@@ -67,6 +67,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.slf4j.LoggerFactory;
 
+import com.hp.hpl.jena.shared.JenaException;
+
 @Component
 @Path("/store/{storeName}/offerings_description/")	
 public class OfferingsDescriptionRegistrationService {
@@ -79,6 +81,7 @@ public class OfferingsDescriptionRegistrationService {
 	@Autowired private AuthUtils authUtils;
 
 	// CLASS ATTRIBUTES //
+	private static final String INVALID_RDF = "Your RDF could not be parsed";
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
 			LoggerFactory.getLogger(OfferingsDescriptionRegistrationService.class), 
 			"There is already an Offering in this Store with that name/URL");
@@ -110,6 +113,10 @@ public class OfferingsDescriptionRegistrationService {
 			}
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+		} catch (JenaException ex) {
+			// When a offering description is created, the RDF is parsed to update the index
+			// If the RDF is not correct, this exception will be risen
+			response = ERROR_UTILS.badRequestResponse(INVALID_RDF);
 		} catch (StoreNotFoundException ex) {
 			//The Store is an URL... If the Store does not exist a 404
 			//should be returned instead of a 400
@@ -169,6 +176,10 @@ public class OfferingsDescriptionRegistrationService {
 			}
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+		} catch (JenaException ex) {
+			// When a offering description is created, the RDF is parsed to update the index
+			// If the RDF is not correct, this exception will be risen
+			response = ERROR_UTILS.badRequestResponse(INVALID_RDF);
 		} catch (OfferingDescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (StoreNotFoundException ex) {

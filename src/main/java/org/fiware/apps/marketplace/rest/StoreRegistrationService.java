@@ -59,7 +59,9 @@ import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.StoreRegistrationAuth;
+
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;

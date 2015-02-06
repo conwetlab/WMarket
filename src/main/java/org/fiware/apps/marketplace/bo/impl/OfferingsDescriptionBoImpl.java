@@ -48,6 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OfferingsDescriptionBoImpl implements OfferingsDescriptionBo{
 	
 	@Autowired private OfferingsDescriptionDao offeringsDescriptionDao;
+	@Autowired private RdfIndexer rdfIndexer;
 	
 	public void setOfferingsDescriptionDao (OfferingsDescriptionDao offeringsDescriptionDao){
 		this.offeringsDescriptionDao = offeringsDescriptionDao;
@@ -57,22 +58,22 @@ public class OfferingsDescriptionBoImpl implements OfferingsDescriptionBo{
 	@Transactional(readOnly=false)
 	public void save(OfferingsDescription offeringsDescription) {		
 		offeringsDescriptionDao.save(offeringsDescription);	
-		RdfIndexer.indexService(offeringsDescription);	
+		rdfIndexer.indexService(offeringsDescription);	
 	}
 
 	@Override
 	@Transactional(readOnly=false)
 	public void update(OfferingsDescription offeringsDescription) {
 		offeringsDescriptionDao.update(offeringsDescription);
-		RdfIndexer.deleteService(offeringsDescription);
-		RdfIndexer.indexService(offeringsDescription);
+		rdfIndexer.deleteService(offeringsDescription);
+		rdfIndexer.indexService(offeringsDescription);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
 	public void delete(OfferingsDescription offeringsDescription) {
 		offeringsDescriptionDao.delete(offeringsDescription);
-		RdfIndexer.deleteService(offeringsDescription);
+		rdfIndexer.deleteService(offeringsDescription);
 	}
 
 	@Override

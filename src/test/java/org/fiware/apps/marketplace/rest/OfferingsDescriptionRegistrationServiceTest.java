@@ -66,6 +66,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import com.hp.hpl.jena.shared.JenaException;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 public class OfferingsDescriptionRegistrationServiceTest {
@@ -80,7 +81,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 
 	// Default values
 	private Store store;
-	private OfferingsDescription OfferingsDescription;
+	private OfferingsDescription offeringsDescription;
 	private User user;
 
 	// Other useful constants
@@ -91,6 +92,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 	private static final String VALIDATION_ERROR = "Validation Exception";
 	private static final String DESCRIPTION = "This is a basic description";
 	private static final String DESCRIPTION_NAME = "offerings description";
+	private static final String INVALID_RDF = "Your RDF could not be parsed";
 	private static final String URL = "https://repo.lab.fi-ware.org/description.rdf";
 
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -104,10 +106,10 @@ public class OfferingsDescriptionRegistrationServiceTest {
 
 	@Before
 	public void generateValidStore() {
-		OfferingsDescription = new OfferingsDescription();
-		OfferingsDescription.setDescription(DESCRIPTION);
-		OfferingsDescription.setName(DESCRIPTION_NAME);
-		OfferingsDescription.setUrl(URL);
+		offeringsDescription = new OfferingsDescription();
+		offeringsDescription.setDescription(DESCRIPTION);
+		offeringsDescription.setName(DESCRIPTION_NAME);
+		offeringsDescription.setUrl(URL);
 	}
 
 	@Before
@@ -127,7 +129,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		when(offeringsDescriptionRegistrationAuthMock.canCreate()).thenReturn(false);
 
 		// Call the method
-		Response res = offeringRegistrationService.createOfferingsDescription(STORE_NAME, OfferingsDescription);
+		Response res = offeringRegistrationService.createOfferingsDescription(STORE_NAME, offeringsDescription);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
@@ -143,23 +145,23 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		when(offeringsDescriptionRegistrationAuthMock.canCreate()).thenReturn(true);
 
 		//Call the method
-		Response res = offeringRegistrationService.createOfferingsDescription(STORE_NAME, OfferingsDescription);
+		Response res = offeringRegistrationService.createOfferingsDescription(STORE_NAME, offeringsDescription);
 
 		// Verify mocks
-		verify(offeringsDescriptionValidatorMock).validateOfferingsDescription(OfferingsDescription, true);
-		verify(offeringsDescriptionBoMock).save(OfferingsDescription);
+		verify(offeringsDescriptionValidatorMock).validateOfferingsDescription(offeringsDescription, true);
+		verify(offeringsDescriptionBoMock).save(offeringsDescription);
 
 		// Check the response
 		assertThat(res.getStatus()).isEqualTo(201);
 
 		// Check that all the parameters of the Store are correct
 		// (some of them must have been changed by the method)
-		assertThat(OfferingsDescription.getRegistrationDate()).isNotNull();
-		assertThat(OfferingsDescription.getName()).isEqualTo(DESCRIPTION_NAME);
-		assertThat(OfferingsDescription.getDescription()).isEqualTo(DESCRIPTION);
-		assertThat(OfferingsDescription.getUrl()).isEqualTo(URL);
-		assertThat(OfferingsDescription.getCreator()).isEqualTo(user);
-		assertThat(OfferingsDescription.getLasteditor()).isEqualTo(user);
+		assertThat(offeringsDescription.getRegistrationDate()).isNotNull();
+		assertThat(offeringsDescription.getName()).isEqualTo(DESCRIPTION_NAME);
+		assertThat(offeringsDescription.getDescription()).isEqualTo(DESCRIPTION);
+		assertThat(offeringsDescription.getUrl()).isEqualTo(URL);
+		assertThat(offeringsDescription.getCreator()).isEqualTo(user);
+		assertThat(offeringsDescription.getLasteditor()).isEqualTo(user);
 	}
 
 	private void testCreateOfferingsDescriptionGenericError(int statusCode, ErrorType errorType, 
@@ -168,12 +170,12 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		int saveTimes = saveInvoked ? 1 : 0;
 
 		// Call the method
-		Response res = offeringRegistrationService.createOfferingsDescription(STORE_NAME, OfferingsDescription);
+		Response res = offeringRegistrationService.createOfferingsDescription(STORE_NAME, offeringsDescription);
 
 		// Verify mocks
 		try {
-			verify(offeringsDescriptionValidatorMock).validateOfferingsDescription(OfferingsDescription, true);
-			verify(offeringsDescriptionBoMock, times(saveTimes)).save(OfferingsDescription);
+			verify(offeringsDescriptionValidatorMock).validateOfferingsDescription(offeringsDescription, true);
+			verify(offeringsDescriptionBoMock, times(saveTimes)).save(offeringsDescription);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, errorMsg);
 		} catch (ValidationException e) {
 			// Impossible...
@@ -186,9 +188,19 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		// Mocks
 		when(offeringsDescriptionRegistrationAuthMock.canCreate()).thenReturn(true);
 		doThrow(new ValidationException(VALIDATION_ERROR)).
-				when(offeringsDescriptionValidatorMock).validateOfferingsDescription(OfferingsDescription, true);
+				when(offeringsDescriptionValidatorMock).validateOfferingsDescription(offeringsDescription, true);
 
 		testCreateOfferingsDescriptionGenericError(400, ErrorType.BAD_REQUEST, VALIDATION_ERROR, false);
+	}
+	
+	@Test
+	public void testCreateOfferingsDescriptionInvalidRDF() throws ValidationException {
+		//Mocks
+		when(offeringsDescriptionRegistrationAuthMock.canCreate()).thenReturn(true);
+		doThrow(new JenaException("Some message")).
+				when(offeringsDescriptionBoMock).save(offeringsDescription);
+		
+		testCreateOfferingsDescriptionGenericError(400, ErrorType.BAD_REQUEST, INVALID_RDF, true);
 	}
 
 	@Test
@@ -219,7 +231,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		// Mock
 		when(offeringsDescriptionRegistrationAuthMock.canCreate()).thenReturn(true);
 		doThrow(new DataIntegrityViolationException("", exception)).
-				when(offeringsDescriptionBoMock).save(OfferingsDescription);
+				when(offeringsDescriptionBoMock).save(offeringsDescription);
 
 		testCreateOfferingsDescriptionGenericError(400, ErrorType.BAD_REQUEST, message, true);
 	}
@@ -242,7 +254,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		String exceptionMsg = "SERVER ERROR";
 		when(offeringsDescriptionRegistrationAuthMock.canCreate()).thenReturn(true);
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).
-				when(offeringsDescriptionBoMock).save(OfferingsDescription);
+				when(offeringsDescriptionBoMock).save(offeringsDescription);
 
 		testCreateOfferingsDescriptionGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg, true);
 	}
@@ -259,9 +271,9 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		OfferingsDescription newOfferingsDescription = new OfferingsDescription();
 
 		// Mocks
-		when(offeringsDescriptionRegistrationAuthMock.canUpdate(OfferingsDescription)).thenReturn(false);
+		when(offeringsDescriptionRegistrationAuthMock.canUpdate(offeringsDescription)).thenReturn(false);
 		when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-				thenReturn(OfferingsDescription);
+				thenReturn(offeringsDescription);
 
 		// Call the method
 		Response res = offeringRegistrationService.
@@ -272,15 +284,15 @@ public class OfferingsDescriptionRegistrationServiceTest {
 				"You are not authorized to update offering " + DESCRIPTION_NAME);
 
 		// Verify mocks
-		verify(offeringsDescriptionBoMock, never()).update(OfferingsDescription);	
+		verify(offeringsDescriptionBoMock, never()).update(offeringsDescription);	
 	}
 
 	private void testUpdateOfferingsDescriptionField(OfferingsDescription newOfferingsDescription) {
 		try {
 			// Mock
-			when(offeringsDescriptionRegistrationAuthMock.canUpdate(OfferingsDescription)).thenReturn(true);
+			when(offeringsDescriptionRegistrationAuthMock.canUpdate(offeringsDescription)).thenReturn(true);
 			when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-					thenReturn(OfferingsDescription);
+					thenReturn(offeringsDescription);
 
 			// Call the method
 			Response res = offeringRegistrationService.
@@ -288,23 +300,23 @@ public class OfferingsDescriptionRegistrationServiceTest {
 
 			// Verify mocks
 			verify(offeringsDescriptionValidatorMock).validateOfferingsDescription(newOfferingsDescription, false);
-			verify(offeringsDescriptionBoMock).update(OfferingsDescription);
+			verify(offeringsDescriptionBoMock).update(offeringsDescription);
 
 			// Assertions
 			assertThat(res.getStatus()).isEqualTo(200);
 
 			// New values
 			String newStoreName = newOfferingsDescription.getName() != null ? 
-					newOfferingsDescription.getName() : OfferingsDescription.getName();
-			assertThat(OfferingsDescription.getName()).isEqualTo(newStoreName);
+					newOfferingsDescription.getName() : offeringsDescription.getName();
+			assertThat(offeringsDescription.getName()).isEqualTo(newStoreName);
 
 			String newStoreUrl = newOfferingsDescription.getUrl() != null ? 
-					newOfferingsDescription.getUrl() : OfferingsDescription.getUrl();
-			assertThat(OfferingsDescription.getUrl()).isEqualTo(newStoreUrl);
+					newOfferingsDescription.getUrl() : offeringsDescription.getUrl();
+			assertThat(offeringsDescription.getUrl()).isEqualTo(newStoreUrl);
 
 			String newStoreDescription = newOfferingsDescription.getDescription() != null ? 
-					newOfferingsDescription.getDescription() : OfferingsDescription.getDescription();
-			assertThat(OfferingsDescription.getDescription()).isEqualTo(newStoreDescription);
+					newOfferingsDescription.getDescription() : offeringsDescription.getDescription();
+			assertThat(offeringsDescription.getDescription()).isEqualTo(newStoreDescription);
 		} catch (Exception ex) {
 			// It's not supposed to happen
 			fail("Exception " + ex + " is not supposed to happen");
@@ -327,31 +339,31 @@ public class OfferingsDescriptionRegistrationServiceTest {
 
 	@Test
 	public void testUpdateOfferingsDescriptionDescription() {
-		OfferingsDescription newOfferingsDescriptions = new OfferingsDescription();
-		newOfferingsDescriptions.setDescription("New Description");
-		testUpdateOfferingsDescriptionField(newOfferingsDescriptions);
+		OfferingsDescription newOfferingsDescription = new OfferingsDescription();
+		newOfferingsDescription.setDescription("New Description");
+		testUpdateOfferingsDescriptionField(newOfferingsDescription);
 	}
 
-	private void testUpdateOfferingsDescriptionGenericError(OfferingsDescription newOfferingsDescriptions, 
+	private void testUpdateOfferingsDescriptionGenericError(OfferingsDescription newOfferingsDescription, 
 			int status, ErrorType errorType, String message, boolean updateInvoked, boolean verifyInvoked) {
 		int updateTimes = updateInvoked ? 1 : 0;
 		int verifyTimes = verifyInvoked ? 1 : 0;
 
 		try {
 			// Mocks
-			when(offeringsDescriptionRegistrationAuthMock.canUpdate(OfferingsDescription)).thenReturn(true);
+			when(offeringsDescriptionRegistrationAuthMock.canUpdate(offeringsDescription)).thenReturn(true);
 
 			// Call the method
 			Response res = offeringRegistrationService.
-					updateOfferingsDescription(STORE_NAME, DESCRIPTION_NAME, newOfferingsDescriptions);
+					updateOfferingsDescription(STORE_NAME, DESCRIPTION_NAME, newOfferingsDescription);
 
 			// Assertions
 			GenericRestTestUtils.checkAPIError(res, status, errorType, message);
 
 			// Verify mocks
 			verify(offeringsDescriptionValidatorMock, times(verifyTimes)).
-					validateOfferingsDescription(newOfferingsDescriptions, false);
-			verify(offeringsDescriptionBoMock, times(updateTimes)).update(OfferingsDescription);	
+					validateOfferingsDescription(newOfferingsDescription, false);
+			verify(offeringsDescriptionBoMock, times(updateTimes)).update(offeringsDescription);	
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected.");
 		}
@@ -361,18 +373,36 @@ public class OfferingsDescriptionRegistrationServiceTest {
 	@Test
 	public void testUpdateOfferingsDescriptionValidationException() throws ValidationException, 
 			StoreNotFoundException, OfferingDescriptionNotFoundException {
-		OfferingsDescription newOfferingsDescriptions = new OfferingsDescription();
+		OfferingsDescription newOfferingsDescription = new OfferingsDescription();
 
 		// Mocks
 		doThrow(new ValidationException(VALIDATION_ERROR)).
-				when(offeringsDescriptionValidatorMock).validateOfferingsDescription(newOfferingsDescriptions, false);
+				when(offeringsDescriptionValidatorMock).validateOfferingsDescription(newOfferingsDescription, false);
 		when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-				thenReturn(OfferingsDescription);
+				thenReturn(offeringsDescription);
 
 		// Test
-		testUpdateOfferingsDescriptionGenericError(newOfferingsDescriptions, 400, ErrorType.BAD_REQUEST, 
+		testUpdateOfferingsDescriptionGenericError(newOfferingsDescription, 400, ErrorType.BAD_REQUEST, 
 				VALIDATION_ERROR, false, true);
 	}
+	
+	@Test
+	public void testUpdateOfferingsDescriptionInvalidRDF() throws ValidationException, 
+			StoreNotFoundException, OfferingDescriptionNotFoundException {
+		OfferingsDescription newOfferingsDescription = new OfferingsDescription();
+
+		// Mocks
+		doThrow(new JenaException("A message")).
+				when(offeringsDescriptionBoMock).update(offeringsDescription);
+		when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
+				thenReturn(offeringsDescription);
+
+		// Test
+		testUpdateOfferingsDescriptionGenericError(newOfferingsDescription, 400, ErrorType.BAD_REQUEST, 
+				INVALID_RDF, true, true);
+	}
+	
+	
 
 	@Test
 	public void testUpdateOfferingsDescriptionStoreNotFound() 
@@ -412,7 +442,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		// Mocks
 		doThrow(new UserNotFoundException("")).when(authUtilsMock).getLoggedUser();
 		when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-				thenReturn(OfferingsDescription);
+				thenReturn(offeringsDescription);
 
 		// Test
 		testUpdateOfferingsDescriptionGenericError(newOfferingsDescription, 500, ErrorType.INTERNAL_SERVER_ERROR, 
@@ -425,9 +455,9 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		//Mocks
 		try {
 			doThrow(new DataIntegrityViolationException("", exception)).
-					when(offeringsDescriptionBoMock).update(OfferingsDescription);
+					when(offeringsDescriptionBoMock).update(offeringsDescription);
 			when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-					thenReturn(OfferingsDescription);
+					thenReturn(offeringsDescription);
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected");
 		}
@@ -454,9 +484,9 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		OfferingsDescription newOfferingsDescription = new OfferingsDescription();
 		String exceptionMsg = "SERVER ERROR";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).
-				when(offeringsDescriptionBoMock).update(OfferingsDescription);
+				when(offeringsDescriptionBoMock).update(offeringsDescription);
 		when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-				thenReturn(OfferingsDescription);
+				thenReturn(offeringsDescription);
 
 		testUpdateOfferingsDescriptionGenericError(newOfferingsDescription, 500, ErrorType.INTERNAL_SERVER_ERROR, 
 				exceptionMsg, true, true);
@@ -472,9 +502,9 @@ public class OfferingsDescriptionRegistrationServiceTest {
 			throws StoreNotFoundException, OfferingDescriptionNotFoundException {
 		
 		// Mocks
-		when(offeringsDescriptionRegistrationAuthMock.canDelete(OfferingsDescription)).thenReturn(false);
+		when(offeringsDescriptionRegistrationAuthMock.canDelete(offeringsDescription)).thenReturn(false);
 		when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-				thenReturn(OfferingsDescription);
+				thenReturn(offeringsDescription);
 
 		// Call the method
 		Response res = offeringRegistrationService.deleteOfferingsDescription(STORE_NAME, DESCRIPTION_NAME);
@@ -492,9 +522,9 @@ public class OfferingsDescriptionRegistrationServiceTest {
 			throws StoreNotFoundException, OfferingDescriptionNotFoundException {
 		
 		// Mocks
-		when(offeringsDescriptionRegistrationAuthMock.canDelete(OfferingsDescription)).thenReturn(true);
+		when(offeringsDescriptionRegistrationAuthMock.canDelete(offeringsDescription)).thenReturn(true);
 		when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-				thenReturn(OfferingsDescription);
+				thenReturn(offeringsDescription);
 
 		// Call the method
 		Response res = offeringRegistrationService.deleteOfferingsDescription(STORE_NAME, DESCRIPTION_NAME);
@@ -503,7 +533,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		assertThat(res.getStatus()).isEqualTo(204);
 
 		// Verify mocks
-		verify(offeringsDescriptionBoMock).delete(OfferingsDescription);	
+		verify(offeringsDescriptionBoMock).delete(offeringsDescription);	
 	}
 	
 	private void testDeleteOfferingsDescriptionGenericError(int status, ErrorType errorType, 
@@ -512,7 +542,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 
 		try {
 			// Mocks
-			when(offeringsDescriptionRegistrationAuthMock.canDelete(OfferingsDescription)).thenReturn(true);
+			when(offeringsDescriptionRegistrationAuthMock.canDelete(offeringsDescription)).thenReturn(true);
 
 			// Call the method
 			Response res = offeringRegistrationService.deleteOfferingsDescription(STORE_NAME, DESCRIPTION_NAME);
@@ -521,7 +551,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 			GenericRestTestUtils.checkAPIError(res, status, errorType, message);
 
 			// Verify mocks
-			verify(offeringsDescriptionBoMock, times(deleteTimes)).delete(OfferingsDescription);	
+			verify(offeringsDescriptionBoMock, times(deleteTimes)).delete(offeringsDescription);	
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected.");
 		}
@@ -555,9 +585,9 @@ public class OfferingsDescriptionRegistrationServiceTest {
 			throws StoreNotFoundException, OfferingDescriptionNotFoundException {
 		String exceptionMsg = "SERVER ERROR";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).
-				when(offeringsDescriptionBoMock).delete(OfferingsDescription);
+				when(offeringsDescriptionBoMock).delete(offeringsDescription);
 		when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-				thenReturn(OfferingsDescription);
+				thenReturn(offeringsDescription);
 
 		testDeleteOfferingsDescriptionGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg, true);
 	}
@@ -572,9 +602,9 @@ public class OfferingsDescriptionRegistrationServiceTest {
 			throws StoreNotFoundException, OfferingDescriptionNotFoundException {
 		
 		// Mocks
-		when(offeringsDescriptionRegistrationAuthMock.canGet(OfferingsDescription)).thenReturn(false);
+		when(offeringsDescriptionRegistrationAuthMock.canGet(offeringsDescription)).thenReturn(false);
 		when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-				thenReturn(OfferingsDescription);
+				thenReturn(offeringsDescription);
 
 		// Call the method
 		Response res = offeringRegistrationService.getOfferingsDescription(STORE_NAME, DESCRIPTION_NAME);
@@ -589,23 +619,23 @@ public class OfferingsDescriptionRegistrationServiceTest {
 			throws StoreNotFoundException, OfferingDescriptionNotFoundException {
 		
 		// Mocks
-		when(offeringsDescriptionRegistrationAuthMock.canGet(OfferingsDescription)).thenReturn(true);
+		when(offeringsDescriptionRegistrationAuthMock.canGet(offeringsDescription)).thenReturn(true);
 		when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-				thenReturn(OfferingsDescription);
+				thenReturn(offeringsDescription);
 
 		// Call the method
 		Response res = offeringRegistrationService.getOfferingsDescription(STORE_NAME, DESCRIPTION_NAME);
 
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
-		assertThat((OfferingsDescription) res.getEntity()).isEqualTo(OfferingsDescription);
+		assertThat((OfferingsDescription) res.getEntity()).isEqualTo(offeringsDescription);
 	}
 	
 	private void testGetOfferingsDescriptionGenericError(int status, ErrorType errorType, String message) {
 
 		try {
 			// Mocks
-			when(offeringsDescriptionRegistrationAuthMock.canGet(OfferingsDescription)).thenReturn(true);
+			when(offeringsDescriptionRegistrationAuthMock.canGet(offeringsDescription)).thenReturn(true);
 
 			// Call the method
 			Response res = offeringRegistrationService.getOfferingsDescription(STORE_NAME, DESCRIPTION_NAME);

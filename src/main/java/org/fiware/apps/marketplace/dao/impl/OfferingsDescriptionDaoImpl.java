@@ -39,7 +39,9 @@ import org.fiware.apps.marketplace.dao.OfferingsDescriptionDao;
 import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
 import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
+
 import org.hibernate.criterion.DetachedCriteria;
+
 import org.springframework.stereotype.Repository;
 
 @Repository("offeringsDescriptionDao")

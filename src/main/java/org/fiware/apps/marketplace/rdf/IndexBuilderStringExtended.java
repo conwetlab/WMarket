@@ -5,6 +5,7 @@ package org.fiware.apps.marketplace.rdf;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,48 +38,66 @@ import java.util.Set;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.larq.ARQLuceneException;
-import com.hp.hpl.jena.query.larq.IndexBuilderNode;
 import com.hp.hpl.jena.query.larq.IndexBuilderString;
 import com.hp.hpl.jena.rdf.model.Statement;
 
+/**
+ * Helper to index a document. The document should be received 
+ * through the constructor
+ * @author aitor
+ *
+ */
 public class IndexBuilderStringExtended extends IndexBuilderString {
 
+	// private IndexBuilderNodeExtended index;
+	private Set<Node> indexedNodes = new HashSet<Node>();
+	private String docId;
 
-//	protected IndexBuilderNodeExtended index;
-	private Set<Node> seen = new HashSet<Node>() ;
-
-	public IndexBuilderStringExtended(){        	
-		index = new IndexBuilderNodeExtended();
+	/**
+	 * Helper to index a document. A generic path will be used to store
+	 * the document
+	 * @param docId The document to be indexed
+	 */
+	public IndexBuilderStringExtended(String docId) {
+		this.index = new IndexBuilderNodeExtended();
+		this.docId = docId;
 	}
 
-	public IndexBuilderStringExtended(String path){        
-		 index = new IndexBuilderNodeExtended(path);
+	/**
+	 * Helper to index a document
+	 * @param path The Lucene path where the Index will be stored
+	 * @param docId The document to be indexed
+	 */
+	public IndexBuilderStringExtended(String path, String docId) {
+		this.index = new IndexBuilderNodeExtended(path);
+		this.docId = docId;
 	}
 
-	public void indexStatement(Statement s, String docId)
-	{
-		if ( ! indexThisStatement(s) )
-			return ;
+	/**
+	 * Function to index a statement that belongs to the service
+	 * that is being indexed
+	 * @param statement The statement to be indexed associated
+	 * to the service
+	 */
+	public void indexStatement(Statement statement) {
+		if (indexThisStatement(statement)) {
+			try {
+				if (statement.getObject().isLiteral()) {
+					
+					Node node = statement.getObject().asNode();
+					
+					if (!indexedNodes.contains(node)){
+						if (indexThisLiteral(statement.getLiteral())){
+							IndexBuilderNodeExtended indexExt = (IndexBuilderNodeExtended) index;
+							indexExt.index(node, node.getLiteralLexicalForm(), this.docId);
+						}
 
-		try {
-			if ( s.getObject().isLiteral() )
-			{
-				Node node = s.getObject().asNode() ;
-				if ( ! seen.contains(node) )
-				{
-					if ( indexThisLiteral(s.getLiteral())){
-						IndexBuilderNodeExtended indexExt = (IndexBuilderNodeExtended) index;                    	
-						indexExt.index(node, node.getLiteralLexicalForm(), docId) ;
-						
+						indexedNodes.add(node);
 					}
-						
-					seen.add(node) ;
 				}
+			} catch (Exception e) { 
+				throw new ARQLuceneException("indexStatement", e); 
 			}
-		} catch (Exception e)
-		{ throw new ARQLuceneException("indexStatement", e) ; }
+		}
 	}
-
-
-
 }

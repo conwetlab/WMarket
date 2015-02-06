@@ -99,7 +99,7 @@ public class OpenJenaTest {
 			e.printStackTrace();
 		}
 
-		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended("C:\\temp") ;		
+		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended("C:\\temp", "3131") ;		
 
 		//IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended() ;		
 
@@ -112,7 +112,7 @@ public class OpenJenaTest {
 			Statement a = indexModel.next() ;	
 
 
-			larqBuilder.indexStatement(a, "3131");		
+			larqBuilder.indexStatement(a);		
 
 
 
