@@ -51,14 +51,14 @@ public class StoreValidator {
 	public boolean validateStore(Store store, boolean isBeingCreated) throws ValidationException {
 		
 		if (isBeingCreated) {
-			if (store.getName() == null || store.getUrl() == null) {
+			if (store.getDisplayName() == null || store.getUrl() == null) {
 				throw new ValidationException("name and/or url cannot be null");
 			}
 		}
 		
-		if (store.getName() != null && !GENERIC_VALIDATOR.validateName(store.getName())) {
-			int minNameLength = GenericValidator.getNameMinLength();
-			int maxNameLength = GenericValidator.getNameMaxLength();
+		if (store.getDisplayName() != null && !GENERIC_VALIDATOR.validateDisplayName(store.getDisplayName())) {
+			int minNameLength = GenericValidator.getDisplayNameMinLength();
+			int maxNameLength = GenericValidator.getDisplayNameMaxLength();
 			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("name", 
 					minNameLength, maxNameLength));
 		}

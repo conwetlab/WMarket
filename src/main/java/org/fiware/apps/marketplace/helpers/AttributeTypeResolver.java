@@ -41,6 +41,8 @@ import org.fiware.apps.marketplace.model.ServiceNominalAttributeType;
 import org.fiware.apps.marketplace.model.ServiceOrdinalAttributeType;
 import org.fiware.apps.marketplace.model.ServiceRatioAttributeType;
 import org.fiware.apps.marketplace.rdf.RdfHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hp.hpl.jena.rdf.model.Model;
 
@@ -50,26 +52,31 @@ import com.hp.hpl.jena.rdf.model.Model;
  * @author D058352
  *
  */
-public abstract class AttributeTypeResolver {
+@Service("attributeTypeResolver")
+public class AttributeTypeResolver {
+	
+	@Autowired private RdfHelper rdfHelper;
 
 	/**
 	 * Resolves all service attribute types that are contained under the given uri.
 	 * @param uri
 	 * @return
 	 */
-	public static List<ServiceAttributeType> resolveAttributeTypesFromUri(String uri) {
-		Model model = RdfHelper.getModelFromUri(uri);
+	public List<ServiceAttributeType> resolveAttributeTypesFromUri(String uri) {
+		Model model = rdfHelper.getModelFromUri(uri);
 		if (model == null)
 			return Collections.emptyList();
 
 		List<ServiceAttributeType> types = new ArrayList<ServiceAttributeType>();
-		StringBuilder queryTypes = new StringBuilder(RdfHelper.queryPrefixes);
+		StringBuilder queryTypes = new StringBuilder(RdfHelper.getQueryPrefixes());
 		queryTypes.append("SELECT DISTINCT ?x WHERE { ");
 		queryTypes.append("?x a skos:Concept . ");
 		queryTypes.append("{ { ?x rdfs:subClassOf gr:QualitativeValue } UNION { ?x rdfs:subClassOf gr:QuantitativeValue } } } ");
-		for (String typeUri : RdfHelper.queryUris(queryTypes.toString(), "x", model)) {
+		
+		for (String typeUri : rdfHelper.queryUris(model, queryTypes.toString(), "x")) {
 			types.add(createAttributeType(typeUri, model));
 		}
+		
 		return types;
 	}
 
@@ -79,15 +86,15 @@ public abstract class AttributeTypeResolver {
 	 * @param model
 	 * @return Returns null if more than two parent classes have been found or the contained type is unknown. 
 	 */
-	protected static ServiceAttributeType createAttributeType(String typeUri, Model model) {
-		List<String> baseTypeUris = RdfHelper.getObjectUris(typeUri, "rdfs:subClassOf", model);
+	protected ServiceAttributeType createAttributeType(String typeUri, Model model) {
+		List<String> baseTypeUris = rdfHelper.getObjectUris(model, typeUri, "rdfs:subClassOf");
 		if (baseTypeUris.size() > 2) {
 			System.out.println(AttributeTypeResolver.class.getName() + " - Too many base type uris: " + typeUri);
 			return null;
 		}
 
-		String rightSiblingUri = RdfHelper.getObjectUri(typeUri, "genVoc:hasRightSibling", model);
-		String leftSiblingUri = RdfHelper.getObjectUri(typeUri, "genVoc:hasLeftSibling", model);
+		String rightSiblingUri = rdfHelper.getObjectUri(model, typeUri, "genVoc:hasRightSibling");
+		String leftSiblingUri = rdfHelper.getObjectUri(model, typeUri, "genVoc:hasLeftSibling");
 
 		ServiceAttributeType attributeType = null;
 		if (isRatioAttributeType(baseTypeUris))
@@ -102,10 +109,10 @@ public abstract class AttributeTypeResolver {
 		}
 
 		attributeType.setUri(typeUri);
-		attributeType.setPreferedLabel(RdfHelper.getLiteral(typeUri, "skos:prefLabel", model));
-		attributeType.setDescription(RdfHelper.getLiteral(typeUri, "dcterms:description", model));
-		attributeType.setBroaderTypeUri(RdfHelper.getObjectUri(typeUri, "skos:broader", model));
-		for (String narrowerTypeUri : RdfHelper.getObjectUris(typeUri, "skos:narrower", model)) {
+		attributeType.setPreferedLabel(rdfHelper.getLiteral(model, typeUri, "skos:prefLabel"));
+		attributeType.setDescription(rdfHelper.getLiteral(model, typeUri, "dcterms:description"));
+		attributeType.setBroaderTypeUri(rdfHelper.getObjectUri(model, typeUri, "skos:broader"));
+		for (String narrowerTypeUri : rdfHelper.getObjectUris(model, typeUri, "skos:narrower")) {
 			attributeType.addNarrowerTypeUri(narrowerTypeUri);
 		}
 		for (String baseTypeUri : baseTypeUris) {
@@ -118,31 +125,31 @@ public abstract class AttributeTypeResolver {
 		return attributeType;
 	}
 
-	protected static boolean isRatioAttributeType(List<String> baseTypeUris) {
+	protected boolean isRatioAttributeType(List<String> baseTypeUris) {
 		return baseTypeUris.contains(ServiceRatioAttributeType.baseTypeUri);
 	}
 
-	protected static boolean isOrdinalAttributeType(List<String> baseTypeUris, String rightSiblingUri, String leftSiblingUri) {
+	protected boolean isOrdinalAttributeType(List<String> baseTypeUris, String rightSiblingUri, String leftSiblingUri) {
 		return baseTypeUris.contains(ServiceOrdinalAttributeType.baseTypeUri) && (null != rightSiblingUri || null != leftSiblingUri);
 	}
 
-	protected static boolean isNominalAttributeType(List<String> baseTypeUris, String rightSiblingUri, String leftSiblingUri) {
+	protected boolean isNominalAttributeType(List<String> baseTypeUris, String rightSiblingUri, String leftSiblingUri) {
 		return baseTypeUris.contains(ServiceNominalAttributeType.baseTypeUri) && null == rightSiblingUri && null == leftSiblingUri;
 	}
 
-	protected static ServiceRatioAttributeType createRatioAttributeType() {
+	protected ServiceRatioAttributeType createRatioAttributeType() {
 		ServiceRatioAttributeType attributeType = new ServiceRatioAttributeType();
 		return attributeType;
 	}
 
-	protected static ServiceOrdinalAttributeType createOrdinalAttributeType(String rightSiblingUri, String leftSiblingUri) {
+	protected ServiceOrdinalAttributeType createOrdinalAttributeType(String rightSiblingUri, String leftSiblingUri) {
 		ServiceOrdinalAttributeType attributeType = new ServiceOrdinalAttributeType();
 		attributeType.setLeftSiblingUri(leftSiblingUri);
 		attributeType.setRightSiblingUri(rightSiblingUri);
 		return attributeType;
 	}
 
-	protected static ServiceNominalAttributeType createNominalAttributeType() {
+	protected ServiceNominalAttributeType createNominalAttributeType() {
 		ServiceNominalAttributeType attributeType = new ServiceNominalAttributeType();
 		return attributeType;
 	}

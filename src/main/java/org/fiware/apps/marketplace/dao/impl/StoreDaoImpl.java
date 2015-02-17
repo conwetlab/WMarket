@@ -39,7 +39,6 @@ import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
-import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 
 @Repository("storeDao")
@@ -47,22 +46,25 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 
 	@Override
 	public void save(Store store) {
-		getHibernateTemplate().saveOrUpdate(store);				
+		getSession().saveOrUpdate(store);				
 	}
 	
 	@Override
 	public void update(Store store) {
-		getHibernateTemplate().update(store);		
+		getSession().update(store);		
 	}
 
 	@Override
 	public void delete(Store store) {
-		getHibernateTemplate().delete(store);		
+		getSession().delete(store);		
 	}
 
 	@Override
 	public Store findByName(String name) throws StoreNotFoundException {	
-		List<?> list = getHibernateTemplate().find("from Store where name=?", name);	
+		List<?> list = getSession()
+				.createQuery("from Store where name=:name")
+				.setParameter("name", name)
+				.list();	
 		
 		if (list.size() == 0){
 			throw new StoreNotFoundException("Store " + name + " not found");
@@ -75,13 +77,17 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Store> getStoresPage(int offset, int max) {
-		return (List<Store>) getHibernateTemplate().findByCriteria(
-				DetachedCriteria.forClass(Store.class), offset, max);
+		return getSession()
+				.createCriteria(Store.class)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List <Store> getAllStores() {
-		return getHibernateTemplate().loadAll(Store.class);
+		return getSession().createCriteria(Store.class).list();
 	}
 
 }

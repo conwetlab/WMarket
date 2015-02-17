@@ -35,14 +35,19 @@ package org.fiware.apps.marketplace.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -53,6 +58,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.fiware.apps.marketplace.utils.xmladapters.StoreXMLAdapter;
 import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
@@ -65,20 +72,26 @@ public class OfferingsDescription {
 	private Integer id;
 	private String url;
 	private String name;
+	private String displayName;
 	private String description;
 	private Date registrationDate;
 	private Store store;
 	private User lasteditor;	
 	private User creator;
+	private List<Offering> offerings;
+	
+	public OfferingsDescription() {
+		this.offerings = new ArrayList<Offering>();
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer  getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer  id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -91,6 +104,16 @@ public class OfferingsDescription {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@XmlElement
+	@Column(name = "display_name")
+	public String getDisplayName() {
+		return this.displayName;
+	}
+	
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	@XmlElement
@@ -116,7 +139,7 @@ public class OfferingsDescription {
 	@XmlElement
 	@XmlJavaTypeAdapter(StoreXMLAdapter.class)
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "store", nullable=false)
+	@JoinColumn(name = "store", updatable=false)
 	public Store getStore() {
 		return store;
 	}
@@ -157,5 +180,24 @@ public class OfferingsDescription {
 
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	@XmlElement
+	@OneToMany(mappedBy="describedIn", cascade=CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	public List<Offering> getOfferings() {
+		return offerings;
+	}
+
+	public void setOfferings(List<Offering> offerings) {
+		this.offerings = offerings;
+	}
+	
+	public void addOffering(Offering offering) {
+		this.offerings.add(offering);
+	}
+	
+	public void addOfferings(Collection<Offering> offerings) {
+		this.offerings.addAll(offerings);
 	}
 }

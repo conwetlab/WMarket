@@ -41,7 +41,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -56,6 +55,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 
@@ -67,10 +68,11 @@ public class Store {
 	
 	private Integer id;
 	private String url;
+	private String displayName;
 	private String name;
 	private String description;
 	private Date registrationDate;
-	private List <OfferingsDescription> offeringsDescriptions;
+	private List<OfferingsDescription> offeringsDescriptions;
 	private User lasteditor;	
 	private User creator;
 	
@@ -95,6 +97,17 @@ public class Store {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@XmlID
+	@XmlElement 
+	@Column(name = "display_name", unique = true, nullable = false)
+	public String getDisplayName() {
+		return displayName;
+	}
+	
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 	
 	@XmlElement
@@ -152,7 +165,8 @@ public class Store {
 	}
 	
 	@XmlTransient
-	@OneToMany(mappedBy="store",  cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="store", cascade=CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	public List<OfferingsDescription> getOfferingsDescriptions() {
 		return offeringsDescriptions;
 	}
@@ -160,5 +174,4 @@ public class Store {
 	public void setOfferingsDescriptions(List<OfferingsDescription> offeringsDescriptions) {
 		this.offeringsDescriptions = offeringsDescriptions;
 	}
-
 }

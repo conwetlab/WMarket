@@ -40,12 +40,19 @@ import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.OfferingsDescription;
 
 public interface OfferingsDescriptionBo {
-	void save(OfferingsDescription offeringsDescription);
-	void update(OfferingsDescription offeringsDescription);
-	void delete(OfferingsDescription offeringsDescription);
-	OfferingsDescription findByName(String name) throws OfferingDescriptionNotFoundException;
-	OfferingsDescription findByNameAndStore(String name, String store) throws OfferingDescriptionNotFoundException, StoreNotFoundException;
-	OfferingsDescription findById(Integer id) throws OfferingDescriptionNotFoundException;
-	List<OfferingsDescription> getAllOfferingsDescriptions();
-	List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max);
+	
+	// Save, Update, Delete
+	public void save(OfferingsDescription offeringsDescription) throws Exception;
+	public void update(OfferingsDescription offeringsDescription) throws Exception;
+	public void delete(OfferingsDescription offeringsDescription) throws Exception;
+	
+	// Find
+	public OfferingsDescription findByName(String name) throws OfferingDescriptionNotFoundException;
+	public OfferingsDescription findByNameAndStore(String name, String store) 
+			throws OfferingDescriptionNotFoundException, StoreNotFoundException;
+	public OfferingsDescription findById(Integer id) throws OfferingDescriptionNotFoundException;
+	
+	// Get all or a sublist
+	public List<OfferingsDescription> getAllOfferingsDescriptions();
+	public List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max);
 }

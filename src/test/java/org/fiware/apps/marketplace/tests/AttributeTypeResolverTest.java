@@ -47,6 +47,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 public class AttributeTypeResolverTest {
+	
+	private AttributeTypeResolver attributeTypeResolver = new AttributeTypeResolver();
 
 	private static final String amazonUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
 	private static final String cloudVocUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004";
@@ -55,7 +57,7 @@ public class AttributeTypeResolverTest {
 	@Test
 	@Ignore
 	public void testResolveAttributeTypesFromUri_GeneralVoc() {
-		List<ServiceAttributeType> generalVocTypes = AttributeTypeResolver.resolveAttributeTypesFromUri(generalVocUri);
+		List<ServiceAttributeType> generalVocTypes = attributeTypeResolver.resolveAttributeTypesFromUri(generalVocUri);
 		assertEquals(7, generalVocTypes.size());
 
 		int nominalCtr = 0;
@@ -140,7 +142,7 @@ public class AttributeTypeResolverTest {
 	@Test
 	@Ignore
 	public void testResolveAttributeTypesFromUri_CloudVoc() {
-		List<ServiceAttributeType> generalVocTypes = AttributeTypeResolver.resolveAttributeTypesFromUri(cloudVocUri);
+		List<ServiceAttributeType> generalVocTypes = attributeTypeResolver.resolveAttributeTypesFromUri(cloudVocUri);
 		assertEquals(36, generalVocTypes.size());
 
 		int nominalCtr = 0;
@@ -200,7 +202,7 @@ public class AttributeTypeResolverTest {
 	@Test
 	@Ignore
 	public void testResolveOrdinalValue() {
-		List<ServiceAttributeType> types = AttributeTypeResolver.resolveAttributeTypesFromUri(amazonUri);
+		List<ServiceAttributeType> types = attributeTypeResolver.resolveAttributeTypesFromUri(amazonUri);
 		assertEquals(20, types.size());
 		for (ServiceAttributeType type : types) {
 			if (type.getUri().equals(amazonUri + "#Amazon_Support_ArchitectureSupport_ServiceReviews")) {

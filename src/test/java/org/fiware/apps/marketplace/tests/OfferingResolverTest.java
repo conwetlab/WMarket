@@ -46,7 +46,7 @@ import org.junit.Test;
 
 public class OfferingResolverTest {
 
-	private static final String uri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
+	/*private static final String uri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
 
 	@Test
 	@Ignore
@@ -106,5 +106,5 @@ public class OfferingResolverTest {
 			} else
 				fail("Unknown offering uri. This point should not be reached.");
 		}
-	}
+	}*/
 }

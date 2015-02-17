@@ -33,6 +33,7 @@ package org.fiware.apps.marketplace.rest;
  * #L%
  */
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -56,11 +57,9 @@ import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
 import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.fiware.apps.marketplace.security.auth.UserRegistrationAuth;
-
+import org.hibernate.HibernateException;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -90,20 +89,25 @@ public class UserRegistrationService {
 		try {
 			if (userRegistrationAuth.canCreate()) {
 				// Validate the user (exception is thrown if the user is not valid)
-				userValidator.validateUser(user, true); 		
+				userValidator.validateUser(user, true);
+				
+				// Set user name (it won't be changed even if the display name changes)
+				user.setUserName(Utils.getURLName(user.getDisplayName()));
 				
 				// Encode password. Set registration date...
 				user.setPassword(enconder.encode(user.getPassword()));
 				user.setRegistrationDate(new Date());
 				
 				userBo.save(user);
-				response = Response.status(Status.CREATED).build();		
+				response = Response.status(Status.CREATED)
+						.contentLocation(new URI(user.getUserName()))
+						.build();		
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("create user");
 			}
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
-		} catch (DataAccessException ex) {
+		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
@@ -149,13 +153,13 @@ public class UserRegistrationService {
 				}
 				
 				userBo.update(userToBeUpdated);
-				response = Response.status(Status.OK).build();	
+				response = Response.status(Status.OK).build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("update user " + username);
 			}
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
-		} catch (DataAccessException ex) {
+		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);

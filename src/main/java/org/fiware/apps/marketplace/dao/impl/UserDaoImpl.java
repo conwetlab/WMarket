@@ -39,7 +39,6 @@ import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
-import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 
 @Repository("userDao")
@@ -49,23 +48,26 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 
 	@Override
 	public void save(User user) {
-		getHibernateTemplate().saveOrUpdate(user);	
+		getSession().saveOrUpdate(user);	
 	}
 
 	@Override
 	public void update(User user) {
-		getHibernateTemplate().update(user);
+		getSession().update(user);
 	}
 
 	@Override
 	public void delete(User user) {
-		getHibernateTemplate().delete(user);
+		getSession().delete(user);
 	}
 
 	@Override
 	public User findByName(String username) throws UserNotFoundException{
-		String query = String.format("from %s where userName=?", TABLE_NAME);
-		List<?> list = getHibernateTemplate().find(query, username);
+		String query = String.format("from %s where userName=:userName", TABLE_NAME);
+		List<?> list = getSession()
+				.createQuery(query)
+				.setParameter("userName", username)
+				.list();
 		
 		if (list.size() == 0) {
 			throw new UserNotFoundException("User " + username + " not found");
@@ -77,13 +79,19 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsersPage(int offset, int max) {
-		return (List<User>) getHibernateTemplate().findByCriteria(
-				DetachedCriteria.forClass(User.class), offset, max);
+		return getSession()
+				.createCriteria(User.class)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getAllUsers() {
-		return getHibernateTemplate().loadAll(User.class);
+		return getSession()
+				.createCriteria(User.class)
+				.list();
 	}
 
 }

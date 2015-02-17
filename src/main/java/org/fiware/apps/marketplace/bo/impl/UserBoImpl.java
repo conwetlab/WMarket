@@ -72,16 +72,19 @@ public class UserBoImpl implements UserBo {
 	}
 
 	@Override
+	@Transactional
 	public User findByName(String username) throws UserNotFoundException {
 		return userDao.findByName(username);
 	}
 	
 	@Override
+	@Transactional
 	public List<User> getUsersPage(int offset, int max) {
 		return userDao.getUsersPage(offset, max);
 	}
 
 	@Override
+	@Transactional
 	public List<User> getAllUsers() {
 		return userDao.getAllUsers();
 	}

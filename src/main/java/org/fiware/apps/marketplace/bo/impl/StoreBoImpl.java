@@ -75,16 +75,19 @@ public class StoreBoImpl implements StoreBo{
 	}
 
 	@Override
+	@Transactional
 	public Store findByName(String name) throws StoreNotFoundException {
 		return storeDao.findByName(name);
 	}
 	
 	@Override
+	@Transactional
 	public List<Store> getStoresPage(int offset, int max) {
 		return storeDao.getStoresPage(offset, max);
 	}
 	
 	@Override
+	@Transactional
 	public List<Store> getAllStores() {
 		return storeDao.getAllStores();
 	}

@@ -48,7 +48,7 @@ public class UserValidatorTest {
 	
 	private static User generateValidUser() {
 		User user = new User();
-		user.setUserName("userName");
+		user.setDisplayName("userName");
 		user.setPassword("12345678");
 		user.setEmail("example@example.com");
 		user.setCompany("EXAMPLE");
@@ -69,7 +69,7 @@ public class UserValidatorTest {
 	@Test
 	public void testValidBasicUser() throws ValidationException {
 		User user = new User();
-		user.setUserName("userName");
+		user.setDisplayName("userName");
 		user.setPassword("12345678");
 		user.setEmail("example@example.com");
 		
@@ -86,7 +86,7 @@ public class UserValidatorTest {
 	public void testMissingUserNameOnCreation() {
 		// Generate a user without username
 		User user = generateValidUser();
-		user.setUserName(null);
+		user.setDisplayName(null);
 		
 		assertInvalidUser(user, MISSING_FILEDS_MSG, true);
 	}
@@ -95,7 +95,7 @@ public class UserValidatorTest {
 	public void testMissingUserNameOnUpdate() throws ValidationException {
 		// Generate a user without username
 		User user = generateValidUser();
-		user.setUserName(null);
+		user.setDisplayName(null);
 		
 		assertThat(userValidator.validateUser(user, false)).isTrue();
 	}
@@ -152,22 +152,6 @@ public class UserValidatorTest {
 		
 		// Company name can be set to null
 		assertThat(userValidator.validateUser(user, false)).isTrue();
-	}
-	
-	@Test
-	public void testUserNameTooShort() {
-		User user = generateValidUser();
-		user.setUserName("a");
-		
-		assertInvalidUser(user, String.format(INVALID_LENGTH_PATTERN, "userName", 5, 15), false);
-	}
-	
-	@Test
-	public void testUserNameTooLong() {
-		User user = generateValidUser();
-		user.setUserName("1234567890123456");
-		
-		assertInvalidUser(user, String.format(INVALID_LENGTH_PATTERN, "userName", 5, 15), false);
 	}
 	
 	@Test

@@ -33,12 +33,16 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
+import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.dao.OfferingsDescriptionDao;
 import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.helpers.OfferingResolver;
+import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.rdf.RdfIndexer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +53,8 @@ public class OfferingsDescriptionBoImpl implements OfferingsDescriptionBo{
 	
 	@Autowired private OfferingsDescriptionDao offeringsDescriptionDao;
 	@Autowired private RdfIndexer rdfIndexer;
+	@Autowired private OfferingResolver offeringResolver;
+	@Autowired private StoreBo storeBo;
 	
 	public void setOfferingsDescriptionDao (OfferingsDescriptionDao offeringsDescriptionDao){
 		this.offeringsDescriptionDao = offeringsDescriptionDao;
@@ -56,15 +62,29 @@ public class OfferingsDescriptionBoImpl implements OfferingsDescriptionBo{
 	
 	@Override
 	@Transactional(readOnly=false)
-	public void save(OfferingsDescription offeringsDescription) {		
-		offeringsDescriptionDao.save(offeringsDescription);	
-		rdfIndexer.indexService(offeringsDescription);	
+	public void save(OfferingsDescription offeringsDescription) throws MalformedURLException {
+		// Get all the offerings described in the USDL
+		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(offeringsDescription);
+		offeringsDescription.addOfferings(offerings);
+		
+		// Save the description
+		offeringsDescriptionDao.save(offeringsDescription);
+		
+		// Index
+		rdfIndexer.indexService(offeringsDescription);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(OfferingsDescription offeringsDescription) {
+	public void update(OfferingsDescription offeringsDescription) throws MalformedURLException {
+		// Get all the offerings described in the USDL
+		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(offeringsDescription);
+		offeringsDescription.setOfferings(offerings);
+
+		// Save the description
 		offeringsDescriptionDao.update(offeringsDescription);
+		
+		// Reindex
 		rdfIndexer.deleteService(offeringsDescription);
 		rdfIndexer.indexService(offeringsDescription);
 	}
@@ -77,27 +97,32 @@ public class OfferingsDescriptionBoImpl implements OfferingsDescriptionBo{
 	}
 
 	@Override
+	@Transactional
 	public OfferingsDescription findById(Integer id) throws OfferingDescriptionNotFoundException{
 		return offeringsDescriptionDao.findById(id);
 	}
 	
 	@Override
+	@Transactional
 	public OfferingsDescription findByName(String name) throws OfferingDescriptionNotFoundException {
 		return offeringsDescriptionDao.findByName(name);
 	}
 
 	@Override
+	@Transactional
 	public OfferingsDescription findByNameAndStore(String name, String store) 
 			throws OfferingDescriptionNotFoundException, StoreNotFoundException {
 		return offeringsDescriptionDao.findByNameAndStore(name, store);
 	}
 	
 	@Override
+	@Transactional
 	public List<OfferingsDescription> getAllOfferingsDescriptions() {
 		return offeringsDescriptionDao.getAllOfferingsDescriptions();
 	}
 	
 	@Override
+	@Transactional
 	public List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max) {
 		return offeringsDescriptionDao.getOfferingsDescriptionsPage(offset, max);
 	}

@@ -54,7 +54,7 @@ public class StoreValidatorTest {
 		store.setCreator(new User());
 		store.setDescription("This is a basic description");
 		store.setLasteditor(store.getCreator());
-		store.setName("store");
+		store.setDisplayName("store");
 		store.setUrl("https://store.lab.fi-ware.org");
 		store.setRegistrationDate(new Date());
 
@@ -73,7 +73,7 @@ public class StoreValidatorTest {
 	@Test
 	public void testValidBasicStore() throws ValidationException {
 		Store store = new Store();
-		store.setName("store");
+		store.setDisplayName("store");
 		store.setUrl("https://store.lab.fi-ware.org");
 
 		assertThat(storeValidator.validateStore(store, true)).isTrue();
@@ -88,7 +88,7 @@ public class StoreValidatorTest {
 	@Test
 	public void testMissingNameOnCreation() {
 		Store store = generateValidStore();
-		store.setName(null);
+		store.setDisplayName(null);
 
 		assertInvalidStore(store, MISSING_FIELDS, true);
 	}
@@ -136,7 +136,7 @@ public class StoreValidatorTest {
 	@Test
 	public void testNameTooShort() {
 		Store store = generateValidStore();
-		store.setName("a");
+		store.setDisplayName("a");
 
 		assertInvalidStore(store, String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
 	}
@@ -144,7 +144,7 @@ public class StoreValidatorTest {
 	@Test
 	public void testUserNameTooLong() {
 		Store store = generateValidStore();
-		store.setName("1234567890123456");
+		store.setDisplayName("1234567890123456");
 
 		assertInvalidStore(store, String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
 	}

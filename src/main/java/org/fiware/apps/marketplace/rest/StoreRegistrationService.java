@@ -33,6 +33,7 @@ package org.fiware.apps.marketplace.rest;
  * #L%
  */
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -59,11 +60,9 @@ import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.StoreRegistrationAuth;
-
+import org.hibernate.HibernateException;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -95,6 +94,9 @@ public class StoreRegistrationService {
 				
 				// Get the current user
 				User currentUser = authUtils.getLoggedUser();
+				
+				//Set the name
+				store.setName(Utils.getURLName(store.getDisplayName()));
 
 				store.setRegistrationDate(new Date());
 				store.setCreator(currentUser);
@@ -102,7 +104,9 @@ public class StoreRegistrationService {
 
 				// Save the new Store and return CREATED
 				storeBo.save(store);
-				response = Response.status(Status.CREATED).build();
+				response = Response.status(Status.CREATED)
+						.contentLocation(new URI(store.getName()))
+						.build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("create store");
 			}
@@ -110,7 +114,7 @@ public class StoreRegistrationService {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
-		} catch (DataAccessException ex) {
+		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
@@ -132,9 +136,10 @@ public class StoreRegistrationService {
 				//Validate the Store (exception is thrown if the Store is not valid)
 				storeValidator.validateStore(store, false);
 				
-				if (store.getName() != null) {
-					storeDB.setName(store.getName());
-				}
+				// At this moment, the URL cannot be changed...
+				// if (store.getName() != null) {
+				// 	storeDB.setName(store.getName());
+				// }
 
 				if (store.getUrl() != null) {
 					storeDB.setUrl(store.getUrl());
@@ -142,6 +147,10 @@ public class StoreRegistrationService {
 
 				if (store.getDescription() != null) {
 					storeDB.setDescription(store.getDescription());
+				}
+				
+				if (store.getDisplayName() != null) {
+					storeDB.setDisplayName(store.getDisplayName());
 				}
 
 				store.setLasteditor(authUtils.getLoggedUser());
@@ -156,7 +165,7 @@ public class StoreRegistrationService {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
-		} catch (DataAccessException ex) {
+		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);

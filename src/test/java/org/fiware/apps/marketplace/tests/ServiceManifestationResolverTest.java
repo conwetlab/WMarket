@@ -56,7 +56,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 public class ServiceManifestationResolverTest {
 
-	private static Model model;
+	/*private static Model model;
 	private static final String baseUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
 	private static final String cloudVocUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Cloud_004";
 	private static final String supportVocUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003";
@@ -260,5 +260,5 @@ public class ServiceManifestationResolverTest {
 			}
 			assertEquals(0, expectedTypeUris.size());
 		}
-	}
+	}*/
 }

@@ -52,14 +52,15 @@ public class OfferingsDescriptionValidator {
 			boolean isBeingCreated) throws ValidationException {
 
 		if (isBeingCreated) {
-			if (offeringsDescription.getName() == null || offeringsDescription.getUrl() == null) {
+			if (offeringsDescription.getDisplayName() == null || offeringsDescription.getUrl() == null) {
 				throw new ValidationException("name and/or url cannot be null");
 			}
 		}
 
-		if (offeringsDescription.getName() != null && !GENERIC_VALIDATOR.validateName(offeringsDescription.getName())) {
-			int minNameLength = GenericValidator.getNameMinLength();
-			int maxNameLength = GenericValidator.getNameMaxLength();
+		if (offeringsDescription.getDisplayName() != null && 
+				!GENERIC_VALIDATOR.validateDisplayName(offeringsDescription.getDisplayName())) {
+			int minNameLength = GenericValidator.getDisplayNameMinLength();
+			int maxNameLength = GenericValidator.getDisplayNameMaxLength();
 			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("name", 
 					minNameLength, maxNameLength));
 		}

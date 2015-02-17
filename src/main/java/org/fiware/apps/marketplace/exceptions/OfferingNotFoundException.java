@@ -1,10 +1,10 @@
-package org.fiware.apps.marketplace.tests;
+package org.fiware.apps.marketplace.exceptions;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,37 +32,12 @@ package org.fiware.apps.marketplace.tests;
  * #L%
  */
 
-import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class OfferingNotFoundException extends Exception {
+	
+	private static final long serialVersionUID = 1L;
+	
+	public OfferingNotFoundException(String message) {
+		super(message);
+	}
 
-public class App 
-{
-    public static void main( String[] args ) throws Exception
-    {
-    	ApplicationContext appContext = 
-    	  new ClassPathXmlApplicationContext("spring/config/BeanLocations.xml");
- 
-    	OfferingsDescriptionBo serviceBo = (OfferingsDescriptionBo)appContext.getBean("serviceBo");
- 
-    	/** insert **/
-    	OfferingsDescription service = new OfferingsDescription();
-    	service.setUrl("testurl");
-    	service.setName("HAIO");
-    	serviceBo.save(service);
- 
-    	/** select **/
-    	//Service service2 = serviceBo.findByName("testurl");
-    	//System.out.println(service2);
- 
-    	/** update **/
-    	//service2.setName("HAIO-1");
-    	//serviceBo.update(service2);
- 
-    	/** delete **/
-    	//serviceBo.delete(service2);
- 
-    	System.out.println("Done");
-    }
 }

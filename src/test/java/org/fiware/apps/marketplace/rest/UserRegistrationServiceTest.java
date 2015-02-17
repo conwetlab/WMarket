@@ -35,6 +35,7 @@ package org.fiware.apps.marketplace.rest;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,15 +49,15 @@ import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
 import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.fiware.apps.marketplace.security.auth.UserRegistrationAuth;
+import org.hibernate.HibernateException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 public class UserRegistrationServiceTest {
 
@@ -74,11 +75,14 @@ public class UserRegistrationServiceTest {
 	private static final String OFFSET_MAX_INVALID = "offset and/or max are not valid";
 	private static final String VALIDATION_ERROR = "Validation Error";
 	private static final String ENCODED_PASSWORD = "ENCODED_PASSWORD";
-	private static final String USER_NAME = "user_name";
+	private static final String USER_NAME = "example-name";
 	private static final String PASSWORD = "12345678";
 	private static final String EMAIL = "example@example.com";
 	private static final String COMPANY = "Example";
 	private static final String DISPLAY_NAME = "Example Name";
+	
+	private static final ConstraintViolationException VIOLATION_EXCEPTION = 
+			new ConstraintViolationException("", new SQLException(), "");
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// BASIC METHODS ////////////////////////////////////
@@ -92,7 +96,6 @@ public class UserRegistrationServiceTest {
 	@Before
 	public void generateValidUser() {
 		user = new User();
-		user.setUserName(USER_NAME);
 		user.setPassword(PASSWORD);
 		user.setEmail(EMAIL);
 		user.setCompany(COMPANY);
@@ -169,10 +172,10 @@ public class UserRegistrationServiceTest {
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, VALIDATION_ERROR);
 	}
 	
-	private void testCreateUserDataAccessException(Exception exception, String message) throws ValidationException {
+	private void testCreateUserHibernateException(Exception ex, String message) throws ValidationException {
 		// Mock
 		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
-		doThrow(new DataIntegrityViolationException("", exception)).when(userBoMock).save(isA(User.class));
+		doThrow(ex).when(userBoMock).save(isA(User.class));
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
 
 		// Call the method
@@ -186,14 +189,14 @@ public class UserRegistrationServiceTest {
 
 	@Test
 	public void testCreateUserAlreadyExists() throws ValidationException {
-		testCreateUserDataAccessException(new MySQLIntegrityConstraintViolationException(), 
+		testCreateUserHibernateException(VIOLATION_EXCEPTION, 
 				"The user and/or the email introduced are already registered in the system");
 	}
 	
 	@Test
 	public void testCreateUserOtherDataException() throws ValidationException {
-		Exception exception = new Exception("Too much content");
-		testCreateUserDataAccessException(exception, exception.getMessage());
+		Exception exception = new HibernateException(new Exception("too much content"));
+		testCreateUserHibernateException(exception, exception.getCause().getMessage());
 	}
 	
 	@Test
@@ -395,13 +398,12 @@ public class UserRegistrationServiceTest {
 		GenericRestTestUtils.checkAPIError(res, 404, ErrorType.NOT_FOUND, userNotFoundMsg);
 	}
 	
-	private void testUpdateUserDataAccessException(Exception exception, String message) {
+	private void testUpdateUserHibernateException(Exception ex, String message) {
 		User newUser = new User();
 		
 		// Mock
 		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
-		doThrow(new DataIntegrityViolationException("",
-				exception)).when(userBoMock).update(user);
+		doThrow(ex).when(userBoMock).update(user);
 		
 		try {
 			when(userBoMock.findByName(USER_NAME)).thenReturn(user);
@@ -427,15 +429,14 @@ public class UserRegistrationServiceTest {
 	
 	@Test
 	public void testUpdateUserViolationIntegration() throws ValidationException {
-		testUpdateUserDataAccessException(new MySQLIntegrityConstraintViolationException(), 
+		testUpdateUserHibernateException(VIOLATION_EXCEPTION, 
 				"The user and/or the email introduced are already registered in the system");
 	}
 	
-	
 	@Test
 	public void testUpdateUserOtherDataException() throws ValidationException {
-		Exception exception = new Exception("Too much content");
-		testUpdateUserDataAccessException(exception, exception.getMessage());
+		HibernateException exception = new HibernateException(new Exception("Too much content"));
+		testUpdateUserHibernateException(exception, exception.getCause().getMessage());
 	}
 	
 	@Test

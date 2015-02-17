@@ -56,7 +56,7 @@ public class OfferingsDescriptionValidatorTest {
 		creator.setId(1);
 		
 		OfferingsDescription offeringsDescription = new OfferingsDescription();
-		offeringsDescription.setName("description1");
+		offeringsDescription.setDisplayName("description1");
 		offeringsDescription.setUrl("https://repo.lab.fi-ware.org/offerings/offering1.rdf");
 		offeringsDescription.setDescription("This is an example description");
 		offeringsDescription.setRegistrationDate(new Date());
@@ -81,7 +81,7 @@ public class OfferingsDescriptionValidatorTest {
 	@Test
 	public void testValidBasicOfferingsDescription() throws ValidationException {
 		OfferingsDescription offeringsDescription = new OfferingsDescription();
-		offeringsDescription.setName("description1");
+		offeringsDescription.setDisplayName("description1");
 		offeringsDescription.setUrl("https://repo.lab.fi-ware.org/offerings/offering1.rdf");
 		
 		assertThat(offeringsDescriptionValidator.validateOfferingsDescription(offeringsDescription, true)).isTrue();
@@ -96,7 +96,7 @@ public class OfferingsDescriptionValidatorTest {
 	@Test
 	public void testMissingNameOnCreation() {
 		OfferingsDescription offeringsDescription = generateValidOfferingsDescription();
-		offeringsDescription.setName(null);
+		offeringsDescription.setDisplayName(null);
 		assertInvalidOfferingsDescription(offeringsDescription, MISSING_FIELDS, true);
 	}
 	
@@ -140,7 +140,7 @@ public class OfferingsDescriptionValidatorTest {
 	@Test
 	public void testNameTooShort() {
 		OfferingsDescription offeringsDescription = generateValidOfferingsDescription();
-		offeringsDescription.setName("a");
+		offeringsDescription.setDisplayName("a");
 		assertInvalidOfferingsDescription(offeringsDescription, 
 				String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
 	}
@@ -148,7 +148,7 @@ public class OfferingsDescriptionValidatorTest {
 	@Test
 	public void testNameTooLong() {
 		OfferingsDescription offeringsDescription = generateValidOfferingsDescription();
-		offeringsDescription.setName("1234567890123456");
+		offeringsDescription.setDisplayName("1234567890123456");
 		assertInvalidOfferingsDescription(offeringsDescription, 
 				String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
 	}

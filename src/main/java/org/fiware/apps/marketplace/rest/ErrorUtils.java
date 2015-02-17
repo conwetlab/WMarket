@@ -37,11 +37,10 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.APIError;
-import org.springframework.dao.DataAccessException;
-
+import org.hibernate.HibernateException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 public class ErrorUtils {
 	
@@ -58,15 +57,15 @@ public class ErrorUtils {
 		this.contraintViolationMessage = contraintViolationMessage;
 	}
 	
-	public Response badRequestResponse(DataAccessException ex) {
+	public Response badRequestResponse(HibernateException ex) {
 		String message;
-		if (ex.getRootCause() instanceof MySQLIntegrityConstraintViolationException 
+		if (ex instanceof ConstraintViolationException 
 				&& this.contraintViolationMessage != null)  {
 			logger.warn("Constraint Violation", ex);
 			message = this.contraintViolationMessage;
 		} else {
 			logger.error("Data Access Error", ex);
-			message = ex.getRootCause().getMessage();
+			message = ex.getCause().getMessage();
 		}
 		
 		return Response.status(Status.BAD_REQUEST).entity(

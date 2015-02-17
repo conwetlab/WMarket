@@ -33,6 +33,7 @@ package org.fiware.apps.marketplace.rest;
  * #L%
  */
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -62,8 +63,8 @@ import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.validators.OfferingsDescriptionValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.OfferingsDescriptionRegistrationAuth;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.slf4j.LoggerFactory;
 
@@ -90,24 +91,27 @@ public class OfferingsDescriptionRegistrationService {
 	@Consumes({"application/xml", "application/json"})
 	@Path("/")	
 	public Response createOfferingsDescription(@PathParam("storeName") String storeName, 
-			OfferingsDescription offeringDescription) {	
+			OfferingsDescription offeringsDescription) {	
 		Response response;
 
 		try {			
 			if (offeringRegistrationAuth.canCreate()) {
 
 				// Validate offerings description (exception is thrown if the description is not valid) 
-				offeringsDescriptionValidator.validateOfferingsDescription(offeringDescription, true);
+				offeringsDescriptionValidator.validateOfferingsDescription(offeringsDescription, true);
 
 				User user = authUtils.getLoggedUser();
 				Store store = storeBo.findByName(storeName);
-				offeringDescription.setRegistrationDate(new Date());
-				offeringDescription.setStore(store);
-				offeringDescription.setCreator(user);
-				offeringDescription.setLasteditor(user);
+				offeringsDescription.setRegistrationDate(new Date());
+				offeringsDescription.setStore(store);
+				offeringsDescription.setCreator(user);
+				offeringsDescription.setLasteditor(user);
+				offeringsDescription.setName(Utils.getURLName(offeringsDescription.getDisplayName()));
 
-				offeringsDescriptionBo.save(offeringDescription);
-				response = Response.status(Status.CREATED).build();
+				offeringsDescriptionBo.save(offeringsDescription);
+				response = Response.status(Status.CREATED)
+						.contentLocation(new URI(offeringsDescription.getName()))
+						.build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("create offering");
 			}
@@ -124,7 +128,7 @@ public class OfferingsDescriptionRegistrationService {
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.internalServerError(
 					"There was an error retrieving the user from the database");
-		} catch (DataAccessException ex) {
+		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
@@ -154,8 +158,13 @@ public class OfferingsDescriptionRegistrationService {
 				// Validate offerings description (exception is thrown if the description is not valid) 
 				offeringsDescriptionValidator.validateOfferingsDescription(offeringDescriptionInfo, false);
 
-				if (offeringDescriptionInfo.getName() != null) {
-					offeringDescription.setName(offeringDescriptionInfo.getName());
+				// Name cannot be changed...
+				// if (offeringDescriptionInfo.getName() != null) {
+				// 	 offeringDescription.setName(offeringDescriptionInfo.getName());
+				// }
+
+				if (offeringDescriptionInfo.getDisplayName() != null) {
+					offeringDescription.setDisplayName(offeringDescriptionInfo.getDisplayName());
 				}
 
 				if (offeringDescriptionInfo.getUrl() != null) {
@@ -187,10 +196,9 @@ public class OfferingsDescriptionRegistrationService {
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.internalServerError(
 					"There was an error retrieving the user from the database");
-		} catch (DataAccessException ex) {
+		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
-
 			response = ERROR_UTILS.internalServerError(ex);
 		}
 

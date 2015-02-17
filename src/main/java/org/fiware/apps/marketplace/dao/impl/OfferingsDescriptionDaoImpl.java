@@ -39,9 +39,7 @@ import org.fiware.apps.marketplace.dao.OfferingsDescriptionDao;
 import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
 import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
-
-import org.hibernate.criterion.DetachedCriteria;
-
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository("offeringsDescriptionDao")
@@ -51,27 +49,36 @@ public class OfferingsDescriptionDaoImpl extends MarketplaceHibernateDao impleme
 
 	@Override
 	public void save(OfferingsDescription offeringsDescription) {
-		getHibernateTemplate().saveOrUpdate(offeringsDescription);		
+		getSession().saveOrUpdate(offeringsDescription);		
 	}
 
 	@Override
 	public void update(OfferingsDescription offeringsDescription) {
-		getHibernateTemplate().update(offeringsDescription);		
+		getSession().update(offeringsDescription);		
 	}
 
 	@Override
 	public void delete(OfferingsDescription offeringsDescription) {
-		getHibernateTemplate().delete(offeringsDescription);		
+		getSession().delete(offeringsDescription);
 	}
 
 	@Override
 	public OfferingsDescription findById(Integer id) {
-		Object res = getHibernateTemplate().get(OfferingsDescription.class, id);
+		Object res = getSession().get(OfferingsDescription.class, id);
 		return (OfferingsDescription) res;
 	}
 	
-	private OfferingsDescription findByQuery(String query, Object[] params) throws OfferingDescriptionNotFoundException {
-		List<?> list = getHibernateTemplate().find(query, params);
+	private OfferingsDescription findByQuery(String queryString, Object[] params) 
+			throws OfferingDescriptionNotFoundException {
+		
+		Query query = getSession()
+				.createQuery(queryString);
+		
+		for (int i = 0; i < params.length; i++) {
+			query.setParameter(i, params[i]);
+		}
+		
+		List<?> list = query.list();
 		
 		if (list.size() == 0) {
 			throw new OfferingDescriptionNotFoundException("Offerings Description " + params[0] + " not found");
@@ -94,16 +101,21 @@ public class OfferingsDescriptionDaoImpl extends MarketplaceHibernateDao impleme
 		return this.findByQuery(query, params);				
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<OfferingsDescription> getAllOfferingsDescriptions() {
-		return getHibernateTemplate().loadAll(OfferingsDescription.class);
+		return getSession()
+				.createCriteria(OfferingsDescription.class)
+				.list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max) {
-		return (List<OfferingsDescription>) getHibernateTemplate().findByCriteria(
-				DetachedCriteria.forClass(OfferingsDescription.class), offset, max);
+		return getSession()
+				.createCriteria(OfferingsDescription.class)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
 	}
-
 }

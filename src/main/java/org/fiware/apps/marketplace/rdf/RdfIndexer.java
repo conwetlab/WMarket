@@ -34,6 +34,7 @@ package org.fiware.apps.marketplace.rdf;
  */
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -46,6 +47,7 @@ import org.fiware.apps.marketplace.model.OfferingsDescription;
 import org.fiware.apps.marketplace.utils.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -57,10 +59,12 @@ public class RdfIndexer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RdfIndexer.class);
 	
-	public void indexService(OfferingsDescription service){
+	@Autowired private RdfHelper rdfHelper;
+	
+	public void indexService(OfferingsDescription service) throws MalformedURLException{
 
 		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
-		Model model = RdfHelper.loadModel(service.getUrl());
+		Model model = rdfHelper.loadModel(service.getUrl());
 		String serviceId = service.getId().toString();
 		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath, serviceId);	
 

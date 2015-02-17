@@ -51,8 +51,6 @@ public class RatingBoImpl implements RatingBo {
 	@Autowired
 	RatingDao ratingDao;
 
-
-
 	@Override
 	public void saveRating(Rating obj) {
 		ratingDao.saveRating(obj);

@@ -52,14 +52,14 @@ public class OfferingBoImpl implements OfferingBo {
 
 	@Override
 	public void save(Offering offering) {
-		if (!offeringMap.containsKey(offering.getOfferingUri()))
-			offeringMap.put(offering.getOfferingUri(), offering);
+		if (!offeringMap.containsKey(offering.getUri()))
+			offeringMap.put(offering.getUri(), offering);
 	}
 
 	@Override
 	public void delete(Offering offering) {
-		if (offeringMap.containsKey(offering.getOfferingUri()))
-			offeringMap.remove(offering.getOfferingUri());
+		if (offeringMap.containsKey(offering.getUri()))
+			offeringMap.remove(offering.getUri());
 	}
 
 	@Override

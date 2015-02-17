@@ -53,7 +53,7 @@ import org.junit.Test;
 
 public class AttributeTypeStatisticsResolverTest {
 
-	private static final String amazonUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
+	/*private static final String amazonUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Amazon_EC2_001";
 	private static final String rackspaceUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Rackspace_CloudServers_001";
 	private static final String elasticHostsUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/ElasticHosts_CloudHosting_001";
 	private static final String reliaCloudUri = "http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/cloudServices/Visi_ReliaCloud_001";
@@ -157,5 +157,5 @@ public class AttributeTypeStatisticsResolverTest {
 				assertTrue(getSumOfProbabilities(stats.get(key).getTypeStatsMap()) - 1.0 < epsilon);
 		}
 		return sum;
-	}
+	}*/
 }

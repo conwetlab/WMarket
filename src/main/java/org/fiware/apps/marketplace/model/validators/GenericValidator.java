@@ -60,7 +60,7 @@ public class GenericValidator {
 		return INSTANCE;
 	}
 	
-	public static int getNameMaxLength() {
+	public static int getDisplayNameMaxLength() {
 		return NAME_MAX_LENGTH;
 	}
 
@@ -68,7 +68,7 @@ public class GenericValidator {
 		return DESCRIPTION_MAX_LENGTH;
 	}
 	
-	public static int getNameMinLength() {
+	public static int getDisplayNameMinLength() {
 		return NAME_MIN_LENGTH;
 	}
 
@@ -88,7 +88,7 @@ public class GenericValidator {
 		return minAccomplished && maxAccomplished;
 	}
 
-	public boolean validateName(String name) {
+	public boolean validateDisplayName(String name) {
 		return validateLength(name, NAME_MIN_LENGTH, NAME_MAX_LENGTH);
 	}
 	
