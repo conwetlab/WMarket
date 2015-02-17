@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest;
+package org.fiware.apps.marketplace.bo.impl;
 
 import java.text.Normalizer;
 

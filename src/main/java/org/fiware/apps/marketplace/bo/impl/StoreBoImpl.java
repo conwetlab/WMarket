@@ -56,6 +56,7 @@ public class StoreBoImpl implements StoreBo{
 	@Override
 	@Transactional(readOnly=false)
 	public void save(Store store) {
+		store.setName(Utils.getURLName(store.getDisplayName()));
 		storeDao.save(store);
 		
 	}

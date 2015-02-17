@@ -106,7 +106,6 @@ public class OfferingsDescriptionRegistrationService {
 				offeringsDescription.setStore(store);
 				offeringsDescription.setCreator(user);
 				offeringsDescription.setLasteditor(user);
-				offeringsDescription.setName(Utils.getURLName(offeringsDescription.getDisplayName()));
 
 				offeringsDescriptionBo.save(offeringsDescription);
 				response = Response.status(Status.CREATED)

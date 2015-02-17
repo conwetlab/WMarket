@@ -60,6 +60,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 public class StoreRegistrationServiceTest {
 
@@ -132,6 +134,13 @@ public class StoreRegistrationServiceTest {
 	public void testCreateStoreNoErrors() throws ValidationException {
 		// Mocks
 		when(storeRegistrationAuthMock.canCreate()).thenReturn(true);
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				invocation.getArgumentAt(0, Store.class).setName(NAME);
+				return null;
+			}
+		}).when(storeBoMock).save(store);
 
 		//Call the method
 		Response res = storeRegistrationService.createStore(store);

@@ -56,6 +56,7 @@ public class UserBoImpl implements UserBo {
 	@Override
 	@Transactional(readOnly=false)
 	public void save(User localuser) {
+		localuser.setUserName(Utils.getURLName(localuser.getDisplayName()));
 		userDao.save(localuser);
 	}
 

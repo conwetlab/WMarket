@@ -90,10 +90,7 @@ public class UserRegistrationService {
 			if (userRegistrationAuth.canCreate()) {
 				// Validate the user (exception is thrown if the user is not valid)
 				userValidator.validateUser(user, true);
-				
-				// Set user name (it won't be changed even if the display name changes)
-				user.setUserName(Utils.getURLName(user.getDisplayName()));
-				
+								
 				// Encode password. Set registration date...
 				user.setPassword(enconder.encode(user.getPassword()));
 				user.setRegistrationDate(new Date());

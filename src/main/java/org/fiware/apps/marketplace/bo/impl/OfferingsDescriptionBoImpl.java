@@ -63,6 +63,9 @@ public class OfferingsDescriptionBoImpl implements OfferingsDescriptionBo{
 	@Override
 	@Transactional(readOnly=false)
 	public void save(OfferingsDescription offeringsDescription) throws MalformedURLException {
+		// Set the name
+		offeringsDescription.setName(Utils.getURLName(offeringsDescription.getDisplayName()));
+		
 		// Get all the offerings described in the USDL
 		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(offeringsDescription);
 		offeringsDescription.addOfferings(offerings);

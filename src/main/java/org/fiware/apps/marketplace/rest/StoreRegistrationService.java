@@ -95,9 +95,6 @@ public class StoreRegistrationService {
 				// Get the current user
 				User currentUser = authUtils.getLoggedUser();
 				
-				//Set the name
-				store.setName(Utils.getURLName(store.getDisplayName()));
-
 				store.setRegistrationDate(new Date());
 				store.setCreator(currentUser);
 				store.setLasteditor(currentUser);

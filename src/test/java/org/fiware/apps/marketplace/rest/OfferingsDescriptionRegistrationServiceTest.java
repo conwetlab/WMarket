@@ -34,6 +34,7 @@ package org.fiware.apps.marketplace.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -67,6 +68,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.hp.hpl.jena.shared.JenaException;
 
@@ -148,6 +151,13 @@ public class OfferingsDescriptionRegistrationServiceTest {
 	public void testCreateOfferingsDescriptionNoErrors() throws Exception {
 		// Mocks
 		when(offeringsDescriptionRegistrationAuthMock.canCreate()).thenReturn(true);
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				invocation.getArgumentAt(0, OfferingsDescription.class).setName(DESCRIPTION_NAME);
+				return null;
+			}
+		}).when(offeringsDescriptionBoMock).save(offeringsDescription);
 
 		//Call the method
 		Response res = offeringRegistrationService.createOfferingsDescription(STORE_NAME, offeringsDescription);

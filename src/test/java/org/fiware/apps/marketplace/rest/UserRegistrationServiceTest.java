@@ -56,6 +56,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -138,6 +140,13 @@ public class UserRegistrationServiceTest {
 		// Mocks
 		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				invocation.getArgumentAt(0, User.class).setUserName(USER_NAME);
+				return null;
+			}
+		}).when(userBoMock).save(user);
 
 		//Call the method
 		Response res = userRegistrationService.createUser(user);
