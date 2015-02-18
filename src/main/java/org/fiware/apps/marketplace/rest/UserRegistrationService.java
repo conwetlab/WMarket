@@ -47,8 +47,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
@@ -83,7 +86,7 @@ public class UserRegistrationService {
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/")	
-	public Response createUser(User user) {
+	public Response createUser(@Context UriInfo uri, User user) {
 
 		Response response;
 		try {
@@ -95,10 +98,16 @@ public class UserRegistrationService {
 				user.setPassword(enconder.encode(user.getPassword()));
 				user.setRegistrationDate(new Date());
 				
+				// Save the new user
 				userBo.save(user);
-				response = Response.status(Status.CREATED)
-						.contentLocation(new URI(user.getUserName()))
-						.build();		
+				
+				// Generate the URI and return CREATED
+				URI newURI = UriBuilder
+						.fromUri(uri.getPath())
+						.path(user.getUserName())
+						.build();
+				
+				response = Response.created(newURI).build();		
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("create user");
 			}
@@ -148,7 +157,7 @@ public class UserRegistrationService {
 				if (user.getDisplayName() != null) {
 					userToBeUpdated.setDisplayName(user.getDisplayName());
 				}
-				
+								
 				userBo.update(userToBeUpdated);
 				response = Response.status(Status.OK).build();
 			} else {

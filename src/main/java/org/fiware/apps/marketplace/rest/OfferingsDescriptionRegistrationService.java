@@ -47,7 +47,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
@@ -85,12 +88,13 @@ public class OfferingsDescriptionRegistrationService {
 	private static final String INVALID_RDF = "Your RDF could not be parsed";
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
 			LoggerFactory.getLogger(OfferingsDescriptionRegistrationService.class), 
-			"There is already an Offering in this Store with that name/URL");
+			"There is already an Offering in this Store with that name");
 
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/")	
-	public Response createOfferingsDescription(@PathParam("storeName") String storeName, 
+	public Response createOfferingsDescription(@Context UriInfo uri, 
+			@PathParam("storeName") String storeName, 
 			OfferingsDescription offeringsDescription) {	
 		Response response;
 
@@ -106,11 +110,17 @@ public class OfferingsDescriptionRegistrationService {
 				offeringsDescription.setStore(store);
 				offeringsDescription.setCreator(user);
 				offeringsDescription.setLasteditor(user);
-
+				
+				// Save the offerings description
 				offeringsDescriptionBo.save(offeringsDescription);
-				response = Response.status(Status.CREATED)
-						.contentLocation(new URI(offeringsDescription.getName()))
+				
+				// Get the URL and return created
+				URI newURI = UriBuilder
+						.fromUri(uri.getPath())
+						.path(offeringsDescription.getName())
 						.build();
+				
+				response = Response.created(newURI).build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("create offering");
 			}

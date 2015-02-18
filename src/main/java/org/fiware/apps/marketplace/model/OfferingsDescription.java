@@ -64,7 +64,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
 // Each offerings description has to be unique for a store context
-@Table(name = "offerings_descriptions", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "store", "url" }) })
+@Table(name = "offerings_descriptions", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "store" }) })
 @XmlRootElement(name = "offering_description")
 @IgnoreMediaTypes("application/*+json")
 public class OfferingsDescription {
@@ -183,7 +183,7 @@ public class OfferingsDescription {
 	}
 
 	@XmlElement
-	@OneToMany(mappedBy="describedIn", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "describedIn", cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	public List<Offering> getOfferings() {
 		return offerings;

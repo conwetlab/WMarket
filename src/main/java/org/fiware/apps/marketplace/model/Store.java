@@ -145,7 +145,7 @@ public class Store {
 	@XmlElement
 	@XmlJavaTypeAdapter(UserXMLAdapter.class)
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "last_editor", nullable=false)
+	@JoinColumn(name = "last_editor", nullable = false)
 	public User getLasteditor() {
 		return lasteditor;
 	}
@@ -165,7 +165,7 @@ public class Store {
 	}
 	
 	@XmlTransient
-	@OneToMany(mappedBy="store", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="store", cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	public List<OfferingsDescription> getOfferingsDescriptions() {
 		return offeringsDescriptions;

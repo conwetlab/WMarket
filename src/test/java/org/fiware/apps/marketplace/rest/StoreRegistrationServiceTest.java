@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
@@ -72,9 +73,10 @@ public class StoreRegistrationServiceTest {
 
 	@InjectMocks private StoreRegistrationService storeRegistrationService;
 
-	// Default store
+	// Default URI
 	private User user;
 	private Store store;
+	private UriInfo uri;
 
 	// Other useful constants
 	private static final String OFFSET_MAX_INVALID = "offset and/or max are not valid";
@@ -83,6 +85,7 @@ public class StoreRegistrationServiceTest {
 	private static final String DISPLAY_NAME = "stOre 1";
 	private static final String NAME = "store-1";
 	private static final String URL = "https://store.lab.fi-ware.org";
+	private static final String PATH = "/api/store";
 	
 	private static final ConstraintViolationException VIOLATION_EXCEPTION = 
 			new ConstraintViolationException("", new SQLException(), "");
@@ -103,6 +106,12 @@ public class StoreRegistrationServiceTest {
 		store.setDisplayName(DISPLAY_NAME);
 		store.setUrl(URL);
 	}
+	
+	@Before
+	public void setUpUri() {
+		uri = mock(UriInfo.class);
+		when(uri.getPath()).thenReturn(PATH);
+	}
 
 	@Before
 	public void initAuthUtils() throws UserNotFoundException {
@@ -121,10 +130,11 @@ public class StoreRegistrationServiceTest {
 		when(storeRegistrationAuthMock.canCreate()).thenReturn(false);
 
 		// Call the method
-		Response res = storeRegistrationService.createStore(store);
+		Response res = storeRegistrationService.createStore(uri, store);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to create store");
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
+				"You are not authorized to create store");
 
 		// Verify mocks
 		verify(storeBoMock, never()).save(store);
@@ -143,7 +153,7 @@ public class StoreRegistrationServiceTest {
 		}).when(storeBoMock).save(store);
 
 		//Call the method
-		Response res = storeRegistrationService.createStore(store);
+		Response res = storeRegistrationService.createStore(uri, store);
 
 		// Verify mocks
 		verify(storeValidatorMock).validateStore(store, true);
@@ -151,6 +161,7 @@ public class StoreRegistrationServiceTest {
 
 		// Check the response
 		assertThat(res.getStatus()).isEqualTo(201);
+		assertThat(res.getHeaders().get("Location").get(0).toString()).isEqualTo(PATH + "/" + NAME);
 
 		// Check that all the parameters of the Store are correct
 		// (some of them must have been changed by the method)
@@ -163,11 +174,12 @@ public class StoreRegistrationServiceTest {
 		assertThat(store.getLasteditor()).isEqualTo(user);
 	}
 
-	private void testCreateStoreGenericError(int statusCode, ErrorType errorType, String errorMsg, boolean saveInvoked) {
+	private void testCreateStoreGenericError(int statusCode, ErrorType errorType, 
+			String errorMsg, boolean saveInvoked) {
 		int saveTimes = saveInvoked ? 1 : 0;
 
 		// Call the method
-		Response res = storeRegistrationService.createStore(store);
+		Response res = storeRegistrationService.createStore(uri, store);
 
 		// Verify mocks
 		try {
@@ -259,6 +271,8 @@ public class StoreRegistrationServiceTest {
 			// Mock
 			when(storeRegistrationAuthMock.canUpdate(store)).thenReturn(true);
 			when(storeBoMock.findByName(DISPLAY_NAME)).thenReturn(store);
+			
+			String previousStoreName = store.getName();
 
 			// Call the method
 			Response res = storeRegistrationService.updateStore(DISPLAY_NAME, newStore);
@@ -277,8 +291,12 @@ public class StoreRegistrationServiceTest {
 			String newStoreUrl = newStore.getUrl() != null ? newStore.getUrl() : store.getUrl();
 			assertThat(store.getUrl()).isEqualTo(newStoreUrl);
 
-			String newStoreDescription = newStore.getDescription() != null ? newStore.getDescription() : store.getDescription();
+			String newStoreDescription = newStore.getDescription() != null ? 
+					newStore.getDescription() : store.getDescription();
 			assertThat(store.getDescription()).isEqualTo(newStoreDescription);
+			
+			// Assert that the name is not changed
+			assertThat(store.getName()).isEqualTo(previousStoreName);
 		} catch (Exception ex) {
 			// It's not supposed to happen
 			fail("Exception " + ex + " is not supposed to happen");
@@ -290,7 +308,6 @@ public class StoreRegistrationServiceTest {
 		Store newStore = new Store();
 		newStore.setDisplayName("new_name");
 		testUpdateStoreField(newStore);
-		// TODO: Check that name has not changed
 	}
 
 	@Test
@@ -559,7 +576,8 @@ public class StoreRegistrationServiceTest {
 		Response res = storeRegistrationService.listStores(0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, "You are not authorized to list stores");
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
+				"You are not authorized to list stores");
 	}
 	
 	
@@ -619,7 +637,8 @@ public class StoreRegistrationServiceTest {
 	public void testListStoresException() {
 		// Mocks
 		String exceptionMsg = "exception";
-		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).getStoresPage(anyInt(), anyInt());
+		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock)
+				.getStoresPage(anyInt(), anyInt());
 		when(storeRegistrationAuthMock.canList()).thenReturn(true);
 
 		// Call the method

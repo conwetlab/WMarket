@@ -120,7 +120,7 @@ public class Offering {
 
 	@XmlTransient
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "described_in", nullable=false)
+	@JoinColumn(name = "described_in", nullable = false)
 	public OfferingsDescription getDescribedIn() {
 		return describedIn;
 	}

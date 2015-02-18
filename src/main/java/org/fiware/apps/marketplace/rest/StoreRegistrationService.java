@@ -47,7 +47,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
@@ -84,7 +87,7 @@ public class StoreRegistrationService {
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/")	
-	public Response createStore(Store store) {
+	public Response createStore(@Context UriInfo uri, Store store) {
 		Response response;
 
 		try {
@@ -99,11 +102,16 @@ public class StoreRegistrationService {
 				store.setCreator(currentUser);
 				store.setLasteditor(currentUser);
 
-				// Save the new Store and return CREATED
+				// Save the new Store
 				storeBo.save(store);
-				response = Response.status(Status.CREATED)
-						.contentLocation(new URI(store.getName()))
+				
+				// Generate the URI and return CREATED
+				URI newURI = UriBuilder
+						.fromUri(uri.getPath())
+						.path(store.getName())
 						.build();
+								
+				response = Response.created(newURI).build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("create store");
 			}

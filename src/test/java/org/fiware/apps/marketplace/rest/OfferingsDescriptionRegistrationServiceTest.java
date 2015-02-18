@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
@@ -87,9 +89,10 @@ public class OfferingsDescriptionRegistrationServiceTest {
 	private Store store;
 	private OfferingsDescription offeringsDescription;
 	private User user;
+	private UriInfo uri;
 
 	// Other useful constants
-	private static final String STORE_NAME = "WStore";
+	private static final String STORE_NAME = "wstore";
 	private static final String OFFSET_MAX_INVALID = "offset and/or max are not valid";
 	private static final String DESCRIPTION_ALREADY_EXISTS = 
 			"There is already an Offering in this Store with that name/URL";
@@ -99,6 +102,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 	private static final String DESCRIPTION_NAME = "offerings-description";
 	private static final String INVALID_RDF = "Your RDF could not be parsed";
 	private static final String URL = "https://repo.lab.fi-ware.org/description.rdf";
+	private static final String PATH = "/api/store/" + STORE_NAME + "/offerings_description";
 	
 	private static final ConstraintViolationException VIOLATION_EXCEPTION = 
 			new ConstraintViolationException("", new SQLException(), "");
@@ -119,7 +123,13 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		offeringsDescription.setDisplayName(DESCRIPTION_DISPLAY_NAME);
 		offeringsDescription.setUrl(URL);
 	}
-
+	
+	@Before
+	public void setUpUri() {
+		uri = mock(UriInfo.class);
+		when(uri.getPath()).thenReturn(PATH);
+	}
+	
 	@Before
 	public void initAuthUtils() throws UserNotFoundException {
 		user = new User();
@@ -137,7 +147,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		when(offeringsDescriptionRegistrationAuthMock.canCreate()).thenReturn(false);
 
 		// Call the method
-		Response res = offeringRegistrationService.createOfferingsDescription(STORE_NAME, offeringsDescription);
+		Response res = offeringRegistrationService.createOfferingsDescription(uri, STORE_NAME, offeringsDescription);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
@@ -160,7 +170,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		}).when(offeringsDescriptionBoMock).save(offeringsDescription);
 
 		//Call the method
-		Response res = offeringRegistrationService.createOfferingsDescription(STORE_NAME, offeringsDescription);
+		Response res = offeringRegistrationService.createOfferingsDescription(uri, STORE_NAME, offeringsDescription);
 
 		// Verify mocks
 		verify(offeringsDescriptionValidatorMock).validateOfferingsDescription(offeringsDescription, true);
@@ -168,6 +178,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 
 		// Check the response
 		assertThat(res.getStatus()).isEqualTo(201);
+		assertThat(res.getHeaders().get("Location").get(0).toString()).isEqualTo(PATH + "/" + DESCRIPTION_NAME);
 
 		// Check that all the parameters of the Store are correct
 		// (some of them must have been changed by the method)
@@ -186,7 +197,7 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		int saveTimes = saveInvoked ? 1 : 0;
 
 		// Call the method
-		Response res = offeringRegistrationService.createOfferingsDescription(STORE_NAME, offeringsDescription);
+		Response res = offeringRegistrationService.createOfferingsDescription(uri, STORE_NAME, offeringsDescription);
 
 		// Verify mocks
 		try {
@@ -309,6 +320,9 @@ public class OfferingsDescriptionRegistrationServiceTest {
 			when(offeringsDescriptionBoMock.findByNameAndStore(DESCRIPTION_DISPLAY_NAME, STORE_NAME)).
 					thenReturn(offeringsDescription);
 
+			// Get the 
+			String previousName = offeringsDescription.getName();
+			
 			// Call the method
 			Response res = offeringRegistrationService.
 					updateOfferingsDescription(STORE_NAME, DESCRIPTION_DISPLAY_NAME, newOfferingsDescription);
@@ -319,6 +333,9 @@ public class OfferingsDescriptionRegistrationServiceTest {
 
 			// Assertions
 			assertThat(res.getStatus()).isEqualTo(200);
+			
+			// Assert that offerings description name has not changed
+			assertThat(offeringsDescription.getName()).isEqualTo(previousName);
 
 			// New values
 			String newStoreName = newOfferingsDescription.getName() != null ? 
@@ -521,7 +538,8 @@ public class OfferingsDescriptionRegistrationServiceTest {
 				thenReturn(offeringsDescription);
 
 		// Call the method
-		Response res = offeringRegistrationService.deleteOfferingsDescription(STORE_NAME, DESCRIPTION_DISPLAY_NAME);
+		Response res = offeringRegistrationService.deleteOfferingsDescription(
+				STORE_NAME, DESCRIPTION_DISPLAY_NAME);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
@@ -541,7 +559,8 @@ public class OfferingsDescriptionRegistrationServiceTest {
 				thenReturn(offeringsDescription);
 
 		// Call the method
-		Response res = offeringRegistrationService.deleteOfferingsDescription(STORE_NAME, DESCRIPTION_DISPLAY_NAME);
+		Response res = offeringRegistrationService.deleteOfferingsDescription(
+				STORE_NAME, DESCRIPTION_DISPLAY_NAME);
 
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(204);
@@ -559,7 +578,8 @@ public class OfferingsDescriptionRegistrationServiceTest {
 			when(offeringsDescriptionRegistrationAuthMock.canDelete(offeringsDescription)).thenReturn(true);
 
 			// Call the method
-			Response res = offeringRegistrationService.deleteOfferingsDescription(STORE_NAME, DESCRIPTION_DISPLAY_NAME);
+			Response res = offeringRegistrationService.deleteOfferingsDescription(
+					STORE_NAME, DESCRIPTION_DISPLAY_NAME);
 
 			// Assertions
 			GenericRestTestUtils.checkAPIError(res, status, errorType, message);
@@ -652,7 +672,8 @@ public class OfferingsDescriptionRegistrationServiceTest {
 			when(offeringsDescriptionRegistrationAuthMock.canGet(offeringsDescription)).thenReturn(true);
 
 			// Call the method
-			Response res = offeringRegistrationService.getOfferingsDescription(STORE_NAME, DESCRIPTION_DISPLAY_NAME);
+			Response res = offeringRegistrationService.getOfferingsDescription(
+					STORE_NAME, DESCRIPTION_DISPLAY_NAME);
 
 			// Assertions
 			GenericRestTestUtils.checkAPIError(res, status, errorType, message);
@@ -667,7 +688,8 @@ public class OfferingsDescriptionRegistrationServiceTest {
 		// Mocks
 		String exceptionMsg = "Store not found";
 		doThrow(new StoreNotFoundException(
-				exceptionMsg)).when(offeringsDescriptionBoMock).findByNameAndStore(DESCRIPTION_DISPLAY_NAME, STORE_NAME);
+				exceptionMsg)).when(offeringsDescriptionBoMock).findByNameAndStore(
+						DESCRIPTION_DISPLAY_NAME, STORE_NAME);
 		
 		testGetOfferingsDescriptionGenericError(404, ErrorType.NOT_FOUND, exceptionMsg);
 	}
