@@ -36,98 +36,112 @@ package org.fiware.apps.marketplace.bo.impl;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
+import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
-import org.fiware.apps.marketplace.dao.OfferingsDescriptionDao;
-import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
+import org.fiware.apps.marketplace.dao.DescriptionDao;
+import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.helpers.OfferingResolver;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.rdf.RdfIndexer;
+import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-@org.springframework.stereotype.Service("offeringsDescriptionBo")
-public class OfferingsDescriptionBoImpl implements OfferingsDescriptionBo{
+@org.springframework.stereotype.Service("descriptionBo")
+public class DescriptionBoImpl implements DescriptionBo {
 	
-	@Autowired private OfferingsDescriptionDao offeringsDescriptionDao;
+	@Autowired private DescriptionDao descriptionDao;
 	@Autowired private RdfIndexer rdfIndexer;
 	@Autowired private OfferingResolver offeringResolver;
 	@Autowired private StoreBo storeBo;
 	
-	public void setOfferingsDescriptionDao (OfferingsDescriptionDao offeringsDescriptionDao){
-		this.offeringsDescriptionDao = offeringsDescriptionDao;
+	public void setOfferingsDescriptionDao (DescriptionDao descriptionDao){
+		this.descriptionDao = descriptionDao;
 	}
 	
 	@Override
 	@Transactional(readOnly=false)
-	public void save(OfferingsDescription offeringsDescription) throws MalformedURLException {
+	public void save(Description description) throws MalformedURLException {
 		// Set the name
-		offeringsDescription.setName(Utils.getURLName(offeringsDescription.getDisplayName()));
+		description.setName(NameGenerator.getURLName(description.getDisplayName()));
 		
 		// Get all the offerings described in the USDL
-		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(offeringsDescription);
-		offeringsDescription.addOfferings(offerings);
+		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
+		description.addOfferings(offerings);
 		
 		// Save the description
-		offeringsDescriptionDao.save(offeringsDescription);
+		descriptionDao.save(description);
 		
 		// Index
-		rdfIndexer.indexService(offeringsDescription);
+		rdfIndexer.indexService(description);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(OfferingsDescription offeringsDescription) throws MalformedURLException {
+	public void update(Description description) throws MalformedURLException {
 		// Get all the offerings described in the USDL
-		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(offeringsDescription);
-		offeringsDescription.setOfferings(offerings);
+		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
+		description.setOfferings(offerings);
 
 		// Save the description
-		offeringsDescriptionDao.update(offeringsDescription);
+		descriptionDao.update(description);
 		
 		// Reindex
-		rdfIndexer.deleteService(offeringsDescription);
-		rdfIndexer.indexService(offeringsDescription);
+		rdfIndexer.deleteService(description);
+		rdfIndexer.indexService(description);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(OfferingsDescription offeringsDescription) {
-		offeringsDescriptionDao.delete(offeringsDescription);
-		rdfIndexer.deleteService(offeringsDescription);
+	public void delete(Description description) {
+		descriptionDao.delete(description);
+		rdfIndexer.deleteService(description);
 	}
 
 	@Override
 	@Transactional
-	public OfferingsDescription findById(Integer id) throws OfferingDescriptionNotFoundException{
-		return offeringsDescriptionDao.findById(id);
+	public Description findById(Integer id) throws DescriptionNotFoundException{
+		return descriptionDao.findById(id);
 	}
 	
 	@Override
 	@Transactional
-	public OfferingsDescription findByName(String name) throws OfferingDescriptionNotFoundException {
-		return offeringsDescriptionDao.findByName(name);
+	public Description findByName(String name) throws DescriptionNotFoundException {
+		return descriptionDao.findByName(name);
 	}
 
 	@Override
 	@Transactional
-	public OfferingsDescription findByNameAndStore(String name, String store) 
-			throws OfferingDescriptionNotFoundException, StoreNotFoundException {
-		return offeringsDescriptionDao.findByNameAndStore(name, store);
+	public Description findByNameAndStore(String name, String store) 
+			throws DescriptionNotFoundException, StoreNotFoundException {
+		return descriptionDao.findByNameAndStore(name, store);
 	}
 	
 	@Override
 	@Transactional
-	public List<OfferingsDescription> getAllOfferingsDescriptions() {
-		return offeringsDescriptionDao.getAllOfferingsDescriptions();
+	public List<Description> getAllDescriptions() {
+		return descriptionDao.getAllDescriptions();
 	}
 	
 	@Override
 	@Transactional
-	public List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max) {
-		return offeringsDescriptionDao.getOfferingsDescriptionsPage(offset, max);
+	public List<Description> getDescriptionsPage(int offset, int max) {
+		return descriptionDao.getDescriptionsPage(offset, max);
+	}
+
+	@Override
+	@Transactional
+	public List<Description> getStoreDescriptions(String storeName) {
+		return descriptionDao.getStoreDescriptions(storeName);
+	}
+
+	@Override
+	@Transactional
+	public List<Description> getStoreDescriptionsPage(String storeName,
+			int offset, int max) {
+		return descriptionDao.getStoreDescriptionsPage(storeName, offset, max);
 	}
 
 }

@@ -1,11 +1,11 @@
-package org.fiware.apps.marketplace.dao;
+package org.fiware.apps.marketplace.bo;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,16 +35,27 @@ package org.fiware.apps.marketplace.dao;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.model.Description;
 
-public interface OfferingsDescriptionDao {
-	void save(OfferingsDescription offeringsDescription);
-	void update(OfferingsDescription offeringsDescription);
-	void delete(OfferingsDescription offeringsDescription);
-	OfferingsDescription findByName(String name) throws OfferingDescriptionNotFoundException;
-	OfferingsDescription findByNameAndStore(String name, String store) throws OfferingDescriptionNotFoundException;
-	OfferingsDescription findById(Integer id);
-	List<OfferingsDescription> getAllOfferingsDescriptions();
-	List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max);
+public interface DescriptionBo {
+	
+	// Save, Update, Delete
+	public void save(Description description) throws Exception;
+	public void update(Description description) throws Exception;
+	public void delete(Description description) throws Exception;
+	
+	// Find
+	public Description findByName(String name) throws DescriptionNotFoundException;
+	public Description findByNameAndStore(String name, String store) 
+			throws DescriptionNotFoundException, StoreNotFoundException;
+	public Description findById(Integer id) throws DescriptionNotFoundException;
+	
+	// Get all or a sublist
+	public List<Description> getAllDescriptions();
+	public List<Description> getDescriptionsPage(int offset, int max);
+	public List<Description> getStoreDescriptions(String storeName);
+	public List<Description> getStoreDescriptionsPage(String storeName, int offset, int max);
+
 }

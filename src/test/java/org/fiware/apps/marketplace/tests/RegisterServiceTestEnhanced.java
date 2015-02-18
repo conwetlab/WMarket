@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
 
 import org.fiware.apps.marketplace.client.ServiceClient;
 import org.fiware.apps.marketplace.client.StoreClient;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -101,8 +101,8 @@ public class RegisterServiceTestEnhanced {
 		return store;
 	}*/
 	
-	private OfferingsDescription createServiceTest(String serviceName, String serviceURL, String storeName){
-		OfferingsDescription service = new OfferingsDescription();
+	private Description createServiceTest(String serviceName, String serviceURL, String storeName){
+		Description service = new Description();
 		service.setName(serviceName);
 		service.setUrl(serviceURL);
 

@@ -39,6 +39,7 @@ import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +57,7 @@ public class UserBoImpl implements UserBo {
 	@Override
 	@Transactional(readOnly=false)
 	public void save(User localuser) {
-		localuser.setUserName(Utils.getURLName(localuser.getDisplayName()));
+		localuser.setUserName(NameGenerator.getURLName(localuser.getDisplayName()));
 		userDao.save(localuser);
 	}
 

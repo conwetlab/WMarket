@@ -32,8 +32,8 @@ package org.fiware.apps.marketplace.tests;
  * #L%
  */
 
-import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.bo.DescriptionBo;
+import org.fiware.apps.marketplace.model.Description;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -44,10 +44,10 @@ public class App
     	ApplicationContext appContext = 
     	  new ClassPathXmlApplicationContext("spring/config/BeanLocations.xml");
  
-    	OfferingsDescriptionBo serviceBo = (OfferingsDescriptionBo)appContext.getBean("serviceBo");
+    	DescriptionBo serviceBo = (DescriptionBo)appContext.getBean("serviceBo");
  
     	/** insert **/
-    	OfferingsDescription service = new OfferingsDescription();
+    	Description service = new Description();
     	service.setUrl("testurl");
     	service.setName("HAIO");
     	serviceBo.save(service);

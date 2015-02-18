@@ -39,6 +39,7 @@ import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +57,7 @@ public class StoreBoImpl implements StoreBo{
 	@Override
 	@Transactional(readOnly=false)
 	public void save(Store store) {
-		store.setName(Utils.getURLName(store.getDisplayName()));
+		store.setName(NameGenerator.getURLName(store.getDisplayName()));
 		storeDao.save(store);
 		
 	}

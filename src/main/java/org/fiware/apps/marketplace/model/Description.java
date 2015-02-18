@@ -67,7 +67,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @Table(name = "offerings_descriptions", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "store" }) })
 @XmlRootElement(name = "offering_description")
 @IgnoreMediaTypes("application/*+json")
-public class OfferingsDescription {
+public class Description {
 
 	private Integer id;
 	private String url;
@@ -80,7 +80,7 @@ public class OfferingsDescription {
 	private User creator;
 	private List<Offering> offerings;
 	
-	public OfferingsDescription() {
+	public Description() {
 		this.offerings = new ArrayList<Offering>();
 	}
 

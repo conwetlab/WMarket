@@ -33,44 +33,44 @@ package org.fiware.apps.marketplace.model.validators;
  */
 
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.model.Description;
 import org.springframework.stereotype.Service;
 
 @Service("offeringsDescriptionValidator")
-public class OfferingsDescriptionValidator {
+public class DescriptionValidator {
 
 	private static final GenericValidator GENERIC_VALIDATOR = GenericValidator.getInstance();
 
 	/**
-	 * @param offeringsDescription Offerings Description to be checked
+	 * @param description Offerings Description to be checked
 	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
 	 * the basic fields (name, url) are included.
 	 * @return True if the description is valid. Otherwise <code>ValidationException</code> will be thrown
 	 * @throws ValidationException If description is not valid
 	 */
-	public boolean validateOfferingsDescription(OfferingsDescription offeringsDescription, 
+	public boolean validateDescription(Description description, 
 			boolean isBeingCreated) throws ValidationException {
 
 		if (isBeingCreated) {
-			if (offeringsDescription.getDisplayName() == null || offeringsDescription.getUrl() == null) {
+			if (description.getDisplayName() == null || description.getUrl() == null) {
 				throw new ValidationException("name and/or url cannot be null");
 			}
 		}
 
-		if (offeringsDescription.getDisplayName() != null && 
-				!GENERIC_VALIDATOR.validateDisplayName(offeringsDescription.getDisplayName())) {
+		if (description.getDisplayName() != null && 
+				!GENERIC_VALIDATOR.validateDisplayName(description.getDisplayName())) {
 			int minNameLength = GenericValidator.getDisplayNameMinLength();
 			int maxNameLength = GenericValidator.getDisplayNameMaxLength();
 			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("name", 
 					minNameLength, maxNameLength));
 		}
 
-		if (offeringsDescription.getUrl() != null && !GENERIC_VALIDATOR.validateURL(offeringsDescription.getUrl())) {
+		if (description.getUrl() != null && !GENERIC_VALIDATOR.validateURL(description.getUrl())) {
 			throw new ValidationException("url is not valid");
 		}
 
-		if (offeringsDescription.getDescription() != null && 
-				!GENERIC_VALIDATOR.validateDescription(offeringsDescription.getDescription())) {
+		if (description.getDescription() != null && 
+				!GENERIC_VALIDATOR.validateDescription(description.getDescription())) {
 			int minDescriptionLength = GenericValidator.getDescriptionMinLength();
 			int maxDescriptionLength = GenericValidator.getDescriptionMaxLength();
 			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("description", 

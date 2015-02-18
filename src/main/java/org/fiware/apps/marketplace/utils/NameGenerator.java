@@ -1,8 +1,8 @@
-package org.fiware.apps.marketplace.bo.impl;
+package org.fiware.apps.marketplace.utils;
 
 import java.text.Normalizer;
 
-public class Utils {
+public class NameGenerator {
 	
 	public static String getURLName(String name) {
 		

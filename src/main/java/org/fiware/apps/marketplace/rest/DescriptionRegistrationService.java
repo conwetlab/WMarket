@@ -35,7 +35,6 @@ package org.fiware.apps.marketplace.rest;
 
 import java.net.URI;
 import java.util.Date;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -53,19 +52,19 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
+import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
-import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.OfferingsDescriptions;
+import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
-import org.fiware.apps.marketplace.model.validators.OfferingsDescriptionValidator;
+import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
-import org.fiware.apps.marketplace.security.auth.OfferingsDescriptionRegistrationAuth;
+import org.fiware.apps.marketplace.security.auth.DescriptionRegistrationAuth;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -74,50 +73,50 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.shared.JenaException;
 
 @Component
-@Path("/store/{storeName}/offerings_description/")	
-public class OfferingsDescriptionRegistrationService {
+@Path("/store/{storeName}/description/")	
+public class DescriptionRegistrationService {
 
 	// OBJECT ATTRIBUTES //
 	@Autowired private StoreBo storeBo;
-	@Autowired private OfferingsDescriptionBo offeringsDescriptionBo;
-	@Autowired private OfferingsDescriptionRegistrationAuth offeringRegistrationAuth;
-	@Autowired private OfferingsDescriptionValidator offeringsDescriptionValidator;
+	@Autowired private DescriptionBo descriptionBo;
+	@Autowired private DescriptionRegistrationAuth descriptionRegistrationAuth;
+	@Autowired private DescriptionValidator descriptionValidator;
 	@Autowired private AuthUtils authUtils;
 
 	// CLASS ATTRIBUTES //
 	private static final String INVALID_RDF = "Your RDF could not be parsed";
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(OfferingsDescriptionRegistrationService.class), 
+			LoggerFactory.getLogger(DescriptionRegistrationService.class), 
 			"There is already an Offering in this Store with that name");
 
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/")	
-	public Response createOfferingsDescription(@Context UriInfo uri, 
+	public Response createDescription(@Context UriInfo uri, 
 			@PathParam("storeName") String storeName, 
-			OfferingsDescription offeringsDescription) {	
+			Description description) {	
 		Response response;
 
 		try {			
-			if (offeringRegistrationAuth.canCreate()) {
+			if (descriptionRegistrationAuth.canCreate()) {
 
 				// Validate offerings description (exception is thrown if the description is not valid) 
-				offeringsDescriptionValidator.validateOfferingsDescription(offeringsDescription, true);
+				descriptionValidator.validateDescription(description, true);
 
 				User user = authUtils.getLoggedUser();
 				Store store = storeBo.findByName(storeName);
-				offeringsDescription.setRegistrationDate(new Date());
-				offeringsDescription.setStore(store);
-				offeringsDescription.setCreator(user);
-				offeringsDescription.setLasteditor(user);
+				description.setRegistrationDate(new Date());
+				description.setStore(store);
+				description.setCreator(user);
+				description.setLasteditor(user);
 				
 				// Save the offerings description
-				offeringsDescriptionBo.save(offeringsDescription);
+				descriptionBo.save(description);
 				
 				// Get the URL and return created
 				URI newURI = UriBuilder
 						.fromUri(uri.getPath())
-						.path(offeringsDescription.getName())
+						.path(description.getName())
 						.build();
 				
 				response = Response.created(newURI).build();
@@ -149,48 +148,48 @@ public class OfferingsDescriptionRegistrationService {
 
 	@PUT
 	@Consumes({"application/xml", "application/json"})
-	@Path("/{offeringsDescriptionName}")
-	public Response updateOfferingsDescription(@PathParam("storeName") String storeName, 
-			@PathParam("offeringsDescriptionName") String offeringsDescriptionName, 
-			OfferingsDescription offeringDescriptionInfo) {
+	@Path("/{descriptionName}")
+	public Response updateDescription(@PathParam("storeName") String storeName, 
+			@PathParam("descriptionName") String descriptionName, 
+			Description descriptionInfo) {
 
 		Response response;
 
 		try {
 			@SuppressWarnings("unused")
 			Store store = storeBo.findByName(storeName);	//Check that the Store exists
-			OfferingsDescription offeringDescription = offeringsDescriptionBo.
-					findByNameAndStore(offeringsDescriptionName, storeName);
+			Description description = descriptionBo.
+					findByNameAndStore(descriptionName, storeName);
 
-			if (offeringRegistrationAuth.canUpdate(offeringDescription)) {
+			if (descriptionRegistrationAuth.canUpdate(description)) {
 
 				// Validate offerings description (exception is thrown if the description is not valid) 
-				offeringsDescriptionValidator.validateOfferingsDescription(offeringDescriptionInfo, false);
+				descriptionValidator.validateDescription(descriptionInfo, false);
 
 				// Name cannot be changed...
 				// if (offeringDescriptionInfo.getName() != null) {
 				// 	 offeringDescription.setName(offeringDescriptionInfo.getName());
 				// }
 
-				if (offeringDescriptionInfo.getDisplayName() != null) {
-					offeringDescription.setDisplayName(offeringDescriptionInfo.getDisplayName());
+				if (descriptionInfo.getDisplayName() != null) {
+					description.setDisplayName(descriptionInfo.getDisplayName());
 				}
 
-				if (offeringDescriptionInfo.getUrl() != null) {
-					offeringDescription.setUrl(offeringDescriptionInfo.getUrl());
+				if (descriptionInfo.getUrl() != null) {
+					description.setUrl(descriptionInfo.getUrl());
 				}
 
-				if (offeringDescriptionInfo.getDescription() != null) {
-					offeringDescription.setDescription(offeringDescriptionInfo.getDescription());
+				if (descriptionInfo.getDescription() != null) {
+					description.setDescription(descriptionInfo.getDescription());
 				}
 
-				offeringDescription.setLasteditor(authUtils.getLoggedUser());
+				description.setLasteditor(authUtils.getLoggedUser());
 
-				offeringsDescriptionBo.update(offeringDescription);
+				descriptionBo.update(description);
 				response = Response.status(Status.OK).build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse(
-						"update offering " + offeringsDescriptionName);
+						"update offering " + descriptionName);
 			}
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
@@ -198,7 +197,7 @@ public class OfferingsDescriptionRegistrationService {
 			// When a offering description is created, the RDF is parsed to update the index
 			// If the RDF is not correct, this exception will be risen
 			response = ERROR_UTILS.badRequestResponse(INVALID_RDF);
-		} catch (OfferingDescriptionNotFoundException ex) {
+		} catch (DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
@@ -215,24 +214,24 @@ public class OfferingsDescriptionRegistrationService {
 	}
 
 	@DELETE
-	@Path("/{offeringsDescriptionName}")	
-	public Response deleteOfferingsDescription(@PathParam("storeName") String storeName, 
-			@PathParam("offeringsDescriptionName") String offeringsDescriptionName) {
+	@Path("/{descriptionName}")	
+	public Response deleteDescription(@PathParam("storeName") String storeName, 
+			@PathParam("descriptionName") String descriptionName) {
 		Response response;
 
 		try {
 			@SuppressWarnings("unused")
 			Store store = storeBo.findByName(storeName);	//Check that the Store exists
-			OfferingsDescription offeringsDescription = offeringsDescriptionBo.
-					findByNameAndStore(offeringsDescriptionName, storeName);
+			Description description = descriptionBo.
+					findByNameAndStore(descriptionName, storeName);
 
-			if (offeringRegistrationAuth.canDelete(offeringsDescription)) {
-				offeringsDescriptionBo.delete(offeringsDescription);
+			if (descriptionRegistrationAuth.canDelete(description)) {
+				descriptionBo.delete(description);
 				response = Response.status(Status.NO_CONTENT).build();
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("delete offering " + offeringsDescriptionName);
+				response = ERROR_UTILS.unauthorizedResponse("delete offering " + descriptionName);
 			}
-		} catch (OfferingDescriptionNotFoundException ex) {
+		} catch (DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
@@ -245,23 +244,23 @@ public class OfferingsDescriptionRegistrationService {
 
 	@GET
 	@Produces({"application/xml", "application/json"})
-	@Path("/{offeringsDescriptionName}")	
-	public Response getOfferingsDescription(@PathParam("storeName") String storeName, 
-			@PathParam("offeringsDescriptionName") String offeringsDescriptionName) {	
+	@Path("/{descriptionName}")	
+	public Response getDescription(@PathParam("storeName") String storeName, 
+			@PathParam("descriptionName") String descriptionName) {	
 		Response response;
 
 		try {
 			@SuppressWarnings("unused")
 			Store store = storeBo.findByName(storeName);	//Check that the Store exists
-			OfferingsDescription offeringDescription = offeringsDescriptionBo.
-					findByNameAndStore(offeringsDescriptionName, storeName);
+			Description description = descriptionBo.
+					findByNameAndStore(descriptionName, storeName);
 
-			if (offeringRegistrationAuth.canGet(offeringDescription)) {
-				response = Response.status(Status.OK).entity(offeringDescription).build();
+			if (descriptionRegistrationAuth.canGet(description)) {
+				response = Response.status(Status.OK).entity(description).build();
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("get offering " + offeringsDescriptionName);
+				response = ERROR_UTILS.unauthorizedResponse("get offering " + descriptionName);
 			}
-		} catch (OfferingDescriptionNotFoundException ex) {
+		} catch (DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
@@ -275,7 +274,7 @@ public class OfferingsDescriptionRegistrationService {
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
-	public Response listOfferingsDescriptionsInStore(@PathParam("storeName") String storeName, 
+	public Response listDescriptionsInStore(@PathParam("storeName") String storeName, 
 			@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max) {
 		Response response;
@@ -285,25 +284,13 @@ public class OfferingsDescriptionRegistrationService {
 			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
 		} else {
 			try {
-				int toIndex;
 				Store store = storeBo.findByName(storeName);
 
-				if (offeringRegistrationAuth.canList(store)) {
-					OfferingsDescriptions returnedOfferingDescriptions = new OfferingsDescriptions();
-					List<OfferingsDescription> allOfferingDescriptions = store.getOfferingsDescriptions();
-
-					// Otherwise (if offset > allServices.size() - 1) an empty list will be returned
-					if (offset <= allOfferingDescriptions.size() - 1) {
-						if (offset + max > allOfferingDescriptions.size()) {
-							toIndex = allOfferingDescriptions.size();
-						} else {
-							toIndex = offset + max;
-						}	
-						returnedOfferingDescriptions.setOfferingsDescriptions(
-								store.getOfferingsDescriptions().subList(offset, toIndex));
-					}
-
-					response = Response.status(Status.OK).entity(returnedOfferingDescriptions).build();
+				if (descriptionRegistrationAuth.canList(store)) {
+					Descriptions returnedDescriptions = new Descriptions(descriptionBo
+							.getStoreDescriptionsPage(storeName, offset, max));
+					
+					response = Response.status(Status.OK).entity(returnedDescriptions).build();
 				} else {
 					response = ERROR_UTILS.unauthorizedResponse("list offerings");
 				}

@@ -1,11 +1,10 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.security.auth;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
- * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,28 +32,26 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
-import java.util.List;
+import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.Description;
 
-import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
-import org.fiware.apps.marketplace.model.Offering;
 
-public interface OfferingBo {
+@org.springframework.stereotype.Service("offeringsDescriptionRegistrationAuth")
+public class DescriptionRegistrationAuth extends RegistrationAuth<Description> {
+
+	@Override
+	protected User getEntityOwner(Description service) {
+		return service.getCreator();
+	}
 	
-	// Save, update, delete
-	public void save(Offering offering);
-	public void update(Offering offering);
-	public void delete(Offering offering);
-	
-	// Find 
-	public Offering findByUri(String uri);
-	public Offering findByStoreDescriptionAndStore(String storeName, String descriptionName, 
-			String offeringName) throws OfferingNotFoundException;
-	
-	// Get all or a sublist based on some criteria
-	public List<Offering> getAllOfferings();
-	public List<Offering> getOfferingsPage(int offset, int max);
-	public List<Offering> getAllStoreOfferings(String storeName);
-	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max);
-	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName);
-	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, int offset, int max);	
+	/**
+	 * Method to know if a user can list the offerings belonging to a Store
+	 * @param store The store whose offerings will be listed
+	 * @return By default it returns true
+	 */
+	public boolean canList(Store store) {
+		return true;
+	}
+
 }

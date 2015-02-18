@@ -41,10 +41,10 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.fiware.apps.marketplace.bo.SearchBo;
-import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
+import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.model.SearchResult;
 import org.fiware.apps.marketplace.model.SearchResultEntryMatch;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.utils.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,7 @@ public class SearchBoImpl implements SearchBo {
 	
 	private final static Logger logger = LoggerFactory.getLogger(SearchBoImpl.class);
 
-	@Autowired private OfferingsDescriptionBo offeringsDescriptionBo;
+	@Autowired private DescriptionBo offeringsDescriptionBo;
 
 	@Override
 	public SearchResult searchByKeyword(String searchstring) {
@@ -86,7 +86,7 @@ public class SearchBoImpl implements SearchBo {
 			try {
 				Document doc = reader.document(hitlarq.getLuceneDocId());
 				Field val = doc.getField("docId");
-				OfferingsDescription offeringDescription = 
+				Description offeringDescription = 
 						offeringsDescriptionBo.findById(Integer.parseInt(val.stringValue()));
 
 				SearchResultEntryMatch match = new SearchResultEntryMatch(node.toString(), hitlarq.getScore());

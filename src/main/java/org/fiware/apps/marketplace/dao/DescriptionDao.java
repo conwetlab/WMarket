@@ -1,10 +1,11 @@
-package org.fiware.apps.marketplace.exceptions;
+package org.fiware.apps.marketplace.dao;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2012 SAP
+ * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,12 +33,28 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
-public class OfferingDescriptionNotFoundException extends Exception {
-	
-	private static final long serialVersionUID = 1L;
-	
-	public OfferingDescriptionNotFoundException(String message) {
-		super(message);
-	}
+import java.util.List;
 
+import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.model.Description;
+
+public interface DescriptionDao {
+	
+	// Save, update & delete
+	public void save(Description description);
+	public void update(Description description);
+	public void delete(Description description);
+	
+	// Find
+	public Description findByName(String name) 
+			throws DescriptionNotFoundException;
+	public Description findByNameAndStore(String name, String store) 
+			throws DescriptionNotFoundException;
+	public Description findById(Integer id);
+	
+	// Get all offerings descriptions
+	public List<Description> getAllDescriptions();
+	public List<Description> getDescriptionsPage(int offset, int max);
+	public List<Description> getStoreDescriptions(String storeName);
+	public List<Description> getStoreDescriptionsPage(String storeName, int offset, int max);
 }

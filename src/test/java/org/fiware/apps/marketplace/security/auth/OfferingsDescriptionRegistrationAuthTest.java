@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
@@ -51,7 +51,7 @@ public class OfferingsDescriptionRegistrationAuthTest {
 
 
 	@Mock private AuthUtils authUtils;
-	@InjectMocks private static OfferingsDescriptionRegistrationAuth authHelper;
+	@InjectMocks private static DescriptionRegistrationAuth authHelper;
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// BASIC METHODS ////////////////////////////////////
@@ -63,9 +63,9 @@ public class OfferingsDescriptionRegistrationAuthTest {
 		return user;
 	}
 
-	private OfferingsDescription setUpTestUpdateAndDelete(User creator, User updater) {
+	private Description setUpTestUpdateAndDelete(User creator, User updater) {
 		// Set up the test		
-		OfferingsDescription offeringsDescription = new OfferingsDescription();
+		Description offeringsDescription = new Description();
 		offeringsDescription.setCreator(creator);
 
 		try {
@@ -105,7 +105,7 @@ public class OfferingsDescriptionRegistrationAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	private void testUpdate(User creator, User updater, boolean canUpdate)  {
-		OfferingsDescription offeringsDescription = setUpTestUpdateAndDelete(creator, updater);
+		Description offeringsDescription = setUpTestUpdateAndDelete(creator, updater);
 
 		// Execute the test
 		boolean result = authHelper.canUpdate(offeringsDescription);
@@ -147,7 +147,7 @@ public class OfferingsDescriptionRegistrationAuthTest {
 	///////////////////////////////////// TEST DELETE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	private void testDelete(User creator, User updater, boolean canDelete)  {
-		OfferingsDescription offeringsDescription = setUpTestUpdateAndDelete(creator, updater);
+		Description offeringsDescription = setUpTestUpdateAndDelete(creator, updater);
 
 		// Execute the test
 		boolean result = authHelper.canDelete(offeringsDescription);

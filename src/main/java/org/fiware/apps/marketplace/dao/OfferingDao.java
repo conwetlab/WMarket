@@ -1,10 +1,10 @@
-package org.fiware.apps.marketplace.security.auth;
+package org.fiware.apps.marketplace.dao;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,26 +32,29 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
-import org.fiware.apps.marketplace.model.Store;
-import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import java.util.List;
 
+import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.model.Offering;
 
-@org.springframework.stereotype.Service("offeringsDescriptionRegistrationAuth")
-public class OfferingsDescriptionRegistrationAuth extends RegistrationAuth<OfferingsDescription> {
-
-	@Override
-	protected User getEntityOwner(OfferingsDescription service) {
-		return service.getCreator();
-	}
+public interface OfferingDao {
 	
-	/**
-	 * Method to know if a user can list the offerings belonging to a Store
-	 * @param store The store whose offerings will be listed
-	 * @return By default it returns true
-	 */
-	public boolean canList(Store store) {
-		return true;
-	}
+	// Save, update & delete
+	public void save(Offering offering);
+	public void update(Offering offering);
+	public void delete(Offering offering);
+	
+	// Find
+	public Offering findByStoreDescriptionAndStore(String storeName, String descriptionName, 
+			String offeringName) throws OfferingNotFoundException;
+	
+	// Get offerings
+	public List<Offering> getAllOfferings();
+	public List<Offering> getOfferingsPage(int offset, int max);
+	public List<Offering> getAllStoreOfferings(String storeName);
+	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max);
+	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName);
+	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, int offset, int max);
+	
 
 }

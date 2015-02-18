@@ -35,41 +35,41 @@ package org.fiware.apps.marketplace.dao.impl;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.dao.OfferingsDescriptionDao;
-import org.fiware.apps.marketplace.exceptions.OfferingDescriptionNotFoundException;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.dao.DescriptionDao;
+import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository("offeringsDescriptionDao")
-public class OfferingsDescriptionDaoImpl extends MarketplaceHibernateDao implements OfferingsDescriptionDao {
+public class DescriptionDaoImpl extends MarketplaceHibernateDao implements DescriptionDao {
 	
-	private final static String TABLE_NAME = OfferingsDescription.class.getName();
+	private final static String TABLE_NAME = Description.class.getName();
 
 	@Override
-	public void save(OfferingsDescription offeringsDescription) {
-		getSession().saveOrUpdate(offeringsDescription);		
+	public void save(Description description) {
+		getSession().saveOrUpdate(description);		
 	}
 
 	@Override
-	public void update(OfferingsDescription offeringsDescription) {
-		getSession().update(offeringsDescription);		
+	public void update(Description description) {
+		getSession().update(description);		
 	}
 
 	@Override
-	public void delete(OfferingsDescription offeringsDescription) {
-		getSession().delete(offeringsDescription);
+	public void delete(Description description) {
+		getSession().delete(description);
 	}
 
 	@Override
-	public OfferingsDescription findById(Integer id) {
-		Object res = getSession().get(OfferingsDescription.class, id);
-		return (OfferingsDescription) res;
+	public Description findById(Integer id) {
+		Object res = getSession().get(Description.class, id);
+		return (Description) res;
 	}
 	
-	private OfferingsDescription findByQuery(String queryString, Object[] params) 
-			throws OfferingDescriptionNotFoundException {
+	private Description findByQuery(String queryString, Object[] params) 
+			throws DescriptionNotFoundException {
 		
 		Query query = getSession()
 				.createQuery(queryString);
@@ -81,21 +81,21 @@ public class OfferingsDescriptionDaoImpl extends MarketplaceHibernateDao impleme
 		List<?> list = query.list();
 		
 		if (list.size() == 0) {
-			throw new OfferingDescriptionNotFoundException("Offerings Description " + params[0] + " not found");
+			throw new DescriptionNotFoundException("Offerings Description " + params[0] + " not found");
 		} else {
-			return (OfferingsDescription) list.get(0);
+			return (Description) list.get(0);
 		}
 	}
 	
 	@Override
-	public OfferingsDescription findByName(String name) throws OfferingDescriptionNotFoundException {
+	public Description findByName(String name) throws DescriptionNotFoundException {
 		Object[] params = {name};
 		String query = String.format("from %s where name = ?", TABLE_NAME);
 		return this.findByQuery(query, params);
 	}
 
 	@Override
-	public OfferingsDescription findByNameAndStore(String name, String store) throws OfferingDescriptionNotFoundException {
+	public Description findByNameAndStore(String name, String store) throws DescriptionNotFoundException {
 		Object[] params  = {name , store};
 		String query = String.format("from %s where name = ? and store.name = ?", TABLE_NAME);
 		return this.findByQuery(query, params);				
@@ -103,17 +103,33 @@ public class OfferingsDescriptionDaoImpl extends MarketplaceHibernateDao impleme
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<OfferingsDescription> getAllOfferingsDescriptions() {
+	public List<Description> getAllDescriptions() {
 		return getSession()
-				.createCriteria(OfferingsDescription.class)
+				.createCriteria(Description.class)
 				.list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<OfferingsDescription> getOfferingsDescriptionsPage(int offset, int max) {
+	public List<Description> getDescriptionsPage(int offset, int max) {
 		return getSession()
-				.createCriteria(OfferingsDescription.class)
+				.createCriteria(Description.class)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
+	}
+
+	@Override
+	public List<Description> getStoreDescriptions(String storeName) {
+		return getStoreDescriptionsPage(storeName, 0, Integer.MAX_VALUE);	
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Description> getStoreDescriptionsPage(String storeName,
+			int offset, int max) {
+		return getSession().createQuery(String.format("from %s where store.name = :storeName", TABLE_NAME))
+				.setParameter("storeName", storeName)
 				.setFirstResult(offset)
 				.setMaxResults(max)
 				.list();

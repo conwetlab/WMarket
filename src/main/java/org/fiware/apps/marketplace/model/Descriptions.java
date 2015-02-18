@@ -43,25 +43,25 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @XmlRootElement(name = "offerings_descriptions")
 @IgnoreMediaTypes("application/*+json")
-public class OfferingsDescriptions {
+public class Descriptions {
 	
-    private List<OfferingsDescription> offeringsDescriptions = null;
+    private List<Description> descriptions = null;
     
-    public OfferingsDescriptions() {
-    	this.setOfferingsDescriptions(new ArrayList<OfferingsDescription>());
+    public Descriptions() {
+    	this.setDescriptions(new ArrayList<Description>());
     }
     
-    public OfferingsDescriptions(List<OfferingsDescription> offeringsDescriptions) {
-    	this.setOfferingsDescriptions(offeringsDescriptions);
+    public Descriptions(List<Description> descriptions) {
+    	this.setDescriptions(descriptions);
     }
  
     @XmlElement(name = "offering_description")
     @JsonProperty("offering_descriptions")
-    public List<OfferingsDescription> getOfferingsDescriptions() {
-        return this.offeringsDescriptions;
+    public List<Description> getDescriptions() {
+        return this.descriptions;
     }
  
-    public void setOfferingsDescriptions(List<OfferingsDescription> offeringsDescriptions) {
-    	this.offeringsDescriptions = offeringsDescriptions;
+    public void setDescriptions(List<Description> descriptions) {
+    	this.descriptions = descriptions;
     }
 }

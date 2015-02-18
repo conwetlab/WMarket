@@ -1,10 +1,10 @@
-package org.fiware.apps.marketplace.bo.impl;
+package org.fiware.apps.marketplace.dao.impl;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,88 +34,100 @@ package org.fiware.apps.marketplace.bo.impl;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.bo.OfferingBo;
 import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service("offeringBo")
-public class OfferingBoImpl implements OfferingBo {
+@Service("offeringDao")
+public class OfferingDaoImpl extends MarketplaceHibernateDao implements OfferingDao  {
 	
-	@Autowired private OfferingDao offeringDao;
+	private static final String TABLE_NAME = Offering.class.getName();
 
 	@Override
-	@Transactional(readOnly = false)
 	public void save(Offering offering) {
-		offeringDao.save(offering);
+		getSession().save(offering);
 	}
 
 	@Override
-	@Transactional(readOnly = false)
 	public void update(Offering offering) {
-		offeringDao.update(offering);
+		getSession().update(offering);
 	}
 
 	@Override
-	@Transactional(readOnly = false)
 	public void delete(Offering offering) {
-		offeringDao.delete(offering);
+		getSession().delete(offering);
 	}
 
 	@Override
-	@Transactional
-	public Offering findByUri(String uri) {
-		// TODO Auto-generated method stub
-		return null;
+	public Offering findByStoreDescriptionAndStore(String storeName, String descriptionName, 
+			String offeringName) throws OfferingNotFoundException {
+		
+		List<?> offerings = getSession().createQuery("from " + TABLE_NAME + " WHERE "
+				+ "describedIn.name = :descriptionName, describedIn.store.name = :storeName "
+				+ "AND name = :offeringName;")
+				.setParameter("storeName", storeName)
+				.setParameter("descriptionName", descriptionName)
+				.setParameter("offeringName", offeringName)
+				.list();
+		
+		if (offerings.size() == 0) {
+			throw new OfferingNotFoundException("Offering " + 
+					offeringName + " not found in description " + descriptionName);
+		} else {
+			return (Offering) offerings.get(0);
+		}
 	}
 
 	@Override
-	@Transactional
-	public Offering findByStoreDescriptionAndStore(String storeName,
-			String descriptionName, String offeringName)
-			throws OfferingNotFoundException {
-		return offeringDao.findByStoreDescriptionAndStore(storeName, descriptionName, offeringName);
-	}
-
-	@Override
-	@Transactional
 	public List<Offering> getAllOfferings() {
-		return offeringDao.getAllOfferings();
+		return getOfferingsPage(0, Integer.MAX_VALUE);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	@Transactional
 	public List<Offering> getOfferingsPage(int offset, int max) {
-		return offeringDao.getOfferingsPage(offset, max);
+		return getSession()
+				.createCriteria(Offering.class)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
 	}
 
 	@Override
-	@Transactional
 	public List<Offering> getAllStoreOfferings(String storeName) {
-		return offeringDao.getAllStoreOfferings(storeName);
+		return getStoreOfferingsPage(storeName, 0, Integer.MAX_VALUE);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	@Transactional
-	public List<Offering> getStoreOfferingsPage(String storeName, int offset,
+	public List<Offering> getStoreOfferingsPage(String storeName, int offset,	
 			int max) {
-		return offeringDao.getStoreOfferingsPage(storeName, offset, max);
+		
+		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE describedIn.store.name = :storeName;")
+				.setParameter("storeName", storeName)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
 	}
 
 	@Override
-	@Transactional
 	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) {
-		return offeringDao.getAllDescriptionOfferings(storeName, descriptionName);
+		return getDescriptionOfferingsPage(storeName, descriptionName, 0, Integer.MAX_VALUE);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	@Transactional
-	public List<Offering> getDescriptionOfferingsPage(String storeName, 
-			String descriptionName, int offset, int max) {
-		return offeringDao.getDescriptionOfferingsPage(storeName, descriptionName, offset, max);
+	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName,
+			int offset, int max) {
+		return getSession().createQuery("FROM " + TABLE_NAME + " "
+				+ "WHERE describedIn.name = :descriptionName AND describedIn.store.name = :storeName;")
+				.setParameter("descriptionName", descriptionName)
+				.setParameter("storeName", storeName)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
 	}
-	
+
 }

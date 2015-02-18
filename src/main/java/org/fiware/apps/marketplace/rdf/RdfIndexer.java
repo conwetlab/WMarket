@@ -43,7 +43,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.StaleReaderException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.LockObtainFailedException;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.utils.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,7 @@ public class RdfIndexer {
 	
 	@Autowired private RdfHelper rdfHelper;
 	
-	public void indexService(OfferingsDescription service) throws MalformedURLException{
+	public void indexService(Description service) throws MalformedURLException{
 
 		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
 		Model model = rdfHelper.loadModel(service.getUrl());
@@ -78,7 +78,7 @@ public class RdfIndexer {
 
 	}
 
-	public void deleteService(OfferingsDescription service){
+	public void deleteService(Description service){
 
 		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
 		Analyzer analyzer = new StandardAnalyzer();

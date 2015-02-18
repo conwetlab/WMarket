@@ -38,9 +38,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.rdf.RdfHelper;
+import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -154,9 +155,9 @@ public class OfferingResolver {
 	 * @param offeringDescriptions
 	 * @return
 	 */
-	public List<Offering> resolveOfferingsFromServiceDescriptions(List<OfferingsDescription> offeringDescriptions) {
+	public List<Offering> resolveOfferingsFromServiceDescriptions(List<Description> offeringDescriptions) {
 		List<Offering> offerings = new ArrayList<Offering>();
-		for (OfferingsDescription service : offeringDescriptions) {
+		for (Description service : offeringDescriptions) {
 			offerings.addAll(resolveOfferingsFromServiceDescription(service));
 		}
 		return offerings;
@@ -167,7 +168,7 @@ public class OfferingResolver {
 	 * @param uri
 	 * @return
 	 */
-	public List<Offering> resolveOfferingsFromServiceDescription(OfferingsDescription offeringDescription) {
+	public List<Offering> resolveOfferingsFromServiceDescription(Description offeringDescription) {
 		
 		Model model = rdfHelper.getModelFromUri(offeringDescription.getUrl());
 		
@@ -182,7 +183,8 @@ public class OfferingResolver {
 		for (String offeringUri : offeringUris) {
 			
 			Offering offering = new Offering();
-			offering.setTitle(getOfferingTitle(model, offeringUri));
+			offering.setDisplayName(getOfferingTitle(model, offeringUri));
+			offering.setName(NameGenerator.getURLName(offering.getDisplayName()));
 			offering.setUri(offeringUri);
 			offering.setDescribedIn(offeringDescription);
 			offering.setVersion(getOfferingVersion(model, offeringUri));

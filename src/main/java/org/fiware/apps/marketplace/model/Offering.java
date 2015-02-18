@@ -58,11 +58,12 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 public class Offering {
 
 	private Integer id;
-	private String title;
+	private String name;
+	private String displayName;
 	private String uri;
 	private String description;
 	private String version;
-	private OfferingsDescription describedIn;
+	private Description describedIn;
 	private String imageUrl;
 
 	@Id
@@ -80,12 +81,22 @@ public class Offering {
 	@XmlID
 	@XmlAttribute 
 	@Column(name = "name", nullable = false)
-	public String getTitle() {
-		return title;
+	public String getName() {
+		return name;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@XmlElement
+	@Column(name = "display_name")
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	@XmlAttribute
@@ -121,11 +132,11 @@ public class Offering {
 	@XmlTransient
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "described_in", nullable = false)
-	public OfferingsDescription getDescribedIn() {
+	public Description getDescribedIn() {
 		return describedIn;
 	}
 
-	public void setDescribedIn(OfferingsDescription describedIn) {
+	public void setDescribedIn(Description describedIn) {
 		this.describedIn = describedIn;
 	}
 

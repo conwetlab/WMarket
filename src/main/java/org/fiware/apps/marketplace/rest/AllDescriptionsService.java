@@ -42,26 +42,26 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.OfferingsDescriptionBo;
-import org.fiware.apps.marketplace.model.OfferingsDescription;
-import org.fiware.apps.marketplace.model.OfferingsDescriptions;
-import org.fiware.apps.marketplace.security.auth.OfferingsDescriptionRegistrationAuth;
+import org.fiware.apps.marketplace.bo.DescriptionBo;
+import org.fiware.apps.marketplace.model.Description;
+import org.fiware.apps.marketplace.model.Descriptions;
+import org.fiware.apps.marketplace.security.auth.DescriptionRegistrationAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import org.slf4j.LoggerFactory;
 
 @Component
-@Path("/offerings")	
-public class AllOfferingsDescriptionsService {
+@Path("/descriptions")	
+public class AllDescriptionsService {
 		
 	// OBJECT ATTRIBUTES //
-	@Autowired private OfferingsDescriptionBo offeringsDescriptionBo;
-	@Autowired private OfferingsDescriptionRegistrationAuth offeringRegistrationAuth;
+	@Autowired private DescriptionBo offeringsDescriptionBo;
+	@Autowired private DescriptionRegistrationAuth offeringRegistrationAuth;
 	
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(AllOfferingsDescriptionsService.class));
+			LoggerFactory.getLogger(AllDescriptionsService.class));
 
 	
 	@GET
@@ -78,10 +78,10 @@ public class AllOfferingsDescriptionsService {
 		} else {
 			if (offeringRegistrationAuth.canList()) {
 				try {
-					List<OfferingsDescription> offeringsDescriptionsPage = 
-							offeringsDescriptionBo.getOfferingsDescriptionsPage(offset, max);
-					OfferingsDescriptions returnedOfferingsDescriptions = new OfferingsDescriptions();
-					returnedOfferingsDescriptions.setOfferingsDescriptions(offeringsDescriptionsPage);
+					List<Description> offeringsDescriptionsPage = 
+							offeringsDescriptionBo.getDescriptionsPage(offset, max);
+					Descriptions returnedOfferingsDescriptions = new Descriptions();
+					returnedOfferingsDescriptions.setDescriptions(offeringsDescriptionsPage);
 					response = Response.status(Status.OK).entity(returnedOfferingsDescriptions).build();
 				} catch (Exception ex) {
 					response = ERROR_UTILS.internalServerError(ex);
