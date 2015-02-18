@@ -53,7 +53,7 @@ import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
-import org.fiware.apps.marketplace.security.auth.StoreRegistrationAuth;
+import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
@@ -64,14 +64,14 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class StoreRegistrationServiceTest {
+public class StoreServiceTest {
 
 	@Mock private StoreBo storeBoMock;
-	@Mock private StoreRegistrationAuth storeRegistrationAuthMock;
+	@Mock private StoreAuth storeAuthMock;
 	@Mock private StoreValidator storeValidatorMock;
 	@Mock private AuthUtils authUtilsMock;
 
-	@InjectMocks private StoreRegistrationService storeRegistrationService;
+	@InjectMocks private StoreService storeRegistrationService;
 
 	// Default URI
 	private User user;
@@ -127,7 +127,7 @@ public class StoreRegistrationServiceTest {
 	@Test
 	public void testCreateStoreNotAllowed() {
 		// Mocks
-		when(storeRegistrationAuthMock.canCreate()).thenReturn(false);
+		when(storeAuthMock.canCreate()).thenReturn(false);
 
 		// Call the method
 		Response res = storeRegistrationService.createStore(uri, store);
@@ -143,7 +143,7 @@ public class StoreRegistrationServiceTest {
 	@Test
 	public void testCreateStoreNoErrors() throws ValidationException {
 		// Mocks
-		when(storeRegistrationAuthMock.canCreate()).thenReturn(true);
+		when(storeAuthMock.canCreate()).thenReturn(true);
 		doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -195,7 +195,7 @@ public class StoreRegistrationServiceTest {
 	@Test
 	public void testCreateStoreValidationException() throws ValidationException {
 		// Mocks
-		when(storeRegistrationAuthMock.canCreate()).thenReturn(true);
+		when(storeAuthMock.canCreate()).thenReturn(true);
 		doThrow(new ValidationException(VALIDATION_ERROR)).when(storeValidatorMock).validateStore(store, true);
 
 		testCreateStoreGenericError(400, ErrorType.BAD_REQUEST, VALIDATION_ERROR, false);
@@ -204,7 +204,7 @@ public class StoreRegistrationServiceTest {
 	@Test
 	public void testCreateStoreUserNotFoundException() throws ValidationException, UserNotFoundException {
 		// Mocks
-		when(storeRegistrationAuthMock.canCreate()).thenReturn(true);
+		when(storeAuthMock.canCreate()).thenReturn(true);
 		doThrow(new UserNotFoundException("User Not Found exception")).when(authUtilsMock).getLoggedUser();
 
 		testCreateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, 
@@ -214,7 +214,7 @@ public class StoreRegistrationServiceTest {
 
 	private void testCreateStoreHibernateException(Exception exception, String message) throws ValidationException {
 		// Mock
-		when(storeRegistrationAuthMock.canCreate()).thenReturn(true);
+		when(storeAuthMock.canCreate()).thenReturn(true);
 		doThrow(exception).when(storeBoMock).save(store);
 
 		testCreateStoreGenericError(400, ErrorType.BAD_REQUEST, message, true);
@@ -236,7 +236,7 @@ public class StoreRegistrationServiceTest {
 	public void testCreteStoreNotKnowException() throws ValidationException {
 		// Mock
 		String exceptionMsg = "SERVER ERROR";
-		when(storeRegistrationAuthMock.canCreate()).thenReturn(true);
+		when(storeAuthMock.canCreate()).thenReturn(true);
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).save(store);
 
 		testCreateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg, true);
@@ -252,7 +252,7 @@ public class StoreRegistrationServiceTest {
 		Store newStore = new Store();
 
 		// Mocks
-		when(storeRegistrationAuthMock.canUpdate(store)).thenReturn(false);
+		when(storeAuthMock.canUpdate(store)).thenReturn(false);
 		when(storeBoMock.findByName(DISPLAY_NAME)).thenReturn(store);
 
 		// Call the method
@@ -269,7 +269,7 @@ public class StoreRegistrationServiceTest {
 	private void testUpdateStoreField(Store newStore) {
 		try {
 			// Mock
-			when(storeRegistrationAuthMock.canUpdate(store)).thenReturn(true);
+			when(storeAuthMock.canUpdate(store)).thenReturn(true);
 			when(storeBoMock.findByName(DISPLAY_NAME)).thenReturn(store);
 			
 			String previousStoreName = store.getName();
@@ -331,7 +331,7 @@ public class StoreRegistrationServiceTest {
 
 		try {
 			// Mocks
-			when(storeRegistrationAuthMock.canUpdate(store)).thenReturn(true);
+			when(storeAuthMock.canUpdate(store)).thenReturn(true);
 
 			// Call the method
 			Response res = storeRegistrationService.updateStore(DISPLAY_NAME, newStore);
@@ -427,7 +427,7 @@ public class StoreRegistrationServiceTest {
 	@Test
 	public void testDeleteStoreNotAllowed() throws StoreNotFoundException {
 		// Mocks
-		when(storeRegistrationAuthMock.canDelete(store)).thenReturn(false);
+		when(storeAuthMock.canDelete(store)).thenReturn(false);
 		when(storeBoMock.findByName(DISPLAY_NAME)).thenReturn(store);
 
 		// Call the method
@@ -444,7 +444,7 @@ public class StoreRegistrationServiceTest {
 	@Test
 	public void testDeleteStoreNoErrors() throws StoreNotFoundException {
 		// Mocks
-		when(storeRegistrationAuthMock.canDelete(store)).thenReturn(true);
+		when(storeAuthMock.canDelete(store)).thenReturn(true);
 		when(storeBoMock.findByName(DISPLAY_NAME)).thenReturn(store);
 
 		// Call the method
@@ -463,7 +463,7 @@ public class StoreRegistrationServiceTest {
 
 		try {
 			// Mocks
-			when(storeRegistrationAuthMock.canDelete(store)).thenReturn(true);
+			when(storeAuthMock.canDelete(store)).thenReturn(true);
 
 			// Call the method
 			Response res = storeRegistrationService.deleteStore(DISPLAY_NAME);
@@ -504,7 +504,7 @@ public class StoreRegistrationServiceTest {
 	@Test
 	public void testGetStoreNotAllowed() throws StoreNotFoundException {
 		// Mocks
-		when(storeRegistrationAuthMock.canGet(store)).thenReturn(false);
+		when(storeAuthMock.canGet(store)).thenReturn(false);
 		when(storeBoMock.findByName(DISPLAY_NAME)).thenReturn(store);
 
 		// Call the method
@@ -518,7 +518,7 @@ public class StoreRegistrationServiceTest {
 	@Test
 	public void testGetStoreNoErrors() throws StoreNotFoundException {
 		// Mocks
-		when(storeRegistrationAuthMock.canGet(store)).thenReturn(true);
+		when(storeAuthMock.canGet(store)).thenReturn(true);
 		when(storeBoMock.findByName(DISPLAY_NAME)).thenReturn(store);
 
 		// Call the method
@@ -533,7 +533,7 @@ public class StoreRegistrationServiceTest {
 
 		try {
 			// Mocks
-			when(storeRegistrationAuthMock.canGet(store)).thenReturn(true);
+			when(storeAuthMock.canGet(store)).thenReturn(true);
 
 			// Call the method
 			Response res = storeRegistrationService.getStore(DISPLAY_NAME);
@@ -570,7 +570,7 @@ public class StoreRegistrationServiceTest {
 	@Test
 	public void testListStoresNotAllowed() {
 		// Mocks
-		when(storeRegistrationAuthMock.canList()).thenReturn(false);
+		when(storeAuthMock.canList()).thenReturn(false);
 
 		// Call the method
 		Response res = storeRegistrationService.listStores(0, 100);
@@ -583,7 +583,7 @@ public class StoreRegistrationServiceTest {
 	
 	private void testListStoresInvalidParams(int offset, int max) {
 		// Mocks
-		when(storeRegistrationAuthMock.canList()).thenReturn(true);
+		when(storeAuthMock.canList()).thenReturn(true);
 
 		// Call the method
 		Response res = storeRegistrationService.listStores(offset, max);
@@ -617,7 +617,7 @@ public class StoreRegistrationServiceTest {
 		}
 		
 		// Mocks
-		when(storeRegistrationAuthMock.canList()).thenReturn(true);
+		when(storeAuthMock.canList()).thenReturn(true);
 		when(storeBoMock.getStoresPage(anyInt(), anyInt())).thenReturn(stores);
 		
 		// Call the method
@@ -639,7 +639,7 @@ public class StoreRegistrationServiceTest {
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock)
 				.getStoresPage(anyInt(), anyInt());
-		when(storeRegistrationAuthMock.canList()).thenReturn(true);
+		when(storeAuthMock.canList()).thenReturn(true);
 
 		// Call the method
 		int offset = 0;

@@ -32,16 +32,27 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
-import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.Description;
 import org.springframework.stereotype.Service;
 
-@Service("storeRegistrationAuth")
-public class StoreRegistrationAuth extends RegistrationAuth<Store> {
+
+@Service("descriptionAuth")
+public class DescriptionAuth extends GenericAuth<Description> {
 
 	@Override
-	protected User getEntityOwner(Store store) {
-		return store.getCreator();
+	protected User getEntityOwner(Description service) {
+		return service.getCreator();
+	}
+	
+	/**
+	 * Method to know if a user can list the descriptions belonging to a Store
+	 * @param store The store whose offerings will be listed
+	 * @return By default it returns true
+	 */
+	public boolean canList(Store store) {
+		return true;
 	}
 
 }

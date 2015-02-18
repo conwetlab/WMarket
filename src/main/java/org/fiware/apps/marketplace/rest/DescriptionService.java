@@ -64,7 +64,7 @@ import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
-import org.fiware.apps.marketplace.security.auth.DescriptionRegistrationAuth;
+import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -74,20 +74,20 @@ import com.hp.hpl.jena.shared.JenaException;
 
 @Component
 @Path("/store/{storeName}/description/")	
-public class DescriptionRegistrationService {
+public class DescriptionService {
 
 	// OBJECT ATTRIBUTES //
 	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
-	@Autowired private DescriptionRegistrationAuth descriptionRegistrationAuth;
+	@Autowired private DescriptionAuth descriptionAuth;
 	@Autowired private DescriptionValidator descriptionValidator;
 	@Autowired private AuthUtils authUtils;
 
 	// CLASS ATTRIBUTES //
 	private static final String INVALID_RDF = "Your RDF could not be parsed";
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(DescriptionRegistrationService.class), 
-			"There is already an Offering in this Store with that name");
+			LoggerFactory.getLogger(DescriptionService.class), 
+			"There is already a Description in this Store with that name");
 
 	@POST
 	@Consumes({"application/xml", "application/json"})
@@ -98,7 +98,7 @@ public class DescriptionRegistrationService {
 		Response response;
 
 		try {			
-			if (descriptionRegistrationAuth.canCreate()) {
+			if (descriptionAuth.canCreate()) {
 
 				// Validate offerings description (exception is thrown if the description is not valid) 
 				descriptionValidator.validateDescription(description, true);
@@ -121,7 +121,7 @@ public class DescriptionRegistrationService {
 				
 				response = Response.created(newURI).build();
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("create offering");
+				response = ERROR_UTILS.unauthorizedResponse("create description");
 			}
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
@@ -161,7 +161,7 @@ public class DescriptionRegistrationService {
 			Description description = descriptionBo.
 					findByNameAndStore(descriptionName, storeName);
 
-			if (descriptionRegistrationAuth.canUpdate(description)) {
+			if (descriptionAuth.canUpdate(description)) {
 
 				// Validate offerings description (exception is thrown if the description is not valid) 
 				descriptionValidator.validateDescription(descriptionInfo, false);
@@ -189,7 +189,7 @@ public class DescriptionRegistrationService {
 				response = Response.status(Status.OK).build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse(
-						"update offering " + descriptionName);
+						"update description " + descriptionName);
 			}
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
@@ -225,11 +225,11 @@ public class DescriptionRegistrationService {
 			Description description = descriptionBo.
 					findByNameAndStore(descriptionName, storeName);
 
-			if (descriptionRegistrationAuth.canDelete(description)) {
+			if (descriptionAuth.canDelete(description)) {
 				descriptionBo.delete(description);
 				response = Response.status(Status.NO_CONTENT).build();
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("delete offering " + descriptionName);
+				response = ERROR_UTILS.unauthorizedResponse("delete description " + descriptionName);
 			}
 		} catch (DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
@@ -255,10 +255,10 @@ public class DescriptionRegistrationService {
 			Description description = descriptionBo.
 					findByNameAndStore(descriptionName, storeName);
 
-			if (descriptionRegistrationAuth.canGet(description)) {
+			if (descriptionAuth.canGet(description)) {
 				response = Response.status(Status.OK).entity(description).build();
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("get offering " + descriptionName);
+				response = ERROR_UTILS.unauthorizedResponse("get description " + descriptionName);
 			}
 		} catch (DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
@@ -286,13 +286,13 @@ public class DescriptionRegistrationService {
 			try {
 				Store store = storeBo.findByName(storeName);
 
-				if (descriptionRegistrationAuth.canList(store)) {
+				if (descriptionAuth.canList(store)) {
 					Descriptions returnedDescriptions = new Descriptions(descriptionBo
 							.getStoreDescriptionsPage(storeName, offset, max));
 					
 					response = Response.status(Status.OK).entity(returnedDescriptions).build();
 				} else {
-					response = ERROR_UTILS.unauthorizedResponse("list offerings");
+					response = ERROR_UTILS.unauthorizedResponse("list descriptions");
 				}
 
 

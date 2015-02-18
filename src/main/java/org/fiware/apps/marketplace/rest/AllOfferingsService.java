@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.rest;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,32 +42,29 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.DescriptionBo;
-import org.fiware.apps.marketplace.model.Description;
-import org.fiware.apps.marketplace.model.Descriptions;
-import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
+import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Offerings;
+import org.fiware.apps.marketplace.security.auth.OfferingAuth;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import org.slf4j.LoggerFactory;
-
 @Component
-@Path("/descriptions")	
-public class AllDescriptionsService {
-		
-	// OBJECT ATTRIBUTES //
-	@Autowired private DescriptionBo descriptionBo;
-	@Autowired private DescriptionAuth descriptionAuth;
+@Path("/offerings")	
+public class AllOfferingsService {
+	
+	@Autowired private OfferingBo offeringBo;
+	@Autowired private OfferingAuth offeringAuth;
 	
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(AllDescriptionsService.class));
-
+			LoggerFactory.getLogger(AllOfferingsService.class));
 	
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
-	public Response listDescriptions(@DefaultValue("0") @QueryParam("offset") int offset,
+	public Response listOfferings(@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max) {
 		Response response;
 
@@ -76,21 +73,21 @@ public class AllDescriptionsService {
 			response = ERROR_UTILS.badRequestResponse(String.format(
 					"offset (%d) and/or max (%d) are not valid", offset, max));
 		} else {
-			if (descriptionAuth.canList()) {
-				try {
-					List<Description> descriptionsPage = 
-							descriptionBo.getDescriptionsPage(offset, max);
-					Descriptions returnedDescriptions = new Descriptions();
-					returnedDescriptions.setDescriptions(descriptionsPage);
-					response = Response.status(Status.OK).entity(returnedDescriptions).build();
-				} catch (Exception ex) {
-					response = ERROR_UTILS.internalServerError(ex);
-				}
+			if (offeringAuth.canList()) {
+				List<Offering> descriptionsPage = 
+						offeringBo.getOfferingsPage(offset, max);
+				Offerings returnedOfferings = new Offerings();
+				returnedOfferings.setOfferings(descriptionsPage);
+				response = Response.status(Status.OK).entity(returnedOfferings).build();
+
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("list descriptions");
+				response = ERROR_UTILS.unauthorizedResponse("list offerings");
 			}	
+
 		}
 		
 		return response;
 	}
+
+
 }

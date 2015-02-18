@@ -41,7 +41,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
-@XmlRootElement(name = "offerings_descriptions")
+@XmlRootElement(name = "descriptions")
 @IgnoreMediaTypes("application/*+json")
 public class Descriptions {
 	
@@ -55,8 +55,8 @@ public class Descriptions {
     	this.setDescriptions(descriptions);
     }
  
-    @XmlElement(name = "offering_description")
-    @JsonProperty("offering_descriptions")
+    @XmlElement(name = "description")
+    @JsonProperty("descriptions")
     public List<Description> getDescriptions() {
         return this.descriptions;
     }

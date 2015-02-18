@@ -47,8 +47,8 @@ public interface OfferingBo {
 	
 	// Find 
 	public Offering findByUri(String uri);
-	public Offering findByStoreDescriptionAndStore(String storeName, String descriptionName, 
-			String offeringName) throws OfferingNotFoundException;
+	public Offering findByStoreDescriptionAndStore(String offeringName, 
+			String descriptionName, String storeName) throws OfferingNotFoundException;
 	
 	// Get all or a sublist based on some criteria
 	public List<Offering> getAllOfferings();

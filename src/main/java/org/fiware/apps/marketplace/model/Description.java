@@ -64,8 +64,8 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
 // Each offerings description has to be unique for a store context
-@Table(name = "offerings_descriptions", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "store" }) })
-@XmlRootElement(name = "offering_description")
+@Table(name = "descriptions", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "store" }) })
+@XmlRootElement(name = "description")
 @IgnoreMediaTypes("application/*+json")
 public class Description {
 

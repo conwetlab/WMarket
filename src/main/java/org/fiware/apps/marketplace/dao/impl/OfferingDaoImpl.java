@@ -61,20 +61,20 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 	}
 
 	@Override
-	public Offering findByStoreDescriptionAndStore(String storeName, String descriptionName, 
-			String offeringName) throws OfferingNotFoundException {
+	public Offering findByStoreDescriptionAndStore(String offeringName, 
+			String descriptionName, String storeName) throws OfferingNotFoundException {
 		
 		List<?> offerings = getSession().createQuery("from " + TABLE_NAME + " WHERE "
-				+ "describedIn.name = :descriptionName, describedIn.store.name = :storeName "
-				+ "AND name = :offeringName;")
+				+ "describedIn.name = :descriptionName AND describedIn.store.name = :storeName "
+				+ "AND name = :offeringName")
 				.setParameter("storeName", storeName)
 				.setParameter("descriptionName", descriptionName)
 				.setParameter("offeringName", offeringName)
 				.list();
 		
 		if (offerings.size() == 0) {
-			throw new OfferingNotFoundException("Offering " + 
-					offeringName + " not found in description " + descriptionName);
+			throw new OfferingNotFoundException(String.format("Offering %s not found in "
+					+ "description %s (Store: %s)", offeringName, descriptionName, storeName));
 		} else {
 			return (Offering) offerings.get(0);
 		}
@@ -105,7 +105,7 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset,	
 			int max) {
 		
-		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE describedIn.store.name = :storeName;")
+		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE describedIn.store.name = :storeName")
 				.setParameter("storeName", storeName)
 				.setFirstResult(offset)
 				.setMaxResults(max)
@@ -122,7 +122,7 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName,
 			int offset, int max) {
 		return getSession().createQuery("FROM " + TABLE_NAME + " "
-				+ "WHERE describedIn.name = :descriptionName AND describedIn.store.name = :storeName;")
+				+ "WHERE describedIn.name = :descriptionName AND describedIn.store.name = :storeName")
 				.setParameter("descriptionName", descriptionName)
 				.setParameter("storeName", storeName)
 				.setFirstResult(offset)

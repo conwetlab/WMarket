@@ -36,7 +36,7 @@ import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class RegistrationAuth<T> {
+public abstract class GenericAuth<T> {
 	
 	@Autowired
 	private AuthUtils authUtils;

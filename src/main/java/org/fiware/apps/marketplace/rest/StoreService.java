@@ -62,7 +62,7 @@ import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
-import org.fiware.apps.marketplace.security.auth.StoreRegistrationAuth;
+import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.hibernate.HibernateException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,17 +70,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Path("/store")
-public class StoreRegistrationService {
+public class StoreService {
 
 	// OBJECT ATTRIBUTES //
 	@Autowired private StoreBo storeBo;
-	@Autowired private StoreRegistrationAuth storeRegistrationAuth;
+	@Autowired private StoreAuth storeAuth;
 	@Autowired private StoreValidator storeValidator;
 	@Autowired private AuthUtils authUtils;
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(StoreRegistrationService.class),
+			LoggerFactory.getLogger(StoreService.class),
 			"There is already a Store with that name/URL registered in the system");
 
 	// OBJECT METHODS //
@@ -91,7 +91,7 @@ public class StoreRegistrationService {
 		Response response;
 
 		try {
-			if (storeRegistrationAuth.canCreate()) {
+			if (storeAuth.canCreate()) {
 				//Validate the Store (exception is thrown if the Store is not valid)
 				storeValidator.validateStore(store, true);
 				
@@ -137,7 +137,7 @@ public class StoreRegistrationService {
 
 		try {
 			Store storeDB = storeBo.findByName(storeName);				
-			if (storeRegistrationAuth.canUpdate(storeDB)) {
+			if (storeAuth.canUpdate(storeDB)) {
 				//Validate the Store (exception is thrown if the Store is not valid)
 				storeValidator.validateStore(store, false);
 				
@@ -190,7 +190,7 @@ public class StoreRegistrationService {
 			//Retrieve the Store from the database
 			Store store = storeBo.findByName(storeName);
 
-			if (storeRegistrationAuth.canDelete(store)) {
+			if (storeAuth.canDelete(store)) {
 				storeBo.delete(store);
 				response = Response.status(Status.NO_CONTENT).build();		// Return 204 No Content
 			} else {
@@ -215,7 +215,7 @@ public class StoreRegistrationService {
 			// Retrieve the Store from the database
 			Store store = storeBo.findByName(storeName);
 
-			if (storeRegistrationAuth.canGet(store)) {
+			if (storeAuth.canGet(store)) {
 				response = Response.status(Status.OK).entity(store).build(); 	//Return the Store
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("get store " + storeName);
@@ -241,7 +241,7 @@ public class StoreRegistrationService {
 			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
 		} else {
 			try {
-				if (storeRegistrationAuth.canList()) {
+				if (storeAuth.canList()) {
 					List<Store> stores = storeBo.getStoresPage(offset, max);
 					response = Response.status(Status.OK).entity(new Stores(stores)).build();
 				} else {

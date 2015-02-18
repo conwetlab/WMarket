@@ -46,11 +46,11 @@ import org.mockito.MockitoAnnotations;
 
 
 
-public class StoreRegistrationAuthTest {
+public class StoreAuthTest {
 
 
 	@Mock private AuthUtils authUtils;
-	@InjectMocks private static StoreRegistrationAuth authHelper;
+	@InjectMocks private static StoreAuth authHelper;
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// BASIC METHODS ////////////////////////////////////

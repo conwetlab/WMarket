@@ -40,7 +40,6 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
-import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.helpers.OfferingResolver;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Description;
@@ -115,7 +114,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Override
 	@Transactional
 	public Description findByNameAndStore(String name, String store) 
-			throws DescriptionNotFoundException, StoreNotFoundException {
+			throws DescriptionNotFoundException {
 		return descriptionDao.findByNameAndStore(name, store);
 	}
 	

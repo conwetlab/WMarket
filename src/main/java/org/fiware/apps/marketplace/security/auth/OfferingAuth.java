@@ -1,11 +1,10 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.security.auth;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
- * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,28 +32,26 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
-import java.util.List;
-
-import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
+import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.User;
+import org.springframework.stereotype.Service;
 
-public interface DescriptionBo {
+@Service("offeringAuth")
+public class OfferingAuth extends GenericAuth<Offering> {
+
+	@Override
+	protected User getEntityOwner(Offering offering) {
+		return offering.getDescribedIn().getCreator();
+	}
 	
-	// Save, Update, Delete
-	public void save(Description description) throws Exception;
-	public void update(Description description) throws Exception;
-	public void delete(Description description) throws Exception;
-	
-	// Find
-	public Description findByName(String name) throws DescriptionNotFoundException;
-	public Description findByNameAndStore(String name, String store) 
-			throws DescriptionNotFoundException;
-	public Description findById(Integer id) throws DescriptionNotFoundException;
-	
-	// Get all or a sublist
-	public List<Description> getAllDescriptions();
-	public List<Description> getDescriptionsPage(int offset, int max);
-	public List<Description> getStoreDescriptions(String storeName);
-	public List<Description> getStoreDescriptionsPage(String storeName, int offset, int max);
+	/**
+	 * Determines if a user can list all the offerings described in an offering.
+	 * @param description The description where the offerings are described
+	 * @return By default it returns true
+	 */
+	public boolean canList(Description description) {
+		return true;
+	}
 
 }

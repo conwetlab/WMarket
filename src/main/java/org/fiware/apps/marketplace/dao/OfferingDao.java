@@ -45,8 +45,8 @@ public interface OfferingDao {
 	public void delete(Offering offering);
 	
 	// Find
-	public Offering findByStoreDescriptionAndStore(String storeName, String descriptionName, 
-			String offeringName) throws OfferingNotFoundException;
+	public Offering findByStoreDescriptionAndStore(String offeringName, String descriptionName, 
+			String storeName) throws OfferingNotFoundException;
 	
 	// Get offerings
 	public List<Offering> getAllOfferings();

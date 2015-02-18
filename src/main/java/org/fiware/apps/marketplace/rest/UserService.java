@@ -59,7 +59,7 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
 import org.fiware.apps.marketplace.model.validators.UserValidator;
-import org.fiware.apps.marketplace.security.auth.UserRegistrationAuth;
+import org.fiware.apps.marketplace.security.auth.UserAuth;
 import org.hibernate.HibernateException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,18 +68,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Path("/user")
-public class UserRegistrationService {
+public class UserService {
 
 	// OBJECT ATTRIBUTES //
 	@Autowired private UserBo userBo;
-	@Autowired private UserRegistrationAuth userRegistrationAuth;
+	@Autowired private UserAuth userAuth;
 	@Autowired private UserValidator userValidator;
 	// Encoder must be the same in all the platform: use the bean
 	@Autowired private PasswordEncoder enconder;
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(UserRegistrationService.class),
+			LoggerFactory.getLogger(UserService.class),
 			"The user and/or the email introduced are already registered in the system");
 
 	// OBJECT METHODS //
@@ -90,7 +90,7 @@ public class UserRegistrationService {
 
 		Response response;
 		try {
-			if (userRegistrationAuth.canCreate()) {
+			if (userAuth.canCreate()) {
 				// Validate the user (exception is thrown if the user is not valid)
 				userValidator.validateUser(user, true);
 								
@@ -132,7 +132,7 @@ public class UserRegistrationService {
 		try {
 			User userToBeUpdated = userBo.findByName(username);
 
-			if (userRegistrationAuth.canUpdate(userToBeUpdated)) {
+			if (userAuth.canUpdate(userToBeUpdated)) {
 				// Validate the user (exception is thrown when the user is not valid)
 				userValidator.validateUser(user, false);
 				
@@ -184,7 +184,7 @@ public class UserRegistrationService {
 		try {
 			User userToBeDeleted = userBo.findByName(username);
 			// Only a user can delete his/her account
-			if (userRegistrationAuth.canDelete(userToBeDeleted)) {
+			if (userAuth.canDelete(userToBeDeleted)) {
 				userBo.delete(userToBeDeleted);
 				response = Response.status(Status.NO_CONTENT).build();	
 			} else {
@@ -208,7 +208,7 @@ public class UserRegistrationService {
 		try {
 			User user = userBo.findByName(username);
 
-			if (userRegistrationAuth.canGet(user)) {
+			if (userAuth.canGet(user)) {
 				// If the value of the attribute is null, the 
 				// attribute won't be returned in the response
 				// Note: We are not saving the user, otherwise the information will be lost
@@ -239,7 +239,7 @@ public class UserRegistrationService {
 			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
 		} else {
 			try {
-				if (userRegistrationAuth.canList()) {
+				if (userAuth.canList()) {
 					List<User> users = userBo.getUsersPage(offset, max);
 					
 					// If the value of the attribute is null, the 

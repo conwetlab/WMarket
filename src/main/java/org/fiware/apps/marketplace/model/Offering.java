@@ -42,13 +42,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.fiware.apps.marketplace.utils.xmladapters.DescriptionXMLAdapter;
+import org.fiware.apps.marketplace.utils.xmladapters.StoreXMLAdapter;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
@@ -129,7 +133,8 @@ public class Offering {
 		this.version = version;
 	}
 
-	@XmlTransient
+	@XmlAttribute
+	@XmlJavaTypeAdapter(DescriptionXMLAdapter.class)
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "described_in", nullable = false)
 	public Description getDescribedIn() {
@@ -138,6 +143,13 @@ public class Offering {
 
 	public void setDescribedIn(Description describedIn) {
 		this.describedIn = describedIn;
+	}
+	
+	@Transient
+	@XmlAttribute
+	@XmlJavaTypeAdapter(StoreXMLAdapter.class)
+	public Store getStore() {
+		return describedIn.getStore();
 	}
 
 	@XmlElement

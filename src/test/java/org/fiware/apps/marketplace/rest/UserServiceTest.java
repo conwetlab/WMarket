@@ -49,7 +49,7 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
 import org.fiware.apps.marketplace.model.validators.UserValidator;
-import org.fiware.apps.marketplace.security.auth.UserRegistrationAuth;
+import org.fiware.apps.marketplace.security.auth.UserAuth;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
@@ -62,14 +62,14 @@ import org.mockito.stubbing.Answer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
-public class UserRegistrationServiceTest {
+public class UserServiceTest {
 
 	@Mock private UserBo userBoMock;
-	@Mock private UserRegistrationAuth userRegistrationAuthMock;
+	@Mock private UserAuth userAuthMock;
 	@Mock private UserValidator userValidator;
 	@Mock private PasswordEncoder encoder;
 
-	@InjectMocks private UserRegistrationService userRegistrationService;
+	@InjectMocks private UserService userRegistrationService;
 
 	// User to be created...
 	private User user;
@@ -132,7 +132,7 @@ public class UserRegistrationServiceTest {
 	@Test
 	public void testCreateUserNotAllowed() {
 		// Mocks
-		when(userRegistrationAuthMock.canCreate()).thenReturn(false);
+		when(userAuthMock.canCreate()).thenReturn(false);
 
 		// Call the method
 		Response res = userRegistrationService.createUser(uri, user);
@@ -150,7 +150,7 @@ public class UserRegistrationServiceTest {
 	@Test
 	public void testCreateUserNoErrors() throws ValidationException {
 		// Mocks
-		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
+		when(userAuthMock.canCreate()).thenReturn(true);
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
 		doAnswer(new Answer<Void>() {
 			@Override
@@ -181,7 +181,7 @@ public class UserRegistrationServiceTest {
 	@Test
 	public void testCreateUserValidationError() throws ValidationException {
 		// Mock
-		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
+		when(userAuthMock.canCreate()).thenReturn(true);
 		doThrow(new ValidationException(VALIDATION_ERROR)).when(userValidator).validateUser(user, true);
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
 
@@ -196,7 +196,7 @@ public class UserRegistrationServiceTest {
 	
 	private void testCreateUserHibernateException(Exception ex, String message) throws ValidationException {
 		// Mock
-		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
+		when(userAuthMock.canCreate()).thenReturn(true);
 		doThrow(ex).when(userBoMock).save(isA(User.class));
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
 
@@ -225,7 +225,7 @@ public class UserRegistrationServiceTest {
 	public void testCreteUpdateNotKnowException() throws ValidationException {
 		// Mock
 		String exceptionMsg = "SERVER ERROR";
-		when(userRegistrationAuthMock.canCreate()).thenReturn(true);
+		when(userAuthMock.canCreate()).thenReturn(true);
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).save(user);
 		when(encoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
 
@@ -249,7 +249,7 @@ public class UserRegistrationServiceTest {
 		
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(false);
+		when(userAuthMock.canUpdate(user)).thenReturn(false);
 
 		// Call the method
 		Response res = userRegistrationService.updateUser(USER_NAME, newUser);
@@ -267,7 +267,7 @@ public class UserRegistrationServiceTest {
 	private void testUpdateGenericUserNoErrors(User newUser) {
 		// Mocks
 		String NEW_ENCODED_PASSWORD = "NEW_PASSWORD";
-		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
+		when(userAuthMock.canUpdate(user)).thenReturn(true);
 		when(encoder.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
 		when(encoder.encode(newUser.getPassword())).thenReturn(NEW_ENCODED_PASSWORD);
 
@@ -343,7 +343,7 @@ public class UserRegistrationServiceTest {
 		newUser.setUserName("new_user_name");
 		
 		// Mocks
-		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
+		when(userAuthMock.canUpdate(user)).thenReturn(true);
 
 		try {
 			when(userBoMock.findByName(USER_NAME)).thenReturn(user);
@@ -394,7 +394,7 @@ public class UserRegistrationServiceTest {
 		User newUser = new User();
 		
 		// Mock
-		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
+		when(userAuthMock.canUpdate(user)).thenReturn(true);
 		doThrow(new ValidationException(VALIDATION_ERROR)).when(userValidator).validateUser(newUser, false);
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
 
@@ -416,7 +416,7 @@ public class UserRegistrationServiceTest {
 		String userNotFoundMsg = "user_name does not exist";
 		
 		// Mock
-		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
+		when(userAuthMock.canUpdate(user)).thenReturn(true);
 		doThrow(new UserNotFoundException(userNotFoundMsg)).when(userBoMock).findByName(USER_NAME);
 		
 		// Call the method
@@ -433,7 +433,7 @@ public class UserRegistrationServiceTest {
 		User newUser = new User();
 		
 		// Mock
-		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
+		when(userAuthMock.canUpdate(user)).thenReturn(true);
 		doThrow(ex).when(userBoMock).update(user);
 		
 		try {
@@ -474,7 +474,7 @@ public class UserRegistrationServiceTest {
 	public void testUpdateUserNotKnowException() throws ValidationException, UserNotFoundException {
 		// Mock
 		String exceptionMsg = "SERVER ERROR";
-		when(userRegistrationAuthMock.canUpdate(user)).thenReturn(true);
+		when(userAuthMock.canUpdate(user)).thenReturn(true);
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).update(user);
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
 		
@@ -497,7 +497,7 @@ public class UserRegistrationServiceTest {
 	public void testDeleteUserNotAllowed() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuthMock.canDelete(user)).thenReturn(false);
+		when(userAuthMock.canDelete(user)).thenReturn(false);
 
 		// Call the method
 		Response res = userRegistrationService.deleteUser(USER_NAME);
@@ -515,7 +515,7 @@ public class UserRegistrationServiceTest {
 	public void testDeleteUserNoErrors() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuthMock.canDelete(user)).thenReturn(true);
+		when(userAuthMock.canDelete(user)).thenReturn(true);
 
 		// Call the method
 		Response res = userRegistrationService.deleteUser(USER_NAME);
@@ -533,7 +533,7 @@ public class UserRegistrationServiceTest {
 		// Mocks
 		String msg = "User user_name not found";
 		doThrow(new UserNotFoundException(msg)).when(userBoMock).findByName(USER_NAME);
-		when(userRegistrationAuthMock.canDelete(user)).thenReturn(true);
+		when(userAuthMock.canDelete(user)).thenReturn(true);
 		
 		// Call the method
 		Response res = userRegistrationService.deleteUser(USER_NAME);
@@ -552,7 +552,7 @@ public class UserRegistrationServiceTest {
 		String exceptionMsg = "DB is down!";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(userBoMock).delete(user);
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuthMock.canDelete(user)).thenReturn(true);
+		when(userAuthMock.canDelete(user)).thenReturn(true);
 
 		// Call the method
 		Response res = userRegistrationService.deleteUser(USER_NAME);
@@ -574,7 +574,7 @@ public class UserRegistrationServiceTest {
 	public void testGetUserNotAllowed() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuthMock.canGet(user)).thenReturn(false);
+		when(userAuthMock.canGet(user)).thenReturn(false);
 
 		// Call the method
 		Response res = userRegistrationService.getUser(USER_NAME);
@@ -588,7 +588,7 @@ public class UserRegistrationServiceTest {
 	public void testGetUserNoErrors() throws UserNotFoundException {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		when(userRegistrationAuthMock.canGet(user)).thenReturn(true);
+		when(userAuthMock.canGet(user)).thenReturn(true);
 
 		// Call the method
 		Response res = userRegistrationService.getUser(USER_NAME);
@@ -603,7 +603,7 @@ public class UserRegistrationServiceTest {
 		// Mocks
 		String msg = "User user_name not found";
 		doThrow(new UserNotFoundException(msg)).when(userBoMock).findByName(USER_NAME);
-		when(userRegistrationAuthMock.canGet(user)).thenReturn(true);
+		when(userAuthMock.canGet(user)).thenReturn(true);
 		
 		// Call the method
 		Response res = userRegistrationService.deleteUser(USER_NAME);
@@ -618,7 +618,7 @@ public class UserRegistrationServiceTest {
 		String exceptionMsg = "DB is down!";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg)))
 				.when(userBoMock).findByName(USER_NAME);
-		when(userRegistrationAuthMock.canGet(user)).thenReturn(true);
+		when(userAuthMock.canGet(user)).thenReturn(true);
 
 		// Call the method
 		Response res = userRegistrationService.getUser(USER_NAME);
@@ -638,7 +638,7 @@ public class UserRegistrationServiceTest {
 	@Test
 	public void testListUsersNotAllowed() {
 		// Mocks
-		when(userRegistrationAuthMock.canList()).thenReturn(false);
+		when(userAuthMock.canList()).thenReturn(false);
 
 		// Call the method
 		Response res = userRegistrationService.listUsers(0, 100);
@@ -650,7 +650,7 @@ public class UserRegistrationServiceTest {
 	
 	private void testListUsersInvalidParams(int offset, int max) {
 		// Mocks
-		when(userRegistrationAuthMock.canList()).thenReturn(true);
+		when(userAuthMock.canList()).thenReturn(true);
 
 		// Call the method
 		Response res = userRegistrationService.listUsers(offset, max);
@@ -684,7 +684,7 @@ public class UserRegistrationServiceTest {
 		}
 		
 		// Mocks
-		when(userRegistrationAuthMock.canList()).thenReturn(true);
+		when(userAuthMock.canList()).thenReturn(true);
 		when(userBoMock.getUsersPage(anyInt(), anyInt())).thenReturn(users);
 		
 		// Call the method
@@ -706,7 +706,7 @@ public class UserRegistrationServiceTest {
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg)))
 				.when(userBoMock).getUsersPage(anyInt(), anyInt());
-		when(userRegistrationAuthMock.canList()).thenReturn(true);
+		when(userAuthMock.canList()).thenReturn(true);
 
 		// Call the method
 		int offset = 0;

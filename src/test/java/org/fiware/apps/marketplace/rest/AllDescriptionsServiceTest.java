@@ -47,7 +47,7 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
-import org.fiware.apps.marketplace.security.auth.DescriptionRegistrationAuth;
+import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -57,7 +57,7 @@ import org.mockito.MockitoAnnotations;
 public class AllDescriptionsServiceTest {
 	
 	@Mock private DescriptionBo descriptionBoMock;
-	@Mock private DescriptionRegistrationAuth descriptionRegistrationAuthMock;
+	@Mock private DescriptionAuth descriptionRegistrationAuthMock;
 	
 	@InjectMocks private AllDescriptionsService allOfferingsDescriptionsService;
 	
@@ -74,11 +74,11 @@ public class AllDescriptionsServiceTest {
 		when(descriptionRegistrationAuthMock.canList()).thenReturn(false);
 
 		// Call the method
-		Response res = allOfferingsDescriptionsService.listOfferingsDescriptions(0, 100);
+		Response res = allOfferingsDescriptionsService.listDescriptions(0, 100);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to list offerings");
+				"You are not authorized to list descriptions");
 	}
 	
 	
@@ -87,7 +87,7 @@ public class AllDescriptionsServiceTest {
 		when(descriptionRegistrationAuthMock.canList()).thenReturn(true);
 
 		// Call the method
-		Response res = allOfferingsDescriptionsService.listOfferingsDescriptions(offset, max);
+		Response res = allOfferingsDescriptionsService.listDescriptions(offset, max);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -126,7 +126,7 @@ public class AllDescriptionsServiceTest {
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsDescriptionsService.listOfferingsDescriptions(offset, max);
+		Response res = allOfferingsDescriptionsService.listDescriptions(offset, max);
 		
 		// Verify
 		verify(descriptionBoMock).getDescriptionsPage(offset, max);
@@ -148,7 +148,7 @@ public class AllDescriptionsServiceTest {
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsDescriptionsService.listOfferingsDescriptions(offset, max);
+		Response res = allOfferingsDescriptionsService.listDescriptions(offset, max);
 		
 		// Verify
 		verify(descriptionBoMock).getDescriptionsPage(offset, max);

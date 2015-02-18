@@ -74,10 +74,10 @@ public class OfferingBoImpl implements OfferingBo {
 
 	@Override
 	@Transactional
-	public Offering findByStoreDescriptionAndStore(String storeName,
-			String descriptionName, String offeringName)
+	public Offering findByStoreDescriptionAndStore(String offeringName, 
+			String descriptionName, String storeName)
 			throws OfferingNotFoundException {
-		return offeringDao.findByStoreDescriptionAndStore(storeName, descriptionName, offeringName);
+		return offeringDao.findByStoreDescriptionAndStore(offeringName, descriptionName, storeName);
 	}
 
 	@Override
