@@ -40,7 +40,12 @@ import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.utils.NameGenerator;
+import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +54,8 @@ public class UserBoImpl implements UserBo {
 
 	@Autowired
 	private UserDao userDao;
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserBoImpl.class);
 	
 	public void setStoreDao (UserDao localuser){
 		this.userDao = localuser;
@@ -92,6 +99,22 @@ public class UserBoImpl implements UserBo {
 	@Transactional
 	public List<User> getAllUsers() {
 		return userDao.getAllUsers();
+	}
+
+	@Override
+	public User getCurrentUser() throws UserNotFoundException {
+		String userName;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		// When OAuth2 is being used, we should cast the authentication to read the correct user name
+		if (authentication instanceof ClientAuthenticationToken) {
+			userName = ((ClientAuthenticationToken) authentication).getUserProfile().getId();
+		} else {
+			userName = authentication.getName();
+		}
+		
+		logger.warn("User: {}", userName);
+		return this.findByName(userName);
 	}
 
 }

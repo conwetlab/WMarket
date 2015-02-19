@@ -35,6 +35,7 @@ package org.fiware.apps.marketplace.security.auth;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
@@ -48,7 +49,7 @@ import org.mockito.MockitoAnnotations;
 public class UserAuthTest {
 
 
-	@Mock private AuthUtils authUtils;
+	@Mock private UserBo userBoMock;
 	@InjectMocks private static UserAuth authHelper;
 
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +84,7 @@ public class UserAuthTest {
 
 	private void testUpdate(User creator, User updater, boolean canUpdate)  {
 		try {
-			when(authUtils.getLoggedUser()).thenReturn(updater);
+			when(userBoMock.getCurrentUser()).thenReturn(updater);
 		} catch (UserNotFoundException e) {
 			// Nothing to do...
 		}
@@ -129,7 +130,7 @@ public class UserAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	private void testDelete(User creator, User updater, boolean canDelete)  {
 		try {
-			when(authUtils.getLoggedUser()).thenReturn(updater);
+			when(userBoMock.getCurrentUser()).thenReturn(updater);
 		} catch (UserNotFoundException e) {
 			// Nothing to do...
 		}

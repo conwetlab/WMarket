@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.bo;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,11 +40,17 @@ import org.fiware.apps.marketplace.model.Store;
 
 
 public interface StoreBo {
-	void save(Store store);
-	void update(Store store);
-	void delete(Store store);
-	Store findByName(String name) throws StoreNotFoundException;
-	List<Store> getStoresPage(int offset, int max);
-	List <Store> getAllStores();
+	
+	// Save, update, delete
+	public void save(Store store);
+	public void update(Store store);
+	public void delete(Store store);
+	
+	// Find by name
+	public Store findByName(String name) throws StoreNotFoundException;
+	
+	// Get all or a sublist
+	public List<Store> getStoresPage(int offset, int max);
+	public List <Store> getAllStores();
 	
 }

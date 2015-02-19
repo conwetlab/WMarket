@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest.v1;
+package org.fiware.apps.marketplace.bo;
 
 /*
  * #%L
@@ -47,7 +47,8 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
-import org.fiware.apps.marketplace.rest.v1.AllDescriptionsService;
+import org.fiware.apps.marketplace.rest.v2.AllDescriptionsService;
+import org.fiware.apps.marketplace.rest.v2.GenericRestTestUtils;
 import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class AllDescriptionsServiceTest {
+public class UserBoImpl {
 	
 	@Mock private DescriptionBo descriptionBoMock;
 	@Mock private DescriptionAuth descriptionRegistrationAuthMock;

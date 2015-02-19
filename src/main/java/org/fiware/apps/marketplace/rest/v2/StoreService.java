@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest.v1;
+package org.fiware.apps.marketplace.rest.v2;
 
 /*
  * #%L
@@ -49,130 +49,130 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
+import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.Users;
-import org.fiware.apps.marketplace.model.validators.UserValidator;
-import org.fiware.apps.marketplace.security.auth.UserAuth;
+import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.Stores;
+import org.fiware.apps.marketplace.model.validators.StoreValidator;
+import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.hibernate.HibernateException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-@Path("/api/v2/user")
-public class UserService {
+@Path("/api/v2/store")
+public class StoreService {
 
 	// OBJECT ATTRIBUTES //
 	@Autowired private UserBo userBo;
-	@Autowired private UserAuth userAuth;
-	@Autowired private UserValidator userValidator;
-	// Encoder must be the same in all the platform: use the bean
-	@Autowired private PasswordEncoder enconder;
+	@Autowired private StoreBo storeBo;
+	@Autowired private StoreAuth storeAuth;
+	@Autowired private StoreValidator storeValidator;
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(UserService.class),
-			"The user and/or the email introduced are already registered in the system");
+			LoggerFactory.getLogger(StoreService.class),
+			"There is already a Store with that name/URL registered in the system");
 
 	// OBJECT METHODS //
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/")	
-	public Response createUser(@Context UriInfo uri, User user) {
-
+	public Response createStore(@Context UriInfo uri, Store store) {
 		Response response;
+
 		try {
-			if (userAuth.canCreate()) {
-				// Validate the user (exception is thrown if the user is not valid)
-				userValidator.validateUser(user, true);
+			if (storeAuth.canCreate()) {
+				//Validate the Store (exception is thrown if the Store is not valid)
+				storeValidator.validateStore(store, true);
 				
-				// Users are not allowed to chose their user name
-				// Set user name to null. In this case, the BO will be the one in 
-				// charge of setting the user name
-				user.setUserName(null);
-								
-				// Encode password. Set registration date...
-				user.setPassword(enconder.encode(user.getPassword()));
-				user.setRegistrationDate(new Date());
+				// Get the current user
+				User currentUser = userBo.getCurrentUser();
 				
-				// Save the new user
-				userBo.save(user);
+				store.setRegistrationDate(new Date());
+				store.setCreator(currentUser);
+				store.setLasteditor(currentUser);
+
+				// Save the new Store
+				storeBo.save(store);
 				
 				// Generate the URI and return CREATED
 				URI newURI = UriBuilder
 						.fromUri(uri.getPath())
-						.path(user.getUserName())
+						.path(store.getName())
 						.build();
-				
-				response = Response.created(newURI).build();		
+								
+				response = Response.created(newURI).build();
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("create user");
+				response = ERROR_UTILS.unauthorizedResponse("create store");
 			}
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+		} catch (UserNotFoundException ex) {
+			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
 		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
 		}
 
-		return response;
-
+		return response;	
 	}
+
 
 	@PUT
 	@Consumes({"application/xml", "application/json"})
-	@Path("/{username}")	
-	public Response updateUser(@PathParam("username") String username, User user) {
-
+	@Path("/{storeName}")	
+	public Response updateStore(@PathParam("storeName") String storeName, Store store) {
 		Response response;
-		try {
-			User userToBeUpdated = userBo.findByName(username);
 
-			if (userAuth.canUpdate(userToBeUpdated)) {
-				// Validate the user (exception is thrown when the user is not valid)
-				userValidator.validateUser(user, false);
+		try {
+			Store storeDB = storeBo.findByName(storeName);				
+			if (storeAuth.canUpdate(storeDB)) {
+				//Validate the Store (exception is thrown if the Store is not valid)
+				storeValidator.validateStore(store, false);
 				
-				// At this moment, user name cannot be changed to avoid error with sessions...
-				// userToBeUpdated.setUserName(user.getUserName());
-				if (user.getUserName() != null && user.getUserName() != userToBeUpdated.getUserName()) {
-					throw new ValidationException("userName cannot be changed");
+				// At this moment, the URL cannot be changed...
+				// if (store.getName() != null) {
+				// 	storeDB.setName(store.getName());
+				// }
+
+				if (store.getUrl() != null) {
+					storeDB.setUrl(store.getUrl());
+				}
+
+				if (store.getDescription() != null) {
+					storeDB.setDescription(store.getDescription());
 				}
 				
-				if (user.getCompany() != null) {
-					userToBeUpdated.setCompany(user.getCompany());
+				if (store.getDisplayName() != null) {
+					storeDB.setDisplayName(store.getDisplayName());
 				}
-				
-				if (user.getPassword() != null) {
-					userToBeUpdated.setPassword(enconder.encode(user.getPassword()));
-				}
-				
-				if (user.getEmail() != null) {
-					userToBeUpdated.setEmail(user.getEmail());
-				}
-				
-				if (user.getDisplayName() != null) {
-					userToBeUpdated.setDisplayName(user.getDisplayName());
-				}
-								
-				userBo.update(userToBeUpdated);
+
+				store.setLasteditor(userBo.getCurrentUser());
+
+				// Save the new Store and Return OK
+				storeBo.update(storeDB);
 				response = Response.status(Status.OK).build();
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("update user " + username);
+				response = ERROR_UTILS.unauthorizedResponse("update store " + storeName);
 			}
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+		} catch (UserNotFoundException ex) {
+			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
 		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
-		} catch (UserNotFoundException ex) {
+		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
@@ -182,23 +182,24 @@ public class UserService {
 	}
 
 	@DELETE
-	@Path("/{username}")	
-	public Response deleteUser(@PathParam("username") String username) {
-
+	@Path("/{storeName}")	
+	public Response deleteStore(@PathParam("storeName") String storeName) {
 		Response response;
+
 		try {
-			User userToBeDeleted = userBo.findByName(username);
-			// Only a user can delete his/her account
-			if (userAuth.canDelete(userToBeDeleted)) {
-				userBo.delete(userToBeDeleted);
-				response = Response.status(Status.NO_CONTENT).build();	
+			//Retrieve the Store from the database
+			Store store = storeBo.findByName(storeName);
+
+			if (storeAuth.canDelete(store)) {
+				storeBo.delete(store);
+				response = Response.status(Status.NO_CONTENT).build();		// Return 204 No Content
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("delete user " + username);
+				response = ERROR_UTILS.unauthorizedResponse("delete store " + storeName);
 			}
-		} catch (UserNotFoundException ex) {
+		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex);
+			response = ERROR_UTILS.internalServerError(ex.getCause().getMessage());
 		}
 
 		return response;
@@ -206,24 +207,20 @@ public class UserService {
 
 	@GET
 	@Produces({"application/xml", "application/json"})
-	@Path("/{username}")	
-	public Response getUser(@PathParam("username") String username) {	
-
+	@Path("/{storeName}")	
+	public Response getStore(@PathParam("storeName") String storeName) {
 		Response response;
-		try {
-			User user = userBo.findByName(username);
 
-			if (userAuth.canGet(user)) {
-				// If the value of the attribute is null, the 
-				// attribute won't be returned in the response
-				// Note: We are not saving the user, otherwise the information will be lost
-				user.setPassword(null);
-				user.setEmail(null);
-				response = Response.status(Status.OK).entity(user).build();
+		try {
+			// Retrieve the Store from the database
+			Store store = storeBo.findByName(storeName);
+
+			if (storeAuth.canGet(store)) {
+				response = Response.status(Status.OK).entity(store).build(); 	//Return the Store
 			} else {
-				response = ERROR_UTILS.unauthorizedResponse("get user " + username);
+				response = ERROR_UTILS.unauthorizedResponse("get store " + storeName);
 			}
-		} catch (UserNotFoundException ex) {
+		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
@@ -235,7 +232,7 @@ public class UserService {
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
-	public Response listUsers(@DefaultValue("0") @QueryParam("offset") int offset,
+	public Response listStores(@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max) {
 		Response response;
 
@@ -244,24 +241,15 @@ public class UserService {
 			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
 		} else {
 			try {
-				if (userAuth.canList()) {
-					List<User> users = userBo.getUsersPage(offset, max);
-					
-					// If the value of the attribute is null, the 
-					// attribute won't be returned in the response
-					// Note: We are not saving the users, otherwise the information will be lost
-					for (User user: users) {
-						user.setPassword(null);
-						user.setEmail(null);
-					}
-					
-					return Response.status(Status.OK).entity(new Users(users)).build();
+				if (storeAuth.canList()) {
+					List<Store> stores = storeBo.getStoresPage(offset, max);
+					response = Response.status(Status.OK).entity(new Stores(stores)).build();
 				} else {
-					response = ERROR_UTILS.unauthorizedResponse("list users");
+					response = ERROR_UTILS.unauthorizedResponse("list stores");
 				}
 			} catch (Exception ex) {
 				response = ERROR_UTILS.internalServerError(ex);
-			}	
+			}
 		}
 
 		return response;

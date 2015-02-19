@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.security.auth;
+package org.fiware.apps.marketplace.rest.v2;
 
 /*
  * #%L
@@ -32,38 +32,21 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
-import org.fiware.apps.marketplace.bo.UserBo;
-import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.User;
-import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@Service("authUtils")
-public class AuthUtils {
-	
-    private static Logger logger = LoggerFactory.getLogger(AuthUtils.class);
-	
-	//Instance attributes
-	@Autowired private UserBo localuserBo;
+import javax.ws.rs.core.Response;
 
-	public User getLoggedUser() throws UserNotFoundException {
-		String userName;
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		// When OAuth2 is being used, we should cast the authentication to read the correct user name
-		if (authentication instanceof ClientAuthenticationToken) {
-			userName = ((ClientAuthenticationToken) authentication).getUserProfile().getId();
-		} else {
-			userName = authentication.getName();
-		}
-		
-		logger.warn("User: {}", userName);
-		return localuserBo.findByName(userName);
+import org.fiware.apps.marketplace.model.APIError;
+import org.fiware.apps.marketplace.model.ErrorType;
+
+public class GenericRestTestUtils {
+	
+	public static void checkAPIError(Response res, int status, ErrorType type, String message) {
+		assertThat(res.getStatus()).isEqualTo(status);
+		APIError error = (APIError) res.getEntity();
+		assertThat(error.getErrorType()).isEqualTo(type);
+		assertThat(error.getErrorMessage()).isEqualTo(message);
 	}
-	
+
+
 }
