@@ -102,6 +102,7 @@ public class UserBoImpl implements UserBo {
 	}
 
 	@Override
+	@Transactional
 	public User getCurrentUser() throws UserNotFoundException {
 		String userName;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
