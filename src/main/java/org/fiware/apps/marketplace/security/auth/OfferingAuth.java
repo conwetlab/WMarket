@@ -34,6 +34,7 @@ package org.fiware.apps.marketplace.security.auth;
 
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +47,20 @@ public class OfferingAuth extends GenericAuth<Offering> {
 	}
 	
 	/**
-	 * Determines if a user can list all the offerings described in an offering.
+	 * Determines if a user can list all the offerings described in an description.
 	 * @param description The description where the offerings are described
-	 * @return By default it returns true
+	 * @return By default, it returns true
 	 */
 	public boolean canList(Description description) {
+		return true;
+	}
+	
+	/**
+	 * Determines if a user can list all the offerings that belongs to a Store
+	 * @param store The store where the offerings are contained
+	 * @return By default, it returns true
+	 */
+	public boolean canList(Store store) {
 		return true;
 	}
 
