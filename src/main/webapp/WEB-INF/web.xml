@@ -1,11 +1,10 @@
 <web-app id="WebApp_ID" version="2.4"
 	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
-	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	
 	<display-name>Fiware Marketplace</display-name>
-	<!-- <context-param> <param-name>resteasy.scan</param-name> <param-value>true</param-value> 
-		</context-param> -->
 
+	<!-- Spring Security -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -16,28 +15,7 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<context-param>
-		<param-name>resteasy.resources</param-name>
-		<param-value>
-			org.fiware.apps.marketplace.rest.v1.AllDescriptionsService,
-			org.fiware.apps.marketplace.rest.v1.AllOfferingsService,
-			org.fiware.apps.marketplace.rest.v1.DescriptionService,
-			org.fiware.apps.marketplace.rest.v1.StoreService,
-			org.fiware.apps.marketplace.rest.v1.OfferingService,
-			org.fiware.apps.marketplace.rest.v1.UserService,
-			org.fiware.apps.marketplace.rest.SearchService,
-			org.fiware.apps.marketplace.rest.RatingService,
-			org.fiware.apps.marketplace.rest.RecommendationService,
-			org.fiware.apps.marketplace.rest.CompareService,
-			org.fiware.apps.marketplace.rest.ServiceManifestationIndexerService
-		</param-value>
-	</context-param>
-	
-	<context-param>
-		<param-name>resteasy.servlet.mapping.prefix</param-name>
-		<param-value>/</param-value>
-	</context-param>
-
+	<!-- RestEasy listeners -->
 	<listener>
 		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
 	</listener>
@@ -46,17 +24,23 @@
 		<listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
 	</listener>
 
+	<!-- Servlet configuration -->
 	<servlet>
-		<servlet-name>resteasy-servlet</servlet-name>
-		<servlet-class>
-			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value></param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>resteasy-servlet</servlet-name>
+		<servlet-name>spring</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
+	
+	<!-- Servlet configuration -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
@@ -64,7 +48,5 @@
 		/WEB-INF/classes/spring/config/securityOAuth2.xml
 		</param-value>
 	</context-param>
-
-
 
 </web-app>
