@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest.v1;
+package org.fiware.apps.marketplace.rest.v2;
 
 /*
  * #%L
@@ -53,6 +53,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
@@ -63,8 +64,7 @@ import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
-import org.fiware.apps.marketplace.rest.v1.DescriptionService;
-import org.fiware.apps.marketplace.security.auth.AuthUtils;
+import org.fiware.apps.marketplace.rest.v2.DescriptionService;
 import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -80,11 +80,11 @@ import com.hp.hpl.jena.shared.JenaException;
 
 public class DescriptionRegistrationServiceTest {
 
+	@Mock private UserBo userBoMock;
 	@Mock private StoreBo storeBoMock;
 	@Mock private DescriptionBo descriptionBoMock;
 	@Mock private DescriptionAuth descriptionAuthMock;
 	@Mock private DescriptionValidator descriptionValidatorMock;
-	@Mock private AuthUtils authUtilsMock;
 
 	@InjectMocks private DescriptionService descriptionRegistrationService;
 
@@ -136,7 +136,7 @@ public class DescriptionRegistrationServiceTest {
 	@Before
 	public void initAuthUtils() throws UserNotFoundException {
 		user = new User();
-		when(authUtilsMock.getLoggedUser()).thenReturn(user);
+		when(userBoMock.getCurrentUser()).thenReturn(user);
 	}
 
 
@@ -238,7 +238,7 @@ public class DescriptionRegistrationServiceTest {
 			throws ValidationException, UserNotFoundException {
 		// Mocks
 		when(descriptionAuthMock.canCreate()).thenReturn(true);
-		doThrow(new UserNotFoundException("User Not Found exception")).when(authUtilsMock).getLoggedUser();
+		doThrow(new UserNotFoundException("User Not Found exception")).when(userBoMock).getCurrentUser();
 
 		testCreateDescriptionGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, 
 				"There was an error retrieving the user from the database", false);
@@ -473,7 +473,7 @@ public class DescriptionRegistrationServiceTest {
 		Description newDescription = new Description();
 
 		// Mocks
-		doThrow(new UserNotFoundException("")).when(authUtilsMock).getLoggedUser();
+		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
 		when(descriptionBoMock.findByNameAndStore(STORE_NAME, DESCRIPTION_NAME)).
 				thenReturn(description);
 

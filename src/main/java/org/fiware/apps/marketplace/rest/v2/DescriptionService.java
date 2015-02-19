@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest.v1;
+package org.fiware.apps.marketplace.rest.v2;
 
 /*
  * #%L
@@ -54,6 +54,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
@@ -63,7 +64,6 @@ import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
-import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,11 +77,11 @@ import com.hp.hpl.jena.shared.JenaException;
 public class DescriptionService {
 
 	// OBJECT ATTRIBUTES //
+	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
 	@Autowired private DescriptionAuth descriptionAuth;
 	@Autowired private DescriptionValidator descriptionValidator;
-	@Autowired private AuthUtils authUtils;
 
 	// CLASS ATTRIBUTES //
 	private static final String INVALID_RDF = "Your RDF could not be parsed";
@@ -103,7 +103,7 @@ public class DescriptionService {
 				// Validate offerings description (exception is thrown if the description is not valid) 
 				descriptionValidator.validateDescription(description, true);
 
-				User user = authUtils.getLoggedUser();
+				User user = userBo.getCurrentUser();
 				Store store = storeBo.findByName(storeName);
 				description.setRegistrationDate(new Date());
 				description.setStore(store);
@@ -181,7 +181,7 @@ public class DescriptionService {
 					description.setDescription(descriptionInfo.getDescription());
 				}
 
-				description.setLasteditor(authUtils.getLoggedUser());
+				description.setLasteditor(userBo.getCurrentUser());
 
 				descriptionBo.update(description);
 				response = Response.status(Status.OK).build();

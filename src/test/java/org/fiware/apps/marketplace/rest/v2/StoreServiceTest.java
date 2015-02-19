@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest.v1;
+package org.fiware.apps.marketplace.rest.v2;
 
 /*
  * #%L
@@ -44,6 +44,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -52,8 +53,7 @@ import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
-import org.fiware.apps.marketplace.rest.v1.StoreService;
-import org.fiware.apps.marketplace.security.auth.AuthUtils;
+import org.fiware.apps.marketplace.rest.v2.StoreService;
 import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -67,10 +67,10 @@ import org.mockito.stubbing.Answer;
 
 public class StoreServiceTest {
 
+	@Mock private UserBo userBoMock;
 	@Mock private StoreBo storeBoMock;
 	@Mock private StoreAuth storeAuthMock;
 	@Mock private StoreValidator storeValidatorMock;
-	@Mock private AuthUtils authUtilsMock;
 
 	@InjectMocks private StoreService storeRegistrationService;
 
@@ -117,7 +117,7 @@ public class StoreServiceTest {
 	@Before
 	public void initAuthUtils() throws UserNotFoundException {
 		user = new User();
-		when(authUtilsMock.getLoggedUser()).thenReturn(user);
+		when(userBoMock.getCurrentUser()).thenReturn(user);
 	}
 
 
@@ -206,7 +206,7 @@ public class StoreServiceTest {
 	public void testCreateStoreUserNotFoundException() throws ValidationException, UserNotFoundException {
 		// Mocks
 		when(storeAuthMock.canCreate()).thenReturn(true);
-		doThrow(new UserNotFoundException("User Not Found exception")).when(authUtilsMock).getLoggedUser();
+		doThrow(new UserNotFoundException("User Not Found exception")).when(userBoMock).getCurrentUser();
 
 		testCreateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, 
 				"There was an error retrieving the user from the database", false);
@@ -376,7 +376,7 @@ public class StoreServiceTest {
 		Store newStore = new Store();
 		
 		// Mocks
-		doThrow(new UserNotFoundException("")).when(authUtilsMock).getLoggedUser();
+		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
 		when(storeBoMock.findByName(NAME)).thenReturn(store);
 		
 		// Test

@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest.v1;
+package org.fiware.apps.marketplace.rest.v2;
 
 /*
  * #%L
@@ -49,7 +49,7 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
 import org.fiware.apps.marketplace.model.validators.UserValidator;
-import org.fiware.apps.marketplace.rest.v1.UserService;
+import org.fiware.apps.marketplace.rest.v2.UserService;
 import org.fiware.apps.marketplace.security.auth.UserAuth;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;

@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.bo;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,11 +40,19 @@ import org.fiware.apps.marketplace.model.User;
 
 public interface UserBo {
 	
-	void save(User user);
-	void update(User user);
-	void delete(User luser);
-	User findByName(String username) throws UserNotFoundException;
-	List<User> getUsersPage(int offset, int max);
-	List<User> getAllUsers();
+	// Save, update, delete
+	public void save(User user);
+	public void update(User user);
+	public void delete(User luser);
+	
+	// Find by name
+	public User findByName(String username) throws UserNotFoundException;
+	
+	// Get all or a sublist
+	public List<User> getUsersPage(int offset, int max);
+	public List<User> getAllUsers();
+	
+	// Get logged user
+	public User getCurrentUser() throws UserNotFoundException;
 	
 }

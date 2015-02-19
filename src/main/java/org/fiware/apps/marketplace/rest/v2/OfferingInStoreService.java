@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest.v1;
+package org.fiware.apps.marketplace.rest.v2;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;

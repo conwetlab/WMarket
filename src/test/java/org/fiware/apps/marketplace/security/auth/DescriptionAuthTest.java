@@ -35,6 +35,7 @@ package org.fiware.apps.marketplace.security.auth;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
@@ -50,7 +51,7 @@ import org.mockito.MockitoAnnotations;
 public class DescriptionAuthTest {
 
 
-	@Mock private AuthUtils authUtils;
+	@Mock private UserBo userBoMock;
 	@InjectMocks private static DescriptionAuth authHelper;
 
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +70,7 @@ public class DescriptionAuthTest {
 		offeringsDescription.setCreator(creator);
 
 		try {
-			when(authUtils.getLoggedUser()).thenReturn(updater);
+			when(userBoMock.getCurrentUser()).thenReturn(updater);
 		} catch (UserNotFoundException e) {
 			// never happens
 		}
@@ -89,13 +90,13 @@ public class DescriptionAuthTest {
 
 	@Test
 	public void canCreateOffering() throws UserNotFoundException {
-		when(authUtils.getLoggedUser()).thenReturn(new User());
+		when(userBoMock.getCurrentUser()).thenReturn(new User());
 		assertThat(authHelper.canCreate()).isTrue();
 	}
 
 	@Test
 	public void canNotCreateOffering() throws UserNotFoundException {
-		doThrow(new UserNotFoundException("")).when(authUtils).getLoggedUser();
+		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
 		assertThat(authHelper.canCreate()).isFalse();
 	}
 

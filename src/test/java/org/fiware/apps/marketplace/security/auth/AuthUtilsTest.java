@@ -41,6 +41,8 @@ import static org.mockito.Mockito.verify;
 import java.util.Collection;
 
 import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.bo.impl.UserBoImpl;
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,9 +58,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthUtilsTest {
 
-	@Mock private UserBo userBoMock;
-	@InjectMocks private AuthUtils authUtils;
-
+	@Mock private UserDao userDaoMock;
+	@InjectMocks private UserBo userBoMock = new UserBoImpl();
+	
 	@Before 
 	public void initMocks() {
 		MockitoAnnotations.initMocks(this);
@@ -69,15 +71,15 @@ public class AuthUtilsTest {
 			String userName = user.getUserName();
 
 			// Configure the mocks
-			when(userBoMock.findByName(userName)).thenReturn(user);
+			when(userDaoMock.findByName(userName)).thenReturn(user);
 
 			// Configure the context returned by the SecurityContextHolder
 			SecurityContextHolder.setContext(context);
 
 			// Call the function
-			User returnedUser = authUtils.getLoggedUser();
+			User returnedUser = userBoMock.getCurrentUser();
 
-			verify(userBoMock).findByName(userName);
+			verify(userDaoMock).findByName(userName);
 			assertThat(returnedUser).isEqualTo(user);
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected");
@@ -178,9 +180,5 @@ public class AuthUtilsTest {
 
 		testGeneric(user, context);
 	}
-	
-	
-
-
 
 }

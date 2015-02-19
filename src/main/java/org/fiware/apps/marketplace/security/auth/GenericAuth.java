@@ -32,6 +32,7 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class GenericAuth<T> {
 	
 	@Autowired
-	private AuthUtils authUtils;
+	private UserBo userBo;
 	
 	/**
 	 * Method to return the Localuser who is owner of the entity
@@ -57,7 +58,7 @@ public abstract class GenericAuth<T> {
 		boolean canAccess = false;
 
 		try {
-			User loggedUser = authUtils.getLoggedUser();
+			User loggedUser = userBo.getCurrentUser();
 			// logged User can be null if the user is not logged in...
 			if (loggedUser != null && loggedUser.equals(this.getEntityOwner(entity))) {
 				canAccess = true;
@@ -78,7 +79,7 @@ public abstract class GenericAuth<T> {
 		boolean isLoggedIn = false;
 
 		try {
-			isLoggedIn = authUtils.getLoggedUser() != null;
+			isLoggedIn = userBo.getCurrentUser() != null;
 		} catch (UserNotFoundException ex) {
 			//Nothing to do... False will be returned
 		}
