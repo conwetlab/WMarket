@@ -19,12 +19,12 @@
 	<context-param>
 		<param-name>resteasy.resources</param-name>
 		<param-value>
-			org.fiware.apps.marketplace.rest.v1.AllDescriptionsService,
-			org.fiware.apps.marketplace.rest.v1.AllOfferingsService,
-			org.fiware.apps.marketplace.rest.v1.DescriptionService,
-			org.fiware.apps.marketplace.rest.v1.StoreService,
-			org.fiware.apps.marketplace.rest.v1.OfferingService,
-			org.fiware.apps.marketplace.rest.v1.UserService,
+			org.fiware.apps.marketplace.rest.v2.AllDescriptionsService,
+			org.fiware.apps.marketplace.rest.v2.AllOfferingsService,
+			org.fiware.apps.marketplace.rest.v2.DescriptionService,
+			org.fiware.apps.marketplace.rest.v2.StoreService,
+			org.fiware.apps.marketplace.rest.v2.OfferingService,
+			org.fiware.apps.marketplace.rest.v2.UserService,
 			org.fiware.apps.marketplace.rest.SearchService,
 			org.fiware.apps.marketplace.rest.RatingService,
 			org.fiware.apps.marketplace.rest.RecommendationService,

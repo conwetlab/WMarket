@@ -65,7 +65,7 @@ public class ErrorUtils {
 			message = this.contraintViolationMessage;
 		} else {
 			logger.error("Data Access Error", ex);
-			message = ex.getCause().getMessage();
+			message = ex.getCause() == null ? ex.getMessage() : ex.getCause().getMessage();
 		}
 		
 		return Response.status(Status.BAD_REQUEST).entity(
