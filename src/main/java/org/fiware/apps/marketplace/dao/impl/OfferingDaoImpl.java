@@ -34,14 +34,22 @@ package org.fiware.apps.marketplace.dao.impl;
 
 import java.util.List;
 
+import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.dao.OfferingDao;
+import org.fiware.apps.marketplace.dao.StoreDao;
+import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("offeringDao")
 public class OfferingDaoImpl extends MarketplaceHibernateDao implements OfferingDao  {
+	
+	@Autowired private StoreDao storeDao;
+	@Autowired private DescriptionDao descriptionDao;
 	
 	private static final String TABLE_NAME = Offering.class.getName();
 
@@ -61,9 +69,15 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 	}
 
 	@Override
-	public Offering findByStoreDescriptionAndStore(String offeringName, 
-			String descriptionName, String storeName) throws OfferingNotFoundException {
+	public Offering findDescriptionByNameStoreAndDescription(String storeName, 
+			String descriptionName, String offeringName) throws OfferingNotFoundException, 
+			StoreNotFoundException, DescriptionNotFoundException{
 		
+		// Throw exceptions if the Store or the Description does not exist
+		storeDao.findByName(storeName);
+		descriptionDao.findByNameAndStore(storeName, descriptionName);
+		
+		// Get the Offering
 		List<?> offerings = getSession().createQuery("from " + TABLE_NAME + " WHERE "
 				+ "describedIn.name = :descriptionName AND describedIn.store.name = :storeName "
 				+ "AND name = :offeringName")
@@ -96,15 +110,20 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 	}
 
 	@Override
-	public List<Offering> getAllStoreOfferings(String storeName) {
+	public List<Offering> getAllStoreOfferings(String storeName) 
+			throws StoreNotFoundException {
 		return getStoreOfferingsPage(storeName, 0, Integer.MAX_VALUE);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset,	
-			int max) {
+			int max) throws StoreNotFoundException {
 		
+		// Throw exceptions if the Store or the Description does not exist
+		storeDao.findByName(storeName);
+		
+		// Get the offerings
 		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE describedIn.store.name = :storeName")
 				.setParameter("storeName", storeName)
 				.setFirstResult(offset)
@@ -113,14 +132,21 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 	}
 
 	@Override
-	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) {
+	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
+			throws StoreNotFoundException, DescriptionNotFoundException {
 		return getDescriptionOfferingsPage(storeName, descriptionName, 0, Integer.MAX_VALUE);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName,
-			int offset, int max) {
+			int offset, int max) throws StoreNotFoundException, DescriptionNotFoundException {
+		
+		// Throw exceptions if the Store or the Description does not exist
+		storeDao.findByName(storeName);
+		descriptionDao.findByNameAndStore(storeName, descriptionName);
+		
+		// Get the offerings
 		return getSession().createQuery("FROM " + TABLE_NAME + " "
 				+ "WHERE describedIn.name = :descriptionName AND describedIn.store.name = :storeName")
 				.setParameter("descriptionName", descriptionName)

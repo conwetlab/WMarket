@@ -35,7 +35,9 @@ package org.fiware.apps.marketplace.bo;
 
 import java.util.List;
 
+import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
 
 public interface OfferingBo {
@@ -47,14 +49,18 @@ public interface OfferingBo {
 	
 	// Find 
 	public Offering findByUri(String uri);
-	public Offering findByStoreDescriptionAndStore(String offeringName, 
-			String descriptionName, String storeName) throws OfferingNotFoundException;
+	public Offering findDescriptionByNameStoreAndDescription(String storeName, 
+			String descriptionName, String offeringName) throws OfferingNotFoundException,
+			StoreNotFoundException, DescriptionNotFoundException;
 	
 	// Get all or a sublist based on some criteria
 	public List<Offering> getAllOfferings();
 	public List<Offering> getOfferingsPage(int offset, int max);
-	public List<Offering> getAllStoreOfferings(String storeName);
-	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max);
-	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName);
-	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, int offset, int max);	
+	public List<Offering> getAllStoreOfferings(String storeName) throws StoreNotFoundException;
+	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max) 
+			throws StoreNotFoundException;
+	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
+			throws StoreNotFoundException, DescriptionNotFoundException;
+	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
+			int offset, int max) throws StoreNotFoundException, DescriptionNotFoundException;	
 }

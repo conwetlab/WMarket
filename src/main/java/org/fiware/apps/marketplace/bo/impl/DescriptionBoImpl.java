@@ -40,6 +40,7 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.helpers.OfferingResolver;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Description;
@@ -104,18 +105,12 @@ public class DescriptionBoImpl implements DescriptionBo {
 	public Description findById(Integer id) throws DescriptionNotFoundException{
 		return descriptionDao.findById(id);
 	}
-	
-	@Override
-	@Transactional
-	public Description findByName(String name) throws DescriptionNotFoundException {
-		return descriptionDao.findByName(name);
-	}
 
 	@Override
 	@Transactional
-	public Description findByNameAndStore(String name, String store) 
-			throws DescriptionNotFoundException {
-		return descriptionDao.findByNameAndStore(name, store);
+	public Description findByNameAndStore(String storeName, String descriptionName) 
+			throws StoreNotFoundException, DescriptionNotFoundException {
+		return descriptionDao.findByNameAndStore(storeName, descriptionName);
 	}
 	
 	@Override
@@ -132,14 +127,15 @@ public class DescriptionBoImpl implements DescriptionBo {
 
 	@Override
 	@Transactional
-	public List<Description> getStoreDescriptions(String storeName) {
+	public List<Description> getStoreDescriptions(String storeName) 
+			throws StoreNotFoundException{
 		return descriptionDao.getStoreDescriptions(storeName);
 	}
 
 	@Override
 	@Transactional
 	public List<Description> getStoreDescriptionsPage(String storeName,
-			int offset, int max) {
+			int offset, int max) throws StoreNotFoundException {
 		return descriptionDao.getStoreDescriptionsPage(storeName, offset, max);
 	}
 

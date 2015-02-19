@@ -80,14 +80,16 @@ public class OfferingService {
 		Response response;
 		
 		try {
-			Offering offering = offeringBo.findByStoreDescriptionAndStore(offeringName, descriptionName, storeName);
+			Offering offering = offeringBo.findDescriptionByNameStoreAndDescription(
+					storeName, descriptionName, offeringName);
 			
 			if (offeringAuth.canGet(offering)) {
 				response = Response.status(Status.OK).entity(offering).build();
 			} else {
 				response = ERROR_UTILS.unauthorizedResponse("get offering"); 
 			}
-		} catch (OfferingNotFoundException e) {
+		} catch (OfferingNotFoundException | StoreNotFoundException | 
+				DescriptionNotFoundException e) {
 			response = ERROR_UTILS.entityNotFoundResponse(e);
 		} catch (Exception e) {
 			response = ERROR_UTILS.internalServerError(e);
@@ -108,8 +110,7 @@ public class OfferingService {
 		Response response;
 		
 		try {
-			storeBo.findByName(storeName);		// Throws the exception if the store cannot be found
-			Description description = descriptionBo.findByNameAndStore(descriptionName, storeName);
+			Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
 			
 			if (offeringAuth.canList(description)) {
 				Offerings offerings = new Offerings(offeringBo.getDescriptionOfferingsPage(
@@ -119,9 +120,7 @@ public class OfferingService {
 				response = ERROR_UTILS.unauthorizedResponse(String.format(
 						"list offerings in description %s (Store: %s)", descriptionName, storeName));
 			}
-		} catch (DescriptionNotFoundException e) {
-			response = ERROR_UTILS.entityNotFoundResponse(e);
-		} catch (StoreNotFoundException e) {
+		} catch (DescriptionNotFoundException | StoreNotFoundException e) {
 			response = ERROR_UTILS.entityNotFoundResponse(e);
 		} catch (Exception e) {
 			response = ERROR_UTILS.internalServerError(e);

@@ -36,6 +36,7 @@ package org.fiware.apps.marketplace.dao;
 import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 
 public interface DescriptionDao {
@@ -46,15 +47,15 @@ public interface DescriptionDao {
 	public void delete(Description description);
 	
 	// Find
-	public Description findByName(String name) 
-			throws DescriptionNotFoundException;
-	public Description findByNameAndStore(String name, String store) 
-			throws DescriptionNotFoundException;
+	public Description findByNameAndStore(String storeName, String descriptionName) 
+			throws StoreNotFoundException, DescriptionNotFoundException;
 	public Description findById(Integer id);
 	
 	// Get all offerings descriptions
 	public List<Description> getAllDescriptions();
 	public List<Description> getDescriptionsPage(int offset, int max);
-	public List<Description> getStoreDescriptions(String storeName);
-	public List<Description> getStoreDescriptionsPage(String storeName, int offset, int max);
+	public List<Description> getStoreDescriptions(String storeName) 
+			throws StoreNotFoundException;
+	public List<Description> getStoreDescriptionsPage(String storeName, 
+			int offset, int max) throws StoreNotFoundException;
 }

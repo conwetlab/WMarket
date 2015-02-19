@@ -36,6 +36,7 @@ package org.fiware.apps.marketplace.bo;
 import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 
 public interface DescriptionBo {
@@ -46,15 +47,14 @@ public interface DescriptionBo {
 	public void delete(Description description) throws Exception;
 	
 	// Find
-	public Description findByName(String name) throws DescriptionNotFoundException;
-	public Description findByNameAndStore(String name, String store) 
-			throws DescriptionNotFoundException;
+	public Description findByNameAndStore(String storeName, String descriptionName) 
+			throws DescriptionNotFoundException, StoreNotFoundException;
 	public Description findById(Integer id) throws DescriptionNotFoundException;
 	
 	// Get all or a sublist
 	public List<Description> getAllDescriptions();
 	public List<Description> getDescriptionsPage(int offset, int max);
-	public List<Description> getStoreDescriptions(String storeName);
-	public List<Description> getStoreDescriptionsPage(String storeName, int offset, int max);
+	public List<Description> getStoreDescriptions(String storeName) throws StoreNotFoundException;
+	public List<Description> getStoreDescriptionsPage(String storeName, int offset, int max) throws StoreNotFoundException;
 
 }

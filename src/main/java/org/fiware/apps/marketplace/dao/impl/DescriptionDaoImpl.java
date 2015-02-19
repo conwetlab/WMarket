@@ -36,15 +36,19 @@ package org.fiware.apps.marketplace.dao.impl;
 import java.util.List;
 
 import org.fiware.apps.marketplace.dao.DescriptionDao;
+import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository("offeringsDescriptionDao")
 public class DescriptionDaoImpl extends MarketplaceHibernateDao implements DescriptionDao {
 	
+	@Autowired private StoreDao storeDao;
 	private final static String TABLE_NAME = Description.class.getName();
 
 	@Override
@@ -86,17 +90,15 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 			return (Description) list.get(0);
 		}
 	}
-	
-	@Override
-	public Description findByName(String name) throws DescriptionNotFoundException {
-		Object[] params = {name};
-		String query = String.format("from %s where name = ?", TABLE_NAME);
-		return this.findByQuery(query, params);
-	}
 
 	@Override
-	public Description findByNameAndStore(String name, String store) throws DescriptionNotFoundException {
-		Object[] params  = {name , store};
+	public Description findByNameAndStore(String storeName, String descriptionName) 
+			throws DescriptionNotFoundException, StoreNotFoundException {
+		
+		// Throws StoreNotFoundException if the Store does not exist
+		storeDao.findByName(storeName);
+		
+		Object[] params  = {descriptionName , storeName};
 		String query = String.format("from %s where name = ? and store.name = ?", TABLE_NAME);
 		return this.findByQuery(query, params);				
 	}
@@ -120,14 +122,17 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 	}
 
 	@Override
-	public List<Description> getStoreDescriptions(String storeName) {
+	public List<Description> getStoreDescriptions(String storeName) throws StoreNotFoundException {
 		return getStoreDescriptionsPage(storeName, 0, Integer.MAX_VALUE);	
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Description> getStoreDescriptionsPage(String storeName,
-			int offset, int max) {
+			int offset, int max) throws StoreNotFoundException {
+		// Throws StoreNotFoundException if the store does not exist
+		storeDao.findByName(storeName);
+		
 		return getSession().createQuery(String.format("from %s where store.name = :storeName", TABLE_NAME))
 				.setParameter("storeName", storeName)
 				.setFirstResult(offset)

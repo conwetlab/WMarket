@@ -156,10 +156,8 @@ public class DescriptionService {
 		Response response;
 
 		try {
-			@SuppressWarnings("unused")
-			Store store = storeBo.findByName(storeName);	//Check that the Store exists
 			Description description = descriptionBo.
-					findByNameAndStore(descriptionName, storeName);
+					findByNameAndStore(storeName, descriptionName);
 
 			if (descriptionAuth.canUpdate(description)) {
 
@@ -220,10 +218,8 @@ public class DescriptionService {
 		Response response;
 
 		try {
-			@SuppressWarnings("unused")
-			Store store = storeBo.findByName(storeName);	//Check that the Store exists
 			Description description = descriptionBo.
-					findByNameAndStore(descriptionName, storeName);
+					findByNameAndStore(storeName, descriptionName);
 
 			if (descriptionAuth.canDelete(description)) {
 				descriptionBo.delete(description);
@@ -250,10 +246,8 @@ public class DescriptionService {
 		Response response;
 
 		try {
-			@SuppressWarnings("unused")
-			Store store = storeBo.findByName(storeName);	//Check that the Store exists
 			Description description = descriptionBo.
-					findByNameAndStore(descriptionName, storeName);
+					findByNameAndStore(storeName, descriptionName);
 
 			if (descriptionAuth.canGet(description)) {
 				response = Response.status(Status.OK).entity(description).build();

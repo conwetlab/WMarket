@@ -36,7 +36,9 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.bo.OfferingBo;
 import org.fiware.apps.marketplace.dao.OfferingDao;
+import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,10 +76,10 @@ public class OfferingBoImpl implements OfferingBo {
 
 	@Override
 	@Transactional
-	public Offering findByStoreDescriptionAndStore(String offeringName, 
-			String descriptionName, String storeName)
-			throws OfferingNotFoundException {
-		return offeringDao.findByStoreDescriptionAndStore(offeringName, descriptionName, storeName);
+	public Offering findDescriptionByNameStoreAndDescription(String storeName, 
+			String descriptionName, String offeringName)
+			throws OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException {
+		return offeringDao.findDescriptionByNameStoreAndDescription(storeName, descriptionName, offeringName);
 	}
 
 	@Override
@@ -94,27 +96,28 @@ public class OfferingBoImpl implements OfferingBo {
 
 	@Override
 	@Transactional
-	public List<Offering> getAllStoreOfferings(String storeName) {
+	public List<Offering> getAllStoreOfferings(String storeName) throws StoreNotFoundException {
 		return offeringDao.getAllStoreOfferings(storeName);
 	}
 
 	@Override
 	@Transactional
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset,
-			int max) {
+			int max) throws StoreNotFoundException {
 		return offeringDao.getStoreOfferingsPage(storeName, offset, max);
 	}
 
 	@Override
 	@Transactional
-	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) {
+	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
+			throws StoreNotFoundException, DescriptionNotFoundException {
 		return offeringDao.getAllDescriptionOfferings(storeName, descriptionName);
 	}
 
 	@Override
 	@Transactional
 	public List<Offering> getDescriptionOfferingsPage(String storeName, 
-			String descriptionName, int offset, int max) {
+			String descriptionName, int offset, int max) throws StoreNotFoundException, DescriptionNotFoundException {
 		return offeringDao.getDescriptionOfferingsPage(storeName, descriptionName, offset, max);
 	}
 	
