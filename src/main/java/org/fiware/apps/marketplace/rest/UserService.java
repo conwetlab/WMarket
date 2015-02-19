@@ -93,6 +93,11 @@ public class UserService {
 			if (userAuth.canCreate()) {
 				// Validate the user (exception is thrown if the user is not valid)
 				userValidator.validateUser(user, true);
+				
+				// Users are not allowed to chose their user name
+				// Set user name to null. In this case, the BO will be the one in 
+				// charge of setting the user name
+				user.setUserName(null);
 								
 				// Encode password. Set registration date...
 				user.setPassword(enconder.encode(user.getPassword()));

@@ -57,7 +57,10 @@ public class UserBoImpl implements UserBo {
 	@Override
 	@Transactional(readOnly=false)
 	public void save(User localuser) {
-		localuser.setUserName(NameGenerator.getURLName(localuser.getDisplayName()));
+		// Some authentication methods require their own user name
+		if (localuser.getUserName() == null) {
+			localuser.setUserName(NameGenerator.getURLName(localuser.getDisplayName()));
+		}
 		userDao.save(localuser);
 	}
 
