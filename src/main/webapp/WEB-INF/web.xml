@@ -19,23 +19,23 @@
 	<context-param>
 		<param-name>resteasy.resources</param-name>
 		<param-value>
-			org.fiware.apps.marketplace.rest.AllDescriptionsService,
-			org.fiware.apps.marketplace.rest.AllOfferingsService,
-			org.fiware.apps.marketplace.rest.DescriptionService,
-			org.fiware.apps.marketplace.rest.StoreService,
-			org.fiware.apps.marketplace.rest.OfferingService,
+			org.fiware.apps.marketplace.rest.v1.AllDescriptionsService,
+			org.fiware.apps.marketplace.rest.v1.AllOfferingsService,
+			org.fiware.apps.marketplace.rest.v1.DescriptionService,
+			org.fiware.apps.marketplace.rest.v1.StoreService,
+			org.fiware.apps.marketplace.rest.v1.OfferingService,
+			org.fiware.apps.marketplace.rest.v1.UserService,
 			org.fiware.apps.marketplace.rest.SearchService,
-			org.fiware.apps.marketplace.rest.UserService,
 			org.fiware.apps.marketplace.rest.RatingService,
 			org.fiware.apps.marketplace.rest.RecommendationService,
 			org.fiware.apps.marketplace.rest.CompareService,
 			org.fiware.apps.marketplace.rest.ServiceManifestationIndexerService
 		</param-value>
 	</context-param>
-
+	
 	<context-param>
 		<param-name>resteasy.servlet.mapping.prefix</param-name>
-		<param-value>/api</param-value>
+		<param-value>/</param-value>
 	</context-param>
 
 	<listener>
@@ -54,7 +54,7 @@
 
 	<servlet-mapping>
 		<servlet-name>resteasy-servlet</servlet-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
 	<context-param>

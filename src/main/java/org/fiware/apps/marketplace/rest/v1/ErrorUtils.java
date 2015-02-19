@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest;
+package org.fiware.apps.marketplace.rest.v1;
 
 /*
  * #%L

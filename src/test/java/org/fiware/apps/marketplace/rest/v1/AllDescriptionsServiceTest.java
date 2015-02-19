@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest;
+package org.fiware.apps.marketplace.rest.v1;
 
 /*
  * #%L
@@ -47,6 +47,7 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
+import org.fiware.apps.marketplace.rest.v1.AllDescriptionsService;
 import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.junit.Before;
 import org.junit.Test;

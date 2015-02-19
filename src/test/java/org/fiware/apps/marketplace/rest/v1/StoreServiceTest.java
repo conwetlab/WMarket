@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest;
+package org.fiware.apps.marketplace.rest.v1;
 
 /*
  * #%L
@@ -52,6 +52,7 @@ import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
+import org.fiware.apps.marketplace.rest.v1.StoreService;
 import org.fiware.apps.marketplace.security.auth.AuthUtils;
 import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.hibernate.HibernateException;

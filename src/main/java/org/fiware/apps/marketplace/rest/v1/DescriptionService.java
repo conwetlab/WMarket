@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest;
+package org.fiware.apps.marketplace.rest.v1;
 
 /*
  * #%L
@@ -73,7 +73,7 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.shared.JenaException;
 
 @Component
-@Path("/store/{storeName}/description/")	
+@Path("/api/v2/store/{storeName}/description/")	
 public class DescriptionService {
 
 	// OBJECT ATTRIBUTES //

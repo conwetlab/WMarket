@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.rest;
+package org.fiware.apps.marketplace.rest.v1;
 
 /*
  * #%L
@@ -67,7 +67,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-@Path("/user")
+@Path("/api/v2/user")
 public class UserService {
 
 	// OBJECT ATTRIBUTES //
