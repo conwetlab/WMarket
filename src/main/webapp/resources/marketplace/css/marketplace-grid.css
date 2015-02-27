@@ -1,0 +1,211 @@
+@CHARSET "UTF-8";
+
+/*!
+ * Copyright (c) 2015, CoNWeT Lab., Universidad Politécnica de Madrid
+ * Code licensed under BSD 3-Clause (https://github.com/conwetlab/Marketplace-RI/blob/master/LICENSE)
+ */
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0px;
+    padding-top: 57px;
+    background-color: rgba(245, 247, 250, 0.95);
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - CONTAINERS
+ ***************************************************************************************/
+
+.container-flex {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+/* Smartphones */
+.container-fluid {
+    position: relative;
+    display: block;
+    margin: 0px auto;
+    padding: 0px 10px;
+    max-width: 480px;
+    transition: max-width ease-in 100ms;
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+
+    .container-fluid {
+        max-width: 768px;
+    }
+
+}
+
+/* Desktops */
+@media (min-width: 992px) {
+
+    .container-fluid {
+        max-width: 992px;
+    }
+
+}
+
+/* Large Desktops */
+@media (min-width: 1200px) {
+
+    .container-fluid {
+        max-width: 1200px;
+    }
+
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - ROWS
+ ***************************************************************************************/
+
+.row:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - COLUMNS
+ ***************************************************************************************/
+
+.row > [class*="col-smartphone"]:not(:last-child):not([class~="col-smartphone-10"]) {
+    padding-right: 5px !important;
+}
+
+.row > [class*="col-smartphone"]:not(:first-child):not([class~="col-smartphone-10"]) {
+    padding-left: 5px !important;
+}
+
+.row > [class*="col-smartphone"] {
+    display: block;
+    float: left;
+    padding: 0px 0px;
+}
+
+.col-smartphone-2 {
+    width: 20%;
+}
+
+.col-smartphone-4 {
+    width: 40%;
+}
+
+.col-smartphone-8 {
+    width: 80%;
+}
+
+.col-smartphone-10 {
+    width: 100%;
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+
+    .row > [class*="col-tablet"]:not(:last-child) {
+        padding-right: 5px !important;
+    }
+
+    .row > [class*="col-tablet"]:not(:first-child) {
+        padding-left: 5px !important;
+    }
+
+    .row > [class*="col-tablet"] {
+        display: block;
+        float: left;
+        padding: 0px 0px;
+    }
+
+    .col-tablet-1 {
+        width: 10%;
+    }
+
+    .col-tablet-3 {
+        width: 30%;
+    }
+
+    .col-tablet-5 {
+        width: 50%;
+    }
+
+    .col-tablet-7 {
+        width: 70%;
+    }
+
+}
+
+/* Desktops, Large Desktops */
+@media (min-width: 992px) {
+
+    .row > [class*="col-desktop"]:not(:last-child) {
+        padding-right: 5px !important;
+    }
+
+    .row > [class*="col-desktop"]:not(:first-child) {
+        padding-left: 5px !important;
+    }
+
+    .row > [class*="col-desktop"] {
+        display: block;
+        float: left;
+        padding: 0px 0px;
+    }
+
+    .col-desktop-1 {
+        width: 10%;
+    }
+
+    .col-desktop-3 {
+        width: 30%;
+    }
+
+    .col-desktop-5 {
+        width: 50%;
+    }
+
+    .col-desktop-7 {
+        width: 70%;
+    }
+
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - FOOTER
+ ***************************************************************************************/
+
+.footer {
+    margin-bottom: 10px;
+}
+
+.footer-col {
+    display: block;
+    text-align: center !important;
+    margin-bottom: 10px;
+}
+
+/* Tablets, Desktops, Large Desktops */
+@media (min-width: 768px) {
+
+    .footer-col {
+        display: table-cell;
+        width: 1%;
+    }
+    
+    .footer-col.text-left {
+        text-align: left !important;
+    }
+
+    .footer-col.text-right {
+        text-align: right !important;
+    }
+
+}

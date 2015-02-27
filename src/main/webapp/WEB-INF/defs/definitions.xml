@@ -5,9 +5,17 @@
 
 <tiles-definitions>
 
-	<!-- Default Main Template -->
-	<definition name="homepage" template="/WEB-INF/views/index.jsp">
-		<put-attribute name="header" value="/WEB-INF/views/header.jsp" />
+	<!-- Offerings - List View -->
+	<definition name="offering.list" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="left-sidebar" value="/WEB-INF/views/offerings/list-sidebar.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/offerings/list-content.jsp" />
+		<put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/list-scripts.jsp" />
+	</definition>
+
+	<!-- Offerings - Detail View -->
+	<definition name="offering.detail" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/offerings/detail-content.jsp" />
+		<put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/detail-scripts.jsp" />
 	</definition>
 
 </tiles-definitions>
