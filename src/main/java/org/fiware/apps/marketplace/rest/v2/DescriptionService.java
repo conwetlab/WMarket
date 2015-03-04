@@ -64,8 +64,6 @@ import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
-import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
-import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -82,8 +80,6 @@ public class DescriptionService {
 	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
-	@Autowired private DescriptionAuth descriptionAuth;
-	@Autowired private DescriptionValidator descriptionValidator;
 
 	// CLASS ATTRIBUTES //
 	private static final String INVALID_RDF = "Your RDF could not be parsed";
@@ -156,10 +152,6 @@ public class DescriptionService {
 		try {
 			Description description = descriptionBo.
 					findByNameAndStore(storeName, descriptionName);
-
-
-			// Validate offerings description (exception is thrown if the description is not valid) 
-			descriptionValidator.validateDescription(descriptionInfo, false);
 
 			// Name cannot be changed...
 			// if (offeringDescriptionInfo.getName() != null) {

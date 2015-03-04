@@ -46,7 +46,6 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
-import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.slf4j.LoggerFactory;
@@ -57,7 +56,6 @@ public class AllDescriptionsService {
 		
 	// OBJECT ATTRIBUTES //
 	@Autowired private DescriptionBo descriptionBo;
-	@Autowired private DescriptionAuth descriptionAuth;
 	
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(

@@ -50,7 +50,6 @@ import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
-import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -61,7 +60,6 @@ public class OfferingService {
 	
 	// OBJECT ATTRIBUTES //
 	@Autowired private OfferingBo offeringBo;
-	@Autowired private OfferingAuth offeringAuth;
 	@Autowired private DescriptionBo descriptionBo;
 	@Autowired private StoreBo storeBo;
 	

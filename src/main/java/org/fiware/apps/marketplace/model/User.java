@@ -152,8 +152,17 @@ public class User {
 	
 	@Override
 	public boolean equals(Object obj) {
-		User other = (User) obj;
-		return other.id == this.id;
+		
+		if (obj == null) {
+			return false;
+		}
+		
+		if (obj instanceof User) {
+			User other = (User) obj;
+			return other.id == this.id;
+		} else {
+			return false;
+		}
 	}
 
 }

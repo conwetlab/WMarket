@@ -39,6 +39,7 @@ import java.util.List;
 import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
+import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
@@ -63,6 +64,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Autowired private RdfIndexer rdfIndexer;
 	@Autowired private OfferingResolver offeringResolver;
 	@Autowired private StoreBo storeBo;
+	@Autowired private OfferingDao offeringDao;
 		
 	@Override
 	@Transactional(readOnly=false)
@@ -104,7 +106,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 		
 		// Get all the offerings described in the USDL
 		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
-		description.setOfferings(offerings);
+		description.setOfferings(offerings);	// Add the new offerings
 
 		// Save the description
 		descriptionDao.update(description);
@@ -120,7 +122,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 		// Check rights (exception is risen if user is not allowed)
 		descriptionAuth.canDelete(description);
 		
+		// Delete the description from the data base
 		descriptionDao.delete(description);
+		
+		// Delete indexes
 		rdfIndexer.deleteService(description);
 	}
 

@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.rest.v2;
 
 /*
  * #%L
@@ -34,9 +34,7 @@ package org.fiware.apps.marketplace.bo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,23 +42,21 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.rest.v2.AllDescriptionsService;
-import org.fiware.apps.marketplace.rest.v2.GenericRestTestUtils;
-import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class UserBoImpl {
+public class AllDescriptionsServiceTest {
 	
 	@Mock private DescriptionBo descriptionBoMock;
-	@Mock private DescriptionAuth descriptionRegistrationAuthMock;
-	
 	@InjectMocks private AllDescriptionsService allOfferingsDescriptionsService;
 	
 	private static final String OFFSET_MAX_INVALID = "offset (%d) and/or max (%d) are not valid";
@@ -71,23 +67,25 @@ public class UserBoImpl {
 	}
 
 	@Test
-	public void testListAllDescriptionsNotAllowed() {
+	public void testListAllDescriptionsNotAllowed() throws NotAuthorizedException {
+		String userName = "example-user";
+		
 		// Mocks
-		when(descriptionRegistrationAuthMock.canList()).thenReturn(false);
+		User user = mock(User.class);
+		when(user.getUserName()).thenReturn(userName);
+		Exception e = new NotAuthorizedException(user, "list descriptions");
+		doThrow(e).when(descriptionBoMock).getDescriptionsPage(anyInt(), anyInt());
 
 		// Call the method
 		Response res = allOfferingsDescriptionsService.listDescriptions(0, 100);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to list descriptions");
+				e.toString());
 	}
 	
 	
 	private void testListAllDescriptionsInvalidParams(int offset, int max) {
-		// Mocks
-		when(descriptionRegistrationAuthMock.canList()).thenReturn(true);
-
 		// Call the method
 		Response res = allOfferingsDescriptionsService.listDescriptions(offset, max);
 
@@ -112,7 +110,7 @@ public class UserBoImpl {
 	}
 	
 	@Test
-	public void testListAllDescriptionsGetNoErrors() {
+	public void testListAllDescriptionsGetNoErrors() throws NotAuthorizedException {
 		List<Description> oferringsDescriptions = new ArrayList<Description>();
 		for (int i = 0; i < 3; i++) {
 			Description offeringDescription = new Description();
@@ -121,7 +119,6 @@ public class UserBoImpl {
 		}
 		
 		// Mocks
-		when(descriptionRegistrationAuthMock.canList()).thenReturn(true);
 		when(descriptionBoMock.getDescriptionsPage(anyInt(), anyInt())).
 				thenReturn(oferringsDescriptions);
 		
@@ -140,12 +137,11 @@ public class UserBoImpl {
 	}
 	
 	@Test
-	public void testListAllDescriptionsException() {
+	public void testListAllDescriptionsException() throws NotAuthorizedException {
 		// Mocks
 		String exceptionMsg = "exception";
-		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(descriptionBoMock).
-				getDescriptionsPage(anyInt(), anyInt());
-		when(descriptionRegistrationAuthMock.canList()).thenReturn(true);
+		doThrow(new RuntimeException("", new Exception(exceptionMsg)))
+				.when(descriptionBoMock).getDescriptionsPage(anyInt(), anyInt());
 
 		// Call the method
 		int offset = 0;

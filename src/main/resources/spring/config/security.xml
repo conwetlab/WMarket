@@ -11,7 +11,7 @@
 		<intercept-url pattern="/vocabulary/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 		<intercept-url pattern="/demoservices/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 		<!-- This URL can be accessed anonymously to create a new account -->
-		<intercept-url pattern="/api/user/**" access="ROLE_ANONYMOUS,ROLE_USER" />
+		<intercept-url pattern="/api/v2/user/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 		<intercept-url pattern="/**" access="ROLE_USER" />
 	</http>
 

@@ -39,7 +39,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,17 +54,15 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
-import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
 import org.fiware.apps.marketplace.rest.v2.DescriptionService;
-import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
@@ -83,13 +80,10 @@ public class DescriptionRegistrationServiceTest {
 	@Mock private UserBo userBoMock;
 	@Mock private StoreBo storeBoMock;
 	@Mock private DescriptionBo descriptionBoMock;
-	@Mock private DescriptionAuth descriptionAuthMock;
-	@Mock private DescriptionValidator descriptionValidatorMock;
 
 	@InjectMocks private DescriptionService descriptionRegistrationService;
 
 	// Default values
-	private Store store;
 	private Description description;
 	private User user;
 	private UriInfo uri;
@@ -139,31 +133,30 @@ public class DescriptionRegistrationServiceTest {
 		when(userBoMock.getCurrentUser()).thenReturn(user);
 	}
 
-
+	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// CREATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void testCreateDescriptionNotAllowed() {
+	public void testCreateDescriptionNotAllowed() throws Exception {
 		// Mocks
-		when(descriptionAuthMock.canCreate()).thenReturn(false);
+		Exception e = new NotAuthorizedException(user, "create description");
+		doThrow(e).when(descriptionBoMock).save(description);
 
 		// Call the method
 		Response res = descriptionRegistrationService.createDescription(uri, STORE_NAME, description);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to create description");
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
 
 		// Verify mocks
-		verify(storeBoMock, never()).save(store);
+		verify(descriptionBoMock).save(description);
 	}
-
+	
 	@Test
 	public void testCreateDescriptionNoErrors() throws Exception {
 		// Mocks
-		when(descriptionAuthMock.canCreate()).thenReturn(true);
 		doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -176,7 +169,6 @@ public class DescriptionRegistrationServiceTest {
 		Response res = descriptionRegistrationService.createDescription(uri, STORE_NAME, description);
 
 		// Verify mocks
-		verify(descriptionValidatorMock).validateDescription(description, true);
 		verify(descriptionBoMock).save(description);
 
 		// Check the response
@@ -193,7 +185,7 @@ public class DescriptionRegistrationServiceTest {
 		assertThat(description.getCreator()).isEqualTo(user);
 		assertThat(description.getLasteditor()).isEqualTo(user);
 	}
-
+	
 	private void testCreateDescriptionGenericError(int statusCode, ErrorType errorType, 
 			String errorMsg, boolean saveInvoked) {
 		
@@ -204,7 +196,6 @@ public class DescriptionRegistrationServiceTest {
 
 		// Verify mocks
 		try {
-			verify(descriptionValidatorMock).validateDescription(description, true);
 			verify(descriptionBoMock, times(saveTimes)).save(description);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, errorMsg);
 		} catch (Exception e) {
@@ -214,52 +205,45 @@ public class DescriptionRegistrationServiceTest {
 	}
 
 	@Test
-	public void testCreateDescriptionValidationException() throws ValidationException {
+	public void testCreateDescriptionValidationException() throws Exception {
 		// Mocks
-		when(descriptionAuthMock.canCreate()).thenReturn(true);
-		doThrow(new ValidationException(VALIDATION_ERROR)).
-				when(descriptionValidatorMock).validateDescription(description, true);
+		doThrow(new ValidationException(VALIDATION_ERROR)).when(descriptionBoMock).save(description);
 
-		testCreateDescriptionGenericError(400, ErrorType.BAD_REQUEST, VALIDATION_ERROR, false);
+		testCreateDescriptionGenericError(400, ErrorType.BAD_REQUEST, VALIDATION_ERROR, true);
 	}
 	
 	@Test
 	public void testCreateDescriptionInvalidRDF() throws Exception {
 		//Mocks
-		when(descriptionAuthMock.canCreate()).thenReturn(true);
 		doThrow(new JenaException("Some message")).
 				when(descriptionBoMock).save(description);
 		
 		testCreateDescriptionGenericError(400, ErrorType.BAD_REQUEST, INVALID_RDF, true);
 	}
-
+	
 	@Test
-	public void testCreateDescriptionUserNotFoundException() 
-			throws ValidationException, UserNotFoundException {
+	public void testCreateDescriptionUserNotFoundException() throws Exception {
 		// Mocks
-		when(descriptionAuthMock.canCreate()).thenReturn(true);
 		doThrow(new UserNotFoundException("User Not Found exception")).when(userBoMock).getCurrentUser();
 
 		testCreateDescriptionGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, 
 				"There was an error retrieving the user from the database", false);
 
 	}
-
+	
 	@Test
-	public void testCreateDescriptionStoreNotFoundException() 
-			throws ValidationException, StoreNotFoundException {
+	public void testCreateDescriptionStoreNotFoundException() throws Exception {
 		// Mocks
 		String exceptionMsg = "Store Not Found!";
-		when(descriptionAuthMock.canCreate()).thenReturn(true);
 		doThrow(new StoreNotFoundException(exceptionMsg)).when(storeBoMock).findByName(STORE_NAME);
 
 		testCreateDescriptionGenericError(404, ErrorType.NOT_FOUND, exceptionMsg, false);
 	}
-
+	
 	private void testCreateDescriptionHibernateException(Exception exception, String message) 
 			throws Exception {
+		
 		// Mock
-		when(descriptionAuthMock.canCreate()).thenReturn(true);
 		doThrow(exception).when(descriptionBoMock).save(description);
 
 		testCreateDescriptionGenericError(400, ErrorType.BAD_REQUEST, message, true);
@@ -270,7 +254,7 @@ public class DescriptionRegistrationServiceTest {
 		testCreateDescriptionHibernateException(VIOLATION_EXCEPTION, 
 				DESCRIPTION_ALREADY_EXISTS);
 	}
-
+	
 	@Test
 	public void testCreateDescriptionOtherDataException() throws Exception {
 		HibernateException exception = new HibernateException(new Exception("Too much content"));
@@ -281,7 +265,6 @@ public class DescriptionRegistrationServiceTest {
 	public void testCreteDescriptionNotKnowException() throws Exception {
 		// Mock
 		String exceptionMsg = "SERVER ERROR";
-		when(descriptionAuthMock.canCreate()).thenReturn(true);
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).
 				when(descriptionBoMock).save(description);
 
@@ -292,16 +275,16 @@ public class DescriptionRegistrationServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// UPDATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-
+	
 	@Test
-	public void testUpdateDescriptionNotAllowed() 
-			throws Exception {
+	public void testUpdateDescriptionNotAllowed() throws Exception {
 		
 		Description newDescription = new Description();
 
 		// Mocks
-		when(descriptionAuthMock.canUpdate(description)).thenReturn(false);
-		when(descriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
+		Exception e = new NotAuthorizedException(user, "update description");
+		doThrow(e).when(descriptionBoMock).update(description);
+		when(descriptionBoMock.findByNameAndStore(STORE_NAME, DESCRIPTION_NAME)).
 				thenReturn(description);
 
 		// Call the method
@@ -309,17 +292,15 @@ public class DescriptionRegistrationServiceTest {
 				updateDescription(STORE_NAME, DESCRIPTION_NAME, newDescription);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to update description " + DESCRIPTION_NAME);
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
 
 		// Verify mocks
-		verify(descriptionBoMock, never()).update(description);	
+		verify(descriptionBoMock).update(description);	
 	}
-
+	
 	private void testUpdateDescriptionField(Description newDescription) {
 		try {
 			// Mock
-			when(descriptionAuthMock.canUpdate(description)).thenReturn(true);
 			when(descriptionBoMock.findByNameAndStore(STORE_NAME, DESCRIPTION_NAME)).
 					thenReturn(description);
 
@@ -331,7 +312,6 @@ public class DescriptionRegistrationServiceTest {
 					updateDescription(STORE_NAME, DESCRIPTION_NAME, newDescription);
 
 			// Verify mocks
-			verify(descriptionValidatorMock).validateDescription(newDescription, false);
 			verify(descriptionBoMock).update(description);
 
 			// Assertions
@@ -364,7 +344,7 @@ public class DescriptionRegistrationServiceTest {
 		newDescription.setDisplayName("new_name");
 		testUpdateDescriptionField(newDescription);
 	}
-
+	
 	@Test
 	public void testUpdateDescriptionUrl() {
 		Description newDescription = new Description();
@@ -380,14 +360,10 @@ public class DescriptionRegistrationServiceTest {
 	}
 
 	private void testUpdateDescriptionGenericError(Description newDescription, 
-			int status, ErrorType errorType, String message, boolean updateInvoked, boolean verifyInvoked) {
+			int status, ErrorType errorType, String message, boolean updateInvoked) {
 		int updateTimes = updateInvoked ? 1 : 0;
-		int verifyTimes = verifyInvoked ? 1 : 0;
 
 		try {
-			// Mocks
-			when(descriptionAuthMock.canUpdate(description)).thenReturn(true);
-
 			// Call the method
 			Response res = descriptionRegistrationService.
 					updateDescription(STORE_NAME, DESCRIPTION_NAME, newDescription);
@@ -396,8 +372,6 @@ public class DescriptionRegistrationServiceTest {
 			GenericRestTestUtils.checkAPIError(res, status, errorType, message);
 
 			// Verify mocks
-			verify(descriptionValidatorMock, times(verifyTimes)).
-					validateDescription(newDescription, false);
 			verify(descriptionBoMock, times(updateTimes)).update(description);	
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected.");
@@ -406,19 +380,18 @@ public class DescriptionRegistrationServiceTest {
 
 
 	@Test
-	public void testUpdateDescriptionValidationException() throws ValidationException, 
-			StoreNotFoundException, DescriptionNotFoundException {
+	public void testUpdateDescriptionValidationException() throws Exception {
 		Description newDescription = new Description();
 
 		// Mocks
 		doThrow(new ValidationException(VALIDATION_ERROR)).
-				when(descriptionValidatorMock).validateDescription(newDescription, false);
+				when(descriptionBoMock).update(description);
 		when(descriptionBoMock.findByNameAndStore(STORE_NAME, DESCRIPTION_NAME)).
 				thenReturn(description);
 
 		// Test
 		testUpdateDescriptionGenericError(newDescription, 400, ErrorType.BAD_REQUEST, 
-				VALIDATION_ERROR, false, true);
+				VALIDATION_ERROR, true);
 	}
 	
 	@Test
@@ -433,13 +406,11 @@ public class DescriptionRegistrationServiceTest {
 
 		// Test
 		testUpdateDescriptionGenericError(newDescription, 400, ErrorType.BAD_REQUEST, 
-				INVALID_RDF, true, true);
+				INVALID_RDF, true);
 	}
-	
-	
+
 	@Test
-	public void testUpdateDescriptionStoreNotFound() 
-			throws StoreNotFoundException, DescriptionNotFoundException {
+	public void testUpdateDescriptionStoreNotFound() throws Exception {
 		
 		Description newDescription = new Description();
 
@@ -449,12 +420,11 @@ public class DescriptionRegistrationServiceTest {
 				findByNameAndStore(STORE_NAME, DESCRIPTION_NAME);
 
 		testUpdateDescriptionGenericError(newDescription, 404, ErrorType.NOT_FOUND, 
-				exceptionMsg, false, false);
+				exceptionMsg, false);
 	}
-
+	
 	@Test
-	public void testUpdateDescriptionNotFound() 
-			throws StoreNotFoundException, DescriptionNotFoundException {
+	public void testUpdateDescriptionNotFound() throws Exception {
 		
 		Description newDescription = new Description();
 
@@ -464,12 +434,11 @@ public class DescriptionRegistrationServiceTest {
 				when(descriptionBoMock).findByNameAndStore(STORE_NAME, DESCRIPTION_NAME);
 
 		testUpdateDescriptionGenericError(newDescription, 404, ErrorType.NOT_FOUND, 
-				exceptionMsg, false, false);
+				exceptionMsg, false);
 	}
-
+	
 	@Test
-	public void testUpdateDescriptionNotFoundException() 
-			throws UserNotFoundException, StoreNotFoundException, DescriptionNotFoundException {
+	public void testUpdateDescriptionUserException() throws Exception {
 		Description newDescription = new Description();
 
 		// Mocks
@@ -479,7 +448,7 @@ public class DescriptionRegistrationServiceTest {
 
 		// Test
 		testUpdateDescriptionGenericError(newDescription, 500, ErrorType.INTERNAL_SERVER_ERROR, 
-				"There was an error retrieving the user from the database", false, true);
+				"There was an error retrieving the user from the database", false);
 	}
 	
 	private void testUpdateDescriptionHibernateException(Exception exception, String message)  {
@@ -496,7 +465,7 @@ public class DescriptionRegistrationServiceTest {
 		}
 		
 		testUpdateDescriptionGenericError(newDescription, 400, ErrorType.BAD_REQUEST, 
-				message, true, true);
+				message, true);
 	}
 	
 	@Test
@@ -512,8 +481,7 @@ public class DescriptionRegistrationServiceTest {
 	}
 
 	@Test
-	public void testUpdateDescriptionNotKnownException() 
-			throws Exception {
+	public void testUpdateDescriptionNotKnownException() throws Exception {
 		Description newDescription = new Description();
 		String exceptionMsg = "SERVER ERROR";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).
@@ -522,7 +490,7 @@ public class DescriptionRegistrationServiceTest {
 				thenReturn(description);
 
 		testUpdateDescriptionGenericError(newDescription, 500, ErrorType.INTERNAL_SERVER_ERROR, 
-				exceptionMsg, true, true);
+				exceptionMsg, true);
 	}
 	
 	
@@ -531,12 +499,12 @@ public class DescriptionRegistrationServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void testDeleteDescriptionNotAllowed() 
-			throws StoreNotFoundException, DescriptionNotFoundException {
+	public void testDeleteDescriptionNotAllowed() throws Exception {
 		
 		// Mocks
-		when(descriptionAuthMock.canDelete(description)).thenReturn(false);
-		when(descriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
+		Exception e = new NotAuthorizedException(user, "delete description");
+		doThrow(e).when(descriptionBoMock).delete(description);
+		when(descriptionBoMock.findByNameAndStore(STORE_NAME, DESCRIPTION_NAME)).
 				thenReturn(description);
 
 		// Call the method
@@ -544,19 +512,16 @@ public class DescriptionRegistrationServiceTest {
 				STORE_NAME, DESCRIPTION_NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to delete description " + DESCRIPTION_NAME);
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
 
 		// Verify mocks
-		verify(storeBoMock, never()).delete(store);	
+		verify(descriptionBoMock).delete(description);	
 	}
 	
 	@Test
-	public void testDeleteDescriptionNoErrors() 
-			throws Exception {
+	public void testDeleteDescriptionNoErrors() throws Exception {
 		
 		// Mocks
-		when(descriptionAuthMock.canDelete(description)).thenReturn(true);
 		when(descriptionBoMock.findByNameAndStore(STORE_NAME, DESCRIPTION_NAME)).
 				thenReturn(description);
 
@@ -576,9 +541,6 @@ public class DescriptionRegistrationServiceTest {
 		int deleteTimes = deleteInvoked ? 1 : 0;
 
 		try {
-			// Mocks
-			when(descriptionAuthMock.canDelete(description)).thenReturn(true);
-
 			// Call the method
 			Response res = descriptionRegistrationService.deleteDescription(
 					STORE_NAME, DESCRIPTION_NAME);
@@ -594,8 +556,7 @@ public class DescriptionRegistrationServiceTest {
 	}
 	
 	@Test 
-	public void testDeleteDescriptionStoreNotFound() 
-			throws StoreNotFoundException, DescriptionNotFoundException {
+	public void testDeleteDescriptionStoreNotFound() throws Exception {
 		
 		// Mocks
 		String exceptionMsg = "Store not found";
@@ -606,8 +567,7 @@ public class DescriptionRegistrationServiceTest {
 	}
 	
 	@Test 
-	public void testDeleteDescriptionNotFound() 
-			throws StoreNotFoundException, DescriptionNotFoundException {
+	public void testDeleteDescriptionNotFound() throws Exception {
 		// Mocks
 		String exceptionMsg = "Description not found";
 		doThrow(new DescriptionNotFoundException(exceptionMsg)).when(descriptionBoMock).
@@ -617,8 +577,7 @@ public class DescriptionRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testDeleteDescriptionNotKnownException() 
-			throws Exception {
+	public void testDeleteDescriptionNotKnownException() throws Exception {
 		String exceptionMsg = "SERVER ERROR";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).
 				when(descriptionBoMock).delete(description);
@@ -634,30 +593,24 @@ public class DescriptionRegistrationServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void testGetDescriptionNotAllowed() 
-			throws StoreNotFoundException, DescriptionNotFoundException {
+	public void testGetDescriptionNotAllowed() throws Exception {
 		
 		// Mocks
-		when(descriptionAuthMock.canGet(description)).thenReturn(false);
-		when(descriptionBoMock.findByNameAndStore(DESCRIPTION_NAME, STORE_NAME)).
-				thenReturn(description);
+		Exception e = new NotAuthorizedException(user, "get description");
+		doThrow(e).when(descriptionBoMock).findByNameAndStore(STORE_NAME, DESCRIPTION_NAME);
 
 		// Call the method
 		Response res = descriptionRegistrationService.getDescription(STORE_NAME, DESCRIPTION_NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to get description " + DESCRIPTION_NAME);
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
 	}
 	
 	@Test
-	public void testGetDescriptionNoErrors() 
-			throws StoreNotFoundException, DescriptionNotFoundException {
+	public void testGetDescriptionNoErrors() throws Exception {
 		
 		// Mocks
-		when(descriptionAuthMock.canGet(description)).thenReturn(true);
-		when(descriptionBoMock.findByNameAndStore(STORE_NAME, DESCRIPTION_NAME)).
-				thenReturn(description);
+		when(descriptionBoMock.findByNameAndStore(STORE_NAME, DESCRIPTION_NAME)).thenReturn(description);
 
 		// Call the method
 		Response res = descriptionRegistrationService.getDescription(STORE_NAME, DESCRIPTION_NAME);
@@ -670,9 +623,6 @@ public class DescriptionRegistrationServiceTest {
 	private void testGetDescriptionGenericError(int status, ErrorType errorType, String message) {
 
 		try {
-			// Mocks
-			when(descriptionAuthMock.canGet(description)).thenReturn(true);
-
 			// Call the method
 			Response res = descriptionRegistrationService.getDescription(
 					STORE_NAME, DESCRIPTION_NAME);
@@ -685,8 +635,7 @@ public class DescriptionRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testGetDescriptionStoreNotFound() 
-			throws StoreNotFoundException, DescriptionNotFoundException {
+	public void testGetDescriptionStoreNotFound() throws Exception {
 		// Mocks
 		String exceptionMsg = "Store not found";
 		doThrow(new StoreNotFoundException(
@@ -697,8 +646,7 @@ public class DescriptionRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testGetDescriptionNotKnownException() 
-			throws StoreNotFoundException, DescriptionNotFoundException {
+	public void testGetDescriptionNotKnownException() throws Exception {
 		
 		String exceptionMsg = "SERVER ERROR";
 		doThrow(new RuntimeException("", 
@@ -714,22 +662,20 @@ public class DescriptionRegistrationServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void testListDescriptionsNotAllowed() {
+	public void testListDescriptionsNotAllowed() throws Exception {
 		// Mocks
-		when(descriptionAuthMock.canList(store)).thenReturn(false);
+		Exception e = new NotAuthorizedException(user, "get description");
+		doThrow(e).when(descriptionBoMock).getStoreDescriptionsPage(eq(STORE_NAME), anyInt(), anyInt());
 
 		// Call the method
 		Response res = descriptionRegistrationService.listDescriptionsInStore(STORE_NAME, 0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to list descriptions");
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
 	}
 	
+	
 	private void testListDescriptionsInvalidParams(int offset, int max) {
-		// Mocks
-		when(descriptionAuthMock.canList(store)).thenReturn(true);
-
 		// Call the method
 		Response res = descriptionRegistrationService.listDescriptionsInStore(STORE_NAME, offset, max);
 
@@ -753,7 +699,7 @@ public class DescriptionRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testListDescriptionsNoErrors() throws StoreNotFoundException {
+	public void testListDescriptionsNoErrors() throws Exception {
 		List<Description> descriptions = new ArrayList<>();
 		for (int i = 0; i < 3; i++) {
 			Description description = new Description();
@@ -762,7 +708,6 @@ public class DescriptionRegistrationServiceTest {
 		}
 		
 		// Mocks
-		when(descriptionAuthMock.canList(store)).thenReturn(true);
 		when(descriptionBoMock.getStoreDescriptionsPage(eq(STORE_NAME), anyInt(), anyInt())).thenReturn(descriptions);
 		
 		// Call the method
@@ -779,12 +724,11 @@ public class DescriptionRegistrationServiceTest {
 	}
 	
 	@Test
-	public void testListDescriptionsException() throws StoreNotFoundException {
+	public void testListDescriptionsException() throws Exception {
 		// Mocks
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(descriptionBoMock)
 				.getStoreDescriptionsPage(eq(STORE_NAME), anyInt(), anyInt());
-		when(descriptionAuthMock.canList(store)).thenReturn(true);
 
 		// Call the method
 		int offset = 0;

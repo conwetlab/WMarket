@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.security.auth;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,10 +32,10 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
@@ -44,7 +44,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 
 
 public class StoreAuthTest {
@@ -88,15 +87,17 @@ public class StoreAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void canCreateStore() throws UserNotFoundException {
+	public void canCreateStore() throws UserNotFoundException, NotAuthorizedException {
+		Store store = mock(Store.class);
 		when(userBoMock.getCurrentUser()).thenReturn(new User());
-		assertThat(authHelper.canCreate()).isTrue();
+		authHelper.canCreate(store);
 	}
 
-	@Test
-	public void canNotCreateStore() throws UserNotFoundException {
+	@Test(expected = NotAuthorizedException.class)
+	public void canNotCreateStore() throws UserNotFoundException, NotAuthorizedException {
+		Store store = mock(Store.class);
 		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
-		assertThat(authHelper.canCreate()).isFalse();
+		authHelper.canCreate(store);
 	}
 
 
@@ -104,93 +105,87 @@ public class StoreAuthTest {
 	///////////////////////////////////// TEST UPDATE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 
-	private void testUpdate(User creator, User updater, boolean canUpdate)  {
+	private void testUpdate(User creator, User updater) throws NotAuthorizedException  {
 		Store store = setUpTestUpdateAndDelete(creator, updater);
-
-		// Execute the test
-		boolean result = authHelper.canUpdate(store);
-
-		// Check the result
-		assertThat(result).isEqualTo(canUpdate);
-
+		authHelper.canUpdate(store);
 	}
 
 	@Test
-	public void canUpdateStoreSameUser() throws UserNotFoundException {
+	public void canUpdateStoreSameUser() 
+			throws UserNotFoundException, NotAuthorizedException {
 		User creator = createBasicUser(1);
-		testUpdate(creator, creator, true);
+		testUpdate(creator, creator);
 	}
 
 	@Test
-	public void canUpdateStore() throws UserNotFoundException {
+	public void canUpdateStore() 
+			throws UserNotFoundException, NotAuthorizedException {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
-		testUpdate(creator, updater, true);
+		testUpdate(creator, updater);
 	}
 
-	@Test
-	public void canNotUpdateStoreNotSameUser() throws UserNotFoundException {			
+	@Test(expected = NotAuthorizedException.class)
+	public void canNotUpdateStoreNotSameUser() 
+			throws UserNotFoundException, NotAuthorizedException {			
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
-		testUpdate(creator, updater, false);
+		testUpdate(creator, updater);
 	}
 
-	@Test
-	public void canNotUpdateStoreNotLoggedIn() throws UserNotFoundException {			
+	@Test(expected = NotAuthorizedException.class)
+	public void canNotUpdateStoreNotLoggedIn() 
+			throws UserNotFoundException, NotAuthorizedException {			
 		User creator = createBasicUser(1);
 		User updater = null;
-		testUpdate(creator, updater, false);
+		testUpdate(creator, updater);
 	}
 
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////// TEST DELETE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-	private void testDelete(User creator, User updater, boolean canDelete)  {
+	
+	private void testDelete(User creator, User updater) throws NotAuthorizedException  {
 		Store store = setUpTestUpdateAndDelete(creator, updater);
-
-		// Execute the test
-		boolean result = authHelper.canDelete(store);
-
-		// Check the result
-		assertThat(result).isEqualTo(canDelete);
-
+		authHelper.canDelete(store);
 	}
 
 	@Test
-	public void canDeleteStoreSameUser() {
+	public void canDeleteStoreSameUser() throws NotAuthorizedException {
 		User creator = createBasicUser(1);
-		testDelete(creator, creator, true);
+		testDelete(creator, creator);
 	}
 
 	@Test
-	public void canDeleteStore() {
+	public void canDeleteStore() throws NotAuthorizedException {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
-		testDelete(creator, updater, true);
+		testDelete(creator, updater);
 	}
 
-	@Test
-	public void canNotDeleteStoreNotSameUser() {			
+	@Test(expected = NotAuthorizedException.class)
+	public void canNotDeleteStoreNotSameUser() throws NotAuthorizedException {			
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
-		testDelete(creator, updater, false);
+		testDelete(creator, updater);
 	}
 
-	@Test
-	public void canNotDeleteStoreNotLoggedIn() {			
+	@Test(expected = NotAuthorizedException.class)
+	public void canNotDeleteStoreNotLoggedIn() throws NotAuthorizedException {			
 		User creator = createBasicUser(1);
 		User updater = null;
-		testDelete(creator, updater, false);
+		testDelete(creator, updater);
 	}
 
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////// TEST LIST //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
+	
 	@Test
-	public void canList() {
-		assertThat(authHelper.canList()).isTrue();
+	public void canList() throws NotAuthorizedException {
+		authHelper.canList();
 	}
 
 }

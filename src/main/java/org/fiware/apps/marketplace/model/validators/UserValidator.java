@@ -57,9 +57,7 @@ public class UserValidator {
 	 * @throws ValidationException If user is not valid
 	 */
 	public boolean validateUser(User user, boolean isBeingCreated) throws ValidationException {
-		
-		System.out.println(user.getPassword());
-		
+				
 		if (isBeingCreated) {
 			if (user.getDisplayName() == null || user.getEmail() == null || user.getPassword() == null) {
 				throw new ValidationException("name, email and/or password cannot be null");

@@ -21,10 +21,10 @@
 		<security:intercept-url pattern="/demoservices/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
 		
 		<!-- When the IdM is working, users cannot be created or modified -->
-		<security:intercept-url pattern="/api/user/**" method="POST" access="denyAll" />
-		<security:intercept-url pattern="/api/user/**" method="PUT" access="denyAll" />
-		<security:intercept-url pattern="/api/user/**" method="DELETE" access="denyAll" />
-		<security:intercept-url pattern="/api/user/**" method="GET" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/api/v2/user/**" method="POST" access="denyAll" />
+		<security:intercept-url pattern="/api/v2/user/**" method="PUT" access="denyAll" />
+		<security:intercept-url pattern="/api/v2/user/**" method="DELETE" access="denyAll" />
+		<security:intercept-url pattern="/api/v2/user/**" method="GET" access="hasRole('ROLE_USER')" />
 		
 		<!-- Security rule for the rest of URLs -->
     	<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />

@@ -14,7 +14,6 @@ import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Offerings;
-import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +24,6 @@ public class OfferingInStoreService {
 	
 	// OBJECT ATTRIBUTES //
 	@Autowired private OfferingBo offeringBo;
-	@Autowired private OfferingAuth offeringAuth;
 	@Autowired private StoreBo storeBo;
 	
 	// CLASS ATTRIBUTES //

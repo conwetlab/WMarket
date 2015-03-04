@@ -45,6 +45,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -52,9 +53,7 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.rest.v2.StoreService;
-import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
@@ -69,8 +68,6 @@ public class StoreServiceTest {
 
 	@Mock private UserBo userBoMock;
 	@Mock private StoreBo storeBoMock;
-	@Mock private StoreAuth storeAuthMock;
-	@Mock private StoreValidator storeValidatorMock;
 
 	@InjectMocks private StoreService storeRegistrationService;
 
@@ -126,25 +123,24 @@ public class StoreServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void testCreateStoreNotAllowed() {
+	public void testCreateStoreNotAllowed() throws Exception {
 		// Mocks
-		when(storeAuthMock.canCreate()).thenReturn(false);
+		Exception e = new NotAuthorizedException(user, "create store");
+		doThrow(e).when(storeBoMock).save(store);
 
 		// Call the method
 		Response res = storeRegistrationService.createStore(uri, store);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to create store");
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
 
 		// Verify mocks
-		verify(storeBoMock, never()).save(store);
+		verify(storeBoMock).save(store);
 	}
 
 	@Test
-	public void testCreateStoreNoErrors() throws ValidationException {
+	public void testCreateStoreNoErrors() throws Exception {
 		// Mocks
-		when(storeAuthMock.canCreate()).thenReturn(true);
 		doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -157,7 +153,6 @@ public class StoreServiceTest {
 		Response res = storeRegistrationService.createStore(uri, store);
 
 		// Verify mocks
-		verify(storeValidatorMock).validateStore(store, true);
 		verify(storeBoMock).save(store);
 
 		// Check the response
@@ -174,9 +169,10 @@ public class StoreServiceTest {
 		assertThat(store.getCreator()).isEqualTo(user);
 		assertThat(store.getLasteditor()).isEqualTo(user);
 	}
-
+	
 	private void testCreateStoreGenericError(int statusCode, ErrorType errorType, 
 			String errorMsg, boolean saveInvoked) {
+		
 		int saveTimes = saveInvoked ? 1 : 0;
 
 		// Call the method
@@ -184,60 +180,55 @@ public class StoreServiceTest {
 
 		// Verify mocks
 		try {
-			verify(storeValidatorMock).validateStore(store, true);
 			verify(storeBoMock, times(saveTimes)).save(store);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, errorMsg);
-		} catch (ValidationException e) {
+		} catch (Exception e) {
 			// Impossible...
 			fail("exception " + e + " not expected");
 		}
 	}
-
+	
 	@Test
-	public void testCreateStoreValidationException() throws ValidationException {
+	public void testCreateStoreValidationException() throws Exception {
 		// Mocks
-		when(storeAuthMock.canCreate()).thenReturn(true);
-		doThrow(new ValidationException(VALIDATION_ERROR)).when(storeValidatorMock).validateStore(store, true);
+		doThrow(new ValidationException(VALIDATION_ERROR)).when(storeBoMock).save(store);
 
-		testCreateStoreGenericError(400, ErrorType.BAD_REQUEST, VALIDATION_ERROR, false);
+		testCreateStoreGenericError(400, ErrorType.BAD_REQUEST, VALIDATION_ERROR, true);
 	}
-
+	
 	@Test
-	public void testCreateStoreUserNotFoundException() throws ValidationException, UserNotFoundException {
+	public void testCreateStoreUserNotFoundException() throws Exception {
 		// Mocks
-		when(storeAuthMock.canCreate()).thenReturn(true);
 		doThrow(new UserNotFoundException("User Not Found exception")).when(userBoMock).getCurrentUser();
 
 		testCreateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, 
 				"There was an error retrieving the user from the database", false);
 
 	}
-
-	private void testCreateStoreHibernateException(Exception exception, String message) throws ValidationException {
+	
+	private void testCreateStoreHibernateException(Exception exception, String message)  throws Exception {
 		// Mock
-		when(storeAuthMock.canCreate()).thenReturn(true);
 		doThrow(exception).when(storeBoMock).save(store);
 
 		testCreateStoreGenericError(400, ErrorType.BAD_REQUEST, message, true);
 	}
-
+	
 	@Test
-	public void testCreateStoreAlreadyExists() throws ValidationException {
+	public void testCreateStoreAlreadyExists() throws Exception {
 		testCreateStoreHibernateException(VIOLATION_EXCEPTION,
 				"There is already a Store with that name/URL registered in the system");
 	}
 
 	@Test
-	public void testCreateStoreOtherDataException() throws ValidationException {
+	public void testCreateStoreOtherDataException() throws Exception {
 		HibernateException exception = new HibernateException(new Exception("Too much content"));
 		testCreateStoreHibernateException(exception, exception.getCause().getMessage());
 	}
-
+	
 	@Test
-	public void testCreteStoreNotKnowException() throws ValidationException {
+	public void testCreteStoreNotKnowException() throws Exception {
 		// Mock
 		String exceptionMsg = "SERVER ERROR";
-		when(storeAuthMock.canCreate()).thenReturn(true);
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).save(store);
 
 		testCreateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg, true);
@@ -249,28 +240,27 @@ public class StoreServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void testUpdateStoreNotAllowed() throws StoreNotFoundException {
+	public void testUpdateStoreNotAllowed() throws Exception {
 		Store newStore = new Store();
 
 		// Mocks
-		when(storeAuthMock.canUpdate(store)).thenReturn(false);
 		when(storeBoMock.findByName(NAME)).thenReturn(store);
+		Exception e = new NotAuthorizedException(user, "update store");
+		doThrow(e).when(storeBoMock).update(store);
 
 		// Call the method
 		Response res = storeRegistrationService.updateStore(NAME, newStore);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to update store " + NAME);
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
 
 		// Verify mocks
-		verify(storeBoMock, never()).update(store);	
+		verify(storeBoMock).update(store);	
 	}
-
+	
 	private void testUpdateStoreField(Store newStore) {
 		try {
 			// Mock
-			when(storeAuthMock.canUpdate(store)).thenReturn(true);
 			when(storeBoMock.findByName(NAME)).thenReturn(store);
 			
 			String previousStoreName = store.getName();
@@ -279,7 +269,6 @@ public class StoreServiceTest {
 			Response res = storeRegistrationService.updateStore(NAME, newStore);
 
 			// Verify mocks
-			verify(storeValidatorMock).validateStore(newStore, false);
 			verify(storeBoMock).update(store);
 
 			// Assertions
@@ -324,16 +313,13 @@ public class StoreServiceTest {
 		newStore.setDescription("New Description");
 		testUpdateStoreField(newStore);
 	}
-
+	
 	private void testUpdateStoreGenericError(Store newStore, int status, ErrorType errorType, 
-			String message, boolean updateInvoked, boolean verifyInvoked) {
+			String message, boolean updateInvoked) {
+		
 		int updateTimes = updateInvoked ? 1 : 0;
-		int verifyTimes = verifyInvoked ? 1 : 0;
 
 		try {
-			// Mocks
-			when(storeAuthMock.canUpdate(store)).thenReturn(true);
-
 			// Call the method
 			Response res = storeRegistrationService.updateStore(NAME, newStore);
 
@@ -341,7 +327,6 @@ public class StoreServiceTest {
 			GenericRestTestUtils.checkAPIError(res, status, errorType, message);
 
 			// Verify mocks
-			verify(storeValidatorMock, times(verifyTimes)).validateStore(newStore, false);
 			verify(storeBoMock, times(updateTimes)).update(store);	
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected.");
@@ -349,30 +334,30 @@ public class StoreServiceTest {
 	}
 	
 	@Test
-	public void testUpdateStoreValidationException() throws ValidationException, StoreNotFoundException {
+	public void testUpdateStoreValidationException() throws Exception {
 		Store newStore = new Store();
 		
 		// Mocks
-		doThrow(new ValidationException(VALIDATION_ERROR)).when(storeValidatorMock).validateStore(newStore, false);
+		doThrow(new ValidationException(VALIDATION_ERROR)).when(storeBoMock).update(store);
 		when(storeBoMock.findByName(NAME)).thenReturn(store);
 		
 		// Test
-		testUpdateStoreGenericError(newStore, 400, ErrorType.BAD_REQUEST, VALIDATION_ERROR, false, true);
+		testUpdateStoreGenericError(newStore, 400, ErrorType.BAD_REQUEST, VALIDATION_ERROR, true);
 	}
 	
 	@Test
-	public void testUpdateStoreStoreNotFound() throws StoreNotFoundException {
+	public void testUpdateStoreStoreNotFound() throws Exception {
 		Store newStore = new Store();
 		
 		//Mocks
 		String exceptionMsg = "Store not Found!";
 		doThrow(new StoreNotFoundException(exceptionMsg)).when(storeBoMock).findByName(NAME);
 		
-		testUpdateStoreGenericError(newStore, 404, ErrorType.NOT_FOUND, exceptionMsg, false, false);
+		testUpdateStoreGenericError(newStore, 404, ErrorType.NOT_FOUND, exceptionMsg, false);
 	}
 	
 	@Test
-	public void testUpdateStoreNotFoundException() throws UserNotFoundException, StoreNotFoundException {
+	public void testUpdateStoreNotFoundException() throws Exception {
 		Store newStore = new Store();
 		
 		// Mocks
@@ -381,10 +366,10 @@ public class StoreServiceTest {
 		
 		// Test
 		testUpdateStoreGenericError(newStore, 500, ErrorType.INTERNAL_SERVER_ERROR, 
-				"There was an error retrieving the user from the database", false, true);
+				"There was an error retrieving the user from the database", false);
 	}
 	
-	private void testUpdateStoreHibernateException(Exception exception, String message)  {
+	private void testUpdateStoreHibernateException(Exception exception, String message) {
 		Store newStore = new Store();	
 		
 		//Mocks
@@ -395,7 +380,7 @@ public class StoreServiceTest {
 			fail("Exception " + ex + " not expected");
 		}
 		
-		testUpdateStoreGenericError(newStore, 400, ErrorType.BAD_REQUEST, message, true, true);
+		testUpdateStoreGenericError(newStore, 400, ErrorType.BAD_REQUEST, message, true);
 	}
 	
 	@Test
@@ -411,13 +396,13 @@ public class StoreServiceTest {
 	}
 	
 	@Test
-	public void testUpdateStoreNotKnownException() throws StoreNotFoundException {
+	public void testUpdateStoreNotKnownException() throws Exception {
 		Store newStore = new Store();
 		String exceptionMsg = "SERVER ERROR";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).update(store);
 		when(storeBoMock.findByName(NAME)).thenReturn(store);
 
-		testUpdateStoreGenericError(newStore, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg, true, true);
+		testUpdateStoreGenericError(newStore, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg, true);
 	}
 	
 	
@@ -426,26 +411,25 @@ public class StoreServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void testDeleteStoreNotAllowed() throws StoreNotFoundException {
+	public void testDeleteStoreNotAllowed() throws Exception {
 		// Mocks
-		when(storeAuthMock.canDelete(store)).thenReturn(false);
 		when(storeBoMock.findByName(NAME)).thenReturn(store);
+		Exception e = new NotAuthorizedException(user, "delete store");
+		doThrow(e).when(storeBoMock).delete(store);
 
 		// Call the method
 		Response res = storeRegistrationService.deleteStore(NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to delete store " + NAME);
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
 
 		// Verify mocks
-		verify(storeBoMock, never()).delete(store);	
+		verify(storeBoMock).delete(store);	
 	}
 	
 	@Test
-	public void testDeleteStoreNoErrors() throws StoreNotFoundException {
+	public void testDeleteStoreNoErrors() throws Exception {
 		// Mocks
-		when(storeAuthMock.canDelete(store)).thenReturn(true);
 		when(storeBoMock.findByName(NAME)).thenReturn(store);
 
 		// Call the method
@@ -460,12 +444,10 @@ public class StoreServiceTest {
 	
 	private void testDeleteStoreGenericError(int status, ErrorType errorType, 
 			String message, boolean deleteInvoked) {
+		
 		int deleteTimes = deleteInvoked ? 1 : 0;
 
 		try {
-			// Mocks
-			when(storeAuthMock.canDelete(store)).thenReturn(true);
-
 			// Call the method
 			Response res = storeRegistrationService.deleteStore(NAME);
 
@@ -480,7 +462,7 @@ public class StoreServiceTest {
 	}
 	
 	@Test 
-	public void testDeleteStoreStoreNotFound() throws StoreNotFoundException {
+	public void testDeleteStoreStoreNotFound() throws Exception {
 		// Mocks
 		String exceptionMsg = "Store not found";
 		doThrow(new StoreNotFoundException(exceptionMsg)).when(storeBoMock).findByName(NAME);
@@ -489,7 +471,7 @@ public class StoreServiceTest {
 	}
 	
 	@Test
-	public void testDeleteStoreNotKnownException() throws StoreNotFoundException {
+	public void testDeleteStoreNotKnownException() throws StoreNotFoundException, NotAuthorizedException {
 		String exceptionMsg = "SERVER ERROR";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).delete(store);
 		when(storeBoMock.findByName(NAME)).thenReturn(store);
@@ -503,23 +485,24 @@ public class StoreServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void testGetStoreNotAllowed() throws StoreNotFoundException {
+	public void testGetStoreNotAllowed() throws Exception {
 		// Mocks
-		when(storeAuthMock.canGet(store)).thenReturn(false);
-		when(storeBoMock.findByName(NAME)).thenReturn(store);
+		Exception e = new NotAuthorizedException(user, "get store");
+		doThrow(e).when(storeBoMock).findByName(NAME);
 
 		// Call the method
 		Response res = storeRegistrationService.getStore(NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to get store " + NAME);
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		
+		// Verify mocks
+		verify(storeBoMock).findByName(NAME);	
 	}
 	
 	@Test
-	public void testGetStoreNoErrors() throws StoreNotFoundException {
+	public void testGetStoreNoErrors() throws Exception {
 		// Mocks
-		when(storeAuthMock.canGet(store)).thenReturn(true);
 		when(storeBoMock.findByName(NAME)).thenReturn(store);
 
 		// Call the method
@@ -531,11 +514,7 @@ public class StoreServiceTest {
 	}
 	
 	private void testGetStoreGenericError(int status, ErrorType errorType, String message) {
-
 		try {
-			// Mocks
-			when(storeAuthMock.canGet(store)).thenReturn(true);
-
 			// Call the method
 			Response res = storeRegistrationService.getStore(NAME);
 
@@ -547,7 +526,7 @@ public class StoreServiceTest {
 	}
 	
 	@Test
-	public void testGetStoreStoreNotFound() throws StoreNotFoundException {
+	public void testGetStoreStoreNotFound() throws Exception {
 		// Mocks
 		String exceptionMsg = "Store not found";
 		doThrow(new StoreNotFoundException(exceptionMsg)).when(storeBoMock).findByName(NAME);
@@ -556,7 +535,7 @@ public class StoreServiceTest {
 	}
 	
 	@Test
-	public void testGetStoreNotKnownException() throws StoreNotFoundException {
+	public void testGetStoreNotKnownException() throws Exception {
 		String exceptionMsg = "SERVER ERROR";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).findByName(NAME);
 
@@ -567,25 +546,25 @@ public class StoreServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////// LIST ////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-
+	
 	@Test
-	public void testListStoresNotAllowed() {
+	public void testListStoresNotAllowed() throws NotAuthorizedException {
 		// Mocks
-		when(storeAuthMock.canList()).thenReturn(false);
+		Exception e = new NotAuthorizedException(user, "list stores");
+		doThrow(e).when(storeBoMock).getStoresPage(anyInt(), anyInt());
 
 		// Call the method
 		Response res = storeRegistrationService.listStores(0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
-				"You are not authorized to list stores");
+		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		
+		// Verify
+		verify(storeBoMock).getStoresPage(0, 100);
 	}
 	
 	
 	private void testListStoresInvalidParams(int offset, int max) {
-		// Mocks
-		when(storeAuthMock.canList()).thenReturn(true);
-
 		// Call the method
 		Response res = storeRegistrationService.listStores(offset, max);
 
@@ -609,7 +588,7 @@ public class StoreServiceTest {
 	}
 	
 	@Test
-	public void testListStoresGetNoErrors() {
+	public void testListStoresGetNoErrors() throws NotAuthorizedException {
 		List<Store> stores = new ArrayList<Store>();
 		for (int i = 0; i < 3; i++) {
 			Store store = new Store();
@@ -618,7 +597,6 @@ public class StoreServiceTest {
 		}
 		
 		// Mocks
-		when(storeAuthMock.canList()).thenReturn(true);
 		when(storeBoMock.getStoresPage(anyInt(), anyInt())).thenReturn(stores);
 		
 		// Call the method
@@ -635,12 +613,11 @@ public class StoreServiceTest {
 	}
 	
 	@Test
-	public void testListStoresException() {
+	public void testListStoresException() throws NotAuthorizedException {
 		// Mocks
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock)
 				.getStoresPage(anyInt(), anyInt());
-		when(storeAuthMock.canList()).thenReturn(true);
 
 		// Call the method
 		int offset = 0;
@@ -653,6 +630,6 @@ public class StoreServiceTest {
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
 	}
-
+	
 
 }

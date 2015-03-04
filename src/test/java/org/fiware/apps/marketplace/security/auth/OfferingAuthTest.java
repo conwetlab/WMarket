@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.security.auth;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,12 +32,15 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
+import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
@@ -47,11 +50,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 
-
-public class DescriptionAuthTest {
-
+public class OfferingAuthTest {
+	
 	@Mock private UserBo userBoMock;
-	@InjectMocks private static DescriptionAuth authHelper;
+	@InjectMocks private static OfferingAuth authHelper;
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// BASIC METHODS ////////////////////////////////////
@@ -63,20 +65,24 @@ public class DescriptionAuthTest {
 		return user;
 	}
 
-	private Description setUpTestUpdateAndDelete(User creator, User updater) {
+	private Offering setUpTestUpdateAndDelete(User creator, User updater) {
 		// Set up the test
 		Store store = new Store();
+		
 		Description description = new Description();
 		description.setCreator(creator);
 		description.setStore(store);
-
+		
+		Offering offering = new Offering();
+		offering.setDescribedIn(description);
+		
 		try {
 			when(userBoMock.getCurrentUser()).thenReturn(updater);
 		} catch (UserNotFoundException e) {
 			// never happens
 		}
 
-		return description;
+		return offering;
 	}
 
 	@Before 
@@ -90,35 +96,41 @@ public class DescriptionAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void canCreateDescription() 
+	public void canCreateOffering() 
 			throws UserNotFoundException, NotAuthorizedException {
 
-		Description description = mock(Description.class);
+		Offering description = mock(Offering.class);
 		when(userBoMock.getCurrentUser()).thenReturn(new User());
 		authHelper.canCreate(description);
 	}
 
 	@Test(expected = NotAuthorizedException.class)
-	public void canNotCreateDescription() throws UserNotFoundException, NotAuthorizedException {
-		Description description = mock(Description.class);
-		Store store = mock(Store.class);
-		when(description.getStore()).thenReturn(store);
+	public void canNotCreateOffering() throws UserNotFoundException, NotAuthorizedException {
+		// Set up the test
+		Store store = new Store();
+		
+		Description description = new Description();
+		description.setStore(store);
+		
+		Offering offering = new Offering();
+		offering.setDescribedIn(description);
+		
 		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
-		authHelper.canCreate(description);
+		authHelper.canCreate(offering);
 	}
 
-
+	
 	///////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////// TEST UPDATE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	private void testUpdate(User creator, User updater) throws NotAuthorizedException  {
-		Description description = setUpTestUpdateAndDelete(creator, updater);
-		authHelper.canUpdate(description);
+		Offering offering = setUpTestUpdateAndDelete(creator, updater);
+		authHelper.canUpdate(offering);
 	}
 
 	@Test
-	public void canUpdateDescriptionSameUser() 
+	public void canUpdateOfferingSameUser() 
 			throws UserNotFoundException, NotAuthorizedException {
 		
 		User creator = createBasicUser(1);
@@ -126,7 +138,7 @@ public class DescriptionAuthTest {
 	}
 
 	@Test
-	public void canUpdateDescription() 
+	public void canUpdateOffering() 
 			throws UserNotFoundException, NotAuthorizedException {
 		
 		User creator = createBasicUser(1);
@@ -135,7 +147,7 @@ public class DescriptionAuthTest {
 	}
 
 	@Test(expected = NotAuthorizedException.class)
-	public void canNotUpdateDescriptionNotSameUser() 
+	public void canNotUpdateOfferingNotSameUser() 
 			throws UserNotFoundException, NotAuthorizedException {
 		
 		User creator = createBasicUser(1);
@@ -144,7 +156,7 @@ public class DescriptionAuthTest {
 	}
 
 	@Test(expected = NotAuthorizedException.class)
-	public void canNotUpdateDescriptionNotLoggedIn() 
+	public void canNotUpdateOfferingNotLoggedIn() 
 			throws UserNotFoundException, NotAuthorizedException {	
 		
 		User creator = createBasicUser(1);
@@ -158,32 +170,32 @@ public class DescriptionAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	private void testDelete(User creator, User updater) throws NotAuthorizedException  {
-		Description description = setUpTestUpdateAndDelete(creator, updater);
-		authHelper.canDelete(description);
+		Offering offering = setUpTestUpdateAndDelete(creator, updater);
+		authHelper.canDelete(offering);
 	}
 
 	@Test
-	public void canDeleteDescriptionSameUser() throws NotAuthorizedException {
+	public void canDeleteOfferingSameUser() throws NotAuthorizedException {
 		User creator = createBasicUser(1);
 		testDelete(creator, creator);
 	}
 
 	@Test
-	public void canDeleteDescription() throws NotAuthorizedException {
+	public void canDeleteOffering() throws NotAuthorizedException {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
 		testDelete(creator, updater);
 	}
 
 	@Test(expected = NotAuthorizedException.class)
-	public void canNotDeleteDescriptionNotSameUser() throws NotAuthorizedException {			
+	public void canNotDeleteOfferingNotSameUser() throws NotAuthorizedException {			
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
 		testDelete(creator, updater);
 	}
 
 	@Test(expected = NotAuthorizedException.class)
-	public void canNotDeleteDescriptionNotLoggedIn() throws NotAuthorizedException {			
+	public void canNotDeleteOfferingNotLoggedIn() throws NotAuthorizedException {			
 		User creator = createBasicUser(1);
 		User updater = null;
 		testDelete(creator, updater);
@@ -202,6 +214,11 @@ public class DescriptionAuthTest {
 	@Test
 	public void canListStore() throws NotAuthorizedException {
 		authHelper.canList(new Store());
+	}
+	
+	@Test
+	public void canListDescription() throws NotAuthorizedException {
+		authHelper.canList(new Description());
 	}
 
 }

@@ -35,7 +35,7 @@ package org.fiware.apps.marketplace.oauth2;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
@@ -49,7 +49,7 @@ import org.pac4j.core.context.WebContext;
 public class FIWAREClientTest {
 
 	private final static String SERVER_URL = "https://account.lab.fiware.org";
-	@Mock private UserBo userBoMock;
+	@Mock private UserDao userDaoMock;
 	@InjectMocks private FIWAREClient client = new FIWAREClient();
 
 
@@ -80,9 +80,9 @@ public class FIWAREClientTest {
 				user.setUserName(userName + "_old");
 				user.setDisplayName(displayName + "_old");
 				user.setEmail(email + "_old");
-				when(userBoMock.findByName(userName)).thenReturn(user);
+				when(userDaoMock.findByName(userName)).thenReturn(user);
 			} else {
-				doThrow(new UserNotFoundException("user not found")).when(userBoMock).findByName(userName);
+				doThrow(new UserNotFoundException("user not found")).when(userDaoMock).findByName(userName);
 			}
 
 			// Call the function
@@ -95,7 +95,7 @@ public class FIWAREClientTest {
 
 			// Capture the user saved in the database
 			ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
-			verify(userBoMock).save(captor.capture());
+			verify(userDaoMock).save(captor.capture());
 
 			User storedUser = captor.getValue();
 			assertThat(storedUser.getUserName()).isEqualTo(userName);
@@ -124,7 +124,7 @@ public class FIWAREClientTest {
 		
 		// Assertions
 		assertThat(profile).isNull();
-		verify(userBoMock, never()).save(isA(User.class));
+		verify(userDaoMock, never()).save(isA(User.class));
 	}
 
 	@Test
