@@ -35,24 +35,31 @@ package org.fiware.apps.marketplace.bo;
 
 import java.util.List;
 
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
 
 public interface UserBo {
-	
+
 	// Save, update, delete
-	public void save(User user);
-	public void update(User user);
-	public void delete(User luser);
+	public void save(User user) throws NotAuthorizedException, 
+			ValidationException;
+	public void update(User user) throws NotAuthorizedException,
+			ValidationException;
+	public void delete(User user) throws NotAuthorizedException;
 	
 	// Find by name
-	public User findByName(String username) throws UserNotFoundException;
-	
+	public User findByName(String userName) throws NotAuthorizedException, 
+			UserNotFoundException;
+
 	// Get all or a sublist
-	public List<User> getUsersPage(int offset, int max);
-	public List<User> getAllUsers();
-	
+	public List<User> getUsersPage(int offset, int max) 
+			throws NotAuthorizedException;
+	public List<User> getAllUsers() 
+			throws NotAuthorizedException;
+
 	// Get logged user
 	public User getCurrentUser() throws UserNotFoundException;
-	
+
 }

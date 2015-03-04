@@ -11,9 +11,9 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.OfferingBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Offerings;
-import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,20 +42,15 @@ public class OfferingInStoreService {
 		Response response;
 		
 		try {
-			Store store = storeBo.findByName(storeName);
-			
-			if (offeringAuth.canList(store)) {
-				Offerings offerings = new Offerings(offeringBo.getStoreOfferingsPage(
-						storeName, offset, max));
-				response = Response.status(Status.OK).entity(offerings).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse(String.format(
-						"list offerings in Store %s", storeName));
-			}
-		} catch (StoreNotFoundException e) {
-			response = ERROR_UTILS.entityNotFoundResponse(e);
-		} catch (Exception e) {
-			response = ERROR_UTILS.internalServerError(e);
+			Offerings offerings = new Offerings(offeringBo.getStoreOfferingsPage(
+					storeName, offset, max));
+			response = Response.status(Status.OK).entity(offerings).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
+		} catch (StoreNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 		
 		return response;

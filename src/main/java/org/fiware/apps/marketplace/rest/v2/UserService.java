@@ -54,6 +54,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
@@ -63,7 +64,7 @@ import org.fiware.apps.marketplace.security.auth.UserAuth;
 import org.hibernate.HibernateException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -74,8 +75,6 @@ public class UserService {
 	@Autowired private UserBo userBo;
 	@Autowired private UserAuth userAuth;
 	@Autowired private UserValidator userValidator;
-	// Encoder must be the same in all the platform: use the bean
-	@Autowired private PasswordEncoder enconder;
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
@@ -89,35 +88,31 @@ public class UserService {
 	public Response createUser(@Context UriInfo uri, User user) {
 
 		Response response;
-		try {
-			if (userAuth.canCreate()) {
-				// Validate the user (exception is thrown if the user is not valid)
-				userValidator.validateUser(user, true);
-				
-				// Users are not allowed to chose their user name
-				// Set user name to null. In this case, the BO will be the one in 
-				// charge of setting the user name
-				user.setUserName(null);
-								
-				// Encode password. Set registration date...
-				user.setPassword(enconder.encode(user.getPassword()));
-				user.setRegistrationDate(new Date());
-				
-				// Save the new user
-				userBo.save(user);
-				
-				// Generate the URI and return CREATED
-				URI newURI = UriBuilder
-						.fromUri(uri.getPath())
-						.path(user.getUserName())
-						.build();
-				
-				response = Response.created(newURI).build();		
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("create user");
-			}
+		try {			
+			// Users are not allowed to chose their user name
+			// Set user name to null. In this case, the BO will be the one in 
+			// charge of setting the user name
+			user.setUserName(null);
+							
+			// Encode password. Set registration date...
+			user.setRegistrationDate(new Date());
+			
+			// Save the new user
+			userBo.save(user);
+			
+			// Generate the URI and return CREATED
+			URI newURI = UriBuilder
+					.fromUri(uri.getPath())
+					.path(user.getUserName())
+					.build();
+			
+			response = Response.created(newURI).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+		} catch (DataIntegrityViolationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
@@ -137,39 +132,36 @@ public class UserService {
 		try {
 			User userToBeUpdated = userBo.findByName(username);
 
-			if (userAuth.canUpdate(userToBeUpdated)) {
-				// Validate the user (exception is thrown when the user is not valid)
-				userValidator.validateUser(user, false);
-				
-				// At this moment, user name cannot be changed to avoid error with sessions...
-				// userToBeUpdated.setUserName(user.getUserName());
-				if (user.getUserName() != null && user.getUserName() != userToBeUpdated.getUserName()) {
-					throw new ValidationException("userName cannot be changed");
-				}
-				
-				if (user.getCompany() != null) {
-					userToBeUpdated.setCompany(user.getCompany());
-				}
-				
-				if (user.getPassword() != null) {
-					userToBeUpdated.setPassword(enconder.encode(user.getPassword()));
-				}
-				
-				if (user.getEmail() != null) {
-					userToBeUpdated.setEmail(user.getEmail());
-				}
-				
-				if (user.getDisplayName() != null) {
-					userToBeUpdated.setDisplayName(user.getDisplayName());
-				}
-								
-				userBo.update(userToBeUpdated);
-				response = Response.status(Status.OK).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("update user " + username);
+			// At this moment, user name cannot be changed to avoid error with sessions...
+			// userToBeUpdated.setUserName(user.getUserName());
+			if (user.getUserName() != null && user.getUserName() != userToBeUpdated.getUserName()) {
+				throw new ValidationException("userName cannot be changed");
 			}
+			
+			if (user.getCompany() != null) {
+				userToBeUpdated.setCompany(user.getCompany());
+			}
+			
+			if (user.getPassword() != null) {
+				userToBeUpdated.setPassword(user.getPassword());
+			}
+			
+			if (user.getEmail() != null) {
+				userToBeUpdated.setEmail(user.getEmail());
+			}
+			
+			if (user.getDisplayName() != null) {
+				userToBeUpdated.setDisplayName(user.getDisplayName());
+			}
+							
+			userBo.update(userToBeUpdated);
+			response = Response.status(Status.OK).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+		} catch (DataIntegrityViolationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (UserNotFoundException ex) {
@@ -188,13 +180,10 @@ public class UserService {
 		Response response;
 		try {
 			User userToBeDeleted = userBo.findByName(username);
-			// Only a user can delete his/her account
-			if (userAuth.canDelete(userToBeDeleted)) {
-				userBo.delete(userToBeDeleted);
-				response = Response.status(Status.NO_CONTENT).build();	
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("delete user " + username);
-			}
+			userBo.delete(userToBeDeleted);
+			response = Response.status(Status.NO_CONTENT).build();	
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
@@ -213,16 +202,14 @@ public class UserService {
 		try {
 			User user = userBo.findByName(username);
 
-			if (userAuth.canGet(user)) {
-				// If the value of the attribute is null, the 
-				// attribute won't be returned in the response
-				// Note: We are not saving the user, otherwise the information will be lost
-				user.setPassword(null);
-				user.setEmail(null);
-				response = Response.status(Status.OK).entity(user).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("get user " + username);
-			}
+			// If the value of the attribute is null, the 
+			// attribute won't be returned in the response
+			// Note: We are not saving the user, otherwise the information will be lost
+			user.setPassword(null);
+			user.setEmail(null);
+			response = Response.status(Status.OK).entity(user).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
@@ -244,21 +231,19 @@ public class UserService {
 			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
 		} else {
 			try {
-				if (userAuth.canList()) {
-					List<User> users = userBo.getUsersPage(offset, max);
-					
-					// If the value of the attribute is null, the 
-					// attribute won't be returned in the response
-					// Note: We are not saving the users, otherwise the information will be lost
-					for (User user: users) {
-						user.setPassword(null);
-						user.setEmail(null);
-					}
-					
-					return Response.status(Status.OK).entity(new Users(users)).build();
-				} else {
-					response = ERROR_UTILS.unauthorizedResponse("list users");
+				List<User> users = userBo.getUsersPage(offset, max);
+				
+				// If the value of the attribute is null, the 
+				// attribute won't be returned in the response
+				// Note: We are not saving the users, otherwise the information will be lost
+				for (User user: users) {
+					user.setPassword(null);
+					user.setEmail(null);
 				}
+				
+				return Response.status(Status.OK).entity(new Users(users)).build();
+			} catch (NotAuthorizedException ex) {
+				response = ERROR_UTILS.unauthorizedResponse(ex);
 			} catch (Exception ex) {
 				response = ERROR_UTILS.internalServerError(ex);
 			}	

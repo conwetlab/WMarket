@@ -33,28 +33,39 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Description;
 
 public interface DescriptionBo {
 	
 	// Save, Update, Delete
-	public void save(Description description) throws Exception;
-	public void update(Description description) throws Exception;
-	public void delete(Description description) throws Exception;
+	public void save(Description description) throws MalformedURLException, 
+			NotAuthorizedException, ValidationException;
+	public void update(Description description) throws MalformedURLException, 
+			NotAuthorizedException, ValidationException;
+	public void delete(Description description) throws NotAuthorizedException, 
+			ValidationException;
 	
 	// Find
 	public Description findByNameAndStore(String storeName, String descriptionName) 
-			throws DescriptionNotFoundException, StoreNotFoundException;
-	public Description findById(Integer id) throws DescriptionNotFoundException;
+			throws DescriptionNotFoundException, StoreNotFoundException, 
+			NotAuthorizedException;
+	public Description findById(Integer id) throws DescriptionNotFoundException, 
+			NotAuthorizedException;
 	
 	// Get all or a sublist
-	public List<Description> getAllDescriptions();
-	public List<Description> getDescriptionsPage(int offset, int max);
-	public List<Description> getStoreDescriptions(String storeName) throws StoreNotFoundException;
-	public List<Description> getStoreDescriptionsPage(String storeName, int offset, int max) throws StoreNotFoundException;
+	public List<Description> getAllDescriptions() throws NotAuthorizedException;
+	public List<Description> getDescriptionsPage(int offset, int max) 
+			throws NotAuthorizedException;
+	public List<Description> getStoreDescriptions(String storeName) 
+			throws StoreNotFoundException, NotAuthorizedException;
+	public List<Description> getStoreDescriptionsPage(String storeName, 
+			int offset, int max) throws StoreNotFoundException, NotAuthorizedException;
 
 }

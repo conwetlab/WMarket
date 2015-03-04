@@ -32,6 +32,7 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Store;
@@ -39,29 +40,37 @@ import org.fiware.apps.marketplace.model.User;
 import org.springframework.stereotype.Service;
 
 @Service("offeringAuth")
-public class OfferingAuth extends GenericAuth<Offering> {
+public class OfferingAuth extends AbstractAuth<Offering> {
 
 	@Override
 	protected User getEntityOwner(Offering offering) {
 		return offering.getDescribedIn().getCreator();
 	}
 	
+	@Override
+	protected String genEntityName(Offering entity) {
+		return String.format("%s (Store: %s, Description: %s)", entity.getName(), 
+				entity.getStore().getName(), entity.getDescribedIn().getName());
+	}
+	
 	/**
 	 * Determines if a user can list all the offerings described in an description.
 	 * @param description The description where the offerings are described
-	 * @return By default, it returns true
+	 * @throws NotAuthorizedException If the user is not allowed to list all
+	 * the descriptions contained in the description
 	 */
-	public boolean canList(Description description) {
-		return true;
+	public void canList(Description description) throws NotAuthorizedException {
+
 	}
 	
 	/**
 	 * Determines if a user can list all the offerings that belongs to a Store
 	 * @param store The store where the offerings are contained
-	 * @return By default, it returns true
+	 * @throws NotAuthorizedException If the user is not allowed to list all
+	 * the descriptions contained in the Store
 	 */
-	public boolean canList(Store store) {
-		return true;
+	public void canList(Store store) throws NotAuthorizedException {
+
 	}
 
 }

@@ -33,14 +33,28 @@ package org.fiware.apps.marketplace.security.auth;
  */
 
 import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class GenericAuth<T> {
+public abstract class AbstractAuth<T> {
 	
 	@Autowired
 	private UserBo userBo;
+	
+	private String getActionForException(T entity, String action) {
+		return action + " " + entity.getClass().getSimpleName().toLowerCase() 
+				+ " " + genEntityName(entity);
+	}
+	
+	/**
+	 * Returns the name of an entity. It's useful to return a more detailed
+	 * error message
+	 * @param entity The entity
+	 * @return The name of the entity
+	 */
+	protected abstract String genEntityName(T entity);
 	
 	/**
 	 * Method to return the Localuser who is owner of the entity
@@ -52,77 +66,85 @@ public abstract class GenericAuth<T> {
 	/**
 	 * Method to know if the logged user is the owner of the entity
 	 * @param entity The entity to check. 
-	 * @return True if the logged user is the owner of the entity. False otherwise
+	 * @param action The action that is being performed
+	 * @throws NotAuthorizedException if the user is not authorized to perform the action
 	 */
-	protected boolean isLoggedUserTheOwner(T entity) {
+	protected void isOwner(T entity, String action) throws NotAuthorizedException {
 		boolean canAccess = false;
+		User loggedUser = null;
 
 		try {
-			User loggedUser = userBo.getCurrentUser();
+			loggedUser = userBo.getCurrentUser();
 			// logged User can be null if the user is not logged in...
-			if (loggedUser != null && loggedUser.equals(this.getEntityOwner(entity))) {
+			if (this.getEntityOwner(entity).equals(loggedUser)) {
 				canAccess = true;
 			}
 		} catch (UserNotFoundException ex) {
 			// Nothing to do... False will be returned
 		}
-
-		return canAccess;
 		
+		if (!canAccess) {
+			throw new NotAuthorizedException(loggedUser, getActionForException(entity, action));
+		}		
 	}
 	
 	/**
 	 * Method to know if the user is logged in
-	 * @return True if the user is logged in. Otherwise, it will return False
+	 * @param entity The entity to check.
+	 * @throws NotAuthorizedException if the user is not logged in
 	 */
-	protected boolean isLoggedIn() {
-		boolean isLoggedIn = false;
+	protected void isLoggedIn(T entity, String action) throws NotAuthorizedException {
+		User loggedUser = null;
 
 		try {
-			isLoggedIn = userBo.getCurrentUser() != null;
+			loggedUser = userBo.getCurrentUser();
 		} catch (UserNotFoundException ex) {
-			//Nothing to do... False will be returned
+			// Nothing to do
 		}
-
-		return isLoggedIn;
+		
+		if (loggedUser == null) {
+			throw new NotAuthorizedException(loggedUser, getActionForException(entity, action));
+		}
 	}
 	
 	/**
 	 * @return By default it returns True if the user is logged in
+	 * @throws NotAuthorizedException if the user is not authorized to create the entity
 	 */
-	public boolean canCreate() {
-		return this.isLoggedIn();
+	public void canCreate(T entity) throws NotAuthorizedException {
+		this.isLoggedIn(entity, "create");
 	}
 
 	/**
 	 * @param entity The entity that is going to be updated
-	 * @return By default it returns True if the logged user is the owner of the entity
+	 * @throws NotAuthorizedException if the user is not authorized to update the entity
 	 */
-	public boolean canUpdate(T entity) {
-		return this.isLoggedUserTheOwner(entity);
+	public void canUpdate(T entity) throws NotAuthorizedException {
+		this.isOwner(entity, "update");
 	}
 
 	/**
 	 * @param entity The entity that is going to be deleted
-	 * @return By default it returns True if the logged user is the owner of the entity
+	 * @throws NotAuthorizedException if the user is not authorized to delete the entity
 	 */
-	public boolean canDelete(T entity) {
-		return this.isLoggedUserTheOwner(entity);
+	public void canDelete(T entity) throws NotAuthorizedException {
+		this.isOwner(entity, "delete");
 	}
 
 	/**
 	 * @param entity The entity that is going to be got
-	 * @return By default it returns True
+	 * @throws NotAuthorizedException if the user is not authorized to get the entity
 	 */
-	public boolean canGet(T entity) {
-		return true;
+	public void canGet(T entity) throws NotAuthorizedException {
+
 	}
 
 	/**
 	 * @return By default, it returns True
+	 * @throws NotAuthorizedException if the user is not authorized to list the entities
 	 */
-	public boolean canList() {
-		return true;
+	public void canList() throws NotAuthorizedException {
+
 	}
 
 

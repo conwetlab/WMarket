@@ -40,6 +40,7 @@ import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("userDao")
 public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
@@ -47,21 +48,28 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 	private static final String TABLE_NAME = User.class.getName();
 
 	@Override
+	@Transactional(readOnly = false)
 	public void save(User user) {
 		getSession().saveOrUpdate(user);	
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public void update(User user) {
-		getSession().update(user);
+		// Avoid NonUniqueObjectException. This exception is risen because
+		// the user is retrieved twice (one because of the authentication and
+		// another one because of the update) and the first time is detached
+		getSession().merge(user);
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public void delete(User user) {
 		getSession().delete(user);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public User findByName(String username) throws UserNotFoundException{
 		String query = String.format("from %s where userName=:userName", TABLE_NAME);
 		List<?> list = getSession()
@@ -78,6 +86,7 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional(readOnly = true)
 	public List<User> getUsersPage(int offset, int max) {
 		return getSession()
 				.createCriteria(User.class)
@@ -88,6 +97,7 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional(readOnly = true)
 	public List<User> getAllUsers() {
 		return getSession()
 				.createCriteria(User.class)

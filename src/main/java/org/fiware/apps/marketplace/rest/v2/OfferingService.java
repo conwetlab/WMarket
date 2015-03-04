@@ -45,9 +45,9 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.OfferingBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
-import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
@@ -80,19 +80,16 @@ public class OfferingService {
 		Response response;
 		
 		try {
-			Offering offering = offeringBo.findDescriptionByNameStoreAndDescription(
+			Offering offering = offeringBo.findOfferingByNameStoreAndDescription(
 					storeName, descriptionName, offeringName);
-			
-			if (offeringAuth.canGet(offering)) {
-				response = Response.status(Status.OK).entity(offering).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("get offering"); 
-			}
+			response = Response.status(Status.OK).entity(offering).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (OfferingNotFoundException | StoreNotFoundException | 
-				DescriptionNotFoundException e) {
-			response = ERROR_UTILS.entityNotFoundResponse(e);
-		} catch (Exception e) {
-			response = ERROR_UTILS.internalServerError(e);
+				DescriptionNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 		
 		return response;
@@ -109,21 +106,16 @@ public class OfferingService {
 		
 		Response response;
 		
-		try {
-			Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
-			
-			if (offeringAuth.canList(description)) {
-				Offerings offerings = new Offerings(offeringBo.getDescriptionOfferingsPage(
-						storeName, descriptionName, offset, max));
-				response = Response.status(Status.OK).entity(offerings).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse(String.format(
-						"list offerings in description %s (Store: %s)", descriptionName, storeName));
-			}
-		} catch (DescriptionNotFoundException | StoreNotFoundException e) {
-			response = ERROR_UTILS.entityNotFoundResponse(e);
-		} catch (Exception e) {
-			response = ERROR_UTILS.internalServerError(e);
+		try {			
+			Offerings offerings = new Offerings(offeringBo.getDescriptionOfferingsPage(
+					storeName, descriptionName, offset, max));
+			response = Response.status(Status.OK).entity(offerings).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
+		} catch (DescriptionNotFoundException | StoreNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 		
 		return response;

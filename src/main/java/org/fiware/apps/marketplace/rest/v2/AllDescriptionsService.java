@@ -43,6 +43,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
@@ -75,19 +76,17 @@ public class AllDescriptionsService {
 			response = ERROR_UTILS.badRequestResponse(String.format(
 					"offset (%d) and/or max (%d) are not valid", offset, max));
 		} else {
-			if (descriptionAuth.canList()) {
 				try {
 					List<Description> descriptionsPage = 
 							descriptionBo.getDescriptionsPage(offset, max);
 					Descriptions returnedDescriptions = new Descriptions();
 					returnedDescriptions.setDescriptions(descriptionsPage);
 					response = Response.status(Status.OK).entity(returnedDescriptions).build();
+				} catch (NotAuthorizedException ex) {
+					response = ERROR_UTILS.unauthorizedResponse(ex);
 				} catch (Exception ex) {
 					response = ERROR_UTILS.internalServerError(ex);
 				}
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("list descriptions");
-			}	
 		}
 		
 		return response;

@@ -55,6 +55,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -66,6 +67,7 @@ import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.hibernate.HibernateException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -90,35 +92,33 @@ public class StoreService {
 	public Response createStore(@Context UriInfo uri, Store store) {
 		Response response;
 
-		try {
-			if (storeAuth.canCreate()) {
-				//Validate the Store (exception is thrown if the Store is not valid)
-				storeValidator.validateStore(store, true);
-				
-				// Get the current user
-				User currentUser = userBo.getCurrentUser();
-				
-				store.setRegistrationDate(new Date());
-				store.setCreator(currentUser);
-				store.setLasteditor(currentUser);
+		try {				
+			// Get the current user
+			User currentUser = userBo.getCurrentUser();
 
-				// Save the new Store
-				storeBo.save(store);
-				
-				// Generate the URI and return CREATED
-				URI newURI = UriBuilder
-						.fromUri(uri.getPath())
-						.path(store.getName())
-						.build();
-								
-				response = Response.created(newURI).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("create store");
-			}
+			store.setRegistrationDate(new Date());
+			store.setCreator(currentUser);
+			store.setLasteditor(currentUser);
+
+			// Save the new Store
+			storeBo.save(store);
+
+			// Generate the URI and return CREATED
+			URI newURI = UriBuilder
+					.fromUri(uri.getPath())
+					.path(store.getName())
+					.build();
+
+			response = Response.created(newURI).build();
+
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
+		} catch (DataIntegrityViolationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
@@ -136,40 +136,39 @@ public class StoreService {
 		Response response;
 
 		try {
-			Store storeDB = storeBo.findByName(storeName);				
-			if (storeAuth.canUpdate(storeDB)) {
-				//Validate the Store (exception is thrown if the Store is not valid)
-				storeValidator.validateStore(store, false);
-				
-				// At this moment, the URL cannot be changed...
-				// if (store.getName() != null) {
-				// 	storeDB.setName(store.getName());
-				// }
+			Store storeDB = storeBo.findByName(storeName);								
 
-				if (store.getUrl() != null) {
-					storeDB.setUrl(store.getUrl());
-				}
+			// At this moment, the URL cannot be changed...
+			// if (store.getName() != null) {
+			// 	storeDB.setName(store.getName());
+			// }
 
-				if (store.getDescription() != null) {
-					storeDB.setDescription(store.getDescription());
-				}
-				
-				if (store.getDisplayName() != null) {
-					storeDB.setDisplayName(store.getDisplayName());
-				}
-
-				store.setLasteditor(userBo.getCurrentUser());
-
-				// Save the new Store and Return OK
-				storeBo.update(storeDB);
-				response = Response.status(Status.OK).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("update store " + storeName);
+			if (store.getUrl() != null) {
+				storeDB.setUrl(store.getUrl());
 			}
+
+			if (store.getDescription() != null) {
+				storeDB.setDescription(store.getDescription());
+			}
+
+			if (store.getDisplayName() != null) {
+				storeDB.setDisplayName(store.getDisplayName());
+			}
+
+			store.setLasteditor(userBo.getCurrentUser());
+
+			// Save the new Store and Return OK
+			storeBo.update(storeDB);
+			response = Response.status(Status.OK).build();
+
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
+		} catch (DataIntegrityViolationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (StoreNotFoundException ex) {
@@ -189,13 +188,10 @@ public class StoreService {
 		try {
 			//Retrieve the Store from the database
 			Store store = storeBo.findByName(storeName);
-
-			if (storeAuth.canDelete(store)) {
-				storeBo.delete(store);
-				response = Response.status(Status.NO_CONTENT).build();		// Return 204 No Content
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("delete store " + storeName);
-			}
+			storeBo.delete(store);
+			response = Response.status(Status.NO_CONTENT).build();		// Return 204 No Content
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
@@ -214,12 +210,10 @@ public class StoreService {
 		try {
 			// Retrieve the Store from the database
 			Store store = storeBo.findByName(storeName);
-
-			if (storeAuth.canGet(store)) {
-				response = Response.status(Status.OK).entity(store).build(); 	//Return the Store
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("get store " + storeName);
-			}
+			// Return the store
+			response = Response.status(Status.OK).entity(store).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
@@ -241,12 +235,10 @@ public class StoreService {
 			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
 		} else {
 			try {
-				if (storeAuth.canList()) {
-					List<Store> stores = storeBo.getStoresPage(offset, max);
-					response = Response.status(Status.OK).entity(new Stores(stores)).build();
-				} else {
-					response = ERROR_UTILS.unauthorizedResponse("list stores");
-				}
+				List<Store> stores = storeBo.getStoresPage(offset, max);
+				response = Response.status(Status.OK).entity(new Stores(stores)).build();
+			} catch (NotAuthorizedException ex) {
+				response = ERROR_UTILS.unauthorizedResponse(ex);
 			} catch (Exception ex) {
 				response = ERROR_UTILS.internalServerError(ex);
 			}

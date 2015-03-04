@@ -56,6 +56,7 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -67,6 +68,7 @@ import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
 import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.slf4j.LoggerFactory;
 
@@ -98,31 +100,25 @@ public class DescriptionService {
 		Response response;
 
 		try {			
-			if (descriptionAuth.canCreate()) {
-
-				// Validate offerings description (exception is thrown if the description is not valid) 
-				descriptionValidator.validateDescription(description, true);
-
-				User user = userBo.getCurrentUser();
-				Store store = storeBo.findByName(storeName);
-				description.setRegistrationDate(new Date());
-				description.setStore(store);
-				description.setCreator(user);
-				description.setLasteditor(user);
-				
-				// Save the offerings description
-				descriptionBo.save(description);
-				
-				// Get the URL and return created
-				URI newURI = UriBuilder
-						.fromUri(uri.getPath())
-						.path(description.getName())
-						.build();
-				
-				response = Response.created(newURI).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("create description");
-			}
+			User user = userBo.getCurrentUser();
+			Store store = storeBo.findByName(storeName);
+			description.setRegistrationDate(new Date());
+			description.setStore(store);
+			description.setCreator(user);
+			description.setLasteditor(user);
+			
+			// Save the offerings description
+			descriptionBo.save(description);
+			
+			// Get the URL and return created
+			URI newURI = UriBuilder
+					.fromUri(uri.getPath())
+					.path(description.getName())
+					.build();
+			
+			response = Response.created(newURI).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (JenaException ex) {
@@ -136,6 +132,8 @@ public class DescriptionService {
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.internalServerError(
 					"There was an error retrieving the user from the database");
+		} catch (DataIntegrityViolationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
@@ -159,36 +157,34 @@ public class DescriptionService {
 			Description description = descriptionBo.
 					findByNameAndStore(storeName, descriptionName);
 
-			if (descriptionAuth.canUpdate(description)) {
 
-				// Validate offerings description (exception is thrown if the description is not valid) 
-				descriptionValidator.validateDescription(descriptionInfo, false);
+			// Validate offerings description (exception is thrown if the description is not valid) 
+			descriptionValidator.validateDescription(descriptionInfo, false);
 
-				// Name cannot be changed...
-				// if (offeringDescriptionInfo.getName() != null) {
-				// 	 offeringDescription.setName(offeringDescriptionInfo.getName());
-				// }
+			// Name cannot be changed...
+			// if (offeringDescriptionInfo.getName() != null) {
+			// 	 offeringDescription.setName(offeringDescriptionInfo.getName());
+			// }
 
-				if (descriptionInfo.getDisplayName() != null) {
-					description.setDisplayName(descriptionInfo.getDisplayName());
-				}
-
-				if (descriptionInfo.getUrl() != null) {
-					description.setUrl(descriptionInfo.getUrl());
-				}
-
-				if (descriptionInfo.getDescription() != null) {
-					description.setDescription(descriptionInfo.getDescription());
-				}
-
-				description.setLasteditor(userBo.getCurrentUser());
-
-				descriptionBo.update(description);
-				response = Response.status(Status.OK).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse(
-						"update description " + descriptionName);
+			if (descriptionInfo.getDisplayName() != null) {
+				description.setDisplayName(descriptionInfo.getDisplayName());
 			}
+
+			if (descriptionInfo.getUrl() != null) {
+				description.setUrl(descriptionInfo.getUrl());
+			}
+
+			if (descriptionInfo.getDescription() != null) {
+				description.setDescription(descriptionInfo.getDescription());
+			}
+
+			description.setLasteditor(userBo.getCurrentUser());
+
+			descriptionBo.update(description);
+			response = Response.status(Status.OK).build();
+				
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (JenaException ex) {
@@ -202,6 +198,8 @@ public class DescriptionService {
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.internalServerError(
 					"There was an error retrieving the user from the database");
+		} catch (DataIntegrityViolationException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
@@ -221,12 +219,10 @@ public class DescriptionService {
 			Description description = descriptionBo.
 					findByNameAndStore(storeName, descriptionName);
 
-			if (descriptionAuth.canDelete(description)) {
-				descriptionBo.delete(description);
-				response = Response.status(Status.NO_CONTENT).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("delete description " + descriptionName);
-			}
+			descriptionBo.delete(description);
+			response = Response.status(Status.NO_CONTENT).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (StoreNotFoundException ex) {
@@ -249,11 +245,9 @@ public class DescriptionService {
 			Description description = descriptionBo.
 					findByNameAndStore(storeName, descriptionName);
 
-			if (descriptionAuth.canGet(description)) {
-				response = Response.status(Status.OK).entity(description).build();
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("get description " + descriptionName);
-			}
+			response = Response.status(Status.OK).entity(description).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.unauthorizedResponse(ex);
 		} catch (DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (StoreNotFoundException ex) {
@@ -278,18 +272,13 @@ public class DescriptionService {
 			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
 		} else {
 			try {
-				Store store = storeBo.findByName(storeName);
-
-				if (descriptionAuth.canList(store)) {
-					Descriptions returnedDescriptions = new Descriptions(descriptionBo
-							.getStoreDescriptionsPage(storeName, offset, max));
+				Descriptions returnedDescriptions = new Descriptions(descriptionBo
+						.getStoreDescriptionsPage(storeName, offset, max));
+				
+				response = Response.status(Status.OK).entity(returnedDescriptions).build();
 					
-					response = Response.status(Status.OK).entity(returnedDescriptions).build();
-				} else {
-					response = ERROR_UTILS.unauthorizedResponse("list descriptions");
-				}
-
-
+			} catch (NotAuthorizedException ex) {
+				response = ERROR_UTILS.unauthorizedResponse(ex);
 			} catch (StoreNotFoundException ex) {
 				response = ERROR_UTILS.entityNotFoundResponse(ex);
 			} catch (Exception ex) {

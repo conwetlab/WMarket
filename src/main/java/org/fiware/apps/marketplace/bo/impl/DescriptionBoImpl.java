@@ -40,11 +40,16 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.helpers.OfferingResolver;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Description;
+import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
 import org.fiware.apps.marketplace.rdf.RdfIndexer;
+import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,18 +57,25 @@ import org.springframework.transaction.annotation.Transactional;
 @org.springframework.stereotype.Service("descriptionBo")
 public class DescriptionBoImpl implements DescriptionBo {
 	
+	@Autowired private DescriptionAuth descriptionAuth;
+	@Autowired private DescriptionValidator descriptionValidator;
 	@Autowired private DescriptionDao descriptionDao;
 	@Autowired private RdfIndexer rdfIndexer;
 	@Autowired private OfferingResolver offeringResolver;
 	@Autowired private StoreBo storeBo;
-	
-	public void setOfferingsDescriptionDao (DescriptionDao descriptionDao){
-		this.descriptionDao = descriptionDao;
-	}
-	
+		
 	@Override
 	@Transactional(readOnly=false)
-	public void save(Description description) throws MalformedURLException {
+	public void save(Description description) 
+			throws MalformedURLException, NotAuthorizedException, 
+			ValidationException {
+		
+		// Check rights (exception is risen if user is not allowed)
+		descriptionAuth.canCreate(description);
+		
+		// Validate the description (exception is risen if the user is not valid)
+		descriptionValidator.validateDescription(description, true);
+		
 		// Set the name
 		description.setName(NameGenerator.getURLName(description.getDisplayName()));
 		
@@ -80,7 +92,16 @@ public class DescriptionBoImpl implements DescriptionBo {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(Description description) throws MalformedURLException {
+	public void update(Description description) 
+			throws MalformedURLException, NotAuthorizedException, 
+			ValidationException {
+		
+		// Check rights (exception is risen if user is not allowed)
+		descriptionAuth.canUpdate(description);
+		
+		// Validate the description (exception is risen if the user is not valid)
+		descriptionValidator.validateDescription(description, false);
+		
 		// Get all the offerings described in the USDL
 		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
 		description.setOfferings(offerings);
@@ -95,47 +116,91 @@ public class DescriptionBoImpl implements DescriptionBo {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(Description description) {
+	public void delete(Description description) throws NotAuthorizedException {
+		// Check rights (exception is risen if user is not allowed)
+		descriptionAuth.canDelete(description);
+		
 		descriptionDao.delete(description);
 		rdfIndexer.deleteService(description);
 	}
 
 	@Override
 	@Transactional
-	public Description findById(Integer id) throws DescriptionNotFoundException{
-		return descriptionDao.findById(id);
+	public Description findById(Integer id) 
+			throws DescriptionNotFoundException, NotAuthorizedException{
+		
+		Description description = descriptionDao.findById(id);
+		
+		// Check rights (exception is risen if user is not allowed)
+		descriptionAuth.canGet(description);
+		
+		return description;
 	}
 
 	@Override
 	@Transactional
 	public Description findByNameAndStore(String storeName, String descriptionName) 
-			throws StoreNotFoundException, DescriptionNotFoundException {
-		return descriptionDao.findByNameAndStore(storeName, descriptionName);
+			throws StoreNotFoundException, DescriptionNotFoundException, 
+			NotAuthorizedException {
+		
+		Description description = descriptionDao.findByNameAndStore(storeName, descriptionName);
+		
+		// Check rights (exception is risen if user is not allowed)
+		descriptionAuth.canGet(description);
+		
+		return description;
 	}
 	
 	@Override
 	@Transactional
-	public List<Description> getAllDescriptions() {
+	public List<Description> getAllDescriptions() 
+			throws NotAuthorizedException {
+		
+		// Check rights (exception is risen if user is not allowed)
+		descriptionAuth.canList();
+
 		return descriptionDao.getAllDescriptions();
 	}
 	
 	@Override
 	@Transactional
-	public List<Description> getDescriptionsPage(int offset, int max) {
+	public List<Description> getDescriptionsPage(int offset, int max)
+			throws NotAuthorizedException {
+		
+		// Check rights (exception is risen if user is not allowed)
+		descriptionAuth.canList();
+		
 		return descriptionDao.getDescriptionsPage(offset, max);
 	}
 
 	@Override
 	@Transactional
 	public List<Description> getStoreDescriptions(String storeName) 
-			throws StoreNotFoundException{
-		return descriptionDao.getStoreDescriptions(storeName);
+			throws StoreNotFoundException, NotAuthorizedException {
+		
+		// Will throw exception in case the Store does not exist
+		Store store = storeBo.findByName(storeName);
+		
+		// Check rights (exception is risen if user is not allowed)
+		descriptionAuth.canList(store);
+		
+		List<Description> descriptions = descriptionDao.getStoreDescriptions(storeName);
+		
+		return descriptions;
 	}
 
 	@Override
 	@Transactional
 	public List<Description> getStoreDescriptionsPage(String storeName,
-			int offset, int max) throws StoreNotFoundException {
+			int offset, int max) throws StoreNotFoundException, 
+			NotAuthorizedException {
+		
+		// Will throw exception in case the Store does not exist
+		Store store = storeBo.findByName(storeName);
+		
+		// Check rights (exception is risen if user is not allowed)
+		descriptionAuth.canList(store);
+
 		return descriptionDao.getStoreDescriptionsPage(storeName, offset, max);
 	}
 

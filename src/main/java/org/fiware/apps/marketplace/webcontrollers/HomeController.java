@@ -41,9 +41,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.fiware.apps.marketplace.bo.OfferingBo;
 import org.fiware.apps.marketplace.bo.UserBo;
-import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
-import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
-import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,12 +89,13 @@ public class HomeController {
 		}
 
 		try {
-			offering = offeringBo.findDescriptionByNameStoreAndDescription(
+			offering = offeringBo.findOfferingByNameStoreAndDescription(
 					storeName, descriptionName, offeringName);
 
 			data.addAttribute("offering", offering);
 			data.addAttribute("title", offering.getDisplayName() + " - Marketplace");
-		} catch (OfferingNotFoundException | StoreNotFoundException | DescriptionNotFoundException e) {
+		} catch (Exception e) {
+			// TODO: Show an error page!!!!
 			e.printStackTrace();
 		}
 

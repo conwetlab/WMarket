@@ -1,11 +1,12 @@
-package org.fiware.apps.marketplace.security;
+package org.fiware.apps.marketplace.exceptions;
+
+import org.fiware.apps.marketplace.model.User;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
- * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,35 +34,29 @@ package org.fiware.apps.marketplace.security;
  * #L%
  */
 
+public class NotAuthorizedException extends Exception {
 
-import org.fiware.apps.marketplace.dao.UserDao;
-import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-@Service("userManagementService")
-@Transactional
-public class UserManagementService implements UserDetailsService{
-
-	@Autowired private UserDao userDao;
-	@Autowired private Assembler assembler;
-
+	private static final long serialVersionUID = 1L;
+	
+	private String action;
+	private User user;
+	
+	public NotAuthorizedException(User user, String action) {
+		this.user = user;
+		this.action = action;
+	}
+	
 	@Override
-    public UserDetails loadUserByUsername(String username)
-    	     throws UsernameNotFoundException, DataAccessException {
+	public String toString() {
+		String userName;
 		
-		try {
-	        User userEntity = userDao.findByName(username);
-	        return assembler.buildUserFromUserEntity(userEntity);
-		} catch (UserNotFoundException ex) {
-        	throw new UsernameNotFoundException("user not found");
+		if (user == null) {
+			userName = "Anonymous user";
+		} else {
+			userName = user.getUserName();
 		}
+		
+		return userName + " is not allowed to " + action;
 	}
 
 }

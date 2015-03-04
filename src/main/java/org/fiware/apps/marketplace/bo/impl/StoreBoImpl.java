@@ -37,8 +37,12 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.dao.StoreDao;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.validators.StoreValidator;
+import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,16 +51,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("storeBo")
 public class StoreBoImpl implements StoreBo{
 
-	@Autowired
-	StoreDao storeDao;
-	
-	public void setStoreDao (StoreDao storeDao){
-		this.storeDao = storeDao;
-	}
-	
+	@Autowired private StoreDao storeDao;
+	@Autowired private StoreAuth storeAuth;
+	@Autowired private StoreValidator storeValidator;
+		
 	@Override
 	@Transactional(readOnly=false)
-	public void save(Store store) {
+	public void save(Store store) throws NotAuthorizedException, 
+			ValidationException {
+		
+		// Check rights (exception is risen if user is not allowed)
+		storeAuth.canCreate(store);
+		
+		// Validate the store (exception is risen if the user is not valid)
+		storeValidator.validateStore(store, true);
+		
 		store.setName(NameGenerator.getURLName(store.getDisplayName()));
 		storeDao.save(store);
 		
@@ -64,33 +73,59 @@ public class StoreBoImpl implements StoreBo{
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(Store store) {
+	public void update(Store store) throws NotAuthorizedException, 
+			ValidationException {
+		
+		// Check rights (exception is risen if user is not allowed)
+		storeAuth.canUpdate(store);
+		
+		// Validate the store (exception is risen if the user is not valid)
+		storeValidator.validateStore(store, false);
+		
 		storeDao.update(store);
 		
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(Store store) {
+	public void delete(Store store) throws NotAuthorizedException {
+		// Check rights (exception is risen if user is not allowed)
+		storeAuth.canDelete(store);
 		storeDao.delete(store);
 		
 	}
 
 	@Override
 	@Transactional
-	public Store findByName(String name) throws StoreNotFoundException {
-		return storeDao.findByName(name);
+	public Store findByName(String name) throws StoreNotFoundException, 
+			NotAuthorizedException {
+		
+		Store store = storeDao.findByName(name);
+		
+		// Check rights (exception is risen if user is not allowed)
+		storeAuth.canGet(store);
+		
+		return store;
 	}
 	
 	@Override
 	@Transactional
-	public List<Store> getStoresPage(int offset, int max) {
+	public List<Store> getStoresPage(int offset, int max) 
+			throws NotAuthorizedException {
+		
+		// Check rights (exception is risen if user is not allowed)
+		storeAuth.canList();
+		
 		return storeDao.getStoresPage(offset, max);
 	}
 	
 	@Override
 	@Transactional
-	public List<Store> getAllStores() {
+	public List<Store> getAllStores() throws NotAuthorizedException {
+		
+		// Check rights (exception is risen if user is not allowed)
+		storeAuth.canList();
+		
 		return storeDao.getAllStores();
 	}
 }

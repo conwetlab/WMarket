@@ -43,6 +43,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
@@ -73,21 +74,16 @@ public class AllOfferingsService {
 			response = ERROR_UTILS.badRequestResponse(String.format(
 					"offset (%d) and/or max (%d) are not valid", offset, max));
 		} else {
-			if (offeringAuth.canList()) {
-				List<Offering> descriptionsPage = 
-						offeringBo.getOfferingsPage(offset, max);
-				Offerings returnedOfferings = new Offerings();
-				returnedOfferings.setOfferings(descriptionsPage);
-				response = Response.status(Status.OK).entity(returnedOfferings).build();
-
-			} else {
-				response = ERROR_UTILS.unauthorizedResponse("list offerings");
-			}	
-
+				try {
+					List<Offering> descriptionsPage = offeringBo.getOfferingsPage(offset, max);
+					Offerings returnedOfferings = new Offerings();
+					returnedOfferings.setOfferings(descriptionsPage);
+					response = Response.status(Status.OK).entity(returnedOfferings).build();
+				} catch (NotAuthorizedException ex) {
+					response = ERROR_UTILS.unauthorizedResponse(ex);
+				}
 		}
 		
 		return response;
 	}
-
-
 }

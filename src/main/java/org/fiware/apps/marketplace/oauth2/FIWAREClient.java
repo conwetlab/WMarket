@@ -34,7 +34,7 @@ package org.fiware.apps.marketplace.oauth2;
 
 import java.util.Date;
 
-import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.pac4j.core.client.BaseClient;
@@ -54,11 +54,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 	// To store users information
-	@Autowired private UserBo userBo;
+	@Autowired private UserDao userDao;
 
 	private String scopeValue = "";
 	private String serverURL;
-	
+
 	/**
 	 * Method to get the FIWARE IdM that is being in used
 	 * @return The FIWARE IdM that is being used to authenticate the users
@@ -66,7 +66,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 	public String getServerURL() {
 		return this.serverURL;
 	}
-	
+
 	/**
 	 * Method to set the FIWARE IdM that will be use to authenticate the users
 	 * @param serverURL The FIWARE IdM that will be use to authenticate the users
@@ -74,7 +74,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 	public void setServerURL(String serverURL) {
 		this.serverURL = serverURL;
 	}
-	
+
 	@Override
 	protected void internalInit() {
 		super.internalInit();
@@ -96,8 +96,9 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 	@Override
 	protected FIWAREProfile extractUserProfile(String body) {
+
 		FIWAREProfile profile = new FIWAREProfile();
-		
+
 		if (body != null) {
 			final JsonNode json = JsonHelper.getFirstNode(body);
 			profile.setId(JsonHelper.get(json, "nickName"));
@@ -116,7 +117,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 			try {
 				// Modify the existing user
-				user = userBo.findByName(username);
+				user = userDao.findByName(username);
 			} catch (UserNotFoundException e) {
 				// Create a new user
 				user = new User();
@@ -130,7 +131,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 			user.setDisplayName(displayName);
 
 			// Save the new user
-			userBo.save(user);
+			userDao.save(user);
 
 			return profile;
 		} else {

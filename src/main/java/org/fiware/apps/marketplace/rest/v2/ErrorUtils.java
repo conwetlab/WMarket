@@ -35,11 +35,13 @@ package org.fiware.apps.marketplace.rest.v2;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.APIError;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
 
 
 public class ErrorUtils {
@@ -55,6 +57,17 @@ public class ErrorUtils {
 	public ErrorUtils(Logger logger, String contraintViolationMessage) {
 		this.logger = logger;
 		this.contraintViolationMessage = contraintViolationMessage;
+	}
+	
+	public Response badRequestResponse(DataIntegrityViolationException ex) {
+		Response response;
+		if (ex.getCause() instanceof HibernateException) {
+			response = badRequestResponse((HibernateException) ex.getCause());
+		} else {
+			response = internalServerError(ex);
+		}
+		
+		return response;
 	}
 	
 	public Response badRequestResponse(HibernateException ex) {
@@ -84,10 +97,12 @@ public class ErrorUtils {
 				new APIError(ErrorType.NOT_FOUND, ex.getMessage())).build();
 	}
 	
-	public Response unauthorizedResponse(String action) {
-		logger.warn("User is not authorized to {}", action);
+	public Response unauthorizedResponse(NotAuthorizedException exception) {
+		String message = exception.toString();
+		logger.warn(message);
 		return Response.status(Status.UNAUTHORIZED).entity(
-				new APIError(ErrorType.UNAUTHORIZED, "You are not authorized to " + action)).build();
+				new APIError(ErrorType.UNAUTHORIZED, message)).build();
+
 	}
 	
 	public Response internalServerError(Exception exception) {

@@ -34,12 +34,18 @@ package org.fiware.apps.marketplace.bo.impl;
 
 import java.util.List;
 
+import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,77 +53,110 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("offeringBo")
 public class OfferingBoImpl implements OfferingBo {
 	
+	@Autowired private OfferingAuth offeringAuth;
 	@Autowired private OfferingDao offeringDao;
+	@Autowired private StoreBo storeBo;
+	@Autowired private DescriptionBo descriptionBo;
 
 	@Override
 	@Transactional(readOnly = false)
-	public void save(Offering offering) {
+	public void save(Offering offering) throws NotAuthorizedException {
+		offeringAuth.canCreate(offering);	// Throws exception if not authorized
 		offeringDao.save(offering);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void update(Offering offering) {
+	public void update(Offering offering) throws NotAuthorizedException {
+		offeringAuth.canUpdate(offering);	// Throws exception if not authorized
 		offeringDao.update(offering);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void delete(Offering offering) {
+	public void delete(Offering offering) throws NotAuthorizedException {
+		offeringAuth.canDelete(offering);	// Throws exception if not authorized
 		offeringDao.delete(offering);
 	}
 
 	@Override
 	@Transactional
-	public Offering findByUri(String uri) {
+	public Offering findByUri(String uri) throws NotAuthorizedException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	@Transactional
-	public Offering findDescriptionByNameStoreAndDescription(String storeName, 
+	public Offering findOfferingByNameStoreAndDescription(String storeName, 
 			String descriptionName, String offeringName)
-			throws OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException {
-		return offeringDao.findDescriptionByNameStoreAndDescription(storeName, descriptionName, offeringName);
+			throws NotAuthorizedException, OfferingNotFoundException, 
+			StoreNotFoundException, DescriptionNotFoundException {
+		
+		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		
+		// Check rights (Exception is risen if user is not authorized)
+		offeringAuth.canGet(offering);
+		
+		return offering;
 	}
 
 	@Override
 	@Transactional
-	public List<Offering> getAllOfferings() {
+	public List<Offering> getAllOfferings() throws NotAuthorizedException {
+		offeringAuth.canList();		// Throws exception if not authorized	
 		return offeringDao.getAllOfferings();
 	}
 
 	@Override
 	@Transactional
-	public List<Offering> getOfferingsPage(int offset, int max) {
+	public List<Offering> getOfferingsPage(int offset, int max) 
+			throws NotAuthorizedException {
+		
+		offeringAuth.canList();		// Throws exception if not authorized	
 		return offeringDao.getOfferingsPage(offset, max);
 	}
 
 	@Override
 	@Transactional
-	public List<Offering> getAllStoreOfferings(String storeName) throws StoreNotFoundException {
+	public List<Offering> getAllStoreOfferings(String storeName) 
+			throws StoreNotFoundException, NotAuthorizedException {
+		
+		Store store = storeBo.findByName(storeName);
+		offeringAuth.canList(store);	// Throws exception if not authorized
 		return offeringDao.getAllStoreOfferings(storeName);
 	}
 
 	@Override
 	@Transactional
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset,
-			int max) throws StoreNotFoundException {
+			int max) throws StoreNotFoundException, NotAuthorizedException {
+		
+		Store store = storeBo.findByName(storeName);
+		offeringAuth.canList(store);	// Throws exception if not authorized
 		return offeringDao.getStoreOfferingsPage(storeName, offset, max);
 	}
 
 	@Override
 	@Transactional
 	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
-			throws StoreNotFoundException, DescriptionNotFoundException {
+			throws StoreNotFoundException, DescriptionNotFoundException, NotAuthorizedException {
+		
+		Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
+		offeringAuth.canList(description);	// Throws exception if not authorized
 		return offeringDao.getAllDescriptionOfferings(storeName, descriptionName);
 	}
 
 	@Override
 	@Transactional
 	public List<Offering> getDescriptionOfferingsPage(String storeName, 
-			String descriptionName, int offset, int max) throws StoreNotFoundException, DescriptionNotFoundException {
+			String descriptionName, int offset, int max) throws 
+			StoreNotFoundException, DescriptionNotFoundException, 
+			NotAuthorizedException {
+		
+		Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
+		offeringAuth.canList(description);	// Throws exception if not authorized
 		return offeringDao.getDescriptionOfferingsPage(storeName, descriptionName, offset, max);
 	}
 	

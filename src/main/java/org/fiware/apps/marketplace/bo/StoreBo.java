@@ -35,22 +35,28 @@ package org.fiware.apps.marketplace.bo;
 
 import java.util.List;
 
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
 
 
 public interface StoreBo {
 	
 	// Save, update, delete
-	public void save(Store store);
-	public void update(Store store);
-	public void delete(Store store);
+	public void save(Store store) throws NotAuthorizedException, 
+			ValidationException;
+	public void update(Store store) throws NotAuthorizedException,
+			ValidationException;
+	public void delete(Store store) throws NotAuthorizedException;
 	
 	// Find by name
-	public Store findByName(String name) throws StoreNotFoundException;
+	public Store findByName(String name) throws NotAuthorizedException, 
+			StoreNotFoundException;
 	
 	// Get all or a sublist
-	public List<Store> getStoresPage(int offset, int max);
-	public List <Store> getAllStores();
+	public List<Store> getStoresPage(int offset, int max)
+			throws NotAuthorizedException;
+	public List <Store> getAllStores() throws NotAuthorizedException;
 	
 }

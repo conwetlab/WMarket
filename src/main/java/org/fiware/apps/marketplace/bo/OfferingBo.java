@@ -36,6 +36,7 @@ package org.fiware.apps.marketplace.bo;
 import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
@@ -43,24 +44,27 @@ import org.fiware.apps.marketplace.model.Offering;
 public interface OfferingBo {
 	
 	// Save, update, delete
-	public void save(Offering offering);
-	public void update(Offering offering);
-	public void delete(Offering offering);
+	public void save(Offering offering) throws NotAuthorizedException;
+	public void update(Offering offering) throws NotAuthorizedException;
+	public void delete(Offering offering) throws NotAuthorizedException;
 	
 	// Find 
-	public Offering findByUri(String uri);
-	public Offering findDescriptionByNameStoreAndDescription(String storeName, 
-			String descriptionName, String offeringName) throws OfferingNotFoundException,
-			StoreNotFoundException, DescriptionNotFoundException;
+	public Offering findByUri(String uri) throws NotAuthorizedException;
+	public Offering findOfferingByNameStoreAndDescription(String storeName, 
+			String descriptionName, String offeringName) throws NotAuthorizedException,
+			OfferingNotFoundException, StoreNotFoundException, 
+			DescriptionNotFoundException;
 	
 	// Get all or a sublist based on some criteria
-	public List<Offering> getAllOfferings();
-	public List<Offering> getOfferingsPage(int offset, int max);
-	public List<Offering> getAllStoreOfferings(String storeName) throws StoreNotFoundException;
+	public List<Offering> getAllOfferings() throws NotAuthorizedException;
+	public List<Offering> getOfferingsPage(int offset, int max) throws NotAuthorizedException;
+	public List<Offering> getAllStoreOfferings(String storeName) 
+			throws StoreNotFoundException, NotAuthorizedException;
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max) 
-			throws StoreNotFoundException;
+			throws StoreNotFoundException, NotAuthorizedException;
 	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
-			throws StoreNotFoundException, DescriptionNotFoundException;
+			throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException;
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
-			int offset, int max) throws StoreNotFoundException, DescriptionNotFoundException;	
+			int offset, int max) throws NotAuthorizedException, StoreNotFoundException, 
+			DescriptionNotFoundException;	
 }

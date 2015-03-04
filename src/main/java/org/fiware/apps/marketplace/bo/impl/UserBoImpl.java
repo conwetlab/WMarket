@@ -37,8 +37,12 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.UserDao;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.validators.UserValidator;
+import org.fiware.apps.marketplace.security.auth.UserAuth;
 import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
 import org.slf4j.Logger;
@@ -46,58 +50,98 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("userBo")
 public class UserBoImpl implements UserBo {
 
-	@Autowired
-	private UserDao userDao;
-	
+	@Autowired private UserDao userDao;
+	@Autowired private UserAuth userAuth;
+	@Autowired private UserValidator userValidator;
+	// Encoder must be the same in all the platform: use the bean
+	@Autowired private PasswordEncoder encoder;
+
+
 	private static final Logger logger = LoggerFactory.getLogger(UserBoImpl.class);
-	
-	public void setStoreDao (UserDao localuser){
-		this.userDao = localuser;
-	}
-	
+
 	@Override
 	@Transactional(readOnly=false)
-	public void save(User localuser) {
+	public void save(User user) throws NotAuthorizedException, ValidationException{
+
+		// Check rights (exception is risen if user is not allowed)
+		userAuth.canCreate(user);
+		
+		// Validate the user (exception is risen if the user is not valid)
+		userValidator.validateUser(user, true);
+
 		// Some authentication methods require their own user name
-		if (localuser.getUserName() == null) {
-			localuser.setUserName(NameGenerator.getURLName(localuser.getDisplayName()));
+		if (user.getUserName() == null) {
+			user.setUserName(NameGenerator.getURLName(user.getDisplayName()));
 		}
-		userDao.save(localuser);
+		
+		// Encode the password
+		user.setPassword(encoder.encode(user.getPassword()));
+		
+		// Save the new user
+		userDao.save(user);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(User localuser) {
-		userDao.update(localuser);
+	public void update(User user) throws NotAuthorizedException, ValidationException {
+		
+		// Check rights (exception is risen if user is not allowed)
+		userAuth.canUpdate(user);
+		
+		// Validate the user (exception is risen if the user is not valid)
+		userValidator.validateUser(user, false);
+		
+		// Encode the password
+		user.setPassword(encoder.encode(user.getPassword()));
+			
+		userDao.update(user);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(User localuser) {
-		userDao.delete(localuser);
+	public void delete(User user) throws NotAuthorizedException {
+		
+		// Check rights (exception is risen if user is not allowed)
+		userAuth.canDelete(user);
+		
+		userDao.delete(user);
 	}
 
 	@Override
 	@Transactional
-	public User findByName(String username) throws UserNotFoundException {
-		return userDao.findByName(username);
+	public User findByName(String userName) throws NotAuthorizedException, 
+			UserNotFoundException {
+		
+		User user = userDao.findByName(userName);
+		
+		// Check rights (exception is risen if user is not allowed)
+		userAuth.canGet(user);
+		
+		return user;
 	}
-	
+
 	@Override
 	@Transactional
-	public List<User> getUsersPage(int offset, int max) {
+	public List<User> getUsersPage(int offset, int max) throws NotAuthorizedException {
+		// Check rights (exception is risen if user is not allowed)
+		userAuth.canList();
+		
 		return userDao.getUsersPage(offset, max);
 	}
 
 	@Override
 	@Transactional
-	public List<User> getAllUsers() {
+	public List<User> getAllUsers() throws NotAuthorizedException {
+		// Check rights (exception is risen if user is not allowed)
+		userAuth.canList();
+
 		return userDao.getAllUsers();
 	}
 
@@ -106,16 +150,16 @@ public class UserBoImpl implements UserBo {
 	public User getCurrentUser() throws UserNotFoundException {
 		String userName;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
+
 		// When OAuth2 is being used, we should cast the authentication to read the correct user name
 		if (authentication instanceof ClientAuthenticationToken) {
 			userName = ((ClientAuthenticationToken) authentication).getUserProfile().getId();
 		} else {
 			userName = authentication.getName();
 		}
-		
+
 		logger.warn("User: {}", userName);
-		return this.findByName(userName);
+		return userDao.findByName(userName);
 	}
 
 }
