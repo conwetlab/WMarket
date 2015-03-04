@@ -38,7 +38,7 @@ var Offering = (function () {
         this.descriptionElement.appendChild(document.createTextNode(data.description));
 
         this.element.addEventListener('click', function (event) {
-            location.assign(location.href + data.store + '/' + data.describedIn + '/' + data.name + '/');
+            location.assign(location.href + '/' + data.store + '/' + data.describedIn + '/' + data.name + '/');
         });
     };
 

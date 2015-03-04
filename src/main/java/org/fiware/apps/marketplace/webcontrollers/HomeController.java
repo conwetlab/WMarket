@@ -32,73 +32,23 @@ package org.fiware.apps.marketplace.webcontrollers;
  * #L%
  */
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
-import javax.ws.rs.core.MediaType;
-
-import org.fiware.apps.marketplace.bo.OfferingBo;
-import org.fiware.apps.marketplace.bo.UserBo;
-import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Offering;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.servlet.ModelAndView;
 
 @Component
 @Path("/")
 public class HomeController {
 
-	@Autowired private OfferingBo offeringBo;
-	@Autowired private UserBo userBo;
-
 	@GET
-	@Produces(MediaType.TEXT_HTML)
-	public ModelAndView offeringListView() {
-		ModelMap data = new ModelMap();
-
-		try {
-			data.addAttribute("user", userBo.getCurrentUser());
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		data.addAttribute("title", "Catalogue - Marketplace");
-
-		return new ModelAndView("offering.list", data);
+	public Response home() throws URISyntaxException {
+		return Response.status(Status.TEMPORARY_REDIRECT).location(new URI("offering")).build();
 	}
-
-	@GET
-	@Produces(MediaType.TEXT_HTML)
-	@Path("{storeName}/{descriptionName}/{offeringName}/")
-	public ModelAndView offeringDetailView(
-			@PathParam("storeName") String storeName,
-			@PathParam("descriptionName") String descriptionName,
-			@PathParam("offeringName") String offeringName) {
-
-		ModelMap data = new ModelMap();
-		Offering offering;
-
-		try {
-			data.addAttribute("user", userBo.getCurrentUser());
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			offering = offeringBo.findOfferingByNameStoreAndDescription(
-					storeName, descriptionName, offeringName);
-
-			data.addAttribute("offering", offering);
-			data.addAttribute("title", offering.getDisplayName() + " - Marketplace");
-		} catch (Exception e) {
-			// TODO: Show an error page!!!!
-			e.printStackTrace();
-		}
-
-		return new ModelAndView("offering.detail", data);
-	}
+	
 }
