@@ -37,6 +37,7 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
 
@@ -45,7 +46,7 @@ public interface StoreBo {
 	
 	// Save, update, delete
 	public void save(Store store) throws NotAuthorizedException, 
-			ValidationException;
+			ValidationException, UserNotFoundException;
 	public void update(Store store) throws NotAuthorizedException,
 			ValidationException;
 	public void delete(Store store) throws NotAuthorizedException;

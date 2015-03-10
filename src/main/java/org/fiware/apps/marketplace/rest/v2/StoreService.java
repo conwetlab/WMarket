@@ -91,15 +91,8 @@ public class StoreService {
 	public Response createStore(@Context UriInfo uri, Store store) {
 		Response response;
 
-		try {				
-			// Get the current user
-			User currentUser = userBo.getCurrentUser();
-
-			store.setRegistrationDate(new Date());
-			store.setCreator(currentUser);
-			store.setLasteditor(currentUser);
-
-			// Save the new Store
+		try {
+			// Register the store given
 			storeBo.save(store);
 
 			// Generate the URI and return CREATED

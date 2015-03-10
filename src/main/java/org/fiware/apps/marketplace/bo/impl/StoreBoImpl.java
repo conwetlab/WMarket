@@ -33,14 +33,18 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
+import java.util.Date;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.fiware.apps.marketplace.utils.NameGenerator;
@@ -54,12 +58,25 @@ public class StoreBoImpl implements StoreBo{
 	@Autowired private StoreDao storeDao;
 	@Autowired private StoreAuth storeAuth;
 	@Autowired private StoreValidator storeValidator;
-		
+	@Autowired private UserBo userBo;
+
 	@Override
 	@Transactional(readOnly=false)
 	public void save(Store store) throws NotAuthorizedException, 
-			ValidationException {
-		
+			ValidationException, UserNotFoundException {
+
+		User user;
+
+		// Get the currently logged-in user
+		user = userBo.getCurrentUser();
+
+		// Set the current date as registration date of this store
+		store.setRegistrationDate(new Date());
+
+		// Set user as creator and latest editor of this store
+		store.setCreator(user);
+		store.setLasteditor(user);
+
 		// Check rights (exception is risen if user is not allowed)
 		storeAuth.canCreate(store);
 		
