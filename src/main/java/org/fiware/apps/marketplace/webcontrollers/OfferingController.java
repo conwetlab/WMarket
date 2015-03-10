@@ -128,8 +128,12 @@ public class OfferingController {
 			response = Response.serverError().entity(view).build();
 		} catch (NotAuthorizedException e) {
 			logger.info("User not authorized", e);
-			// TODO: Replace with a View to show errors and set the error properly
-			view = null;
+
+			data.addAttribute("title", "Marketplace");
+			data.addAttribute("statusCode", 401);
+			data.addAttribute("statusPhrase", "Unauthorized");
+			data.addAttribute("content", "Sorry, you must sign in to view this page.");
+			view = new ModelAndView("core.httpresponse", data);
 			response = Response.status(Status.UNAUTHORIZED).entity(view).build();
 		} catch (OfferingNotFoundException e) {
 			logger.info("Offering not found", e);
