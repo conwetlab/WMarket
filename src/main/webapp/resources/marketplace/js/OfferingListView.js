@@ -4,90 +4,57 @@
  */
 
 
-var wmarket = {
-
-    navbar: {
-        search: $('#search'),
-        searchField: $('#search-field'),
-        searchFilters: $('#toggle-left-sidebar'),
-        userPreferences: $('#toggle-right-sidebar')
-    },
-
-    loading: $('.loading'),
-
-    sidebars: {
-        left: $('#left-sidebar'),
-        right: $('#right-sidebar')
-    },
-
-    content: {
-        storeList: $('#store-list'),
-        searchResults: $('#search-results')
-    }
-
-};
-
 $(function () {
 
-    wmarket.navbar.search.attr('disabled', "disabled");
-    wmarket.navbar.searchField.attr('disabled', "disabled");
+    "use strict";
 
-    wmarket.navbar.searchFilters.on('click', function (event) {
+    WMarket.layout.toggleFilters.attr('disabled', false);
+
+    WMarket.layout.toggleFilters.on('click', function (event) {
         event.preventDefault();
 
         if (this.classList.contains('active')) {
             this.classList.remove('active');
-            wmarket.sidebars.left.removeClass('active');
+            WMarket.layout.menuFilters.removeClass('active');
         } else {
             this.classList.add('active');
-            wmarket.sidebars.left.addClass('active');
+            WMarket.layout.menuFilters.addClass('active');
         }
 
         event.stopPropagation();
     });
 
-    wmarket.navbar.userPreferences.on('click', function (event) {
-        event.preventDefault();
+    WMarket.requests.read({
+        namespace: "offerings:collection",
+        containment: WMarket.layout.offeringList,
+        alert: WMarket.alerts.warning("No offering available.", 'col-sm-10 col-md-8 col-lg-6'),
+        onSuccess: function (collection, containment) {
+            var i, offering;
 
-        if (this.classList.contains('active')) {
-            this.classList.remove('active');
-            wmarket.sidebars.right.removeClass('active');
-        } else {
-            this.classList.add('active');
-            wmarket.sidebars.right.addClass('active');
-        }
-
-        event.stopPropagation();
-    });
-
-    $.ajax({
-        type: 'GET',
-        url: "/FiwareMarketplace/api/v2/offerings/",
-        dataType: 'json',
-        success: function (data, textStatus, jqXHR) {
-            var offering;
-
-            wmarket.loading.remove();
-
-            for (var i = 0; i < data.offerings.length; i++) {
-                offering = new Offering(data.offerings[i]);
-                wmarket.content.searchResults.append(offering.element);
+            for (i = 0; i < collection.length; i++) {
+                offering = new Offering(collection[i]);
+                containment.append(offering.element);
             }
+        },
+        onFailure: function () {
+            // TODO: code that identify what error was occurred.
         }
     });
 
-    $.ajax({
-        type: 'GET',
-        url: "/FiwareMarketplace/api/v2/store/",
-        dataType: 'json',
-        success: function (data, textStatus, jqXHR) {
-            var store;
+    WMarket.requests.read({
+        namespace: "stores:collection",
+        containment: WMarket.layout.storeList,
+        alert: WMarket.alerts.warning("No web store available."),
+        onSuccess: function (collection, containment) {
+            var i, store;
 
-            for (var i = 0; i < data.stores.length; i++) {
-                store = new Store(data.stores[i]);
-                store.element.classList.add('list-item');
-                wmarket.content.storeList.append(store.element);
+            for (i = 0; i < collection.length; i++) {
+                store = new Store(collection[i]);
+                containment.append(store.element);
             }
+        },
+        onFailure: function () {
+            // TODO: code that identify what error was occurred.
         }
     });
 
