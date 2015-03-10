@@ -79,13 +79,16 @@ public class OfferingController {
 			view = new ModelAndView("offering.list", data);
 			response = Response.ok().entity(view).build();
 		} catch (UserNotFoundException e) {
-			logger.warn("User could not be found", e);
-			
-			// TODO: Replace with a View to show errors and set the error properly
-			view = null;
+			logger.warn("User not found", e);
+
+			data.addAttribute("title", "Marketplace");
+			data.addAttribute("statusCode", 500);
+			data.addAttribute("statusPhrase", "Internal Server Error");
+			data.addAttribute("content", "Sorry, we encountered an unexpected situation which related to the user.");
+			view = new ModelAndView("core.httpresponse", data);
 			response = Response.serverError().entity(view).build();
 		}
-		
+
 		return response;
 	}
 
@@ -114,9 +117,14 @@ public class OfferingController {
 			response = Response.ok().entity(view).build();
 
 		} catch (UserNotFoundException e) {
-			logger.warn("User nof found exception", e);
-			// TODO: Replace with a View to show errors and set the error properly
-			view = null;
+			logger.warn("User not found", e);
+
+			data.addAttribute("title", "Marketplace");
+			data.addAttribute("statusCode", 500);
+			data.addAttribute("statusPhrase", "Internal Server Error");
+			data.addAttribute("content", "User not found");
+			data.addAttribute("content", "Sorry, we encountered an unexpected situation related to the user.");
+			view = new ModelAndView("core.httpresponse", data);
 			response = Response.serverError().entity(view).build();
 		} catch (NotAuthorizedException e) {
 			logger.info("User not authorized", e);
