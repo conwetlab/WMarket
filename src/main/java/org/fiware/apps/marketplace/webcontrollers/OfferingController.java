@@ -137,18 +137,30 @@ public class OfferingController {
 			response = Response.status(Status.UNAUTHORIZED).entity(view).build();
 		} catch (OfferingNotFoundException e) {
 			logger.info("Offering not found", e);
-			// TODO: Replace with a View to show errors and set the error properly
-			view = null;
+
+			data.addAttribute("title", "Marketplace");
+			data.addAttribute("statusCode", 404);
+			data.addAttribute("statusPhrase", "Not Found");
+			data.addAttribute("content", "Sorry, we couldn't find the offering called '<name>'.".replaceFirst("<name>", offeringName));
+			view = new ModelAndView("core.httpresponse", data);
 			response = Response.status(Status.NOT_FOUND).entity(view).build();
 		} catch (StoreNotFoundException e) {
 			logger.info("Store not found", e);
-			// TODO: Replace with a View to show errors and set the error properly
-			view = null;
+
+			data.addAttribute("title", "Marketplace");
+			data.addAttribute("statusCode", 404);
+			data.addAttribute("statusPhrase", "Not Found");
+			data.addAttribute("content", "Sorry, we couldn't find the store called '<name>'.".replaceFirst("<name>", storeName));
+			view = new ModelAndView("core.httpresponse", data);
 			response = Response.status(Status.NOT_FOUND).entity(view).build();
 		} catch (DescriptionNotFoundException e) {
 			logger.info("Description not found", e);
-			// TODO: Replace with a View to show errors and set the error properly
-			view = null;
+
+			data.addAttribute("title", "Marketplace");
+			data.addAttribute("statusCode", 404);
+			data.addAttribute("statusPhrase", "Not Found");
+			data.addAttribute("content", "Sorry, we couldn't find the description called '<name>'.".replaceFirst("<name>", descriptionName));
+			view = new ModelAndView("core.httpresponse", data);
 			response = Response.status(Status.NOT_FOUND).entity(view).build();
 		}
 
