@@ -5,6 +5,11 @@
 
 <tiles-definitions>
 
+	<!-- Core - HTTP Response -->
+	<definition name="core.httpresponse" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/core/http-response.jsp" />
+	</definition>
+
 	<!-- Offerings - List View -->
 	<definition name="offering.list" template="/WEB-INF/views/base.jsp">
 		<put-attribute name="left-sidebar" value="/WEB-INF/views/offerings/list-sidebar.jsp" />
