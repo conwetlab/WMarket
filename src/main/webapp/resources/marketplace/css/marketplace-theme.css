@@ -39,10 +39,20 @@ input[type="submit"] {
 
 .btn {
     outline: none;
-    padding: 0px 8px;
+    padding: 0px 5px;
     border: solid 1px transparent;
     border-radius: 4px;
-    min-width: 50px;
+    min-width: 35px;
+}
+
+/* Tablets, Desktops and Large Desktops */ 
+@media (min-width: 768px) {
+
+    .btn {
+        padding: 0px 8px;
+        min-width: 50px;
+    }
+
 }
 
 .btn:focus,
