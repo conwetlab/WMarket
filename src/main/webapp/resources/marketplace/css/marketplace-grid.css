@@ -78,67 +78,155 @@ body {
  *  DEFAULT THEME - COLUMNS
  ***************************************************************************************/
 
-.row > [class*="col-smartphone"]:not(:last-child):not([class~="col-smartphone-10"]) {
+.row > [class*="col-xs"]:not(:last-child):not([class~="col-xs-10"]) {
     padding-right: 5px !important;
 }
 
-.row > [class*="col-smartphone"]:not(:first-child):not([class~="col-smartphone-10"]) {
+.row > [class*="col-xs"]:not(:first-child):not([class~="col-xs-10"]) {
     padding-left: 5px !important;
 }
 
-.row > [class*="col-smartphone"] {
+.row > [class*="col-xs"] {
     display: block;
     float: left;
     padding: 0px 0px;
 }
 
-.col-smartphone-2 {
+.col-xs-1 {
+    width: 10%;
+}
+
+.col-xs-2 {
     width: 20%;
 }
 
-.col-smartphone-4 {
+.col-xs-3 {
+    width: 30%;
+}
+
+.col-xs-4 {
     width: 40%;
 }
 
-.col-smartphone-8 {
+.col-xs-5 {
+    width: 50%;
+}
+
+.col-xs-6 {
+    width: 60%;
+}
+
+.col-xs-7 {
+    width: 70%;
+}
+
+.col-xs-8 {
     width: 80%;
 }
 
-.col-smartphone-10 {
+.col-xs-9 {
+    width: 90%;
+}
+
+.col-xs-10 {
     width: 100%;
 }
 
 /* Tablets */
 @media (min-width: 768px) {
 
-    .row > [class*="col-tablet"]:not(:last-child) {
+    .row > [class*="col-md"]:not(:last-child) {
         padding-right: 5px !important;
     }
 
-    .row > [class*="col-tablet"]:not(:first-child) {
+    .row > [class*="col-md"]:not(:first-child) {
         padding-left: 5px !important;
     }
 
-    .row > [class*="col-tablet"] {
+    .row > [class*="col-md"] {
         display: block;
         float: left;
         padding: 0px 0px;
     }
 
-    .col-tablet-1 {
+    .col-md-1 {
         width: 10%;
     }
 
-    .col-tablet-3 {
+    .col-md-2 {
+        width: 20%;
+    }
+
+    .col-md-3 {
         width: 30%;
     }
 
-    .col-tablet-5 {
+    .col-md-4 {
+        width: 40%;
+    }
+
+    .col-md-5 {
         width: 50%;
     }
 
-    .col-tablet-7 {
+    .col-md-6 {
+        width: 60%;
+    }
+
+    .col-md-7 {
         width: 70%;
+    }
+
+    .col-md-8 {
+        width: 80%;
+    }
+
+    .col-md-9 {
+        width: 90%;
+    }
+
+    .col-md-10 {
+        width: 100%;
+    }
+
+    .col-md-offset-1 {
+        margin-left: 10%;
+    }
+
+    .col-md-offset-2 {
+        margin-left: 20%;
+    }
+
+    .col-md-offset-3 {
+        margin-left: 30%;
+    }
+
+    .col-md-offset-4 {
+        margin-left: 40%;
+    }
+
+    .col-md-offset-5 {
+        margin-left: 50%;
+    }
+
+    .col-md-offset-6 {
+        margin-left: 60%;
+    }
+
+    .col-md-offset-7 {
+        margin-left: 70%;
+    }
+
+    .col-md-offset-8 {
+        margin-left: 80%;
+    }
+
+    .col-md-offset-9 {
+        margin-left: 90%;
+    }
+
+    .col-md-offset-10 {
+        margin-left: 100%;
     }
 
 }
@@ -146,34 +234,78 @@ body {
 /* Desktops, Large Desktops */
 @media (min-width: 992px) {
 
-    .row > [class*="col-desktop"]:not(:last-child) {
+    .row > [class*="col-lg"]:not(:last-child) {
         padding-right: 5px !important;
     }
 
-    .row > [class*="col-desktop"]:not(:first-child) {
+    .row > [class*="col-lg"]:not(:first-child) {
         padding-left: 5px !important;
     }
 
-    .row > [class*="col-desktop"] {
+    .row > [class*="col-lg"] {
         display: block;
         float: left;
         padding: 0px 0px;
     }
 
-    .col-desktop-1 {
+    .col-lg-1 {
         width: 10%;
     }
 
-    .col-desktop-3 {
+    .col-lg-2 {
+        width: 20%;
+    }
+
+    .col-lg-3 {
         width: 30%;
     }
 
-    .col-desktop-5 {
+    .col-lg-4 {
+        width: 40%;
+    }
+
+    .col-lg-5 {
         width: 50%;
     }
 
-    .col-desktop-7 {
+    .col-lg-6 {
+        width: 60%;
+    }
+
+    .col-lg-7 {
         width: 70%;
+    }
+
+    .col-lg-8 {
+        width: 80%;
+    }
+
+    .col-lg-9 {
+        width: 90%;
+    }
+
+    .col-lg-10 {
+        width: 100%;
+    }
+
+    .col-lg-offset-1 {
+        margin-left: 10%;
+    }
+
+    .col-lg-offset-2 {
+        margin-left: 20%;
+    }
+
+    .col-lg-offset-3 {
+        margin-left: 30%;
+    }
+
+    .col-lg-offset-4 {
+        margin-left: 40%;
+    }
+
+    .col-lg-offset-5 {
+        margin-left: 50%;
     }
 
 }
