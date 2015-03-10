@@ -21,7 +21,7 @@
     border-top: solid 1px rgb(215, 225, 225);
 }
 
-.loading {
+.loading-state {
     padding: 10px 0px;
     font: normal 700 30px/1.15 Helvetica, Arial, sans-serif;
     text-align: center;
