@@ -150,6 +150,47 @@ input[type="submit"] {
 }
 
 /***************************************************************************************
+ *  DEFAULT THEME - ALERT
+ ***************************************************************************************/
+
+.alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.alert-heading {
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - ALERT - CONTEXTUAL CLASS
+ ***************************************************************************************/
+
+.alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.alert-warning {
+    color: rgb(135, 100, 60);
+    background-color: rgb(240, 240, 220);
+    border-color: rgb(230, 210, 180);
+}
+
+.alert-danger {
+    color: rgb(170, 70, 65);
+    background-color: rgb(230, 210, 210);
+    border-color: rgb(205, 175, 180);
+}
+
+/***************************************************************************************
  *  DEFAULT THEME - FORM CONTROL
  ***************************************************************************************/
 
