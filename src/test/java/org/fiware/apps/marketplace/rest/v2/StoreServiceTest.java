@@ -132,7 +132,7 @@ public class StoreServiceTest {
 		Response res = storeRegistrationService.createStore(uri, store);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 
 		// Verify mocks
 		verify(storeBoMock).save(store);
@@ -252,7 +252,7 @@ public class StoreServiceTest {
 		Response res = storeRegistrationService.updateStore(NAME, newStore);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 
 		// Verify mocks
 		verify(storeBoMock).update(store);	
@@ -421,7 +421,7 @@ public class StoreServiceTest {
 		Response res = storeRegistrationService.deleteStore(NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 
 		// Verify mocks
 		verify(storeBoMock).delete(store);	
@@ -494,7 +494,7 @@ public class StoreServiceTest {
 		Response res = storeRegistrationService.getStore(NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 		
 		// Verify mocks
 		verify(storeBoMock).findByName(NAME);	
@@ -557,7 +557,7 @@ public class StoreServiceTest {
 		Response res = storeRegistrationService.listStores(0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 		
 		// Verify
 		verify(storeBoMock).getStoresPage(0, 100);

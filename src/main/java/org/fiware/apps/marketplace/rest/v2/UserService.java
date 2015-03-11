@@ -42,7 +42,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -108,7 +107,7 @@ public class UserService {
 			
 			response = Response.created(newURI).build();
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (DataIntegrityViolationException ex) {
@@ -123,7 +122,7 @@ public class UserService {
 
 	}
 
-	@PUT
+	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/{username}")	
 	public Response updateUser(@PathParam("username") String username, User user) {
@@ -157,7 +156,7 @@ public class UserService {
 			userBo.update(userToBeUpdated);
 			response = Response.status(Status.OK).build();
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (DataIntegrityViolationException ex) {
@@ -183,7 +182,7 @@ public class UserService {
 			userBo.delete(userToBeDeleted);
 			response = Response.status(Status.NO_CONTENT).build();	
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
@@ -209,7 +208,7 @@ public class UserService {
 			user.setEmail(null);
 			response = Response.status(Status.OK).entity(user).build();
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
@@ -243,7 +242,7 @@ public class UserService {
 				
 				return Response.status(Status.OK).entity(new Users(users)).build();
 			} catch (NotAuthorizedException ex) {
-				response = ERROR_UTILS.unauthorizedResponse(ex);
+				response = ERROR_UTILS.notAuthorizedResponse(ex);
 			} catch (Exception ex) {
 				response = ERROR_UTILS.internalServerError(ex);
 			}	

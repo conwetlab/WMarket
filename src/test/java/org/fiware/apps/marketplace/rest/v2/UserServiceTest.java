@@ -124,7 +124,7 @@ public class UserServiceTest {
 		Response res = userRegistrationService.createUser(uri, user);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 
 		// Verify mocks
 		verify(userBoMock).save(user);
@@ -228,7 +228,7 @@ public class UserServiceTest {
 		Response res = userRegistrationService.updateUser(USER_NAME, newUser);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 
 		// Verify mocks
 		verify(userBoMock).findByName(USER_NAME);
@@ -456,7 +456,7 @@ public class UserServiceTest {
 		Response res = userRegistrationService.deleteUser(USER_NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 
 		// Verify mocks
 		verify(userBoMock).findByName(USER_NAME);
@@ -530,7 +530,7 @@ public class UserServiceTest {
 		Response res = userRegistrationService.getUser(USER_NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 	}
 	
 	@Test
@@ -591,7 +591,7 @@ public class UserServiceTest {
 		Response res = userRegistrationService.listUsers(0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 	}
 	
 	private void testListUsersInvalidParams(int offset, int max) {

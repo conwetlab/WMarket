@@ -41,7 +41,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -114,7 +113,7 @@ public class DescriptionService {
 			
 			response = Response.created(newURI).build();
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (JenaException ex) {
@@ -140,7 +139,7 @@ public class DescriptionService {
 	}
 
 
-	@PUT
+	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/{descriptionName}")
 	public Response updateDescription(@PathParam("storeName") String storeName, 
@@ -176,7 +175,7 @@ public class DescriptionService {
 			response = Response.status(Status.OK).build();
 				
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (JenaException ex) {
@@ -214,7 +213,7 @@ public class DescriptionService {
 			descriptionBo.delete(description);
 			response = Response.status(Status.NO_CONTENT).build();
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (StoreNotFoundException ex) {
@@ -239,7 +238,7 @@ public class DescriptionService {
 
 			response = Response.status(Status.OK).entity(description).build();
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (StoreNotFoundException ex) {
@@ -270,7 +269,7 @@ public class DescriptionService {
 				response = Response.status(Status.OK).entity(returnedDescriptions).build();
 					
 			} catch (NotAuthorizedException ex) {
-				response = ERROR_UTILS.unauthorizedResponse(ex);
+				response = ERROR_UTILS.notAuthorizedResponse(ex);
 			} catch (StoreNotFoundException ex) {
 				response = ERROR_UTILS.entityNotFoundResponse(ex);
 			} catch (Exception ex) {

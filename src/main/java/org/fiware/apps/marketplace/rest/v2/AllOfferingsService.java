@@ -72,14 +72,17 @@ public class AllOfferingsService {
 			response = ERROR_UTILS.badRequestResponse(String.format(
 					"offset (%d) and/or max (%d) are not valid", offset, max));
 		} else {
-				try {
-					List<Offering> descriptionsPage = offeringBo.getOfferingsPage(offset, max);
-					Offerings returnedOfferings = new Offerings();
-					returnedOfferings.setOfferings(descriptionsPage);
-					response = Response.status(Status.OK).entity(returnedOfferings).build();
-				} catch (NotAuthorizedException ex) {
-					response = ERROR_UTILS.unauthorizedResponse(ex);
-				}
+			try {
+				List<Offering> descriptionsPage = offeringBo.getOfferingsPage(offset, max);
+				Offerings returnedOfferings = new Offerings();
+				returnedOfferings.setOfferings(descriptionsPage);
+				response = Response.status(Status.OK).entity(returnedOfferings).build();
+			} catch (NotAuthorizedException ex) {
+				response = ERROR_UTILS.notAuthorizedResponse(ex);
+			} catch (Exception ex) {
+				response = ERROR_UTILS.internalServerError(ex);
+			}
+
 		}
 		
 		return response;

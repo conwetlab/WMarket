@@ -41,82 +41,54 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.OfferingBo;
-import org.fiware.apps.marketplace.bo.StoreBo;
-import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
-import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Path("/api/v2/store/{storeName}/description/{descriptionName}/offering/")
-public class OfferingService {
-	
+@Path("/api/v2/store/{storeName}/offering/")
+public class OfferingsInStoreService {
+
 	// OBJECT ATTRIBUTES //
 	@Autowired private OfferingBo offeringBo;
-	@Autowired private DescriptionBo descriptionBo;
-	@Autowired private StoreBo storeBo;
-	
+
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
 			LoggerFactory.getLogger(DescriptionService.class));
-	
+
 	@GET
 	@Produces({"application/xml", "application/json"})
-	@Path("/{offeringName}")
-	public Response getOffering(
-			@PathParam("storeName") String storeName, 
-			@PathParam("descriptionName") String descriptionName,
-			@PathParam("offeringName") String offeringName) {
-		
-		Response response;
-		
-		try {
-			Offering offering = offeringBo.findOfferingByNameStoreAndDescription(
-					storeName, descriptionName, offeringName);
-			response = Response.status(Status.OK).entity(offering).build();
-		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.notAuthorizedResponse(ex);
-		} catch (OfferingNotFoundException | StoreNotFoundException | 
-				DescriptionNotFoundException ex) {
-			response = ERROR_UTILS.entityNotFoundResponse(ex);
-		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex);
-		}
-		
-		return response;
-	}
-	
-	@GET
-	@Produces({"application/xml", "application/json"})
-	@Path("/")
-	public Response listOfferingsInDescription(
-			@PathParam("storeName") String storeName, 
-			@PathParam("descriptionName") String descriptionName,
+	public Response listOfferingsInStore(
+			@PathParam("storeName") String storeName,
 			@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max) {
-		
+
 		Response response;
-		
-		try {			
-			Offerings offerings = new Offerings(offeringBo.getDescriptionOfferingsPage(
-					storeName, descriptionName, offset, max));
-			response = Response.status(Status.OK).entity(offerings).build();
-		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.notAuthorizedResponse(ex);
-		} catch (DescriptionNotFoundException | StoreNotFoundException ex) {
-			response = ERROR_UTILS.entityNotFoundResponse(ex);
-		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex);
+
+		if (offset < 0 || max <= 0) {
+			// Offset and Max should be checked
+			response = ERROR_UTILS.badRequestResponse(String.format(
+					"offset (%d) and/or max (%d) are not valid", offset, max));
+		} else {
+			try {
+				Offerings offerings = new Offerings(offeringBo.getStoreOfferingsPage(
+						storeName, offset, max));
+				response = Response.status(Status.OK).entity(offerings).build();
+			} catch (NotAuthorizedException ex) {
+				response = ERROR_UTILS.notAuthorizedResponse(ex);
+			} catch (StoreNotFoundException ex) {
+				response = ERROR_UTILS.entityNotFoundResponse(ex);
+			} catch (Exception ex) {
+				response = ERROR_UTILS.internalServerError(ex);
+			}
+
 		}
 		
 		return response;
 	}
-	
+
 }

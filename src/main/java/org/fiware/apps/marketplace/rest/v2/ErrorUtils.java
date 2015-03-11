@@ -97,11 +97,11 @@ public class ErrorUtils {
 				new APIError(ErrorType.NOT_FOUND, ex.getMessage())).build();
 	}
 	
-	public Response unauthorizedResponse(NotAuthorizedException exception) {
+	public Response notAuthorizedResponse(NotAuthorizedException exception) {
 		String message = exception.toString();
 		logger.warn(message);
-		return Response.status(Status.UNAUTHORIZED).entity(
-				new APIError(ErrorType.UNAUTHORIZED, message)).build();
+		return Response.status(Status.FORBIDDEN).entity(
+				new APIError(ErrorType.FORBIDDEN, message)).build();
 
 	}
 	
