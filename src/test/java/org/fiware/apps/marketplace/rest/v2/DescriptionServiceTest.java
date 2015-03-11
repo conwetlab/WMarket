@@ -75,7 +75,7 @@ import org.mockito.stubbing.Answer;
 
 import com.hp.hpl.jena.shared.JenaException;
 
-public class DescriptionRegistrationServiceTest {
+public class DescriptionServiceTest {
 
 	@Mock private UserBo userBoMock;
 	@Mock private StoreBo storeBoMock;
