@@ -79,7 +79,7 @@ public class OfferingsInStoreService {
 						storeName, offset, max));
 				response = Response.status(Status.OK).entity(offerings).build();
 			} catch (NotAuthorizedException ex) {
-				response = ERROR_UTILS.unauthorizedResponse(ex);
+				response = ERROR_UTILS.notAuthorizedResponse(ex);
 			} catch (StoreNotFoundException ex) {
 				response = ERROR_UTILS.entityNotFoundResponse(ex);
 			} catch (Exception ex) {

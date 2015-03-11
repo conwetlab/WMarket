@@ -111,7 +111,7 @@ public class StoreService {
 			response = Response.created(newURI).build();
 
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (UserNotFoundException ex) {
@@ -161,7 +161,7 @@ public class StoreService {
 			response = Response.status(Status.OK).build();
 
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
 		} catch (UserNotFoundException ex) {
@@ -190,7 +190,7 @@ public class StoreService {
 			storeBo.delete(store);
 			response = Response.status(Status.NO_CONTENT).build();		// Return 204 No Content
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
@@ -212,7 +212,7 @@ public class StoreService {
 			// Return the store
 			response = Response.status(Status.OK).entity(store).build();
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
@@ -237,7 +237,7 @@ public class StoreService {
 				List<Store> stores = storeBo.getStoresPage(offset, max);
 				response = Response.status(Status.OK).entity(new Stores(stores)).build();
 			} catch (NotAuthorizedException ex) {
-				response = ERROR_UTILS.unauthorizedResponse(ex);
+				response = ERROR_UTILS.notAuthorizedResponse(ex);
 			} catch (Exception ex) {
 				response = ERROR_UTILS.internalServerError(ex);
 			}

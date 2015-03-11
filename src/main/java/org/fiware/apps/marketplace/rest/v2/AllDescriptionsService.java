@@ -81,7 +81,7 @@ public class AllDescriptionsService {
 					returnedDescriptions.setDescriptions(descriptionsPage);
 					response = Response.status(Status.OK).entity(returnedDescriptions).build();
 				} catch (NotAuthorizedException ex) {
-					response = ERROR_UTILS.unauthorizedResponse(ex);
+					response = ERROR_UTILS.notAuthorizedResponse(ex);
 				} catch (Exception ex) {
 					response = ERROR_UTILS.internalServerError(ex);
 				}

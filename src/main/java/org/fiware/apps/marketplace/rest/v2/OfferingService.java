@@ -82,7 +82,7 @@ public class OfferingService {
 					storeName, descriptionName, offeringName);
 			response = Response.status(Status.OK).entity(offering).build();
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (OfferingNotFoundException | StoreNotFoundException | 
 				DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
@@ -109,7 +109,7 @@ public class OfferingService {
 					storeName, descriptionName, offset, max));
 			response = Response.status(Status.OK).entity(offerings).build();
 		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.unauthorizedResponse(ex);
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (DescriptionNotFoundException | StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {

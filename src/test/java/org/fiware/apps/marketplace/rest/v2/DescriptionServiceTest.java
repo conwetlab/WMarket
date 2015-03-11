@@ -148,7 +148,7 @@ public class DescriptionServiceTest {
 		Response res = descriptionRegistrationService.createDescription(uri, STORE_NAME, description);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 
 		// Verify mocks
 		verify(descriptionBoMock).save(description);
@@ -292,7 +292,7 @@ public class DescriptionServiceTest {
 				updateDescription(STORE_NAME, DESCRIPTION_NAME, newDescription);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 
 		// Verify mocks
 		verify(descriptionBoMock).update(description);	
@@ -512,7 +512,7 @@ public class DescriptionServiceTest {
 				STORE_NAME, DESCRIPTION_NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 
 		// Verify mocks
 		verify(descriptionBoMock).delete(description);	
@@ -603,7 +603,7 @@ public class DescriptionServiceTest {
 		Response res = descriptionRegistrationService.getDescription(STORE_NAME, DESCRIPTION_NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 	}
 	
 	@Test
@@ -671,7 +671,7 @@ public class DescriptionServiceTest {
 		Response res = descriptionRegistrationService.listDescriptionsInStore(STORE_NAME, 0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
 	}
 	
 	

@@ -80,7 +80,7 @@ public class AllDescriptionsServiceTest {
 		Response res = allDescriptionsService.listDescriptions(0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, 
 				e.toString());
 	}
 	

@@ -82,7 +82,7 @@ public class AllOfferingsServiceTest {
 		Response res = allOfferingsService.listOfferings(0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, 
 				e.toString());
 	}
 	

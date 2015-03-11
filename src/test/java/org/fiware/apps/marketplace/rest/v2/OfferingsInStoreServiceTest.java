@@ -167,7 +167,7 @@ public class OfferingsInStoreServiceTest {
 		when(user.getUserName()).thenReturn(userName);
 		Exception e = new NotAuthorizedException(user, "list offerings");
 	
-		testListOfferingsInStoreException(e, 401, ErrorType.UNAUTHORIZED, e.toString());
+		testListOfferingsInStoreException(e, 403, ErrorType.FORBIDDEN, e.toString());
 	}
 	
 }
