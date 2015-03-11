@@ -1,10 +1,34 @@
 package org.fiware.apps.marketplace.rest.v2;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.model.ErrorType;
+import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Offerings;
+import org.fiware.apps.marketplace.model.User;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,32 +56,10 @@ package org.fiware.apps.marketplace.rest.v2;
  * #L%
  */
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.core.Response;
-
-import org.fiware.apps.marketplace.bo.DescriptionBo;
-import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.model.ErrorType;
-import org.fiware.apps.marketplace.model.Description;
-import org.fiware.apps.marketplace.model.Descriptions;
-import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.rest.v2.AllDescriptionsService;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-public class AllDescriptionsServiceTest {
+public class AllOfferingsServiceTest {
 	
-	@Mock private DescriptionBo descriptionBoMock;
-	@InjectMocks private AllDescriptionsService allDescriptionsService;
+	@Mock private OfferingBo offeringBoMock;
+	@InjectMocks private AllOfferingsService allOfferingsService;
 	
 	private static final String OFFSET_MAX_INVALID = "offset (%d) and/or max (%d) are not valid";
 	
@@ -65,29 +67,28 @@ public class AllDescriptionsServiceTest {
 	public void initMocks() {
 		MockitoAnnotations.initMocks(this);
 	}
-
+	
 	@Test
-	public void testListAllDescriptionsNotAllowed() throws NotAuthorizedException {
+	public void testListAllOfferingNotAllowed() throws NotAuthorizedException {
 		String userName = "example-user";
 		
 		// Mocks
 		User user = mock(User.class);
 		when(user.getUserName()).thenReturn(userName);
-		Exception e = new NotAuthorizedException(user, "list descriptions");
-		doThrow(e).when(descriptionBoMock).getDescriptionsPage(anyInt(), anyInt());
+		Exception e = new NotAuthorizedException(user, "list offerings");
+		doThrow(e).when(offeringBoMock).getOfferingsPage(anyInt(), anyInt());
 
 		// Call the method
-		Response res = allDescriptionsService.listDescriptions(0, 100);
+		Response res = allOfferingsService.listOfferings(0, 100);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 401, ErrorType.UNAUTHORIZED, 
 				e.toString());
 	}
 	
-	
-	private void testListAllDescriptionsInvalidParams(int offset, int max) {
+	private void testListAllOfferingsInvalidParams(int offset, int max) {
 		// Call the method
-		Response res = allDescriptionsService.listDescriptions(offset, max);
+		Response res = allOfferingsService.listOfferings(offset, max);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -96,44 +97,44 @@ public class AllDescriptionsServiceTest {
 	
 	@Test
 	public void testListAllDescriptionsInvalidOffset() {
-		testListAllDescriptionsInvalidParams(-1, 100);
+		testListAllOfferingsInvalidParams(-1, 100);
 	}
 	
 	@Test
 	public void testListAllDescriptionsInvalidMax() {
-		testListAllDescriptionsInvalidParams(0, -1);
+		testListAllOfferingsInvalidParams(0, -1);
 	}
 	
 	@Test
 	public void testListAllDescriptionsInvalidOffsetMax() {
-		testListAllDescriptionsInvalidParams(-1, -1);
+		testListAllOfferingsInvalidParams(-1, -1);
 	}
 	
 	@Test
-	public void testListAllDescriptionsGetNoErrors() throws NotAuthorizedException {
-		List<Description> descriptions = new ArrayList<Description>();
+	public void testListAllOfferingsGetNoErrors() throws NotAuthorizedException {
+		List<Offering> oferrings = new ArrayList<Offering>();
 		for (int i = 0; i < 3; i++) {
-			Description offeringDescription = new Description();
-			offeringDescription.setId(i);
-			descriptions.add(offeringDescription);
+			Offering offering = new Offering();
+			offering.setId(i);
+			oferrings.add(offering);
 		}
 		
 		// Mocks
-		when(descriptionBoMock.getDescriptionsPage(anyInt(), anyInt())).
-				thenReturn(descriptions);
+		when(offeringBoMock.getOfferingsPage(anyInt(), anyInt())).
+				thenReturn(oferrings);
 		
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allDescriptionsService.listDescriptions(offset, max);
+		Response res = allOfferingsService.listOfferings(offset, max);
 		
 		// Verify
-		verify(descriptionBoMock).getDescriptionsPage(offset, max);
+		verify(offeringBoMock).getOfferingsPage(offset, max);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
-		assertThat(((Descriptions) res.getEntity()).
-				getDescriptions()).isEqualTo(descriptions);
+		assertThat(((Offerings) res.getEntity()).
+				getOfferings()).isEqualTo(oferrings);
 	}
 	
 	@Test
@@ -141,17 +142,18 @@ public class AllDescriptionsServiceTest {
 		// Mocks
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg)))
-				.when(descriptionBoMock).getDescriptionsPage(anyInt(), anyInt());
+				.when(offeringBoMock).getOfferingsPage(anyInt(), anyInt());
 
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allDescriptionsService.listDescriptions(offset, max);
+		Response res = allOfferingsService.listOfferings(offset, max);
 		
 		// Verify
-		verify(descriptionBoMock).getDescriptionsPage(offset, max);
+		verify(offeringBoMock).getOfferingsPage(offset, max);
 		
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
 	}
+
 }
