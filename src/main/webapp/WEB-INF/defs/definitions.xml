@@ -5,9 +5,9 @@
 
 <tiles-definitions>
 
-	<!-- Core - HTTP Response -->
-	<definition name="core.httpresponse" template="/WEB-INF/views/base.jsp">
-		<put-attribute name="content" value="/WEB-INF/views/core/http-response.jsp" />
+	<!-- Core - Error View -->
+	<definition name="core.error" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/core/error.jsp" />
 	</definition>
 
 	<!-- Offerings - List View -->
