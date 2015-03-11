@@ -1,29 +1,5 @@
 package org.fiware.apps.marketplace.rest.v2;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.core.Response;
-
-import org.fiware.apps.marketplace.bo.OfferingBo;
-import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.model.ErrorType;
-import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.Offerings;
-import org.fiware.apps.marketplace.model.User;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 /*
  * #%L
  * FiwareMarketplace
@@ -55,6 +31,30 @@ import org.mockito.MockitoAnnotations;
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.model.ErrorType;
+import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Offerings;
+import org.fiware.apps.marketplace.model.User;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class AllOfferingsServiceTest {
 	
