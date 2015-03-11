@@ -22,11 +22,20 @@
           <a class="navbar-brand" href="${ pageContext.request.contextPath }">WMarket</a>
         </div><!-- /.navbar-header -->
 
+        <c:choose>
+          <c:when test="${ not empty user }">
+
+            <div class="navbar-element pull-left">
+              <button id="toggle-left-sidebar" class="btn btn-default" type="button">
+                <span class="fa fa-bars"></span>
+              </button>
+            </div><!-- /.navbar-element -->
+
+          </c:when>
+        </c:choose>
+
         <form class="navbar-element pull-left">
           <div class="form-field">
-            <button id="toggle-left-sidebar" class="btn btn-default btn-addon" type="button">
-              <span class="fa fa-bars"></span>
-            </button>
             <input id="search-field" class="form-control" type="text" placeholder="TODO: Not implemented yet.">
             <button id="search" class="btn btn-default btn-addon" type="submit">
               <span class="fa fa-search"></span>
@@ -38,7 +47,7 @@
           <c:when test="${ not empty user }">
 
             <div class="navbar-element pull-right">
-              <button id="toggle-right-sidebar" class="btn btn-primary-lighter" type="submit">
+              <button id="toggle-right-sidebar" class="btn btn-primary-lighter" type="button">
                 <span class="fa fa-user"></span>
                 <span class="text-plain text-truncate hidden-smartphone">${ user.displayName }</span>
               </button>
@@ -76,10 +85,25 @@
           </div>
         </div><!-- /.panel -->
 
+		<div id="left-sidebar" class="panel panel-default panel-sliding panel-sliding-left">
+		  <div class="panel-heading">
+		    <span class="panel-title">All search filters</span>
+		  </div><!-- /.panel-heading -->
+		  <div class="panel-body">
+		    <div class="title-descriptions">Search By</div>
+		    <div class="alert alert-info">
+		      <strong><span class="fa fa-info-circle"></span> TODO:</strong> Not implemented yet.
+		    </div>
+		    <div class="title-descriptions">Search Across</div>
+		    <div class="list">
+		      <div id="store-list" class="list-body"></div>
+		    </div>
+		  </div><!-- /.panel-body -->
+		</div><!-- /.panel -->
+
       </c:when>
     </c:choose>
 
-    <t:insertAttribute name="left-sidebar" ignore="true" />
     <t:insertAttribute name="content" />
 
     <div class="footer container-fluid">
@@ -106,9 +130,6 @@
       };
 
       WMarket.core.contextPath = "${ pageContext.request.contextPath }";
-
-      WMarket.layout.toggleFilters = $('#toggle-left-sidebar');
-      WMarket.layout.toggleFilters.attr('disabled', true);
 
       WMarket.layout.btnSearch = $('#search');
       WMarket.layout.btnSearch.attr('disabled', true);
@@ -140,6 +161,23 @@
             event.stopPropagation();
           });
 
+          WMarket.layout.toggleFilters = $('#toggle-left-sidebar');
+          WMarket.layout.menuFilters = $('#left-sidebar');
+
+          WMarket.layout.toggleFilters.on('click', function (event) {
+            event.preventDefault();
+
+            if (this.classList.contains('active')) {
+              this.classList.remove('active');
+              WMarket.layout.menuFilters.removeClass('active');
+            } else {
+              this.classList.add('active');
+              WMarket.layout.menuFilters.addClass('active');
+            }
+
+            event.stopPropagation();
+          });
+
         </script>
 
       </c:when>
@@ -148,6 +186,36 @@
     <script src="${ pageContext.request.contextPath }/resources/marketplace/js/AlertManager.js"></script>
     <script src="${ pageContext.request.contextPath }/resources/marketplace/js/EndpointManager.js"></script>
     <script src="${ pageContext.request.contextPath }/resources/marketplace/js/Store.js"></script>
+
+    <c:choose>
+      <c:when test="${ not empty user }">
+
+        <script>
+
+          WMarket.layout.storeList = $('#store-list');
+
+          WMarket.requests.read({
+            namespace: "stores:collection",
+            containment: WMarket.layout.storeList,
+            alert: WMarket.alerts.warning("No web store available."),
+            onSuccess: function (collection, containment) {
+              var i, store;
+
+              for (i = 0; i < collection.length; i++) {
+                store = new Store(collection[i]);
+                containment.append(store.element);
+              }
+            },
+            onFailure: function () {
+              // TODO: code that identify what error was occurred.
+            }
+          });
+
+        </script>
+
+      </c:when>
+    </c:choose>
+
     <t:insertAttribute name="extra-scripts" ignore="true" />
   </body>
 </html>

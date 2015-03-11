@@ -12,7 +12,6 @@
 
 	<!-- Offerings - List View -->
 	<definition name="offering.list" template="/WEB-INF/views/base.jsp">
-		<put-attribute name="left-sidebar" value="/WEB-INF/views/offerings/list-sidebar.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/offerings/list-content.jsp" />
 		<put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/list-scripts.jsp" />
 	</definition>

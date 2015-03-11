@@ -8,21 +8,7 @@ $(function () {
 
     "use strict";
 
-    WMarket.layout.toggleFilters.attr('disabled', false);
-
-    WMarket.layout.toggleFilters.on('click', function (event) {
-        event.preventDefault();
-
-        if (this.classList.contains('active')) {
-            this.classList.remove('active');
-            WMarket.layout.menuFilters.removeClass('active');
-        } else {
-            this.classList.add('active');
-            WMarket.layout.menuFilters.addClass('active');
-        }
-
-        event.stopPropagation();
-    });
+    WMarket.layout.offeringList = $('#search-results');
 
     WMarket.requests.read({
         namespace: "offerings:collection",
@@ -34,23 +20,6 @@ $(function () {
             for (i = 0; i < collection.length; i++) {
                 offering = new Offering(collection[i]);
                 containment.append(offering.element);
-            }
-        },
-        onFailure: function () {
-            // TODO: code that identify what error was occurred.
-        }
-    });
-
-    WMarket.requests.read({
-        namespace: "stores:collection",
-        containment: WMarket.layout.storeList,
-        alert: WMarket.alerts.warning("No web store available."),
-        onSuccess: function (collection, containment) {
-            var i, store;
-
-            for (i = 0; i < collection.length; i++) {
-                store = new Store(collection[i]);
-                containment.append(store.element);
             }
         },
         onFailure: function () {
