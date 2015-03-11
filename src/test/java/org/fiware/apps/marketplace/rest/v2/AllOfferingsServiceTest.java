@@ -96,17 +96,17 @@ public class AllOfferingsServiceTest {
 	}
 	
 	@Test
-	public void testListAllDescriptionsInvalidOffset() {
+	public void testListAllOfferingsInvalidOffset() {
 		testListAllOfferingsInvalidParams(-1, 100);
 	}
 	
 	@Test
-	public void testListAllDescriptionsInvalidMax() {
+	public void testListAllOfferingsInvalidMax() {
 		testListAllOfferingsInvalidParams(0, -1);
 	}
 	
 	@Test
-	public void testListAllDescriptionsInvalidOffsetMax() {
+	public void testListAllOfferingsInvalidOffsetMax() {
 		testListAllOfferingsInvalidParams(-1, -1);
 	}
 	
@@ -138,7 +138,7 @@ public class AllOfferingsServiceTest {
 	}
 	
 	@Test
-	public void testListAllDescriptionsException() throws NotAuthorizedException {
+	public void testListAllOfferingsException() throws NotAuthorizedException {
 		// Mocks
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg)))
