@@ -35,6 +35,7 @@ package org.fiware.apps.marketplace.model.validators;
 import java.util.regex.Pattern;
 
 import org.apache.commons.validator.routines.UrlValidator;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 
 public class GenericValidator {
 	
@@ -75,7 +76,37 @@ public class GenericValidator {
 	public static int getDescriptionMinLength() {
 		return DESCRIPTION_MIN_LENGTH;
 	}
-	
+
+	public void validatorRequired(String fieldName, String fieldValue) throws ValidationException {
+		if (fieldValue == null || fieldValue.length() == 0) {
+			throw new ValidationException(fieldName, "This field is required.");
+		}
+	}
+
+	public void validatorPattern(String fieldName, String fieldValue, String regex, String errorMessage) throws ValidationException {
+		if (fieldValue == null || !fieldValue.matches(regex)) {
+			throw new ValidationException(fieldName, errorMessage);
+		}
+	}
+
+	public void validatorURLPattern(String fieldName, String fieldValue) throws ValidationException {
+		if (fieldValue == null || !urlValidator.isValid(fieldValue)) {
+			throw new ValidationException(fieldName, "This field must be an URL valid.");
+		}
+	}
+
+	public void validatorMinLength(String fieldName, String fieldValue, int minLength) throws ValidationException {
+		if (fieldValue == null || fieldValue.length() < minLength) {
+			throw new ValidationException(fieldName, String.format("This field must be at least %d chars.", minLength));
+		}
+	}
+
+	public void validatorMaxLength(String fieldName, String fieldValue, int maxLength) throws ValidationException {
+		if (fieldValue == null || fieldValue.length() >= maxLength) {
+			throw new ValidationException(fieldName, String.format("This field must not exceed the %d chars.", maxLength));
+		}
+	}
+
 	public String getLengthErrorMessage(String field, int minLength, int maxLength) {
 		return field + " is not valid. (min length: " +
 				minLength + ", max length: " + maxLength + ")";
