@@ -49,24 +49,21 @@ public class StoreValidator {
 	 * @throws ValidationException If store is not valid
 	 */
 	public boolean validateStore(Store store, boolean isBeingCreated) throws ValidationException {
-		
+
 		if (isBeingCreated) {
-			if (store.getDisplayName() == null || store.getUrl() == null) {
-				throw new ValidationException("name and/or url cannot be null");
-			}
+			GENERIC_VALIDATOR.validatorRequired("displayName", store.getDisplayName());
 		}
-		
-		if (store.getDisplayName() != null && !GENERIC_VALIDATOR.validateDisplayName(store.getDisplayName())) {
-			int minNameLength = GenericValidator.getDisplayNameMinLength();
-			int maxNameLength = GenericValidator.getDisplayNameMaxLength();
-			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("name", 
-					minNameLength, maxNameLength));
+
+		GENERIC_VALIDATOR.validatorPattern("displayName", store.getDisplayName(), "^[\\w -]+$", "This field only accepts letters, digits and (-/_).");
+		GENERIC_VALIDATOR.validatorMinLength("displayName", store.getDisplayName(), GenericValidator.getDisplayNameMinLength());
+		GENERIC_VALIDATOR.validatorMaxLength("displayName", store.getDisplayName(), GenericValidator.getDisplayNameMaxLength());
+
+		if (isBeingCreated) {
+			GENERIC_VALIDATOR.validatorRequired("url", store.getUrl());
 		}
-		
-		if (store.getUrl() != null && !GENERIC_VALIDATOR.validateURL(store.getUrl())) {
-			throw new ValidationException("url is not valid");
-		}
-		
+
+		GENERIC_VALIDATOR.validatorURLPattern("url", store.getUrl());
+
 		if (store.getDescription() != null && !GENERIC_VALIDATOR.validateDescription(store.getDescription())) {
 			int minDescriptionLength = GenericValidator.getDescriptionMinLength();
 			int maxDescriptionLength = GenericValidator.getDescriptionMaxLength();
