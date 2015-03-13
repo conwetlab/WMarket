@@ -135,11 +135,11 @@ body {
 /* Tablets */
 @media (min-width: 768px) {
 
-    .row > [class*="col-md"]:not(:last-child) {
+    .row > [class*="col-md"]:not(:last-child):not([class~="col-md-10"]) {
         padding-right: 5px !important;
     }
 
-    .row > [class*="col-md"]:not(:first-child) {
+    .row > [class*="col-md"]:not(:first-child):not([class~="col-md-10"]) {
         padding-left: 5px !important;
     }
 
@@ -234,11 +234,11 @@ body {
 /* Desktops, Large Desktops */
 @media (min-width: 992px) {
 
-    .row > [class*="col-lg"]:not(:last-child) {
+    .row > [class*="col-lg"]:not(:last-child):not([class~="col-lg-10"]) {
         padding-right: 5px !important;
     }
 
-    .row > [class*="col-lg"]:not(:first-child) {
+    .row > [class*="col-lg"]:not(:first-child):not([class~="col-lg-10"]) {
         padding-left: 5px !important;
     }
 

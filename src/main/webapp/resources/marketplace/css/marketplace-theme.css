@@ -125,6 +125,23 @@ input[type="submit"] {
 }
 
 /***************************************************************************************
+ *  DEFAULT THEME - BUTTON - CONTEXTUAL CLASS - WARNING
+ ***************************************************************************************/
+
+.btn-warning {
+    color: rgb(255, 255, 255);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: rgb(250, 180, 90);
+    border-color: rgb(230, 150, 40);
+}
+
+.btn-warning.active,
+.btn-warning:hover {
+    background-color: rgb(240, 160, 40);
+    border-color: rgb(210, 130, 20);
+}
+
+/***************************************************************************************
  *  DEFAULT THEME - BUTTON - ACTIVE STATE
  ***************************************************************************************/
 
@@ -154,6 +171,7 @@ input[type="submit"] {
  ***************************************************************************************/
 
 .alert {
+    position: relative;
     padding: 15px;
     margin-bottom: 10px;
     font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
@@ -168,9 +186,26 @@ input[type="submit"] {
     text-align: center;
 }
 
+.alert-manager {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    z-index: 30;
+}
+
+.alert-manager .alert {
+    left: -50%;
+}
+
 /***************************************************************************************
  *  DEFAULT THEME - ALERT - CONTEXTUAL CLASS
  ***************************************************************************************/
+
+.alert-success {
+    color: rgb(60, 110, 60);
+    background-color: rgb(220, 240, 210);
+    border-color: rgb(190, 210, 180);
+}
 
 .alert-info {
     color: #31708f;
@@ -197,12 +232,13 @@ input[type="submit"] {
 input[type="password"],
 input[type="text"] {
     position: relative;
-    display: inline-block;
     min-height: 30px;
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
 }
 
 .form-control {
+    display: block;
+    width: 100%;
     padding: 0px 8px;
     border: solid 1px rgb(220, 220, 220);
     border-radius: 4px;
@@ -231,14 +267,18 @@ input[type="text"] {
  *  DEFAULT THEME - FORM FIELD
  ***************************************************************************************/
 
+.form-field {
+    margin-bottom: 10px;
+}
+
 .form-field > .btn-addon:last-child,
-.form-field > .form-control:not(:first-child) {
+.form-field > .btn-addon + .form-control {
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
 }
 
 .form-field > .btn-addon:first-child,
-.form-field > .form-control:not(:last-child) {
+.form-field.form-addon > .form-control:not(:last-child) {
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
@@ -249,6 +289,29 @@ input[type="text"] {
 
 .form-field > .btn-addon:last-child {
     margin-left: -5px;
+}
+
+.form-field > label {
+    display: block;
+    line-height: 20px;
+    font-weight: 700;
+    color: rgb(70, 70, 70);
+    margin-bottom: 5px;
+}
+
+.form-field > label + .form-control {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.form-field-error {
+    margin-top: 5px;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
+    color: rgb(160, 60, 60);
+}
+
+.form-options {
+    text-align: center;
 }
 
 /***************************************************************************************
@@ -342,6 +405,35 @@ input[type="text"] {
 }
 
 /***************************************************************************************
+ *  DEFAULT THEME - LIST GROUP
+ ***************************************************************************************/
+
+.list-group > .list-group-title {
+    position: relative;
+    display: block;
+    margin: 0px 10px;
+    padding: 8px 0px 7px;
+    color: rgb(145, 160, 165);
+    font: normal 700 14px/18px Helvetica, Arial, sans-serif;
+    border-top: solid 1px rgb(215, 225, 225);
+}
+
+.list-group > .list-group-item {
+    position: relative;
+    display: block;
+    cursor: pointer;
+    padding: 8px 15px;
+    color: rgb(90, 90, 90);
+    text-decoration: none;
+    background-color: rgb(254, 254, 254);
+}
+
+.list-group > .list-group-item:hover {
+    color: rgb(20, 170, 215);
+    background-color: rgb(240, 240, 240);
+}
+
+/***************************************************************************************
  *  DEFAULT THEME - PANEL
  ***************************************************************************************/
 
@@ -356,7 +448,7 @@ input[type="text"] {
 .panel .panel-heading {
     position: relative;
     padding: 8px 10px;
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    font: normal 500 14px/20px Helvetica, Arial, sans-serif;
     text-align: center;
     border-radius: 3px 3px 0px 0px;
 }
@@ -364,7 +456,7 @@ input[type="text"] {
 .panel .panel-heading .panel-title {
     display: block;
     font-size: 18px;
-    line-height: 1.15;
+    line-height: 24px;
 }
 
 .panel .panel-heading .panel-subtitle {
@@ -388,8 +480,8 @@ input[type="text"] {
 }
 
 .panel-default .panel-heading {
-    color: rgb(110, 110, 110);
-    background-color: rgb(250, 250, 250);
+    color: rgb(130, 130, 130);
+    background-color: rgb(240, 240, 240);
 }
 
 /***************************************************************************************
@@ -492,7 +584,6 @@ input[type="text"] {
 
 }
 
-
 .navbar .navbar-header > .navbar-brand {
     color: rgb(120, 120, 120);
     font-size: 18px;
@@ -509,7 +600,12 @@ input[type="text"] {
  *  DEFAULT THEME - NAVBAR - ELEMENTS
  ***************************************************************************************/
 
+.navbar-element * {
+    margin-bottom: 0px !important;
+}
+
 .navbar-element .form-control {
+    display: inline-block;
     width: 160px;
 }
 
@@ -657,37 +753,23 @@ input[type="text"] {
  *  DEFAULT THEME - STORE
  ***************************************************************************************/
 
-.store {
-    display: table;
-    cursor: pointer;
-    width: 100%;
-    padding: 10px;
+#store-list {
+    max-height: 287px;
+    margin: 0px 10px;
+    overflow-y: auto;
+    border-bottom: solid 1px rgb(215, 225, 225);
+    border-top: solid 1px rgb(215, 225, 225);
 }
 
-.store-heading {
-    position: relative;
-    display: table-cell;
-    vertical-align: middle;
-    width: 15%;
+.store-item .store-name {
+    padding-left: 4px;
+    font: normal 700 14px/20px Helvetica, Arial, sans-serif;
 }
 
-.store-body {
-    position: relative;
-    display: table-cell;
-    vertical-align: middle;
-    width: 85%;
-}
-
-.store-name {
-    font-weight: 700;
-}
-
-.store-add {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    margin-top: 13px;
+.store-item .store-url {
+    padding-left: 22px;
+    font: normal 400 13px/20px Helvetica, Arial, sans-serif;
+    color: rgb(120, 120, 120);
 }
 
 /***************************************************************************************
