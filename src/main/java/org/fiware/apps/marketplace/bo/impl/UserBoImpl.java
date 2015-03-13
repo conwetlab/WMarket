@@ -33,6 +33,7 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
+import java.util.Date;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.UserBo;
@@ -83,6 +84,9 @@ public class UserBoImpl implements UserBo {
 		
 		// Encode the password
 		user.setPassword(encoder.encode(user.getPassword()));
+		
+		// Set the registration date
+		user.setRegistrationDate(new Date());
 		
 		// Save the new user
 		userDao.save(user);
