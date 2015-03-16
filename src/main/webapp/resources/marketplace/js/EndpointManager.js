@@ -54,7 +54,7 @@ WMarket.requests = (function () {
     var registerList = {};
 
     var getResource = function getResource(options) {
-        var endpointType, namespaceArgs, resourceName, resourceURL;
+        var endpointType, name, namespaceArgs, resourceName, resourceURL;
 
         namespaceArgs = options.namespace.split(':');
 
@@ -67,7 +67,13 @@ WMarket.requests = (function () {
             throw null;
         }
 
-        // TODO: Handle URL kwargs.
+        if ('kwargs' in options) {
+            for (name in options.kwargs) {
+                if (resourceURL.indexOf('%(' + name + ')s') != -1) {
+                    resourceURL = resourceURL.replace('%(' + name + ')s', options.kwargs[name]);
+                }
+            }
+        }
 
         return {
             'name': resourceName,
