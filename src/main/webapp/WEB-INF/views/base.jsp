@@ -35,7 +35,7 @@
         </c:choose>
 
         <form class="navbar-element pull-left">
-          <div class="form-field">
+          <div class="form-field form-addon">
             <input id="search-field" class="form-control" type="text" placeholder="TODO: Not implemented yet.">
             <button id="search" class="btn btn-default btn-addon" type="submit">
               <span class="fa fa-search"></span>
@@ -72,44 +72,60 @@
             <span class="panel-subtitle text-truncate">${ user.email }</span>
           </div>
           <div class="panel-body">
-            <div class="list">
-              <div class="list-body">
-                <a class="list-item" href="#">
-                  <i class="fa fa-cog fa-fw"></i>&nbsp; Settings
-                </a>
-                <a class="list-item" href="#">
-                  <i class="fa fa-sign-out fa-fw"></i>&nbsp; Sign out
-                </a>
-              </div>
+		    <div class="list-group">
+		      <a class="list-group-item" href="${ pageContext.request.contextPath }/account/">
+                <span class="fa fa-cog fa-fw"></span>
+                <span class="text-plain">Settings</span>
+              </a>
+              <a class="list-group-item" href="#">
+                <span class="fa fa-sign-out fa-fw"></span>
+                <span class="text-plain">Sign out</span>
+              </a>
             </div>
           </div>
         </div><!-- /.panel -->
 
 		<div id="left-sidebar" class="panel panel-default panel-sliding panel-sliding-left">
-		  <div class="panel-heading">
-		    <span class="panel-title">All search filters</span>
-		  </div><!-- /.panel-heading -->
 		  <div class="panel-body">
-		    <div class="title-descriptions">Search By</div>
-		    <div class="alert alert-info">
-		      <strong><span class="fa fa-info-circle"></span> TODO:</strong> Not implemented yet.
-		    </div>
-		    <div class="title-descriptions">Search Across</div>
-		    <div class="list">
-		      <div id="store-list" class="list-body"></div>
-		    </div>
+		    <div class="list-group">
+		      <div class="list-group-item">
+                <span class="fa fa-archive fa-fw"></span>
+                <span class="text-plain">My offerings</span>
+              </div>
+              <a class="list-group-item" href="#"> <!-- TODO: ${ pageContext.request.contextPath }/offerings/register/ -->
+                <span class="fa fa-upload fa-fw"></span>
+                <span class="text-plain">Upload new offering</span>
+              </a>
+            </div>
+		    <div class="list-group">
+              <div class="list-group-title">WEB STORES</div>
+              <div id="store-list" class="list-group">
+              </div>
+              <a class="list-group-item" href="${ pageContext.request.contextPath }/stores/register/">
+                <span class="fa fa-plus-circle fa-fw"></span>
+                <span class="text-plain">Register new store</span>
+              </a>
+            </div>
 		  </div><!-- /.panel-body -->
 		</div><!-- /.panel -->
 
       </c:when>
     </c:choose>
 
+	<c:if test="${ not empty message }">
+	  <div class="alert-manager">
+	    <div class="alert alert-success">
+	      <span class="fa fa-check-circle"></span> ${ message }
+	    </div>
+	  </div>
+	</c:if>
+
     <t:insertAttribute name="content" />
 
     <div class="footer container-fluid">
       <div class="vertical-divider"></div>
       <div class="footer-col text-left">
-        <span class="text-plain">© 2015 CoNWeT Lab., Universidad Politécnica de Madrid</span>
+        <span class="text-plain text-default">© 2015 CoNWeT Lab., Universidad Politécnica de Madrid</span>
       </div>
       <div class="footer-col text-center">
         <button class="btn btn-default" type="button">
@@ -126,7 +142,8 @@
 
       var WMarket = {
         core: {},
-        layout: {}
+        layout: {},
+        resources: {}
       };
 
       WMarket.core.contextPath = "${ pageContext.request.contextPath }";
@@ -136,6 +153,8 @@
 
       WMarket.layout.fieldSearch = $('#search-field');
       WMarket.layout.fieldSearch.attr('disabled', true);
+
+      $('.alert-manager > .alert').delay(2000).slideUp(500);
 
     </script>
 
@@ -186,6 +205,8 @@
     <script src="${ pageContext.request.contextPath }/resources/marketplace/js/AlertManager.js"></script>
     <script src="${ pageContext.request.contextPath }/resources/marketplace/js/EndpointManager.js"></script>
     <script src="${ pageContext.request.contextPath }/resources/marketplace/js/Store.js"></script>
+    <script src="${ pageContext.request.contextPath }/resources/marketplace/js/StoreManager.js"></script>
+    <script src="${ pageContext.request.contextPath }/resources/marketplace/js/Offering.js"></script>
 
     <c:choose>
       <c:when test="${ not empty user }">
@@ -194,21 +215,26 @@
 
           WMarket.layout.storeList = $('#store-list');
 
-          WMarket.requests.read({
-            namespace: "stores:collection",
-            containment: WMarket.layout.storeList,
-            alert: WMarket.alerts.warning("No web store available."),
-            onSuccess: function (collection, containment) {
-              var i, store;
+          WMarket.requests.register('core', function () {
+            WMarket.requests.read({
+              namespace: "stores:collection",
+              containment: WMarket.layout.storeList,
+              alert: WMarket.alerts.warning("No web store available."),
+              onSuccess: function (collection, containment) {
+                var i, store;
 
-              for (i = 0; i < collection.length; i++) {
-                store = new Store(collection[i]);
-                containment.append(store.element);
+                for (i = 0; i < collection.length; i++) {
+                  store = WMarket.resources.stores.addStore(collection[i]);
+                  containment.append(store.addClass('list-group-item').get());
+                }
+
+                WMarket.requests.ready('storeList');
+
+              },
+              onFailure: function () {
+                // TODO: code that identify what error was occurred.
               }
-            },
-            onFailure: function () {
-              // TODO: code that identify what error was occurred.
-            }
+            });
           });
 
         </script>
@@ -217,5 +243,17 @@
     </c:choose>
 
     <t:insertAttribute name="extra-scripts" ignore="true" />
+    <c:choose>
+      <c:when test="${ not empty user }">
+
+        <script>
+
+          WMarket.requests.ready('core');
+
+        </script>
+
+      </c:when>
+    </c:choose>
+
   </body>
 </html>
