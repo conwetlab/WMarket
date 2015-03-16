@@ -57,7 +57,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @Component
-@Path("/offerings/")
+@Path("offerings")
 public class OfferingController extends AbstractController {
 
     @Autowired private OfferingBo offeringBo;
@@ -90,7 +90,7 @@ public class OfferingController extends AbstractController {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("{storeName}/{descriptionName}/{offeringName}/")
+    @Path("{storeName}/{descriptionName}/{offeringName}")
     public Response detailView(
             @PathParam("storeName") String storeName,
             @PathParam("descriptionName") String descriptionName,
