@@ -6,35 +6,48 @@
 
 var Store = (function () {
 
+	"use strict";
+
     var Store = function Store(data, options) {
-        this.element = document.createElement('div');
-        this.element.className = "store";
+        this.element = document.createElement('a');
+        this.element.className = "store-item";
+        this.element.href = [WMarket.core.contextPath, 'stores', data.name, 'offerings'].join('/');
 
-        var storeHeader = this.element.appendChild(document.createElement('div'));
-            storeHeader.className = "store-heading";
+        var storeHeading = this.element.appendChild(document.createElement('div'));
+            storeHeading.className = "store-heading";
 
-        var stackElement = storeHeader.appendChild(document.createElement('span'));
-            stackElement.className = "fa-stack fa-lg";
+        var avatarElement = storeHeading.appendChild(document.createElement('span'));
+            avatarElement.className = "fa fa-building fa-fw";
 
-        var circleElement = stackElement.appendChild(document.createElement('span'));
-            circleElement.className = "fa fa-circle fa-stack-2x";
+        this.nameElement = storeHeading.appendChild(document.createElement('span'));
+        this.nameElement.className = "store-name text-plain";
+        this.nameElement.appendChild(document.createTextNode(data.displayName));
 
-        var avatarElement = stackElement.appendChild(document.createElement('span'));
-            avatarElement.className = "fa fa-building fa-stack-1x fa-inverse";
+        this.displayName = data.displayName;
+        this.name = data.name;
 
         var storeBody = this.element.appendChild(document.createElement('div'));
             storeBody.className = "store-body";
 
-        this.nameElement = storeBody.appendChild(document.createElement('div'));
-        this.nameElement.className = "store-name";
-        this.nameElement.appendChild(document.createTextNode(data.displayName));
-
-        this.urlElement = storeBody.appendChild(document.createElement('div'));
+        this.urlElement = storeBody.appendChild(document.createElement('span'));
         this.urlElement.className = "store-url";
         this.urlElement.appendChild(document.createTextNode(data.url));
+    };
 
-        var plusElement = storeBody.appendChild(document.createElement('span'));
-            plusElement.className = "store-add fa fa-plus-circle";
+    Store.prototype.addClass = function addClass(classString) {
+        var classList, i;
+
+        classList = classString.split(' ');
+
+        for (i = 0; i < classList.length; i++) {
+            this.element.classList.add(classList[i]);
+        }
+
+        return this;
+    };
+
+    Store.prototype.get = function get() {
+        return this.element;
     };
 
     return Store;
