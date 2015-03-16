@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.bo;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 20154444 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -181,7 +181,7 @@ public class UserBoImplTest {
 	public void testUpdateNotAuthorized() throws Exception {
 		
 		User user = mock(User.class);
-		doThrow(new NotAuthorizedException(user, "create user")).when(userAuthMock).canUpdate(user);
+		doThrow(new NotAuthorizedException(user, "update user")).when(userAuthMock).canUpdate(user);
 		
 		// Call the method and check that DAO is not called
 		testUpdateException(user);
@@ -225,11 +225,11 @@ public class UserBoImplTest {
 	public void testDeleteNotAuthorized() throws Exception {
 
 		User user = mock(User.class);
-		doThrow(new NotAuthorizedException(user, "create user")).when(userAuthMock).canUpdate(user);
+		doThrow(new NotAuthorizedException(user, "delete user")).when(userAuthMock).canDelete(user);
 		
 		try {			
 			// Call the method
-			userBo.update(user);
+			userBo.delete(user);
 			fail("Exception expected");
 		} catch (Exception e) {
 			// Verify that the DAO has not been called
@@ -241,6 +241,7 @@ public class UserBoImplTest {
 
 	}
 	
+	@Test
 	public void testDelete() throws NotAuthorizedException {
 		User user = new User();
 		
@@ -366,7 +367,6 @@ public class UserBoImplTest {
 	////////////////////////////////// GET CURRENT USER ///////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	
 	private void testGetCurrentUser(User user, SecurityContext context) {
 		try {
 			String userName = user.getUserName();
@@ -481,23 +481,5 @@ public class UserBoImplTest {
 
 		testGetCurrentUser(user, context);
 	}
-
-
-	
-	
-
-
-	
-	
-	
-
-	
-	
-
-	
-
-	
-	
-	
 
 }
