@@ -10,21 +10,25 @@ $(function () {
 
     WMarket.layout.offeringList = $('#search-results');
 
-    WMarket.requests.read({
-        namespace: "offerings:collection",
-        containment: WMarket.layout.offeringList,
-        alert: WMarket.alerts.warning("No offering available.", 'col-sm-10 col-md-8 col-lg-6'),
-        onSuccess: function (collection, containment) {
-            var i, offering;
+    WMarket.requests.register('storeList', function () {
 
-            for (i = 0; i < collection.length; i++) {
-                offering = new Offering(collection[i]);
-                containment.append(offering.element);
+        WMarket.requests.read({
+            namespace: "offerings:collection",
+            containment: WMarket.layout.offeringList,
+            alert: WMarket.alerts.warning("No offering available.", 'col-sm-10 col-md-10 col-lg-10'),
+            onSuccess: function (collection, containment) {
+                var i, offering;
+
+                for (i = 0; i < collection.length; i++) {
+                    offering = new Offering(collection[i]);
+                    containment.append(offering.element);
+                }
+            },
+            onFailure: function () {
+                // TODO: code that identify what error was occurred.
             }
-        },
-        onFailure: function () {
-            // TODO: code that identify what error was occurred.
-        }
+        });
+
     });
 
 });
