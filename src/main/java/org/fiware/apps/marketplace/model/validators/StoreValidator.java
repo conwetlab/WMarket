@@ -64,13 +64,11 @@ public class StoreValidator {
 
 		GENERIC_VALIDATOR.validatorURLPattern("url", store.getUrl());
 
-		if (store.getDescription() != null && !GENERIC_VALIDATOR.validateDescription(store.getDescription())) {
-			int minDescriptionLength = GenericValidator.getDescriptionMinLength();
-			int maxDescriptionLength = GenericValidator.getDescriptionMaxLength();
-			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("description", 
-					minDescriptionLength, maxDescriptionLength));
+		if (store.getDescription() != null) {
+			GENERIC_VALIDATOR.validatorMinLength("description", store.getDescription(), GenericValidator.getDescriptionMinLength());
+			GENERIC_VALIDATOR.validatorMaxLength("description", store.getDescription(), GenericValidator.getDescriptionMaxLength());
 		}
-		
+
 		return true;
 	}
 
