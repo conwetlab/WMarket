@@ -11,6 +11,24 @@ WMarket.requests = (function () {
 
         'read': function read(options) {
             makeRequest('GET', options);
+        },
+
+        'register': function register(namespace, callback) {
+            if (!(namespace in registerList)) {
+                registerList[namespace] = [];
+            }
+
+            registerList[namespace].push(callback);
+        },
+
+        'ready': function ready(namespace) {
+            var i;
+
+            if (namespace in registerList) {
+                for (i = 0; i < registerList[namespace].length; i++) {
+                    registerList[namespace][i]();
+                }
+            }
         }
 
     };
@@ -24,13 +42,16 @@ WMarket.requests = (function () {
     var endpointList = {
 
         offerings: {
-            collection: "/offerings/"
+            collection: "/offerings/",
+            store_collection: "/store/%(name)s/offering/"
         },
         stores: {
             collection: "/store/"
         }
 
     };
+
+    var registerList = {};
 
     var getResource = function getResource(options) {
         var endpointType, namespaceArgs, resourceName, resourceURL;
@@ -76,7 +97,7 @@ WMarket.requests = (function () {
 
                 options.containment.empty();
 
-                if (resource.type == 'collection') {
+                if (resource.type.indexOf('collection') != -1) {
                     collection = data[resource.name];
                     if (!collection.length) {
                         options.containment.append(options.alert);
