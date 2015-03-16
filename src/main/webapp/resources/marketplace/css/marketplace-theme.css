@@ -12,15 +12,14 @@
 
 a {
     cursor: pointer;
-    color: rgb(95, 155, 235);
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    color: rgb(100, 150, 250);
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
     text-decoration: none;
     background-color: transparent;
 }
 
 a:hover {
-    color: rgb(30, 115, 225);
-    text-decoration: underline;
+    color: rgb(40, 80, 180);
 }
 
 /***************************************************************************************
@@ -236,10 +235,16 @@ input[type="text"] {
     font: normal 400 14px/20px Helvetica, Arial, sans-serif;
 }
 
+textarea {
+	position: relative;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
+    resize: none;
+}
+
 .form-control {
     display: block;
     width: 100%;
-    padding: 0px 8px;
+    padding: 4px 8px;
     border: solid 1px rgb(220, 220, 220);
     border-radius: 4px;
     color: #555;
@@ -310,6 +315,16 @@ input[type="text"] {
     color: rgb(160, 60, 60);
 }
 
+.form-field.readonly .form-control {
+    cursor: default;
+    color: rgb(100, 100, 100);
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    pointer-events: none;
+    -webkit-user-select: none;
+}
+
 .form-options {
     text-align: center;
 }
@@ -321,7 +336,7 @@ input[type="text"] {
 .thumbnail {
     position: relative;
     display: inline-block;
-    margin: 0px auto 10px;
+    margin: 0px auto 8px;
     padding: 3px;
     background-color: rgb(254, 254, 254);
     border: solid 1px rgb(210, 220, 230);
@@ -342,6 +357,11 @@ input[type="text"] {
         height: 180px;
     }
 
+}
+
+.thumbnail-sm > img {
+    width: 140px;
+    height: 140px;
 }
 
 /***************************************************************************************
@@ -456,7 +476,7 @@ input[type="text"] {
 .panel .panel-heading .panel-title {
     display: block;
     font-size: 18px;
-    line-height: 24px;
+    line-height: 20px;
 }
 
 .panel .panel-heading .panel-subtitle {
@@ -493,12 +513,12 @@ input[type="text"] {
 }
 
 .panel-default-darker .panel-heading {
-    color: rgb(225, 226, 227);
-    background-color: rgb(58, 63, 81);
+    color: rgb(220, 220, 230);
+    background-color: rgb(60, 65, 75);
 }
 
 .panel-default-darker .panel-heading .panel-subtitle {
-    color: rgb(145, 157, 168);
+    color: rgb(150, 170, 180);
 }
 
 /***************************************************************************************
@@ -634,68 +654,16 @@ input[type="text"] {
  *  DEFAULT THEME - OFFERING
  ***************************************************************************************/
 
-.offering {
-    cursor: pointer;
-    position: relative;
-    width: 100%;
-    margin: 0px 0px 10px;
-    background-color: transparent;
-    border: solid 1px rgb(210, 220, 230);
-    border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-}
-
-.offering-heading {
-    height: 170px;
-    padding: 5px 5px 0px;
-    background-color: rgb(254, 254, 254);
-    border-radius: 3px 3px 0px 0px;
-}
-
-.offering-image {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(58, 63, 81);
-    border: solid 1px rgb(210, 220, 230);
-}
-
-.offering-image > img {
-    position: absolute;
-    display: block;
-    top: 0px;
-    bottom: 0px;
-    width: 100%;
-    max-height: 143px;
-    margin: auto;
-}
-
-.offering-body {
-    position: relative;
-    padding: 8px 10px;
-    background-color: rgb(254, 254, 254);
-    border-radius: 0px 0px 3px 3px;
-}
-
-.offering-title {
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
-}
-
 .offering-name {
-    display: block;
-    color: rgb(50, 50, 50);
-    font-size: 18px;
+    color: rgb(70, 70, 70);
     font-weight: bold;
-    line-height: 1.15;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 
 .offering-store {
-    display: block;
-    color: rgb(170, 170, 170);
+    font-size: 16px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -709,42 +677,55 @@ input[type="text"] {
     height: 80px;
 }
 
-.offering:focus,
-.offering:hover {
-    border-color: rgb(102, 175, 233);
-    box-shadow: 0px 0px 5px rgba(102, 175, 233, 0.75);
+.offering .thumbnail:hover {
+    cursor: pointer;
+    background-color: rgb(110, 210, 250);
+    border-color: rgb(20, 170, 215);
 }
 
-.offering:hover .offering-heading,
-.offering:hover .offering-body {
-    background-color: rgb(250, 250, 250);
+.offering .thumbnail:hover > img {
+    border-color: rgb(20, 170, 215);
 }
 
-.offering:hover .offering-name {
-    color: rgb(30, 180, 230);
+.offering .offering-name:hover {
+    color: rgb(20, 170, 215);
 }
 
+/* Smartphones */
+.offering {
+    position: relative;
+    width: 100%;
+    margin: 0px 0px 10px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    transition: width ease-in 100ms;
+}
+
+/* Tablets */
 @media (min-width: 768px) {
 
     .offering {
-        width: 48%;
-        margin: 0px 1% 10px;
+        width: 48.5%;
+        margin: 0px 0.7% 10px;
     }
 
 }
 
+/* Desktops */
 @media (min-width: 992px) {
 
     .offering {
-        width: 31%;
+        width: 32.1%;
+        margin: 0px 0.55% 10px;
     }
 
 }
 
+/* Large Desktops */
 @media (min-width: 1200px) {
 
     .offering {
-        width: 23%;
+        width: 24%;
+        margin: 0px 0.5% 10px;
     }
 
 }
@@ -781,5 +762,5 @@ input[type="text"] {
 }
 
 .fa-avatar > .fa-circle {
-    color: rgb(35, 180, 230);
+    color: rgb(80, 190, 250);
 }
