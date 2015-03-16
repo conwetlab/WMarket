@@ -22,4 +22,15 @@
 		<put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/detail-scripts.jsp" />
 	</definition>
 
+	<!-- Stores - Register Form View -->
+	<definition name="store.register" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/stores/form-content.jsp" />
+	</definition>
+
+	<!-- Stores - Detail View -->
+	<definition name="store.detail" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/stores/detail-content.jsp" />
+		<put-attribute name="extra-scripts" value="/WEB-INF/views/stores/detail-scripts.jsp" />
+	</definition>
+
 </tiles-definitions>
