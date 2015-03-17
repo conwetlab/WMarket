@@ -153,6 +153,7 @@ public class StoreController extends AbstractController {
 
             model.addAttribute("field_displayName", displayName);
             model.addAttribute("field_url", url);
+            model.addAttribute("field_description", description);
 
             model.addAttribute("form_error", e);
             view = new ModelAndView("store.register", model);
