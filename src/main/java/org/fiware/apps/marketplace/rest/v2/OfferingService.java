@@ -41,9 +41,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.OfferingBo;
-import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
@@ -60,8 +58,6 @@ public class OfferingService {
 	
 	// OBJECT ATTRIBUTES //
 	@Autowired private OfferingBo offeringBo;
-	@Autowired private DescriptionBo descriptionBo;
-	@Autowired private StoreBo storeBo;
 	
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
@@ -104,16 +100,22 @@ public class OfferingService {
 		
 		Response response;
 		
-		try {			
-			Offerings offerings = new Offerings(offeringBo.getDescriptionOfferingsPage(
-					storeName, descriptionName, offset, max));
-			response = Response.status(Status.OK).entity(offerings).build();
-		} catch (NotAuthorizedException ex) {
-			response = ERROR_UTILS.notAuthorizedResponse(ex);
-		} catch (DescriptionNotFoundException | StoreNotFoundException ex) {
-			response = ERROR_UTILS.entityNotFoundResponse(ex);
-		} catch (Exception ex) {
-			response = ERROR_UTILS.internalServerError(ex);
+		if (offset < 0 || max <= 0) {
+			// Offset and Max should be checked
+			response = ERROR_UTILS.badRequestResponse(String.format(
+					"offset (%d) and/or max (%d) are not valid", offset, max));
+		} else {
+			try {			
+				Offerings offerings = new Offerings(offeringBo.getDescriptionOfferingsPage(
+						storeName, descriptionName, offset, max));
+				response = Response.status(Status.OK).entity(offerings).build();
+			} catch (NotAuthorizedException ex) {
+				response = ERROR_UTILS.notAuthorizedResponse(ex);
+			} catch (DescriptionNotFoundException | StoreNotFoundException ex) {
+				response = ERROR_UTILS.entityNotFoundResponse(ex);
+			} catch (Exception ex) {
+				response = ERROR_UTILS.internalServerError(ex);
+			}
 		}
 		
 		return response;

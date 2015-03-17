@@ -34,7 +34,6 @@ package org.fiware.apps.marketplace.rest.v2;
  */
 
 import java.net.URI;
-import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -92,10 +91,7 @@ public class UserService {
 			// Set user name to null. In this case, the BO will be the one in 
 			// charge of setting the user name
 			user.setUserName(null);
-							
-			// Encode password. Set registration date...
-			user.setRegistrationDate(new Date());
-			
+
 			// Save the new user
 			userBo.save(user);
 			

@@ -46,7 +46,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 public class ErrorUtils {
 	
-	private String contraintViolationMessage;
+	private final String contraintViolationMessage;
 	private Logger logger;
 	
 	public ErrorUtils(Logger logger) {

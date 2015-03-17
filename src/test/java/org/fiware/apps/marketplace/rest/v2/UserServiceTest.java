@@ -151,7 +151,8 @@ public class UserServiceTest {
 		// Check
 		assertThat(res.getStatus()).isEqualTo(201);
 		assertThat(res.getHeaders().get("Location").get(0).toString()).isEqualTo(PATH + "/" + USER_NAME);
-		assertThat(user.getRegistrationDate()).isNotNull();
+		// Done by the BO
+		// assertThat(user.getRegistrationDate()).isNotNull();
 		assertThat(user.getUserName()).isEqualTo(USER_NAME);
 		assertThat(user.getDisplayName()).isEqualTo(DISPLAY_NAME);
 		assertThat(user.getEmail()).isEqualTo(EMAIL);
