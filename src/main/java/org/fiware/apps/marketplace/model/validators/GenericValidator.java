@@ -91,7 +91,7 @@ public class GenericValidator {
 
 	public void validatorURLPattern(String fieldName, String fieldValue) throws ValidationException {
 		if (fieldValue == null || !urlValidator.isValid(fieldValue)) {
-			throw new ValidationException(fieldName, "This field must be an URL valid.");
+			throw new ValidationException(fieldName, "This field must be a valid URL.");
 		}
 	}
 
@@ -103,7 +103,7 @@ public class GenericValidator {
 
 	public void validatorMaxLength(String fieldName, String fieldValue, int maxLength) throws ValidationException {
 		if (fieldValue == null || fieldValue.length() >= maxLength) {
-			throw new ValidationException(fieldName, String.format("This field must not exceed the %d chars.", maxLength));
+			throw new ValidationException(fieldName, String.format("This field must not exceed %d chars.", maxLength));
 		}
 	}
 
