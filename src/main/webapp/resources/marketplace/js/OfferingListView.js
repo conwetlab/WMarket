@@ -15,7 +15,7 @@ $(function () {
         WMarket.requests.read({
             namespace: "offerings:collection",
             containment: WMarket.layout.offeringList,
-            alert: WMarket.alerts.warning("No offering available.", 'col-sm-10 col-md-10 col-lg-10'),
+            alert: WMarket.alerts.warning("No offering available.", 'col-sm-10'),
             onSuccess: function (collection, containment) {
                 var i, offering;
 
