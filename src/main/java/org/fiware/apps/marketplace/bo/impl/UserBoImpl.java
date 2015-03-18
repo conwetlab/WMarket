@@ -94,23 +94,50 @@ public class UserBoImpl implements UserBo {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(User user) throws NotAuthorizedException, ValidationException {
+	public void update(String userName, User updatedUser) 
+			throws NotAuthorizedException, ValidationException, UserNotFoundException {
+		
+		User userToBeUpdated = findByName(userName);
 		
 		// Check rights (exception is risen if user is not allowed)
-		userAuth.canUpdate(user);
+		userAuth.canUpdate(userToBeUpdated);
 		
 		// Validate the user (exception is risen if the user is not valid)
-		userValidator.validateUser(user, false);
+		userValidator.validateUser(updatedUser, false);		
+
+		// At this moment, user name cannot be changed to avoid error with sessions...
+		// userToBeUpdated.setUserName(user.getUserName());
+		if (updatedUser.getUserName() != null && !updatedUser.getUserName().equals(userToBeUpdated.getUserName())) {
+			throw new ValidationException("displayName", "displayName cannot be changed");
+		}
+		
+		if (updatedUser.getCompany() != null) {
+			userToBeUpdated.setCompany(updatedUser.getCompany());
+		}
+		
+		if (updatedUser.getPassword() != null) {
+			userToBeUpdated.setPassword(updatedUser.getPassword());
+		}
+		
+		if (updatedUser.getEmail() != null) {
+			userToBeUpdated.setEmail(updatedUser.getEmail());
+		}
+		
+		if (updatedUser.getDisplayName() != null) {
+			userToBeUpdated.setDisplayName(updatedUser.getDisplayName());
+		}
 		
 		// Encode the password
-		user.setPassword(encoder.encode(user.getPassword()));
+		userToBeUpdated.setPassword(encoder.encode(userToBeUpdated.getPassword()));
 			
-		userDao.update(user);
+		userDao.update(userToBeUpdated);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(User user) throws NotAuthorizedException {
+	public void delete(String userName) throws NotAuthorizedException, UserNotFoundException {
+		
+		User user = findByName(userName);
 		
 		// Check rights (exception is risen if user is not allowed)
 		userAuth.canDelete(user);

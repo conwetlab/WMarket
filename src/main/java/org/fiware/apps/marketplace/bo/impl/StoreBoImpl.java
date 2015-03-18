@@ -63,49 +63,79 @@ public class StoreBoImpl implements StoreBo{
 	@Override
 	@Transactional(readOnly=false)
 	public void save(Store store) throws NotAuthorizedException, 
-			ValidationException, UserNotFoundException {
-
-		User user;
-
-		// Get the currently logged-in user
-		user = userBo.getCurrentUser();
-
-		// Set the current date as registration date of this store
-		store.setRegistrationDate(new Date());
-
-		// Set user as creator and latest editor of this store
-		store.setCreator(user);
-		store.setLasteditor(user);
-
-		// Check rights (exception is risen if user is not allowed)
-		storeAuth.canCreate(store);
-		
-		// Validate the store (exception is risen if the user is not valid)
-		storeValidator.validateStore(store, true);
-		
-		store.setName(NameGenerator.getURLName(store.getDisplayName()));
-		storeDao.save(store);
-		
-	}
-
-	@Override
-	@Transactional(readOnly=false)
-	public void update(Store store) throws NotAuthorizedException, 
 			ValidationException {
-		
-		// Check rights (exception is risen if user is not allowed)
-		storeAuth.canUpdate(store);
-		
-		// Validate the store (exception is risen if the user is not valid)
-		storeValidator.validateStore(store, false);
-		
-		storeDao.update(store);
+
+		try {
+			// Get the currently logged-in user
+			User user = userBo.getCurrentUser();
+	
+			// Set the current date as registration date of this store
+			store.setRegistrationDate(new Date());
+	
+			// Set user as creator and latest editor of this store
+			store.setCreator(user);
+			store.setLasteditor(user);
+	
+			// Check rights (exception is risen if user is not allowed)
+			storeAuth.canCreate(store);
+			
+			// Validate the store (exception is risen if the user is not valid)
+			storeValidator.validateStore(store, true);
+			
+			store.setName(NameGenerator.getURLName(store.getDisplayName()));
+			storeDao.save(store);
+		} catch (UserNotFoundException ex) {
+			// This exception is not supposed to happen
+			throw new RuntimeException(ex);
+		}
 		
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(Store store) throws NotAuthorizedException {
+	public void update(String storeName, Store updatedStore) throws NotAuthorizedException, 
+			ValidationException, StoreNotFoundException {
+		
+		try {
+			// Get the currently logged-in user
+			User user = userBo.getCurrentUser();
+			
+			Store storeToUpdate = this.findByName(storeName);								
+
+			// Exception is risen if user is not allowed
+			storeAuth.canUpdate(storeToUpdate);
+			
+			// Exception is risen if the user is not valid
+			storeValidator.validateStore(updatedStore, false);
+			
+			// Update fields
+			if (updatedStore.getUrl() != null) {
+				storeToUpdate.setUrl(updatedStore.getUrl());
+			}
+
+			if (updatedStore.getDescription() != null) {
+				storeToUpdate.setDescription(updatedStore.getDescription());
+			}
+
+			if (updatedStore.getDisplayName() != null) {
+				storeToUpdate.setDisplayName(updatedStore.getDisplayName());
+			}
+			
+			storeToUpdate.setLasteditor(user);
+			
+			storeDao.update(storeToUpdate);
+			
+		} catch (UserNotFoundException ex) {
+			// This exception is not supposed to happen
+			throw new RuntimeException(ex);
+		}
+		
+	}
+
+	@Override
+	@Transactional(readOnly=false)
+	public void delete(String storeName) throws NotAuthorizedException, StoreNotFoundException {
+		Store store = this.findByName(storeName);
 		// Check rights (exception is risen if user is not allowed)
 		storeAuth.canDelete(store);
 		storeDao.delete(store);

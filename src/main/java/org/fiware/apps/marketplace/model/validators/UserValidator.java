@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.model.validators;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,11 +41,8 @@ public class UserValidator {
 
 	private static final int COMPANY_MIN_LENGTH = 3;	//For example: UPM, TID, SAP, ENG,...
 	private static final int COMPANY_MAX_LENGTH = 30;
-	//Just for the future...
 	private static final int PASSWORD_MIN_LENGTH = 8;
 	private static final int PASSWORD_MAX_LENGTH = 30;
-	private static final int DISPLAY_NAME_MIN_LENGTH = 5;
-	private static final int DISPLAY_NAME_MAX_LENGTH = 30;
 
 	private static final GenericValidator GENERIC_VALIDATOR = GenericValidator.getInstance();
 
@@ -53,40 +50,42 @@ public class UserValidator {
 	 * @param user User to be checked
 	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
 	 * the basic fields (name, mail, pass) are included.
-	 * @return True if the user is valid. Otherwise <code>ValidationException</code> will be thrown
 	 * @throws ValidationException If user is not valid
 	 */
-	public boolean validateUser(User user, boolean isBeingCreated) throws ValidationException {
-				
+	public void validateUser(User user, boolean isBeingCreated) throws ValidationException {
+		
+		// Check basic fields when a user is created
 		if (isBeingCreated) {
-			if (user.getDisplayName() == null || user.getEmail() == null || user.getPassword() == null) {
-				throw new ValidationException("name, email and/or password cannot be null");
-			}
-		}
-
-		if (user.getDisplayName() != null && !GENERIC_VALIDATOR.validateLength(user.getDisplayName(), 
-				DISPLAY_NAME_MIN_LENGTH, DISPLAY_NAME_MAX_LENGTH)) {
-			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("displayName", 
-					DISPLAY_NAME_MIN_LENGTH, DISPLAY_NAME_MAX_LENGTH));
+			GENERIC_VALIDATOR.validateRequired("displayName", user.getDisplayName());
+			GENERIC_VALIDATOR.validateRequired("email", user.getEmail());
+			GENERIC_VALIDATOR.validateRequired("password", user.getPassword());
 		}
 		
-		if (user.getPassword() != null && !GENERIC_VALIDATOR.validateLength(user.getPassword(), 
-				PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH)) {
-			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("password", 
-					PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH));
+		if (user.getDisplayName() != null) {
+			GENERIC_VALIDATOR.validatePattern("displayName", user.getDisplayName(), 
+					"^[\\w ]+$", "This field only accepts letters and digits.");
+			GENERIC_VALIDATOR.validateMinLength("displayName", user.getDisplayName(), 
+					GenericValidator.getDisplayNameMinLength());
+			GENERIC_VALIDATOR.validateMaxLength("displayName", user.getDisplayName(), 
+					GenericValidator.getDisplayNameMaxLength());
 		}
 		
-		if (user.getEmail() != null && !GENERIC_VALIDATOR.validateEMail(user.getEmail())) {
-			throw new ValidationException("email is not valid");
+		if (user.getPassword() != null) {
+			GENERIC_VALIDATOR.validateMinLength("password", user.getPassword(), 
+					PASSWORD_MIN_LENGTH);
+			GENERIC_VALIDATOR.validateMaxLength("password", user.getPassword(), 
+					PASSWORD_MAX_LENGTH);
+		}
+		
+		if (user.getEmail() != null) {
+			GENERIC_VALIDATOR.validateEMail("email", user.getEmail());
 		}
 
-		if (user.getCompany() != null && !GENERIC_VALIDATOR.validateLength(user.getCompany(), 
-				COMPANY_MIN_LENGTH, COMPANY_MAX_LENGTH)) {
-			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("company", 
-					COMPANY_MIN_LENGTH, COMPANY_MAX_LENGTH));
+		if (user.getCompany() != null) {
+			GENERIC_VALIDATOR.validateMinLength("company", user.getCompany(), 
+					COMPANY_MIN_LENGTH);
+			GENERIC_VALIDATOR.validateMaxLength("company", user.getCompany(), 
+					COMPANY_MAX_LENGTH);
 		}
-
-		return true;
 	}
-
 }

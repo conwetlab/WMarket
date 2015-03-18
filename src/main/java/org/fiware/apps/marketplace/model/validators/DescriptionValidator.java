@@ -45,39 +45,36 @@ public class DescriptionValidator {
 	 * @param description Offerings Description to be checked
 	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
 	 * the basic fields (name, url) are included.
-	 * @return True if the description is valid. Otherwise <code>ValidationException</code> will be thrown
 	 * @throws ValidationException If description is not valid
 	 */
-	public boolean validateDescription(Description description, 
-			boolean isBeingCreated) throws ValidationException {
+	public void validateDescription(Description description, boolean isBeingCreated) throws ValidationException {
 
+		// Check basic fields when a description is created
 		if (isBeingCreated) {
-			if (description.getDisplayName() == null || description.getUrl() == null) {
-				throw new ValidationException("name and/or url cannot be null");
-			}
+			GENERIC_VALIDATOR.validateRequired("displayName", description.getDisplayName());
+			GENERIC_VALIDATOR.validateRequired("url", description.getUrl());
 		}
 
-		if (description.getDisplayName() != null && 
-				!GENERIC_VALIDATOR.validateDisplayName(description.getDisplayName())) {
-			int minNameLength = GenericValidator.getDisplayNameMinLength();
-			int maxNameLength = GenericValidator.getDisplayNameMaxLength();
-			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("name", 
-					minNameLength, maxNameLength));
+		if (description.getDisplayName() != null) {
+			GENERIC_VALIDATOR.validatePattern("displayName", description.getDisplayName(), 
+					"^[\\w -]+$", "This field only accepts letters, digits and (-/_).");
+			GENERIC_VALIDATOR.validateMinLength("displayName", description.getDisplayName(), 
+					GenericValidator.getDisplayNameMinLength());
+			GENERIC_VALIDATOR.validateMaxLength("displayName", description.getDisplayName(), 
+					GenericValidator.getDisplayNameMaxLength());
 		}
 
-		if (description.getUrl() != null && !GENERIC_VALIDATOR.validateURL(description.getUrl())) {
-			throw new ValidationException("url is not valid");
+		if (description.getUrl() != null) {
+			GENERIC_VALIDATOR.validateURL("url", description.getUrl());
 		}
 
-		if (description.getDescription() != null && 
-				!GENERIC_VALIDATOR.validateDescription(description.getDescription())) {
-			int minDescriptionLength = GenericValidator.getDescriptionMinLength();
-			int maxDescriptionLength = GenericValidator.getDescriptionMaxLength();
-			throw new ValidationException(GENERIC_VALIDATOR.getLengthErrorMessage("description", 
-					minDescriptionLength, maxDescriptionLength));
-		}
+		if (description.getDescription() != null) {
+			GENERIC_VALIDATOR.validateMinLength("description", description.getDescription(), 
+					GenericValidator.getDescriptionMinLength());
+			GENERIC_VALIDATOR.validateMaxLength("description", description.getDescription(), 
+					GenericValidator.getDescriptionMaxLength());
 
-		return true;
+		}	
 	}
 
 }

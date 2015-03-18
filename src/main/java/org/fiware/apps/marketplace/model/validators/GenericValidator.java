@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.model.validators;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -77,62 +77,44 @@ public class GenericValidator {
 		return DESCRIPTION_MIN_LENGTH;
 	}
 
-	public void validatorRequired(String fieldName, String fieldValue) throws ValidationException {
+	public void validateRequired(String fieldName, String fieldValue) throws ValidationException {
 		if (fieldValue == null || fieldValue.length() == 0) {
 			throw new ValidationException(fieldName, "This field is required.");
 		}
 	}
 
-	public void validatorPattern(String fieldName, String fieldValue, String regex, String errorMessage) throws ValidationException {
+	public void validatePattern(String fieldName, String fieldValue, String regex, String errorMessage) 
+			throws ValidationException {
+		
 		if (fieldValue == null || !fieldValue.matches(regex)) {
 			throw new ValidationException(fieldName, errorMessage);
 		}
 	}
 
-	public void validatorURLPattern(String fieldName, String fieldValue) throws ValidationException {
+	public void validateURL(String fieldName, String fieldValue) throws ValidationException {
 		if (fieldValue == null || !urlValidator.isValid(fieldValue)) {
 			throw new ValidationException(fieldName, "This field must be a valid URL.");
 		}
 	}
 
-	public void validatorMinLength(String fieldName, String fieldValue, int minLength) throws ValidationException {
+	public void validateMinLength(String fieldName, String fieldValue, int minLength) throws ValidationException {
 		if (fieldValue == null || fieldValue.length() < minLength) {
-			throw new ValidationException(fieldName, String.format("This field must be at least %d chars.", minLength));
+			throw new ValidationException(fieldName, 
+					String.format("This field must be at least %d chars.", minLength));
 		}
 	}
 
-	public void validatorMaxLength(String fieldName, String fieldValue, int maxLength) throws ValidationException {
+	public void validateMaxLength(String fieldName, String fieldValue, int maxLength) throws ValidationException {
 		if (fieldValue == null || fieldValue.length() >= maxLength) {
-			throw new ValidationException(fieldName, String.format("This field must not exceed %d chars.", maxLength));
+			throw new ValidationException(fieldName, 
+					String.format("This field must not exceed %d chars.", maxLength));
 		}
 	}
-
-	public String getLengthErrorMessage(String field, int minLength, int maxLength) {
-		return field + " is not valid. (min length: " +
-				minLength + ", max length: " + maxLength + ")";
-	}
-
-	public boolean validateLength(String value, int minLength, int maxLength) {		
-		boolean minAccomplished = minLength <= 0 ? true : value.length() >= minLength;
-		boolean maxAccomplished = value.length() <= maxLength;
-		
-		return minAccomplished && maxAccomplished;
-	}
-
-	public boolean validateDisplayName(String name) {
-		return validateLength(name, NAME_MIN_LENGTH, NAME_MAX_LENGTH);
-	}
 	
-	public boolean validateDescription(String description) {
-		return validateLength(description, DESCRIPTION_MIN_LENGTH, DESCRIPTION_MAX_LENGTH);
-	}
-	
-	public boolean validateEMail(String email) {
-		return emailPattern.matcher(email).matches();
-	}
-	
-	public boolean validateURL(String url) {
-		return urlValidator.isValid(url);
+	public void validateEMail(String fieldName, String email) throws ValidationException {
+		if (email == null || !emailPattern.matcher(email).matches()) {
+			throw new ValidationException(fieldName, "This field must be a valid email.");
+		}
 	}
 	
 }

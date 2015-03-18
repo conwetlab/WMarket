@@ -45,9 +45,10 @@ public interface UserBo {
 	// Save, update, delete
 	public void save(User user) throws NotAuthorizedException, 
 			ValidationException;
-	public void update(User user) throws NotAuthorizedException,
-			ValidationException;
-	public void delete(User user) throws NotAuthorizedException;
+	public void update(String userName, User updatedUser) throws NotAuthorizedException,
+			ValidationException, UserNotFoundException;
+	public void delete(String userName) throws NotAuthorizedException,
+			UserNotFoundException;
 	
 	// Find by name
 	public User findByName(String userName) throws NotAuthorizedException, 

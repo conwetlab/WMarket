@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.model.validators;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,31 +45,39 @@ public class StoreValidator {
 	 * @param store Store to be checked
 	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
 	 * the basic fields (name, url) are included.
-	 * @return True if the store is valid. Otherwise <code>ValidationException</code> will be thrown
 	 * @throws ValidationException If store is not valid
 	 */
-	public boolean validateStore(Store store, boolean isBeingCreated) throws ValidationException {
+	public void validateStore(Store store, boolean isBeingCreated) throws ValidationException {
 
+		// Check basic fields when a store is created
 		if (isBeingCreated) {
-			GENERIC_VALIDATOR.validatorRequired("displayName", store.getDisplayName());
+			GENERIC_VALIDATOR.validateRequired("displayName", store.getDisplayName());
+			GENERIC_VALIDATOR.validateRequired("url", store.getUrl());
 		}
 
-		GENERIC_VALIDATOR.validatorPattern("displayName", store.getDisplayName(), "^[\\w -]+$", "This field only accepts letters, digits and (-/_).");
-		GENERIC_VALIDATOR.validatorMinLength("displayName", store.getDisplayName(), GenericValidator.getDisplayNameMinLength());
-		GENERIC_VALIDATOR.validatorMaxLength("displayName", store.getDisplayName(), GenericValidator.getDisplayNameMaxLength());
-
-		if (isBeingCreated) {
-			GENERIC_VALIDATOR.validatorRequired("url", store.getUrl());
+		// If the store is being created, this value cannot be null since we have
+		// checked it before
+		if (store.getDisplayName() != null) {
+			GENERIC_VALIDATOR.validatePattern("displayName", store.getDisplayName(), 
+					"^[\\w -]+$", "This field only accepts letters, digits and (-/_).");
+			GENERIC_VALIDATOR.validateMinLength("displayName", store.getDisplayName(), 
+					GenericValidator.getDisplayNameMinLength());
+			GENERIC_VALIDATOR.validateMaxLength("displayName", store.getDisplayName(), 
+					GenericValidator.getDisplayNameMaxLength());
 		}
 
-		GENERIC_VALIDATOR.validatorURLPattern("url", store.getUrl());
+		// If the store is being created, this value cannot be null since we have
+		// checked it before
+		if (store.getUrl() != null) {
+			GENERIC_VALIDATOR.validateURL("url", store.getUrl());
+		}
 
 		if (store.getDescription() != null) {
-			GENERIC_VALIDATOR.validatorMinLength("description", store.getDescription(), GenericValidator.getDescriptionMinLength());
-			GENERIC_VALIDATOR.validatorMaxLength("description", store.getDescription(), GenericValidator.getDescriptionMaxLength());
+			GENERIC_VALIDATOR.validateMinLength("description", store.getDescription(), 
+					GenericValidator.getDescriptionMinLength());
+			GENERIC_VALIDATOR.validateMaxLength("description", store.getDescription(), 
+					GenericValidator.getDescriptionMaxLength());
 		}
-
-		return true;
 	}
 
 }

@@ -45,12 +45,13 @@ import org.fiware.apps.marketplace.model.Description;
 public interface DescriptionBo {
 	
 	// Save, Update, Delete
-	public void save(Description description) throws MalformedURLException, 
-			NotAuthorizedException, ValidationException;
-	public void update(Description description) throws MalformedURLException, 
-			NotAuthorizedException, ValidationException;
-	public void delete(Description description) throws NotAuthorizedException, 
-			ValidationException;
+	public void save(String storeName, Description description) throws MalformedURLException, 
+			NotAuthorizedException, ValidationException, StoreNotFoundException;
+	public void update(String storeName, String descriptionName, Description updatedDescription) 
+			throws MalformedURLException, NotAuthorizedException, ValidationException,
+			StoreNotFoundException, DescriptionNotFoundException;
+	public void delete(String storeName, String descriptionName) throws NotAuthorizedException, 
+			ValidationException, StoreNotFoundException, DescriptionNotFoundException;
 	
 	// Find
 	public Description findByNameAndStore(String storeName, String descriptionName) 

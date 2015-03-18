@@ -147,7 +147,7 @@ public class OfferingResolver {
 	 * @return
 	 */
 	public List<Offering> resolveOfferingsFromStore(Store store) {
-		return resolveOfferingsFromServiceDescriptions(store.getOfferingsDescriptions());
+		return resolveOfferingsFromServiceDescriptions(store.getDescriptions());
 	}
 
 	/**

@@ -63,7 +63,7 @@ public class RdfIndexer {
 	
 	public void indexService(Description service) throws MalformedURLException{
 
-		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
+		String lucenePath = PropertiesUtil.getProperty("lucene.IndexPath");
 		Model model = rdfHelper.loadModel(service.getUrl());
 		String serviceId = service.getId().toString();
 		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath, serviceId);	

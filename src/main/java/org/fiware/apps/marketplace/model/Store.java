@@ -72,7 +72,7 @@ public class Store {
 	private String name;
 	private String description;
 	private Date registrationDate;
-	private List<Description> offeringsDescriptions;
+	private List<Description> descriptions;
 	private User lasteditor;	
 	private User creator;
 	
@@ -167,11 +167,11 @@ public class Store {
 	@XmlTransient
 	@OneToMany(mappedBy="store", cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
-	public List<Description> getOfferingsDescriptions() {
-		return offeringsDescriptions;
+	public List<Description> getDescriptions() {
+		return descriptions;
 	}
 	
-	public void setOfferingsDescriptions(List<Description> offeringsDescriptions) {
-		this.offeringsDescriptions = offeringsDescriptions;
+	public void setDescriptions(List<Description> offeringsDescriptions) {
+		this.descriptions = offeringsDescriptions;
 	}
 }

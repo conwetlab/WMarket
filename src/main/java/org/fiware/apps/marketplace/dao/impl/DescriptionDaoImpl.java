@@ -85,7 +85,7 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 		List<?> list = query.list();
 		
 		if (list.size() == 0) {
-			throw new DescriptionNotFoundException("Offerings Description " + params[0] + " not found");
+			throw new DescriptionNotFoundException("Description " + params[0] + " not found");
 		} else {
 			return (Description) list.get(0);
 		}

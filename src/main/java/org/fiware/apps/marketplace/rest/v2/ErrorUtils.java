@@ -36,6 +36,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.APIError;
 import org.hibernate.HibernateException;
@@ -89,6 +90,13 @@ public class ErrorUtils {
 		logger.warn("Bad Request {}", message);
 		return Response.status(Status.BAD_REQUEST).entity(
 				new APIError(ErrorType.BAD_REQUEST, message)).build();
+	}
+	
+	public Response validationErrorResponse(ValidationException ex) {
+		logger.warn("Validation Exception {} {}", ex.getFieldName(), ex.getFieldError());
+		return Response.status(Status.BAD_REQUEST).entity(
+				new APIError(ErrorType.VALIDATION_ERROR, ex.getFieldName(), ex.getFieldError())).build();
+
 	}
 	
 	public Response entityNotFoundResponse(Exception ex) {

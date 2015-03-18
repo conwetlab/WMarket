@@ -34,7 +34,6 @@ package org.fiware.apps.marketplace.rest.v2;
  */
 
 import java.net.URI;
-import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -56,9 +55,7 @@ import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
-import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
@@ -106,9 +103,7 @@ public class StoreService {
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
-			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
-		} catch (UserNotFoundException ex) {
-			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
+			response = ERROR_UTILS.validationErrorResponse(ex);
 		} catch (DataIntegrityViolationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
@@ -128,37 +123,12 @@ public class StoreService {
 		Response response;
 
 		try {
-			Store storeDB = storeBo.findByName(storeName);								
-
-			// At this moment, the URL cannot be changed...
-			// if (store.getName() != null) {
-			// 	storeDB.setName(store.getName());
-			// }
-
-			if (store.getUrl() != null) {
-				storeDB.setUrl(store.getUrl());
-			}
-
-			if (store.getDescription() != null) {
-				storeDB.setDescription(store.getDescription());
-			}
-
-			if (store.getDisplayName() != null) {
-				storeDB.setDisplayName(store.getDisplayName());
-			}
-
-			store.setLasteditor(userBo.getCurrentUser());
-
-			// Save the new Store and Return OK
-			storeBo.update(storeDB);
+			storeBo.update(storeName, store);
 			response = Response.status(Status.OK).build();
-
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
-			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
-		} catch (UserNotFoundException ex) {
-			response = ERROR_UTILS.internalServerError("There was an error retrieving the user from the database");
+			response = ERROR_UTILS.validationErrorResponse(ex);
 		} catch (DataIntegrityViolationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
@@ -178,9 +148,7 @@ public class StoreService {
 		Response response;
 
 		try {
-			//Retrieve the Store from the database
-			Store store = storeBo.findByName(storeName);
-			storeBo.delete(store);
+			storeBo.delete(storeName);
 			response = Response.status(Status.NO_CONTENT).build();		// Return 204 No Content
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);

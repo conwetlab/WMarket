@@ -34,20 +34,24 @@ package org.fiware.apps.marketplace.bo.impl;
  */
 
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.helpers.OfferingResolver;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
 import org.fiware.apps.marketplace.rdf.RdfIndexer;
 import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
@@ -63,66 +67,112 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Autowired private DescriptionDao descriptionDao;
 	@Autowired private RdfIndexer rdfIndexer;
 	@Autowired private OfferingResolver offeringResolver;
+	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
 	@Autowired private OfferingDao offeringDao;
 		
 	@Override
 	@Transactional(readOnly=false)
-	public void save(Description description) 
+	public void save(String storeName, Description description) 
 			throws MalformedURLException, NotAuthorizedException, 
-			ValidationException {
+			ValidationException, StoreNotFoundException {
 		
-		// Check rights (exception is risen if user is not allowed)
-		descriptionAuth.canCreate(description);
-		
-		// Validate the description (exception is risen if the user is not valid)
-		descriptionValidator.validateDescription(description, true);
-		
-		// Set the name
-		description.setName(NameGenerator.getURLName(description.getDisplayName()));
-		
-		// Get all the offerings described in the USDL
-		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
-		description.addOfferings(offerings);
-		
-		// Save the description
-		descriptionDao.save(description);
-		
-		// Index
-		rdfIndexer.indexService(description);
+		try {
+			
+			User user = userBo.getCurrentUser();
+			Store store = storeBo.findByName(storeName);
+			
+			// Check rights (exception is risen if user is not allowed)
+			descriptionAuth.canCreate(description);
+			
+			// Set basic fields
+			description.setRegistrationDate(new Date());
+			description.setStore(store);
+			description.setCreator(user);
+			description.setLasteditor(user);
+			
+			// Validate the description (exception is risen if the user is not valid)
+			descriptionValidator.validateDescription(description, true);
+			
+			// Set the name
+			description.setName(NameGenerator.getURLName(description.getDisplayName()));
+			
+			// Get all the offerings described in the USDL
+			List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
+			description.addOfferings(offerings);
+			
+			// Save the description
+			descriptionDao.save(description);
+			
+			// Index
+			rdfIndexer.indexService(description);
+		} catch (UserNotFoundException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(Description description) 
+	public void update(String storeName, String descriptionName, Description updatedDescription) 
 			throws MalformedURLException, NotAuthorizedException, 
-			ValidationException {
+			ValidationException, StoreNotFoundException, DescriptionNotFoundException {
 		
-		// Check rights (exception is risen if user is not allowed)
-		descriptionAuth.canUpdate(description);
-		
-		// Validate the description (exception is risen if the user is not valid)
-		descriptionValidator.validateDescription(description, false);
-		
-		// Get all the offerings described in the USDL
-		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
-		description.setOfferings(offerings);	// Add the new offerings
-
-		// Save the description
-		descriptionDao.update(description);
-		
-		// Reindex
-		rdfIndexer.deleteService(description);
-		rdfIndexer.indexService(description);
+		try {
+			Description descriptionToBeUpdated = this.findByNameAndStore(storeName, descriptionName);
+			
+			// Check rights (exception is risen if user is not allowed)
+			descriptionAuth.canUpdate(descriptionToBeUpdated);
+			
+			// Validate the description (exception is risen if the user is not valid)
+			descriptionValidator.validateDescription(updatedDescription, false);
+			
+			// Update fields
+			if (updatedDescription.getDisplayName() != null) {
+				descriptionToBeUpdated.setDisplayName(updatedDescription.getDisplayName());
+			}
+	
+			if (updatedDescription.getUrl() != null) {
+				descriptionToBeUpdated.setUrl(updatedDescription.getUrl());
+			}
+	
+			if (updatedDescription.getDescription() != null) {
+				descriptionToBeUpdated.setDescription(updatedDescription.getDescription());
+			}
+	
+			descriptionToBeUpdated.setLasteditor(userBo.getCurrentUser());
+	
+			// Remove previous offerings
+			descriptionToBeUpdated.getOfferings().removeAll(descriptionToBeUpdated.getOfferings());
+			
+			// Get all the offerings described in the USDL
+			List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(descriptionToBeUpdated);
+			descriptionToBeUpdated.setOfferings(offerings);	// Add the new offerings
+	
+			// Save the description
+			descriptionDao.update(descriptionToBeUpdated);
+			
+			// Reindex
+			rdfIndexer.deleteService(descriptionToBeUpdated);
+			rdfIndexer.indexService(descriptionToBeUpdated);
+			
+		} catch (UserNotFoundException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(Description description) throws NotAuthorizedException {
+	public void delete(String storeName, String descriptionName) 
+			throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException {
+		
+		Store store = storeBo.findByName(storeName);
+		Description description = this.findByNameAndStore(storeName, descriptionName);
+		
 		// Check rights (exception is risen if user is not allowed)
 		descriptionAuth.canDelete(description);
 		
 		// Delete the description from the data base
+		store.getDescriptions().remove(description);
 		descriptionDao.delete(description);
 		
 		// Delete indexes
