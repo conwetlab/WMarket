@@ -30,15 +30,15 @@ button,
 input[type="button"],
 input[type="submit"] {
     position: relative;
-    display: inline-block;
     cursor: pointer;
     min-height: 30px;
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
 }
 
 .btn {
+    display: inline-block;
     outline: none;
-    padding: 0px 5px;
+    padding: 4px 5px;
     border: solid 1px transparent;
     border-radius: 4px;
     min-width: 35px;
@@ -48,7 +48,7 @@ input[type="submit"] {
 @media (min-width: 768px) {
 
     .btn {
-        padding: 0px 8px;
+        padding: 4px 8px;
         min-width: 50px;
     }
 
@@ -101,6 +101,7 @@ input[type="submit"] {
 .btn-primary-lighter.active,
 .btn-primary-lighter:focus,
 .btn-primary-lighter:hover {
+    color: rgb(255, 255, 255);
     background-color: rgb(75, 145, 235);
     border-color: rgb(50, 130, 230);
 }
@@ -113,12 +114,13 @@ input[type="submit"] {
     color: rgb(255, 255, 255);
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: rgb(90, 185, 90);
-    border-color: rgb(75, 175, 75);
+    border-color: rgb(50, 150, 50);
 }
 
 .btn-success.active,
 .btn-success:focus,
 .btn-success:hover {
+    color: rgb(255, 255, 255);
     background-color: rgb(70, 155, 70);
     border-color: rgb(55, 130, 55);
 }
@@ -136,8 +138,23 @@ input[type="submit"] {
 
 .btn-warning.active,
 .btn-warning:hover {
+    color: rgb(255, 255, 255);
     background-color: rgb(240, 160, 40);
     border-color: rgb(210, 130, 20);
+}
+
+.btn-danger {
+    color: rgb(255, 255, 255);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: rgb(240, 110, 100);
+    border-color: rgb(210, 70, 60);
+}
+
+.btn-danger.active,
+.btn-danger:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(225, 75, 75);
+    border-color: rgb(160, 20, 15);
 }
 
 /***************************************************************************************
@@ -236,7 +253,7 @@ input[type="text"] {
 }
 
 textarea {
-	position: relative;
+    position: relative;
     font: normal 400 14px/20px Helvetica, Arial, sans-serif;
     resize: none;
 }
@@ -491,6 +508,10 @@ textarea {
     border-radius: 0px 0px 3px 3px;
 }
 
+.panel .panel-body .alert {
+    padding: 10px 10px;
+}
+
 /***************************************************************************************
  *  DEFAULT THEME - PANEL - CONTEXTUAL CLASS - DEFAULT
  ***************************************************************************************/
@@ -500,7 +521,7 @@ textarea {
 }
 
 .panel-default .panel-heading {
-    color: rgb(130, 130, 130);
+    color: rgb(100, 100, 100);
     background-color: rgb(240, 240, 240);
 }
 
@@ -515,6 +536,7 @@ textarea {
 .panel-default-darker .panel-heading {
     color: rgb(220, 220, 230);
     background-color: rgb(60, 65, 75);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
 .panel-default-darker .panel-heading .panel-subtitle {
