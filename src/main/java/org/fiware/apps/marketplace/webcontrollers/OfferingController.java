@@ -32,10 +32,13 @@ package org.fiware.apps.marketplace.webcontrollers;
  * #L%
  */
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -48,6 +51,7 @@ import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,15 +70,32 @@ public class OfferingController extends AbstractController {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public Response listView() {
+    public Response listView(
+            @Context HttpServletRequest request) {
 
+        Boolean wasCreated;
+        HttpSession session;
         ModelAndView view;
         ModelMap model = new ModelMap();
         ResponseBuilder builder;
+        User user;
 
         try {
-            model.addAttribute("user", getCurrentUser());
+            user = getCurrentUser();
+
+            model.addAttribute("user", user);
             model.addAttribute("title", "Catalogue - " + getContextName());
+
+            session = request.getSession();
+
+            synchronized (session) {
+                wasCreated = (Boolean) session.getAttribute("created");
+
+                if (wasCreated != null) {
+                    model.addAttribute("message", "Hi '" + user.getDisplayName() + "', your account was created successfully.");
+                    session.removeAttribute("created");
+                }
+            }
 
             view = new ModelAndView("offering.list", model);
             builder = Response.ok();
