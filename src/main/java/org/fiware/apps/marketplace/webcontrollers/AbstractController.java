@@ -73,4 +73,8 @@ public abstract class AbstractController {
         return userBo.getCurrentUser();
     }
 
+    protected UserBo getUserBo() {
+        return userBo;
+    }
+
 }
