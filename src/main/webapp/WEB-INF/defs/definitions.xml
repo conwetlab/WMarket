@@ -5,9 +5,24 @@
 
 <tiles-definitions>
 
+	<!-- Core - Login View -->
+	<definition name="core.login" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/core/login-form.jsp" />
+	</definition>
+
+	<!-- Core - Register Form View -->
+	<definition name="core.register" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/core/registration-form.jsp" />
+	</definition>
+
 	<!-- Core - Error View -->
 	<definition name="core.error" template="/WEB-INF/views/base.jsp">
 		<put-attribute name="content" value="/WEB-INF/views/core/error.jsp" />
+	</definition>
+
+	<!-- Users - Detail View -->
+	<definition name="user.detail" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/users/detail-content.jsp" />
 	</definition>
 
 	<!-- Offerings - List View -->
