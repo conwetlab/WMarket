@@ -31,20 +31,14 @@
               </button>
             </div><!-- /.navbar-element -->
 
-          </c:when>
-        </c:choose>
-
-        <form class="navbar-element pull-left">
-          <div class="form-field form-addon">
-            <input id="search-field" class="form-control" type="text" placeholder="TODO: Not implemented yet.">
-            <button id="search" class="btn btn-default btn-addon" type="submit">
-              <span class="fa fa-search"></span>
-            </button>
-          </div>
-        </form><!-- /.navbar-element -->
-
-        <c:choose>
-          <c:when test="${ not empty user }">
+            <form class="navbar-element pull-left">
+              <div class="form-field form-addon">
+                <input id="search-field" class="form-control" type="text" placeholder="TODO: Not implemented yet.">
+                <button id="search" class="btn btn-default btn-addon" type="submit">
+                  <span class="fa fa-search"></span>
+                </button>
+              </div>
+            </form><!-- /.navbar-element -->
 
             <div class="navbar-element pull-right">
               <button id="toggle-right-sidebar" class="btn btn-primary-lighter" type="button">
@@ -54,6 +48,24 @@
             </div><!-- /.navbar-element -->
 
           </c:when>
+          <c:when test="${ current_view == 'register_user' }">
+
+            <div class="navbar-element pull-right">
+              <a class="btn btn-primary-lighter" href="${ pageContext.request.contextPath }/login">
+                <span class="text-plain">Sign In</span>
+              </a>
+            </div><!-- /.navbar-element -->
+
+          </c:when>
+          <c:otherwise>
+
+            <div class="navbar-element pull-right">
+              <a class="btn btn-warning" href="${ pageContext.request.contextPath }/register">
+                <span class="text-plain">Sign Up</span>
+              </a>
+            </div><!-- /.navbar-element -->
+
+          </c:otherwise>
         </c:choose>
 
       </div>
@@ -61,6 +73,10 @@
 
     <c:choose>
       <c:when test="${ not empty user }">
+
+        <form name="logout_form" method="post" action="${ pageContext.request.contextPath }/logout">
+          <!-- <input name="${ _csrf.parameterName }" type="hidden" value="${ _csrf.token }" /> -->
+        </form>
 
         <div id="right-sidebar" class="panel panel-default-darker panel-sliding panel-sliding-right">
           <div class="panel-heading">
@@ -72,23 +88,23 @@
             <span class="panel-subtitle text-truncate">${ user.email }</span>
           </div>
           <div class="panel-body">
-		    <div class="list-group">
-		      <a class="list-group-item" href="${ pageContext.request.contextPath }/account/">
+        <div class="list-group">
+          <a class="list-group-item" href="${ pageContext.request.contextPath }/account">
                 <span class="fa fa-cog fa-fw"></span>
                 <span class="text-plain">Settings</span>
               </a>
-              <a class="list-group-item" href="#">
+              <a class="list-group-item" href="javascript:logout()">
                 <span class="fa fa-sign-out fa-fw"></span>
-                <span class="text-plain">Sign out</span>
+                <span class="text-plain">Log out</span>
               </a>
             </div>
           </div>
         </div><!-- /.panel -->
 
-		<div id="left-sidebar" class="panel panel-default panel-sliding panel-sliding-left">
-		  <div class="panel-body">
-		    <div class="list-group">
-		      <div class="list-group-item">
+    <div id="left-sidebar" class="panel panel-default panel-sliding panel-sliding-left">
+      <div class="panel-body">
+        <div class="list-group">
+          <div class="list-group-item">
                 <span class="fa fa-archive fa-fw"></span>
                 <span class="text-plain">My offerings</span>
               </div>
@@ -97,28 +113,28 @@
                 <span class="text-plain">Upload new offering</span>
               </a>
             </div>
-		    <div class="list-group">
+        <div class="list-group">
               <div class="list-group-title">WEB STORES</div>
               <div id="store-list" class="list-group">
               </div>
-              <a class="list-group-item" href="${ pageContext.request.contextPath }/stores/register/">
+              <a class="list-group-item" href="${ pageContext.request.contextPath }/stores/register">
                 <span class="fa fa-plus-circle fa-fw"></span>
                 <span class="text-plain">Register new store</span>
               </a>
             </div>
-		  </div><!-- /.panel-body -->
-		</div><!-- /.panel -->
+      </div><!-- /.panel-body -->
+    </div><!-- /.panel -->
+
+        <c:if test="${ not empty message }">
+          <div class="alert-manager">
+            <div class="alert alert-success">
+              <span class="fa fa-check-circle"></span> ${ message }
+            </div>
+          </div>
+        </c:if>
 
       </c:when>
     </c:choose>
-
-	<c:if test="${ not empty message }">
-	  <div class="alert-manager">
-	    <div class="alert alert-success">
-	      <span class="fa fa-check-circle"></span> ${ message }
-	    </div>
-	  </div>
-	</c:if>
 
     <t:insertAttribute name="content" />
 
@@ -138,29 +154,28 @@
     </div><!-- /.footer -->
 
     <script src="${ pageContext.request.contextPath }/resources/jquery/js/jquery-1.11.2.js"></script>
-    <script>
-
-      var WMarket = {
-        core: {},
-        layout: {},
-        resources: {}
-      };
-
-      WMarket.core.contextPath = "${ pageContext.request.contextPath }";
-
-      WMarket.layout.btnSearch = $('#search');
-      WMarket.layout.btnSearch.attr('disabled', true);
-
-      WMarket.layout.fieldSearch = $('#search-field');
-      WMarket.layout.fieldSearch.attr('disabled', true);
-
-      $('.alert-manager > .alert').delay(2000).slideUp(500);
-
-    </script>
-
     <c:choose>
       <c:when test="${ not empty user }">
 
+        <script>
+
+          var WMarket = {
+            core: {},
+            layout: {},
+            resources: {}
+          };
+
+          WMarket.core.contextPath = "${ pageContext.request.contextPath }";
+
+          WMarket.layout.btnSearch = $('#search');
+          WMarket.layout.btnSearch.attr('disabled', true);
+
+          WMarket.layout.fieldSearch = $('#search-field');
+          WMarket.layout.fieldSearch.attr('disabled', true);
+
+          $('.alert-manager > .alert').delay(2000).slideUp(500);
+
+        </script>
         <script>
 
           WMarket.layout.togglePrefs = $('#toggle-right-sidebar');
@@ -197,20 +212,15 @@
             event.stopPropagation();
           });
 
+          var logout = function logout() {
+            document.logout_form.submit();
+          };
         </script>
-
-      </c:when>
-    </c:choose>
-
-    <script src="${ pageContext.request.contextPath }/resources/marketplace/js/AlertManager.js"></script>
-    <script src="${ pageContext.request.contextPath }/resources/marketplace/js/EndpointManager.js"></script>
-    <script src="${ pageContext.request.contextPath }/resources/marketplace/js/Store.js"></script>
-    <script src="${ pageContext.request.contextPath }/resources/marketplace/js/StoreManager.js"></script>
-    <script src="${ pageContext.request.contextPath }/resources/marketplace/js/Offering.js"></script>
-
-    <c:choose>
-      <c:when test="${ not empty user }">
-
+        <script src="${ pageContext.request.contextPath }/resources/marketplace/js/AlertManager.js"></script>
+        <script src="${ pageContext.request.contextPath }/resources/marketplace/js/EndpointManager.js"></script>
+        <script src="${ pageContext.request.contextPath }/resources/marketplace/js/Store.js"></script>
+        <script src="${ pageContext.request.contextPath }/resources/marketplace/js/StoreManager.js"></script>
+        <script src="${ pageContext.request.contextPath }/resources/marketplace/js/Offering.js"></script>
         <script>
 
           WMarket.layout.storeList = $('#store-list');
