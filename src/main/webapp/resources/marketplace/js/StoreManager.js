@@ -6,35 +6,35 @@
 
 var StoreManager = (function () {
 
-	"use strict";
+    "use strict";
 
     var StoreManager = function StoreManager() {
-        this.storeList = [];
+        this.storeList = {};
     };
 
     StoreManager.prototype.addStore = function addStore(data) {
-        var newStore;
+        var store;
 
-        newStore = new Store(data);
-        this.storeList.push(newStore);
+        store = new Store(data);
+        this.storeList[store.name] = store;
 
-        return newStore;
+        return store;
     };
 
     StoreManager.prototype.getStoreByName = function getStoreByName(name) {
-        var found, i, storeFound;
+        var store, storeException;
 
-        for (found = false, i = 0; !found && i < this.storeList.length; i++) {
-            if (this.storeList[i].name == name) {
-                found = true;
-                storeFound = this.storeList[i];
-            }
+        if (!(store=this.storeList[name])) {
+            storeException = new Exception("The store '%(name)s' is not saved.".replace("%(name)s", name));
+            storeException.name = "Store Not Found";
+
+            throw storeException;
         }
 
-        return storeFound;
+        return store;
     };
 
-    if (typeof WMarket !== 'undefined' && 'resources' in WMarket) {
+    if (WMarket && WMarket.resources) {
         WMarket.resources.stores = new StoreManager();
     }
 
