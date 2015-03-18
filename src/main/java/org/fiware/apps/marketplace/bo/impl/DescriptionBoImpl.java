@@ -34,6 +34,7 @@ package org.fiware.apps.marketplace.bo.impl;
  */
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -141,13 +142,40 @@ public class DescriptionBoImpl implements DescriptionBo {
 	
 			descriptionToBeUpdated.setLasteditor(userBo.getCurrentUser());
 	
+			// Save the current state
+			List<Offering> previousOfferingsCopy = new ArrayList<Offering>(descriptionToBeUpdated.getOfferings());
+			List<Offering> descriptionOfferings = descriptionToBeUpdated.getOfferings();
+			
 			// Remove previous offerings
-			descriptionToBeUpdated.getOfferings().removeAll(descriptionToBeUpdated.getOfferings());
+			descriptionOfferings.clear();
 			
 			// Get all the offerings described in the USDL
-			List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(descriptionToBeUpdated);
-			descriptionToBeUpdated.setOfferings(offerings);	// Add the new offerings
-	
+			List<Offering> newOfferings = offeringResolver
+					.resolveOfferingsFromServiceDescription(descriptionToBeUpdated);
+			
+			for (Offering updatedOffering: newOfferings) {
+				int index = previousOfferingsCopy.indexOf(updatedOffering);
+				
+				if (index < 0) {
+					// A new offering that was not included before in the USDL
+					descriptionOfferings.add(updatedOffering);
+				} else {
+					// A old offering that was previously included in the USDL
+					Offering previousOffering = previousOfferingsCopy.get(index);
+					
+					// We have to update the fields (not to insert the new one)
+					previousOffering.setDescription(updatedOffering.getDescription());
+					previousOffering.setDisplayName(updatedOffering.getDisplayName());
+					previousOffering.setImageUrl(updatedOffering.getImageUrl());
+					previousOffering.setVersion(updatedOffering.getVersion());
+					previousOffering.setDisplayName(updatedOffering.getDisplayName());
+					previousOffering.setName(updatedOffering.getVersion());
+					
+					descriptionOfferings.add(previousOffering);
+				}
+				
+			}
+			
 			// Save the description
 			descriptionDao.update(descriptionToBeUpdated);
 			

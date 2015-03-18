@@ -116,7 +116,8 @@ public class UserBoImpl implements UserBo {
 		}
 		
 		if (updatedUser.getPassword() != null) {
-			userToBeUpdated.setPassword(updatedUser.getPassword());
+			// Encode the password
+			userToBeUpdated.setPassword(encoder.encode(updatedUser.getPassword()));
 		}
 		
 		if (updatedUser.getEmail() != null) {
@@ -127,8 +128,6 @@ public class UserBoImpl implements UserBo {
 			userToBeUpdated.setDisplayName(updatedUser.getDisplayName());
 		}
 		
-		// Encode the password
-		userToBeUpdated.setPassword(encoder.encode(userToBeUpdated.getPassword()));
 			
 		userDao.update(userToBeUpdated);
 	}

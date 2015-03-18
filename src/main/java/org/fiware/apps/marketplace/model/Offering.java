@@ -161,5 +161,27 @@ public class Offering {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return uri.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj) {
+			return true;
+		} 
+		
+		if (obj instanceof Offering) {
+			Offering other = (Offering) obj;
+			
+			if (this.uri.equals(other.uri)) {
+				return true;
+			}
+		}
+						
+		return false;
+	}	
 }
