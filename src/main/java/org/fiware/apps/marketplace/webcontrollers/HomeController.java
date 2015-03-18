@@ -37,18 +37,36 @@ import java.net.URISyntaxException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.springframework.stereotype.Component;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.servlet.ModelAndView;
 
 @Component
 @Path("/")
-public class HomeController {
+public class HomeController extends AbstractController {
 
 	@GET
 	public Response home() throws URISyntaxException {
 		return Response.status(Status.TEMPORARY_REDIRECT).location(new URI("offerings")).build();
 	}
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("login")
+    public Response login() {
+
+        ModelAndView view;
+        ModelMap model = new ModelMap();
+
+        model.addAttribute("title", "Sign In - " + getContextName());
+        view = new ModelAndView("core.login", model);
+
+        return Response.ok().entity(view).build();
+    }
 
 }
