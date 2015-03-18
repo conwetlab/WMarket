@@ -50,7 +50,7 @@
         <div class="title-descriptions">Store Information</div>
         <dl class="dl-vertical">
           <dt>Name</dt>
-          <dd>${ offering.store.displayName }</dd>
+          <dd><a href="${ pageContext.request.contextPath }/stores/${ offering.store.name }/offerings">${ offering.store.displayName }</a></dd>
           <dt>Creator</dt>
           <dd>${ offering.store.creator.displayName }</dd>
           <dt>Registration Date</dt>
