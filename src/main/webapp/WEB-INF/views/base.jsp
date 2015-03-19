@@ -108,9 +108,9 @@
                 <span class="fa fa-archive fa-fw"></span>
                 <span class="text-plain">My offerings</span>
               </div>
-              <a class="list-group-item" href="#"> <!-- TODO: ${ pageContext.request.contextPath }/offerings/register/ -->
+              <a class="list-group-item" href="${ pageContext.request.contextPath }/offerings/register">
                 <span class="fa fa-upload fa-fw"></span>
-                <span class="text-plain">Upload new offering</span>
+                <span class="text-plain">Upload new offerings</span>
               </a>
             </div>
         <div class="list-group">

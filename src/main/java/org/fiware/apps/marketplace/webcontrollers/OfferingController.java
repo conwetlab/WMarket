@@ -32,19 +32,17 @@ package org.fiware.apps.marketplace.webcontrollers;
  * #L%
  */
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
@@ -65,16 +63,47 @@ import org.springframework.web.servlet.ModelAndView;
 public class OfferingController extends AbstractController {
 
     @Autowired private OfferingBo offeringBo;
+    @Autowired private StoreBo storeBo;
 
     private static Logger logger = LoggerFactory.getLogger(OfferingController.class);
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public Response listView(
-            @Context HttpServletRequest request) {
+    @Path("register")
+    public Response registerFormView() {
 
-        Boolean wasCreated;
-        HttpSession session;
+        ModelAndView view;
+        ModelMap model = new ModelMap();
+        ResponseBuilder builder;
+
+        try {
+            User user = getCurrentUser();
+
+            model.addAttribute("user", user);
+            model.addAttribute("title", "Upload offerings - " + getContextName());
+            model.addAttribute("storeList", storeBo.filterByCreator(user.getUserName()));
+
+            view = new ModelAndView("offering.register", model);
+            builder = Response.ok();
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError();
+        } catch (NotAuthorizedException e) {
+            logger.info("User unauthorized", e);
+
+            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+            builder = Response.status(Status.UNAUTHORIZED);
+        }
+
+        return builder.entity(view).build();
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public Response listView() {
+
         ModelAndView view;
         ModelMap model = new ModelMap();
         ResponseBuilder builder;
@@ -85,17 +114,6 @@ public class OfferingController extends AbstractController {
 
             model.addAttribute("user", user);
             model.addAttribute("title", "Catalogue - " + getContextName());
-
-            session = request.getSession();
-
-            synchronized (session) {
-                wasCreated = (Boolean) session.getAttribute("created");
-
-                if (wasCreated != null) {
-                    model.addAttribute("message", "Hi '" + user.getDisplayName() + "', your account was created successfully.");
-                    session.removeAttribute("created");
-                }
-            }
 
             view = new ModelAndView("offering.list", model);
             builder = Response.ok();
