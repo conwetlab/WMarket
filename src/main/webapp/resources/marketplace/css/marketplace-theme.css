@@ -213,6 +213,10 @@ input[type="submit"] {
     left: -50%;
 }
 
+.alert .alert-link {
+    font-weight: bold;
+}
+
 /***************************************************************************************
  *  DEFAULT THEME - ALERT - CONTEXTUAL CLASS
  ***************************************************************************************/
@@ -224,9 +228,18 @@ input[type="submit"] {
 }
 
 .alert-info {
-    color: #31708f;
-    background-color: #d9edf7;
-    border-color: #bce8f1;
+    color: rgb(60, 110, 130);
+    background-color: rgb(225, 235, 245);
+    border-color: rgb(180, 220, 220);
+}
+
+.alert-info .alert-link {
+    color: rgb(60, 110, 130);
+}
+
+.alert-info .alert-link:hover {
+    color: rgb(10, 70, 90);
+    text-decoration: underline;
 }
 
 .alert-warning {
@@ -246,7 +259,8 @@ input[type="submit"] {
  ***************************************************************************************/
 
 input[type="password"],
-input[type="text"] {
+input[type="text"],
+select {
     position: relative;
     min-height: 30px;
     font: normal 400 14px/20px Helvetica, Arial, sans-serif;
@@ -510,6 +524,10 @@ textarea {
 
 .panel .panel-body .alert {
     padding: 10px 10px;
+}
+
+.panel .panel-body > *:last-child {
+    margin-bottom: 0px;
 }
 
 /***************************************************************************************

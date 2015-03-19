@@ -55,11 +55,6 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
@@ -69,7 +64,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("register")
 public class UserRegistrationController extends AbstractController {
 
-    private AuthenticationManager authManager;
     private static Logger logger = LoggerFactory.getLogger(UserRegistrationController.class);
 
     @GET
@@ -93,8 +87,7 @@ public class UserRegistrationController extends AbstractController {
             @Context HttpServletRequest request,
             @FormParam("displayName") String displayName,
             @FormParam("email") String email,
-            @FormParam("password") String password,
-            @FormParam("passwordConfirm") String passwordConfirm) throws URISyntaxException {
+            @FormParam("password") String password) throws URISyntaxException {
 
         HttpSession session;
         ModelAndView view;
@@ -111,8 +104,8 @@ public class UserRegistrationController extends AbstractController {
             user.setPassword(password);
 
             getUserBo().save(user);
-            autoLogin(user.getUserName(), password, request);
-            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).build();
+
+            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login").build();
             session = request.getSession();
 
             synchronized (session) {
@@ -139,17 +132,6 @@ public class UserRegistrationController extends AbstractController {
         }
 
         return builder.build();
-    }
-
-    private void autoLogin( String username, String password, HttpServletRequest request) {
-
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-        Authentication authentication = authManager.authenticate(token);
- 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
- 
-        //this step is important, otherwise the new login is not in session which is required by Spring Security
-        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
     }
 
 }

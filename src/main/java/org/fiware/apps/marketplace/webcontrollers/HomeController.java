@@ -35,9 +35,12 @@ package org.fiware.apps.marketplace.webcontrollers;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -50,18 +53,29 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("/")
 public class HomeController extends AbstractController {
 
-	@GET
-	public Response home() throws URISyntaxException {
-		return Response.status(Status.TEMPORARY_REDIRECT).location(new URI("offerings")).build();
-	}
+    @GET
+    public Response home() throws URISyntaxException {
+        return Response.status(Status.TEMPORARY_REDIRECT).location(new URI("offerings")).build();
+    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("login")
-    public Response login() {
+    public Response loginView(
+            @Context HttpServletRequest request) {
 
+        HttpSession session = request.getSession();
         ModelAndView view;
         ModelMap model = new ModelMap();
+
+        synchronized (session) {
+            Boolean wasCreated = (Boolean) session.getAttribute("created");
+
+            if (wasCreated != null) {
+                model.addAttribute("message", "Your user account was created successfully. You can log in right now.");
+                session.removeAttribute("created");
+            }
+        }
 
         model.addAttribute("title", "Sign In - " + getContextName());
         view = new ModelAndView("core.login", model);

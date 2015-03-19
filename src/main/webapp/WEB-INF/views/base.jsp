@@ -125,16 +125,16 @@
       </div><!-- /.panel-body -->
     </div><!-- /.panel -->
 
-        <c:if test="${ not empty message }">
-          <div class="alert-manager">
-            <div class="alert alert-success">
-              <span class="fa fa-check-circle"></span> ${ message }
-            </div>
-          </div>
-        </c:if>
-
       </c:when>
     </c:choose>
+
+    <c:if test="${ not empty message }">
+      <div class="alert-manager">
+        <div class="alert alert-success">
+          <span class="fa fa-check-circle"></span> ${ message }
+        </div>
+      </div>
+    </c:if>
 
     <t:insertAttribute name="content" />
 
@@ -154,6 +154,12 @@
     </div><!-- /.footer -->
 
     <script src="${ pageContext.request.contextPath }/resources/jquery/js/jquery-1.11.2.js"></script>
+    <script>
+
+      $('.alert-manager > .alert').delay(2000).slideUp(500);
+
+    </script>
+
     <c:choose>
       <c:when test="${ not empty user }">
 

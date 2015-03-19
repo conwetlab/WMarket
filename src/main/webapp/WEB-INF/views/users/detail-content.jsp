@@ -48,7 +48,7 @@
             </c:if>
           </div>
 
-          <p class="text-plain text-default">* Fields required</p>
+          <p class="text-plain text-default">* Required fields</p>
           <div class="form-options">
             <button type="submit" class="btn btn-success btn-sm-10 btn-md-5">Update Profile</button>
           </div>

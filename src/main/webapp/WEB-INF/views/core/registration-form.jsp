@@ -38,15 +38,6 @@
             </c:if>
           </div>
 
-          <div class="form-field">
-            <label class="text-plain">Confirm your password</label>
-            <input class="form-control" type="password" name="passwordConfirm" />
-
-            <c:if test="${ not empty form_error and form_error.fieldName == 'passwordConfirm' }">
-              <div class="form-field-error">${ form_error.fieldError }</div>
-            </c:if>
-          </div>
-
           <p class="text-plain text-default">All fields are required</p>
           <div class="form-options">
             <button class="btn btn-warning btn-sm-10 btn-md-5" type="submit">Create Account</button>
