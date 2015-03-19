@@ -174,4 +174,28 @@ public class Store {
 	public void setDescriptions(List<Description> offeringsDescriptions) {
 		this.descriptions = offeringsDescriptions;
 	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		
+		if (obj instanceof Store) {
+			Store other = (Store) obj;
+			
+			if (id == other.id || name.equals(other.name)) {
+				return true;
+			}			
+		}
+	
+		return false;
+	}
+	
+	
 }

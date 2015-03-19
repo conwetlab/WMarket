@@ -76,10 +76,10 @@ public class StoreBoImpl implements StoreBo{
 			store.setCreator(user);
 			store.setLasteditor(user);
 	
-			// Check rights (exception is risen if user is not allowed)
+			// Exception is risen if the user is not allowed
 			storeAuth.canCreate(store);
 			
-			// Validate the store (exception is risen if the user is not valid)
+			// Exception is risen if the store is not valid
 			storeValidator.validateStore(store, true);
 			
 			store.setName(NameGenerator.getURLName(store.getDisplayName()));
@@ -105,7 +105,8 @@ public class StoreBoImpl implements StoreBo{
 			// Exception is risen if user is not allowed
 			storeAuth.canUpdate(storeToUpdate);
 			
-			// Exception is risen if the user is not valid
+			// Exception is risen if the store is not valid
+			// Store returned by the BBDD cannot be updated if the updated store is not valid.
 			storeValidator.validateStore(updatedStore, false);
 			
 			// Update fields
@@ -149,7 +150,7 @@ public class StoreBoImpl implements StoreBo{
 		
 		Store store = storeDao.findByName(name);
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		storeAuth.canGet(store);
 		
 		return store;
@@ -160,7 +161,7 @@ public class StoreBoImpl implements StoreBo{
 	public List<Store> getStoresPage(int offset, int max) 
 			throws NotAuthorizedException {
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		storeAuth.canList();
 		
 		return storeDao.getStoresPage(offset, max);
@@ -170,7 +171,7 @@ public class StoreBoImpl implements StoreBo{
 	@Transactional
 	public List<Store> getAllStores() throws NotAuthorizedException {
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		storeAuth.canList();
 		
 		return storeDao.getAllStores();

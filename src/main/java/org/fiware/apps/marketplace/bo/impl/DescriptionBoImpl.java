@@ -83,7 +83,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			User user = userBo.getCurrentUser();
 			Store store = storeBo.findByName(storeName);
 			
-			// Check rights (exception is risen if user is not allowed)
+			// Exception is risen if user is not allowed
 			descriptionAuth.canCreate(description);
 			
 			// Set basic fields
@@ -92,7 +92,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			description.setCreator(user);
 			description.setLasteditor(user);
 			
-			// Validate the description (exception is risen if the user is not valid)
+			// Exception is risen if the description is not valid
 			descriptionValidator.validateDescription(description, true);
 			
 			// Set the name
@@ -121,67 +121,68 @@ public class DescriptionBoImpl implements DescriptionBo {
 		try {
 			Description descriptionToBeUpdated = this.findByNameAndStore(storeName, descriptionName);
 			
-			// Check rights (exception is risen if user is not allowed)
+			// Exception is risen if user is not allowed
 			descriptionAuth.canUpdate(descriptionToBeUpdated);
 			
-			// Validate the description (exception is risen if the user is not valid)
+			// Exception is risen if the description is not valid
 			descriptionValidator.validateDescription(updatedDescription, false);
 			
 			// Update fields
 			if (updatedDescription.getDisplayName() != null) {
 				descriptionToBeUpdated.setDisplayName(updatedDescription.getDisplayName());
 			}
-	
-			if (updatedDescription.getUrl() != null) {
-				descriptionToBeUpdated.setUrl(updatedDescription.getUrl());
-			}
-	
+			
 			if (updatedDescription.getDescription() != null) {
 				descriptionToBeUpdated.setDescription(updatedDescription.getDescription());
 			}
 	
-			descriptionToBeUpdated.setLasteditor(userBo.getCurrentUser());
-	
-			// Save the current state
-			List<Offering> previousOfferingsCopy = new ArrayList<Offering>(descriptionToBeUpdated.getOfferings());
-			List<Offering> descriptionOfferings = descriptionToBeUpdated.getOfferings();
-			
-			// Remove previous offerings
-			descriptionOfferings.clear();
-			
-			// Get all the offerings described in the USDL
-			List<Offering> newOfferings = offeringResolver
-					.resolveOfferingsFromServiceDescription(descriptionToBeUpdated);
-			
-			for (Offering updatedOffering: newOfferings) {
-				int index = previousOfferingsCopy.indexOf(updatedOffering);
+			if (updatedDescription.getUrl() != null) {
+				// If the URL has changed, the new offerings have to be retrieved and loaded. Otherwise,
+				// this step is not required
 				
-				if (index < 0) {
-					// A new offering that was not included before in the USDL
-					descriptionOfferings.add(updatedOffering);
-				} else {
-					// A old offering that was previously included in the USDL
-					Offering previousOffering = previousOfferingsCopy.get(index);
+				descriptionToBeUpdated.setUrl(updatedDescription.getUrl());
+				
+				// Save the current state
+				List<Offering> previousOfferingsCopy = new ArrayList<Offering>(descriptionToBeUpdated.getOfferings());
+				List<Offering> descriptionOfferings = descriptionToBeUpdated.getOfferings();
+				
+				// Remove previous offerings
+				descriptionOfferings.clear();
+				
+				// Get all the offerings described in the USDL
+				List<Offering> newOfferings = offeringResolver
+						.resolveOfferingsFromServiceDescription(descriptionToBeUpdated);
+				
+				for (Offering updatedOffering: newOfferings) {
+					int index = previousOfferingsCopy.indexOf(updatedOffering);
 					
-					// We have to update the fields (not to insert the new one)
-					previousOffering.setDescription(updatedOffering.getDescription());
-					previousOffering.setDisplayName(updatedOffering.getDisplayName());
-					previousOffering.setImageUrl(updatedOffering.getImageUrl());
-					previousOffering.setVersion(updatedOffering.getVersion());
-					previousOffering.setDisplayName(updatedOffering.getDisplayName());
-					previousOffering.setName(updatedOffering.getVersion());
+					if (index < 0) {
+						// A new offering that was not included before in the previous USDL
+						descriptionOfferings.add(updatedOffering);
+					} else {
+						// A old offering that was previously included in the previous USDL
+						Offering previousOffering = previousOfferingsCopy.get(index);
+						
+						// We have to update the fields (not to create a new one)
+						previousOffering.setDescription(updatedOffering.getDescription());
+						previousOffering.setDisplayName(updatedOffering.getDisplayName());
+						previousOffering.setImageUrl(updatedOffering.getImageUrl());
+						previousOffering.setVersion(updatedOffering.getVersion());
+						previousOffering.setDisplayName(updatedOffering.getDisplayName());
+						previousOffering.setName(updatedOffering.getVersion());
+						
+						descriptionOfferings.add(previousOffering);
+					}
 					
-					descriptionOfferings.add(previousOffering);
 				}
 				
+				// When the description URL changes, the index must be updated. 
+				rdfIndexer.deleteService(descriptionToBeUpdated);
+				rdfIndexer.indexService(descriptionToBeUpdated);
 			}
-			
-			// Save the description
+	
+			descriptionToBeUpdated.setLasteditor(userBo.getCurrentUser());
 			descriptionDao.update(descriptionToBeUpdated);
-			
-			// Reindex
-			rdfIndexer.deleteService(descriptionToBeUpdated);
-			rdfIndexer.indexService(descriptionToBeUpdated);
 			
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
@@ -196,7 +197,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 		Store store = storeBo.findByName(storeName);
 		Description description = this.findByNameAndStore(storeName, descriptionName);
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		descriptionAuth.canDelete(description);
 		
 		// Delete the description from the data base
@@ -214,7 +215,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 		
 		Description description = descriptionDao.findById(id);
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		descriptionAuth.canGet(description);
 		
 		return description;
@@ -228,7 +229,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 		
 		Description description = descriptionDao.findByNameAndStore(storeName, descriptionName);
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		descriptionAuth.canGet(description);
 		
 		return description;
@@ -239,7 +240,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	public List<Description> getAllDescriptions() 
 			throws NotAuthorizedException {
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		descriptionAuth.canList();
 
 		return descriptionDao.getAllDescriptions();
@@ -250,7 +251,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	public List<Description> getDescriptionsPage(int offset, int max)
 			throws NotAuthorizedException {
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		descriptionAuth.canList();
 		
 		return descriptionDao.getDescriptionsPage(offset, max);
@@ -264,7 +265,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 		// Will throw exception in case the Store does not exist
 		Store store = storeBo.findByName(storeName);
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		descriptionAuth.canList(store);
 		
 		List<Description> descriptions = descriptionDao.getStoreDescriptions(storeName);
@@ -281,7 +282,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 		// Will throw exception in case the Store does not exist
 		Store store = storeBo.findByName(storeName);
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		descriptionAuth.canList(store);
 
 		return descriptionDao.getStoreDescriptionsPage(storeName, offset, max);

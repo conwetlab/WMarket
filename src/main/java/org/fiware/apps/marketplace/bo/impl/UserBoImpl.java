@@ -71,10 +71,10 @@ public class UserBoImpl implements UserBo {
 	@Transactional(readOnly=false)
 	public void save(User user) throws NotAuthorizedException, ValidationException{
 
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		userAuth.canCreate(user);
 		
-		// Validate the user (exception is risen if the user is not valid)
+		// Exception is risen if the user is not valid
 		userValidator.validateUser(user, true);
 
 		// Some authentication methods require their own user name
@@ -99,17 +99,18 @@ public class UserBoImpl implements UserBo {
 		
 		User userToBeUpdated = findByName(userName);
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		userAuth.canUpdate(userToBeUpdated);
 		
-		// Validate the user (exception is risen if the user is not valid)
+		// Exception is risen if the user is not valid
 		userValidator.validateUser(updatedUser, false);		
 
-		// At this moment, user name cannot be changed to avoid error with sessions...
+		// At this moment, user name cannot be changed to avoid error with sessions
+		// For this reason this field is ignored
 		// userToBeUpdated.setUserName(user.getUserName());
-		if (updatedUser.getUserName() != null && !updatedUser.getUserName().equals(userToBeUpdated.getUserName())) {
-			throw new ValidationException("displayName", "displayName cannot be changed");
-		}
+		// if (updatedUser.getUserName() != null && !updatedUser.getUserName().equals(userToBeUpdated.getUserName())) {
+		// 	throw new ValidationException("userName", "userName cannot be changed");
+		// }
 		
 		if (updatedUser.getCompany() != null) {
 			userToBeUpdated.setCompany(updatedUser.getCompany());
@@ -138,7 +139,7 @@ public class UserBoImpl implements UserBo {
 		
 		User user = findByName(userName);
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		userAuth.canDelete(user);
 		
 		userDao.delete(user);
@@ -151,7 +152,7 @@ public class UserBoImpl implements UserBo {
 		
 		User user = userDao.findByName(userName);
 		
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		userAuth.canGet(user);
 		
 		return user;
@@ -169,7 +170,7 @@ public class UserBoImpl implements UserBo {
 	@Override
 	@Transactional
 	public List<User> getAllUsers() throws NotAuthorizedException {
-		// Check rights (exception is risen if user is not allowed)
+		// Exception is risen if user is not allowed
 		userAuth.canList();
 
 		return userDao.getAllUsers();
