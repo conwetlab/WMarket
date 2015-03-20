@@ -157,6 +157,19 @@ public class UserBoImpl implements UserBo {
 		
 		return user;
 	}
+	
+	@Override
+	@Transactional
+	public User findByEmail(String email) throws NotAuthorizedException, 
+			UserNotFoundException {
+		
+		User user = userDao.findByEmail(email);
+		
+		// Exception is risen if user is not allowed
+		userAuth.canGet(user);
+		
+		return user;
+	}
 
 	@Override
 	@Transactional

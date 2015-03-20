@@ -50,8 +50,10 @@ public interface UserBo {
 	public void delete(String userName) throws NotAuthorizedException,
 			UserNotFoundException;
 	
-	// Find by name
+	// Find by name or mail
 	public User findByName(String userName) throws NotAuthorizedException, 
+			UserNotFoundException;
+	public User findByEmail(String email) throws NotAuthorizedException,
 			UserNotFoundException;
 
 	// Get all or a sublist

@@ -84,6 +84,22 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 		}
 	}
 	
+	@Override
+	@Transactional(readOnly = true)
+	public User findByEmail(String email) throws UserNotFoundException{
+		String query = String.format("from %s where email=:email", TABLE_NAME);
+		List<?> list = getSession()
+				.createQuery(query)
+				.setParameter("email", email)
+				.list();
+		
+		if (list.size() == 0) {
+			throw new UserNotFoundException("User with email" + email + " not found");
+		} else {
+			return (User) list.get(0);
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly = true)

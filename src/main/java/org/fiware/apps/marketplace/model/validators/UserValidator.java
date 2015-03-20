@@ -46,7 +46,7 @@ public class UserValidator {
 	private static final int PASSWORD_MIN_LENGTH = 8;
 	private static final int PASSWORD_MAX_LENGTH = 30;
 
-	private static final GenericValidator GENERIC_VALIDATOR = GenericValidator.getInstance();
+	private static final BasicValidator BASIC_VALIDATOR = BasicValidator.getInstance();
 
 	/**
 	 * @param user User to be checked
@@ -58,35 +58,35 @@ public class UserValidator {
 		
 		// Check basic fields when a user is created
 		if (isBeingCreated) {
-			GENERIC_VALIDATOR.validateRequired("displayName", user.getDisplayName());
-			GENERIC_VALIDATOR.validateRequired("email", user.getEmail());
-			GENERIC_VALIDATOR.validateRequired("password", user.getPassword());
+			BASIC_VALIDATOR.validateRequired("displayName", user.getDisplayName());
+			BASIC_VALIDATOR.validateRequired("email", user.getEmail());
+			BASIC_VALIDATOR.validateRequired("password", user.getPassword());
 		}
 		
 		if (user.getDisplayName() != null) {
-			GENERIC_VALIDATOR.validatePattern("displayName", user.getDisplayName(), 
+			BASIC_VALIDATOR.validatePattern("displayName", user.getDisplayName(), 
 					"^[\\w ]+$", "This field only accepts letters and digits.");
-			GENERIC_VALIDATOR.validateMinLength("displayName", user.getDisplayName(), 
+			BASIC_VALIDATOR.validateMinLength("displayName", user.getDisplayName(), 
 					DISPLAY_NAME_MIN_LENGTH);
-			GENERIC_VALIDATOR.validateMaxLength("displayName", user.getDisplayName(), 
+			BASIC_VALIDATOR.validateMaxLength("displayName", user.getDisplayName(), 
 					DISPLAY_NAME_MAX_LENGTH);
 		}
 		
 		if (user.getPassword() != null) {
-			GENERIC_VALIDATOR.validateMinLength("password", user.getPassword(), 
+			BASIC_VALIDATOR.validateMinLength("password", user.getPassword(), 
 					PASSWORD_MIN_LENGTH);
-			GENERIC_VALIDATOR.validateMaxLength("password", user.getPassword(), 
+			BASIC_VALIDATOR.validateMaxLength("password", user.getPassword(), 
 					PASSWORD_MAX_LENGTH);
 		}
 		
 		if (user.getEmail() != null) {
-			GENERIC_VALIDATOR.validateEMail("email", user.getEmail());
+			BASIC_VALIDATOR.validateEMail("email", user.getEmail());
 		}
 
 		if (user.getCompany() != null) {
-			GENERIC_VALIDATOR.validateMinLength("company", user.getCompany(), 
+			BASIC_VALIDATOR.validateMinLength("company", user.getCompany(), 
 					COMPANY_MIN_LENGTH);
-			GENERIC_VALIDATOR.validateMaxLength("company", user.getCompany(), 
+			BASIC_VALIDATOR.validateMaxLength("company", user.getCompany(), 
 					COMPANY_MAX_LENGTH);
 		}
 	}

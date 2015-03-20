@@ -25,7 +25,7 @@
         <form class="col-sm-8 col-sm-offset-1" name="login_form" method="post" action="<c:url value='j_spring_security_check' />">
           <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
           <div class="form-field">
-            <label class="text-plain">Username</label>
+            <label class="text-plain">Email or Username</label>
             <input class="form-control" type="text" name="username" />
           </div>
           <div class="form-field">

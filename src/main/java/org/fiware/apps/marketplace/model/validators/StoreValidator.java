@@ -39,7 +39,7 @@ import org.springframework.stereotype.Service;
 @Service("storeValidator")
 public class StoreValidator {
 	
-	private static final GenericValidator GENERIC_VALIDATOR = GenericValidator.getInstance();
+	private static final BasicValidator BASIC_VALIDATOR = BasicValidator.getInstance();
 	
 	/**
 	 * @param store Store to be checked
@@ -51,32 +51,32 @@ public class StoreValidator {
 
 		// Check basic fields when a store is created
 		if (isBeingCreated) {
-			GENERIC_VALIDATOR.validateRequired("displayName", store.getDisplayName());
-			GENERIC_VALIDATOR.validateRequired("url", store.getUrl());
+			BASIC_VALIDATOR.validateRequired("displayName", store.getDisplayName());
+			BASIC_VALIDATOR.validateRequired("url", store.getUrl());
 		}
 
 		// If the store is being created, this value cannot be null since we have
 		// checked it before
 		if (store.getDisplayName() != null) {
-			GENERIC_VALIDATOR.validatePattern("displayName", store.getDisplayName(), 
+			BASIC_VALIDATOR.validatePattern("displayName", store.getDisplayName(), 
 					"^[\\w -]+$", "This field only accepts letters, digits and (-/_).");
-			GENERIC_VALIDATOR.validateMinLength("displayName", store.getDisplayName(), 
-					GenericValidator.getDisplayNameMinLength());
-			GENERIC_VALIDATOR.validateMaxLength("displayName", store.getDisplayName(), 
-					GenericValidator.getDisplayNameMaxLength());
+			BASIC_VALIDATOR.validateMinLength("displayName", store.getDisplayName(), 
+					BasicValidator.getDisplayNameMinLength());
+			BASIC_VALIDATOR.validateMaxLength("displayName", store.getDisplayName(), 
+					BasicValidator.getDisplayNameMaxLength());
 		}
 
 		// If the store is being created, this value cannot be null since we have
 		// checked it before
 		if (store.getUrl() != null) {
-			GENERIC_VALIDATOR.validateURL("url", store.getUrl());
+			BASIC_VALIDATOR.validateURL("url", store.getUrl());
 		}
 
 		if (store.getDescription() != null) {
-			GENERIC_VALIDATOR.validateMinLength("description", store.getDescription(), 
-					GenericValidator.getDescriptionMinLength());
-			GENERIC_VALIDATOR.validateMaxLength("description", store.getDescription(), 
-					GenericValidator.getDescriptionMaxLength());
+			BASIC_VALIDATOR.validateMinLength("description", store.getDescription(), 
+					BasicValidator.getDescriptionMinLength());
+			BASIC_VALIDATOR.validateMaxLength("description", store.getDescription(), 
+					BasicValidator.getDescriptionMaxLength());
 		}
 	}
 

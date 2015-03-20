@@ -39,7 +39,7 @@ import org.springframework.stereotype.Service;
 @Service("offeringsDescriptionValidator")
 public class DescriptionValidator {
 
-	private static final GenericValidator GENERIC_VALIDATOR = GenericValidator.getInstance();
+	private static final BasicValidator BASIC_VALIDATOR = BasicValidator.getInstance();
 
 	/**
 	 * @param description Offerings Description to be checked
@@ -51,28 +51,28 @@ public class DescriptionValidator {
 
 		// Check basic fields when a description is created
 		if (isBeingCreated) {
-			GENERIC_VALIDATOR.validateRequired("displayName", description.getDisplayName());
-			GENERIC_VALIDATOR.validateRequired("url", description.getUrl());
+			BASIC_VALIDATOR.validateRequired("displayName", description.getDisplayName());
+			BASIC_VALIDATOR.validateRequired("url", description.getUrl());
 		}
 
 		if (description.getDisplayName() != null) {
-			GENERIC_VALIDATOR.validatePattern("displayName", description.getDisplayName(), 
+			BASIC_VALIDATOR.validatePattern("displayName", description.getDisplayName(), 
 					"^[\\w -]+$", "This field only accepts letters, digits and (-/_).");
-			GENERIC_VALIDATOR.validateMinLength("displayName", description.getDisplayName(), 
-					GenericValidator.getDisplayNameMinLength());
-			GENERIC_VALIDATOR.validateMaxLength("displayName", description.getDisplayName(), 
-					GenericValidator.getDisplayNameMaxLength());
+			BASIC_VALIDATOR.validateMinLength("displayName", description.getDisplayName(), 
+					BasicValidator.getDisplayNameMinLength());
+			BASIC_VALIDATOR.validateMaxLength("displayName", description.getDisplayName(), 
+					BasicValidator.getDisplayNameMaxLength());
 		}
 
 		if (description.getUrl() != null) {
-			GENERIC_VALIDATOR.validateURL("url", description.getUrl());
+			BASIC_VALIDATOR.validateURL("url", description.getUrl());
 		}
 
 		if (description.getDescription() != null) {
-			GENERIC_VALIDATOR.validateMinLength("description", description.getDescription(), 
-					GenericValidator.getDescriptionMinLength());
-			GENERIC_VALIDATOR.validateMaxLength("description", description.getDescription(), 
-					GenericValidator.getDescriptionMaxLength());
+			BASIC_VALIDATOR.validateMinLength("description", description.getDescription(), 
+					BasicValidator.getDescriptionMinLength());
+			BASIC_VALIDATOR.validateMaxLength("description", description.getDescription(), 
+					BasicValidator.getDescriptionMaxLength());
 
 		}	
 	}

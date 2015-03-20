@@ -32,32 +32,23 @@ package org.fiware.apps.marketplace.model.validators;
  * #L%
  */
 
-import java.util.regex.Pattern;
-
-import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.GenericValidator;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 
-public class GenericValidator {
-	
-	private Pattern emailPattern;
-	private UrlValidator urlValidator;
+public class BasicValidator {
 	
 	private static final int NAME_MIN_LENGTH = 3;
 	private static final int NAME_MAX_LENGTH = 20;
 	private static final int DESCRIPTION_MIN_LENGTH = 0;
 	private static final int DESCRIPTION_MAX_LENGTH = 200;
-	private static final String EMAIL_PATTERN = 
-			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	
-	private static GenericValidator INSTANCE = new GenericValidator();
+	private static BasicValidator INSTANCE = new BasicValidator();
 	
-	private GenericValidator() {
-		this.emailPattern = Pattern.compile(EMAIL_PATTERN);
-		this.urlValidator = new UrlValidator();
+	private BasicValidator() {
+
 	}
 	
-	public static GenericValidator getInstance() {
+	public static BasicValidator getInstance() {
 		return INSTANCE;
 	}
 	
@@ -92,7 +83,7 @@ public class GenericValidator {
 	}
 
 	public void validateURL(String fieldName, String fieldValue) throws ValidationException {
-		if (fieldValue == null || !urlValidator.isValid(fieldValue)) {
+		if (fieldValue == null || !GenericValidator.isUrl(fieldValue)) {
 			throw new ValidationException(fieldName, "This field must be a valid URL.");
 		}
 	}
@@ -112,7 +103,7 @@ public class GenericValidator {
 	}
 	
 	public void validateEMail(String fieldName, String email) throws ValidationException {
-		if (email == null || !emailPattern.matcher(email).matches()) {
+		if (email == null || !GenericValidator.isEmail(email)) {
 			throw new ValidationException(fieldName, "This field must be a valid email.");
 		}
 	}

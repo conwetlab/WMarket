@@ -47,6 +47,7 @@ public interface UserDao {
 	
 	// Find
 	public User findByName(String username) throws UserNotFoundException;
+	public User findByEmail(String email) throws UserNotFoundException;
 	
 	// Get all or a sublist
 	public List<User> getUsersPage(int offset, int max);
