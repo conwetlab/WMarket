@@ -82,18 +82,19 @@
         <form class="col-sm-8 col-sm-offset-1" method="post" action="${ pageContext.request.contextPath }/account/password">
 
           <div class="form-field">
-            <label class="text-plain">Old password</label>
-            <input class="form-control" type="text" name="password" />
-          </div>
-
-          <div class="form-field">
             <label class="text-plain">New password</label>
-            <input class="form-control" type="text" name="newPassword" />
+            <input class="form-control" type="password" name="password" />
+            <c:if test="${ not empty form_error and form_error.fieldName == 'password' }">
+              <div class="form-field-error">${ form_error.fieldError }</div>
+            </c:if>
           </div>
 
           <div class="form-field">
             <label class="text-plain">Confirm new password</label>
-            <input class="form-control" type="text" name="newPasswordConfirm" />
+            <input class="form-control" type="password" name="passwordConfirm" />
+            <c:if test="${ not empty form_error and form_error.fieldName == 'passwordConfirm' }">
+              <div class="form-field-error">${ form_error.fieldError }</div>
+            </c:if>
           </div>
 
           <div class="form-options">

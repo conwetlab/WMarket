@@ -109,7 +109,7 @@ public class UserAccountController extends AbstractController {
 
     @POST
     @Produces(MediaType.TEXT_HTML)
-    public Response registerFormView(
+    public Response updateFormView(
             @Context UriInfo uri,
             @Context HttpServletRequest request,
             @FormParam("userName") String userName,
@@ -161,6 +161,78 @@ public class UserAccountController extends AbstractController {
             model.addAttribute("field_displayName", displayName);
             model.addAttribute("field_email", email);
             model.addAttribute("field_company", company);
+
+            model.addAttribute("form_error", e);
+
+            view = new ModelAndView("user.detail", model);
+            builder = Response.status(Status.BAD_REQUEST).entity(view);
+        }
+
+        return builder.build();
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_HTML)
+    @Path("password")
+    public Response updatePasswordFormView(
+            @Context UriInfo uri,
+            @Context HttpServletRequest request,
+            @FormParam("password") String password,
+            @FormParam("passwordConfirm") String passwordConfirm) {
+
+        HttpSession session;
+        ModelAndView view;
+        ModelMap model = new ModelMap();
+        ResponseBuilder builder;
+        User user = new User();
+        User currentUser;
+        URI redirectURI;
+
+        try {
+            currentUser = getCurrentUser();
+            model.addAttribute("user", currentUser);
+            model.addAttribute("title", "Account Settings - " + getContextName());
+
+            if (password.isEmpty()) {
+                throw new ValidationException("password", "This field is required.");
+            }
+
+            user.setPassword(password);
+            userValidator.validateUser(user, false);
+
+            if (passwordConfirm.isEmpty()) {
+                throw new ValidationException("passwordConfirm", "This field is required.");
+            }
+            else if (!password.equals(passwordConfirm)) {
+                throw new ValidationException("passwordConfirm", "Passwords do not match.");
+            }
+            else {
+                getUserBo().update(currentUser.getUserName(), user);
+            }
+
+            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("account").build();
+            session = request.getSession();
+
+            synchronized (session) {
+                session.setAttribute("flashMessage", "Your new password was updated successfully.");
+            }
+
+            builder = Response.seeOther(redirectURI);
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError().entity(view);
+        } catch (NotAuthorizedException e) {
+            logger.info("User unauthorized", e);
+
+            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+            builder = Response.status(Status.UNAUTHORIZED).entity(view);
+        } catch (ValidationException e) {
+            logger.info("A form field is not valid", e);
+
+            model.addAttribute("field_password", password);
+            model.addAttribute("field_passwordConfirm", passwordConfirm);
 
             model.addAttribute("form_error", e);
 
