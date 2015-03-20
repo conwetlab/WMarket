@@ -23,29 +23,41 @@
 
           <div class="form-field">
             <label class="text-plain">Full name *</label>
-            <input class="form-control" type="text" name="displayName" value="${ user.displayName }" />
-
-            <c:if test="${ not empty form_error and form_error.fieldName == 'displayName' }">
-              <div class="form-field-error">${ form_error.fieldError }</div>
-            </c:if>
+            <c:choose>
+              <c:when test="${ not empty form_error and form_error.fieldName == 'displayName' }">
+                <input class="form-control" type="text" name="displayName" value="${ field_displayName }" />
+                <div class="form-field-error">${ form_error.fieldError }</div>
+              </c:when>
+              <c:otherwise>
+                <input class="form-control" type="text" name="displayName" value="${ user.displayName }" />
+              </c:otherwise>
+            </c:choose>
           </div>
 
           <div class="form-field">
             <label class="text-plain">Email *</label>
-            <input class="form-control" type="text" name="email" value="${ user.email }" />
-
-            <c:if test="${ not empty form_error and form_error.fieldName == 'email' }">
-              <div class="form-field-error">${ form_error.fieldError }</div>
-            </c:if>
+            <c:choose>
+              <c:when test="${ not empty form_error and form_error.fieldName == 'email' }">
+                <input class="form-control" type="text" name="email" value="${ field_email }" />
+                <div class="form-field-error">${ form_error.fieldError }</div>
+              </c:when>
+              <c:otherwise>
+                <input class="form-control" type="text" name="email" value="${ user.email }" />
+              </c:otherwise>
+            </c:choose>
           </div>
 
           <div class="form-field">
             <label class="text-plain">Company</label>
-            <input class="form-control" type="text" name="company" value="${ user.company }" />
-
-            <c:if test="${ not empty form_error and form_error.fieldName == 'company' }">
-              <div class="form-field-error">${ form_error.fieldError }</div>
-            </c:if>
+            <c:choose>
+              <c:when test="${ not empty form_error and form_error.fieldName == 'company' }">
+                <input class="form-control" type="text" name="company" value="${ field_company }" />
+                <div class="form-field-error">${ form_error.fieldError }</div>
+              </c:when>
+              <c:otherwise>
+                <input class="form-control" type="text" name="company" value="${ user.company }" />
+              </c:otherwise>
+            </c:choose>
           </div>
 
           <p class="text-plain text-default">* Required fields</p>

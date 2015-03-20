@@ -131,8 +131,7 @@ public class UserBoImpl implements UserBo {
 		if (updatedUser.getDisplayName() != null) {
 			userToBeUpdated.setDisplayName(updatedUser.getDisplayName());
 		}
-		
-			
+
 		userDao.update(userToBeUpdated);
 	}
 
