@@ -145,7 +145,7 @@ public class StoreValidatorTest {
 	}
 
 	@Test
-	public void testUserNameTooLong() {
+	public void testDisplayNameTooLong() {
 		Store store = generateValidStore();
 		store.setDisplayName("1234567890123456789012345678901");
 
@@ -202,7 +202,7 @@ public class StoreValidatorTest {
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890");	
 
-		// Empty descriptions are allowed
+		// Too loong descriptions are not allowed
 		assertInvalidStore(store, "description", String.format(TOO_LONG_PATTERN, 200),false);	
 	}
 

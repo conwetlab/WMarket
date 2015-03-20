@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 import java.util.Date;
+
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
@@ -46,9 +47,10 @@ public class DescriptionValidatorTest {
 	
 	private DescriptionValidator descriptionValidator = new DescriptionValidator();
 	
-	private static final String MISSING_FIELDS = "name and/or url cannot be null";
-	private static final String INVALID_LENGTH_PATTERN = "%s is not valid. (min length: %d, max length: %d)";
-	private static final String INVALID_URL = "url is not valid";
+	private static final String MISSING_FIELDS_MSG = "This field is required.";
+	private static final String TOO_SHORT_PATTERN = "This field must be at least %d chars.";
+	private static final String TOO_LONG_PATTERN = "This field must not exceed %d chars.";
+	private static final String INVALID_URL = "This field must be a valid URL.";
 	
 	private static Description generateValiddescription() {
 		// Additional classes
@@ -68,13 +70,14 @@ public class DescriptionValidatorTest {
 	}
 	
 	
-	private void assertInvalidDescription(Description description, 
+	private void assertInvalidDescription(Description description, String field,
 			String expectedMsg, boolean creating) {
 		try {
 			descriptionValidator.validateDescription(description, creating);
 			failBecauseExceptionWasNotThrown(ValidationException.class);
 		} catch (ValidationException ex) {
 			assertThat(ex).hasMessage(expectedMsg);
+			assertThat(ex.getFieldName()).isEqualTo(field);
 		}
 	}
 	
@@ -84,41 +87,41 @@ public class DescriptionValidatorTest {
 		description.setDisplayName("description1");
 		description.setUrl("https://repo.lab.fi-ware.org/offerings/offering1.rdf");
 		
-		assertThat(descriptionValidator.validateDescription(description, true)).isTrue();
+		descriptionValidator.validateDescription(description, true);
 	}
 	
 	@Test
 	public void testValidComplexDescription() throws ValidationException {
 		Description description = generateValiddescription();
-		assertThat(descriptionValidator.validateDescription(description, true)).isTrue();
+		descriptionValidator.validateDescription(description, true);
 	}
 	
 	@Test
-	public void testMissingNameOnCreation() {
+	public void testMissingDisplayNameOnCreation() {
 		Description description = generateValiddescription();
 		description.setDisplayName(null);
-		assertInvalidDescription(description, MISSING_FIELDS, true);
+		assertInvalidDescription(description, "displayName", MISSING_FIELDS_MSG, true);
 	}
 	
 	@Test
-	public void testMissingNameOnUpdate() throws ValidationException {
+	public void testMissingDisplayNameOnUpdate() throws ValidationException {
 		Description description = generateValiddescription();
 		description.setName(null);
-		assertThat(descriptionValidator.validateDescription(description, false)).isTrue();
+		descriptionValidator.validateDescription(description, false);
 	}
 	
 	@Test
 	public void testMissingUrlOnCreation() {
 		Description description = generateValiddescription();
 		description.setUrl(null);
-		assertInvalidDescription(description, MISSING_FIELDS, true);
+		assertInvalidDescription(description, "url", MISSING_FIELDS_MSG, true);
 	}
 	
 	@Test
 	public void testMissingUrlOnUpdate() throws ValidationException {
 		Description description = generateValiddescription();
 		description.setUrl(null);
-		assertThat(descriptionValidator.validateDescription(description, false)).isTrue();
+		descriptionValidator.validateDescription(description, false);
 	}
 	
 	@Test
@@ -126,7 +129,7 @@ public class DescriptionValidatorTest {
 		Description description = generateValiddescription();
 		description.setDescription(null);
 
-		assertThat(descriptionValidator.validateDescription(description, true)).isTrue();
+		descriptionValidator.validateDescription(description, true);
 	}
 	
 	@Test
@@ -134,23 +137,21 @@ public class DescriptionValidatorTest {
 		Description description = generateValiddescription();
 		description.setDescription(null);
 
-		assertThat(descriptionValidator.validateDescription(description, false)).isTrue();
+		descriptionValidator.validateDescription(description, false);
 	}
 	
 	@Test
-	public void testNameTooShort() {
+	public void testDisplayNameTooShort() {
 		Description description = generateValiddescription();
 		description.setDisplayName("a");
-		assertInvalidDescription(description, 
-				String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
+		assertInvalidDescription(description, "displayName", String.format(TOO_SHORT_PATTERN, 3), false);
 	}
 	
 	@Test
-	public void testNameTooLong() {
+	public void testDispalyNameTooLong() {
 		Description description = generateValiddescription();
-		description.setDisplayName("1234567890123456");
-		assertInvalidDescription(description, 
-				String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
+		description.setDisplayName("123456789012345678901");
+		assertInvalidDescription(description, "displayName", String.format(TOO_LONG_PATTERN, 20), false);
 	}
 	
 	@Test
@@ -158,7 +159,7 @@ public class DescriptionValidatorTest {
 		Description description = generateValiddescription();
 		description.setUrl("http://");
 
-		assertInvalidDescription(description, INVALID_URL, false);
+		assertInvalidDescription(description, "url", INVALID_URL, false);
 	}
 
 	@Test
@@ -166,7 +167,7 @@ public class DescriptionValidatorTest {
 		Description description = generateValiddescription();
 		description.setUrl("repo.lab.fi-ware.org/offerings/offering1.rdf");
 
-		assertInvalidDescription(description, INVALID_URL, false);
+		assertInvalidDescription(description, "url", INVALID_URL, false);
 	}
 
 	@Test
@@ -174,7 +175,7 @@ public class DescriptionValidatorTest {
 		Description description = generateValiddescription();
 		description.setUrl("https://repo.lab.fi-ware.org:222222/offerings/offering1.rdf");
 
-		assertInvalidDescription(description, INVALID_URL, false);
+		assertInvalidDescription(description, "url", INVALID_URL, false);
 	}
 
 	@Test
@@ -182,7 +183,7 @@ public class DescriptionValidatorTest {
 		Description description = generateValiddescription();
 		description.setUrl("offering");
 
-		assertInvalidDescription(description, INVALID_URL, false);
+		assertInvalidDescription(description, "url", INVALID_URL, false);
 	}
 	
 	@Test
@@ -191,7 +192,7 @@ public class DescriptionValidatorTest {
 		description.setDescription("");
 
 		// Empty descriptions are allowed
-		assertThat(descriptionValidator.validateDescription(description, false)).isTrue();
+		descriptionValidator.validateDescription(description, false);
 	}
 
 	@Test
@@ -204,8 +205,7 @@ public class DescriptionValidatorTest {
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890");	
 
-		// Empty descriptions are allowed
-		assertInvalidDescription(description, String.format(INVALID_LENGTH_PATTERN, 
-				"description", 0, 200), false);	
+		// Too longs descriptions are not allowed
+		assertInvalidDescription(description, "description", String.format(TOO_LONG_PATTERN, 200), false);
 	}
 }
