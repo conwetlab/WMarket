@@ -44,10 +44,10 @@ import org.apache.lucene.index.StaleReaderException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.fiware.apps.marketplace.model.Description;
-import org.fiware.apps.marketplace.utils.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -57,13 +57,13 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 @Service("rdfIndexer")
 public class RdfIndexer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(RdfIndexer.class);
-	
+	@Value("${lucene.IndexPath}") private String lucenePath;
 	@Autowired private RdfHelper rdfHelper;
+	
+	private static final Logger logger = LoggerFactory.getLogger(RdfIndexer.class);	
 	
 	public void indexService(Description service) throws MalformedURLException{
 
-		String lucenePath = PropertiesUtil.getProperty("lucene.IndexPath");
 		Model model = rdfHelper.loadModel(service.getUrl());
 		String serviceId = service.getId().toString();
 		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath, serviceId);	
@@ -80,7 +80,6 @@ public class RdfIndexer {
 
 	public void deleteService(Description service){
 
-		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
 		Analyzer analyzer = new StandardAnalyzer();
 		IndexWriter indexWriter = null;
 		

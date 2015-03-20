@@ -39,14 +39,24 @@
 		<servlet-name>spring</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-	
+
 	<!-- Servlet configuration -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-		/WEB-INF/classes/spring/config/BeanLocations.xml
-		/WEB-INF/classes/spring/config/securityOAuth2.xml
+		classpath:/spring/config/BeanLocations.xml
 		</param-value>
 	</context-param>
+
+	<!-- Force SSL -->
+	<!-- <security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Entire Application</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>-->
 
 </web-app>

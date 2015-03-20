@@ -45,10 +45,10 @@ import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.model.SearchResult;
 import org.fiware.apps.marketplace.model.SearchResultEntryMatch;
 import org.fiware.apps.marketplace.model.Description;
-import org.fiware.apps.marketplace.utils.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.larq.HitLARQ;
@@ -59,16 +59,17 @@ import com.hp.hpl.jena.query.larq.LARQ;
 @org.springframework.stereotype.Service("searchBo")
 public class SearchBoImpl implements SearchBo {
 	
+	@Value("${lucene.IndexPath}") private String lucenePath;
+	@Autowired private DescriptionBo offeringsDescriptionBo;
+	
 	private final static Logger logger = LoggerFactory.getLogger(SearchBoImpl.class);
 
-	@Autowired private DescriptionBo offeringsDescriptionBo;
 
 	@Override
 	public SearchResult searchByKeyword(String searchstring) {
 
 		SearchResult result = new SearchResult();
 		
-		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
 		IndexBuilderString larqBuilder = new IndexBuilderString(lucenePath) ;	
 		larqBuilder.closeWriter() ;
 		IndexLARQ index = larqBuilder.getIndex() ;		
