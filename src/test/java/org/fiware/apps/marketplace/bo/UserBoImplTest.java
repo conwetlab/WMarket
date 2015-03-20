@@ -340,6 +340,16 @@ public class UserBoImplTest {
 
 	}
 	
+	@Test(expected=UserNotFoundException.class)
+	public void testDeleteUserNotFoundException() throws Exception {
+		
+		String userName = "user";
+		doThrow(new UserNotFoundException("userNotFound")).when(userDaoMock).findByName(userName);
+		
+		testDeleteException(userName);
+		
+	}
+	
 	@Test(expected=NotAuthorizedException.class)
 	public void testDeleteNotAuthorizedException() throws Exception {
 		
