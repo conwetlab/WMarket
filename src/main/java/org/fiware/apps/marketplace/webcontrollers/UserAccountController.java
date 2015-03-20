@@ -178,6 +178,7 @@ public class UserAccountController extends AbstractController {
     public Response updatePasswordFormView(
             @Context UriInfo uri,
             @Context HttpServletRequest request,
+            @FormParam("oldPassword") String oldPassword,
             @FormParam("password") String password,
             @FormParam("passwordConfirm") String passwordConfirm) {
 
@@ -201,13 +202,13 @@ public class UserAccountController extends AbstractController {
             user.setPassword(password);
             userValidator.validateUser(user, false);
 
-            if (passwordConfirm.isEmpty()) {
+            if (!getUserBo().checkCurrentUserPassword(oldPassword)) {
+             	throw new ValidationException("oldPassword", "Invalid password.");
+            } else if (passwordConfirm.isEmpty()) {
                 throw new ValidationException("passwordConfirm", "This field is required.");
-            }
-            else if (!password.equals(passwordConfirm)) {
+            } else if (!password.equals(passwordConfirm)) {
                 throw new ValidationException("passwordConfirm", "Passwords do not match.");
-            }
-            else {
+            } else {
                 getUserBo().update(currentUser.getUserName(), user);
             }
 

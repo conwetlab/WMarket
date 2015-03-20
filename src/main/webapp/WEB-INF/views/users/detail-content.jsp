@@ -80,6 +80,14 @@
       </div>
       <div class="panel-body row">
         <form class="col-sm-8 col-sm-offset-1" method="post" action="${ pageContext.request.contextPath }/account/password">
+        
+          <div class="form-field">
+            <label class="text-plain">Old password</label>
+            <input class="form-control" type="password" name="oldPassword" />
+            <c:if test="${ not empty form_error and form_error.fieldName == 'oldPassword' }">
+              <div class="form-field-error">${ form_error.fieldError }</div>
+            </c:if>
+          </div>
 
           <div class="form-field">
             <label class="text-plain">New password</label>
@@ -116,7 +124,7 @@
       </div>
       <div class="panel-body row">
         <form class="col-sm-8 col-sm-offset-1" method="post" action="${ pageContext.request.contextPath }/account/delete">
-          <p>Once you perform this operation, there is no going back. Please be certain.</p>
+          <p>This operation cannot be undone. All your stores, descriptions and offerings will be deleted. Please, be careful.</p>
           <div class="form-options">
             <button type="submit" class="btn btn-danger btn-sm-10 btn-md-5">Delete this account</button>
           </div>

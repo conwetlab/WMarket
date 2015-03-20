@@ -217,4 +217,12 @@ public class UserBoImpl implements UserBo {
 		return userDao.findByName(userName);
 	}
 
+	@Override
+	public boolean checkCurrentUserPassword(String password) throws UserNotFoundException{
+		User user = getCurrentUser();
+		return encoder.matches(password, user.getPassword());
+	}
+	
+	
+
 }
