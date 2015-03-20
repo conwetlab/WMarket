@@ -70,10 +70,12 @@ public class UserBoImplTest {
 	@InjectMocks private UserBoImpl userBo;
 	
 	private static final String ENCODED_PASSWORD = "ENCODED PASSWORD";
+	private static final String USER_NAME = "userName";
 	
 	@Before 
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
+		this.userBo = spy(this.userBo);
 		when(passwordEncoder.encode(anyString())).thenReturn(ENCODED_PASSWORD);
 	}
 	
@@ -162,29 +164,43 @@ public class UserBoImplTest {
 	/////////////////////////////////////// UPDATE ////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testUpdateException(User user) throws Exception {
+	private void testUpdateException(String userName, User updatedUser) throws Exception {
 		// Call the method
 		try {
-			userBo.update(user);
+			userBo.update(userName, updatedUser);
 			fail("Exception expected");
 		} catch (Exception e) {
 			// Verify that the DAO has not been called
-			verify(userDaoMock, never()).update(user);
+			verify(userDaoMock, never()).update(updatedUser);
 			
 			// Throw the exception
 			throw e;
 		}
 
 	}
+	
+	@Test(expected=UserNotFoundException.class)
+	public void testUpdateNotFound() throws Exception {
+		
+		User user = mock(User.class);
+		doThrow(new UserNotFoundException("user not found")).when(userDaoMock).findByName(USER_NAME);
+		
+		// Call the method and check that DAO is not called
+		testUpdateException(USER_NAME, user);
+	}
 
 	@Test(expected=NotAuthorizedException.class)
 	public void testUpdateNotAuthorized() throws Exception {
 		
-		User user = mock(User.class);
-		doThrow(new NotAuthorizedException(user, "update user")).when(userAuthMock).canUpdate(user);
+		User updatedUser = mock(User.class);
+		User userToBeUpdated = mock(User.class);
+		
+		when(userDaoMock.findByName(USER_NAME)).thenReturn(userToBeUpdated);
+		doThrow(new NotAuthorizedException(userToBeUpdated, "update user"))
+				.when(userAuthMock).canUpdate(userToBeUpdated);
 		
 		// Call the method and check that DAO is not called
-		testUpdateException(user);
+		testUpdateException(USER_NAME, updatedUser);
 	}
 	
 	@Test(expected=ValidationException.class)
@@ -194,26 +210,114 @@ public class UserBoImplTest {
 		doThrow(new ValidationException("invalid")).when(userValidatorMock).validateUser(user, false);
 		
 		// Call the method and check that DAO is not called
-		testUpdateException(user);
+		testUpdateException("user", user);
+	}
+	
+	private void testUpdateGenericUserNoErrors(User newUser) {
+		
+		String displayName = "displayName";
+		String email = "abc@def.com";
+		String password = "password";
+		String company = "company";
+		
+		User user = new User();
+		user.setUserName(USER_NAME);
+		user.setDisplayName(displayName);
+		user.setEmail(email);
+		user.setPassword(password);
+		user.setCompany(company);
+		
+		// Mocks
+		try {
+			doReturn(user).when(userBo).findByName(USER_NAME);
+			//when(userBo.findByName(USER_NAME)).thenReturn(user);
+		} catch (Exception ex) {
+			fail("Exeception not expected", ex);
+		}
+		
+		// Get previous user name
+		String previousUserName = user.getUserName();
+
+		//Call the method
+		try {
+			userBo.update(USER_NAME, newUser);
+		} catch (Exception ex) {
+			fail("Exception not expected", ex);
+		}
+		
+		// Verify mocks
+		try {
+			verify(userBo).findByName(USER_NAME);
+			verify(userDaoMock).update(user);
+		} catch (Exception ex) {
+			fail("Exeception not expected", ex);
+		}
+		
+		// User name has not changed
+		assertThat(user.getUserName()).isEqualTo(previousUserName);
+		
+		// Verify that all the included fields are updated		
+		if (newUser.getDisplayName() != null) {
+			assertThat(user.getDisplayName()).isEqualTo(newUser.getDisplayName());
+		} else {
+			assertThat(user.getDisplayName()).isEqualTo(displayName);
+		}
+		
+		if (newUser.getEmail() != null) {
+			assertThat(user.getEmail()).isEqualTo(newUser.getEmail());
+		} else {
+			assertThat(user.getEmail()).isEqualTo(email);
+		}
+		
+		if (newUser.getCompany() != null) {
+			assertThat(user.getCompany()).isEqualTo(newUser.getCompany());
+		} else {
+			assertThat(user.getCompany()).isEqualTo(company);
+		}
+		
+		if (newUser.getPassword() != null) {
+			verify(passwordEncoder).encode(newUser.getPassword());
+			assertThat(user.getPassword()).isEqualTo(ENCODED_PASSWORD);
+		} else {
+			verify(passwordEncoder, never()).encode(anyString());
+			assertThat(user.getPassword()).isEqualTo(password);
+		}
+	}
+	
+	@Test 
+	public void testUpdateUserName() throws Exception {
+		User newUser = new User();
+		newUser.setUserName("new_user_name");
+		testUpdateGenericUserNoErrors(newUser);
+
 	}
 	
 	@Test
-	public void testUpdate() {
-		
-		try {
-			User user = new User();
-			user.setPassword("password");
-			userBo.update(user);
-			
-			// Verify that the DAO has been called
-			verify(userDaoMock).update(user);
-			
-			// Assert that the password has been encoded
-			assertThat(user.getPassword()).isEqualTo(ENCODED_PASSWORD);
-						
-		} catch (Exception e) {
-			fail("Exception not expected", e);
-		}
+	public void testUpdateUserDisplayName() {
+		User newUser = new User();
+		newUser.setDisplayName("New Display Name");
+		testUpdateGenericUserNoErrors(newUser);
+	}
+	
+	@Test
+	public void testUpdateEmail() {
+		User newUser = new User();
+		newUser.setEmail("newmail@newmail.com");
+		testUpdateGenericUserNoErrors(newUser);
+	}
+	
+	@Test
+	public void testUpdateUserComapmy() {
+		User newUser = new User();
+		newUser.setEmail("New Awesome Company");
+		testUpdateGenericUserNoErrors(newUser);
+	}
+	
+	@Test
+	public void testUpdateUserPassword() {
+		User newUser = new User();
+		newUser.setPassword("my_new_super_secure_password123456789");
+		testUpdateGenericUserNoErrors(newUser);
 	}
 	
 	
@@ -221,19 +325,15 @@ public class UserBoImplTest {
 	/////////////////////////////////////// DELETE ////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	@Test(expected=NotAuthorizedException.class)
-	public void testDeleteNotAuthorized() throws Exception {
-
-		User user = mock(User.class);
-		doThrow(new NotAuthorizedException(user, "delete user")).when(userAuthMock).canDelete(user);
+	private void testDeleteException(String userName) throws Exception {
 		
 		try {			
 			// Call the method
-			userBo.delete(user);
+			userBo.delete(userName);
 			fail("Exception expected");
 		} catch (Exception e) {
 			// Verify that the DAO has not been called
-			verify(userDaoMock, never()).delete(user);
+			verify(userDaoMock, never()).delete(any(User.class));
 			
 			// Throw the exception
 			throw e;
@@ -241,12 +341,27 @@ public class UserBoImplTest {
 
 	}
 	
+	@Test(expected=NotAuthorizedException.class)
+	public void testDeleteNotAuthorizedException() throws Exception {
+		
+		User user = mock(User.class);
+		String userName = "user";
+		when(userDaoMock.findByName(userName)).thenReturn(user);
+		doThrow(new NotAuthorizedException(user, "delete user")).when(userAuthMock).canDelete(user);
+		
+		testDeleteException(userName);
+		
+	}
+	
 	@Test
-	public void testDelete() throws NotAuthorizedException {
-		User user = new User();
+	public void testDelete() throws Exception {
+		User user = mock(User.class);
+		
+		// Configure Mock
+		when(userDaoMock.findByName(USER_NAME)).thenReturn(user);
 		
 		// Call the method
-		userBo.delete(user);
+		userBo.delete(USER_NAME);
 		
 		// Verify that the method has been called
 		verify(userDaoMock).delete(user);

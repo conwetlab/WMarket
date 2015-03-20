@@ -42,10 +42,18 @@ import org.fiware.apps.marketplace.model.ErrorType;
 public class GenericRestTestUtils {
 	
 	public static void checkAPIError(Response res, int status, ErrorType type, String message) {
+		checkAPIError(res, status, type, message, null);
+	}
+	
+	public static void  checkAPIError(Response res, int status, ErrorType type, String message, String field) {
 		assertThat(res.getStatus()).isEqualTo(status);
 		APIError error = (APIError) res.getEntity();
 		assertThat(error.getErrorType()).isEqualTo(type);
 		assertThat(error.getErrorMessage()).isEqualTo(message);
+		
+		if (type == ErrorType.VALIDATION_ERROR) {
+			assertThat(error.getField()).isEqualTo(field);
+		}
 	}
 
 
