@@ -27,6 +27,12 @@
             <span class="fa fa-check-circle"></span> Your account was removed from WMarket.
           </div>
         </c:if>
+        
+        <c:if test="${ not empty param.out and param.out == 3 }">
+          <div class="alert alert-success">
+            <span class="fa fa-check-circle"></span> Your password has been changed. Please sign in again.
+          </div>
+        </c:if>
 
         <form class="col-sm-8 col-sm-offset-1" name="login_form" method="post" action="<c:url value='j_spring_security_check' />">
           <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />

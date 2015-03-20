@@ -34,7 +34,6 @@ package org.fiware.apps.marketplace.webcontrollers;
 
 import java.net.URI;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.FormParam;
@@ -212,11 +211,13 @@ public class UserAccountController extends AbstractController {
                 getUserBo().update(currentUser.getUserName(), user);
             }
 
-            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("account").build();
+            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login").queryParam("out", 3).build();
+
             session = request.getSession();
 
+            // TODO: Invalidate all the user's session
             synchronized (session) {
-                session.setAttribute("flashMessage", "Your new password was updated successfully.");
+            	session.invalidate();
             }
 
             builder = Response.seeOther(redirectURI);
@@ -258,9 +259,10 @@ public class UserAccountController extends AbstractController {
 
         try {
             User user = getCurrentUser();
-
-            request.logout();
             getUserBo().delete(user.getUserName());
+            
+            // TODO: Delete all the user's sessions
+            request.getSession().invalidate();
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login").queryParam("out", 2).build();
             builder = Response.seeOther(redirectURI);
@@ -274,12 +276,7 @@ public class UserAccountController extends AbstractController {
 
             view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
             builder = Response.status(Status.UNAUTHORIZED).entity(view);
-        } catch (ServletException e) {
-            logger.warn("Session not found", e);
-
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError().entity(view);
-        }
+        } 
 
         return builder.build();
     }

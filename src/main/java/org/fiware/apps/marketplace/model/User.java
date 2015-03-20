@@ -36,11 +36,15 @@ package org.fiware.apps.marketplace.model;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -65,6 +69,11 @@ public class User {
 	private String email;
 	private Date registrationDate;
 	private String company;
+	// This lists are needed to allow cascade deletion
+	private List<Store> storesCreated;
+	private List<Store> storesModified;
+	private List<Description> descriptionsCreated;
+	private List<Description> descriptionsModified;
 		
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -144,7 +153,47 @@ public class User {
 	public void setCompany(String company) {
 		this.company = company;
 	}
-	
+
+	@XmlTransient
+	@OneToMany(mappedBy="creator", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	public List<Store> getStoresCreated() {
+		return storesCreated;
+	}
+
+	public void setStoresCreated(List<Store> storesCreated) {
+		this.storesCreated = storesCreated;
+	}
+
+	@XmlTransient
+	@OneToMany(mappedBy="lasteditor", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	public List<Store> getStoresModified() {
+		return storesModified;
+	}
+
+	public void setStoresModified(List<Store> storesModified) {
+		this.storesModified = storesModified;
+	}
+
+	@XmlTransient
+	@OneToMany(mappedBy="creator", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	public List<Description> getDescriptionsCreated() {
+		return descriptionsCreated;
+	}
+
+	public void setDescriptionsCreated(List<Description> descriptionsCreated) {
+		this.descriptionsCreated = descriptionsCreated;
+	}
+
+	@XmlTransient
+	@OneToMany(mappedBy="lasteditor", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	public List<Description> getDescriptionsModified() {
+		return descriptionsModified;
+	}
+
+	public void setDescriptionsModified(List<Description> descriptionsModified) {
+		this.descriptionsModified = descriptionsModified;
+	}
+
 	@Override
 	public int hashCode() {
 		return this.id == null ? 0 : this.id;
