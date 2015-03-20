@@ -51,7 +51,6 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
-import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.rest.v2.StoreService;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -70,7 +69,6 @@ public class StoreServiceTest {
 	@InjectMocks private StoreService storeRegistrationService;
 
 	// Default URI
-	private User user;
 	private Store store;
 	private UriInfo uri;
 
@@ -118,14 +116,14 @@ public class StoreServiceTest {
 	@Test
 	public void testCreateStoreNotAllowed() throws Exception {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "create store");
+		Exception e = new NotAuthorizedException("create store");
 		doThrow(e).when(storeBoMock).save(store);
 
 		// Call the method
 		Response res = storeRegistrationService.createStore(uri, store);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 
 		// Verify mocks
 		verify(storeBoMock).save(store);
@@ -236,14 +234,14 @@ public class StoreServiceTest {
 	@Test
 	public void testUpdateStoreNotAllowed() throws Exception {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "update store");
+		Exception e = new NotAuthorizedException("update store");
 		doThrow(e).when(storeBoMock).update(NAME, store);
 
 		// Call the method
 		Response res = storeRegistrationService.updateStore(NAME, store);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 
 		// Verify mocks
 		verify(storeBoMock).update(NAME, store);	
@@ -354,10 +352,10 @@ public class StoreServiceTest {
 	@Test
 	public void testDeleteStoreNotAllowed() throws Exception {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "delete store");
+		Exception e = new NotAuthorizedException("delete store");
 		doThrow(e).when(storeBoMock).delete(NAME);
 		
-		testDeleteStoreGenericError(403, ErrorType.FORBIDDEN, e.toString());
+		testDeleteStoreGenericError(403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 	@Test 
@@ -397,14 +395,14 @@ public class StoreServiceTest {
 	@Test
 	public void testGetStoreNotAllowed() throws Exception {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "get store");
+		Exception e = new NotAuthorizedException("get store");
 		doThrow(e).when(storeBoMock).findByName(NAME);
 
 		// Call the method
 		Response res = storeRegistrationService.getStore(NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 		
 		// Verify mocks
 		verify(storeBoMock).findByName(NAME);	
@@ -460,14 +458,14 @@ public class StoreServiceTest {
 	@Test
 	public void testListStoresNotAllowed() throws NotAuthorizedException {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "list stores");
+		Exception e = new NotAuthorizedException("list stores");
 		doThrow(e).when(storeBoMock).getStoresPage(anyInt(), anyInt());
 
 		// Call the method
 		Response res = storeRegistrationService.listStores(0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 		
 		// Verify
 		verify(storeBoMock).getStoresPage(0, 100);

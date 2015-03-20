@@ -33,7 +33,6 @@ package org.fiware.apps.marketplace.security.auth;
  */
 
 import org.fiware.apps.marketplace.bo.UserBo;
-import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,21 +42,8 @@ public abstract class AbstractAuth<T> {
 	@Autowired
 	private UserBo userBo;
 	
-	private String getActionForException(T entity, String action) {
-		return action + " " + entity.getClass().getSimpleName().toLowerCase() 
-				+ " " + genEntityName(entity);
-	}
-	
 	/**
-	 * Returns the name of an entity. It's useful to return a more detailed
-	 * error message
-	 * @param entity The entity
-	 * @return The name of the entity
-	 */
-	protected abstract String genEntityName(T entity);
-	
-	/**
-	 * Method to return the Localuser who is owner of the entity
+	 * Method to return the User who is owner of the entity
 	 * @param entity The entity whose owner the developer wants to know
 	 * @return The owner of the entity
 	 */
@@ -66,10 +52,9 @@ public abstract class AbstractAuth<T> {
 	/**
 	 * Method to know if the logged user is the owner of the entity
 	 * @param entity The entity to check. 
-	 * @param action The action that is being performed
-	 * @throws NotAuthorizedException if the user is not authorized to perform the action
+	 * @returns true if the logged user is the owner of the entity. False otherwise.
 	 */
-	protected void isOwner(T entity, String action) throws NotAuthorizedException {
+	protected boolean isOwner(T entity) {
 		boolean canAccess = false;
 		User loggedUser = null;
 
@@ -83,17 +68,15 @@ public abstract class AbstractAuth<T> {
 			// Nothing to do... False will be returned
 		}
 		
-		if (!canAccess) {
-			throw new NotAuthorizedException(loggedUser, getActionForException(entity, action));
-		}		
+		return canAccess;		
 	}
 	
 	/**
 	 * Method to know if the user is logged in
 	 * @param entity The entity to check.
-	 * @throws NotAuthorizedException if the user is not logged in
+	 * @returns true if the user is logged in. False otherwise.
 	 */
-	protected void isLoggedIn(T entity, String action) throws NotAuthorizedException {
+	protected boolean isLoggedIn(T entity)  {
 		User loggedUser = null;
 
 		try {
@@ -102,49 +85,47 @@ public abstract class AbstractAuth<T> {
 			// Nothing to do
 		}
 		
-		if (loggedUser == null) {
-			throw new NotAuthorizedException(loggedUser, getActionForException(entity, action));
-		}
+		return loggedUser != null;
 	}
 	
 	/**
 	 * @return By default it returns True if the user is logged in
-	 * @throws NotAuthorizedException if the user is not authorized to create the entity
+	 * @returns true if the user is allowed to create a entity. False otherwise.
 	 */
-	public void canCreate(T entity) throws NotAuthorizedException {
-		this.isLoggedIn(entity, "create");
+	public boolean canCreate(T entity) {
+		return this.isLoggedIn(entity);
 	}
 
 	/**
 	 * @param entity The entity that is going to be updated
-	 * @throws NotAuthorizedException if the user is not authorized to update the entity
+	 * @returns true if the user is allowed to update a entity. False otherwise.
 	 */
-	public void canUpdate(T entity) throws NotAuthorizedException {
-		this.isOwner(entity, "update");
+	public boolean  canUpdate(T entity) {
+		return this.isOwner(entity);
 	}
 
 	/**
 	 * @param entity The entity that is going to be deleted
-	 * @throws NotAuthorizedException if the user is not authorized to delete the entity
+	 * @returns true if the user is allowed to delete a entity. False otherwise.
 	 */
-	public void canDelete(T entity) throws NotAuthorizedException {
-		this.isOwner(entity, "delete");
+	public boolean canDelete(T entity) {
+		return this.isOwner(entity);
 	}
 
 	/**
 	 * @param entity The entity that is going to be got
-	 * @throws NotAuthorizedException if the user is not authorized to get the entity
+	 * @returns true if the user is allowed to retrieve an entity. False otherwise.
 	 */
-	public void canGet(T entity) throws NotAuthorizedException {
-
+	public boolean canGet(T entity) {
+		return true;
 	}
 
 	/**
 	 * @return By default, it returns True
-	 * @throws NotAuthorizedException if the user is not authorized to list the entities
+	 * @returns true if the user is allowed to list the entities. False otherwise.
 	 */
-	public void canList() throws NotAuthorizedException {
-
+	public boolean canList() {
+		return true;
 	}
 
 

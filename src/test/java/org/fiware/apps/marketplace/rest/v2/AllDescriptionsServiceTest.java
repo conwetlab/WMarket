@@ -73,7 +73,7 @@ public class AllDescriptionsServiceTest {
 		// Mocks
 		User user = mock(User.class);
 		when(user.getUserName()).thenReturn(userName);
-		Exception e = new NotAuthorizedException(user, "list descriptions");
+		Exception e = new NotAuthorizedException("list descriptions");
 		doThrow(e).when(descriptionBoMock).getDescriptionsPage(anyInt(), anyInt());
 
 		// Call the method
@@ -81,7 +81,7 @@ public class AllDescriptionsServiceTest {
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, 
-				e.toString());
+				e.getMessage());
 	}
 	
 	

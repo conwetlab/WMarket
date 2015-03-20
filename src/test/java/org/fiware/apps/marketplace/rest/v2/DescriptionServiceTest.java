@@ -58,7 +58,6 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
-import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.rest.v2.DescriptionService;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -80,7 +79,6 @@ public class DescriptionServiceTest {
 
 	// Default values
 	private Description description;
-	private User user;
 	private UriInfo uri;
 
 	// Other useful constants
@@ -130,14 +128,14 @@ public class DescriptionServiceTest {
 	@Test
 	public void testCreateDescriptionNotAllowed() throws Exception {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "create description");
+		Exception e = new NotAuthorizedException("create description");
 		doThrow(e).when(descriptionBoMock).save(STORE_NAME, description);
 
 		// Call the method
 		Response res = descriptionRegistrationService.createDescription(uri, STORE_NAME, description);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 
 		// Verify mocks
 		verify(descriptionBoMock).save(STORE_NAME, description);
@@ -272,7 +270,7 @@ public class DescriptionServiceTest {
 		Description newDescription = new Description();
 
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "update description");
+		Exception e = new NotAuthorizedException("update description");
 		doThrow(e).when(descriptionBoMock).update(STORE_NAME, DESCRIPTION_NAME, description);
 
 		// Call the method
@@ -280,7 +278,7 @@ public class DescriptionServiceTest {
 				updateDescription(STORE_NAME, DESCRIPTION_NAME, newDescription);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 
 		// Verify mocks
 		verify(descriptionBoMock).update(STORE_NAME, DESCRIPTION_NAME, description);	
@@ -403,10 +401,10 @@ public class DescriptionServiceTest {
 	public void testDeleteDescriptionNotAllowed() throws Exception {
 		
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "delete description");
+		Exception e = new NotAuthorizedException("delete description");
 		doThrow(e).when(descriptionBoMock).delete(STORE_NAME, DESCRIPTION_NAME);
 		
-		testDeleteDescriptionGenericError(403, ErrorType.FORBIDDEN, e.toString());
+		testDeleteDescriptionGenericError(403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 	@Test 
@@ -461,14 +459,14 @@ public class DescriptionServiceTest {
 	public void testGetDescriptionNotAllowed() throws Exception {
 		
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "get description");
+		Exception e = new NotAuthorizedException("get description");
 		doThrow(e).when(descriptionBoMock).findByNameAndStore(STORE_NAME, DESCRIPTION_NAME);
 
 		// Call the method
 		Response res = descriptionRegistrationService.getDescription(STORE_NAME, DESCRIPTION_NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 	@Test
@@ -529,14 +527,14 @@ public class DescriptionServiceTest {
 	@Test
 	public void testListDescriptionsNotAllowed() throws Exception {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "get description");
+		Exception e = new NotAuthorizedException("get description");
 		doThrow(e).when(descriptionBoMock).getStoreDescriptionsPage(eq(STORE_NAME), anyInt(), anyInt());
 
 		// Call the method
 		Response res = descriptionRegistrationService.listDescriptionsInStore(STORE_NAME, 0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 	

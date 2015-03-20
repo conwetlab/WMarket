@@ -116,8 +116,8 @@ public class OfferingServiceTest {
 	public void testGetOfferingNotAuthorized() {
 		User user = mock(User.class);
 		when(user.getUserName()).thenReturn("userName");
-		Exception e = new NotAuthorizedException(user, "list offerings");
-		testGetOfferingExceptcion(e, 403, ErrorType.FORBIDDEN, e.toString());
+		Exception e = new NotAuthorizedException("list offerings");
+		testGetOfferingExceptcion(e, 403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 	@Test
@@ -240,8 +240,8 @@ public class OfferingServiceTest {
 	public void testListAllOfferingsInDescriptionNotAuthorized() {
 		User user = mock(User.class);
 		when(user.getUserName()).thenReturn("userName");
-		Exception e = new NotAuthorizedException(user, "list offerings");
-		testListAllOfferingsInDescriptionException(e, 403, ErrorType.FORBIDDEN, e.toString());
+		Exception e = new NotAuthorizedException("list offerings");
+		testListAllOfferingsInDescriptionException(e, 403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 	@Test

@@ -83,6 +83,7 @@ public class StoreBoImplTest {
 			// Mock
 			doReturn(user).when(userBoMock).getCurrentUser();
 			doReturn(store).when(storeBo).findByName(NAME);
+			when(storeAuthMock.canUpdate(store)).thenReturn(true);
 			
 			String previousStoreName = store.getName();
 
@@ -106,7 +107,6 @@ public class StoreBoImplTest {
 			// Assert that last modifier has changed
 			assertThat(store.getLasteditor()).isEqualTo(user);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			// It's not supposed to happen
 			fail("Exception " + ex + " is not supposed to happen");
 		}

@@ -32,6 +32,7 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -101,10 +102,10 @@ public class OfferingAuthTest {
 
 		Offering description = mock(Offering.class);
 		when(userBoMock.getCurrentUser()).thenReturn(new User());
-		authHelper.canCreate(description);
+		assertThat(authHelper.canCreate(description)).isTrue();
 	}
 
-	@Test(expected = NotAuthorizedException.class)
+	@Test
 	public void canNotCreateOffering() throws UserNotFoundException, NotAuthorizedException {
 		// Set up the test
 		Store store = new Store();
@@ -116,7 +117,7 @@ public class OfferingAuthTest {
 		offering.setDescribedIn(description);
 		
 		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
-		authHelper.canCreate(offering);
+		assertThat(authHelper.canCreate(offering)).isFalse();
 	}
 
 	
@@ -124,9 +125,9 @@ public class OfferingAuthTest {
 	///////////////////////////////////// TEST UPDATE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 
-	private void testUpdate(User creator, User updater) throws NotAuthorizedException  {
+	private void testUpdate(User creator, User updater, boolean canUpdate) throws NotAuthorizedException  {
 		Offering offering = setUpTestUpdateAndDelete(creator, updater);
-		authHelper.canUpdate(offering);
+		assertThat(authHelper.canUpdate(offering)).isEqualTo(canUpdate);
 	}
 
 	@Test
@@ -134,7 +135,7 @@ public class OfferingAuthTest {
 			throws UserNotFoundException, NotAuthorizedException {
 		
 		User creator = createBasicUser(1);
-		testUpdate(creator, creator);
+		testUpdate(creator, creator, true);
 	}
 
 	@Test
@@ -143,25 +144,25 @@ public class OfferingAuthTest {
 		
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
-		testUpdate(creator, updater);
+		testUpdate(creator, updater, true);
 	}
 
-	@Test(expected = NotAuthorizedException.class)
+	@Test
 	public void canNotUpdateOfferingNotSameUser() 
 			throws UserNotFoundException, NotAuthorizedException {
 		
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
-		testUpdate(creator, updater);
+		testUpdate(creator, updater, false);
 	}
 
-	@Test(expected = NotAuthorizedException.class)
+	@Test
 	public void canNotUpdateOfferingNotLoggedIn() 
 			throws UserNotFoundException, NotAuthorizedException {	
 		
 		User creator = createBasicUser(1);
 		User updater = null;
-		testUpdate(creator, updater);
+		testUpdate(creator, updater, false);
 	}
 
 
@@ -169,36 +170,36 @@ public class OfferingAuthTest {
 	///////////////////////////////////// TEST DELETE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testDelete(User creator, User updater) throws NotAuthorizedException  {
+	private void testDelete(User creator, User updater, boolean canDelete) throws NotAuthorizedException  {
 		Offering offering = setUpTestUpdateAndDelete(creator, updater);
-		authHelper.canDelete(offering);
+		assertThat(authHelper.canDelete(offering)).isEqualTo(canDelete);
 	}
 
 	@Test
 	public void canDeleteOfferingSameUser() throws NotAuthorizedException {
 		User creator = createBasicUser(1);
-		testDelete(creator, creator);
+		testDelete(creator, creator, true);
 	}
 
 	@Test
 	public void canDeleteOffering() throws NotAuthorizedException {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
-		testDelete(creator, updater);
+		testDelete(creator, updater, true);
 	}
 
-	@Test(expected = NotAuthorizedException.class)
+	@Test
 	public void canNotDeleteOfferingNotSameUser() throws NotAuthorizedException {			
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
-		testDelete(creator, updater);
+		testDelete(creator, updater, false);
 	}
 
-	@Test(expected = NotAuthorizedException.class)
+	@Test
 	public void canNotDeleteOfferingNotLoggedIn() throws NotAuthorizedException {			
 		User creator = createBasicUser(1);
 		User updater = null;
-		testDelete(creator, updater);
+		testDelete(creator, updater, false);
 	}
 
 
@@ -208,17 +209,17 @@ public class OfferingAuthTest {
 	
 	@Test
 	public void canList() throws NotAuthorizedException {
-		authHelper.canList();
+		assertThat(authHelper.canList()).isTrue();
 	}
 	
 	@Test
 	public void canListStore() throws NotAuthorizedException {
-		authHelper.canList(new Store());
+		assertThat(authHelper.canList(new Store())).isTrue();
 	}
 	
 	@Test
 	public void canListDescription() throws NotAuthorizedException {
-		authHelper.canList(new Description());
+		assertThat(authHelper.canList(new Description())).isTrue();
 	}
 
 }

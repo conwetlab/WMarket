@@ -106,7 +106,7 @@ public class ErrorUtils {
 	}
 	
 	public Response notAuthorizedResponse(NotAuthorizedException exception) {
-		String message = exception.toString();
+		String message = exception.getMessage();
 		logger.warn(message);
 		return Response.status(Status.FORBIDDEN).entity(
 				new APIError(ErrorType.FORBIDDEN, message)).build();

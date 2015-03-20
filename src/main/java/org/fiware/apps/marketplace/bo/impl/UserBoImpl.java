@@ -64,15 +64,16 @@ public class UserBoImpl implements UserBo {
 	// Encoder must be the same in all the platform: use the bean
 	@Autowired private PasswordEncoder encoder;
 
-
 	private static final Logger logger = LoggerFactory.getLogger(UserBoImpl.class);
 
 	@Override
 	@Transactional(readOnly=false)
 	public void save(User user) throws NotAuthorizedException, ValidationException{
-
-		// Exception is risen if user is not allowed
-		userAuth.canCreate(user);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canCreate(user)) {
+			throw new NotAuthorizedException("create user");
+		}
 		
 		// Exception is risen if the user is not valid
 		userValidator.validateUser(user, true);
@@ -99,8 +100,10 @@ public class UserBoImpl implements UserBo {
 		
 		User userToBeUpdated = findByName(userName);
 		
-		// Exception is risen if user is not allowed
-		userAuth.canUpdate(userToBeUpdated);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canUpdate(userToBeUpdated)) {
+			throw new NotAuthorizedException("update user");
+		}
 		
 		// Exception is risen if the user is not valid
 		userValidator.validateUser(updatedUser, false);		
@@ -139,9 +142,10 @@ public class UserBoImpl implements UserBo {
 		
 		User user = findByName(userName);
 		
-		// Exception is risen if user is not allowed
-		userAuth.canDelete(user);
-		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canDelete(user)) {
+			throw new NotAuthorizedException("delete user");
+		}		
 		userDao.delete(user);
 	}
 
@@ -152,8 +156,10 @@ public class UserBoImpl implements UserBo {
 		
 		User user = userDao.findByName(userName);
 		
-		// Exception is risen if user is not allowed
-		userAuth.canGet(user);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canGet(user)) {
+			throw new NotAuthorizedException("find user");
+		}
 		
 		return user;
 	}
@@ -165,8 +171,10 @@ public class UserBoImpl implements UserBo {
 		
 		User user = userDao.findByEmail(email);
 		
-		// Exception is risen if user is not allowed
-		userAuth.canGet(user);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canGet(user)) {
+			throw new NotAuthorizedException("find user");
+		}
 		
 		return user;
 	}
@@ -174,8 +182,10 @@ public class UserBoImpl implements UserBo {
 	@Override
 	@Transactional
 	public List<User> getUsersPage(int offset, int max) throws NotAuthorizedException {
-		// Check rights (exception is risen if user is not allowed)
-		userAuth.canList();
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canList()) {
+			throw new NotAuthorizedException("list users");
+		}
 		
 		return userDao.getUsersPage(offset, max);
 	}
@@ -183,9 +193,11 @@ public class UserBoImpl implements UserBo {
 	@Override
 	@Transactional
 	public List<User> getAllUsers() throws NotAuthorizedException {
-		// Exception is risen if user is not allowed
-		userAuth.canList();
-
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canList()) {
+			throw new NotAuthorizedException("list users");
+		}
+		
 		return userDao.getAllUsers();
 	}
 

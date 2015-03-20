@@ -76,8 +76,10 @@ public class StoreBoImpl implements StoreBo{
 			store.setCreator(user);
 			store.setLasteditor(user);
 	
-			// Exception is risen if the user is not allowed
-			storeAuth.canCreate(store);
+			// Check rights and raise exception if user is not allowed to perform this action
+			if (!storeAuth.canCreate(store)) {
+				throw new NotAuthorizedException("create store");
+			}
 			
 			// Exception is risen if the store is not valid
 			storeValidator.validateStore(store, true);
@@ -100,10 +102,12 @@ public class StoreBoImpl implements StoreBo{
 			// Get the currently logged-in user
 			User user = userBo.getCurrentUser();
 			
-			Store storeToUpdate = this.findByName(storeName);								
-
-			// Exception is risen if user is not allowed
-			storeAuth.canUpdate(storeToUpdate);
+			Store storeToBeUpdate = this.findByName(storeName);
+			
+			// Check rights and raise exception if user is not allowed to perform this action
+			if (!storeAuth.canUpdate(storeToBeUpdate)) {
+				throw new NotAuthorizedException("update store");
+			}
 			
 			// Exception is risen if the store is not valid
 			// Store returned by the BBDD cannot be updated if the updated store is not valid.
@@ -111,20 +115,20 @@ public class StoreBoImpl implements StoreBo{
 			
 			// Update fields
 			if (updatedStore.getUrl() != null) {
-				storeToUpdate.setUrl(updatedStore.getUrl());
+				storeToBeUpdate.setUrl(updatedStore.getUrl());
 			}
 
 			if (updatedStore.getDescription() != null) {
-				storeToUpdate.setDescription(updatedStore.getDescription());
+				storeToBeUpdate.setDescription(updatedStore.getDescription());
 			}
 
 			if (updatedStore.getDisplayName() != null) {
-				storeToUpdate.setDisplayName(updatedStore.getDisplayName());
+				storeToBeUpdate.setDisplayName(updatedStore.getDisplayName());
 			}
 			
-			storeToUpdate.setLasteditor(user);
+			storeToBeUpdate.setLasteditor(user);
 			
-			storeDao.update(storeToUpdate);
+			storeDao.update(storeToBeUpdate);
 			
 		} catch (UserNotFoundException ex) {
 			// This exception is not supposed to happen
@@ -136,9 +140,14 @@ public class StoreBoImpl implements StoreBo{
 	@Override
 	@Transactional(readOnly=false)
 	public void delete(String storeName) throws NotAuthorizedException, StoreNotFoundException {
+		
 		Store store = this.findByName(storeName);
-		// Check rights (exception is risen if user is not allowed)
-		storeAuth.canDelete(store);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!storeAuth.canDelete(store)) {
+			throw new NotAuthorizedException("delete store");
+		}
+		
 		storeDao.delete(store);
 		
 	}
@@ -150,8 +159,10 @@ public class StoreBoImpl implements StoreBo{
 		
 		Store store = storeDao.findByName(name);
 		
-		// Exception is risen if user is not allowed
-		storeAuth.canGet(store);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!storeAuth.canGet(store)) {
+			throw new NotAuthorizedException("find store");
+		}
 		
 		return store;
 	}
@@ -161,8 +172,10 @@ public class StoreBoImpl implements StoreBo{
 	public List<Store> getStoresPage(int offset, int max) 
 			throws NotAuthorizedException {
 		
-		// Exception is risen if user is not allowed
-		storeAuth.canList();
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!storeAuth.canList()) {
+			throw new NotAuthorizedException("list stores");
+		}
 		
 		return storeDao.getStoresPage(offset, max);
 	}
@@ -171,8 +184,10 @@ public class StoreBoImpl implements StoreBo{
 	@Transactional
 	public List<Store> getAllStores() throws NotAuthorizedException {
 		
-		// Exception is risen if user is not allowed
-		storeAuth.canList();
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!storeAuth.canList()) {
+			throw new NotAuthorizedException("list stores");
+		}
 		
 		return storeDao.getAllStores();
 	}

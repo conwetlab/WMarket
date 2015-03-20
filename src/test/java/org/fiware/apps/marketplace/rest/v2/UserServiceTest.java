@@ -91,8 +91,12 @@ public class UserServiceTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Before 
-	public void initMocks() {
+	public void setUp() throws UserNotFoundException {
 		MockitoAnnotations.initMocks(this);
+		
+		User loggedUser = mock(User.class);
+		when(loggedUser.getUserName()).thenReturn(USER_NAME);
+		when(userBoMock.getCurrentUser()).thenReturn(loggedUser);
 	}
 
 	@Before
@@ -117,14 +121,14 @@ public class UserServiceTest {
 	@Test
 	public void testCreateUserNotAllowed() throws Exception {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "create user");
+		Exception e = new NotAuthorizedException("create user");
 		doThrow(e).when(userBoMock).save(user);
 
 		// Call the method
 		Response res = userRegistrationService.createUser(uri, user);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 
 		// Verify mocks
 		verify(userBoMock).save(user);
@@ -221,14 +225,14 @@ public class UserServiceTest {
 	public void testUpdateUserNotAllowed() throws Exception {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		Exception e = new NotAuthorizedException(user, "update user");
+		Exception e = new NotAuthorizedException("update user");
 		doThrow(e).when(userBoMock).update(USER_NAME, user);
 
 		// Call the method
 		Response res = userRegistrationService.updateUser(USER_NAME, user);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 
 		// Verify mocks
 		verify(userBoMock).update(USER_NAME, user);
@@ -344,10 +348,10 @@ public class UserServiceTest {
 	public void testDeleteUserNotAllowed() throws Exception {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		Exception e = new NotAuthorizedException(user, "delete user");
+		Exception e = new NotAuthorizedException("delete user");
 		doThrow(e).when(userBoMock).delete(USER_NAME);
 		
-		testDeleteException(USER_NAME, 403, ErrorType.FORBIDDEN, e.toString());
+		testDeleteException(USER_NAME, 403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 	@Test
@@ -389,14 +393,14 @@ public class UserServiceTest {
 	public void testGetUserNotAllowed() throws Exception {
 		// Mocks
 		when(userBoMock.findByName(USER_NAME)).thenReturn(user);
-		Exception e = new NotAuthorizedException(user, "get user");
+		Exception e = new NotAuthorizedException("get user");
 		doThrow(e).when(userBoMock).findByName(USER_NAME);
 
 		// Call the method
 		Response res = userRegistrationService.getUser(USER_NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 	@Test
@@ -450,14 +454,14 @@ public class UserServiceTest {
 	@Test
 	public void testListUsersNotAllowed() throws NotAuthorizedException {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "list users");
+		Exception e = new NotAuthorizedException("list users");
 		doThrow(e).when(userBoMock).getUsersPage(anyInt(), anyInt());
 
 		// Call the method
 		Response res = userRegistrationService.listUsers(0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 	private void testListUsersInvalidParams(int offset, int max) {

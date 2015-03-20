@@ -32,7 +32,6 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
-import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.stereotype.Service;
 
@@ -40,18 +39,13 @@ import org.springframework.stereotype.Service;
 public class UserAuth extends AbstractAuth<User> {
 	
 	@Override
-	protected String genEntityName(User entity) {
-		return entity.getUserName();
-	}
-	
-	@Override
 	protected User getEntityOwner(User user) {
 		return user;
 	}
 	
 	@Override
-	public void canCreate(User user) throws NotAuthorizedException {
-
+	public boolean canCreate(User user) {
+		return true;
 	}
 
 }

@@ -70,6 +70,7 @@ public class UserBoImplTest {
 	
 	private static final String ENCODED_PASSWORD = "ENCODED PASSWORD";
 	private static final String USER_NAME = "userName";
+	private static final String NOT_AUTHORIZED_BASE = "You are not authorized to %s";
 	
 	@Before 
 	public void setUp() {
@@ -98,14 +99,20 @@ public class UserBoImplTest {
 
 	}
 
-	@Test(expected=NotAuthorizedException.class)
+	@Test
 	public void testSaveNotAuthorized() throws Exception {
-		
-		User user = mock(User.class);
-		doThrow(new NotAuthorizedException(user, "create user")).when(userAuthMock).canCreate(user);
-		
-		// Call the method and check that DAO is not called
-		testSaveException(user);
+		try {
+			User user = mock(User.class);
+			when(userAuthMock.canCreate(user)).thenReturn(false);
+			
+			// Call the method and check that DAO is not called
+			testSaveException(user);
+			
+			// If the exception is not risen, the method is not properly working
+			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+		} catch (NotAuthorizedException ex) {
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "create user"));
+		}
 	}
 	
 	@Test(expected=ValidationException.class)
@@ -113,12 +120,15 @@ public class UserBoImplTest {
 		
 		User user = mock(User.class);
 		doThrow(new ValidationException("a field", "invalid")).when(userValidatorMock).validateUser(user, true);
+		when(userAuthMock.canCreate(user)).thenReturn(true);
 		
 		// Call the method and check that DAO is not called
 		testSaveException(user);
 	}
 	
 	private void testSave(User user, String expectedUserName) {
+		
+		when(userAuthMock.canCreate(user)).thenReturn(true);
 		
 		try {
 			userBo.save(user);
@@ -163,16 +173,13 @@ public class UserBoImplTest {
 	/////////////////////////////////////// UPDATE ////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testUpdateException(String userName, User updatedUser) throws Exception {
+	private void testUpdateException(String userName, User updatedUser) throws Exception {		
 		// Call the method
 		try {
 			userBo.update(userName, updatedUser);
 			fail("Exception expected");
 		} catch (Exception e) {
-			// Verify that the DAO has not been called
 			verify(userDaoMock, never()).update(updatedUser);
-			
-			// Throw the exception
 			throw e;
 		}
 
@@ -182,34 +189,44 @@ public class UserBoImplTest {
 	public void testUpdateNotFound() throws Exception {
 		
 		User user = mock(User.class);
-		doThrow(new UserNotFoundException("user not found")).when(userDaoMock).findByName(USER_NAME);
+		doThrow(new UserNotFoundException("user not found")).when(userBo).findByName(USER_NAME);
+		when(userAuthMock.canUpdate(user)).thenReturn(true);
 		
 		// Call the method and check that DAO is not called
 		testUpdateException(USER_NAME, user);
 	}
 
-	@Test(expected=NotAuthorizedException.class)
+	@Test
 	public void testUpdateNotAuthorized() throws Exception {
-		
-		User updatedUser = mock(User.class);
-		User userToBeUpdated = mock(User.class);
-		
-		when(userDaoMock.findByName(USER_NAME)).thenReturn(userToBeUpdated);
-		doThrow(new NotAuthorizedException(userToBeUpdated, "update user"))
-				.when(userAuthMock).canUpdate(userToBeUpdated);
-		
-		// Call the method and check that DAO is not called
-		testUpdateException(USER_NAME, updatedUser);
+		try {
+			User updatedUser = mock(User.class);
+			User userToBeUpdated = mock(User.class);
+			
+			doReturn(userToBeUpdated).when(userBo).findByName(USER_NAME);
+			when(userAuthMock.canUpdate(userToBeUpdated)).thenReturn(false);
+			
+			// Call the method and check that DAO is not called
+			testUpdateException(USER_NAME, updatedUser);
+			
+			// If the exception is not risen, the method is not properly working
+			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+		} catch (NotAuthorizedException ex) {
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "update user"));
+		}
 	}
 	
 	@Test(expected=ValidationException.class)
 	public void testUpdateInvalidUser() throws Exception {
 		
-		User user = mock(User.class);
-		doThrow(new ValidationException("a field", "invalid")).when(userValidatorMock).validateUser(user, false);
+		User updatedUser = mock(User.class);
+		User userToBeUpdated = mock(User.class);
+		
+		doThrow(new ValidationException("a field", "invalid")).when(userValidatorMock).validateUser(updatedUser, false);
+		doReturn(userToBeUpdated).when(userBo).findByName(USER_NAME);
+		when(userAuthMock.canUpdate(userToBeUpdated)).thenReturn(true);
 		
 		// Call the method and check that DAO is not called
-		testUpdateException("user", user);
+		testUpdateException(USER_NAME, updatedUser);
 	}
 	
 	private void testUpdateGenericUserNoErrors(User newUser) {
@@ -227,9 +244,9 @@ public class UserBoImplTest {
 		user.setCompany(company);
 		
 		// Mocks
+		when(userAuthMock.canUpdate(user)).thenReturn(true);
 		try {
 			doReturn(user).when(userBo).findByName(USER_NAME);
-			//when(userBo.findByName(USER_NAME)).thenReturn(user);
 		} catch (Exception ex) {
 			fail("Exeception not expected", ex);
 		}
@@ -350,15 +367,22 @@ public class UserBoImplTest {
 		
 	}
 	
-	@Test(expected=NotAuthorizedException.class)
+	@Test
 	public void testDeleteNotAuthorizedException() throws Exception {
-		
-		User user = mock(User.class);
-		String userName = "user";
-		when(userDaoMock.findByName(userName)).thenReturn(user);
-		doThrow(new NotAuthorizedException(user, "delete user")).when(userAuthMock).canDelete(user);
-		
-		testDeleteException(userName);
+		try {
+			User user = mock(User.class);
+			String userName = "user";
+			doReturn(user).when(userBo).findByName(userName);
+			when(userAuthMock.canDelete(user)).thenReturn(false);
+			
+			testDeleteException(userName);
+			
+			// If the exception is not risen, the method is not properly working
+			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+		} catch (NotAuthorizedException ex) {
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "delete user"));
+		}
+
 		
 	}
 	
@@ -367,7 +391,8 @@ public class UserBoImplTest {
 		User user = mock(User.class);
 		
 		// Configure Mock
-		when(userDaoMock.findByName(USER_NAME)).thenReturn(user);
+		doReturn(user).when(userBo).findByName(USER_NAME);
+		when(userAuthMock.canDelete(user)).thenReturn(true);
 		
 		// Call the method
 		userBo.delete(USER_NAME);
@@ -397,10 +422,7 @@ public class UserBoImplTest {
 		
 		// Set up mocks
 		when(userDaoMock.findByName(userName)).thenReturn(user);
-		
-		if (!authorized) {
-			doThrow(new NotAuthorizedException(null, "find user")).when(userAuthMock).canGet(user);
-		}
+		when(userAuthMock.canGet(user)).thenReturn(authorized);
 		
 		// Call the function
 		try {
@@ -414,9 +436,16 @@ public class UserBoImplTest {
 		}
 	}
 	
-	@Test(expected=NotAuthorizedException.class)
+	@Test
 	public void testFinByNameNotAuthorized() throws Exception{
-		testFindByNameUserFound(false);
+		try {
+			testFindByNameUserFound(false);
+			// If the exception is not risen, the method is not properly working
+			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+		} catch (NotAuthorizedException ex) {
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "find user"));
+		}
+
 	}
 
 	@Test
@@ -429,10 +458,18 @@ public class UserBoImplTest {
 	/////////////////////////////////// GET USERS PAGE ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	@Test(expected=NotAuthorizedException.class)
+	@Test
 	public void testGetUsersPageNotAuthorized() throws Exception{
-		doThrow(new NotAuthorizedException(null, "get users")).when(userAuthMock).canList();
-		userBo.getUsersPage(0, 100);
+		try {
+			
+			when(userAuthMock.canList()).thenReturn(false);
+			userBo.getUsersPage(0, 100);
+			
+			// If the exception is not risen, the method is not properly working
+			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+		} catch (NotAuthorizedException ex) {
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "list users"));
+		}
 	}
 	
 	@Test
@@ -446,6 +483,7 @@ public class UserBoImplTest {
 		}
 		
 		when(userDaoMock.getUsersPage(anyInt(), anyInt())).thenReturn(users);
+		when(userAuthMock.canList()).thenReturn(true);
 		
 		// Call the function
 		int offset = 0;
@@ -461,10 +499,19 @@ public class UserBoImplTest {
 	/////////////////////////////////// GET ALL USERS /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	@Test(expected=NotAuthorizedException.class)
+	@Test
 	public void testGetAllUsersNotAuthorized() throws Exception{
-		doThrow(new NotAuthorizedException(null, "get users")).when(userAuthMock).canList();
-		userBo.getAllUsers();
+		try {
+			
+			when(userAuthMock.canList()).thenReturn(false);
+			userBo.getAllUsers();
+			
+			// If the exception is not risen, the method is not properly working
+			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+		} catch (NotAuthorizedException ex) {
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "list users"));
+		}
+
 	}
 	
 	@Test
@@ -478,6 +525,7 @@ public class UserBoImplTest {
 		}
 		
 		when(userDaoMock.getAllUsers()).thenReturn(users);
+		when(userAuthMock.canList()).thenReturn(true);
 		
 		// Call the function
 		assertThat(userBo.getAllUsers()).isEqualTo(users);

@@ -92,6 +92,7 @@ public class DescriptionBoImplTest {
 			// Mock
 			doReturn(user).when(userBoMock).getCurrentUser();
 			doReturn(description).when(descriptionBo).findByNameAndStore(STORE_NAME, DESCRIPTION_NAME);
+			when(descriptionAuthMock.canUpdate(description)).thenReturn(true);
 
 			// Get the 
 			String previousName = description.getName();

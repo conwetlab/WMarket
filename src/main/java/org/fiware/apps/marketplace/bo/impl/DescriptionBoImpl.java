@@ -83,8 +83,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 			User user = userBo.getCurrentUser();
 			Store store = storeBo.findByName(storeName);
 			
-			// Exception is risen if user is not allowed
-			descriptionAuth.canCreate(description);
+			// Check rights and raise exception if user is not allowed to perform this action
+			if (!descriptionAuth.canCreate(description)) {
+				throw new NotAuthorizedException("create description");
+			}
 			
 			// Set basic fields
 			description.setRegistrationDate(new Date());
@@ -121,8 +123,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 		try {
 			Description descriptionToBeUpdated = this.findByNameAndStore(storeName, descriptionName);
 			
-			// Exception is risen if user is not allowed
-			descriptionAuth.canUpdate(descriptionToBeUpdated);
+			// Check rights and raise exception if user is not allowed to perform this action
+			if (!descriptionAuth.canUpdate(descriptionToBeUpdated)) {
+				throw new NotAuthorizedException("update description");
+			}
 			
 			// Exception is risen if the description is not valid
 			descriptionValidator.validateDescription(updatedDescription, false);
@@ -197,8 +201,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 		Store store = storeBo.findByName(storeName);
 		Description description = this.findByNameAndStore(storeName, descriptionName);
 		
-		// Exception is risen if user is not allowed
-		descriptionAuth.canDelete(description);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!descriptionAuth.canDelete(description)) {
+			throw new NotAuthorizedException("delete description");
+		}
 		
 		// Delete the description from the data base
 		store.getDescriptions().remove(description);
@@ -215,8 +221,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 		
 		Description description = descriptionDao.findById(id);
 		
-		// Exception is risen if user is not allowed
-		descriptionAuth.canGet(description);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!descriptionAuth.canGet(description)) {
+			throw new NotAuthorizedException("find description");
+		}
 		
 		return description;
 	}
@@ -229,8 +237,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 		
 		Description description = descriptionDao.findByNameAndStore(storeName, descriptionName);
 		
-		// Exception is risen if user is not allowed
-		descriptionAuth.canGet(description);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!descriptionAuth.canGet(description)) {
+			throw new NotAuthorizedException("find description");
+		}
 		
 		return description;
 	}
@@ -240,8 +250,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 	public List<Description> getAllDescriptions() 
 			throws NotAuthorizedException {
 		
-		// Exception is risen if user is not allowed
-		descriptionAuth.canList();
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!descriptionAuth.canList()) {
+			throw new NotAuthorizedException("list descriptions");
+		}
 
 		return descriptionDao.getAllDescriptions();
 	}
@@ -251,8 +263,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 	public List<Description> getDescriptionsPage(int offset, int max)
 			throws NotAuthorizedException {
 		
-		// Exception is risen if user is not allowed
-		descriptionAuth.canList();
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!descriptionAuth.canList()) {
+			throw new NotAuthorizedException("list descriptions");
+		}
 		
 		return descriptionDao.getDescriptionsPage(offset, max);
 	}
@@ -265,12 +279,12 @@ public class DescriptionBoImpl implements DescriptionBo {
 		// Will throw exception in case the Store does not exist
 		Store store = storeBo.findByName(storeName);
 		
-		// Exception is risen if user is not allowed
-		descriptionAuth.canList(store);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!descriptionAuth.canList(store)) {
+			throw new NotAuthorizedException("list descriptions in store " + store.getName());
+		}
 		
-		List<Description> descriptions = descriptionDao.getStoreDescriptions(storeName);
-		
-		return descriptions;
+		return descriptionDao.getStoreDescriptions(storeName);
 	}
 
 	@Override
@@ -282,9 +296,11 @@ public class DescriptionBoImpl implements DescriptionBo {
 		// Will throw exception in case the Store does not exist
 		Store store = storeBo.findByName(storeName);
 		
-		// Exception is risen if user is not allowed
-		descriptionAuth.canList(store);
-
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!descriptionAuth.canList(store)) {
+			throw new NotAuthorizedException("list descriptions in store " + store.getName());
+		}
+		
 		return descriptionDao.getStoreDescriptionsPage(storeName, offset, max);
 	}
 
