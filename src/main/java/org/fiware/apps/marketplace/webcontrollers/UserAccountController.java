@@ -34,6 +34,7 @@ package org.fiware.apps.marketplace.webcontrollers;
 
 import java.net.URI;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.FormParam;
@@ -238,6 +239,45 @@ public class UserAccountController extends AbstractController {
 
             view = new ModelAndView("user.detail", model);
             builder = Response.status(Status.BAD_REQUEST).entity(view);
+        }
+
+        return builder.build();
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_HTML)
+    @Path("delete")
+    public Response deleteView(
+            @Context HttpServletRequest request,
+            @Context UriInfo uri) {
+
+        ModelAndView view;
+        ResponseBuilder builder;
+        URI redirectURI;
+
+        try {
+            User user = getCurrentUser();
+
+            request.logout();
+            getUserBo().delete(user.getUserName());
+
+            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login").queryParam("out", 2).build();
+            builder = Response.seeOther(redirectURI);
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError().entity(view);
+        } catch (NotAuthorizedException e) {
+            logger.info("User unauthorized", e);
+
+            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+            builder = Response.status(Status.UNAUTHORIZED).entity(view);
+        } catch (ServletException e) {
+            logger.warn("Session not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError().entity(view);
         }
 
         return builder.build();

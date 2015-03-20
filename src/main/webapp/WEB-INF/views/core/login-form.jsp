@@ -16,9 +16,15 @@
           </div>
         </c:if>
 
-        <c:if test="${ not empty param.out }">
+        <c:if test="${ not empty param.out and param.out == 1 }">
           <div class="alert alert-success">
             <span class="fa fa-check-circle"></span> You've logged out successfully.
+          </div>
+        </c:if>
+
+        <c:if test="${ not empty param.out and param.out == 2 }">
+          <div class="alert alert-info">
+            <span class="fa fa-check-circle"></span> Your account was removed from WMarket.
           </div>
         </c:if>
 
