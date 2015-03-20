@@ -134,7 +134,7 @@ public class StoreController extends AbstractController {
             session = request.getSession();
 
             synchronized (session) {
-                session.setAttribute("created", true);
+                session.setAttribute("flashMessage", "The store '" + displayName + "' was created successfully.");
             }
 
             builder = Response.seeOther(redirectURI);
@@ -170,7 +170,7 @@ public class StoreController extends AbstractController {
             @Context HttpServletRequest request,
             @PathParam("storeName") String storeName) {
 
-        Boolean wasCreated;
+        String flashMessage;
         HttpSession session;
         ModelAndView view;
         ModelMap model = new ModelMap();
@@ -188,11 +188,11 @@ public class StoreController extends AbstractController {
             session = request.getSession();
 
             synchronized (session) {
-                wasCreated = (Boolean) session.getAttribute("created");
+                flashMessage = (String) session.getAttribute("flashMessage");
 
-                if (wasCreated != null) {
-                    model.addAttribute("message", "The store '" + store.getDisplayName() + "' was created successfully.");
-                    session.removeAttribute("created");
+                if (flashMessage != null) {
+                    model.addAttribute("message", flashMessage);
+                    session.removeAttribute("flashMessage");
                 }
             }
 
