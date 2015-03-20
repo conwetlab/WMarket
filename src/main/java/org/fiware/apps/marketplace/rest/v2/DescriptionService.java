@@ -51,8 +51,6 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
-import org.fiware.apps.marketplace.bo.StoreBo;
-import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
@@ -72,8 +70,6 @@ import com.hp.hpl.jena.shared.JenaException;
 public class DescriptionService {
 
 	// OBJECT ATTRIBUTES //
-	@Autowired private UserBo userBo;
-	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
 
 	// CLASS ATTRIBUTES //
