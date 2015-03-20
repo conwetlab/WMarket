@@ -52,7 +52,6 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
-import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -71,7 +70,6 @@ import org.springframework.stereotype.Component;
 public class StoreService {
 
 	// OBJECT ATTRIBUTES //
-	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
 	@Autowired private StoreAuth storeAuth;
 	@Autowired private StoreValidator storeValidator;

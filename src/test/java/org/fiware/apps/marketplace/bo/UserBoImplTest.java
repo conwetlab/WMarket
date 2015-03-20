@@ -4,7 +4,6 @@ package org.fiware.apps.marketplace.bo;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
  * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
