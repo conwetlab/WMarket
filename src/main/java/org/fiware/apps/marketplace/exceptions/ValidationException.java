@@ -38,10 +38,6 @@ public class ValidationException extends Exception {
 	private String fieldName;
 	private String fieldError;
 
-	public ValidationException(String message) {
-		super(message);
-	}
-
 	public ValidationException(String name, String message) {
 		super(message);
 		this.fieldName = name;
