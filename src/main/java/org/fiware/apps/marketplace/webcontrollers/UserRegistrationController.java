@@ -53,8 +53,10 @@ import javax.ws.rs.core.Response.Status;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
@@ -64,6 +66,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("register")
 public class UserRegistrationController extends AbstractController {
 
+    @Autowired private UserValidator userValidator;
     private static Logger logger = LoggerFactory.getLogger(UserRegistrationController.class);
 
     @GET
@@ -87,7 +90,8 @@ public class UserRegistrationController extends AbstractController {
             @Context HttpServletRequest request,
             @FormParam("displayName") String displayName,
             @FormParam("email") String email,
-            @FormParam("password") String password) throws URISyntaxException {
+            @FormParam("password") String password,
+            @FormParam("passwordConfirm") String passwordConfirm) throws URISyntaxException {
 
         HttpSession session;
         ModelAndView view;
@@ -103,13 +107,23 @@ public class UserRegistrationController extends AbstractController {
             user.setEmail(email);
             user.setPassword(password);
 
-            getUserBo().save(user);
+            userValidator.validateUser(user, true);
+
+            if (passwordConfirm.isEmpty()) {
+                throw new ValidationException("passwordConfirm", "This field is required.");
+            }
+            else if (!password.equals(passwordConfirm)) {
+                throw new ValidationException("passwordConfirm", "Passwords do not match.");
+            }
+            else {
+                getUserBo().save(user);
+            }
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login").build();
             session = request.getSession();
 
             synchronized (session) {
-                session.setAttribute("created", true);
+                session.setAttribute("flashMessage", "You was registered successfully. You can log in right now.");
             }
 
             builder = Response.seeOther(redirectURI);

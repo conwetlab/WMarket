@@ -67,13 +67,14 @@ public class HomeController extends AbstractController {
         HttpSession session = request.getSession();
         ModelAndView view;
         ModelMap model = new ModelMap();
+        String flashMessage;
 
         synchronized (session) {
-            Boolean wasCreated = (Boolean) session.getAttribute("created");
+            flashMessage = (String) session.getAttribute("flashMessage");
 
-            if (wasCreated != null) {
-                model.addAttribute("message", "Your user account was created successfully. You can log in right now.");
-                session.removeAttribute("created");
+            if (flashMessage != null) {
+                model.addAttribute("message", flashMessage);
+                session.removeAttribute("flashMessage");
             }
         }
 
