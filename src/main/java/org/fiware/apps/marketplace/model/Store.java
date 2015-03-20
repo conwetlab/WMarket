@@ -132,7 +132,7 @@ public class Store {
 	
 	@XmlElement
 	@XmlJavaTypeAdapter(UserXMLAdapter.class)
-	@ManyToOne(optional = false, cascade=CascadeType.ALL)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "creator", nullable=false)
 	public User getCreator() {
 		return creator;
