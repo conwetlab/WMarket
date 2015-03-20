@@ -81,7 +81,7 @@ public class OfferingController extends AbstractController {
 
             model.addAttribute("user", user);
             model.addAttribute("title", "Upload offerings - " + getContextName());
-            model.addAttribute("storeList", storeBo.filterByCreator(user.getUserName()));
+            model.addAttribute("storeList", storeBo.getAllStores());
 
             view = new ModelAndView("offering.register", model);
             builder = Response.ok();
