@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.model.validators;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,7 +42,7 @@ public class UserValidatorTest {
 	
 	private UserValidator userValidator = new UserValidator();
 	
-	private static final String MISSING_FILEDS_MSG = "This field is required.";
+	private static final String MISSING_FIELDS_MSG = "This field is required.";
 	private static final String TOO_SHORT_PATTERN = "This field must be at least %d chars.";
 	private static final String TOO_LONG_PATTERN = "This field must not exceed %d chars.";
 	private static final String INVALID_EMAIL = "This field must be a valid email.";
@@ -90,7 +90,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setDisplayName(null);
 		
-		assertInvalidUser(user, "displayName", MISSING_FILEDS_MSG, true);
+		assertInvalidUser(user, "displayName", MISSING_FIELDS_MSG, true);
 	}
 	
 	@Test
@@ -108,7 +108,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setPassword(null);
 		
-		assertInvalidUser(user, "password", MISSING_FILEDS_MSG, true);
+		assertInvalidUser(user, "password", MISSING_FIELDS_MSG, true);
 	}
 	
 	@Test
@@ -126,7 +126,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setEmail(null);
 		
-		assertInvalidUser(user, "email", MISSING_FILEDS_MSG, true);
+		assertInvalidUser(user, "email", MISSING_FIELDS_MSG, true);
 	}
 	
 	@Test

@@ -43,7 +43,7 @@ public class GenericValidator {
 	private UrlValidator urlValidator;
 	
 	private static final int NAME_MIN_LENGTH = 3;
-	private static final int NAME_MAX_LENGTH = 30;
+	private static final int NAME_MAX_LENGTH = 20;
 	private static final int DESCRIPTION_MIN_LENGTH = 0;
 	private static final int DESCRIPTION_MAX_LENGTH = 200;
 	private static final String EMAIL_PATTERN = 

@@ -39,6 +39,8 @@ import org.springframework.stereotype.Service;
 @Service("userValidator")
 public class UserValidator {
 
+	private static final int DISPLAY_NAME_MIN_LENGTH = 3;
+	private static final int DISPLAY_NAME_MAX_LENGTH = 30;
 	private static final int COMPANY_MIN_LENGTH = 3;	//For example: UPM, TID, SAP, ENG,...
 	private static final int COMPANY_MAX_LENGTH = 30;
 	private static final int PASSWORD_MIN_LENGTH = 8;
@@ -65,9 +67,9 @@ public class UserValidator {
 			GENERIC_VALIDATOR.validatePattern("displayName", user.getDisplayName(), 
 					"^[\\w ]+$", "This field only accepts letters and digits.");
 			GENERIC_VALIDATOR.validateMinLength("displayName", user.getDisplayName(), 
-					GenericValidator.getDisplayNameMinLength());
+					DISPLAY_NAME_MIN_LENGTH);
 			GENERIC_VALIDATOR.validateMaxLength("displayName", user.getDisplayName(), 
-					GenericValidator.getDisplayNameMaxLength());
+					DISPLAY_NAME_MAX_LENGTH);
 		}
 		
 		if (user.getPassword() != null) {
