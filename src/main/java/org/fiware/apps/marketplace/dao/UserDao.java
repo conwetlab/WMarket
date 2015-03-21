@@ -41,13 +41,14 @@ import org.fiware.apps.marketplace.model.User;
 public interface UserDao {
 	
 	// Save, update & delete
-	public void save(User localuser);
-	public void update(User localuser);
-	public void delete(User localuser);
+	public void save(User user);
+	public void update(User user);
+	public void delete(User user);
 	
 	// Find
-	public User findByName(String username) throws UserNotFoundException;
+	public User findByName(String userName) throws UserNotFoundException;
 	public User findByEmail(String email) throws UserNotFoundException;
+	public boolean isUserNameAvailable(String userName);
 	
 	// Get all or a sublist
 	public List<User> getUsersPage(int offset, int max);

@@ -78,10 +78,20 @@ public class UserBoImpl implements UserBo {
 		// Exception is risen if the user is not valid
 		userValidator.validateUser(user, true);
 
-		// Some authentication methods require their own user name
-		if (user.getUserName() == null) {
-			user.setUserName(NameGenerator.getURLName(user.getDisplayName()));
+		// Set user name based on the display name. It's possible to have to users with
+		// the same display name, but it's necessary to set a different user name for
+		// each one.
+		String basicUserName = NameGenerator.getURLName(user.getDisplayName());
+		String finalUserName = basicUserName;
+		boolean available = userDao.isUserNameAvailable(basicUserName);
+		int counter = 1;
+		
+		while(!available) {
+			finalUserName = basicUserName + "-" + counter++;
+			available = userDao.isUserNameAvailable(finalUserName);
 		}
+		
+		user.setUserName(finalUserName);
 		
 		// Encode the password
 		user.setPassword(encoder.encode(user.getPassword()));

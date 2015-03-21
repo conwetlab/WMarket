@@ -70,15 +70,15 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 
 	@Override
 	@Transactional(readOnly = true)
-	public User findByName(String username) throws UserNotFoundException{
+	public User findByName(String userName) throws UserNotFoundException{
 		String query = String.format("from %s where userName=:userName", TABLE_NAME);
 		List<?> list = getSession()
 				.createQuery(query)
-				.setParameter("userName", username)
+				.setParameter("userName", userName)
 				.list();
 		
 		if (list.size() == 0) {
-			throw new UserNotFoundException("User " + username + " not found");
+			throw new UserNotFoundException("User " + userName + " not found");
 		} else {
 			return (User) list.get(0);
 		}
@@ -98,6 +98,20 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 		} else {
 			return (User) list.get(0);
 		}
+	}
+	
+	@Override
+	public boolean isUserNameAvailable(String userName) {
+		
+		boolean available = false;
+		
+		try {
+			findByName(userName);
+		} catch (UserNotFoundException e) {
+			available = true;
+		}
+		
+		return available;
 	}
 	
 	@SuppressWarnings("unchecked")
