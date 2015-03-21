@@ -129,6 +129,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 			user.setEmail(email);
 			user.setPassword("");	// Password cannot be NULL
 			user.setDisplayName(displayName);
+			user.setOauth2(true);
 
 			// Save the new user
 			userDao.save(user);

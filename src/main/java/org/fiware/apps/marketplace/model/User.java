@@ -69,6 +69,7 @@ public class User {
 	private String email;
 	private Date registrationDate;
 	private String company;
+	private boolean oauth2 = false;		// False by default
 	// This lists are needed to allow cascade deletion
 	private List<Store> storesCreated;
 	private List<Store> storesModified;
@@ -152,6 +153,16 @@ public class User {
 	
 	public void setCompany(String company) {
 		this.company = company;
+	}
+	
+	@XmlTransient
+	@Column(name = "oauth2")
+	public boolean isOauth2() {
+		return oauth2;
+	}
+
+	public void setOauth2(boolean oauth2) {
+		this.oauth2 = oauth2;
 	}
 
 	@XmlTransient
