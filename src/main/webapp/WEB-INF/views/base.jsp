@@ -222,6 +222,7 @@
             document.logout_form.submit();
           };
         </script>
+        <script src="${ pageContext.request.contextPath }/resources/marketplace/js/CustomError.js"></script>
         <script src="${ pageContext.request.contextPath }/resources/marketplace/js/AlertManager.js"></script>
         <script src="${ pageContext.request.contextPath }/resources/marketplace/js/EndpointManager.js"></script>
         <script src="${ pageContext.request.contextPath }/resources/marketplace/js/Store.js"></script>
@@ -231,26 +232,21 @@
 
           WMarket.layout.storeList = $('#store-list');
 
-          WMarket.requests.register('core', function () {
-            WMarket.requests.read({
-              namespace: "stores:collection",
-              containment: WMarket.layout.storeList,
-              alert: WMarket.alerts.warning("No web store available."),
-              onSuccess: function (collection, containment) {
-                var i, store;
+          WMarket.requests.attach('core', 'read', {
+            namespace: "stores:collection",
+            containment: WMarket.layout.storeList,
+            alert: WMarket.alerts.warning("No web store available."),
+            onSuccess: function (collection, containment) {
+              var i, store;
 
-                for (i = 0; i < collection.length; i++) {
-                  store = WMarket.resources.stores.addStore(collection[i]);
-                  containment.append(store.addClass('list-group-item').get());
-                }
-
-                WMarket.requests.ready('storeList');
-
-              },
-              onFailure: function () {
-                // TODO: code that identify what error was occurred.
+              for (i = 0; i < collection.length; i++) {
+                store = WMarket.resources.stores.addStore(collection[i]);
+                containment.append(store.addClass('list-group-item').get());
               }
-            });
+            },
+            onFailure: function () {
+              // TODO: code that identify what error was occurred.
+            }
           });
 
         </script>
@@ -264,7 +260,7 @@
 
         <script>
 
-          WMarket.requests.ready('core');
+          WMarket.requests.dispatch('core');
 
         </script>
 

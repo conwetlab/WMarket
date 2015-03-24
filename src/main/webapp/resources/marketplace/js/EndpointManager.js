@@ -3,44 +3,35 @@
  *  Code licensed under BSD 3-Clause (https://github.com/conwetlab/WMarket/blob/master/LICENSE)
  */
 
+
 WMarket.requests = (function () {
 
     "use strict";
 
-    var RequestManager = {
-
-        'read': function read(options) {
-            makeRequest('GET', options);
-        },
-
-        'register': function register(namespace, callback) {
-            if (!(namespace in registerList)) {
-                registerList[namespace] = [];
-            }
-
-            registerList[namespace].push(callback);
-        },
-
-        'ready': function ready(namespace) {
-            var i;
-
-            if (namespace in registerList) {
-                for (i = 0; i < registerList[namespace].length; i++) {
-                    registerList[namespace][i]();
-                }
-            }
-        }
-
-    };
-
+    /**
+     * @function
+     * @private
+     *
+     * @returns {HTMLElement}
+     */
     var createLoadingSpinner = function createLoadingSpinner() {
-        var spinner = $('<span>').addClass('fa fa-spinner fa-pulse');
+        var container, spinner;
 
-        return $('<div>').addClass('loading-state').append(spinner);
+        spinner = document.createElement('span');
+        spinner.className = 'fa fa-spinner fa-pulse';
+
+        container = document.createElement('div');
+        container.className = 'loading-state';
+        container.appendChild(spinner);
+
+        return container;
     };
 
+    /**
+     * @type {Object.<String, Object.>}
+     * @private
+     */
     var endpointList = {
-
         offerings: {
             collection: "/offerings/",
             store_collection: "/store/%(name)s/offering/"
@@ -48,31 +39,33 @@ WMarket.requests = (function () {
         stores: {
             collection: "/store/"
         }
-
     };
 
-    var registerList = {};
-
-    var getResource = function getResource(options) {
+    /**
+     * @function
+     * @private
+     *
+     * @param {Object.<String, *>} requestOptions
+     * @returns {Object.<String, *>}
+     */
+    var getResource = function getResource(requestOptions) {
         var endpointType, name, namespaceArgs, resourceName, resourceURL;
 
-        namespaceArgs = options.namespace.split(':');
+        namespaceArgs = requestOptions.namespace.split(':');
 
         resourceName = namespaceArgs[0];
         endpointType = namespaceArgs[1];
 
-        resourceURL = endpointList[resourceName][endpointType];
-
-        if (typeof resourceURL !== 'string') {
-            throw null;
+        if (!(endpointType in endpointList[resourceName])) {
+            throw new CustomError('Resource Not Found', replaceByName('The endpoint type %(type)s was not registered.', {
+                'type': endpointType
+            }));
         }
 
-        if ('kwargs' in options) {
-            for (name in options.kwargs) {
-                if (resourceURL.indexOf('%(' + name + ')s') != -1) {
-                    resourceURL = resourceURL.replace('%(' + name + ')s', options.kwargs[name]);
-                }
-            }
+        resourceURL = endpointList[resourceName][endpointType];
+
+        if ('kwargs' in requestOptions) {
+            resourceURL = replaceByName(resourceURL, requestOptions.kwargs);
         }
 
         return {
@@ -82,34 +75,39 @@ WMarket.requests = (function () {
         };
     };
 
-    var makeRequest = function makeRequest(type, options) {
+    /**
+     * @function
+     * @private
+     *
+     * @param {String} requestType
+     * @param {Object.<String, *>} requestOptions
+     */
+    var makeRequest = function makeRequest(requestType, requestOptions) {
         var resource;
 
-        try {
-            resource = getResource(options);
-        } catch(err) {
-            return;
-        }
-
-        options.containment.empty().append(createLoadingSpinner());
+        resource = getResource(requestOptions);
+        requestOptions.containment.empty().append(createLoadingSpinner());
 
         $.ajax({
             async: true,
-            type: type,
+            type: requestType,
             url: resource.url,
             dataType: 'json',
-            success: function (data, textStatus, jqXHR) {
+            success: function (data) {
                 var collection, i;
 
-                options.containment.empty();
+                requestOptions.containment.empty();
 
                 if (resource.type.indexOf('collection') != -1) {
                     collection = data[resource.name];
+
                     if (!collection.length) {
-                        options.containment.append(options.alert);
+                        requestOptions.containment.append(requestOptions.alert);
                     } else {
-                        options.onSuccess(collection, options.containment, data);
+                        requestOptions.onSuccess(collection, requestOptions.containment, data);
                     }
+
+                    RequestManager.dispatch(requestOptions.namespace);
                 } else {
                     // TODO: Support endpoints for entries.
                 }
@@ -118,6 +116,99 @@ WMarket.requests = (function () {
                 // TODO: Handle the callback onFailure given.
             }
         });
+    };
+
+    /**
+     * @function
+     * @private
+     *
+     * @param {String} text
+     * @param {Object.<String, *>} kwargs
+     * @returns {String}
+     */
+    var replaceByName = function replaceByName(text, kwargs) {
+        var name;
+
+        for (name in kwargs) {
+            if (text.indexOf('%(' + name + ')s') != -1) {
+                text = text.replace('%(' + name + ')s', kwargs[name]);
+            }
+        }
+
+        return text;
+    };
+
+    /**
+     * @type {Object.<String, Array.>}
+     * @private
+     */
+    var requestList = {};
+
+    /**
+     * @type {Array.<String>}
+     * @private
+     */
+    var requestTypeList = ['read'];
+
+    /**
+     * @namespace
+     */
+    var RequestManager = {
+
+        /**
+         * @function
+         * @public
+         *
+         * @param {Object.<String, *>} requestOptions
+         */
+        read: function read(requestOptions) {
+            makeRequest('GET', requestOptions);
+        },
+
+        /**
+         * @function
+         * @public
+         *
+         * @param {String} requestNamespace
+         * @param {String} requestType
+         * @param {Object.<String, *>} requestOptions
+         */
+        attach: function attach(requestNamespace, requestType, requestOptions) {
+            if (!(requestNamespace in requestList)) {
+                requestList[requestNamespace] = [];
+            }
+
+            if (requestTypeList.indexOf(requestType) == -1) {
+                throw new CustomError('Request Not Allowed', replaceByName('The request %(type)s was not registered.', {
+                    'type': requestType
+                }));
+            }
+
+            requestList[requestNamespace].push({
+                type: requestType,
+                options: requestOptions
+            });
+        },
+
+        /**
+         * @function
+         * @public
+         *
+         * @param {String} requestNamespace
+         */
+        dispatch: function dispatch(requestNamespace) {
+            var i, request;
+
+            if (!(requestNamespace in requestList)) {
+                return;
+            }
+
+            for (i = 0; i < requestList[requestNamespace].length; i++) {
+                request = requestList[requestNamespace][i];
+                this[request.type](request.options);
+            }
+        }
+
     };
 
     return RequestManager;
