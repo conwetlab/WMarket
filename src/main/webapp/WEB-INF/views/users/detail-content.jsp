@@ -124,7 +124,7 @@
       </div>
       <div class="panel-body row">
         <form class="col-sm-8 col-sm-offset-1" method="post" action="${ pageContext.request.contextPath }/account/delete">
-          <p>This operation cannot be undone. All your stores, descriptions and offerings will be deleted. Please, be careful.</p>
+          <p class="text-justify">This operation cannot be undone. All your stores, descriptions and offerings will be deleted. Please, be careful.</p>
           <div class="form-options">
             <button type="submit" class="btn btn-danger btn-sm-10 btn-md-5">Delete this account</button>
           </div>

@@ -25,7 +25,7 @@
             </c:when>
             <c:when test="${ not empty param.out and param.out == 2 }">
               <div class="alert alert-info">
-                <span class="fa fa-check-circle"></span> Your account was removed from WMarket.
+                <span class="fa fa-check-circle"></span> Your account was deleted successfully.
               </div>
             </c:when>
             <c:when test="${ not empty param.out and param.out == 3 }">

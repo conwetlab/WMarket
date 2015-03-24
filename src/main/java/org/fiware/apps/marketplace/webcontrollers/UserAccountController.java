@@ -241,6 +241,7 @@ public class UserAccountController extends AbstractController {
             @Context HttpServletRequest request,
             @Context UriInfo uri) {
 
+        HttpSession session;
         ModelAndView view;
         ResponseBuilder builder;
         URI redirectURI;
@@ -248,11 +249,16 @@ public class UserAccountController extends AbstractController {
         try {
             User user = getCurrentUser();
             getUserBo().delete(user.getUserName());
-            
-            // TODO: Delete all the user's sessions
-            request.getSession().invalidate();
 
-            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login").queryParam("out", 2).build();
+            session = request.getSession();
+
+            // TODO: Delete all the user's session
+            synchronized (session) {
+                session.invalidate();
+            }
+
+            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login")
+                    .queryParam("out", 2).build();
             builder = Response.seeOther(redirectURI);
         } catch (UserNotFoundException e) {
             logger.warn("User not found", e);
