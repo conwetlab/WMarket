@@ -197,32 +197,20 @@ public class UserAccountController extends AbstractController {
             model.addAttribute("user", currentUser);
             model.addAttribute("title", "Account Settings - " + getContextName());
 
-            if (password.isEmpty()) {
-                throw new ValidationException("password", "This field is required.");
-            }
-
             user.setPassword(password);
-            userValidator.validateUser(user, false);
 
-            if (!getUserBo().checkCurrentUserPassword(oldPassword)) {
-             	throw new ValidationException("oldPassword", "Invalid password.");
-            } else if (passwordConfirm.isEmpty()) {
-                throw new ValidationException("passwordConfirm", "This field is required.");
-            } else if (!password.equals(passwordConfirm)) {
-                throw new ValidationException("passwordConfirm", "Passwords do not match.");
-            } else {
-                getUserBo().update(currentUser.getUserName(), user);
-            }
-
-            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login").queryParam("out", 3).build();
+            userValidator.validateChangePasswordForm(currentUser, oldPassword, password, passwordConfirm);
+            getUserBo().update(currentUser.getUserName(), user);
 
             session = request.getSession();
 
             // TODO: Invalidate all the user's session
             synchronized (session) {
-            	session.invalidate();
+                session.invalidate();
             }
 
+            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login")
+                    .queryParam("out", 3).build();
             builder = Response.seeOther(redirectURI);
         } catch (UserNotFoundException e) {
             logger.warn("User not found", e);
@@ -236,9 +224,6 @@ public class UserAccountController extends AbstractController {
             builder = Response.status(Status.UNAUTHORIZED).entity(view);
         } catch (ValidationException e) {
             logger.info("A form field is not valid", e);
-
-            model.addAttribute("field_password", password);
-            model.addAttribute("field_passwordConfirm", passwordConfirm);
 
             model.addAttribute("form_error", e);
 

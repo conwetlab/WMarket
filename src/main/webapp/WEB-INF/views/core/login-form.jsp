@@ -30,7 +30,7 @@
             </c:when>
             <c:when test="${ not empty param.out and param.out == 3 }">
               <div class="alert alert-success">
-                <span class="fa fa-check-circle"></span> Your password has been changed. Please sign in again.
+                <span class="fa fa-check-circle"></span> Your password was changed. Please sign in again.
               </div>
             </c:when>
           </c:choose>

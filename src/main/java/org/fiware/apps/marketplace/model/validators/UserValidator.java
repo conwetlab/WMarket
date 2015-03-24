@@ -36,12 +36,14 @@ import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service("userValidator")
 public class UserValidator {
 
     @Autowired private UserDao userDao;
+    @Autowired private PasswordEncoder encoder;
 
 	private static final int DISPLAY_NAME_MIN_LENGTH = 3;
 	private static final int DISPLAY_NAME_MAX_LENGTH = 30;
@@ -105,6 +107,20 @@ public class UserValidator {
         validateDisplayName(user.getDisplayName());
         validateEmail(user.getEmail(), currentUser.getEmail());
         validateCompany(user.getCompany());
+    }
+
+    public void validateChangePasswordForm(User currentUser, String oldPassword, String password, String passwordConfirm) throws ValidationException {
+        try {
+            validatePassword(oldPassword);
+        } catch (ValidationException e) {
+            throw new ValidationException("oldPassword", e.getFieldError());
+        }
+
+        if (!encoder.matches(oldPassword, currentUser.getPassword())) {
+            throw new ValidationException("oldPassword", "The password given is not valid.");
+        }
+
+        validatePassword(password, passwordConfirm);
     }
 
     private void validateDisplayName(String displayName) throws ValidationException {
