@@ -36,12 +36,12 @@ import org.apache.commons.validator.GenericValidator;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 
 public class BasicValidator {
-	
+
 	private static final int NAME_MIN_LENGTH = 3;
 	private static final int NAME_MAX_LENGTH = 20;
 	private static final int DESCRIPTION_MIN_LENGTH = 0;
 	private static final int DESCRIPTION_MAX_LENGTH = 200;
-	
+
 	private static BasicValidator INSTANCE = new BasicValidator();
 	
 	private BasicValidator() {

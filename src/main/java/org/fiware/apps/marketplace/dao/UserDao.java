@@ -49,7 +49,10 @@ public interface UserDao {
 	public User findByName(String userName) throws UserNotFoundException;
 	public User findByEmail(String email) throws UserNotFoundException;
 	public boolean isUserNameAvailable(String userName);
-	
+
+    // Contain
+    public boolean containsWithEmail(String email);
+
 	// Get all or a sublist
 	public List<User> getUsersPage(int offset, int max);
 	public List <User> getAllUsers();

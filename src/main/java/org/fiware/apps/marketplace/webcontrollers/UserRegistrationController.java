@@ -102,22 +102,13 @@ public class UserRegistrationController extends AbstractController {
 
         try {
             model.addAttribute("title", "Sign Up - " + getContextName());
+            model.addAttribute("current_view", "register_user");
 
             user.setDisplayName(displayName);
             user.setEmail(email);
             user.setPassword(password);
-
-            userValidator.validateUser(user, true);
-
-            if (passwordConfirm.isEmpty()) {
-                throw new ValidationException("passwordConfirm", "This field is required.");
-            }
-            else if (!password.equals(passwordConfirm)) {
-                throw new ValidationException("passwordConfirm", "Passwords do not match.");
-            }
-            else {
-                getUserBo().save(user);
-            }
+            userValidator.validateRegistrationForm(user, passwordConfirm);
+            getUserBo().save(user);
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login").build();
             session = request.getSession();

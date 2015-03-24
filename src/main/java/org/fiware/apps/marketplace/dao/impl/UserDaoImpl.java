@@ -134,4 +134,17 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 				.list();
 	}
 
+    @Override
+    @Transactional(readOnly = true)
+    public boolean containsWithEmail(String email) {
+        String query = String.format("from %s where email=:email", TABLE_NAME);
+
+        List<?> list = getSession()
+                .createQuery(query)
+                .setParameter("email", email)
+                .list();
+
+        return !list.isEmpty();
+    }
+
 }

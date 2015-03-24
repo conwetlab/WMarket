@@ -32,12 +32,16 @@ package org.fiware.apps.marketplace.model.validators;
  * #L%
  */
 
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("userValidator")
 public class UserValidator {
+
+    @Autowired private UserDao userDao;
 
 	private static final int DISPLAY_NAME_MIN_LENGTH = 3;
 	private static final int DISPLAY_NAME_MAX_LENGTH = 30;
@@ -90,4 +94,29 @@ public class UserValidator {
 					COMPANY_MAX_LENGTH);
 		}
 	}
+
+    public void validateRegistrationForm(User user, String passwordConfirm) throws ValidationException {
+        BASIC_VALIDATOR.validateRequired("displayName", user.getDisplayName());
+        BASIC_VALIDATOR.validatePattern("displayName", user.getDisplayName(), "^[a-zA-Z ]+$", "This field only accepts letters and white spaces.");
+        BASIC_VALIDATOR.validateMinLength("displayName", user.getDisplayName(), DISPLAY_NAME_MIN_LENGTH);
+        BASIC_VALIDATOR.validateMaxLength("displayName", user.getDisplayName(), DISPLAY_NAME_MAX_LENGTH);
+
+        BASIC_VALIDATOR.validateRequired("email", user.getEmail());
+        BASIC_VALIDATOR.validateEMail("email", user.getEmail());
+
+        if (userDao.containsWithEmail(user.getEmail())) {
+            throw new ValidationException("email", "The email is already registered.");
+        }
+
+        BASIC_VALIDATOR.validateRequired("password", user.getPassword());
+        BASIC_VALIDATOR.validateMinLength("password", user.getPassword(), PASSWORD_MIN_LENGTH);
+        BASIC_VALIDATOR.validateMaxLength("password", user.getPassword(), PASSWORD_MAX_LENGTH);
+
+        BASIC_VALIDATOR.validateRequired("passwordConfirm", passwordConfirm);
+
+        if (!user.getPassword().equals(passwordConfirm)) {
+            throw new ValidationException("passwordConfirm", "Passwords do not match.");
+        }
+    }
+
 }

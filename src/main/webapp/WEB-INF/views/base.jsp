@@ -129,7 +129,7 @@
     </c:choose>
 
     <c:if test="${ not empty message }">
-      <div class="alert-manager">
+      <div class="alert-dismissible alert-manager">
         <div class="alert alert-success">
           <span class="fa fa-check-circle"></span> ${ message }
         </div>
@@ -156,7 +156,7 @@
     <script src="${ pageContext.request.contextPath }/resources/jquery/js/jquery-1.11.2.js"></script>
     <script>
 
-      $('.alert-manager > .alert').delay(2000).slideUp(500);
+      $('.alert-dismissible > .alert').delay(2000).slideUp(500);
 
     </script>
 
@@ -178,8 +178,6 @@
 
           WMarket.layout.fieldSearch = $('#search-field');
           WMarket.layout.fieldSearch.attr('disabled', true);
-
-          $('.alert-manager > .alert').delay(2000).slideUp(500);
 
         </script>
         <script>

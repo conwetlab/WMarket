@@ -16,26 +16,27 @@
           </div>
         </c:if>
 
-        <c:if test="${ not empty param.out and param.out == 1 }">
-          <div class="alert alert-success">
-            <span class="fa fa-check-circle"></span> You've logged out successfully.
-          </div>
-        </c:if>
-
-        <c:if test="${ not empty param.out and param.out == 2 }">
-          <div class="alert alert-info">
-            <span class="fa fa-check-circle"></span> Your account was removed from WMarket.
-          </div>
-        </c:if>
-        
-        <c:if test="${ not empty param.out and param.out == 3 }">
-          <div class="alert alert-success">
-            <span class="fa fa-check-circle"></span> Your password has been changed. Please sign in again.
-          </div>
-        </c:if>
+        <div class="alert-dismissible">
+          <c:choose>
+            <c:when test="${ not empty param.out and param.out == 1 }">
+              <div class="alert alert-success">
+                <span class="fa fa-check-circle"></span> You've logged out successfully.
+              </div>
+            </c:when>
+            <c:when test="${ not empty param.out and param.out == 2 }">
+              <div class="alert alert-info">
+                <span class="fa fa-check-circle"></span> Your account was removed from WMarket.
+              </div>
+            </c:when>
+            <c:when test="${ not empty param.out and param.out == 3 }">
+              <div class="alert alert-success">
+                <span class="fa fa-check-circle"></span> Your password has been changed. Please sign in again.
+              </div>
+            </c:when>
+          </c:choose>
+        </div>
 
         <form class="col-sm-8 col-sm-offset-1" name="login_form" method="post" action="<c:url value='j_spring_security_check' />">
-          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
           <div class="form-field">
             <label class="text-plain">Email or Username</label>
             <input class="form-control" type="text" name="username" />
