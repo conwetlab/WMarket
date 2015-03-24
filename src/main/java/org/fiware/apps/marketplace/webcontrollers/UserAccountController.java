@@ -122,10 +122,12 @@ public class UserAccountController extends AbstractController {
         ModelMap model = new ModelMap();
         ResponseBuilder builder;
         User user = new User();
+        User currentUser;
         URI redirectURI;
 
         try {
-            model.addAttribute("user", getCurrentUser());
+            currentUser = getCurrentUser();
+            model.addAttribute("user", currentUser);
             model.addAttribute("title", "Account Settings - " + getContextName());
 
             user.setDisplayName(displayName);
@@ -135,6 +137,7 @@ public class UserAccountController extends AbstractController {
                 user.setCompany(company);
             }
 
+            userValidator.validateAccountForm(user, currentUser);
             getUserBo().update(userName, user);
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("account").build();

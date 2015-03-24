@@ -96,26 +96,63 @@ public class UserValidator {
 	}
 
     public void validateRegistrationForm(User user, String passwordConfirm) throws ValidationException {
-        BASIC_VALIDATOR.validateRequired("displayName", user.getDisplayName());
-        BASIC_VALIDATOR.validatePattern("displayName", user.getDisplayName(), "^[a-zA-Z ]+$", "This field only accepts letters and white spaces.");
-        BASIC_VALIDATOR.validateMinLength("displayName", user.getDisplayName(), DISPLAY_NAME_MIN_LENGTH);
-        BASIC_VALIDATOR.validateMaxLength("displayName", user.getDisplayName(), DISPLAY_NAME_MAX_LENGTH);
+        validateDisplayName(user.getDisplayName());
+        validateEmail(user.getEmail());
+        validatePassword(user.getPassword(), passwordConfirm);
+    }
 
-        BASIC_VALIDATOR.validateRequired("email", user.getEmail());
-        BASIC_VALIDATOR.validateEMail("email", user.getEmail());
+    public void validateAccountForm(User user, User currentUser) throws ValidationException {
+        validateDisplayName(user.getDisplayName());
+        validateEmail(user.getEmail(), currentUser.getEmail());
+        validateCompany(user.getCompany());
+    }
 
-        if (userDao.containsWithEmail(user.getEmail())) {
+    private void validateDisplayName(String displayName) throws ValidationException {
+        BASIC_VALIDATOR.validateRequired("displayName", displayName);
+        BASIC_VALIDATOR.validatePattern("displayName", displayName, "^[a-zA-Z ]+$", "This field only accepts letters and white spaces.");
+        BASIC_VALIDATOR.validateMinLength("displayName", displayName, DISPLAY_NAME_MIN_LENGTH);
+        BASIC_VALIDATOR.validateMaxLength("displayName", displayName, DISPLAY_NAME_MAX_LENGTH);
+    }
+
+    private void validateEmail(String email) throws ValidationException {
+        BASIC_VALIDATOR.validateRequired("email", email);
+        BASIC_VALIDATOR.validateEMail("email", email);
+
+        if (userDao.containsWithEmail(email)) {
             throw new ValidationException("email", "The email is already registered.");
         }
+    }
 
-        BASIC_VALIDATOR.validateRequired("password", user.getPassword());
-        BASIC_VALIDATOR.validateMinLength("password", user.getPassword(), PASSWORD_MIN_LENGTH);
-        BASIC_VALIDATOR.validateMaxLength("password", user.getPassword(), PASSWORD_MAX_LENGTH);
+    private void validateEmail(String email, String exceptEmail) throws ValidationException {
+        BASIC_VALIDATOR.validateRequired("email", email);
+        BASIC_VALIDATOR.validateEMail("email", email);
+
+        if (userDao.containsWithEmail(email) && !exceptEmail.equals(email)) {
+            throw new ValidationException("email", "The email is already registered.");
+        }
+    }
+
+    private void validatePassword(String password) throws ValidationException {
+        BASIC_VALIDATOR.validateRequired("password", password);
+        BASIC_VALIDATOR.validateMinLength("password", password, PASSWORD_MIN_LENGTH);
+        BASIC_VALIDATOR.validateMaxLength("password", password, PASSWORD_MAX_LENGTH);
+    }
+
+    private void validatePassword(String password, String passwordConfirm) throws ValidationException {
+        validatePassword(password);
 
         BASIC_VALIDATOR.validateRequired("passwordConfirm", passwordConfirm);
 
-        if (!user.getPassword().equals(passwordConfirm)) {
+        if (!password.equals(passwordConfirm)) {
             throw new ValidationException("passwordConfirm", "Passwords do not match.");
+        }
+    }
+
+    private void validateCompany(String company) throws ValidationException {
+        if (company != null) {
+            BASIC_VALIDATOR.validatePattern("company", company, "^[a-zA-Z -]+$", "This field only accepts letters, white spaces and hyphens.");
+            BASIC_VALIDATOR.validateMinLength("company", company, COMPANY_MIN_LENGTH);
+            BASIC_VALIDATOR.validateMaxLength("company", company, COMPANY_MAX_LENGTH);
         }
     }
 
