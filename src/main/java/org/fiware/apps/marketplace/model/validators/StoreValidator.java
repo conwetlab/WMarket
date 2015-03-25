@@ -32,14 +32,23 @@ package org.fiware.apps.marketplace.model.validators;
  * #L%
  */
 
+import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.utils.NameGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("storeValidator")
 public class StoreValidator {
-	
-	private static final BasicValidator BASIC_VALIDATOR = BasicValidator.getInstance();
+
+    @Autowired private StoreDao storeDao;
+
+    private static final int DISPLAY_NAME_MIN_LENGTH = 5;
+    private static final int DISPLAY_NAME_MAX_LENGTH = 30;
+    private static final int DESCRIPTION_MAX_LENGTH = 200;
+
+    private static final BasicValidator BASIC_VALIDATOR = BasicValidator.getInstance();
 	
 	/**
 	 * @param store Store to be checked
@@ -79,5 +88,34 @@ public class StoreValidator {
 					BasicValidator.getDescriptionMaxLength());
 		}
 	}
+
+    public void validateRegistrationForm(Store store) throws ValidationException {
+        validateDisplayName(store.getDisplayName());
+
+        if (storeDao.containsWithName(NameGenerator.getURLName(store.getDisplayName()))) {
+            throw new ValidationException("displayName", "The name is already taken.");
+        }
+
+        validateURL(store.getUrl());
+        validateDescription(store.getDescription());
+    }
+
+    private void validateDisplayName(String displayName) throws ValidationException {
+        BASIC_VALIDATOR.validateRequired("displayName", displayName);
+        BASIC_VALIDATOR.validatePattern("displayName", displayName, "^[a-zA-Z -]+$", "This field only accepts letters, white spaces and hyphens.");
+        BASIC_VALIDATOR.validateMinLength("displayName", displayName, DISPLAY_NAME_MIN_LENGTH);
+        BASIC_VALIDATOR.validateMaxLength("displayName", displayName, DISPLAY_NAME_MAX_LENGTH);
+    }
+
+    private void validateURL(String url) throws ValidationException {
+        BASIC_VALIDATOR.validateRequired("url", url);
+        BASIC_VALIDATOR.validateURL("url", url);
+    }
+
+    private void validateDescription(String description) throws ValidationException {
+        if (description != null) {
+            BASIC_VALIDATOR.validateMaxLength("description", description, DESCRIPTION_MAX_LENGTH);
+        }
+    }
 
 }

@@ -341,7 +341,7 @@ textarea {
 }
 
 .form-field-error {
-    margin-top: 5px;
+    margin: 5px 0px 0px 10px;
     font: normal 400 14px/20px Helvetica, Arial, sans-serif;
     color: rgb(160, 60, 60);
 }

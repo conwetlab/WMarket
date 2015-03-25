@@ -13,7 +13,7 @@ $(function () {
     WMarket.requests.attach('stores:collection', 'read', {
         namespace: "offerings:store_collection",
         kwargs: {
-            'name': WMarket.currentStore.name
+            'name': WMarket.currentStoreName
         },
         containment: WMarket.layout.offeringList,
         alert: WMarket.alerts.warning("No offering available.", 'col-sm-10'),

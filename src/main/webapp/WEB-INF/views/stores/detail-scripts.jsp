@@ -2,11 +2,7 @@
 
 <script>
 
-  WMarket.requests.register('storeList', function () {
-
-    WMarket.currentStore = WMarket.resources.stores.getStoreByName("${ store.name }");
-
-  });
+  WMarket.currentStoreName = "${ store.name }";
 
 </script>
 <script src="${ pageContext.request.contextPath }/resources/marketplace/js/StoreDetailView.js"></script>

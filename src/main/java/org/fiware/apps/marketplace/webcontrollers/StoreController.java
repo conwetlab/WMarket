@@ -58,6 +58,8 @@ import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.validators.StoreValidator;
+import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +74,7 @@ public class StoreController extends AbstractController {
 
     @Autowired private OfferingBo offeringBo;
     @Autowired private StoreBo storeBo;
+    @Autowired private StoreValidator storeValidator;
 
     private static Logger logger = LoggerFactory.getLogger(StoreController.class);
 
@@ -125,6 +128,7 @@ public class StoreController extends AbstractController {
             store.setUrl(url);
             store.setDescription(description);
 
+            storeValidator.validateRegistrationForm(store);
             storeBo.save(store);
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri())
@@ -142,7 +146,7 @@ public class StoreController extends AbstractController {
             logger.warn("User not found", e);
 
             view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError();
+            builder = Response.serverError().entity(view);
         } catch (NotAuthorizedException e) {
             logger.info("User unauthorized", e);
 
