@@ -276,7 +276,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 
 #### List all descriptions
 
-* **Path**: `/api/v2/stores/{STORE_NAME}/description`
+* **Path**: `/api/v2/descriptions`
 * **Method**: GET
 * **Content-Type**: `application/json` or `application/xml`
 * **Params**:
