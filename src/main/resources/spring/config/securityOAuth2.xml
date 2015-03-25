@@ -38,13 +38,13 @@
 
 	<!-- clients definition -->
 	<bean id="fiwareClient" class="org.fiware.apps.marketplace.oauth2.FIWAREClient">
-		<property name="serverURL" value="https://account.lab.fiware.org" />
-		<property name="key" value="KEY" />
-		<property name="secret" value="SECRET" />
+		<property name="serverURL" value="${oauth2.server}" />
+		<property name="key" value="${oauth2.key}" />
+		<property name="secret" value="${oauth2.secret}" />
 	</bean>
 
 	<bean id="clients" class="org.pac4j.core.client.Clients">
-		<property name="callbackUrl" value="http://localhost:8080/FiwareMarketplace/callback" />
+		<property name="callbackUrl" value="${oauth2.callbackURL}" />
 		<property name="clients">
 			<list>
 				<ref bean="fiwareClient" />
