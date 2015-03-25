@@ -181,7 +181,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Content**:
 ```
 [ 
-  {
+ {
   "name": "example-store",
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
@@ -190,7 +190,7 @@ Here you have a basic reference of all the status codes that you can get when yo
   "creator": "user-1",
   "lasteditor": "user-1"
  },
-  {
+ {
   "name": "example-store",
   "displayName": "Example Store 2",
   "url": "https://store2.lab.fiware.org",
