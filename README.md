@@ -252,7 +252,20 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
   "registrationDate": 1,
   "creator": "user-1",
-  "lasteditor": "user-1"
+  "lasteditor": "user-1",
+  "offerings": [
+    {
+     "name": "example-offering"
+     "displayName": "Example Offering",
+     "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+     "description": "Example offering description",
+     "version": "1.0",
+     "describedIn": "example-description",
+     "store": "example-store",
+     "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
+    },
+    [...]
+  ]
 }
 ```
 
@@ -274,7 +287,8 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
   "registrationDate": 1,
   "creator": "user-1",
-  "lasteditor": "user-1"
+  "lasteditor": "user-1",
+  "offerings": [...]
  },
  {
   "name": "example-description",
@@ -283,7 +297,8 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
   "registrationDate": 2,
   "creator": "user-2",
-  "lasteditor": "user-2"
+  "lasteditor": "user-2",
+  "offerings": [...]
  }
  [...]
 }
@@ -307,7 +322,8 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
   "registrationDate": 1,
   "creator": "user-1",
-  "lasteditor": "user-1"
+  "lasteditor": "user-1",
+  "offerings": [...]
  },
  {
   "name": "example-description",
@@ -316,7 +332,8 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
   "registrationDate": 2,
   "creator": "user-2",
-  "lasteditor": "user-2"
+  "lasteditor": "user-2",
+  "offerings": [...]
  }
  [...]
 }
