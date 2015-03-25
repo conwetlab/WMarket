@@ -172,7 +172,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 
 #### List stores
 
-* **Path**: `/api/v2/stores`
+* **Path**: `/api/v2/store`
 * **Method**: GET
 * **Content-Type**: `application/json` or `application/xml`
 * **Params**:
