@@ -83,13 +83,14 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Content**:
 ```
 {
+  "userName": "example-display-name",
   "displayName": "Example Display Name",
   "registrationDate": 1,
   "company": "Example Company"
 }
 ```
 
-#### List of users
+#### List users
 
 * **Path**: `/api/v2/user`
 * **Method**: GET
@@ -101,11 +102,13 @@ Here you have a basic reference of all the status codes that you can get when yo
 ```
 [ 
   {
+    "userName": "example-display-name",
     "displayName": "Example Display Name",
     "registrationDate": 1,
     "company": "Example Company"
   },
   {
+    "userName": "example-display-name",
     "displayName": "Example Display Name 2",
     "registrationDate": 2,
     "company": "Example Company 2"
@@ -157,6 +160,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Content**:
 ```
 {
+  "name": "example-store",
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
   "registrationDate": 1,
@@ -164,7 +168,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 }
 ```
 
-#### List of stores
+#### List stores
 
 * **Path**: `/api/v2/stores`
 * **Method**: GET
@@ -176,12 +180,14 @@ Here you have a basic reference of all the status codes that you can get when yo
 ```
 [ 
   {
+  "name": "example-store",
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
   "registrationDate": 1,
   "description": "Example description"
  },
   {
+  "name": "example-store",
   "displayName": "Example Store 2",
   "url": "https://store2.lab.fiware.org",
   "registrationDate": 2,
@@ -234,12 +240,13 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 * **Content**:
 ```
 {
+  "name": "example-description",
   "displayName": "Example Description",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
 }
 ```
 
-#### List of descriptions
+#### List descriptions
 
 * **Path**: `/api/v2/stores/{STORE_NAME}/description`
 * **Method**: GET
@@ -251,12 +258,142 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 ```
 [ 
  {
+  "name": "example-description",
   "displayName": "Example Description",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
  },
  {
+  "name": "example-description",
   "displayName": "Example Description 2",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+ }
+ [...]
+}
+```
+
+### Offerings API
+
+Each descriptions contains one or more offerings, so you are provided APIs to retrieve the offerings contained in a description.
+
+#### Get an offering
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Content**:
+```
+{
+  "name": "example-offering"
+  "displayName": "Example Offering",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+  "description": "Example offering description",
+  "version": "1.0",
+  "describedIn": "example-description",
+  "store": "example-store",
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
+}
+```
+
+#### List offerings in a description
+
+* **Path**: `/api/v2/stores/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "name": "example-offering"
+  "displayName": "Example Offering",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+  "description": "Example offering description",
+  "version": "1.0",
+  "describedIn": "example-description",
+  "store": "example-store",
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
+ },
+ {
+  "name": "example-offering-2"
+  "displayName": "Example Offering 2",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
+  "description": "Another Example offering description",
+  "version": "1.0",
+  "describedIn": "example-description",
+  "store": "example-store",
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png"
+ }
+ [...]
+}
+```
+
+#### List offerings in a Store
+
+* **Path**: `/api/v2/stores/{STORE_NAME}/offering`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "name": "example-offering"
+  "displayName": "Example Offering",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+  "description": "Example offering description",
+  "version": "1.0",
+  "describedIn": "example-description",
+  "store": "example-store",
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
+ },
+ {
+  "name": "example-offering-2"
+  "displayName": "Example Offering 2",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
+  "description": "Another Example offering description",
+  "version": "1.0",
+  "describedIn": "example-description-1",
+  "store": "example-store",
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png"
+ }
+ [...]
+}
+```
+
+#### List all offerings
+
+* **Path**: `/api/v2/offerings`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "name": "example-offering"
+  "displayName": "Example Offering",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+  "description": "Example offering description",
+  "version": "1.0",
+  "describedIn": "example-description",
+  "store": "example-store",
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
+ },
+ {
+  "name": "example-offering-2"
+  "displayName": "Example Offering 2",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
+  "description": "Another Example offering description",
+  "version": "1.0",
+  "describedIn": "example-description-1",
+  "store": "example-store-1",
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png"
  }
  [...]
 }
