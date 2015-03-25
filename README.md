@@ -190,3 +190,74 @@ Here you have a basic reference of all the status codes that you can get when yo
  [...]
 }
 ```
+
+### Descriptions Management API
+
+Descriptions is the way of creating offerings in a Store. A description is just an URL pointing to an Linked USDL file that contains all the offerings that you want to include in the Store. [You can check more about Linked USDL by clicking here](http://linked-usdl.org/).
+
+#### Create a description
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+  "displayName": "Example Description",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+}
+```
+
+#### Update a description
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+  "displayName": "Example Description",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+}
+```
+
+#### Delete a description
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
+* **Method**: DELETE
+
+#### Get a description
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Content**:
+```
+{
+  "displayName": "Example Description",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+}
+```
+
+#### List of descriptions
+
+* **Path**: `/api/v2/stores/{STORE_NAME}/description`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "displayName": "Example Description",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+ },
+ {
+  "displayName": "Example Description 2",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+ }
+ [...]
+}
+```
