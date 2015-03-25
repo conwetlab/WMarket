@@ -164,7 +164,9 @@ Here you have a basic reference of all the status codes that you can get when yo
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
   "registrationDate": 1,
-  "description": "Example description"
+  "description": "Example description",
+  "creator": "user-1",
+  "lasteditor": "user-1"
 }
 ```
 
@@ -184,14 +186,18 @@ Here you have a basic reference of all the status codes that you can get when yo
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
   "registrationDate": 1,
-  "description": "Example description"
+  "description": "Example description",
+  "creator": "user-1",
+  "lasteditor": "user-1"
  },
   {
   "name": "example-store",
   "displayName": "Example Store 2",
   "url": "https://store2.lab.fiware.org",
   "registrationDate": 2,
-  "description": "Example description 2"
+  "description": "Example description 2",
+  "creator": "user-2",
+  "lasteditor": "user-2"
  },
  [...]
 }
@@ -244,6 +250,9 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "displayName": "Example Description",
   "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+  "registrationDate": 1,
+  "creator": "user-1",
+  "lasteditor": "user-1"
 }
 ```
 
@@ -263,12 +272,18 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "displayName": "Example Description",
   "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+  "registrationDate": 1,
+  "creator": "user-1",
+  "lasteditor": "user-1"
  },
  {
   "name": "example-description",
   "displayName": "Example Description 2",
   "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+  "registrationDate": 2,
+  "creator": "user-2",
+  "lasteditor": "user-2"
  }
  [...]
 }
@@ -290,12 +305,18 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "displayName": "Example Description",
   "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+  "registrationDate": 1,
+  "creator": "user-1",
+  "lasteditor": "user-1"
  },
  {
   "name": "example-description",
   "displayName": "Example Description 2",
   "store": "example-store-1",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+  "registrationDate": 2,
+  "creator": "user-2",
+  "lasteditor": "user-2"
  }
  [...]
 }
