@@ -38,7 +38,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 | 403 | Forbidden | You have no rights to perform the query |
 | 500 | Internal server error | There was an internal error in the system so your request cannot be completed |
 
-### Users management API
+### Users Management API
 
 #### Create a user
 
