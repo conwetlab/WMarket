@@ -242,11 +242,12 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 {
   "name": "example-description",
   "displayName": "Example Description",
+  "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
 }
 ```
 
-#### List descriptions
+#### List descriptions in a Store
 
 * **Path**: `/api/v2/stores/{STORE_NAME}/description`
 * **Method**: GET
@@ -260,11 +261,40 @@ Descriptions is the way of creating offerings in a Store. A description is just 
  {
   "name": "example-description",
   "displayName": "Example Description",
+  "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
  },
  {
   "name": "example-description",
   "displayName": "Example Description 2",
+  "store": "example-store",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+ }
+ [...]
+}
+```
+
+#### List all descriptions
+
+* **Path**: `/api/v2/stores/{STORE_NAME}/description`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "name": "example-description",
+  "displayName": "Example Description",
+  "store": "example-store",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+ },
+ {
+  "name": "example-description",
+  "displayName": "Example Description 2",
+  "store": "example-store-1",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
  }
  [...]
