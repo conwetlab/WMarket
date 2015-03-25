@@ -148,24 +148,51 @@ public class UserBoImplTest {
 	}
 	
 	@Test
-	public void testSaveUserNameChange() {
+	public void testSaveUserName() {
 		User user = new User();
 		user.setDisplayName("MaRkEt PlAcE&1??0");
 		user.setPassword("password");
+		String expectedUserName = "market-place10";
+		
+		// Default string is available
+		when(userDaoMock.isUserNameAvailable(anyString())).thenReturn(true);
 		
 		// Save & check
-		testSave(user, "market-place10");
+		testSave(user, expectedUserName);
+		
+		// Check that the DAO has been properly called
+		verify(userDaoMock).isUserNameAvailable(expectedUserName);
 	}
 	
 	@Test
-	public void testSaveUserNameNoChanges() {
+	public void testSaveUserNameNotAvailable() {
+		int availableID = 3;
 		User user = new User();
 		user.setDisplayName("MaRkEt PlAcE&1??0");
 		user.setPassword("password");
-		user.setUserName("fiware");
+		String baseUserName = "market-place10";
+		String expectedFinalUserName = baseUserName + "-" + availableID;
+		
+		// Default string is NOT available
+		// First ID checked is 1
+		for (int i = 1; i < availableID; i++) {
+			String checkedUser = baseUserName + "-" + i;
+			doReturn(false).when(userDaoMock).isUserNameAvailable(checkedUser);
+		}
+		
+		// Only the thrid ID is available
+		when(userDaoMock.isUserNameAvailable(baseUserName + "-" + availableID)).thenReturn(true);
 		
 		// Save & check
-		testSave(user, "fiware");
+		testSave(user, expectedFinalUserName);
+		
+		// Check that the DAO has been properly called
+		// Until and available ID is found
+		for (int i = 1; i <= availableID; i++) {
+			String checkedUser = baseUserName + "-" + i;
+			verify(userDaoMock).isUserNameAvailable(checkedUser);
+		}
+		
 	}
 	
 	
