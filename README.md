@@ -38,7 +38,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 | 403 | Forbidden | You have no rights to perform the query |
 | 500 | Internal server error | There was an internal error in the system so your request cannot be completed |
 
-### Users API
+### Users management API
 
 #### Create a user
 
@@ -70,7 +70,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 }
 ```
 
-#### Update a user
+#### Delete a user
 
 * **Path**: `/api/v2/user/{USER_NAME}`
 * **Method**: DELETE
@@ -111,5 +111,82 @@ Here you have a basic reference of all the status codes that you can get when yo
     "company": "Example Company 2"
   },
   [...]
-]
+}
+```
+
+### Stores Management API
+
+#### Create a store
+
+* **Path**: `/api/v2/store`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+  "displayName": "Example Store",
+  "url": "https://store.lab.fiware.org",
+  "description": "Example description"
+}
+```
+
+#### Update a store
+
+* **Path**: `/api/v2/store/{STORE_NAME}`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+  "displayName": "Example Store",
+  "url": "https://store.lab.fiware.org",
+  "description": "Example description"
+}
+```
+
+#### Delete a store
+
+* **Path**: `/api/v2/store/{STORE_NAME}`
+* **Method**: DELETE
+
+#### Get a store
+
+* **Path**: `/api/v2/store/{STORE_NAME}`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Content**:
+```
+{
+  "displayName": "Example Store",
+  "url": "https://store.lab.fiware.org",
+  "registrationDate": 1,
+  "description": "Example description"
+}
+```
+
+#### List of stores
+
+* **Path**: `/api/v2/stores`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+  {
+  "displayName": "Example Store",
+  "url": "https://store.lab.fiware.org",
+  "registrationDate": 1,
+  "description": "Example description"
+ },
+  {
+  "displayName": "Example Store 2",
+  "url": "https://store2.lab.fiware.org",
+  "registrationDate": 2,
+  "description": "Example description 2"
+ },
+ [...]
+}
 ```
