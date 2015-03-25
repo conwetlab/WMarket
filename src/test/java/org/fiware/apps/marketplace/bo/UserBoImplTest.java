@@ -180,7 +180,7 @@ public class UserBoImplTest {
 			doReturn(false).when(userDaoMock).isUserNameAvailable(checkedUser);
 		}
 		
-		// Only the thrid ID is available
+		// Only the third ID is available
 		when(userDaoMock.isUserNameAvailable(baseUserName + "-" + availableID)).thenReturn(true);
 		
 		// Save & check
