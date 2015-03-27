@@ -60,38 +60,35 @@ public class StoreBoImpl implements StoreBo{
 	@Autowired private StoreValidator storeValidator;
 	@Autowired private UserBo userBo;
 
-	@Override
-	@Transactional(readOnly=false)
-	public void save(Store store) throws NotAuthorizedException, 
-			ValidationException {
+    @Override
+    @Transactional(readOnly=false)
+    public Store create(String displayName, String url, String description, User committer)
+            throws NotAuthorizedException, ValidationException {
+        Store newStore = new Store();
 
-		try {
-			// Get the currently logged-in user
-			User user = userBo.getCurrentUser();
-	
-			// Set the current date as registration date of this store
-			store.setRegistrationDate(new Date());
-	
-			// Set user as creator and latest editor of this store
-			store.setCreator(user);
-			store.setLasteditor(user);
-	
-			// Check rights and raise exception if user is not allowed to perform this action
-			if (!storeAuth.canCreate(store)) {
-				throw new NotAuthorizedException("create store");
-			}
-			
-			// Exception is risen if the store is not valid
-			storeValidator.validateStore(store, true);
-			
-			store.setName(NameGenerator.getURLName(store.getDisplayName()));
-			storeDao.save(store);
-		} catch (UserNotFoundException ex) {
-			// This exception is not supposed to happen
-			throw new RuntimeException(ex);
-		}
-		
-	}
+        newStore.setDisplayName(displayName);
+        newStore.setUrl(url);
+        newStore.setDescription(description);
+
+        this.saveStore(newStore, committer);
+
+        return newStore;
+    }
+
+    @Override
+    @Transactional(readOnly=false)
+    public Store create(Store store, User committer)
+            throws NotAuthorizedException, ValidationException {
+        Store newStore = new Store();
+
+        newStore.setDisplayName(store.getDisplayName());
+        newStore.setUrl(store.getUrl());
+        newStore.setDescription(store.getDescription());
+
+        this.saveStore(newStore, committer);
+
+        return newStore;
+    }
 
 	@Override
 	@Transactional(readOnly=false)
@@ -111,8 +108,8 @@ public class StoreBoImpl implements StoreBo{
 			
 			// Exception is risen if the store is not valid
 			// Store returned by the BBDD cannot be updated if the updated store is not valid.
-			storeValidator.validateStore(updatedStore, false);
-			
+			this.validateToUpdate(updatedStore, storeToBeUpdate);
+
 			// Update fields
 			if (updatedStore.getUrl() != null) {
 				storeToBeUpdate.setUrl(updatedStore.getUrl());
@@ -191,4 +188,74 @@ public class StoreBoImpl implements StoreBo{
 		
 		return storeDao.getAllStores();
 	}
+
+    @Override
+    public void validateToCreate(String displayName, String url, String description)
+            throws ValidationException {
+        storeValidator.validateDisplayName(displayName);
+        this.validateUniqueDisplayName(displayName);
+        storeValidator.validateURL(url);
+        storeValidator.validateDescription(description);
+    }
+
+    @Override
+    public void validateToCreate(Store store)
+            throws ValidationException {
+        this.validateToCreate(store.getDisplayName(), store.getUrl(), store.getDescription());
+    }
+
+    @Override
+    public void validateToUpdate(Store store, Store oldStore)
+            throws ValidationException {
+        if (store.getDisplayName() != null) {
+            storeValidator.validateDisplayName(store.getDisplayName());
+            this.validateUniqueDisplayName(store.getDisplayName(), oldStore.getName());
+        }
+
+        if (store.getUrl() != null) {
+            storeValidator.validateURL(store.getUrl());
+        }
+
+        storeValidator.validateDescription(store.getDescription());
+    }
+
+    private String generateName(String displayName) {
+        return NameGenerator.getURLName(displayName);
+    }
+
+    private void saveStore(Store store, User committer)
+            throws NotAuthorizedException {
+        // Check if the currently logged-in user can create a store
+        if (!storeAuth.canCreate(store)) {
+            throw new NotAuthorizedException("create store");
+        }
+
+        store.setName(this.generateName(store.getDisplayName()));
+
+        // Set the today's date as registration date
+        store.setRegistrationDate(new Date());
+
+        // Set the committer as creator and latest editor
+        store.setCreator(committer);
+        store.setLasteditor(committer);
+
+        storeDao.save(store);
+    }
+
+    private void validateUniqueDisplayName(String displayName)
+            throws ValidationException {
+        if (storeDao.containsWithName(this.generateName(displayName))) {
+            throw new ValidationException("displayName", "The name is already taken.");
+        }
+    }
+
+    private void validateUniqueDisplayName(String displayName, String oldName)
+            throws ValidationException {
+        String name = this.generateName(displayName);
+
+        if (storeDao.containsWithName(name) && !oldName.equals(name)) {
+            throw new ValidationException("displayName", "The name is already taken.");
+        }
+    }
+
 }

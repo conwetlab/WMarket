@@ -39,13 +39,19 @@ import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.User;
 
 
 public interface StoreBo {
-	
-	// Save, update, delete
-	public void save(Store store) throws NotAuthorizedException, 
-			ValidationException;
+
+    // Create a new store from the fields given.
+    public Store create(String displayName, String url, String description, User committer)
+            throws NotAuthorizedException, ValidationException;
+    // Create a new store from the store given.
+    public Store create(Store store, User committer)
+            throws NotAuthorizedException, ValidationException;
+
+    // update, delete
 	public void update(String name, Store updatedStore) throws NotAuthorizedException,
 			ValidationException, StoreNotFoundException;
 	public void delete(String storeName) throws NotAuthorizedException, StoreNotFoundException;
@@ -58,5 +64,16 @@ public interface StoreBo {
 	public List<Store> getStoresPage(int offset, int max)
 			throws NotAuthorizedException;
 	public List <Store> getAllStores() throws NotAuthorizedException;
-	
+
+    // Check if the fields given are valid.
+    public void validateToCreate(String displayName, String url, String description)
+            throws ValidationException;
+    // Check if the store given is valid.
+    public void validateToCreate(Store store)
+            throws ValidationException;
+
+    // Check if the store given is valid.
+    public void validateToUpdate(Store store, Store oldStore)
+            throws ValidationException;
+
 }

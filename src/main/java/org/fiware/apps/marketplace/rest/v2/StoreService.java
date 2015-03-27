@@ -52,6 +52,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -73,6 +74,7 @@ public class StoreService {
 	@Autowired private StoreBo storeBo;
 	@Autowired private StoreAuth storeAuth;
 	@Autowired private StoreValidator storeValidator;
+    @Autowired private UserBo userBo;
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
@@ -88,12 +90,13 @@ public class StoreService {
 
 		try {
 			// Register the store given
-			storeBo.save(store);
+            storeBo.validateToCreate(store);
+            Store newStore = storeBo.create(store, userBo.getCurrentUser());
 
 			// Generate the URI and return CREATED
 			URI newURI = UriBuilder
 					.fromUri(uri.getPath())
-					.path(store.getName())
+					.path(newStore.getName())
 					.build();
 
 			response = Response.created(newURI).build();

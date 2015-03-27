@@ -58,8 +58,8 @@ import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
-import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,19 +117,17 @@ public class StoreController extends AbstractController {
         ModelAndView view;
         ModelMap model = new ModelMap();
         ResponseBuilder builder;
-        Store store = new Store();
+        Store store;
         URI redirectURI;
 
         try {
-            model.addAttribute("user", getCurrentUser());
+            User currentUser = this.getCurrentUser();
+
+            model.addAttribute("user", currentUser);
             model.addAttribute("title", "New Store - " + getContextName());
 
-            store.setDisplayName(displayName);
-            store.setUrl(url);
-            store.setDescription(description);
-
-            storeValidator.validateRegistrationForm(store);
-            storeBo.save(store);
+            storeBo.validateToCreate(displayName, url, description);
+            store = storeBo.create(displayName, url, description, currentUser);
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri())
                 .path("stores").path(store.getName()).path("offerings")
