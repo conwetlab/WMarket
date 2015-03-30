@@ -48,8 +48,9 @@ public interface StoreDao {
 	// Find by name
 	public Store findByName(String url) throws StoreNotFoundException;
 
-    // Contain
-    public boolean containsWithName(String name);
+    // Validation
+    public boolean isNameAvailable(String name);
+    public boolean isURLAvailable(String url);
 
 	// Get all or a sublist
 	public List<Store> getStoresPage(int offset, int max);

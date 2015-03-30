@@ -125,9 +125,13 @@ public class StoreController extends AbstractController {
 
             model.addAttribute("user", currentUser);
             model.addAttribute("title", "New Store - " + getContextName());
-
-            storeBo.validateToCreate(displayName, url, description);
-            store = storeBo.create(displayName, url, description, currentUser);
+            
+            store = new Store();
+            store.setDisplayName(displayName);
+            store.setUrl(url);
+            store.setDescription(description);
+            
+            storeBo.save(store);
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri())
                 .path("stores").path(store.getName()).path("offerings")

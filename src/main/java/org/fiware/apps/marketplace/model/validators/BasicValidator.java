@@ -37,10 +37,12 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 
 public class BasicValidator {
 
-	private static final int NAME_MIN_LENGTH = 3;
-	private static final int NAME_MAX_LENGTH = 20;
+	private static final int DISPLAY_NAME_MIN_LENGTH = 3;
+	private static final int DISPLAY_NAME_MAX_LENGTH = 20;
 	private static final int DESCRIPTION_MIN_LENGTH = 0;
 	private static final int DESCRIPTION_MAX_LENGTH = 200;
+	private static final String DISPLAY_NAME_FIELD = "displayName";
+	private static final String DESCRIPTION_FIELD = "description";
 
 	private static BasicValidator INSTANCE = new BasicValidator();
 	
@@ -53,7 +55,7 @@ public class BasicValidator {
 	}
 	
 	public static int getDisplayNameMaxLength() {
-		return NAME_MAX_LENGTH;
+		return DISPLAY_NAME_MAX_LENGTH;
 	}
 
 	public static int getDescriptionMaxLength() {
@@ -61,13 +63,14 @@ public class BasicValidator {
 	}
 	
 	public static int getDisplayNameMinLength() {
-		return NAME_MIN_LENGTH;
+		return DISPLAY_NAME_MIN_LENGTH;
 	}
 
 	public static int getDescriptionMinLength() {
 		return DESCRIPTION_MIN_LENGTH;
 	}
 
+	// BASIC VALIDATORS
 	public void validateRequired(String fieldName, String fieldValue) throws ValidationException {
 		if (fieldValue == null || fieldValue.length() == 0) {
 			throw new ValidationException(fieldName, "This field is required.");
@@ -80,6 +83,11 @@ public class BasicValidator {
 		if (fieldValue == null || !fieldValue.matches(regex)) {
 			throw new ValidationException(fieldName, errorMessage);
 		}
+	}
+	
+	public void validateDisplayNamePattern(String displayName) throws ValidationException {
+		this.validatePattern(DISPLAY_NAME_FIELD, displayName, "^[a-zA-Z0-9 -]+$", 
+				"This field only accepts letters, numbers, white spaces and hyphens.");
 	}
 
 	public void validateURL(String fieldName, String fieldValue) throws ValidationException {
@@ -94,6 +102,14 @@ public class BasicValidator {
 					String.format("This field must be at least %d chars.", minLength));
 		}
 	}
+	
+	public void validateDisplayNameMinLength(String displayName) throws ValidationException {
+		validateMinLength(DISPLAY_NAME_FIELD, displayName, DISPLAY_NAME_MIN_LENGTH);
+	}
+	
+	public void validateDescriptionMinLength(String description) throws ValidationException {
+		validateMaxLength(DESCRIPTION_FIELD, description, DESCRIPTION_MAX_LENGTH);
+	}
 
 	public void validateMaxLength(String fieldName, String fieldValue, int maxLength) throws ValidationException {
 		if (fieldValue == null || fieldValue.length() >= maxLength) {
@@ -102,10 +118,30 @@ public class BasicValidator {
 		}
 	}
 	
+	public void validateDisplayNameMaxLength(String displayName) throws ValidationException {
+		validateMaxLength(DISPLAY_NAME_FIELD, displayName, DISPLAY_NAME_MAX_LENGTH);
+	}
+	
+	public void validateDescriptionMaxLength(String description) throws ValidationException {
+		validateMaxLength(DESCRIPTION_FIELD, description, DESCRIPTION_MAX_LENGTH);
+	}
+	
 	public void validateEMail(String fieldName, String email) throws ValidationException {
 		if (email == null || !GenericValidator.isEmail(email)) {
 			throw new ValidationException(fieldName, "This field must be a valid email.");
 		}
+	}
+	
+	// VALIDATORS FOR SPECIFIC FIELDS
+	public void validateDisplayName(String displayName) throws ValidationException {
+		this.validateDisplayNamePattern(displayName);
+		this.validateDisplayNameMinLength(displayName);
+		this.validateDisplayNameMaxLength(displayName);
+	}
+	
+	public void validateDescription(String description) throws ValidationException {
+		this.validateDescriptionMinLength(description);
+		this.validateDescriptionMaxLength(description);
 	}
 	
 }

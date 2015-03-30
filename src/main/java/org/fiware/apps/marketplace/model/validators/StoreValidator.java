@@ -32,34 +32,57 @@ package org.fiware.apps.marketplace.model.validators;
  * #L%
  */
 
+import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
+import org.fiware.apps.marketplace.model.Store;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("storeValidator")
 public class StoreValidator {
 
-    private static final int DISPLAY_NAME_MIN_LENGTH = 5;
-    private static final int DISPLAY_NAME_MAX_LENGTH = 30;
-    private static final int DESCRIPTION_MAX_LENGTH = 200;
+    @Autowired private StoreDao storeDao;
 
     private static final BasicValidator BASIC_VALIDATOR = BasicValidator.getInstance();
+	
+	/**
+	 * @param store Store to be checked
+	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
+	 * the basic fields (name, url) are included.
+	 * @throws ValidationException If store is not valid
+	 */
+	public void validateStore(Store store, boolean isBeingCreated) throws ValidationException {
 
-    public void validateDisplayName(String displayName) throws ValidationException {
-        BASIC_VALIDATOR.validateRequired("displayName", displayName);
-        BASIC_VALIDATOR.validatePattern("displayName", displayName, "^[a-zA-Z -]+$", "This field only accepts letters, white spaces and hyphens.");
-        BASIC_VALIDATOR.validateMinLength("displayName", displayName, DISPLAY_NAME_MIN_LENGTH);
-        BASIC_VALIDATOR.validateMaxLength("displayName", displayName, DISPLAY_NAME_MAX_LENGTH);
-    }
+		// Check basic fields when a store is created
+		if (isBeingCreated) {
+			BASIC_VALIDATOR.validateRequired("displayName", store.getDisplayName());
+			BASIC_VALIDATOR.validateRequired("url", store.getUrl());
+		}
 
-    public void validateURL(String url) throws ValidationException {
-        BASIC_VALIDATOR.validateRequired("url", url);
-        BASIC_VALIDATOR.validateURL("url", url);
-    }
+		// If the store is being created, this value cannot be null since we have
+		// checked it before
+		if (store.getDisplayName() != null) {
+			BASIC_VALIDATOR.validateDisplayName(store.getDisplayName());
+			
+			// Check that the name is not in use
+			if (!storeDao.isNameAvailable(store.getDisplayName())) {
+	            throw new ValidationException("displayName", "This name is already in use.");
+			}
+		}
 
-    public void validateDescription(String description) throws ValidationException {
-        if (description != null) {
-            BASIC_VALIDATOR.validateMaxLength("description", description, DESCRIPTION_MAX_LENGTH);
-        }
-    }
+		// If the store is being created, this value cannot be null since we have
+		// checked it before
+		if (store.getUrl() != null) {
+			BASIC_VALIDATOR.validateURL("url", store.getUrl());
+			
+			// Check that the URL is available
+			if (!storeDao.isURLAvailable(store.getUrl())) {
+	            throw new ValidationException("url", "This url is already in use.");
+			}
+		}
 
+		if (store.getDescription() != null) {
+			BASIC_VALIDATOR.validateDescription(store.getDescription());
+		}
+	}
 }

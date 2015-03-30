@@ -40,7 +40,6 @@ import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository("storeDao")
 public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
@@ -75,6 +74,31 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 			
 	}
 	
+    @Override
+    public boolean isNameAvailable(String name) {
+    	
+    	boolean available = false;
+    	
+    	try {
+    		findByName(name);
+    	} catch (StoreNotFoundException e) {
+    		available = true;
+    	}
+    	
+    	return available;
+    }
+    
+	@Override
+	public boolean isURLAvailable(String url) {
+		List<?> list = getSession()
+				.createQuery("from Store where url=:url")
+				.setParameter("url", url)
+				.list();
+		
+		return list.isEmpty();
+		
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Store> getStoresPage(int offset, int max) {
@@ -90,16 +114,4 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	public List <Store> getAllStores() {
 		return getSession().createCriteria(Store.class).list();
 	}
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean containsWithName(String name) {
-        List<?> list = getSession()
-                .createQuery("from Store where name=:name")
-                .setParameter("name", name)
-                .list();
-
-        return !list.isEmpty();
-    }
-
 }
