@@ -32,6 +32,8 @@ package org.fiware.apps.marketplace.webcontrollers;
  * #L%
  */
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.UserBo;
@@ -75,6 +77,27 @@ public abstract class AbstractController {
 
     protected UserBo getUserBo() {
         return userBo;
+    }
+
+    protected void addFlashMessage(HttpServletRequest request, ModelMap model) {
+        HttpSession session = request.getSession();
+
+        synchronized (session) {
+            String flashMessage = (String) session.getAttribute("flashMessage");
+
+            if (flashMessage != null) {
+                model.addAttribute("message", flashMessage);
+                session.removeAttribute("flashMessage");
+            }
+        }
+    }
+
+    protected void setFlashMessage(HttpServletRequest request, String message) {
+        HttpSession session = request.getSession();
+
+        synchronized (session) {
+            session.setAttribute("flashMessage", message);
+        }
     }
 
 }

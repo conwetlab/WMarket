@@ -53,4 +53,16 @@
 		<put-attribute name="extra-scripts" value="/WEB-INF/views/stores/detail-scripts.jsp" />
 	</definition>
 
+    <!-- Descriptions - List View -->
+    <definition name="description.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/descriptions/list-content.jsp" />
+        <put-attribute name="extra-scripts" value="/WEB-INF/views/descriptions/list-scripts.jsp" />
+    </definition>
+
+    <!-- Descriptions - Detail View -->
+    <definition name="description.detail" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/descriptions/list-content.jsp" />
+        <put-attribute name="extra-scripts" value="/WEB-INF/views/descriptions/list-scripts.jsp" />
+    </definition>
+
 </tiles-definitions>
