@@ -353,8 +353,21 @@ body {
 /* Tablets */
 @media (min-width: 768px) {
 
+     .btn-md-3 {
+        width: 30%;
+    }
+
     .btn-md-5 {
         width: 50%;
+    }
+
+}
+
+/* Desktops, Large Desktops */
+@media (min-width: 992px) {
+
+     .btn-lg-2 {
+        width: 20%;
     }
 
 }

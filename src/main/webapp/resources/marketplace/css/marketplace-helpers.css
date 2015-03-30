@@ -44,7 +44,7 @@ p {
 .text-truncate {
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;    
+    white-space: nowrap;
 }
 
 .text-justify {
@@ -52,7 +52,7 @@ p {
 }
 
 .text-left {
-    text-align: left;
+    text-align: left !important;
 }
 
 .text-center {

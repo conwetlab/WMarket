@@ -7,7 +7,7 @@
   <div class="col-sm-10 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-3">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span class="panel-title">Upload new offerings</span>
+        <span class="panel-title">Upload a new description</span>
       </div>
       <div class="panel-body row">
         <c:choose>
@@ -15,7 +15,7 @@
 
             <form class="col-sm-8 col-sm-offset-1" method="post" action="${ pageContext.request.contextPath }/offerings/register">
               <div class="form-field">
-                <label class="text-plain">Store</label>
+                <label class="text-plain">Store *</label>
                 <select class="form-control" name="storeName">
                   <c:forEach var="store" items="${ storeList }">
                     <c:choose>
@@ -35,7 +35,7 @@
               </div>
 
               <div class="form-field">
-                <label class="text-plain">Name</label>
+                <label class="text-plain">Description name *</label>
                 <input class="form-control" type="text" name="displayName" value="${ field_displayName }" />
 
                 <c:if test="${ not empty form_error and form_error.fieldName == 'displayName' }">
@@ -44,7 +44,7 @@
               </div>
 
               <div class="form-field">
-                <label class="text-plain">Description URL</label>
+                <label class="text-plain">Description URL * <a href="http://linked-usdl.org/"><span class="fa fa-info-circle"></span></a></label>
                 <input class="form-control" type="text" name="url" value="${ field_url }" />
 
                 <c:if test="${ not empty form_error and form_error.fieldName == 'url' }">
@@ -52,7 +52,7 @@
                 </c:if>
               </div>
 
-              <p class="text-plain text-default">All fields are required</p>
+              <p class="text-plain text-default">* Required fields</p>
               <div class="form-options">
                 <button type="submit" class="btn btn-warning btn-sm-10 btn-md-5">Upload</button>
               </div>

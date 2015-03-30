@@ -47,10 +47,15 @@
 		<put-attribute name="content" value="/WEB-INF/views/stores/form-content.jsp" />
 	</definition>
 
+    <!-- Stores - Offering List View -->
+    <definition name="store.offeringlist" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/stores/offering-list-content.jsp" />
+        <put-attribute name="extra-scripts" value="/WEB-INF/views/stores/detail-scripts.jsp" />
+    </definition>
+
 	<!-- Stores - Detail View -->
 	<definition name="store.detail" template="/WEB-INF/views/base.jsp">
 		<put-attribute name="content" value="/WEB-INF/views/stores/detail-content.jsp" />
-		<put-attribute name="extra-scripts" value="/WEB-INF/views/stores/detail-scripts.jsp" />
 	</definition>
 
     <!-- Descriptions - List View -->
