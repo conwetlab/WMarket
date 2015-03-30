@@ -40,7 +40,7 @@
 
           <div class="form-field">
             <label class="text-plain">Confirm your password</label>
-            <input class="form-control" type="password" name="passwordConfirm" />
+            <input class="form-control" type="password" name="passwordConfirm"  value="${ field_passwordConfirm }"/>
 
             <c:if test="${ not empty form_error and form_error.fieldName == 'passwordConfirm' }">
               <div class="form-field-error">${ form_error.fieldError }</div>

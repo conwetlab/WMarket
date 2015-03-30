@@ -137,7 +137,6 @@ public class UserAccountController extends AbstractController {
                 user.setCompany(company);
             }
 
-            userValidator.validateAccountForm(user, currentUser);
             getUserBo().update(userName, user);
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("account").build();
@@ -198,8 +197,15 @@ public class UserAccountController extends AbstractController {
             model.addAttribute("title", "Account Settings - " + getContextName());
 
             user.setPassword(password);
-
-            userValidator.validateChangePasswordForm(currentUser, oldPassword, password, passwordConfirm);
+            
+            // Validate old password
+            if (!getUserBo().checkCurrentUserPassword(oldPassword)) {
+            	throw new ValidationException("oldPassword", "The password given is not valid.");
+            }
+            
+            // Exception risen if passwords don't match
+            checkPasswordConfirmation(password, passwordConfirm);
+            
             getUserBo().update(currentUser.getUserName(), user);
 
             session = request.getSession();

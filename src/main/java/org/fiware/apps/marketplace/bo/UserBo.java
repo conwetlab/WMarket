@@ -64,6 +64,8 @@ public interface UserBo {
 
 	// Get logged user
 	public User getCurrentUser() throws UserNotFoundException;
+	
+	// Validation
 	public boolean checkCurrentUserPassword(String password) throws UserNotFoundException;
 
 }

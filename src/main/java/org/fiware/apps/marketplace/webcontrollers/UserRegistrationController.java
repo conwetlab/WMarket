@@ -33,7 +33,6 @@ package org.fiware.apps.marketplace.webcontrollers;
  */
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -91,7 +90,7 @@ public class UserRegistrationController extends AbstractController {
             @FormParam("displayName") String displayName,
             @FormParam("email") String email,
             @FormParam("password") String password,
-            @FormParam("passwordConfirm") String passwordConfirm) throws URISyntaxException {
+            @FormParam("passwordConfirm") String passwordConfirm) {
 
         HttpSession session;
         ModelAndView view;
@@ -103,11 +102,13 @@ public class UserRegistrationController extends AbstractController {
         try {
             model.addAttribute("title", "Sign Up - " + getContextName());
             model.addAttribute("current_view", "register_user");
-
+            
+            // Exception is throw if passwords do not match
+            checkPasswordConfirmation(password, passwordConfirm);
+            
             user.setDisplayName(displayName);
             user.setEmail(email);
             user.setPassword(password);
-            userValidator.validateRegistrationForm(user, passwordConfirm);
             getUserBo().save(user);
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login").build();
@@ -129,6 +130,7 @@ public class UserRegistrationController extends AbstractController {
             model.addAttribute("field_displayName", displayName);
             model.addAttribute("field_email", email);
             model.addAttribute("field_password", password);
+            model.addAttribute("field_passwordConfirm", passwordConfirm);
 
             model.addAttribute("form_error", e);
 

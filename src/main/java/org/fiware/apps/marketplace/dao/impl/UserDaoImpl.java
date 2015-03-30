@@ -114,6 +114,19 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 		return available;
 	}
 	
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isMailAvailable(String email) {
+        String query = String.format("from %s where email=:email", TABLE_NAME);
+
+        List<?> list = getSession()
+                .createQuery(query)
+                .setParameter("email", email)
+                .list();
+
+        return list.isEmpty();
+    }
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly = true)
@@ -133,18 +146,4 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 				.createCriteria(User.class)
 				.list();
 	}
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean containsWithEmail(String email) {
-        String query = String.format("from %s where email=:email", TABLE_NAME);
-
-        List<?> list = getSession()
-                .createQuery(query)
-                .setParameter("email", email)
-                .list();
-
-        return !list.isEmpty();
-    }
-
 }

@@ -232,7 +232,4 @@ public class UserBoImpl implements UserBo {
 		User user = getCurrentUser();
 		return encoder.matches(password, user.getPassword());
 	}
-	
-	
-
 }
