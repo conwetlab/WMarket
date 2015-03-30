@@ -36,7 +36,6 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -76,12 +75,6 @@ public abstract class AbstractController {
 
     protected UserBo getUserBo() {
         return userBo;
-    }
-    
-    protected void checkPasswordConfirmation(String password, String passwordConfirmation)  throws ValidationException {
-    	if (!password.equals(passwordConfirmation)) {
-    		throw new ValidationException("passwordConfirm", "Passwords do not match.");
-    	}
     }
 
 }
