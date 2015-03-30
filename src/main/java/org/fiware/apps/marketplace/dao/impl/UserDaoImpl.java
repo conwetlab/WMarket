@@ -116,7 +116,7 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 	
     @Override
     @Transactional(readOnly = true)
-    public boolean isMailAvailable(String email) {
+    public boolean isEmailAvailable(String email) {
         String query = String.format("from %s where email=:email", TABLE_NAME);
 
         List<?> list = getSession()

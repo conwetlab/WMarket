@@ -77,7 +77,7 @@ public class StoreValidator {
 			
 			// Check that the URL is available
 			if (!storeDao.isURLAvailable(store.getUrl())) {
-	            throw new ValidationException("url", "This url is already in use.");
+	            throw new ValidationException("url", "This URL is already in use.");
 			}
 		}
 

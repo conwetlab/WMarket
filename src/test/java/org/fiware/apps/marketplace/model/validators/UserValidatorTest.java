@@ -33,14 +33,22 @@ package org.fiware.apps.marketplace.model.validators;
  */
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class UserValidatorTest {
 	
-	private UserValidator userValidator = new UserValidator();
+	@Mock private UserDao userDaoMock;
+	@InjectMocks private UserValidator userValidator = new UserValidator();
 	
 	private static final String MISSING_FIELDS_MSG = "This field is required.";
 	private static final String TOO_SHORT_PATTERN = "This field must be at least %d chars.";
@@ -50,7 +58,7 @@ public class UserValidatorTest {
 	private static User generateValidUser() {
 		User user = new User();
 		user.setDisplayName("userName");
-		user.setPassword("12345678");
+		user.setPassword("12345678a!");
 		user.setEmail("example@example.com");
 		user.setCompany("EXAMPLE");
 		user.setDisplayName("Example Name");
@@ -68,11 +76,18 @@ public class UserValidatorTest {
 		}
 	}
 	
+	@Before 
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+		when(userDaoMock.isEmailAvailable(anyString())).thenReturn(true);
+		
+	}
+	
 	@Test
 	public void testValidBasicUser() throws ValidationException {
 		User user = new User();
 		user.setDisplayName("userName");
-		user.setPassword("12345678");
+		user.setPassword("12345678!a");
 		user.setEmail("example@example.com");
 		
 		userValidator.validateUser(user, true);
@@ -175,7 +190,7 @@ public class UserValidatorTest {
 	@Test
 	public void testDisplayNameTooLong() {
 		User user = generateValidUser();
-		user.setDisplayName("1234567890123456789012345678901");
+		user.setDisplayName("abcdefghijklmnopqrstuvwxyzabcdefghij");
 		
 		assertInvalidUser(user, "displayName", String.format(TOO_LONG_PATTERN, 30), false);
 	}
@@ -202,6 +217,17 @@ public class UserValidatorTest {
 		user.setEmail("@test.com");
 		
 		assertInvalidUser(user, "email", INVALID_EMAIL, false);
+	}
+
+	@Test
+	public void testEmailInUse() {
+		String email = "email@example.com";
+		User user = generateValidUser();
+		user.setEmail(email);
+		when(userDaoMock.isEmailAvailable(email)).thenReturn(false);
+		
+		assertInvalidUser(user, "email", "This email is already registered.", false);
+		
 	}
 	
 	@Test

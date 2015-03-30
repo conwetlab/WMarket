@@ -51,7 +51,7 @@ public interface UserDao {
 
     // For validations...
 	public boolean isUserNameAvailable(String userName);
-    public boolean isMailAvailable(String email);
+    public boolean isEmailAvailable(String email);
 
 	// Get all or a sublist
 	public List<User> getUsersPage(int offset, int max);

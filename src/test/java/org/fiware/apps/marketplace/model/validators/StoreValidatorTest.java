@@ -34,17 +34,24 @@ package org.fiware.apps.marketplace.model.validators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.mockito.Mockito.*;
 
 import java.util.Date;
 
+import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class StoreValidatorTest {
 
-	private StoreValidator storeValidator = new StoreValidator();
+	@Mock private StoreDao storeDaoMock;
+	@InjectMocks private StoreValidator storeValidator = new StoreValidator();
 
 	private static final String MISSING_FIELDS_MSG = "This field is required.";
 	private static final String TOO_SHORT_PATTERN = "This field must be at least %d chars.";
@@ -71,6 +78,14 @@ public class StoreValidatorTest {
 			assertThat(ex).hasMessage(expectedMsg);
 			assertThat(ex.getFieldName()).isEqualTo(field);
 		}
+	}
+	
+	@Before 
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+		when(storeDaoMock.isNameAvailable(anyString())).thenReturn(true);
+		when(storeDaoMock.isURLAvailable(anyString())).thenReturn(true);
+		
 	}
 
 	@Test
@@ -151,6 +166,16 @@ public class StoreValidatorTest {
 
 		assertInvalidStore(store, "displayName", String.format(TOO_LONG_PATTERN, 20), false);
 	}
+	
+	@Test
+	public void testDisplayNameInUse() {
+		String displayName = "storeName";
+		Store store = generateValidStore();
+		store.setDisplayName(displayName);
+		when(storeDaoMock.isNameAvailable(displayName)).thenReturn(false);
+		
+		assertInvalidStore(store, "displayName", "This name is already in use.", false);
+	}
 
 	@Test
 	public void testInvalidURL1() {
@@ -182,6 +207,17 @@ public class StoreValidatorTest {
 		store.setUrl("store");
 
 		assertInvalidStore(store, "url", INVALID_URL, false);
+	}
+	
+	@Test
+	public void testURLInUse() {
+		String url = "http://store.lab.fiware.org";
+		Store store = generateValidStore();
+		store.setUrl(url);
+		when(storeDaoMock.isURLAvailable(url)).thenReturn(false);
+		
+		assertInvalidStore(store, "url", "This URL is already in use.", false);
+
 	}
 
 	@Test

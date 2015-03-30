@@ -80,8 +80,8 @@ public class UserValidator {
 		if (user.getEmail() != null) {
 			BASIC_VALIDATOR.validateEMail("email", user.getEmail());
 
-			if(!userDao.isMailAvailable(user.getEmail())) {
-				throw new ValidationException("email", "The email is already registered.");
+			if(!userDao.isEmailAvailable(user.getEmail())) {
+				throw new ValidationException("email", "This email is already registered.");
 			}
 		}
 
