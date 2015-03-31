@@ -13,7 +13,7 @@
         <c:choose>
           <c:when test="${ not empty storeList }">
 
-            <form class="col-sm-8 col-sm-offset-1" method="post" action="${ pageContext.request.contextPath }/offerings/register">
+            <form class="col-sm-8 col-sm-offset-1" method="post" action="${ pageContext.request.contextPath }/descriptions/register">
               <div class="form-field">
                 <label class="text-plain">Store *</label>
                 <select class="form-control" name="storeName">
@@ -35,7 +35,7 @@
               </div>
 
               <div class="form-field">
-                <label class="text-plain">Description name *</label>
+                <label class="text-plain">Name *</label>
                 <input class="form-control" type="text" name="displayName" value="${ field_displayName }" />
 
                 <c:if test="${ not empty form_error and form_error.fieldName == 'displayName' }">
@@ -44,7 +44,7 @@
               </div>
 
               <div class="form-field">
-                <label class="text-plain">Description URL * <a href="http://linked-usdl.org/"><span class="fa fa-info-circle"></span></a></label>
+                <label class="text-plain">URL to Linked USDL file * <a target="_blank" href="http://linked-usdl.org/"><span class="fa fa-info-circle"></span></a></label>
                 <input class="form-control" type="text" name="url" value="${ field_url }" />
 
                 <c:if test="${ not empty form_error and form_error.fieldName == 'url' }">

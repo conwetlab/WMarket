@@ -61,6 +61,8 @@ import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hp.hpl.jena.shared.JenaException;
+
 @org.springframework.stereotype.Service("descriptionBo")
 public class DescriptionBoImpl implements DescriptionBo {
 	
@@ -73,6 +75,8 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Autowired private StoreBo storeBo;
 	@Autowired private OfferingDao offeringDao;
 	@Autowired private StoreDao storeDao;
+	
+	private static final String JENA_ERROR = "Your RDF could not be parsed.";
 		
 	@Override
 	@Transactional(readOnly=false)
@@ -122,6 +126,8 @@ public class DescriptionBoImpl implements DescriptionBo {
 			rdfIndexer.indexService(description);
 		} catch (MalformedURLException ex) {
 			throw new ValidationException("url", ex.getMessage());
+		} catch (JenaException ex) {
+			throw new ValidationException("url", JENA_ERROR);
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -202,6 +208,8 @@ public class DescriptionBoImpl implements DescriptionBo {
 			descriptionDao.update(descriptionToBeUpdated);
 		} catch (MalformedURLException ex) {
 			throw new ValidationException("url", ex.getMessage());
+		} catch (JenaException ex) {
+			throw new ValidationException("url", JENA_ERROR);
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}

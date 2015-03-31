@@ -92,7 +92,7 @@ public class DescriptionController extends AbstractController {
 
             model.addAttribute("title", store.getDisplayName() + " - Descriptions - " + getContextName());
             model.addAttribute("store", store);
-
+            
             addFlashMessage(request, model);
 
             view = new ModelAndView("description.list", model);

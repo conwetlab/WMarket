@@ -26,8 +26,8 @@
 	</definition>
 
 	<!-- Offerings - Register Form View -->
-	<definition name="offering.register" template="/WEB-INF/views/base.jsp">
-		<put-attribute name="content" value="/WEB-INF/views/offerings/form-content.jsp" />
+	<definition name="description.register" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/descriptions/form-content.jsp" />
 	</definition>
 
 	<!-- Offerings - List View -->
