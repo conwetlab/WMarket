@@ -103,6 +103,28 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 		return this.findByQuery(query, params);				
 	}
 	
+	@Override
+	public boolean isNameAvailableInStore(String storeName, String name) {
+		List<?> list = getSession()
+				.createQuery(String.format("from %s where name = :name and store.name = :storeName", TABLE_NAME))
+				.setParameter("name", name)
+				.setParameter("storeName", storeName)
+				.list();
+		
+		return list.isEmpty();
+	}
+
+	@Override
+	public boolean isURLAvailableInStore(String storeName, String url) {
+		List<?> list = getSession()
+				.createQuery(String.format("from %s where url = :url and store.name = :storeName", TABLE_NAME))
+				.setParameter("url", url)
+				.setParameter("storeName", storeName)
+				.list();
+		
+		return list.isEmpty();
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Description> getAllDescriptions() {

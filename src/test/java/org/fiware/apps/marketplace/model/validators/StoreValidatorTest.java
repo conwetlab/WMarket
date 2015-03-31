@@ -169,12 +169,12 @@ public class StoreValidatorTest {
 	
 	@Test
 	public void testDisplayNameInUse() {
-		String displayName = "storeName";
+		String name = "storeName";
 		Store store = generateValidStore();
-		store.setDisplayName(displayName);
-		when(storeDaoMock.isNameAvailable(displayName)).thenReturn(false);
+		store.setName(name);
+		when(storeDaoMock.isNameAvailable(name)).thenReturn(false);
 		
-		assertInvalidStore(store, "displayName", "This name is already in use.", false);
+		assertInvalidStore(store, "displayName", "This name is already in use.", true);
 	}
 
 	@Test
@@ -216,7 +216,7 @@ public class StoreValidatorTest {
 		store.setUrl(url);
 		when(storeDaoMock.isURLAvailable(url)).thenReturn(false);
 		
-		assertInvalidStore(store, "url", "This URL is already in use.", false);
+		assertInvalidStore(store, "url", "This URL is already in use.", true);
 
 	}
 

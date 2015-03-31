@@ -75,6 +75,9 @@ public class StoreBoImpl implements StoreBo{
 			// Set user as creator and latest editor of this store
 			store.setCreator(user);
 			store.setLasteditor(user);
+			
+			// Set default name based on the display name
+			store.setName(NameGenerator.getURLName(store.getDisplayName()));
 	
 			// Check rights and raise exception if user is not allowed to perform this action
 			if (!storeAuth.canCreate(store)) {
@@ -84,7 +87,6 @@ public class StoreBoImpl implements StoreBo{
 			// Exception is risen if the store is not valid
 			storeValidator.validateStore(store, true);
 			
-			store.setName(NameGenerator.getURLName(store.getDisplayName()));
 			storeDao.save(store);
 		} catch (UserNotFoundException ex) {
 			// This exception is not supposed to happen

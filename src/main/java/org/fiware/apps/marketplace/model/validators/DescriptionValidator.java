@@ -32,12 +32,16 @@ package org.fiware.apps.marketplace.model.validators;
  * #L%
  */
 
+import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Description;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("offeringsDescriptionValidator")
 public class DescriptionValidator {
+	
+	@Autowired private DescriptionDao descriptionDao;
 
 	private static final BasicValidator BASIC_VALIDATOR = BasicValidator.getInstance();
 
@@ -53,6 +57,12 @@ public class DescriptionValidator {
 		if (isBeingCreated) {
 			BASIC_VALIDATOR.validateRequired("displayName", description.getDisplayName());
 			BASIC_VALIDATOR.validateRequired("url", description.getUrl());
+			
+			// Check that the name is not in use
+			if (!descriptionDao.isNameAvailableInStore(description.getStore().getName(), description.getName())) {
+				// Name is based in the display name, so we use this field to return the error
+				throw new ValidationException("displayName", "This name is already in use in this Store.");
+			}
 		}
 
 		if (description.getDisplayName() != null) {
@@ -62,10 +72,17 @@ public class DescriptionValidator {
 					BasicValidator.getDisplayNameMinLength());
 			BASIC_VALIDATOR.validateMaxLength("displayName", description.getDisplayName(), 
 					BasicValidator.getDisplayNameMaxLength());
+			
+			// TODO: Check that the display name is not in use...
 		}
 
 		if (description.getUrl() != null) {
 			BASIC_VALIDATOR.validateURL("url", description.getUrl());
+			
+			// TODO: Check that the URL is not in use when the description is being updated
+			if (isBeingCreated && !descriptionDao.isURLAvailableInStore(description.getStore().getName(), description.getUrl())) {
+				throw new ValidationException("url", "This URL is already in use in this Store.");
+			}
 		}
 
 		if (description.getDescription() != null) {

@@ -76,16 +76,12 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	
     @Override
     public boolean isNameAvailable(String name) {
-    	
-    	boolean available = false;
-    	
-    	try {
-    		findByName(name);
-    	} catch (StoreNotFoundException e) {
-    		available = true;
-    	}
-    	
-    	return available;
+		List<?> list = getSession()
+				.createQuery("from Store where name=:name")
+				.setParameter("name", name)
+				.list();
+		
+		return list.isEmpty();
     }
     
 	@Override

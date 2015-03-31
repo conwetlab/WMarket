@@ -57,6 +57,12 @@ public class StoreValidator {
 		if (isBeingCreated) {
 			BASIC_VALIDATOR.validateRequired("displayName", store.getDisplayName());
 			BASIC_VALIDATOR.validateRequired("url", store.getUrl());
+			
+			// Name does not changes, so it should only be checked on creation
+			if (!storeDao.isNameAvailable(store.getName())) {
+				// Name is based in the display name, so we use this field to return the error
+	            throw new ValidationException("displayName", "This name is already in use.");
+			}
 		}
 
 		// If the store is being created, this value cannot be null since we have
@@ -64,10 +70,8 @@ public class StoreValidator {
 		if (store.getDisplayName() != null) {
 			BASIC_VALIDATOR.validateDisplayName(store.getDisplayName());
 			
-			// Check that the name is not in use
-			if (!storeDao.isNameAvailable(store.getDisplayName())) {
-	            throw new ValidationException("displayName", "This name is already in use.");
-			}
+			// TODO: Check that the display name is not in use...
+
 		}
 
 		// If the store is being created, this value cannot be null since we have
@@ -75,8 +79,9 @@ public class StoreValidator {
 		if (store.getUrl() != null) {
 			BASIC_VALIDATOR.validateURL("url", store.getUrl());
 			
+			// TODO: Check that the URL is not being used when the store is being updated
 			// Check that the URL is available
-			if (!storeDao.isURLAvailable(store.getUrl())) {
+			if (isBeingCreated && !storeDao.isURLAvailable(store.getUrl())) {
 	            throw new ValidationException("url", "This URL is already in use.");
 			}
 		}

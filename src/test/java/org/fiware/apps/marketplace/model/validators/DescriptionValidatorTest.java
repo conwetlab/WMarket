@@ -34,18 +34,26 @@ package org.fiware.apps.marketplace.model.validators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
 import java.util.Date;
 
+import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class DescriptionValidatorTest {
 	
-	private DescriptionValidator descriptionValidator = new DescriptionValidator();
+	@Mock private DescriptionDao descriptionDaoMock;
+	@InjectMocks private DescriptionValidator descriptionValidator = new DescriptionValidator();
 	
 	private static final String MISSING_FIELDS_MSG = "This field is required.";
 	private static final String TOO_SHORT_PATTERN = "This field must be at least %d chars.";
@@ -81,10 +89,21 @@ public class DescriptionValidatorTest {
 		}
 	}
 	
+	@Before 
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+		when(descriptionDaoMock.isNameAvailableInStore(anyString(), anyString())).thenReturn(true);
+		when(descriptionDaoMock.isURLAvailableInStore(anyString(), anyString())).thenReturn(true);
+		
+	}
+	
 	@Test
 	public void testValidBasicDescription() throws ValidationException {
+		Store store = mock(Store.class);
+		when(store.getName()).thenReturn("store display name");
 		Description description = new Description();
 		description.setDisplayName("description1");
+		description.setStore(store);
 		description.setUrl("https://repo.lab.fi-ware.org/offerings/offering1.rdf");
 		
 		descriptionValidator.validateDescription(description, true);
@@ -155,6 +174,17 @@ public class DescriptionValidatorTest {
 	}
 	
 	@Test
+	public void testNameInUse() {
+		String name = "Description-Name";
+		Description description = generateValiddescription();
+		description.setName(name);
+		
+		when(descriptionDaoMock.isNameAvailableInStore(anyString(), eq(name))).thenReturn(false);
+
+		assertInvalidDescription(description, "displayName", "This name is already in use in this Store.", true);
+	}
+	
+	@Test
 	public void testInvalidURL1() {
 		Description description = generateValiddescription();
 		description.setUrl("http://");
@@ -184,6 +214,17 @@ public class DescriptionValidatorTest {
 		description.setUrl("offering");
 
 		assertInvalidDescription(description, "url", INVALID_URL, false);
+	}
+	
+	@Test
+	public void testURLInUse() {
+		String url = "http://fiware.org/valid_usdl.rdf";
+		Description description = generateValiddescription();
+		description.setUrl(url);
+		
+		when(descriptionDaoMock.isURLAvailableInStore(anyString(), eq(url))).thenReturn(false);
+
+		assertInvalidDescription(description, "url", "This URL is already in use in this Store.", true);
 	}
 	
 	@Test

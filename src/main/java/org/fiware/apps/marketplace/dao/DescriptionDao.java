@@ -51,6 +51,10 @@ public interface DescriptionDao {
 			throws StoreNotFoundException, DescriptionNotFoundException;
 	public Description findById(Integer id);
 	
+	// Verifications
+	public boolean isNameAvailableInStore(String storeName, String descriptionName);
+	public boolean isURLAvailableInStore(String storeName, String url);
+	
 	// Get all offerings descriptions
 	public List<Description> getAllDescriptions();
 	public List<Description> getDescriptionsPage(int offset, int max);

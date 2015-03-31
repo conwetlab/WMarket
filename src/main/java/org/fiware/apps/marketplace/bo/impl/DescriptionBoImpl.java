@@ -94,11 +94,11 @@ public class DescriptionBoImpl implements DescriptionBo {
 			description.setCreator(user);
 			description.setLasteditor(user);
 			
+			// Set the name based on the display name
+			description.setName(NameGenerator.getURLName(description.getDisplayName()));
+			
 			// Exception is risen if the description is not valid
 			descriptionValidator.validateDescription(description, true);
-			
-			// Set the name
-			description.setName(NameGenerator.getURLName(description.getDisplayName()));
 			
 			// Get all the offerings described in the USDL
 			List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
