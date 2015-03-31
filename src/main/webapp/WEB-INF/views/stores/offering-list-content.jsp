@@ -12,7 +12,6 @@
       <div class="panel-body">
         <div class="nav-tabs">
           <div class="tab active"><a href="${ pageContext.request.contextPath }/stores/${ store.name }/offerings">Offerings</a></div>
-          <div class="tab"><a href="${ pageContext.request.contextPath }/stores/${ store.name }/descriptions">Descriptions</a></div>
           <div class="tab"><a href="${ pageContext.request.contextPath }/stores/${ store.name }/details">About</a></div>
         </div>
       </div>

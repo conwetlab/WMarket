@@ -3,26 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<div class="row container-fluid">
-  <div class="col-sm-10 col-md-10 col-lg-10">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <span class="panel-title">Welcome to <strong>${ store.displayName }</strong></span>
-      </div>
-      <div class="panel-body">
-        <div class="nav-tabs">
-          <div class="tab"><a href="${ pageContext.request.contextPath }/stores/${ store.name }/offerings">Offerings</a></div>
-          <div class="tab active"><a href="${ pageContext.request.contextPath }/stores/${ store.name }/descriptions">Descriptions</a></div>
-          <div class="tab"><a href="${ pageContext.request.contextPath }/stores/${ store.name }/details">About</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div><!-- /.container-fluid -->
-
 <c:choose>
-  <c:when test="${ not empty store.descriptions }">
-    <c:forEach var="offeringServ" items="${ store.descriptions }">
+  <c:when test="${ not empty descriptions }">
+    <c:forEach var="offeringServ" items="${ descriptions }">
       <div class="row container-fluid">
         <div class="col-sm-10">
           <div
@@ -48,7 +31,7 @@
             </div>
             <div class="row panel-body">
 
-              <form id="form_update_${ offeringServ.name }" method="post" action="${ pageContext.request.contextPath }/stores/${ store.name }/descriptions/${ offeringServ.name }">
+              <form id="form_update_${ offeringServ.name }" method="post" action="${ pageContext.request.contextPath }/stores/${ offeringServ.store.name }/descriptions/${ offeringServ.name }">
                 <div class="row">
                   <div class="form-field col-sm-10 col-md-5">
                     <label class="text-plain">Name *</label>
@@ -90,7 +73,7 @@
                   <button type="submit" class="btn btn-success btn-sm-10 btn-md-3 btn-lg-2">Save changes</button>
                 </div>
               </form>
-              <form name="form_${ offeringServ.name }" method="post" action="${ pageContext.request.contextPath }/stores/${ store.name }/descriptions/${ offeringServ.name }/delete"></form>
+              <form name="form_${ offeringServ.name }" method="post" action="${ pageContext.request.contextPath }/stores/${ offeringServ.store.name }/descriptions/${ offeringServ.name }/delete"></form>
             </div>
           </div>
         </div>
@@ -102,7 +85,7 @@
     <div class="row container-fluid">
       <div class="col-sm-10">
         <div class="alert alert-warning col-sm-10">
-          <span class="fa fa-exclamation-circle"></span> No offering service available.
+          <span class="fa fa-exclamation-circle"></span> No descriptions service available.
         </div>
       </div>
     </div>

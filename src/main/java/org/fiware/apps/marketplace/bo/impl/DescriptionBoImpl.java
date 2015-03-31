@@ -271,6 +271,17 @@ public class DescriptionBoImpl implements DescriptionBo {
 	
 	@Override
 	@Transactional
+	public List<Description> getCurrentUserDescriptions() {
+		try {
+			return descriptionDao.getUserDescriptions(userBo.getCurrentUser().getUserName());
+		} catch (UserNotFoundException e) {
+			// This exception should never happen
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	@Transactional
 	public List<Description> getAllDescriptions() 
 			throws NotAuthorizedException {
 		

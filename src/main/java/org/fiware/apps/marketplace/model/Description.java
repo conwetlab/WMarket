@@ -182,7 +182,7 @@ public class Description {
 	}
 
 	@XmlElement
-	@OneToMany(mappedBy = "describedIn", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "describedIn", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	public List<Offering> getOfferings() {
 		return offerings;
 	}

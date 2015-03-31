@@ -59,8 +59,8 @@
 	</definition>
 
     <!-- Descriptions - List View -->
-    <definition name="description.list" template="/WEB-INF/views/base.jsp">
-        <put-attribute name="content" value="/WEB-INF/views/descriptions/list-content.jsp" />
+    <definition name="description.list-own" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/descriptions/list-own-content.jsp" />
         <put-attribute name="extra-scripts" value="/WEB-INF/views/descriptions/list-scripts.jsp" />
     </definition>
 

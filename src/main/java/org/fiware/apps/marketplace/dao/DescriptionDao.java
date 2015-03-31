@@ -37,6 +37,7 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 
 public interface DescriptionDao {
@@ -56,6 +57,8 @@ public interface DescriptionDao {
 	public boolean isURLAvailableInStore(String storeName, String url);
 	
 	// Get all offerings descriptions
+	public List<Description> getUserDescriptions(String userName) 
+			throws UserNotFoundException;
 	public List<Description> getAllDescriptions();
 	public List<Description> getDescriptionsPage(int offset, int max);
 	public List<Description> getStoreDescriptions(String storeName) 

@@ -1,5 +1,37 @@
 package org.fiware.apps.marketplace.webcontrollers;
 
+/*
+ * #%L
+ * FiwareMarketplace
+ * %%
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of copyright holders nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * #L%
+ */
+
 import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,17 +64,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 
+
 @Component
-@Path("descriptions")
-public class DescriptionsCreatorController extends AbstractController {
-	
+@Path("/descriptions")
+public class UserDescriptionsController extends AbstractController {
+
     @Autowired private DescriptionBo descriptionBo;
     @Autowired private StoreBo storeBo;
+        
+    private static Logger logger = LoggerFactory.getLogger(UserDescriptionsController.class);
     
-    private static Logger logger = LoggerFactory.getLogger(DescriptionsCreatorController.class);
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("register")
+    @Path("/register")
     public Response registerFormView() {
 
         ModelAndView view;
@@ -75,7 +109,7 @@ public class DescriptionsCreatorController extends AbstractController {
 
     @POST
     @Produces(MediaType.TEXT_HTML)
-    @Path("register")
+    @Path("/register")
     public Response registerFormView(
             @Context UriInfo uri,
             @Context HttpServletRequest request,
@@ -144,4 +178,31 @@ public class DescriptionsCreatorController extends AbstractController {
         return builder.build();
     }
 
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public Response listUserDescriptionsView(
+            @Context HttpServletRequest request) {
+
+        ModelAndView view;
+        ModelMap model = new ModelMap();
+        ResponseBuilder builder;
+
+        try {
+            model.addAttribute("user", getCurrentUser());
+            
+            model.addAttribute("title", "Your Descriptions");
+            model.addAttribute("descriptions", descriptionBo.getCurrentUserDescriptions());
+            
+            addFlashMessage(request, model);
+
+            view = new ModelAndView("description.list-own", model);
+            builder = Response.ok();
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError();
+        }
+        return builder.entity(view).build();
+    }
 }

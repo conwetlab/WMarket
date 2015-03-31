@@ -60,6 +60,7 @@ public interface DescriptionBo {
 			NotAuthorizedException;
 	
 	// Get all or a sublist
+	public List<Description> getCurrentUserDescriptions();
 	public List<Description> getAllDescriptions() throws NotAuthorizedException;
 	public List<Description> getDescriptionsPage(int offset, int max) 
 			throws NotAuthorizedException;

@@ -36,7 +36,6 @@ import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -68,58 +67,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @Component
-@Path("stores/{storeName}/descriptions")
+@Path("/stores/{storeName}/descriptions/{descriptionName}")
 public class DescriptionController extends AbstractController {
-
-    private static Logger logger = LoggerFactory.getLogger(DescriptionController.class);
 
     @Autowired private DescriptionBo descriptionBo;
     @Autowired private StoreBo storeBo;
-
-    @GET
+        
+    private static Logger logger = LoggerFactory.getLogger(DescriptionController.class);
+    
+    /*@GET
     @Produces(MediaType.TEXT_HTML)
-    public Response listView(
-            @Context HttpServletRequest request,
-            @PathParam("storeName") String storeName) {
-
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
-
-        try {
-            model.addAttribute("user", getCurrentUser());
-            Store store = storeBo.findByName(storeName);
-
-            model.addAttribute("title", store.getDisplayName() + " - Descriptions - " + getContextName());
-            model.addAttribute("store", store);
-            
-            addFlashMessage(request, model);
-
-            view = new ModelAndView("description.list", model);
-            builder = Response.ok();
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
-
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError();
-        } catch (NotAuthorizedException e) {
-            logger.info("User unauthorized", e);
-
-            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
-            builder = Response.status(Status.UNAUTHORIZED);
-        } catch (StoreNotFoundException e) {
-            logger.info("Store not found", e);
-
-            view = buildErrorView(Status.NOT_FOUND, e.getMessage());
-            builder = Response.status(Status.NOT_FOUND);
-        }
-
-        return builder.entity(view).build();
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("{descriptionName}")
+    @Path(SINGLE_DESCRIPTION_PATH + "/{descriptionName}")
     public Response detailView(
             @Context HttpServletRequest request,
             @PathParam("storeName") String storeName,
@@ -166,11 +124,10 @@ public class DescriptionController extends AbstractController {
         }
 
         return builder.entity(view).build();
-    }
+    }*/
 
     @POST
     @Produces(MediaType.TEXT_HTML)
-    @Path("{descriptionName}")
     public Response updateView(
             @Context UriInfo uri,
             @Context HttpServletRequest request,
@@ -204,7 +161,7 @@ public class DescriptionController extends AbstractController {
             setFlashMessage(request, "The description '" + oldDescription.getDisplayName() + "' was updated successfully.");
 
             URI redirectURI = UriBuilder.fromUri(uri.getBaseUri())
-                    .path("stores").path(storeName).path("descriptions").path(descriptionName)
+                    .path("descriptions")//.path(descriptionName)
                     .build();
             builder = Response.seeOther(redirectURI);
         } catch (UserNotFoundException e) {
@@ -245,7 +202,7 @@ public class DescriptionController extends AbstractController {
 
     @POST
     @Produces(MediaType.TEXT_HTML)
-    @Path("{descriptionName}/delete")
+    @Path("delete")
     public Response deleteView(
             @Context UriInfo uri,
             @Context HttpServletRequest request,
@@ -263,8 +220,7 @@ public class DescriptionController extends AbstractController {
             setFlashMessage(request, "The description '" + description.getDisplayName() + "' was deleted successfully.");
 
             URI redirectURI = UriBuilder.fromUri(uri.getBaseUri())
-                    .path("stores").path(storeName).path("descriptions")
-                    .build();
+                    .path("descriptions").build();
             builder = Response.seeOther(redirectURI);
         } catch (NotAuthorizedException e) {
             logger.info("User unauthorized", e);
@@ -285,5 +241,4 @@ public class DescriptionController extends AbstractController {
 
         return builder.build();
     }
-
 }

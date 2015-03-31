@@ -104,10 +104,10 @@
     <div id="left-sidebar" class="panel panel-default panel-sliding panel-sliding-left">
       <div class="panel-body">
         <div class="list-group">
-          <div class="list-group-item">
+              <a class="list-group-item" href="${ pageContext.request.contextPath }/descriptions">
                 <span class="fa fa-archive fa-fw"></span>
-                <span class="text-plain">My offerings</span>
-              </div>
+                <span class="text-plain">My Descriptions</span>
+              </a>
               <a class="list-group-item" href="${ pageContext.request.contextPath }/descriptions/register">
                 <span class="fa fa-upload fa-fw"></span>
                 <span class="text-plain">Upload new descriptions</span>

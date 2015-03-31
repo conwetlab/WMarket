@@ -37,8 +37,10 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.dao.StoreDao;
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.hibernate.Query;
@@ -48,6 +50,7 @@ import org.springframework.stereotype.Repository;
 @Repository("offeringsDescriptionDao")
 public class DescriptionDaoImpl extends MarketplaceHibernateDao implements DescriptionDao {
 	
+	@Autowired private UserDao userDao;
 	@Autowired private StoreDao storeDao;
 	private final static String TABLE_NAME = Description.class.getName();
 
@@ -127,6 +130,19 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<Description> getUserDescriptions(String userName)
+			throws UserNotFoundException {
+		
+		// Throws UserNotFoundException if the store does not exist
+		userDao.findByName(userName);
+		
+		return getSession().createQuery(String.format("from %s where creator.userName = :userName", TABLE_NAME))
+				.setParameter("userName", userName)
+				.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<Description> getAllDescriptions() {
 		return getSession()
 				.createCriteria(Description.class)
@@ -150,8 +166,9 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Description> getStoreDescriptionsPage(String storeName,
-			int offset, int max) throws StoreNotFoundException {
+	public List<Description> getStoreDescriptionsPage(String storeName, int offset, int max) 
+			throws StoreNotFoundException {
+		
 		// Throws StoreNotFoundException if the store does not exist
 		storeDao.findByName(storeName);
 		
