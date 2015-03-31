@@ -43,6 +43,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -58,8 +59,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.fiware.apps.marketplace.utils.xmladapters.StoreXMLAdapter;
 import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
@@ -139,7 +138,7 @@ public class Description {
 	@XmlElement
 	@XmlJavaTypeAdapter(StoreXMLAdapter.class)
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "store", updatable=false)
+	@JoinColumn(name = "store", nullable=false)
 	public Store getStore() {
 		return store;
 	}
@@ -183,8 +182,7 @@ public class Description {
 	}
 
 	@XmlElement
-	@OneToMany(mappedBy = "describedIn", cascade = CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany(mappedBy = "describedIn", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	public List<Offering> getOfferings() {
 		return offerings;
 	}

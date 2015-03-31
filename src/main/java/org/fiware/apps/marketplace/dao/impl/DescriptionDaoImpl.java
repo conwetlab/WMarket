@@ -51,20 +51,20 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 	@Autowired private StoreDao storeDao;
 	private final static String TABLE_NAME = Description.class.getName();
 
-	@Override
+	/* @Override
 	public void save(Description description) {
 		getSession().saveOrUpdate(description);		
-	}
+	}*/
 
 	@Override
 	public void update(Description description) {
 		getSession().update(description);		
 	}
 
-	@Override
+	/*@Override
 	public void delete(Description description) {
 		getSession().delete(description);
-	}
+	}*/
 
 	@Override
 	public Description findById(Integer id) {

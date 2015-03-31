@@ -41,6 +41,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -55,8 +56,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 
@@ -165,14 +164,21 @@ public class Store {
 	}
 	
 	@XmlTransient
-	@OneToMany(mappedBy="store", cascade = CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany(mappedBy="store", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	public List<Description> getDescriptions() {
 		return descriptions;
 	}
 	
 	public void setDescriptions(List<Description> offeringsDescriptions) {
 		this.descriptions = offeringsDescriptions;
+	}
+	
+	public void addDescription(Description description) {
+		this.descriptions.add(description);
+	}
+	
+	public void removeDescription(Description description) {
+		this.descriptions.remove(description);
 	}
 
 	@Override

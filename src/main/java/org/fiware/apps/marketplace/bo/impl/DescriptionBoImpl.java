@@ -43,6 +43,7 @@ import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.dao.OfferingDao;
+import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
@@ -71,6 +72,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
 	@Autowired private OfferingDao offeringDao;
+	@Autowired private StoreDao storeDao;
 		
 	@Override
 	@Transactional(readOnly=false)
@@ -105,7 +107,16 @@ public class DescriptionBoImpl implements DescriptionBo {
 			description.addOfferings(offerings);
 			
 			// Save the description
-			descriptionDao.save(description);
+			store.addDescription(description);
+			// Use StoreDAO to create. It's easier and safer. Useful to avoid weird Hibernate exceptions
+			storeDao.update(store);
+			
+			// We need to retrieve the ID so
+			try {
+				description = descriptionDao.findByNameAndStore(storeName, description.getName());
+			} catch (DescriptionNotFoundException ex) {
+				// This should not happen. We have just created the description
+			}
 			
 			// Index
 			rdfIndexer.indexService(description);
@@ -210,8 +221,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 		}
 		
 		// Delete the description from the data base
-		store.getDescriptions().remove(description);
-		descriptionDao.delete(description);
+		// We must relay on StoreDao to remove descriptions. It's easier and safer
+		// And weird exceptions are avoided
+		store.removeDescription(description);
+		storeDao.update(store);
 		
 		// Delete indexes
 		rdfIndexer.deleteService(description);

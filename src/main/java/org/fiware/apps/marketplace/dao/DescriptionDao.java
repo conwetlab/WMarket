@@ -42,9 +42,9 @@ import org.fiware.apps.marketplace.model.Description;
 public interface DescriptionDao {
 	
 	// Save, update & delete
-	public void save(Description description);
+	// public void save(Description description);
 	public void update(Description description);
-	public void delete(Description description);
+	// public void delete(Description description);
 	
 	// Find
 	public Description findByNameAndStore(String storeName, String descriptionName) 
