@@ -75,7 +75,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Override
 	@Transactional(readOnly=false)
 	public void save(String storeName, Description description) 
-			throws MalformedURLException, NotAuthorizedException, 
+			throws NotAuthorizedException, 
 			ValidationException, StoreNotFoundException {
 		
 		try {
@@ -109,6 +109,8 @@ public class DescriptionBoImpl implements DescriptionBo {
 			
 			// Index
 			rdfIndexer.indexService(description);
+		} catch (MalformedURLException ex) {
+			throw new ValidationException("url", ex.getMessage());
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -117,7 +119,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Override
 	@Transactional(readOnly=false)
 	public void update(String storeName, String descriptionName, Description updatedDescription) 
-			throws MalformedURLException, NotAuthorizedException, 
+			throws NotAuthorizedException, 
 			ValidationException, StoreNotFoundException, DescriptionNotFoundException {
 		
 		try {
@@ -187,7 +189,8 @@ public class DescriptionBoImpl implements DescriptionBo {
 	
 			descriptionToBeUpdated.setLasteditor(userBo.getCurrentUser());
 			descriptionDao.update(descriptionToBeUpdated);
-			
+		} catch (MalformedURLException ex) {
+			throw new ValidationException("url", ex.getMessage());
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}

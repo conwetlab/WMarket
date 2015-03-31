@@ -36,7 +36,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -72,156 +71,176 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("stores")
 public class StoreController extends AbstractController {
 
-    @Autowired private OfferingBo offeringBo;
-    @Autowired private StoreBo storeBo;
-    @Autowired private StoreValidator storeValidator;
+	@Autowired private OfferingBo offeringBo;
+	@Autowired private StoreBo storeBo;
+	@Autowired private StoreValidator storeValidator;
 
-    private static Logger logger = LoggerFactory.getLogger(StoreController.class);
+	private static Logger logger = LoggerFactory.getLogger(StoreController.class);
 
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("register")
-    public Response registerFormView() {
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	@Path("register")
+	public Response registerFormView() {
 
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
+		ModelAndView view;
+		ModelMap model = new ModelMap();
+		ResponseBuilder builder;
 
-        try {
-            model.addAttribute("user", getCurrentUser());
-            model.addAttribute("title", "New Store - " + getContextName());
+		try {
+			model.addAttribute("user", getCurrentUser());
+			model.addAttribute("title", "New Store - " + getContextName());
 
-            view = new ModelAndView("store.register", model);
-            builder = Response.ok();
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
+			view = new ModelAndView("store.register", model);
+			builder = Response.ok();
+		} catch (UserNotFoundException e) {
+			logger.warn("User not found", e);
 
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError();
-        }
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError();
+		}
 
-        return builder.entity(view).build();
-    }
+		return builder.entity(view).build();
+	}
 
-    @POST
-    @Produces(MediaType.TEXT_HTML)
-    @Path("register")
-    public Response registerFormView(
-            @Context UriInfo uri,
-            @Context HttpServletRequest request,
-            @FormParam("displayName") String displayName,
-            @FormParam("url") String url,
-            @FormParam("description") String description) throws URISyntaxException {
+	@POST
+	@Produces(MediaType.TEXT_HTML)
+	@Path("register")
+	public Response registerFormView(
+			@Context UriInfo uri,
+			@Context HttpServletRequest request,
+			@FormParam("displayName") String displayName,
+			@FormParam("url") String url,
+			@FormParam("description") String description) throws URISyntaxException {
 
-        HttpSession session;
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
-        Store store;
-        URI redirectURI;
+		ModelAndView view;
+		ModelMap model = new ModelMap();
+		ResponseBuilder builder;
+		Store store;
+		URI redirectURI;
 
-        try {
-            User currentUser = this.getCurrentUser();
+		try {
+			User currentUser = this.getCurrentUser();
 
-            model.addAttribute("user", currentUser);
-            model.addAttribute("title", "New Store - " + getContextName());
-            
-            store = new Store();
-            store.setDisplayName(displayName);
-            store.setUrl(url);
-            store.setDescription(description);
-            
-            storeBo.save(store);
+			model.addAttribute("user", currentUser);
+			model.addAttribute("title", "New Store - " + getContextName());
 
-            redirectURI = UriBuilder.fromUri(uri.getBaseUri())
-                .path("stores").path(store.getName()).path("offerings")
-                .build();
+			store = new Store();
+			store.setDisplayName(displayName);
+			store.setUrl(url);
+			store.setDescription(description);
 
-            session = request.getSession();
+			storeBo.save(store);
 
-            synchronized (session) {
-                session.setAttribute("flashMessage", "The store '" + displayName + "' was created successfully.");
-            }
+			redirectURI = UriBuilder.fromUri(uri.getBaseUri())
+					.path("stores").path(store.getName()).path("offerings")
+					.build();
 
-            builder = Response.seeOther(redirectURI);
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
+			setFlashMessage(request, "The store '" + displayName + "' was created successfully.");
 
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError().entity(view);
-        } catch (NotAuthorizedException e) {
-            logger.info("User unauthorized", e);
+			builder = Response.seeOther(redirectURI);
+		} catch (UserNotFoundException e) {
+			logger.warn("User not found", e);
 
-            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
-            builder = Response.status(Status.UNAUTHORIZED).entity(view);
-        } catch (ValidationException e) {
-            logger.info("A form field is not valid", e);
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError().entity(view);
+		} catch (NotAuthorizedException e) {
+			logger.info("User unauthorized", e);
 
-            model.addAttribute("field_displayName", displayName);
-            model.addAttribute("field_url", url);
-            model.addAttribute("field_description", description);
+			view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+			builder = Response.status(Status.UNAUTHORIZED).entity(view);
+		} catch (ValidationException e) {
+			logger.info("A form field is not valid", e);
 
-            model.addAttribute("form_error", e);
-            view = new ModelAndView("store.register", model);
-            builder = Response.status(Status.BAD_REQUEST).entity(view);
-        }
+			model.addAttribute("field_displayName", displayName);
+			model.addAttribute("field_url", url);
+			model.addAttribute("field_description", description);
 
-        return builder.build();
-    }
+			model.addAttribute("form_error", e);
+			view = new ModelAndView("store.register", model);
+			builder = Response.status(Status.BAD_REQUEST).entity(view);
+		}
 
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("{storeName}/offerings")
-    public Response detailView(
-            @Context HttpServletRequest request,
-            @PathParam("storeName") String storeName) {
+		return builder.build();
+	}
 
-        String flashMessage;
-        HttpSession session;
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
-        Store store;
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	@Path("{storeName}/details")
+	public Response detailView(
+			@Context HttpServletRequest request,
+			@PathParam("storeName") String storeName) {
 
-        try {
-            model.addAttribute("user", getCurrentUser());
-            store =  storeBo.findByName(storeName);
+		ModelAndView view;
+		ModelMap model = new ModelMap();
+		ResponseBuilder builder;
 
-            model.addAttribute("title", store.getDisplayName() + " - " + getContextName());
-            model.addAttribute("store", storeBo.findByName(storeName));
-            model.addAttribute("offeringList", offeringBo.getAllStoreOfferings(storeName));
+		try {
+			model.addAttribute("user", getCurrentUser());
+			Store store = storeBo.findByName(storeName);
 
-            session = request.getSession();
+			model.addAttribute("title", store.getDisplayName() + " - " + getContextName());
+			model.addAttribute("store", store);
 
-            synchronized (session) {
-                flashMessage = (String) session.getAttribute("flashMessage");
+			view = new ModelAndView("store.detail", model);
+			builder = Response.ok();
+		} catch (UserNotFoundException e) {
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError();            
+			logger.warn("User not found", e);
+		} catch (NotAuthorizedException e) {
+			logger.info("User unauthorized", e);
 
-                if (flashMessage != null) {
-                    model.addAttribute("message", flashMessage);
-                    session.removeAttribute("flashMessage");
-                }
-            }
+			view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+			builder = Response.status(Status.UNAUTHORIZED);
+		} catch (StoreNotFoundException e) {
+			logger.info("Store not found", e);
 
-            view = new ModelAndView("store.detail", model);
-            builder = Response.ok();
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
+			view = buildErrorView(Status.NOT_FOUND, e.getMessage());
+			builder = Response.status(Status.NOT_FOUND);
+		}
 
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError();
-        } catch (NotAuthorizedException e) {
-            logger.info("User unauthorized", e);
+		return builder.entity(view).build();
+	}
 
-            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
-            builder = Response.status(Status.UNAUTHORIZED);
-        } catch (StoreNotFoundException e) {
-            logger.info("Store not found", e);
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	@Path("{storeName}/offerings")
+	public Response offeringListView(
+			@Context HttpServletRequest request,
+			@PathParam("storeName") String storeName) {
 
-            view = buildErrorView(Status.NOT_FOUND, e.getMessage());
-            builder = Response.status(Status.NOT_FOUND);
-        }
+		ModelAndView view;
+		ModelMap model = new ModelMap();
+		ResponseBuilder builder;
 
-        return builder.entity(view).build();
-    }
+		try {
+			model.addAttribute("user", getCurrentUser());
+			Store store = storeBo.findByName(storeName);
+
+			model.addAttribute("title", store.getDisplayName() + " - Offerings - " + getContextName());
+			model.addAttribute("store", store);
+
+			addFlashMessage(request, model);
+
+			view = new ModelAndView("store.offeringlist", model);
+			builder = Response.ok();
+		} catch (UserNotFoundException e) {
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError();            
+			logger.warn("User not found", e);
+		} catch (NotAuthorizedException e) {
+			logger.info("User unauthorized", e);
+
+			view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+			builder = Response.status(Status.UNAUTHORIZED);
+		} catch (StoreNotFoundException e) {
+			logger.info("Store not found", e);
+
+			view = buildErrorView(Status.NOT_FOUND, e.getMessage());
+			builder = Response.status(Status.NOT_FOUND);
+		}
+
+		return builder.entity(view).build();
+	}
 
 }

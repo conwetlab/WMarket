@@ -32,7 +32,6 @@ package org.fiware.apps.marketplace.webcontrollers;
  * #L%
  */
 
-import java.net.MalformedURLException;
 import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
@@ -165,11 +164,6 @@ public class OfferingController extends AbstractController {
 
             view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
             builder = Response.status(Status.UNAUTHORIZED).entity(view);
-        } catch (MalformedURLException e) {
-            logger.warn("RDF index problem", e);
-
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError().entity(view);
         } catch (ValidationException e) {
             logger.info("A form field is not valid", e);
 

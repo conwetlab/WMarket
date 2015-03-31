@@ -32,7 +32,6 @@ package org.fiware.apps.marketplace.webcontrollers;
  * #L%
  */
 
-import java.net.MalformedURLException;
 import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
@@ -200,11 +199,7 @@ public class DescriptionController extends AbstractController {
             newDescription.setUrl(url);
             newDescription.setDescription(description);
 
-            try {
-                descriptionBo.update(store.getName(), oldDescription.getName(), newDescription);
-            } catch (MalformedURLException e) {
-                // TODO: handle exception
-            }
+            descriptionBo.update(store.getName(), oldDescription.getName(), newDescription);
 
             setFlashMessage(request, "The description '" + oldDescription.getDisplayName() + "' was updated successfully.");
 
@@ -261,7 +256,6 @@ public class DescriptionController extends AbstractController {
         ResponseBuilder builder;
 
         try {
-            User user = getCurrentUser();
             Store store = storeBo.findByName(storeName);
             Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
 
@@ -272,11 +266,6 @@ public class DescriptionController extends AbstractController {
                     .path("stores").path(storeName).path("descriptions")
                     .build();
             builder = Response.seeOther(redirectURI);
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
-
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError().entity(view);
         } catch (NotAuthorizedException e) {
             logger.info("User unauthorized", e);
 

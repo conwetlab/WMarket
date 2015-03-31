@@ -33,7 +33,6 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
@@ -45,13 +44,13 @@ import org.fiware.apps.marketplace.model.Description;
 public interface DescriptionBo {
 	
 	// Save, Update, Delete
-	public void save(String storeName, Description description) throws MalformedURLException, 
-			NotAuthorizedException, ValidationException, StoreNotFoundException;
+	public void save(String storeName, Description description) throws NotAuthorizedException, 
+			ValidationException, StoreNotFoundException;
 	public void update(String storeName, String descriptionName, Description updatedDescription) 
-			throws MalformedURLException, NotAuthorizedException, ValidationException,
+			throws NotAuthorizedException, ValidationException,
 			StoreNotFoundException, DescriptionNotFoundException;
 	public void delete(String storeName, String descriptionName) throws NotAuthorizedException, 
-			ValidationException, StoreNotFoundException, DescriptionNotFoundException;
+			StoreNotFoundException, DescriptionNotFoundException;
 	
 	// Find
 	public Description findByNameAndStore(String storeName, String descriptionName) 
