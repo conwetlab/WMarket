@@ -48,7 +48,8 @@ public class StoreValidator {
 	/**
 	 * @param store Store to be checked
 	 * @param checkRequiredFields true if the user is being created. In this case, the system will check if
-	 * the basic fields (name, url) are included.
+	 * the basic fields (name, URL) are included. Additionally, the method will check that there is not another
+	 * store with the same name.
 	 * @param checkExistingDisplayName If true, the method will check if there is a store with the same display
 	 * name and an exception will be thrown in this case
 	 * @param checkExistingURL If true, the method will check if there is a store with the same URL
@@ -67,8 +68,7 @@ public class StoreValidator {
 			
 			// Name does not changes, so it should only be checked on creation
 			if (!storeDao.isNameAvailable(store.getName())) {
-				// Name is based in the display name, so we use this field to return the error
-	            throw new ValidationException("displayName", "This name is already in use.");
+	            throw new ValidationException("name", "This name is already in use.");
 			}
 		}
 
@@ -87,7 +87,6 @@ public class StoreValidator {
 		if (store.getUrl() != null) {
 			basicValidator.validateURL("url", store.getUrl());
 			
-			// TODO: Check that the URL is not being used when the store is being updated
 			// Check that the URL is available
 			if (checkExistingURL && !storeDao.isURLAvailable(store.getUrl())) {
 	            throw new ValidationException("url", "This URL is already in use.");
@@ -108,6 +107,12 @@ public class StoreValidator {
 		this.validateStore(store, true, true, true);
 	}
 	
+	/**
+	 * Method to check if an updated store is valid
+	 * @param oldStore The store to be updated
+	 * @param updatedStore The new values that will be set in the existing store
+	 * @throws ValidationException It the updated store is not valid
+	 */
 	public void validateUpdatedStore(Store oldStore, Store updatedStore) throws ValidationException {
 		boolean checkExistingDisplayName = !oldStore.getDisplayName().equals(updatedStore.getDisplayName());
 		boolean checkExistingURL = !oldStore.getUrl().equals(updatedStore.getUrl());

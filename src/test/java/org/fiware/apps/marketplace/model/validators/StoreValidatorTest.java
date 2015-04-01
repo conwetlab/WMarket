@@ -187,8 +187,8 @@ public class StoreValidatorTest {
 	public void testDisplayNameInUseOnCreation() {
 		String name = "storeName";
 		Store store = generateValidStore();
-		store.setName(name);
-		when(storeDaoMock.isNameAvailable(name)).thenReturn(false);
+		store.setDisplayName(name);
+		when(storeDaoMock.isDisplayNameAvailable(name)).thenReturn(false);
 		
 		assertInvalidNewStore(store, "displayName", "This name is already in use.");
 	}
@@ -208,7 +208,7 @@ public class StoreValidatorTest {
 	}
 	
 	@Test
-	public void testDisplayNameInUseByOtherUserOnUpdate() throws ValidationException {
+	public void testDisplayNameInUseByOtherStoreOnUpdate() throws ValidationException {
 		String oldDisplayName = "oldDisplayName";
 		String newDisplayName = "newDisplayName";
 		
@@ -224,7 +224,7 @@ public class StoreValidatorTest {
 	}
 	
 	@Test
-	public void testDisplayNameInUseByTheSameUserOnUpdate() throws ValidationException {
+	public void testDisplayNameInUseByTheSameStoreOnUpdate() throws ValidationException {
 		String displayName = "newDisplayName";
 		
 		Store oldStore = generateValidStore();
@@ -296,7 +296,7 @@ public class StoreValidatorTest {
 	}
 	
 	@Test
-	public void testURLInUseByOtherUserOnUpdate() {
+	public void testURLInUseByOtherStoreOnUpdate() {
 		String oldUrl = "http://store-old.lab.fi-ware.org";
 		String updateUrl = "http://store.lab.fiware.org";
 		
@@ -312,7 +312,7 @@ public class StoreValidatorTest {
 	}
 	
 	@Test
-	public void testURLInUseByTheSameUserOnUpdate() throws ValidationException {
+	public void testURLInUseByTheSameStoreOnUpdate() throws ValidationException {
 		String url = "http://store.lab.fiware.org";
 		
 		Store oldStore = generateValidStore();

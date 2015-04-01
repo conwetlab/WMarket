@@ -69,8 +69,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.hp.hpl.jena.shared.JenaException;
-
 public class DescriptionServiceTest {
 
 	@Mock private DescriptionBo descriptionBoMock;
@@ -90,7 +88,6 @@ public class DescriptionServiceTest {
 	private static final String DESCRIPTION = "This is a basic description";
 	private static final String DESCRIPTION_DISPLAY_NAME = "Offerings Description";
 	private static final String DESCRIPTION_NAME = "offerings-description";
-	private static final String INVALID_RDF = "Your RDF could not be parsed";
 	private static final String URL = "https://repo.lab.fi-ware.org/description.rdf";
 	private static final String PATH = "/api/store/" + STORE_NAME + "/offerings_description";
 	
@@ -199,15 +196,6 @@ public class DescriptionServiceTest {
 	}
 	
 	@Test
-	public void testCreateDescriptionInvalidRDF() throws Exception {
-		//Mocks
-		doThrow(new JenaException("Some message")).
-				when(descriptionBoMock).save(STORE_NAME, description);
-		
-		testCreateDescriptionGenericError(400, ErrorType.BAD_REQUEST, null, INVALID_RDF);
-	}
-	
-	@Test
 	public void testCreateDescriptionUserNotFoundException() throws Exception {
 		// Mocks
 		String exceptionMsg = "User Not Found exception";
@@ -313,16 +301,6 @@ public class DescriptionServiceTest {
 
 		// Test
 		testUpdateDescriptionGenericError(e, 400, ErrorType.VALIDATION_ERROR, field, VALIDATION_ERROR);
-	}
-	
-	
-	@Test
-	public void testUpdateDescriptionInvalidRDF() throws Exception {
-		// Mocks
-		Exception e = new JenaException("A message");
-
-		// Test
-		testUpdateDescriptionGenericError(e, 400, ErrorType.BAD_REQUEST, null, INVALID_RDF);
 	}
 
 	@Test

@@ -43,55 +43,77 @@ public class DescriptionValidator {
 	
 	@Autowired private DescriptionDao descriptionDao;
 
-	private static final BasicValidator BASIC_VALIDATOR = BasicValidator.getInstance();
+	private static BasicValidator basicValidator = BasicValidator.getInstance();
 
 	/**
 	 * @param description Offerings Description to be checked
-	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
-	 * the basic fields (name, url) are included.
+	 * @param checkRequiredFields true if the user is being created. In this case, the system will check if
+	 * the basic fields (name, URL) are included. The method will also check that there is not another description
+	 * with the same name.
+	 * @param checkExistingDisplayName If true, the method will check if there is a description with the same
+	 * display name and an exception will be thrown in this case
+	 * @param checkExistingURL If true, the method will check if there is a description with the same
+	 * URL and an exception will be thrown in this case
 	 * @throws ValidationException If description is not valid
 	 */
-	public void validateDescription(Description description, boolean isBeingCreated) throws ValidationException {
+	public void validateDescription(Description description, boolean checkRequiredFields, 
+			boolean checkExistingDisplayName, boolean checkExistingURL) throws ValidationException {
 
 		// Check basic fields when a description is created
-		if (isBeingCreated) {
-			BASIC_VALIDATOR.validateRequired("displayName", description.getDisplayName());
-			BASIC_VALIDATOR.validateRequired("url", description.getUrl());
+		if (checkRequiredFields) {
+			basicValidator.validateRequired("name", description.getName());
+			basicValidator.validateRequired("displayName", description.getDisplayName());
+			basicValidator.validateRequired("url", description.getUrl());
 			
 			// Check that the name is not in use
 			if (!descriptionDao.isNameAvailableInStore(description.getStore().getName(), description.getName())) {
-				// Name is based in the display name, so we use this field to return the error
-				throw new ValidationException("displayName", "This name is already in use in this Store.");
+				throw new ValidationException("name", "This name is already in use in this Store.");
 			}
 		}
 
 		if (description.getDisplayName() != null) {
-			BASIC_VALIDATOR.validatePattern("displayName", description.getDisplayName(), 
-					"^[\\w -]+$", "This field only accepts letters, digits and (-/_).");
-			BASIC_VALIDATOR.validateMinLength("displayName", description.getDisplayName(), 
-					BasicValidator.getDisplayNameMinLength());
-			BASIC_VALIDATOR.validateMaxLength("displayName", description.getDisplayName(), 
-					BasicValidator.getDisplayNameMaxLength());
+			basicValidator.validateDisplayName(description.getDisplayName());
 			
-			// TODO: Check that the display name is not in use...
+			if (checkExistingDisplayName && !descriptionDao.isDisplayNameAvailableInStore(
+					description.getStore().getName(), description.getDisplayName())) {
+				throw new ValidationException("displayName", "This name is already in use in this Store.");
+			}
 		}
 
 		if (description.getUrl() != null) {
-			BASIC_VALIDATOR.validateURL("url", description.getUrl());
+			basicValidator.validateURL("url", description.getUrl());
 			
-			// TODO: Check that the URL is not in use when the description is being updated
-			if (isBeingCreated && !descriptionDao.isURLAvailableInStore(description.getStore().getName(), description.getUrl())) {
+			if (checkExistingURL && !descriptionDao.isURLAvailableInStore(description.getStore().getName(), 
+					description.getUrl())) {
 				throw new ValidationException("url", "This URL is already in use in this Store.");
 			}
 		}
 
 		if (description.getDescription() != null) {
-			BASIC_VALIDATOR.validateMinLength("description", description.getDescription(), 
-					BasicValidator.getDescriptionMinLength());
-			BASIC_VALIDATOR.validateMaxLength("description", description.getDescription(), 
-					BasicValidator.getDescriptionMaxLength());
-
+			basicValidator.validateDescription(description.getDescription());
 		}	
+	}
+	
+	/**
+	 * Method to check if a new description is valid
+	 * @param description The description to be checked
+	 * @throws ValidationException If the new description is not valid
+	 */
+	public void validateNewDescription(Description description) throws ValidationException {
+		this.validateDescription(description, true, true, true);
+	}
+	
+	/**
+	 * Method to check if an updated description is valid
+	 * @param oldDescription The description to be updated
+	 * @param updatedDescription The new values that will be set in the existing description
+	 * @throws ValidationException It the updated description is not valid
+	 */
+	public void validateUpdatedDescription(Description oldDescription, Description updatedDescription) throws ValidationException {
+		boolean checkExistingDisplayName = !oldDescription.getDisplayName().equals(updatedDescription.getDisplayName());
+		boolean checkExistingURL = !oldDescription.getUrl().equals(updatedDescription.getUrl());
+				
+		this.validateDescription(updatedDescription, false, checkExistingDisplayName, checkExistingURL);
 	}
 
 }

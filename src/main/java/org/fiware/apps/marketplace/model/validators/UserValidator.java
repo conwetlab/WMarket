@@ -60,13 +60,17 @@ public class UserValidator {
 	 * the database and throws an exception in this case
 	 * @throws ValidationException If user is not valid
 	 */
-	private void validateUser(User user, boolean checkRequiredFields, boolean checkExistingMail) throws ValidationException {
+	private void validateUser(User user, boolean checkRequiredFields, boolean checkExistingMail)
+			throws ValidationException {
 
 		// Check basic fields when a user is created
 		if (checkRequiredFields) {
+			basicValidator.validateRequired("userName", user.getUserName());
 			basicValidator.validateRequired("displayName", user.getDisplayName());
 			basicValidator.validateRequired("email", user.getEmail());
 			basicValidator.validateRequired("password", user.getPassword());
+			
+			// User name is supposed to be generated automatically without conflicts, so it won't be checked
 		}
 
 		if (user.getDisplayName() != null) {

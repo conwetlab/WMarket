@@ -54,6 +54,7 @@ public interface DescriptionDao {
 	
 	// Verifications
 	public boolean isNameAvailableInStore(String storeName, String descriptionName);
+	public boolean isDisplayNameAvailableInStore(String storeName, String displayName);
 	public boolean isURLAvailableInStore(String storeName, String url);
 	
 	// Get all offerings descriptions

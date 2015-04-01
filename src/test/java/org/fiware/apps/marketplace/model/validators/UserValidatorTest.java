@@ -57,7 +57,8 @@ public class UserValidatorTest {
 	
 	private static User generateValidUser() {
 		User user = new User();
-		user.setDisplayName("userName");
+		user.setUserName("user-name");
+		user.setDisplayName("User Name");
 		user.setPassword("12345678a!");
 		user.setEmail("example@example.com");
 		user.setCompany("EXAMPLE");
@@ -96,7 +97,8 @@ public class UserValidatorTest {
 	@Test
 	public void testValidBasicUser() throws ValidationException {
 		User user = new User();
-		user.setDisplayName("userName");
+		user.setUserName("user-name");
+		user.setDisplayName("user Name");
 		user.setPassword("12345678!a");
 		user.setEmail("example@example.com");
 		

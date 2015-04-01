@@ -15,7 +15,7 @@
             <label class="text-plain">Name *</label>
             <input class="form-control" type="text" name="displayName" value="${ field_displayName }" />
 
-            <c:if test="${ not empty form_error and form_error.fieldName == 'displayName' }">
+            <c:if test="${ not empty form_error and (form_error.fieldName == 'displayName' or form_error.fieldName == 'name' ) }">
               <div class="form-field-error">${ form_error.fieldError }</div>
             </c:if>
 

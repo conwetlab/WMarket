@@ -118,6 +118,17 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 	}
 
 	@Override
+	public boolean isDisplayNameAvailableInStore(String storeName, String displayName) {
+		List<?> list = getSession()
+				.createQuery(String.format("from %s where displayName = :displayName and store.name = :storeName", TABLE_NAME))
+				.setParameter("displayName", displayName)
+				.setParameter("storeName", storeName)
+				.list();
+		
+		return list.isEmpty();
+	}
+	
+	@Override
 	public boolean isURLAvailableInStore(String storeName, String url) {
 		List<?> list = getSession()
 				.createQuery(String.format("from %s where url = :url and store.name = :storeName", TABLE_NAME))

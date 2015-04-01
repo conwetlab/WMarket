@@ -104,7 +104,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			description.setName(NameGenerator.getURLName(description.getDisplayName()));
 			
 			// Exception is risen if the description is not valid
-			descriptionValidator.validateDescription(description, true);
+			descriptionValidator.validateNewDescription(description);
 			
 			// Get all the offerings described in the USDL
 			List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
@@ -115,9 +115,11 @@ public class DescriptionBoImpl implements DescriptionBo {
 			// Use StoreDAO to create. It's easier and safer. Useful to avoid weird Hibernate exceptions
 			storeDao.update(store);
 			
-			// We need to retrieve the ID so
+			// The ID is not automatically set when the description is saved by adding it to the Store
+			// so we need to retrieve the object from the database
 			try {
-				description = descriptionDao.findByNameAndStore(storeName, description.getName());
+				Description createdDescription = descriptionDao.findByNameAndStore(storeName, description.getName());
+				description.setId(createdDescription.getId());
 			} catch (DescriptionNotFoundException ex) {
 				// This should not happen. We have just created the description
 			}
@@ -147,8 +149,11 @@ public class DescriptionBoImpl implements DescriptionBo {
 				throw new NotAuthorizedException("update description");
 			}
 			
+			//Set store in description
+			updatedDescription.setStore(descriptionToBeUpdated.getStore());
+			
 			// Exception is risen if the description is not valid
-			descriptionValidator.validateDescription(updatedDescription, false);
+			descriptionValidator.validateUpdatedDescription(descriptionToBeUpdated, updatedDescription);
 			
 			// Update fields
 			if (updatedDescription.getDisplayName() != null) {
