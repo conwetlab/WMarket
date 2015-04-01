@@ -61,7 +61,7 @@
           </c:when>
           <c:otherwise>
             <div class="alert alert-info">
-              <span class="fa fa-info-circle"></span> To upload offerings, it is necessary to exist at least one store. Go to <a class="alert-link" href="${ pageContext.request.contextPath }/stores/register">register a store</a>.
+              <span class="fa fa-info-circle"></span> To upload offerings, there must be at least one store. Go to <a class="alert-link" href="${ pageContext.request.contextPath }/stores/register">register a store</a>.
             </div>
           </c:otherwise>
         </c:choose>
