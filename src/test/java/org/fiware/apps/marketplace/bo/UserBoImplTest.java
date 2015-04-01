@@ -119,8 +119,12 @@ public class UserBoImplTest {
 	public void testSaveInvalidUser() throws Exception {
 		
 		User user = mock(User.class);
+		doReturn("display name").when(user).getDisplayName();
 		doThrow(new ValidationException("a field", "invalid")).when(userValidatorMock).validateNewUser(user);
 		when(userAuthMock.canCreate(user)).thenReturn(true);
+		
+		// Default string is available
+		when(userDaoMock.isUserNameAvailable(anyString())).thenReturn(true);
 		
 		// Call the method and check that DAO is not called
 		testSaveException(user);

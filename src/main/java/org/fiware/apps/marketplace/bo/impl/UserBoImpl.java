@@ -75,9 +75,6 @@ public class UserBoImpl implements UserBo {
 			throw new NotAuthorizedException("create user");
 		}
 		
-		// Exception is risen if the user is not valid
-		userValidator.validateNewUser(user);
-
 		// Set user name based on the display name. It's possible to have to users with
 		// the same display name, but it's necessary to set a different user name for
 		// each one.
@@ -92,6 +89,9 @@ public class UserBoImpl implements UserBo {
 		}
 		
 		user.setUserName(finalUserName);
+		
+		// Exception is risen if the user is not valid
+		userValidator.validateNewUser(user);
 		
 		// Encode the password
 		user.setPassword(encoder.encode(user.getPassword()));
