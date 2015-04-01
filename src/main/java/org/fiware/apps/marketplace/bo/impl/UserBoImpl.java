@@ -76,7 +76,7 @@ public class UserBoImpl implements UserBo {
 		}
 		
 		// Exception is risen if the user is not valid
-		userValidator.validateUser(user, true);
+		userValidator.validateNewUser(user);
 
 		// Set user name based on the display name. It's possible to have to users with
 		// the same display name, but it's necessary to set a different user name for
@@ -116,7 +116,7 @@ public class UserBoImpl implements UserBo {
 		}
 		
 		// Exception is risen if the user is not valid
-		userValidator.validateUser(updatedUser, false);		
+		userValidator.validateUpdatedUser(userToBeUpdated, updatedUser);		
 
 		// At this moment, user name cannot be changed to avoid error with sessions
 		// For this reason this field is ignored

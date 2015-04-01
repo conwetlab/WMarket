@@ -50,59 +50,76 @@ public class UserValidator {
 	private static final int PASSWORD_MIN_LENGTH = 8;
 	private static final int PASSWORD_MAX_LENGTH = 30;
 
-	private static final BasicValidator BASIC_VALIDATOR = BasicValidator.getInstance();
+	private static BasicValidator basicValidator = BasicValidator.getInstance();
 
 	/**
 	 * @param user User to be checked
 	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
 	 * the basic fields (name, mail, pass) are included.
+	 * @param checkExistingMail If this flag is true, the method checks if the provided mail exists in 
+	 * the database and throws an exception in this case
 	 * @throws ValidationException If user is not valid
 	 */
-	public void validateUser(User user, boolean isBeingCreated) throws ValidationException {
+	private void validateUser(User user, boolean isBeingCreated, boolean checkExistingMail) throws ValidationException {
 
 		// Check basic fields when a user is created
 		if (isBeingCreated) {
-			BASIC_VALIDATOR.validateRequired("displayName", user.getDisplayName());
-			BASIC_VALIDATOR.validateRequired("email", user.getEmail());
-			BASIC_VALIDATOR.validateRequired("password", user.getPassword());
+			basicValidator.validateRequired("displayName", user.getDisplayName());
+			basicValidator.validateRequired("email", user.getEmail());
+			basicValidator.validateRequired("password", user.getPassword());
 		}
 
 		if (user.getDisplayName() != null) {
-			BASIC_VALIDATOR.validatePattern("displayName", user.getDisplayName(), 
+			basicValidator.validatePattern("displayName", user.getDisplayName(), 
 					"^[a-zA-Z ]+$", "This field only accepts letters and white spaces.");
-			BASIC_VALIDATOR.validateMinLength("displayName", user.getDisplayName(), 
-					DISPLAY_NAME_MIN_LENGTH);
-			BASIC_VALIDATOR.validateMaxLength("displayName", user.getDisplayName(), 
-					DISPLAY_NAME_MAX_LENGTH);
+			basicValidator.validateLength("displayName", user.getDisplayName(), 
+					DISPLAY_NAME_MIN_LENGTH, DISPLAY_NAME_MAX_LENGTH);
 		}
 		
-		// Email cannot be repeated. DAO is asked
 		if (user.getEmail() != null) {
-			BASIC_VALIDATOR.validateEMail("email", user.getEmail());
+			basicValidator.validateEMail("email", user.getEmail());
 
-			if(!userDao.isEmailAvailable(user.getEmail())) {
+			// Email cannot be repeated. DAO is asked
+			// In some cases, the mail should not be checked. For example, the user is updating his 
+			// account and he/she doesn't change the mail. In this case, if the mail is checked,
+			// the exception will be risen. 
+			if(checkExistingMail && !userDao.isEmailAvailable(user.getEmail())) {
 				throw new ValidationException("email", "This email is already registered.");
 			}
 		}
 
-		// Check password. Spaces are not allowed
+		// Check password
 		if (user.getPassword() != null) {
-			BASIC_VALIDATOR.validateMinLength("password", user.getPassword(), 
-					PASSWORD_MIN_LENGTH);
-			BASIC_VALIDATOR.validateMaxLength("password", user.getPassword(), 
-					PASSWORD_MAX_LENGTH);
+			basicValidator.validateLength("password", user.getPassword(), PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH);
+			
 			// Check that password contains one letter, one number and one special character
-			BASIC_VALIDATOR.validatePattern("password", user.getPassword(), "^.*(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!#$%&?]).*$", 
+			basicValidator.validatePattern("password", user.getPassword(), "^.*(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!#$%&?]).*$", 
 					"Password must contain one number, one letter and one unique character such as !#$%&?");
 		}
 
 		if (user.getCompany() != null) {
-			BASIC_VALIDATOR.validatePattern("company", user.getCompany(), "^[a-zA-Z0-9 -]+$", 
+			basicValidator.validatePattern("company", user.getCompany(), "^[a-zA-Z0-9 -]+$", 
 					"This field only accepts letters, numbers, white spaces and hyphens.");
-			BASIC_VALIDATOR.validateMinLength("company", user.getCompany(), 
-					COMPANY_MIN_LENGTH);
-			BASIC_VALIDATOR.validateMaxLength("company", user.getCompany(), 
-					COMPANY_MAX_LENGTH);
+			basicValidator.validateLength("company", user.getCompany(), COMPANY_MIN_LENGTH, COMPANY_MAX_LENGTH);
 		}
+	}
+	
+	/**
+	 * Public method to validate a new user
+	 * @param user The user to be checked
+	 * @throws ValidationException If the user is not valid
+	 */
+	public void validateNewUser(User user) throws ValidationException {
+		validateUser(user, true, true);
+	}
+	
+	/**
+	 * Public method to validate an existing user
+	 * @param oldUser The existing user
+	 * @param updatedUser The new values that will be set in the existing user
+	 * @throws ValidationException If the updated user is not valid
+	 */
+	public void validateUpdatedUser(User oldUser, User updatedUser) throws ValidationException {
+		validateUser(updatedUser, false, !oldUser.getEmail().equals(updatedUser.getEmail()));
 	}
 }

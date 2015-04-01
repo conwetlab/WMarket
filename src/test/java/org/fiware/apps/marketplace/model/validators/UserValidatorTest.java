@@ -66,9 +66,19 @@ public class UserValidatorTest {
 		return user;
 	}
 	
-	private void assertInvalidUser(User user, String field, String expectedMsg, boolean creating) {
+	private void assertInvalidNewUser(User user, String field, String expectedMsg) {
 		try {
-			userValidator.validateUser(user, creating);
+			userValidator.validateNewUser(user);
+			failBecauseExceptionWasNotThrown(ValidationException.class);
+		} catch (ValidationException ex) {
+			assertThat(ex).hasMessage(expectedMsg);
+			assertThat(ex.getFieldName()).isEqualTo(field);
+		}
+	}
+	
+	private void assertInvalidUpdatedUser(User oldUser, User updatedUser, String field, String expectedMsg) {
+		try {
+			userValidator.validateUpdatedUser(oldUser, updatedUser);
 			failBecauseExceptionWasNotThrown(ValidationException.class);
 		} catch (ValidationException ex) {
 			assertThat(ex).hasMessage(expectedMsg);
@@ -90,13 +100,13 @@ public class UserValidatorTest {
 		user.setPassword("12345678!a");
 		user.setEmail("example@example.com");
 		
-		userValidator.validateUser(user, true);
+		userValidator.validateNewUser(user);
 	}
 	
 	@Test
 	public void testValidComplexUser() throws ValidationException {
 		User user = generateValidUser();
-		userValidator.validateUser(user, true);
+		userValidator.validateNewUser(user);
 	}
 	
 	@Test
@@ -105,16 +115,17 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setDisplayName(null);
 		
-		assertInvalidUser(user, "displayName", MISSING_FIELDS_MSG, true);
+		assertInvalidNewUser(user, "displayName", MISSING_FIELDS_MSG);
 	}
 	
 	@Test
 	public void testMissingDisplayNameOnUpdate() throws ValidationException {
-		// Generate a user without username
-		User user = generateValidUser();
-		user.setDisplayName(null);
+		// Generate a user without user name
+		User oldUser = generateValidUser();
+		User updatedUser = generateValidUser();
+		updatedUser.setDisplayName(null);
 		
-		userValidator.validateUser(user, false);
+		userValidator.validateUpdatedUser(oldUser, updatedUser);
 	}
 	
 	@Test
@@ -123,16 +134,17 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setPassword(null);
 		
-		assertInvalidUser(user, "password", MISSING_FIELDS_MSG, true);
+		assertInvalidNewUser(user, "password", MISSING_FIELDS_MSG);
 	}
 	
 	@Test
 	public void testMissingPasswordOnUpdate() throws ValidationException {
 		// Generate a user without password
-		User user = generateValidUser();
-		user.setPassword(null);
+		User oldUser = generateValidUser();
+		User updatedUser = generateValidUser();
+		updatedUser.setPassword(null);
 		
-		userValidator.validateUser(user, false);
+		userValidator.validateUpdatedUser(oldUser, updatedUser);
 	}
 	
 	@Test
@@ -141,16 +153,17 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setEmail(null);
 		
-		assertInvalidUser(user, "email", MISSING_FIELDS_MSG, true);
+		assertInvalidNewUser(user, "email", MISSING_FIELDS_MSG);
 	}
 	
 	@Test
 	public void testMissingMailOnUpdate() throws ValidationException {
 		// Generate a user without mail
-		User user = generateValidUser();
-		user.setEmail(null);
+		User oldUser = generateValidUser();
+		User updatedUser = generateValidUser();
+		updatedUser.setEmail(null);
 		
-		userValidator.validateUser(user, false);
+		userValidator.validateUpdatedUser(oldUser, updatedUser);
 	}
 	
 	
@@ -160,7 +173,7 @@ public class UserValidatorTest {
 		user.setCompany(null);
 		
 		// Company name can be set to null
-		userValidator.validateUser(user, false);
+		userValidator.validateNewUser(user);
 	}
 	
 	@Test
@@ -168,7 +181,8 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setPassword("a");
 		
-		assertInvalidUser(user, "password", String.format(TOO_SHORT_PATTERN, 8), false);
+		// Passwords are check in the same way for new or updated users
+		assertInvalidNewUser(user, "password", String.format(TOO_SHORT_PATTERN, 8));
 	}
 	
 	@Test
@@ -176,7 +190,8 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setPassword("1234567890123456789012345678901");
 		
-		assertInvalidUser(user, "password", String.format(TOO_LONG_PATTERN, 30), false);
+		// Passwords are check in the same way for new or updated users
+		assertInvalidNewUser(user, "password", String.format(TOO_LONG_PATTERN, 30));
 	}
 	
 	@Test
@@ -184,7 +199,8 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setDisplayName("a");
 		
-		assertInvalidUser(user, "displayName", String.format(TOO_SHORT_PATTERN, 3), false);
+		// Display names are check in the same way for new or updated users
+		assertInvalidNewUser(user, "displayName", String.format(TOO_SHORT_PATTERN, 3));
 	}
 	
 	@Test
@@ -192,7 +208,8 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setDisplayName("abcdefghijklmnopqrstuvwxyzabcdefghij");
 		
-		assertInvalidUser(user, "displayName", String.format(TOO_LONG_PATTERN, 30), false);
+		// Display names are check in the same way for new or updated users
+		assertInvalidNewUser(user, "displayName", String.format(TOO_LONG_PATTERN, 30));
 	}
 	
 	@Test
@@ -200,7 +217,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setEmail("test");
 		
-		assertInvalidUser(user, "email", INVALID_EMAIL, false);
+		assertInvalidNewUser(user, "email", INVALID_EMAIL);
 	}
 	
 	@Test
@@ -208,7 +225,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setEmail("test@test");
 		
-		assertInvalidUser(user, "email", INVALID_EMAIL, false);
+		assertInvalidNewUser(user, "email", INVALID_EMAIL);
 	}
 	
 	@Test
@@ -216,18 +233,50 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setEmail("@test.com");
 		
-		assertInvalidUser(user, "email", INVALID_EMAIL, false);
+		assertInvalidNewUser(user, "email", INVALID_EMAIL);
 	}
 
 	@Test
-	public void testEmailInUse() {
+	public void testEmailInUseOnCreate() {
 		String email = "email@example.com";
 		User user = generateValidUser();
 		user.setEmail(email);
 		when(userDaoMock.isEmailAvailable(email)).thenReturn(false);
 		
-		assertInvalidUser(user, "email", "This email is already registered.", false);
+		assertInvalidNewUser(user, "email", "This email is already registered.");
 		
+	}
+	
+	@Test
+	public void testUpdateMailToOneUsedByOtherUser() {
+		String oldMail = "oldMail@example.com";
+		String newEmail = "email@example.com";
+		
+		User oldUser = generateValidUser();
+		User updatedUser = generateValidUser();
+	
+		oldUser.setEmail(oldMail);
+		updatedUser.setEmail(newEmail);
+		
+		when(userDaoMock.isEmailAvailable(newEmail)).thenReturn(false);
+		
+		assertInvalidUpdatedUser(oldUser, updatedUser, "email", "This email is already registered.");
+		
+	}
+	
+	@Test
+	public void testUpdateMailToOneUsedByTheSameUser() throws ValidationException {
+		String mail = "email@example.com";
+		
+		User oldUser = generateValidUser();
+		User updatedUser = generateValidUser();
+	
+		oldUser.setEmail(mail);
+		updatedUser.setEmail(mail);
+		
+		when(userDaoMock.isEmailAvailable(mail)).thenReturn(false);
+		
+		userValidator.validateUpdatedUser(oldUser, updatedUser);
 	}
 	
 	@Test
@@ -235,7 +284,8 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setCompany("a");
 		
-		assertInvalidUser(user, "company", String.format(TOO_SHORT_PATTERN, 3), false);
+		// Organizations are checked in the same way for new and updated users
+		assertInvalidNewUser(user, "company", String.format(TOO_SHORT_PATTERN, 3));
 	}
 	
 	@Test
@@ -243,6 +293,7 @@ public class UserValidatorTest {
 		User user = generateValidUser();
 		user.setCompany("1234567890123456789012345678901");
 		
-		assertInvalidUser(user, "company", String.format(TOO_LONG_PATTERN, 30), false);
+		// Organizations are checked in the same way for new and updated users
+		assertInvalidNewUser(user, "company", String.format(TOO_LONG_PATTERN, 30));
 	}
 }

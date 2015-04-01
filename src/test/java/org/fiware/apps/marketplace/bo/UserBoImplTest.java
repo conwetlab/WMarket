@@ -119,7 +119,7 @@ public class UserBoImplTest {
 	public void testSaveInvalidUser() throws Exception {
 		
 		User user = mock(User.class);
-		doThrow(new ValidationException("a field", "invalid")).when(userValidatorMock).validateUser(user, true);
+		doThrow(new ValidationException("a field", "invalid")).when(userValidatorMock).validateNewUser(user);
 		when(userAuthMock.canCreate(user)).thenReturn(true);
 		
 		// Call the method and check that DAO is not called
@@ -248,7 +248,7 @@ public class UserBoImplTest {
 		User updatedUser = mock(User.class);
 		User userToBeUpdated = mock(User.class);
 		
-		doThrow(new ValidationException("a field", "invalid")).when(userValidatorMock).validateUser(updatedUser, false);
+		doThrow(new ValidationException("a field", "invalid")).when(userValidatorMock).validateUpdatedUser(userToBeUpdated, updatedUser);
 		doReturn(userToBeUpdated).when(userBo).findByName(USER_NAME);
 		when(userAuthMock.canUpdate(userToBeUpdated)).thenReturn(true);
 		

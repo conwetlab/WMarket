@@ -102,20 +102,33 @@ public class BasicValidator {
 					String.format("This field must be at least %d chars.", minLength));
 		}
 	}
-	
-	public void validateDisplayNameMinLength(String displayName) throws ValidationException {
-		validateMinLength(DISPLAY_NAME_FIELD, displayName, DISPLAY_NAME_MIN_LENGTH);
-	}
-	
-	public void validateDescriptionMinLength(String description) throws ValidationException {
-		validateMaxLength(DESCRIPTION_FIELD, description, DESCRIPTION_MAX_LENGTH);
-	}
 
 	public void validateMaxLength(String fieldName, String fieldValue, int maxLength) throws ValidationException {
 		if (fieldValue == null || fieldValue.length() >= maxLength) {
 			throw new ValidationException(fieldName, 
 					String.format("This field must not exceed %d chars.", maxLength));
 		}
+	}
+	
+	public void validateLength(String fieldName, String fieldValue, int minLength, int maxLength) throws ValidationException {
+		this.validateMinLength(fieldName, fieldValue, minLength);
+		this.validateMaxLength(fieldName, fieldValue, maxLength);
+		
+	}
+	
+	public void validateEMail(String fieldName, String email) throws ValidationException {
+		if (email == null || !GenericValidator.isEmail(email)) {
+			throw new ValidationException(fieldName, "This field must be a valid email.");
+		}
+	}
+	
+	// VALIDATORS FOR SPECIFIC FIELDS
+	public void validateDisplayNameMinLength(String displayName) throws ValidationException {
+		validateMinLength(DISPLAY_NAME_FIELD, displayName, DISPLAY_NAME_MIN_LENGTH);
+	}
+	
+	public void validateDescriptionMinLength(String description) throws ValidationException {
+		validateMaxLength(DESCRIPTION_FIELD, description, DESCRIPTION_MAX_LENGTH);
 	}
 	
 	public void validateDisplayNameMaxLength(String displayName) throws ValidationException {
@@ -126,13 +139,6 @@ public class BasicValidator {
 		validateMaxLength(DESCRIPTION_FIELD, description, DESCRIPTION_MAX_LENGTH);
 	}
 	
-	public void validateEMail(String fieldName, String email) throws ValidationException {
-		if (email == null || !GenericValidator.isEmail(email)) {
-			throw new ValidationException(fieldName, "This field must be a valid email.");
-		}
-	}
-	
-	// VALIDATORS FOR SPECIFIC FIELDS
 	public void validateDisplayName(String displayName) throws ValidationException {
 		this.validateDisplayNamePattern(displayName);
 		this.validateDisplayNameMinLength(displayName);
