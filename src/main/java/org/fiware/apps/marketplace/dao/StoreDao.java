@@ -50,6 +50,7 @@ public interface StoreDao {
 
     // Validation
     public boolean isNameAvailable(String name);
+    public boolean isDisplayNameAvailable(String displayName);
     public boolean isURLAvailable(String url);
 
 	// Get all or a sublist

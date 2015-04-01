@@ -85,7 +85,7 @@ public class StoreBoImpl implements StoreBo{
 			}
 			
 			// Exception is risen if the store is not valid
-			storeValidator.validateStore(store, true);
+			storeValidator.validateNewStore(store);
 			
 			storeDao.save(store);
 		} catch (UserNotFoundException ex) {
@@ -113,7 +113,7 @@ public class StoreBoImpl implements StoreBo{
 			
 			// Exception is risen if the store is not valid
 			// Store returned by the BBDD cannot be updated if the updated store is not valid.
-			storeValidator.validateStore(updatedStore, false);
+			storeValidator.validateUpdatedStore(storeToBeUpdate, updatedStore);
 			
 			// Update fields
 			if (updatedStore.getUrl() != null) {

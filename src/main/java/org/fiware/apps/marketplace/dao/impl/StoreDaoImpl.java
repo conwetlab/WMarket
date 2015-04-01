@@ -84,6 +84,16 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 		return list.isEmpty();
     }
     
+    @Override
+    public boolean isDisplayNameAvailable(String displayName) {
+		List<?> list = getSession()
+				.createQuery("from Store where displayName=:displayName")
+				.setParameter("displayName", displayName)
+				.list();
+		
+		return list.isEmpty();
+    }
+    
 	@Override
 	public boolean isURLAvailable(String url) {
 		List<?> list = getSession()

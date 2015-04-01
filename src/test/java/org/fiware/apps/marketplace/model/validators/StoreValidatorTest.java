@@ -63,6 +63,7 @@ public class StoreValidatorTest {
 		store.setCreator(new User());
 		store.setDescription("This is a basic description");
 		store.setLasteditor(store.getCreator());
+		store.setName("name");
 		store.setDisplayName("store");
 		store.setUrl("https://store.lab.fiware.org");
 		store.setRegistrationDate(new Date());
@@ -70,9 +71,19 @@ public class StoreValidatorTest {
 		return store;
 	}
 
-	private void assertInvalidStore(Store store, String field, String expectedMsg, boolean creating) {
+	private void assertInvalidNewStore(Store store, String field, String expectedMsg) {
 		try {
-			storeValidator.validateStore(store, creating);
+			storeValidator.validateNewStore(store);
+			failBecauseExceptionWasNotThrown(ValidationException.class);
+		} catch (ValidationException ex) {
+			assertThat(ex).hasMessage(expectedMsg);
+			assertThat(ex.getFieldName()).isEqualTo(field);
+		}
+	}
+	
+	private void assertInvalidUpdatedStore(Store oldStore, Store updatedStore, String field, String expectedMsg) {
+		try {
+			storeValidator.validateUpdatedStore(oldStore, updatedStore);
 			failBecauseExceptionWasNotThrown(ValidationException.class);
 		} catch (ValidationException ex) {
 			assertThat(ex).hasMessage(expectedMsg);
@@ -84,6 +95,7 @@ public class StoreValidatorTest {
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		when(storeDaoMock.isNameAvailable(anyString())).thenReturn(true);
+		when(storeDaoMock.isDisplayNameAvailable(anyString())).thenReturn(true);
 		when(storeDaoMock.isURLAvailable(anyString())).thenReturn(true);
 		
 	}
@@ -91,16 +103,17 @@ public class StoreValidatorTest {
 	@Test
 	public void testValidBasicStore() throws ValidationException {
 		Store store = new Store();
-		store.setDisplayName("store");
+		store.setName("wstore");
+		store.setDisplayName("WStore");
 		store.setUrl("https://store.lab.fi-ware.org");
 
-		storeValidator.validateStore(store, true);
+		storeValidator.validateNewStore(store);
 	}
 
 	@Test
 	public void testValidComplexStore() throws ValidationException {
 		Store store = generateValidStore();
-		storeValidator.validateStore(store, true);
+		storeValidator.validateNewStore(store);
 	}
 
 	@Test
@@ -108,15 +121,16 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setDisplayName(null);
 
-		assertInvalidStore(store, "displayName", MISSING_FIELDS_MSG, true);
+		assertInvalidNewStore(store, "displayName", MISSING_FIELDS_MSG);
 	}
 	
 	@Test
 	public void testMissingDisplayNameOnUpdate() throws ValidationException {
-		Store store = generateValidStore();
-		store.setName(null);
+		Store oldStore = generateValidStore();
+		Store updatedStore = generateValidStore();
+		updatedStore.setName(null);
 
-		storeValidator.validateStore(store, false);
+		storeValidator.validateUpdatedStore(oldStore, updatedStore);
 	}
 
 	@Test
@@ -124,15 +138,16 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setUrl(null);
 
-		assertInvalidStore(store, "url", MISSING_FIELDS_MSG, true);
+		assertInvalidNewStore(store, "url", MISSING_FIELDS_MSG);
 	}
 	
 	@Test
 	public void testMissingUrlOnUpdate() throws ValidationException {
-		Store store = generateValidStore();
-		store.setUrl(null);
+		Store oldStore = generateValidStore();
+		Store updatedStore = generateValidStore();
+		updatedStore.setUrl(null);
 
-		storeValidator.validateStore(store, false);
+		storeValidator.validateUpdatedStore(oldStore, updatedStore);
 	}
 
 	@Test
@@ -140,15 +155,16 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setDescription(null);
 
-		storeValidator.validateStore(store, true);
+		storeValidator.validateNewStore(store);
 	}
 	
 	@Test
 	public void testMissingDescriptionOnUpdate() throws ValidationException {
-		Store store = generateValidStore();
-		store.setDescription(null);
+		Store oldStore = generateValidStore();
+		Store updatedStore = generateValidStore();
+		updatedStore.setDescription(null);
 
-		storeValidator.validateStore(store, false);
+		storeValidator.validateUpdatedStore(oldStore, updatedStore);
 	}
 
 	@Test
@@ -156,7 +172,7 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setDisplayName("a");
 
-		assertInvalidStore(store, "displayName", String.format(TOO_SHORT_PATTERN, 3), false);
+		assertInvalidNewStore(store, "displayName", String.format(TOO_SHORT_PATTERN, 3));
 	}
 
 	@Test
@@ -164,25 +180,70 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setDisplayName("1234567890123456789012345678901");
 
-		assertInvalidStore(store, "displayName", String.format(TOO_LONG_PATTERN, 20), false);
+		assertInvalidNewStore(store, "displayName", String.format(TOO_LONG_PATTERN, 20));
 	}
 	
 	@Test
-	public void testDisplayNameInUse() {
+	public void testDisplayNameInUseOnCreation() {
 		String name = "storeName";
 		Store store = generateValidStore();
 		store.setName(name);
 		when(storeDaoMock.isNameAvailable(name)).thenReturn(false);
 		
-		assertInvalidStore(store, "displayName", "This name is already in use.", true);
+		assertInvalidNewStore(store, "displayName", "This name is already in use.");
 	}
-
+	
+	@Test
+	public void testDisplayNameNotInUseOnUpdate() throws ValidationException {
+		String oldDisplayName = "oldDisplayName";
+		String newDisplayName = "newDisplayName";
+		
+		Store oldStore = generateValidStore();
+		Store updatedStore = generateValidStore();
+		
+		oldStore.setDisplayName(oldDisplayName);
+		updatedStore.setDisplayName(newDisplayName);
+		
+		storeValidator.validateUpdatedStore(oldStore, updatedStore);
+	}
+	
+	@Test
+	public void testDisplayNameInUseByOtherUserOnUpdate() throws ValidationException {
+		String oldDisplayName = "oldDisplayName";
+		String newDisplayName = "newDisplayName";
+		
+		Store oldStore = generateValidStore();
+		Store updatedStore = generateValidStore();
+		
+		oldStore.setDisplayName(oldDisplayName);
+		updatedStore.setDisplayName(newDisplayName);
+		
+		when(storeDaoMock.isDisplayNameAvailable(newDisplayName)).thenReturn(false);
+		
+		this.assertInvalidUpdatedStore(oldStore, updatedStore, "displayName", "This name is already in use.");
+	}
+	
+	@Test
+	public void testDisplayNameInUseByTheSameUserOnUpdate() throws ValidationException {
+		String displayName = "newDisplayName";
+		
+		Store oldStore = generateValidStore();
+		Store updatedStore = generateValidStore();
+		
+		oldStore.setDisplayName(displayName);
+		updatedStore.setDisplayName(displayName);
+		
+		when(storeDaoMock.isDisplayNameAvailable(displayName)).thenReturn(false);
+		
+		storeValidator.validateUpdatedStore(oldStore, updatedStore);
+	}
+	
 	@Test
 	public void testInvalidURL1() {
 		Store store = generateValidStore();
 		store.setUrl("http://");
 
-		assertInvalidStore(store, "url", INVALID_URL, false);
+		assertInvalidNewStore(store, "url", INVALID_URL);
 	}
 
 	@Test
@@ -190,7 +251,7 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setUrl("store.lab.fi-ware.org");
 
-		assertInvalidStore(store, "url", INVALID_URL, false);
+		assertInvalidNewStore(store, "url", INVALID_URL);
 	}
 
 	@Test
@@ -198,7 +259,7 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setUrl("https://store.lab.fi-ware.org:222222");
 
-		assertInvalidStore(store, "url", INVALID_URL, false);
+		assertInvalidNewStore(store, "url", INVALID_URL);
 	}
 
 	@Test
@@ -206,18 +267,63 @@ public class StoreValidatorTest {
 		Store store = generateValidStore();
 		store.setUrl("store");
 
-		assertInvalidStore(store, "url", INVALID_URL, false);
+		assertInvalidNewStore(store, "url", INVALID_URL);
 	}
 	
 	@Test
-	public void testURLInUse() {
+	public void testURLInUseOnCreation() {
 		String url = "http://store.lab.fiware.org";
 		Store store = generateValidStore();
 		store.setUrl(url);
 		when(storeDaoMock.isURLAvailable(url)).thenReturn(false);
 		
-		assertInvalidStore(store, "url", "This URL is already in use.", true);
+		assertInvalidNewStore(store, "url", "This URL is already in use.");
 
+	}
+	
+	@Test
+	public void testURLNotInUseOnUpdate() throws ValidationException {
+		String oldUrl = "http://store-old.lab.fi-ware.org";
+		String updateUrl = "http://store.lab.fiware.org";
+		
+		Store oldStore = generateValidStore();
+		Store updatedStore = generateValidStore();
+		
+		oldStore.setUrl(oldUrl);
+		updatedStore.setUrl(updateUrl);
+				
+		storeValidator.validateUpdatedStore(oldStore, updatedStore);
+	}
+	
+	@Test
+	public void testURLInUseByOtherUserOnUpdate() {
+		String oldUrl = "http://store-old.lab.fi-ware.org";
+		String updateUrl = "http://store.lab.fiware.org";
+		
+		Store oldStore = generateValidStore();
+		Store updatedStore = generateValidStore();
+		
+		oldStore.setUrl(oldUrl);
+		updatedStore.setUrl(updateUrl);
+		
+		when(storeDaoMock.isURLAvailable(updateUrl)).thenReturn(false);
+		
+		assertInvalidUpdatedStore(oldStore, updatedStore, "url", "This URL is already in use.");
+	}
+	
+	@Test
+	public void testURLInUseByTheSameUserOnUpdate() throws ValidationException {
+		String url = "http://store.lab.fiware.org";
+		
+		Store oldStore = generateValidStore();
+		Store updatedStore = generateValidStore();
+		
+		oldStore.setUrl(url);
+		updatedStore.setUrl(url);
+		
+		when(storeDaoMock.isURLAvailable(url)).thenReturn(false);
+		
+		storeValidator.validateUpdatedStore(oldStore, updatedStore);
 	}
 
 	@Test
@@ -226,7 +332,7 @@ public class StoreValidatorTest {
 		store.setDescription("");
 
 		// Empty descriptions are allowed
-		storeValidator.validateStore(store, false);
+		storeValidator.validateNewStore(store);
 	}
 
 	@Test
@@ -238,8 +344,8 @@ public class StoreValidatorTest {
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890");	
 
-		// Too loong descriptions are not allowed
-		assertInvalidStore(store, "description", String.format(TOO_LONG_PATTERN, 200),false);	
+		// Too long descriptions are not allowed
+		assertInvalidNewStore(store, "description", String.format(TOO_LONG_PATTERN, 200));	
 	}
 
 }

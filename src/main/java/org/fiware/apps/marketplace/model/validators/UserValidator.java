@@ -54,16 +54,16 @@ public class UserValidator {
 
 	/**
 	 * @param user User to be checked
-	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
+	 * @param checkRequiredFields true if the user is being created. In this case, the system will check if
 	 * the basic fields (name, mail, pass) are included.
 	 * @param checkExistingMail If this flag is true, the method checks if the provided mail exists in 
 	 * the database and throws an exception in this case
 	 * @throws ValidationException If user is not valid
 	 */
-	private void validateUser(User user, boolean isBeingCreated, boolean checkExistingMail) throws ValidationException {
+	private void validateUser(User user, boolean checkRequiredFields, boolean checkExistingMail) throws ValidationException {
 
 		// Check basic fields when a user is created
-		if (isBeingCreated) {
+		if (checkRequiredFields) {
 			basicValidator.validateRequired("displayName", user.getDisplayName());
 			basicValidator.validateRequired("email", user.getEmail());
 			basicValidator.validateRequired("password", user.getPassword());

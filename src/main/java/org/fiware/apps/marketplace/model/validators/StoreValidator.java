@@ -43,20 +43,27 @@ public class StoreValidator {
 
     @Autowired private StoreDao storeDao;
 
-    private static final BasicValidator BASIC_VALIDATOR = BasicValidator.getInstance();
+    private static BasicValidator basicValidator = BasicValidator.getInstance();
 	
 	/**
 	 * @param store Store to be checked
-	 * @param isBeingCreated true if the user is being created. In this case, the system will check if
+	 * @param checkRequiredFields true if the user is being created. In this case, the system will check if
 	 * the basic fields (name, url) are included.
+	 * @param checkExistingDisplayName If true, the method will check if there is a store with the same display
+	 * name and an exception will be thrown in this case
+	 * @param checkExistingURL If true, the method will check if there is a store with the same URL
+	 * and an exception will be thrown in this case
 	 * @throws ValidationException If store is not valid
 	 */
-	public void validateStore(Store store, boolean isBeingCreated) throws ValidationException {
+	private void validateStore(Store store, boolean checkRequiredFields, boolean checkExistingDisplayName, 
+			boolean checkExistingURL) throws ValidationException {
 
 		// Check basic fields when a store is created
-		if (isBeingCreated) {
-			BASIC_VALIDATOR.validateRequired("displayName", store.getDisplayName());
-			BASIC_VALIDATOR.validateRequired("url", store.getUrl());
+		if (checkRequiredFields) {
+			
+			basicValidator.validateRequired("name", store.getName());
+			basicValidator.validateRequired("displayName", store.getDisplayName());
+			basicValidator.validateRequired("url", store.getUrl());
 			
 			// Name does not changes, so it should only be checked on creation
 			if (!storeDao.isNameAvailable(store.getName())) {
@@ -68,26 +75,45 @@ public class StoreValidator {
 		// If the store is being created, this value cannot be null since we have
 		// checked it before
 		if (store.getDisplayName() != null) {
-			BASIC_VALIDATOR.validateDisplayName(store.getDisplayName());
+			basicValidator.validateDisplayName(store.getDisplayName());
 			
-			// TODO: Check that the display name is not in use...
-
+			if (checkExistingDisplayName && !storeDao.isDisplayNameAvailable(store.getDisplayName())) {
+	            throw new ValidationException("displayName", "This name is already in use.");
+			}
 		}
 
 		// If the store is being created, this value cannot be null since we have
 		// checked it before
 		if (store.getUrl() != null) {
-			BASIC_VALIDATOR.validateURL("url", store.getUrl());
+			basicValidator.validateURL("url", store.getUrl());
 			
 			// TODO: Check that the URL is not being used when the store is being updated
 			// Check that the URL is available
-			if (isBeingCreated && !storeDao.isURLAvailable(store.getUrl())) {
+			if (checkExistingURL && !storeDao.isURLAvailable(store.getUrl())) {
 	            throw new ValidationException("url", "This URL is already in use.");
 			}
 		}
 
 		if (store.getDescription() != null) {
-			BASIC_VALIDATOR.validateDescription(store.getDescription());
+			basicValidator.validateDescription(store.getDescription());
 		}
 	}
+	
+	/**
+	 * Method to check if a new store is valid
+	 * @param store The store to be checked
+	 * @throws ValidationException If the new store is not valid
+	 */
+	public void validateNewStore(Store store) throws ValidationException {
+		this.validateStore(store, true, true, true);
+	}
+	
+	public void validateUpdatedStore(Store oldStore, Store updatedStore) throws ValidationException {
+		boolean checkExistingDisplayName = !oldStore.getDisplayName().equals(updatedStore.getDisplayName());
+		boolean checkExistingURL = !oldStore.getUrl().equals(updatedStore.getUrl());
+		
+		this.validateStore(updatedStore, false, checkExistingDisplayName, checkExistingURL);
+	}
+	
+	
 }
