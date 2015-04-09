@@ -197,7 +197,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 						previousOffering.setImageUrl(updatedOffering.getImageUrl());
 						previousOffering.setVersion(updatedOffering.getVersion());
 						previousOffering.setDisplayName(updatedOffering.getDisplayName());
-						previousOffering.setName(updatedOffering.getVersion());
+						previousOffering.setName(updatedOffering.getName());
 						
 						descriptionOfferings.add(previousOffering);
 					}
