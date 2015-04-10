@@ -70,8 +70,13 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 	}*/
 
 	@Override
-	public Description findById(Integer id) {
+	public Description findById(Integer id) throws DescriptionNotFoundException {
 		Object res = getSession().get(Description.class, id);
+		
+		if (res == null) {
+			throw new DescriptionNotFoundException("Description with ID " + id + " not found");
+		}
+		
 		return (Description) res;
 	}
 	

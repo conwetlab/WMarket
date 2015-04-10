@@ -84,10 +84,13 @@ public class DescriptionBoImpl implements DescriptionBo {
 			throws NotAuthorizedException, 
 			ValidationException, StoreNotFoundException {
 		
+		Store store = null;
+		User user = null;
+		
 		try {
 			
-			User user = userBo.getCurrentUser();
-			Store store = storeBo.findByName(storeName);
+			user = userBo.getCurrentUser();
+			store = storeDao.findByName(storeName);
 			
 			// Check rights and raise exception if user is not allowed to perform this action
 			if (!descriptionAuth.canCreate(description)) {
@@ -115,6 +118,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			// Use StoreDAO to create. It's easier and safer. Useful to avoid weird Hibernate exceptions
 			storeDao.update(store);
 			
+			// ID is required to index the service. Otherwise, the indexer will throw an exception
 			// The ID is not automatically set when the description is saved by adding it to the Store
 			// so we need to retrieve the object from the database
 			try {
@@ -125,11 +129,23 @@ public class DescriptionBoImpl implements DescriptionBo {
 			}
 			
 			// Index
-			rdfIndexer.indexService(description);
-		} catch (MalformedURLException ex) {
-			throw new ValidationException("url", ex.getMessage());
-		} catch (JenaException ex) {
-			throw new ValidationException("url", JENA_ERROR);
+			rdfIndexer.indexOrUpdateService(description);
+		} catch (MalformedURLException | JenaException ex) {
+			
+			// These two exceptions are only thrown if the description cannot be parsed by the RdfIndexer
+			// When the indexed cannot index the service, the description cannot be saved
+			// If this exception is thrown, store is initialized
+			store.removeDescription(description);
+			storeDao.update(store);
+			
+			String errorMessage;
+			if (ex instanceof JenaException) {
+				errorMessage = JENA_ERROR;
+			} else {
+				errorMessage = ex.getMessage();
+			}
+			
+			throw new ValidationException("url", errorMessage);
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -140,7 +156,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	public void update(String storeName, String descriptionName, Description updatedDescription) 
 			throws NotAuthorizedException, 
 			ValidationException, StoreNotFoundException, DescriptionNotFoundException {
-		
+				
 		try {
 			Description descriptionToBeUpdated = this.findByNameAndStore(storeName, descriptionName);
 			
@@ -184,37 +200,43 @@ public class DescriptionBoImpl implements DescriptionBo {
 				for (Offering updatedOffering: newOfferings) {
 					int index = previousOfferingsCopy.indexOf(updatedOffering);
 					
+					Offering offeringToAdd;
+					
 					if (index < 0) {
 						// A new offering that was not included before in the previous USDL
-						descriptionOfferings.add(updatedOffering);
+						offeringToAdd = updatedOffering;
 					} else {
 						// A old offering that was previously included in the previous USDL
-						Offering previousOffering = previousOfferingsCopy.get(index);
+						offeringToAdd = previousOfferingsCopy.get(index);
 						
-						// We have to update the fields (not to create a new one)
-						previousOffering.setDescription(updatedOffering.getDescription());
-						previousOffering.setDisplayName(updatedOffering.getDisplayName());
-						previousOffering.setImageUrl(updatedOffering.getImageUrl());
-						previousOffering.setVersion(updatedOffering.getVersion());
-						previousOffering.setDisplayName(updatedOffering.getDisplayName());
-						previousOffering.setName(updatedOffering.getName());
-						
-						descriptionOfferings.add(previousOffering);
+						// We have to update the fields (not to use the generated one to avoid Hibernate exceptions)
+						offeringToAdd.setDescription(updatedOffering.getDescription());
+						offeringToAdd.setDisplayName(updatedOffering.getDisplayName());
+						offeringToAdd.setImageUrl(updatedOffering.getImageUrl());
+						offeringToAdd.setVersion(updatedOffering.getVersion());
+						offeringToAdd.setDisplayName(updatedOffering.getDisplayName());
+						offeringToAdd.setName(updatedOffering.getName());
 					}
-					
+
+					descriptionOfferings.add(offeringToAdd);
 				}
 				
 				// When the description URL changes, the index must be updated. 
-				rdfIndexer.deleteService(descriptionToBeUpdated);
-				rdfIndexer.indexService(descriptionToBeUpdated);
+				rdfIndexer.indexOrUpdateService(descriptionToBeUpdated);
 			}
 	
 			descriptionToBeUpdated.setLasteditor(userBo.getCurrentUser());
 			descriptionDao.update(descriptionToBeUpdated);
-		} catch (MalformedURLException ex) {
-			throw new ValidationException("url", ex.getMessage());
-		} catch (JenaException ex) {
-			throw new ValidationException("url", JENA_ERROR);
+		} catch (MalformedURLException | JenaException ex) {
+						
+			String errorMessage;
+			if (ex instanceof JenaException) {
+				errorMessage = JENA_ERROR;
+			} else {
+				errorMessage = ex.getMessage();
+			}
+			
+			throw new ValidationException("url", errorMessage);			
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -225,7 +247,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	public void delete(String storeName, String descriptionName) 
 			throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException {
 		
-		Store store = storeBo.findByName(storeName);
+		Store store = storeDao.findByName(storeName);
 		Description description = this.findByNameAndStore(storeName, descriptionName);
 		
 		// Check rights and raise exception if user is not allowed to perform this action
@@ -317,14 +339,14 @@ public class DescriptionBoImpl implements DescriptionBo {
 			throws StoreNotFoundException, NotAuthorizedException {
 		
 		// Will throw exception in case the Store does not exist
-		Store store = storeBo.findByName(storeName);
+		Store store = storeDao.findByName(storeName);
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!descriptionAuth.canList(store)) {
 			throw new NotAuthorizedException("list descriptions in store " + store.getName());
 		}
 		
-		return descriptionDao.getStoreDescriptions(storeName);
+		return store.getDescriptions();
 	}
 
 	@Override
@@ -334,7 +356,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			NotAuthorizedException {
 		
 		// Will throw exception in case the Store does not exist
-		Store store = storeBo.findByName(storeName);
+		Store store = storeDao.findByName(storeName);
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!descriptionAuth.canList(store)) {

@@ -50,7 +50,7 @@ public interface DescriptionDao {
 	// Find
 	public Description findByNameAndStore(String storeName, String descriptionName) 
 			throws StoreNotFoundException, DescriptionNotFoundException;
-	public Description findById(Integer id);
+	public Description findById(Integer id) throws DescriptionNotFoundException;
 	
 	// Verifications
 	public boolean isNameAvailableInStore(String storeName, String descriptionName);

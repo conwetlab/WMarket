@@ -11,11 +11,11 @@ public class NameGenerator {
 				.normalize(name, Normalizer.Form.NFD)
 				.replaceAll("[^\\p{ASCII}]", "");
 		
-		// Remove special characters ("-" are preserved")
+		// Remove special characters ("-" and spaces are preserved)
 		name = name.replaceAll("[^a-zA-Z0-9\\s\\-]+", "");
 
 		// Replace " " by "-"
-		name = name.replaceAll("[\\s\\-]+", "-");
+		name = name.replaceAll("[\\s]+", "-");
 		
 		// Lower case
 		return name.toLowerCase();

@@ -46,17 +46,17 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 
 	@Override
 	public void save(Store store) {
-		getSession().saveOrUpdate(store);				
+		getSession().saveOrUpdate(store);	
 	}
 	
 	@Override
 	public void update(Store store) {
-		getSession().update(store);		
+		getSession().update(store);
 	}
 
 	@Override
 	public void delete(Store store) {
-		getSession().delete(store);		
+		getSession().delete(store);
 	}
 
 	@Override

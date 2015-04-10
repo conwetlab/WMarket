@@ -47,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("userManagementService")
 @Transactional
-public class UserManagementService implements UserDetailsService{
+public class UserManagementService implements UserDetailsService {
 
 	@Autowired private UserDao userDao;
 	@Autowired private Assembler assembler;

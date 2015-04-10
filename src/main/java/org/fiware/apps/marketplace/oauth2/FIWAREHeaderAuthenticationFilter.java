@@ -61,7 +61,7 @@ import org.springframework.util.StringUtils;
  * @author aitor
  *
  */
-public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProcessingFilter{
+public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
 	private String headerName;
 	private FIWAREClient client;

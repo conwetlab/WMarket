@@ -440,7 +440,7 @@ public class UserBoImplTest {
 	@Test(expected=UserNotFoundException.class)
 	public void testFindByNameException() throws Exception {
 		String userName = "username";
-		doThrow(new UserNotFoundException("store not found")).when(userDaoMock).findByName(userName);
+		doThrow(new UserNotFoundException("user not found")).when(userDaoMock).findByName(userName);
 		
 		userBo.findByName(userName);
 	}

@@ -62,11 +62,16 @@ public class RdfIndexer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RdfIndexer.class);	
 	
-	public void indexService(Description service) throws MalformedURLException{
+	public void indexOrUpdateService(Description description) throws MalformedURLException {
 
-		Model model = rdfHelper.loadModel(service.getUrl());
-		String serviceId = service.getId().toString();
+		Model model = rdfHelper.loadModel(description.getUrl());
+		String serviceId = description.getId().toString();
 		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath, serviceId);	
+		
+		// Delete previous indexes for this description (if any)
+		// If a description is being updated, a JenaException should have been thrown previously and
+		// this method won't be called, so the previous index is not deleted.
+		deleteService(description);
 
 		StmtIterator indexModel = model.listStatements();
 		while(indexModel.hasNext()) {	  			  
@@ -78,14 +83,14 @@ public class RdfIndexer {
 
 	}
 
-	public void deleteService(Description service){
+	public void deleteService(Description description) {
 
 		Analyzer analyzer = new StandardAnalyzer();
 		IndexWriter indexWriter = null;
 		
 		try {
 			indexWriter = new IndexWriter(lucenePath, analyzer);
-			indexWriter.deleteDocuments(new Term ("docId", service.getId().toString()));
+			indexWriter.deleteDocuments(new Term ("docId", description.getId().toString()));
 		} catch (StaleReaderException e) {
 			logger.error("Deleting Service from Index - StaleReaderException", e);
 		} catch (CorruptIndexException e) {

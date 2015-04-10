@@ -46,7 +46,7 @@ public interface StoreDao {
 	public void delete(Store store);
 	
 	// Find by name
-	public Store findByName(String url) throws StoreNotFoundException;
+	public Store findByName(String name) throws StoreNotFoundException;
 
     // Validation
     public boolean isNameAvailable(String name);
