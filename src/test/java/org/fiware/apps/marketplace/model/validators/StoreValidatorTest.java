@@ -61,7 +61,7 @@ public class StoreValidatorTest {
 	private static Store generateValidStore() {
 		Store store = new Store();
 		store.setCreator(new User());
-		store.setDescription("This is a basic description");
+		store.setComment("This is a basic comment");
 		store.setLasteditor(store.getCreator());
 		store.setName("name");
 		store.setDisplayName("store");
@@ -151,18 +151,18 @@ public class StoreValidatorTest {
 	}
 
 	@Test
-	public void testMissingDescriptionOnCreation() throws ValidationException {
+	public void testMissingCommentOnCreation() throws ValidationException {
 		Store store = generateValidStore();
-		store.setDescription(null);
+		store.setComment(null);
 
 		storeValidator.validateNewStore(store);
 	}
 	
 	@Test
-	public void testMissingDescriptionOnUpdate() throws ValidationException {
+	public void testMissingCommentOnUpdate() throws ValidationException {
 		Store oldStore = generateValidStore();
 		Store updatedStore = generateValidStore();
-		updatedStore.setDescription(null);
+		updatedStore.setComment(null);
 
 		storeValidator.validateUpdatedStore(oldStore, updatedStore);
 	}
@@ -327,25 +327,25 @@ public class StoreValidatorTest {
 	}
 
 	@Test
-	public void testEmptyDescription() throws ValidationException {
+	public void testEmptyComment() throws ValidationException {
 		Store store = generateValidStore();
-		store.setDescription("");
+		store.setComment("");
 
 		// Empty descriptions are allowed
 		storeValidator.validateNewStore(store);
 	}
 
 	@Test
-	public void testDescriptionTooLong() throws ValidationException {
+	public void testCommentTooLong() throws ValidationException {
 		Store store = generateValidStore();
 
 		//240 characters (80 * 3)
-		store.setDescription("12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
+		store.setComment("12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890");	
 
 		// Too long descriptions are not allowed
-		assertInvalidNewStore(store, "description", String.format(TOO_LONG_PATTERN, 200));	
+		assertInvalidNewStore(store, "comment", String.format(TOO_LONG_PATTERN, 200));	
 	}
 
 }

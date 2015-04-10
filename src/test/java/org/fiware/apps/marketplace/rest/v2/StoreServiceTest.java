@@ -75,7 +75,7 @@ public class StoreServiceTest {
 	// Other useful constants
 	private static final String OFFSET_MAX_INVALID = "offset and/or max are not valid";
 	private static final String VALIDATION_ERROR = "Validation Exception";
-	private static final String DESCRIPTION = "This is a basic description";
+	private static final String COMMENT = "This is a basic description";
 	private static final String DISPLAY_NAME = "stOre 1";
 	private static final String NAME = "store-1";
 	private static final String URL = "https://store.lab.fi-ware.org";
@@ -96,7 +96,7 @@ public class StoreServiceTest {
 	@Before
 	public void generateValidStore() {
 		store = new Store();
-		store.setDescription(DESCRIPTION);
+		store.setComment(COMMENT);
 		store.setDisplayName(DISPLAY_NAME);
 		store.setName(NAME);
 		store.setUrl(URL);
@@ -155,7 +155,7 @@ public class StoreServiceTest {
 		// assertThat(store.getRegistrationDate()).isNotNull();
 		assertThat(store.getDisplayName()).isEqualTo(DISPLAY_NAME);
 		assertThat(store.getName()).isEqualTo(NAME);
-		assertThat(store.getDescription()).isEqualTo(DESCRIPTION);
+		assertThat(store.getComment()).isEqualTo(COMMENT);
 		assertThat(store.getUrl()).isEqualTo(URL);
 		// assertThat(store.getCreator()).isEqualTo(user);
 		// assertThat(store.getLasteditor()).isEqualTo(user);

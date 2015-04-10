@@ -39,8 +39,8 @@
                   </div>
 
                   <div class="form-field col-sm-10 col-md-5">
-                    <label class="text-plain">Description</label>
-                    <input class="form-control" type="text" name="description" value="${ offeringServ.description }" />
+                    <label class="text-plain">Comment</label>
+                    <input class="form-control" type="text" name="comment" value="${ offeringServ.comment }" />
                   </div>
                 </div>
 

@@ -120,8 +120,8 @@ public class StoreBoImpl implements StoreBo{
 				storeToBeUpdate.setUrl(updatedStore.getUrl());
 			}
 
-			if (updatedStore.getDescription() != null) {
-				storeToBeUpdate.setDescription(updatedStore.getDescription());
+			if (updatedStore.getComment() != null) {
+				storeToBeUpdate.setComment(updatedStore.getComment());
 			}
 
 			if (updatedStore.getDisplayName() != null) {

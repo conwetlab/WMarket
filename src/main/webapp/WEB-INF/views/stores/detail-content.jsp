@@ -26,8 +26,8 @@
         <dl class="dl-vertical col-sm-10 col-md-5 visible-sm-margin">
           <dt>Description</dt>
           <c:choose>
-            <c:when test="${ not empty store.description }">
-              <dd>${ store.description }</dd>
+            <c:when test="${ not empty store.comment }">
+              <dd>${ store.comment }</dd>
             </c:when>
             <c:otherwise>
               <dd>No description provided.</dd>

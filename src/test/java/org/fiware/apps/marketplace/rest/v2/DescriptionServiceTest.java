@@ -85,7 +85,7 @@ public class DescriptionServiceTest {
 	private static final String DESCRIPTION_ALREADY_EXISTS = 
 			"There is already a Description in this Store with that name";
 	private static final String VALIDATION_ERROR = "Validation Exception";
-	private static final String DESCRIPTION = "This is a basic description";
+	private static final String COMMENT = "This is a basic description";
 	private static final String DESCRIPTION_DISPLAY_NAME = "Offerings Description";
 	private static final String DESCRIPTION_NAME = "offerings-description";
 	private static final String URL = "https://repo.lab.fi-ware.org/description.rdf";
@@ -106,7 +106,7 @@ public class DescriptionServiceTest {
 	@Before
 	public void generateValidStore() {
 		description = new Description();
-		description.setDescription(DESCRIPTION);
+		description.setComment(COMMENT);
 		description.setDisplayName(DESCRIPTION_DISPLAY_NAME);
 		description.setUrl(URL);
 	}
@@ -164,7 +164,7 @@ public class DescriptionServiceTest {
 		// assertThat(description.getRegistrationDate()).isNotNull();
 		assertThat(description.getName()).isEqualTo(DESCRIPTION_NAME);
 		assertThat(description.getDisplayName()).isEqualTo(DESCRIPTION_DISPLAY_NAME);
-		assertThat(description.getDescription()).isEqualTo(DESCRIPTION);
+		assertThat(description.getComment()).isEqualTo(COMMENT);
 		assertThat(description.getUrl()).isEqualTo(URL);
 		// assertThat(description.getCreator()).isEqualTo(user);
 		// assertThat(description.getLasteditor()).isEqualTo(user);

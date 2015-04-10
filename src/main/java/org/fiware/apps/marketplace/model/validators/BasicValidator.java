@@ -42,7 +42,7 @@ public class BasicValidator {
 	private static final int DESCRIPTION_MIN_LENGTH = 0;
 	private static final int DESCRIPTION_MAX_LENGTH = 200;
 	private static final String DISPLAY_NAME_FIELD = "displayName";
-	private static final String DESCRIPTION_FIELD = "description";
+	private static final String COMMENT_FIELD = "comment";
 
 	private static BasicValidator INSTANCE = new BasicValidator();
 	
@@ -127,16 +127,16 @@ public class BasicValidator {
 		validateMinLength(DISPLAY_NAME_FIELD, displayName, DISPLAY_NAME_MIN_LENGTH);
 	}
 	
-	public void validateDescriptionMinLength(String description) throws ValidationException {
-		validateMaxLength(DESCRIPTION_FIELD, description, DESCRIPTION_MAX_LENGTH);
+	public void validateCommentMinLength(String description) throws ValidationException {
+		validateMaxLength(COMMENT_FIELD, description, DESCRIPTION_MAX_LENGTH);
 	}
 	
 	public void validateDisplayNameMaxLength(String displayName) throws ValidationException {
 		validateMaxLength(DISPLAY_NAME_FIELD, displayName, DISPLAY_NAME_MAX_LENGTH);
 	}
 	
-	public void validateDescriptionMaxLength(String description) throws ValidationException {
-		validateMaxLength(DESCRIPTION_FIELD, description, DESCRIPTION_MAX_LENGTH);
+	public void validateCommentMaxLength(String description) throws ValidationException {
+		validateMaxLength(COMMENT_FIELD, description, DESCRIPTION_MAX_LENGTH);
 	}
 	
 	public void validateDisplayName(String displayName) throws ValidationException {
@@ -145,9 +145,9 @@ public class BasicValidator {
 		this.validateDisplayNameMaxLength(displayName);
 	}
 	
-	public void validateDescription(String description) throws ValidationException {
-		this.validateDescriptionMinLength(description);
-		this.validateDescriptionMaxLength(description);
+	public void validateComment(String description) throws ValidationException {
+		this.validateCommentMinLength(description);
+		this.validateCommentMaxLength(description);
 	}
 	
 }

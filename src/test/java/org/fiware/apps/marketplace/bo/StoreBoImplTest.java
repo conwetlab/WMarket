@@ -77,7 +77,7 @@ public class StoreBoImplTest {
 			Store store = new Store();
 			store.setName(NAME);
 			store.setUrl("http://store.lab.fiware.org");
-			store.setDescription("Basic Description");
+			store.setComment("Basic Comment");
 			store.setLasteditor(null);
 			
 			// Mock
@@ -97,9 +97,9 @@ public class StoreBoImplTest {
 			String newStoreUrl = updatedStore.getUrl() != null ? updatedStore.getUrl() : store.getUrl();
 			assertThat(store.getUrl()).isEqualTo(newStoreUrl);
 
-			String newStoreDescription = updatedStore.getDescription() != null ? 
-					updatedStore.getDescription() : store.getDescription();
-			assertThat(store.getDescription()).isEqualTo(newStoreDescription);
+			String newStoreDescription = updatedStore.getComment() != null ? 
+					updatedStore.getComment() : store.getComment();
+			assertThat(store.getComment()).isEqualTo(newStoreDescription);
 			
 			// Assert that the name is not changed
 			assertThat(store.getName()).isEqualTo(previousStoreName);
@@ -127,9 +127,9 @@ public class StoreBoImplTest {
 	}
 
 	@Test
-	public void testUpdateStoreDescription() {
+	public void testUpdateStoreComment() {
 		Store newStore = new Store();
-		newStore.setDescription("New Description");
+		newStore.setComment("New Comment");
 		testUpdateStoreField(newStore);
 	}
 

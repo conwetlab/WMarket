@@ -66,12 +66,13 @@ public class RdfIndexer {
 
 		Model model = rdfHelper.loadModel(description.getUrl());
 		String serviceId = description.getId().toString();
-		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath, serviceId);	
 		
 		// Delete previous indexes for this description (if any)
 		// If a description is being updated, a JenaException should have been thrown previously and
 		// this method won't be called, so the previous index is not deleted.
 		deleteService(description);
+
+		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath, serviceId);	
 
 		StmtIterator indexModel = model.listStatements();
 		while(indexModel.hasNext()) {	  			  

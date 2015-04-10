@@ -135,7 +135,7 @@ public class DescriptionController extends AbstractController {
             @PathParam("descriptionName") String descriptionName,
             @FormParam("displayName") String displayName,
             @FormParam("url") String url,
-            @FormParam("description") String description) {
+            @FormParam("comment") String comment) {
 
         Description newDescription = new Description();
         ModelAndView view;
@@ -154,7 +154,7 @@ public class DescriptionController extends AbstractController {
 
             newDescription.setDisplayName(displayName);
             newDescription.setUrl(url);
-            newDescription.setDescription(description);
+            newDescription.setComment(comment);
 
             descriptionBo.update(store.getName(), oldDescription.getName(), newDescription);
 
@@ -189,7 +189,7 @@ public class DescriptionController extends AbstractController {
 
             model.addAttribute("field_displayName", displayName);
             model.addAttribute("field_url", url);
-            model.addAttribute("field_description", description);
+            model.addAttribute("field_comment", comment);
 
             model.addAttribute("form_error", e);
 

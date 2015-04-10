@@ -30,10 +30,10 @@
 
           </div>
           <div class="form-field">
-            <label class="text-plain">Description</label>
-            <textarea class="form-control" name="description" rows="4">${ field_description }</textarea>
+            <label class="text-plain">Comment</label>
+            <textarea class="form-control" name="comment" rows="4">${ field_comment }</textarea>
 
-            <c:if test="${ not empty form_error and form_error.fieldName == 'description' }">
+            <c:if test="${ not empty form_error and form_error.fieldName == 'comment' }">
               <div class="form-field-error">${ form_error.fieldError }</div>
             </c:if>
 

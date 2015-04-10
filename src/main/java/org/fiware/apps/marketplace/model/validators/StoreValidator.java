@@ -93,8 +93,8 @@ public class StoreValidator {
 			}
 		}
 
-		if (store.getDescription() != null) {
-			basicValidator.validateDescription(store.getDescription());
+		if (store.getComment() != null) {
+			basicValidator.validateComment(store.getComment());
 		}
 	}
 	

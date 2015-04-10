@@ -73,7 +73,7 @@ public class DescriptionValidatorTest {
 		description.setName("description-1");
 		description.setDisplayName("Description 1");
 		description.setUrl("https://repo.lab.fi-ware.org/offerings/offering1.rdf");
-		description.setDescription("This is an example description");
+		description.setComment("This is an example comment");
 		description.setRegistrationDate(new Date());
 		description.setStore(store);
 		description.setCreator(creator);
@@ -167,18 +167,18 @@ public class DescriptionValidatorTest {
 	}
 	
 	@Test
-	public void testMissingDescriptionOnCreation() throws ValidationException {
+	public void testMissingCommentOnCreation() throws ValidationException {
 		Description description = generateValidDescription();
-		description.setDescription(null);
+		description.setComment(null);
 
 		descriptionValidator.validateNewDescription(description);
 	}
 	
 	@Test
-	public void testMissingDescriptionOnUpdate() throws ValidationException {
+	public void testMissingCommentOnUpdate() throws ValidationException {
 		Description oldDescription = generateValidDescription();
 		Description updatedDescription = generateValidDescription();
-		updatedDescription.setDescription(null);
+		updatedDescription.setComment(null);
 
 		descriptionValidator.validateUpdatedDescription(oldDescription, updatedDescription);
 	}
@@ -356,25 +356,25 @@ public class DescriptionValidatorTest {
 	}
 	
 	@Test
-	public void testEmptyDescription() throws ValidationException {
+	public void testEmptyComment() throws ValidationException {
 		Description description = generateValidDescription();
-		description.setDescription("");
+		description.setComment("");
 
 		// Empty descriptions are allowed
 		descriptionValidator.validateNewDescription(description);
 	}
 
 	@Test
-	public void testDescriptionTooLong() throws ValidationException {
+	public void testCommentTooLong() throws ValidationException {
 		Description description = generateValidDescription();
 
 		//240 characters (80 * 3)
-		description.setDescription(
+		description.setComment(
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890");	
 
 		// Too longs descriptions are not allowed
-		assertInvalidNewDescription(description, "description", String.format(TOO_LONG_PATTERN, 200));
+		assertInvalidNewDescription(description, "comment", String.format(TOO_LONG_PATTERN, 200));
 	}
 }

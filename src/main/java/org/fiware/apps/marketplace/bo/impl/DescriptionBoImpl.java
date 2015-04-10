@@ -176,8 +176,8 @@ public class DescriptionBoImpl implements DescriptionBo {
 				descriptionToBeUpdated.setDisplayName(updatedDescription.getDisplayName());
 			}
 			
-			if (updatedDescription.getDescription() != null) {
-				descriptionToBeUpdated.setDescription(updatedDescription.getDescription());
+			if (updatedDescription.getComment() != null) {
+				descriptionToBeUpdated.setComment(updatedDescription.getComment());
 			}
 	
 			if (updatedDescription.getUrl() != null) {

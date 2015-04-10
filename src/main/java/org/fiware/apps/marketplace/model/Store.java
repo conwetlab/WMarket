@@ -69,7 +69,7 @@ public class Store {
 	private String url;
 	private String displayName;
 	private String name;
-	private String description;
+	private String comment;
 	private Date registrationDate;
 	private List<Description> descriptions;
 	private User lasteditor;	
@@ -120,13 +120,13 @@ public class Store {
 	}
 	
 	@XmlElement
-	@Column(name = "description")
-	public String getDescription() {
-		return description;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 	
-	public void setDescription(String description) {
-		this.description = description;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	@XmlElement

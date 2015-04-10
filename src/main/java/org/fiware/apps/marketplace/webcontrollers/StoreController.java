@@ -108,7 +108,7 @@ public class StoreController extends AbstractController {
 			@Context HttpServletRequest request,
 			@FormParam("displayName") String displayName,
 			@FormParam("url") String url,
-			@FormParam("description") String description) throws URISyntaxException {
+			@FormParam("comment") String comment) throws URISyntaxException {
 
 		ModelAndView view;
 		ModelMap model = new ModelMap();
@@ -125,7 +125,7 @@ public class StoreController extends AbstractController {
 			store = new Store();
 			store.setDisplayName(displayName);
 			store.setUrl(url);
-			store.setDescription(description);
+			store.setComment(comment);
 
 			storeBo.save(store);
 
@@ -151,7 +151,7 @@ public class StoreController extends AbstractController {
 
 			model.addAttribute("field_displayName", displayName);
 			model.addAttribute("field_url", url);
-			model.addAttribute("field_description", description);
+			model.addAttribute("field_comment", comment);
 
 			model.addAttribute("form_error", e);
 			view = new ModelAndView("store.register", model);

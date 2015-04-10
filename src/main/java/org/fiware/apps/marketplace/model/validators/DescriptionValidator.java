@@ -89,8 +89,8 @@ public class DescriptionValidator {
 			}
 		}
 
-		if (description.getDescription() != null) {
-			basicValidator.validateDescription(description.getDescription());
+		if (description.getComment() != null) {
+			basicValidator.validateComment(description.getComment());
 		}	
 	}
 	
