@@ -129,7 +129,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 {
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
-  "description": "Example description"
+  "comment": "Example comment"
 }
 ```
 
@@ -143,7 +143,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 {
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
-  "description": "Example description"
+  "comment": "Example comment"
 }
 ```
 
@@ -164,7 +164,7 @@ Here you have a basic reference of all the status codes that you can get when yo
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
   "registrationDate": 1,
-  "description": "Example description",
+  "comment": "Example comment",
   "creator": "user-1",
   "lasteditor": "user-1"
 }
@@ -186,7 +186,7 @@ Here you have a basic reference of all the status codes that you can get when yo
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
   "registrationDate": 1,
-  "description": "Example description",
+  "comment": "Example comment",
   "creator": "user-1",
   "lasteditor": "user-1"
  },
@@ -195,7 +195,7 @@ Here you have a basic reference of all the status codes that you can get when yo
   "displayName": "Example Store 2",
   "url": "https://store2.lab.fiware.org",
   "registrationDate": 2,
-  "description": "Example description 2",
+  "comment": "Example comment 2",
   "creator": "user-2",
   "lasteditor": "user-2"
  },
