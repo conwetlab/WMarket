@@ -366,4 +366,12 @@ public class DescriptionBoImpl implements DescriptionBo {
 		return descriptionDao.getStoreDescriptionsPage(storeName, offset, max);
 	}
 
+    @Override
+    @Transactional
+    public List<Description> filterByUserNameAndStoreName(String userName, String storeName)
+            throws UserNotFoundException, StoreNotFoundException {
+
+        return descriptionDao.filterByUserNameAndStoreName(userName, storeName);
+    }
+
 }

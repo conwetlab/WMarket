@@ -194,4 +194,19 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 				.setMaxResults(max)
 				.list();
 	}
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Description> filterByUserNameAndStoreName(String userName, String storeName)
+            throws UserNotFoundException, StoreNotFoundException {
+
+        userDao.findByName(userName);
+        storeDao.findByName(storeName);
+
+        return getSession().createQuery(String.format("from %s where creator.userName = :userName and store.name = :storeName", TABLE_NAME))
+                .setParameter("userName", userName)
+                .setParameter("storeName", storeName)
+                .list();
+    }
+
 }
