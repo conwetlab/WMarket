@@ -35,7 +35,6 @@ package org.fiware.apps.marketplace.webcontrollers;
 import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -92,7 +91,6 @@ public class UserRegistrationController extends AbstractController {
             @FormParam("password") String password,
             @FormParam("passwordConfirm") String passwordConfirm) {
 
-        HttpSession session;
         ModelAndView view;
         ModelMap model = new ModelMap();
         ResponseBuilder builder;
@@ -112,11 +110,7 @@ public class UserRegistrationController extends AbstractController {
             getUserBo().save(user);
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login").build();
-            session = request.getSession();
-
-            synchronized (session) {
-                session.setAttribute("flashMessage", "You was registered successfully. You can log in right now.");
-            }
+            setFlashMessage(request, "You was registered successfully. You can log in right now.");
 
             builder = Response.seeOther(redirectURI);
         } catch (NotAuthorizedException e) {

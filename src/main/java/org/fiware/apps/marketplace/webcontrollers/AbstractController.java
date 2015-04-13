@@ -36,6 +36,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response.Status;
 
+import org.fiware.apps.marketplace.bo.DescriptionBo;
+import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -48,6 +51,9 @@ import org.springframework.web.servlet.ModelAndView;
 public abstract class AbstractController {
 
     @Autowired private UserBo userBo;
+    @Autowired private OfferingBo offeringBo;
+    @Autowired private StoreBo storeBo;
+    @Autowired private DescriptionBo descriptionBo;
 
     private String applicationName = "WMarket";
 
@@ -79,7 +85,15 @@ public abstract class AbstractController {
     protected UserBo getUserBo() {
         return userBo;
     }
-    
+
+    protected StoreBo getStoreBo() {
+        return storeBo;
+    }
+
+    protected DescriptionBo getDescriptionBo() {
+        return descriptionBo;
+    }
+
     protected void checkPasswordConfirmation(String password, String passwordConfirm) throws ValidationException {
     	if (!password.equals(passwordConfirm)) {
     		throw new ValidationException("passwordConfirm", "Passwords do not match.");

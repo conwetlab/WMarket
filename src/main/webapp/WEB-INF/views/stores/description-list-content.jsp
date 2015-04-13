@@ -39,7 +39,7 @@
                 <dl class="dl-vertical col-sm-10 col-md-5 visible-sm-margin">
                   <dt>Comment</dt>
                   <c:choose>
-                    <c:when test="${ not empty offering.comment }">
+                    <c:when test="${ not empty description.comment }">
                       <dd>${ description.comment }</dd>
                     </c:when>
                     <c:otherwise>
@@ -63,10 +63,8 @@
   </c:when>
   <c:otherwise>
     <div class="row container-fluid">
-      <div class="col-sm-10">
-        <div class="alert alert-warning col-sm-10">
-          <span class="fa fa-exclamation-circle"></span> No offer package available.
-        </div>
+      <div class="alert alert-warning col-sm-10">
+        <span class="fa fa-exclamation-circle"></span> No description available.
       </div>
     </div>
   </c:otherwise>

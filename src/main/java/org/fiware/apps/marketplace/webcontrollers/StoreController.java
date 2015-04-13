@@ -50,8 +50,6 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.OfferingBo;
-import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
@@ -60,7 +58,6 @@ import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
@@ -70,25 +67,22 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("stores")
 public class StoreController extends AbstractController {
 
-	@Autowired private OfferingBo offeringBo;
-	@Autowired private StoreBo storeBo;
-
 	private static Logger logger = LoggerFactory.getLogger(StoreController.class);
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	@Path("register")
-	public Response registerFormView() {
+	public Response createView() {
 
 		ModelAndView view;
 		ModelMap model = new ModelMap();
 		ResponseBuilder builder;
 
 		try {
+            model.addAttribute("title", "New Store - " + getContextName());
 			model.addAttribute("user", getCurrentUser());
-			model.addAttribute("title", "New Store - " + getContextName());
 
-			view = new ModelAndView("store.register", model);
+			view = new ModelAndView("store.create", model);
 			builder = Response.ok();
 		} catch (UserNotFoundException e) {
 			logger.warn("User not found", e);
@@ -103,7 +97,7 @@ public class StoreController extends AbstractController {
 	@POST
 	@Produces(MediaType.TEXT_HTML)
 	@Path("register")
-	public Response registerFormView(
+	public Response createView(
 			@Context UriInfo uri,
 			@Context HttpServletRequest request,
 			@FormParam("displayName") String displayName,
@@ -119,15 +113,15 @@ public class StoreController extends AbstractController {
 		try {
 			User currentUser = this.getCurrentUser();
 
+            model.addAttribute("title", "New Store - " + getContextName());
 			model.addAttribute("user", currentUser);
-			model.addAttribute("title", "New Store - " + getContextName());
 
 			store = new Store();
 			store.setDisplayName(displayName);
 			store.setUrl(url);
 			store.setComment(comment);
 
-			storeBo.save(store);
+			getStoreBo().save(store);
 
 			redirectURI = UriBuilder.fromUri(uri.getBaseUri())
 					.path("stores").path(store.getName()).path("offerings")
@@ -154,7 +148,7 @@ public class StoreController extends AbstractController {
 			model.addAttribute("field_comment", comment);
 
 			model.addAttribute("form_error", e);
-			view = new ModelAndView("store.register", model);
+			view = new ModelAndView("store.create", model);
 			builder = Response.status(Status.BAD_REQUEST).entity(view);
 		}
 
@@ -163,7 +157,7 @@ public class StoreController extends AbstractController {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	@Path("{storeName}/details")
+	@Path("{storeName}/about")
 	public Response detailView(
 			@Context HttpServletRequest request,
 			@PathParam("storeName") String storeName) {
@@ -174,17 +168,19 @@ public class StoreController extends AbstractController {
 
 		try {
 			model.addAttribute("user", getCurrentUser());
-			Store store = storeBo.findByName(storeName);
+			Store store = getStoreBo().findByName(storeName);
 
 			model.addAttribute("title", store.getDisplayName() + " - " + getContextName());
 			model.addAttribute("store", store);
+            model.addAttribute("currentStoreView", "detail");
 
 			view = new ModelAndView("store.detail", model);
 			builder = Response.ok();
 		} catch (UserNotFoundException e) {
-			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-			builder = Response.serverError();            
-			logger.warn("User not found", e);
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+		    builder = Response.serverError();
 		} catch (NotAuthorizedException e) {
 			logger.info("User unauthorized", e);
 
@@ -213,19 +209,21 @@ public class StoreController extends AbstractController {
 
 		try {
 			model.addAttribute("user", getCurrentUser());
-			Store store = storeBo.findByName(storeName);
+			Store store = getStoreBo().findByName(storeName);
 
 			model.addAttribute("title", store.getDisplayName() + " - Offerings - " + getContextName());
 			model.addAttribute("store", store);
+            model.addAttribute("currentStoreView", "offeringList");
 
 			addFlashMessage(request, model);
 
-			view = new ModelAndView("store.offeringlist", model);
+			view = new ModelAndView("store.offering.list", model);
 			builder = Response.ok();
 		} catch (UserNotFoundException e) {
-			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-			builder = Response.serverError();            
-			logger.warn("User not found", e);
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError();
 		} catch (NotAuthorizedException e) {
 			logger.info("User unauthorized", e);
 
@@ -240,4 +238,48 @@ public class StoreController extends AbstractController {
 
 		return builder.entity(view).build();
 	}
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("{storeName}/descriptions")
+    public Response listView(
+            @Context HttpServletRequest request,
+            @PathParam("storeName") String storeName) {
+
+        ModelAndView view;
+        ModelMap model = new ModelMap();
+        ResponseBuilder builder;
+
+        try {
+            User user = getCurrentUser();
+            model.addAttribute("user", user);
+            Store store = getStoreBo().findByName(storeName);
+
+            model.addAttribute("title", store.getDisplayName() + " - Descriptions - " + getContextName());
+            model.addAttribute("store", store);
+            model.addAttribute("currentStoreView", "descriptionList");
+            model.addAttribute("descriptions", getDescriptionBo().filterByUserNameAndStoreName(user.getUserName(), store.getName()));
+
+            view = new ModelAndView("store.description.list", model);
+            builder = Response.ok();
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError();
+        } catch (NotAuthorizedException e) {
+            logger.info("User unauthorized", e);
+
+            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+            builder = Response.status(Status.UNAUTHORIZED);
+        } catch (StoreNotFoundException e) {
+            logger.info("Store not found", e);
+
+            view = buildErrorView(Status.NOT_FOUND, e.getMessage());
+            builder = Response.status(Status.NOT_FOUND);
+        }
+
+        return builder.entity(view).build();
+    }
+
 }

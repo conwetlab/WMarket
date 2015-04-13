@@ -36,7 +36,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -48,6 +47,7 @@ import javax.ws.rs.core.Response.Status;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
+
 
 @Component
 @Path("/")
@@ -64,24 +64,12 @@ public class HomeController extends AbstractController {
     public Response loginView(
             @Context HttpServletRequest request) {
 
-        HttpSession session = request.getSession();
-        ModelAndView view;
         ModelMap model = new ModelMap();
-        String flashMessage;
-
-        synchronized (session) {
-            flashMessage = (String) session.getAttribute("flashMessage");
-
-            if (flashMessage != null) {
-                model.addAttribute("message", flashMessage);
-                session.removeAttribute("flashMessage");
-            }
-        }
 
         model.addAttribute("title", "Sign In - " + getContextName());
-        view = new ModelAndView("core.login", model);
+        this.addFlashMessage(request, model);
 
-        return Response.ok().entity(view).build();
+        return Response.ok().entity(new ModelAndView("core.login", model)).build();
     }
 
 }

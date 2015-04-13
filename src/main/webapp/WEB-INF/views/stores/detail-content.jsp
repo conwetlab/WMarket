@@ -6,8 +6,10 @@
 
 <t:insertTemplate template="/WEB-INF/views/stores/header.jsp" />
 
+<c:set var="isStoreOwner" value="${ store.creator.userName == user.userName }"></c:set>
+
 <div class="row container-fluid">
-  <div class="col-sm-10 col-md-10 col-lg-10">
+  <div class="col-sm-10 col-md-8 col-md-offset-1 col-lg-6 col-lg-offset-2">
     <div class="panel panel-default">
       <div class="row panel-body">
         <dl class="dl-vertical col-sm-10 col-md-5 visible-sm-margin">
@@ -24,8 +26,15 @@
           <dd>${ store.url }</dd>
         </dl>
         <dl class="dl-vertical col-sm-10 col-md-5">
-          <dt>Creator Name</dt>
-          <dd>${ store.creator.displayName }</dd>
+          <dt>Owner Name</dt>
+          <c:choose>
+            <c:when test="${ isStoreOwner }">
+              <dd>You're the owner</dd>
+            </c:when>
+            <c:otherwise>
+              <dd>${ store.creator.displayName }</dd>
+            </c:otherwise>
+          </c:choose>
           <dt>Registration Date</dt>
           <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ store.registrationDate }" /></dd>
         </dl>

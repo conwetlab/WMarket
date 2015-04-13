@@ -61,10 +61,8 @@
   </c:when>
   <c:otherwise>
     <div class="row container-fluid">
-      <div class="col-sm-10">
-        <div class="alert alert-warning col-sm-10">
-          <span class="fa fa-exclamation-circle"></span> No description available.
-        </div>
+      <div class="alert alert-warning col-sm-10">
+        <span class="fa fa-exclamation-circle"></span> No description available.
       </div>
     </div>
   </c:otherwise>

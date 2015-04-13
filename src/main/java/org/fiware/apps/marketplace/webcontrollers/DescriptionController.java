@@ -36,6 +36,7 @@ import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -48,8 +49,6 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.DescriptionBo;
-import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
@@ -60,7 +59,6 @@ import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
@@ -70,14 +68,10 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("/stores/{storeName}/descriptions/{descriptionName}")
 public class DescriptionController extends AbstractController {
 
-    @Autowired private DescriptionBo descriptionBo;
-    @Autowired private StoreBo storeBo;
-        
     private static Logger logger = LoggerFactory.getLogger(DescriptionController.class);
-    
-    /*@GET
+
+    @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path(SINGLE_DESCRIPTION_PATH + "/{descriptionName}")
     public Response detailView(
             @Context HttpServletRequest request,
             @PathParam("storeName") String storeName,
@@ -89,13 +83,13 @@ public class DescriptionController extends AbstractController {
 
         try {
             User user = getCurrentUser();
-            Store store = storeBo.findByName(storeName);
-            Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
+            Store store = getStoreBo().findByName(storeName);
+            Description description = getDescriptionBo().findByNameAndStore(storeName, descriptionName);
 
             model.addAttribute("user", user);
-            model.addAttribute("title", store.getDisplayName() + " - Descriptions - " + getContextName());
+            model.addAttribute("title", description.getDisplayName() + " - " + getContextName());
             model.addAttribute("store", store);
-            model.addAttribute("current_description", description.getName());
+            model.addAttribute("description", description);
 
             addFlashMessage(request, model);
 
@@ -124,7 +118,7 @@ public class DescriptionController extends AbstractController {
         }
 
         return builder.entity(view).build();
-    }*/
+    }
 
     @POST
     @Produces(MediaType.TEXT_HTML)
@@ -144,24 +138,25 @@ public class DescriptionController extends AbstractController {
 
         try {
             User user = getCurrentUser();
-            Store store = storeBo.findByName(storeName);
-            Description oldDescription = descriptionBo.findByNameAndStore(storeName, descriptionName);
+            Store store = getStoreBo().findByName(storeName);
+            Description oldDescription = getDescriptionBo().findByNameAndStore(storeName, descriptionName);
 
             model.addAttribute("user", user);
-            model.addAttribute("title", store.getDisplayName() + " - Descriptions - " + getContextName());
+            model.addAttribute("title", oldDescription.getDisplayName() + " - " + getContextName());
             model.addAttribute("store", store);
-            model.addAttribute("current_description", oldDescription.getName());
+            model.addAttribute("description", oldDescription);
 
             newDescription.setDisplayName(displayName);
             newDescription.setUrl(url);
             newDescription.setComment(comment);
 
-            descriptionBo.update(store.getName(), oldDescription.getName(), newDescription);
+            getDescriptionBo().update(store.getName(), oldDescription.getName(), newDescription);
 
             setFlashMessage(request, "The description '" + oldDescription.getDisplayName() + "' was updated successfully.");
 
             URI redirectURI = UriBuilder.fromUri(uri.getBaseUri())
-                    .path("descriptions")//.path(descriptionName)
+                    .path("stores").path(storeName)
+                    .path("descriptions").path(descriptionName)
                     .build();
             builder = Response.seeOther(redirectURI);
         } catch (UserNotFoundException e) {
@@ -213,10 +208,10 @@ public class DescriptionController extends AbstractController {
         ResponseBuilder builder;
 
         try {
-            Store store = storeBo.findByName(storeName);
-            Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
+            Store store = getStoreBo().findByName(storeName);
+            Description description = getDescriptionBo().findByNameAndStore(storeName, descriptionName);
 
-            descriptionBo.delete(store.getName(), description.getName());
+            getDescriptionBo().delete(store.getName(), description.getName());
             setFlashMessage(request, "The description '" + description.getDisplayName() + "' was deleted successfully.");
 
             URI redirectURI = UriBuilder.fromUri(uri.getBaseUri())
@@ -241,4 +236,5 @@ public class DescriptionController extends AbstractController {
 
         return builder.build();
     }
+
 }

@@ -30,7 +30,7 @@
     <div class="panel panel-default">
 
       <div class="panel-heading">
-        <div class="panel-title">Offer Details</div>
+        <div class="panel-title">Offering information</div>
       </div><!-- /.panel-heading -->
 
       <div class="panel-body">
@@ -42,7 +42,7 @@
         <dl class="dl-vertical">
           <dt>Current Version</dt>
           <dd>${ offering.version }</dd>
-          <dt>Developer</dt>
+          <dt>Developer Name</dt>
           <dd>${ offering.describedIn.creator.displayName }</dd>
           <dt>Upload Date</dt>
           <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.registrationDate }" /></dd>
@@ -51,7 +51,7 @@
         <dl class="dl-vertical">
           <dt>Name</dt>
           <dd><a href="${ pageContext.request.contextPath }/stores/${ offering.store.name }/offerings">${ offering.store.displayName }</a></dd>
-          <dt>Creator</dt>
+          <dt>Creator Name</dt>
           <dd>${ offering.store.creator.displayName }</dd>
           <dt>Registration Date</dt>
           <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.store.registrationDate }" /></dd>

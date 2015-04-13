@@ -40,7 +40,9 @@ var Store = (function () {
         classList = classString.split(' ');
 
         for (i = 0; i < classList.length; i++) {
-            this.element.classList.add(classList[i]);
+            if (classList[i].length > 0) {
+                this.element.classList.add(classList[i]);
+            }
         }
 
         return this;

@@ -5,4 +5,4 @@
   WMarket.currentStoreName = "${ store.name }";
 
 </script>
-<script src="${ pageContext.request.contextPath }/resources/marketplace/js/StoreDetailView.js"></script>
+<script src="${ pageContext.request.contextPath }/resources/marketplace/js/StoreOfferingListView.js"></script>

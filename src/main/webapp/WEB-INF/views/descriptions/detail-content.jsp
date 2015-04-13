@@ -7,7 +7,7 @@
   <div class="col-sm-10 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-3">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span class="panel-title">General details</span>
+        <span class="panel-title">General information</span>
       </div>
       <div class="panel-body row">
         <form  class="col-sm-8 col-sm-offset-1" method="post" action="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }">

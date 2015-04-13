@@ -52,7 +52,7 @@ p {
 }
 
 .text-left {
-    text-align: left !important;
+    text-align: left;
 }
 
 .text-center {

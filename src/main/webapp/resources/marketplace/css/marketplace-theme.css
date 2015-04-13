@@ -474,14 +474,19 @@ form .row:last-child .form-field {
 
 .list-group .list-group-heading {
     display: block;
+    margin-bottom: 5px;
     padding: 5px;
     font: normal 700 14px/20px Helvetica, Arial, sans-serif;
     color: rgb(120, 160, 170);
+    border-bottom: solid 1px rgb(215, 225, 225);
 }
 
 .list-group .list-group-body {
     display: block;
-    border-top: solid 1px rgb(215, 225, 225);
+}
+
+.list-group .list-group-body .alert {
+    margin-bottom: 5px;
 }
 
 /***************************************************************************************
@@ -762,6 +767,7 @@ form .row:last-child .form-field {
 .navbar {
     padding: 8px 0px;
     background-color: rgb(254, 254, 254);
+    min-width: 400px;
 }
 
 .navbar .container-fluid {
@@ -854,20 +860,6 @@ form .row:last-child .form-field {
     text-align: justify;
     overflow: hidden;
     height: 80px;
-}
-
-.offering .thumbnail:hover {
-    cursor: pointer;
-    background-color: rgb(110, 210, 250);
-    border-color: rgb(20, 170, 215);
-}
-
-.offering .thumbnail:hover > img {
-    border-color: rgb(20, 170, 215);
-}
-
-.offering .offering-name:hover {
-    color: rgb(20, 170, 215);
 }
 
 /* Smartphones */

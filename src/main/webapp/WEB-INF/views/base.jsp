@@ -113,7 +113,7 @@
               </a>
               <a class="list-group-item" href="${ pageContext.request.contextPath }/descriptions/register">
                 <span class="fa fa-upload fa-fw"></span>
-                <span class="text-plain">Upload a description</span>
+                <span class="text-plain">Upload a new description</span>
               </a>
             </div>
           </div><!-- .list-group -->
@@ -124,7 +124,7 @@
             <div class="list-group-body">
               <a class="list-group-item" href="${ pageContext.request.contextPath }/stores/register">
                 <span class="fa fa-plus-circle fa-fw"></span>
-                <span class="text-plain">Register a store</span>
+                <span class="text-plain">Register a new store</span>
               </a>
             </div>
           </div><!-- .list-group -->
@@ -240,7 +240,7 @@
           WMarket.requests.attach('core', 'read', {
             namespace: "stores:collection",
             containment: WMarket.layout.storeList,
-            alert: WMarket.alerts.warning("No web store available."),
+            alert: WMarket.alerts.warning("No store available."),
             onSuccess: function (collection, containment) {
               var i, store;
 

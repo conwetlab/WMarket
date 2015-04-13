@@ -35,7 +35,6 @@ package org.fiware.apps.marketplace.webcontrollers;
 import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -49,8 +48,6 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.DescriptionBo;
-import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
@@ -59,25 +56,48 @@ import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 
 
 @Component
-@Path("/descriptions")
-public class UserDescriptionsController extends AbstractController {
+@Path("descriptions")
+public class UserDescriptionController extends AbstractController {
 
-    @Autowired private DescriptionBo descriptionBo;
-    @Autowired private StoreBo storeBo;
-        
-    private static Logger logger = LoggerFactory.getLogger(UserDescriptionsController.class);
-    
+    private static Logger logger = LoggerFactory.getLogger(UserDescriptionController.class);
+
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/register")
-    public Response registerFormView() {
+    public Response listView(
+            @Context HttpServletRequest request) {
+
+        ModelAndView view;
+        ModelMap model = new ModelMap();
+        ResponseBuilder builder;
+
+        try {
+            model.addAttribute("user", getCurrentUser());
+            model.addAttribute("title", "My descriptions - " + getContextName());
+            model.addAttribute("descriptions", this.getDescriptionBo().getCurrentUserDescriptions());
+
+            addFlashMessage(request, model);
+
+            view = new ModelAndView("user.description.list", model);
+            builder = Response.ok();
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError();
+        }
+        return builder.entity(view).build();
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("register")
+    public Response createView() {
 
         ModelAndView view;
         ModelMap model = new ModelMap();
@@ -87,10 +107,10 @@ public class UserDescriptionsController extends AbstractController {
             User user = getCurrentUser();
 
             model.addAttribute("user", user);
-            model.addAttribute("title", "Upload offerings - " + getContextName());
-            model.addAttribute("storeList", storeBo.getAllStores());
+            model.addAttribute("title", "New description - " + getContextName());
+            model.addAttribute("storeList", this.getStoreBo().getAllStores());
 
-            view = new ModelAndView("description.register", model);
+            view = new ModelAndView("description.create", model);
             builder = Response.ok();
         } catch (UserNotFoundException e) {
             logger.warn("User not found", e);
@@ -109,16 +129,16 @@ public class UserDescriptionsController extends AbstractController {
 
     @POST
     @Produces(MediaType.TEXT_HTML)
-    @Path("/register")
-    public Response registerFormView(
+    @Path("register")
+    public Response createView(
             @Context UriInfo uri,
             @Context HttpServletRequest request,
             @FormParam("storeName") String storeName,
             @FormParam("displayName") String displayName,
-            @FormParam("url") String url) {
+            @FormParam("url") String url,
+            @FormParam("comment") String comment) {
 
         Description description;
-        HttpSession session;
         ModelAndView view;
         ModelMap model = new ModelMap();
         ResponseBuilder builder;
@@ -128,24 +148,23 @@ public class UserDescriptionsController extends AbstractController {
             User user = getCurrentUser();
 
             model.addAttribute("user", user);
-            model.addAttribute("title", "Upload offerings - " + getContextName());
-            model.addAttribute("storeList", storeBo.getAllStores());
+            model.addAttribute("title", "New description - " + getContextName());
+            model.addAttribute("storeList", this.getStoreBo().getAllStores());
 
             description = new Description();
             description.setDisplayName(displayName);
             description.setUrl(url);
 
-            descriptionBo.save(storeName, description);
+            if (!comment.isEmpty()) {
+                description.setComment(comment);
+            }
+
+            this.getDescriptionBo().save(storeName, description);
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri())
                     .path("stores").path(storeName).path("offerings")
                     .build();
-
-            session = request.getSession();
-
-            synchronized (session) {
-                session.setAttribute("flashMessage", "The description '" + displayName + "' was uploaded successfully.");
-            }
+            setFlashMessage(request, "The description '" + displayName + "' was uploaded successfully.");
 
             builder = Response.seeOther(redirectURI);
         } catch (UserNotFoundException e) {
@@ -164,9 +183,10 @@ public class UserDescriptionsController extends AbstractController {
             model.addAttribute("field_storeName", storeName);
             model.addAttribute("field_displayName", displayName);
             model.addAttribute("field_url", url);
+            model.addAttribute("field_comment", comment);
 
             model.addAttribute("form_error", e);
-            view = new ModelAndView("description.register", model);
+            view = new ModelAndView("description.create", model);
             builder = Response.status(Status.BAD_REQUEST).entity(view);
         } catch (StoreNotFoundException e) {
             logger.info("Store not found", e);
@@ -178,31 +198,4 @@ public class UserDescriptionsController extends AbstractController {
         return builder.build();
     }
 
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    public Response listUserDescriptionsView(
-            @Context HttpServletRequest request) {
-
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
-
-        try {
-            model.addAttribute("user", getCurrentUser());
-            
-            model.addAttribute("title", "Your Descriptions");
-            model.addAttribute("descriptions", descriptionBo.getCurrentUserDescriptions());
-            
-            addFlashMessage(request, model);
-
-            view = new ModelAndView("description.list-own", model);
-            builder = Response.ok();
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
-
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError();
-        }
-        return builder.entity(view).build();
-    }
 }

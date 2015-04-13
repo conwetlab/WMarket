@@ -53,10 +53,8 @@ import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
@@ -66,7 +64,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("account")
 public class UserAccountController extends AbstractController {
 
-    @Autowired private UserValidator userValidator;
     private static Logger logger = LoggerFactory.getLogger(UserAccountController.class);
 
     @GET
@@ -74,26 +71,15 @@ public class UserAccountController extends AbstractController {
     public Response detailView(
             @Context HttpServletRequest request) {
 
-        HttpSession session;
         ModelAndView view;
         ModelMap model = new ModelMap();
         ResponseBuilder builder;
-        String flashMessage;
 
         try {
-            model.addAttribute("user", getCurrentUser());
             model.addAttribute("title", "Account Settings - " + getContextName());
+            model.addAttribute("user", getCurrentUser());
 
-            session = request.getSession();
-
-            synchronized (session) {
-                flashMessage = (String) session.getAttribute("flashMessage");
-
-                if (flashMessage != null) {
-                    model.addAttribute("message", flashMessage);
-                    session.removeAttribute("flashMessage");
-                }
-            }
+            addFlashMessage(request, model);
 
             view = new ModelAndView("user.detail", model);
             builder = Response.ok();
@@ -109,7 +95,7 @@ public class UserAccountController extends AbstractController {
 
     @POST
     @Produces(MediaType.TEXT_HTML)
-    public Response updateFormView(
+    public Response updateView(
             @Context UriInfo uri,
             @Context HttpServletRequest request,
             @FormParam("userName") String userName,
@@ -117,7 +103,6 @@ public class UserAccountController extends AbstractController {
             @FormParam("email") String email,
             @FormParam("company") String company) {
 
-        HttpSession session;
         ModelAndView view;
         ModelMap model = new ModelMap();
         ResponseBuilder builder;
@@ -140,11 +125,7 @@ public class UserAccountController extends AbstractController {
             getUserBo().update(userName, user);
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("account").build();
-            session = request.getSession();
-
-            synchronized (session) {
-                session.setAttribute("flashMessage", "Your profile was updated successfully.");
-            }
+            setFlashMessage(request, "Your profile was updated successfully.");
 
             builder = Response.seeOther(redirectURI);
         } catch (UserNotFoundException e) {
@@ -176,7 +157,7 @@ public class UserAccountController extends AbstractController {
     @POST
     @Produces(MediaType.TEXT_HTML)
     @Path("password")
-    public Response updatePasswordFormView(
+    public Response updatePasswordView(
             @Context UriInfo uri,
             @Context HttpServletRequest request,
             @FormParam("oldPassword") String oldPassword,

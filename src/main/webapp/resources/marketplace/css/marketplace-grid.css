@@ -89,7 +89,6 @@ body {
 .row > [class*="col-sm"] {
     display: block;
     float: left;
-    padding: 0px 0px;
 }
 
 .col-sm-1 {
@@ -182,7 +181,6 @@ body {
     .row > [class*="col-md"] {
         display: block;
         float: left;
-        padding: 0px 0px;
     }
 
     .col-md-1 {
@@ -281,7 +279,6 @@ body {
     .row > [class*="col-lg"] {
         display: block;
         float: left;
-        padding: 0px 0px;
     }
 
     .col-lg-1 {

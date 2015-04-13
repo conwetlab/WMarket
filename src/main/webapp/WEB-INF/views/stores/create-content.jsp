@@ -21,7 +21,7 @@
 
           </div>
           <div class="form-field">
-            <label class="text-plain">URL *</label>
+            <label class="text-plain">Website URL *</label>
             <input class="form-control" type="text" name="url" value="${ field_url }" />
 
             <c:if test="${ not empty form_error and form_error.fieldName == 'url' }">
