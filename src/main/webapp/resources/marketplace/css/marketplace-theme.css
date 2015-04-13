@@ -395,6 +395,11 @@ form .row:last-child .form-field {
 
 }
 
+.thumbnail-xs > img {
+    width: 100px;
+    height: 100px;
+}
+
 .thumbnail-sm > img {
     width: 140px;
     height: 140px;
@@ -467,33 +472,45 @@ form .row:last-child .form-field {
  *  DEFAULT THEME - LIST GROUP
  ***************************************************************************************/
 
-.list-group > .list-group-title {
-    position: relative;
+.list-group .list-group-heading {
     display: block;
-    margin: 0px 10px;
-    padding: 8px 0px 6px;
-    color: rgb(145, 160, 165);
-    font: normal 700 14px/18px Helvetica, Arial, sans-serif;
+    padding: 5px;
+    font: normal 700 14px/20px Helvetica, Arial, sans-serif;
+    color: rgb(120, 160, 170);
+}
+
+.list-group .list-group-body {
+    display: block;
     border-top: solid 1px rgb(215, 225, 225);
 }
 
-.list-group > .list-group-item {
-    position: relative;
+/***************************************************************************************
+ *  DEFAULT THEME - LIST GROUP - ITEM
+ ***************************************************************************************/
+
+.list-group .list-group-item {
     display: block;
     cursor: pointer;
-    padding: 8px 15px;
+    padding: 8px 5px;
     color: rgb(90, 90, 90);
-    text-decoration: none;
-    background-color: rgb(254, 254, 254);
 }
 
-.list-group > .list-group-item:hover {
+.list-group .list-group-item:hover {
     color: rgb(20, 170, 215);
     background-color: rgb(240, 240, 240);
 }
 
 .list-group > .alert:first-child {
     margin-top: 10px;
+}
+
+.well {
+    padding: 5px;
+    margin-bottom: 10px;
+    background-color: rgb(245, 245, 245);
+    border: 1px solid rgb(210, 220, 230);
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
 }
 
 /***************************************************************************************
@@ -621,7 +638,7 @@ form .row:last-child .form-field {
     border-color: rgb(210, 220, 230);
 }
 
-.panel-default .panel-heading {
+.panel-default > .panel-heading {
     color: rgb(100, 100, 100);
     background-color: rgb(240, 240, 240);
 }
@@ -634,14 +651,22 @@ form .row:last-child .form-field {
     border-color: rgb(210, 220, 230);
 }
 
-.panel-default-darker .panel-heading {
+.panel-default-darker > .panel-heading {
     color: rgb(220, 220, 230);
     background-color: rgb(60, 65, 75);
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
-.panel-default-darker .panel-heading .panel-subtitle {
+.panel-default-darker > .panel-heading .panel-subtitle {
     color: rgb(150, 170, 180);
+}
+
+.panel-default-darker > .panel-heading a {
+    color: rgb(180, 190, 195);
+}
+
+.panel-default-darker > .panel-heading a:hover {
+    color: rgb(100, 190, 240);
 }
 
 /***************************************************************************************
@@ -662,7 +687,7 @@ form .row:last-child .form-field {
 }
 
 .panel-sliding .panel-body {
-    padding: 0px;
+    padding: 5px;
 }
 
 .panel-sliding .panel-body .title-descriptions {
@@ -890,10 +915,7 @@ form .row:last-child .form-field {
 
 #store-list {
     max-height: 287px;
-    margin: 0px 10px;
     overflow-y: auto;
-    border-bottom: solid 1px rgb(215, 225, 225);
-    border-top: solid 1px rgb(215, 225, 225);
 }
 
 .store-item .store-name {
@@ -917,4 +939,14 @@ form .row:last-child .form-field {
 
 .fa-avatar > .fa-circle {
     color: rgb(80, 190, 250);
+}
+
+.offering-in-description {
+    display: inline-block;
+    max-width: 200px;
+    margin: 0px 5px;
+}
+
+.offering-in-description:first-child {
+    margin-left: 0px;
 }

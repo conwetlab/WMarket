@@ -2,38 +2,25 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="t" uri="http://tiles.apache.org/tags-tiles" %>
 
-<div class="row container-fluid">
-  <div class="col-sm-10 col-md-10 col-lg-10">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <span class="panel-title">Welcome to <strong>${ store.displayName }</strong></span>
-      </div>
-      <div class="panel-body">
-        <div class="nav-tabs">
-          <div class="tab"><a href="${ pageContext.request.contextPath }/stores/${ store.name }/offerings">Offerings</a></div>
-          <div class="tab active"><a href="${ pageContext.request.contextPath }/stores/${ store.name }/details">About</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div><!-- /.container-fluid -->
+<t:insertTemplate template="/WEB-INF/views/stores/header.jsp" />
 
 <div class="row container-fluid">
   <div class="col-sm-10 col-md-10 col-lg-10">
     <div class="panel panel-default">
       <div class="row panel-body">
         <dl class="dl-vertical col-sm-10 col-md-5 visible-sm-margin">
-          <dt>Description</dt>
+          <dt>Comment</dt>
           <c:choose>
             <c:when test="${ not empty store.comment }">
               <dd>${ store.comment }</dd>
             </c:when>
             <c:otherwise>
-              <dd>No description provided.</dd>
+              <dd>No comment provided.</dd>
             </c:otherwise>
           </c:choose>
-          <dt>URL</dt>
+          <dt>Website URL</dt>
           <dd>${ store.url }</dd>
         </dl>
         <dl class="dl-vertical col-sm-10 col-md-5">

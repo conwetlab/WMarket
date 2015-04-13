@@ -101,29 +101,36 @@
           </div>
         </div><!-- /.panel -->
 
-    <div id="left-sidebar" class="panel panel-default panel-sliding panel-sliding-left">
-      <div class="panel-body">
-        <div class="list-group">
+      <div id="left-sidebar" class="panel panel-default panel-sliding panel-sliding-left">
+        <div class="panel-body">
+
+          <div class="list-group">
+            <div class="list-group-heading">DESCRIPTIONS</div>
+            <div class="list-group-body">
               <a class="list-group-item" href="${ pageContext.request.contextPath }/descriptions">
                 <span class="fa fa-archive fa-fw"></span>
-                <span class="text-plain">My Descriptions</span>
+                <span class="text-plain">My descriptions</span>
               </a>
               <a class="list-group-item" href="${ pageContext.request.contextPath }/descriptions/register">
                 <span class="fa fa-upload fa-fw"></span>
-                <span class="text-plain">Upload new descriptions</span>
+                <span class="text-plain">Upload a description</span>
               </a>
             </div>
-        <div class="list-group">
-              <div class="list-group-title">WEB STORES</div>
-              <div id="store-list" class="list-group">
-              </div>
+          </div><!-- .list-group -->
+
+          <div class="list-group">
+            <div class="list-group-heading">STORES</div>
+            <div id="store-list" class="list-group-body"></div>
+            <div class="list-group-body">
               <a class="list-group-item" href="${ pageContext.request.contextPath }/stores/register">
                 <span class="fa fa-plus-circle fa-fw"></span>
-                <span class="text-plain">Register new store</span>
+                <span class="text-plain">Register a store</span>
               </a>
             </div>
-      </div><!-- /.panel-body -->
-    </div><!-- /.panel -->
+          </div><!-- .list-group -->
+
+        </div><!-- /.panel-body -->
+      </div><!-- /.panel -->
 
       </c:when>
     </c:choose>

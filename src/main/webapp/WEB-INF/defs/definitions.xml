@@ -20,54 +20,57 @@
 		<put-attribute name="content" value="/WEB-INF/views/core/error.jsp" />
 	</definition>
 
-	<!-- Users - Detail View -->
-	<definition name="user.detail" template="/WEB-INF/views/base.jsp">
-		<put-attribute name="content" value="/WEB-INF/views/users/detail-content.jsp" />
-	</definition>
+    <!-- User Resource - Detail View -->
+    <definition name="user.detail" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/users/detail-content.jsp" />
+    </definition>
 
-	<!-- Offerings - Register Form View -->
-	<definition name="description.register" template="/WEB-INF/views/base.jsp">
-		<put-attribute name="content" value="/WEB-INF/views/descriptions/form-content.jsp" />
-	</definition>
+    <!-- User Resource - Description Filter - List View -->
+    <definition name="user.description.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/users/description-list-content.jsp" />
+    </definition>
 
-	<!-- Offerings - List View -->
-	<definition name="offering.list" template="/WEB-INF/views/base.jsp">
-		<put-attribute name="content" value="/WEB-INF/views/offerings/list-content.jsp" />
-		<put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/list-scripts.jsp" />
-	</definition>
+    <!-- Offering Resource - List View -->
+    <definition name="offering.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/offerings/list-content.jsp" />
+        <put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/list-scripts.jsp" />
+    </definition>
 
-	<!-- Offerings - Detail View -->
-	<definition name="offering.detail" template="/WEB-INF/views/base.jsp">
-		<put-attribute name="content" value="/WEB-INF/views/offerings/detail-content.jsp" />
-		<put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/detail-scripts.jsp" />
-	</definition>
+    <!-- Offering Resource - Detail View -->
+    <definition name="offering.detail" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/offerings/detail-content.jsp" />
+        <put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/detail-scripts.jsp" />
+    </definition>
 
-	<!-- Stores - Register Form View -->
-	<definition name="store.register" template="/WEB-INF/views/base.jsp">
-		<put-attribute name="content" value="/WEB-INF/views/stores/form-content.jsp" />
-	</definition>
+    <!-- Store Resource - Create View -->
+    <definition name="store.create" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/stores/create-content.jsp" />
+    </definition>
 
-    <!-- Stores - Offering List View -->
-    <definition name="store.offeringlist" template="/WEB-INF/views/base.jsp">
+    <!-- Store Resource - Detail View -->
+    <definition name="store.detail" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/stores/detail-content.jsp" />
+    </definition>
+
+    <!-- Store Resource - Offering Filter - List View -->
+    <definition name="store.offering.list" template="/WEB-INF/views/base.jsp">
         <put-attribute name="content" value="/WEB-INF/views/stores/offering-list-content.jsp" />
-        <put-attribute name="extra-scripts" value="/WEB-INF/views/stores/detail-scripts.jsp" />
+        <put-attribute name="extra-scripts" value="/WEB-INF/views/stores/offering-list-scripts.jsp" />
     </definition>
 
-	<!-- Stores - Detail View -->
-	<definition name="store.detail" template="/WEB-INF/views/base.jsp">
-		<put-attribute name="content" value="/WEB-INF/views/stores/detail-content.jsp" />
-	</definition>
-
-    <!-- Descriptions - List View -->
-    <definition name="description.list-own" template="/WEB-INF/views/base.jsp">
-        <put-attribute name="content" value="/WEB-INF/views/descriptions/list-own-content.jsp" />
-        <put-attribute name="extra-scripts" value="/WEB-INF/views/descriptions/list-scripts.jsp" />
+    <!-- Store Resource - User Description Filter - List View -->
+    <definition name="store.description.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/stores/description-list-content.jsp" />
     </definition>
 
-    <!-- Descriptions - Detail View -->
+    <!-- Description Resource - Create View -->
+    <definition name="description.create" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/descriptions/create-content.jsp" />
+    </definition>
+
+    <!-- Description Resource - Detail View -->
     <definition name="description.detail" template="/WEB-INF/views/base.jsp">
-        <put-attribute name="content" value="/WEB-INF/views/descriptions/list-own-content.jsp" />
-        <put-attribute name="extra-scripts" value="/WEB-INF/views/descriptions/list-scripts.jsp" />
+        <put-attribute name="content" value="/WEB-INF/views/descriptions/detail-content.jsp" />
     </definition>
 
 </tiles-definitions>

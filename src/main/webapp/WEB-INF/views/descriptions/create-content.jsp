@@ -52,6 +52,15 @@
                 </c:if>
               </div>
 
+              <div class="form-field">
+                <label class="text-plain">Comment</label>
+                <textarea class="form-control" name="comment" rows="4">${ field_comment }</textarea>
+
+                <c:if test="${ not empty form_error and form_error.fieldName == 'comment' }">
+                  <div class="form-field-error">${ form_error.fieldError }</div>
+                </c:if>
+              </div>
+
               <p class="text-plain text-default">* Required fields</p>
               <div class="form-options">
                 <button type="submit" class="btn btn-warning btn-sm-10 btn-md-5">Upload</button>
@@ -61,7 +70,7 @@
           </c:when>
           <c:otherwise>
             <div class="alert alert-info">
-              <span class="fa fa-info-circle"></span> To upload offerings, there must be at least one store. Go to <a class="alert-link" href="${ pageContext.request.contextPath }/stores/register">register a store</a>.
+              <span class="fa fa-info-circle"></span> To upload descriptions, there must be at least one store. Go to <a class="alert-link" href="${ pageContext.request.contextPath }/stores/register">register a store</a>.
             </div>
           </c:otherwise>
         </c:choose>
