@@ -108,7 +108,7 @@ public class UserBoImpl implements UserBo {
 	public void update(String userName, User updatedUser) 
 			throws NotAuthorizedException, ValidationException, UserNotFoundException {
 		
-		User userToBeUpdated = findByName(userName);
+		User userToBeUpdated = userDao.findByName(userName);
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!userAuth.canUpdate(userToBeUpdated)) {
@@ -149,7 +149,7 @@ public class UserBoImpl implements UserBo {
 	@Transactional(readOnly=false)
 	public void delete(String userName) throws NotAuthorizedException, UserNotFoundException {
 		
-		User user = findByName(userName);
+		User user = userDao.findByName(userName);
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!userAuth.canDelete(user)) {

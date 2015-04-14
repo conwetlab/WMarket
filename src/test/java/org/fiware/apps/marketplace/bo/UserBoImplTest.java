@@ -35,7 +35,6 @@ package org.fiware.apps.marketplace.bo;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -210,7 +209,7 @@ public class UserBoImplTest {
 			userBo.update(userName, updatedUser);
 			fail("Exception expected");
 		} catch (Exception e) {
-			verify(userDaoMock, never()).update(updatedUser);
+			verify(userDaoMock, never()).update(any(User.class));
 			throw e;
 		}
 
@@ -220,7 +219,7 @@ public class UserBoImplTest {
 	public void testUpdateNotFound() throws Exception {
 		
 		User user = mock(User.class);
-		doThrow(new UserNotFoundException("user not found")).when(userBo).findByName(USER_NAME);
+		doThrow(new UserNotFoundException("user not found")).when(userDaoMock).findByName(USER_NAME);
 		when(userAuthMock.canUpdate(user)).thenReturn(true);
 		
 		// Call the method and check that DAO is not called
@@ -253,7 +252,7 @@ public class UserBoImplTest {
 		User userToBeUpdated = mock(User.class);
 		
 		doThrow(new ValidationException("a field", "invalid")).when(userValidatorMock).validateUpdatedUser(userToBeUpdated, updatedUser);
-		doReturn(userToBeUpdated).when(userBo).findByName(USER_NAME);
+		doReturn(userToBeUpdated).when(userDaoMock).findByName(USER_NAME);
 		when(userAuthMock.canUpdate(userToBeUpdated)).thenReturn(true);
 		
 		// Call the method and check that DAO is not called
@@ -277,7 +276,7 @@ public class UserBoImplTest {
 		// Mocks
 		when(userAuthMock.canUpdate(user)).thenReturn(true);
 		try {
-			doReturn(user).when(userBo).findByName(USER_NAME);
+			doReturn(user).when(userDaoMock).findByName(USER_NAME);
 		} catch (Exception ex) {
 			fail("Exeception not expected", ex);
 		}
@@ -294,7 +293,7 @@ public class UserBoImplTest {
 		
 		// Verify mocks
 		try {
-			verify(userBo).findByName(USER_NAME);
+			verify(userDaoMock).findByName(USER_NAME);
 			verify(userDaoMock).update(user);
 		} catch (Exception ex) {
 			fail("Exeception not expected", ex);
@@ -422,7 +421,7 @@ public class UserBoImplTest {
 		User user = mock(User.class);
 		
 		// Configure Mock
-		doReturn(user).when(userBo).findByName(USER_NAME);
+		doReturn(user).when(userDaoMock).findByName(USER_NAME);
 		when(userAuthMock.canDelete(user)).thenReturn(true);
 		
 		// Call the method
@@ -505,13 +504,8 @@ public class UserBoImplTest {
 	
 	@Test
 	public void testGetUsersPage() throws NotAuthorizedException {
-		List<User> users = new ArrayList<>();
-		
-		for (int i = 0; i < 5; i++) {
-			User user = new User();
-			user.setId(i);
-			users.add(user);
-		}
+		@SuppressWarnings("unchecked")
+		List<User> users = mock(List.class);
 		
 		when(userDaoMock.getUsersPage(anyInt(), anyInt())).thenReturn(users);
 		when(userAuthMock.canList()).thenReturn(true);
@@ -547,13 +541,8 @@ public class UserBoImplTest {
 	
 	@Test
 	public void testGetAllUsers() throws NotAuthorizedException {
-		List<User> users = new ArrayList<>();
-		
-		for (int i = 0; i < 5; i++) {
-			User user = new User();
-			user.setId(i);
-			users.add(user);
-		}
+		@SuppressWarnings("unchecked")
+		List<User> users = mock(List.class);
 		
 		when(userDaoMock.getAllUsers()).thenReturn(users);
 		when(userAuthMock.canList()).thenReturn(true);
