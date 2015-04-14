@@ -104,7 +104,7 @@ public class StoreBoImpl implements StoreBo{
 			// Get the currently logged-in user
 			User user = userBo.getCurrentUser();
 			
-			Store storeToBeUpdate = this.findByName(storeName);
+			Store storeToBeUpdate = storeDao.findByName(storeName);
 			
 			// Check rights and raise exception if user is not allowed to perform this action
 			if (!storeAuth.canUpdate(storeToBeUpdate)) {
@@ -143,7 +143,7 @@ public class StoreBoImpl implements StoreBo{
 	@Transactional(readOnly=false)
 	public void delete(String storeName) throws NotAuthorizedException, StoreNotFoundException {
 		
-		Store store = this.findByName(storeName);
+		Store store = storeDao.findByName(storeName);
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!storeAuth.canDelete(store)) {

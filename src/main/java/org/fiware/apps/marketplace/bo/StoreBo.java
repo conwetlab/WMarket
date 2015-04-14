@@ -55,8 +55,8 @@ public interface StoreBo {
 			StoreNotFoundException;
 	
 	// Get all or a sublist
+	public List <Store> getAllStores() throws NotAuthorizedException;
 	public List<Store> getStoresPage(int offset, int max)
 			throws NotAuthorizedException;
-	public List <Store> getAllStores() throws NotAuthorizedException;
 	
 }
