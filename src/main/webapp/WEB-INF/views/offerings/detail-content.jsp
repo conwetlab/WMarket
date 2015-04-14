@@ -1,14 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div id="offering-detail" class="row container-fluid">
 
-  <div class="col-smartphone-10 col-tablet-5 col-desktop-3">
+  <div class="col-sm-10 col-md-5 col-lg-3">
     <div class="panel panel-default">
 
       <div class="panel-heading">
         <div class="thumbnail">
-          <img src="${offering.imageUrl}">
+          <img src="${ offering.imageUrl }">
         </div>
         <div class="panel-title">${ offering.displayName }</div>
       </div>
@@ -25,11 +26,11 @@
     </div>
   </div><!-- /.col-* -->
 
-  <div class="col-smartphone-10 col-tablet-5 col-desktop-7">
+  <div class="col-sm-10 col-md-5 col-lg-7">
     <div class="panel panel-default">
 
       <div class="panel-heading">
-        <div class="panel-title">Offer Details</div>
+        <div class="panel-title">Offering information</div>
       </div><!-- /.panel-heading -->
 
       <div class="panel-body">
@@ -41,19 +42,19 @@
         <dl class="dl-vertical">
           <dt>Current Version</dt>
           <dd>${ offering.version }</dd>
-          <dt>Developer</dt>
+          <dt>Developer Name</dt>
           <dd>${ offering.describedIn.creator.displayName }</dd>
           <dt>Upload Date</dt>
-          <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${offering.describedIn.registrationDate}" /></dd>
+          <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.registrationDate }" /></dd>
         </dl>
         <div class="title-descriptions">Store Information</div>
         <dl class="dl-vertical">
           <dt>Name</dt>
-          <dd>${ offering.store.displayName }</dd>
-          <dt>Creator</dt>
+          <dd><a href="${ pageContext.request.contextPath }/stores/${ offering.store.name }/offerings">${ offering.store.displayName }</a></dd>
+          <dt>Creator Name</dt>
           <dd>${ offering.store.creator.displayName }</dd>
           <dt>Registration Date</dt>
-          <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${offering.store.registrationDate}" /></dd>
+          <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.store.registrationDate }" /></dd>
         </dl>
       </div><!-- /.panel-body -->
 

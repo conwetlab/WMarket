@@ -38,11 +38,6 @@ import org.springframework.stereotype.Service;
 
 @Service("storeAuth")
 public class StoreAuth extends AbstractAuth<Store> {
-	
-	@Override
-	protected String genEntityName(Store entity) {
-		return entity.getName();
-	}
 
 	@Override
 	protected User getEntityOwner(Store store) {

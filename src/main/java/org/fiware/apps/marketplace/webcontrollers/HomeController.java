@@ -8,16 +8,16 @@ package org.fiware.apps.marketplace.webcontrollers;
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  * 3. Neither the name of copyright holders nor the names of its contributors
- *    may be used to endorse or promote products derived from this software 
+ *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,73 +32,44 @@ package org.fiware.apps.marketplace.webcontrollers;
  * #L%
  */
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.OfferingBo;
-import org.fiware.apps.marketplace.bo.UserBo;
-import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Offering;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 
+
 @Component
 @Path("/")
-public class HomeController {
+public class HomeController extends AbstractController {
 
-	@Autowired private OfferingBo offeringBo;
-	@Autowired private UserBo userBo;
+    @GET
+    public Response home() throws URISyntaxException {
+        return Response.status(Status.TEMPORARY_REDIRECT).location(new URI("offerings")).build();
+    }
 
-	@GET
-	@Produces(MediaType.TEXT_HTML)
-	public ModelAndView offeringListView() {
-		ModelMap data = new ModelMap();
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("login")
+    public Response loginView(
+            @Context HttpServletRequest request) {
 
-		try {
-			data.addAttribute("user", userBo.getCurrentUser());
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
-		}
+        ModelMap model = new ModelMap();
 
-		data.addAttribute("title", "Catalogue - Marketplace");
+        model.addAttribute("title", "Sign In - " + getContextName());
+        this.addFlashMessage(request, model);
 
-		return new ModelAndView("offering.list", data);
-	}
+        return Response.ok().entity(new ModelAndView("core.login", model)).build();
+    }
 
-	@GET
-	@Produces(MediaType.TEXT_HTML)
-	@Path("{storeName}/{descriptionName}/{offeringName}/")
-	public ModelAndView offeringDetailView(
-			@PathParam("storeName") String storeName,
-			@PathParam("descriptionName") String descriptionName,
-			@PathParam("offeringName") String offeringName) {
-
-		ModelMap data = new ModelMap();
-		Offering offering;
-
-		try {
-			data.addAttribute("user", userBo.getCurrentUser());
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			offering = offeringBo.findOfferingByNameStoreAndDescription(
-					storeName, descriptionName, offeringName);
-
-			data.addAttribute("offering", offering);
-			data.addAttribute("title", offering.getDisplayName() + " - Marketplace");
-		} catch (Exception e) {
-			// TODO: Show an error page!!!!
-			e.printStackTrace();
-		}
-
-		return new ModelAndView("offering.detail", data);
-	}
 }

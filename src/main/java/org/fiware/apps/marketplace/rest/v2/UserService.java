@@ -105,7 +105,7 @@ public class UserService {
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
-			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+			response = ERROR_UTILS.validationErrorResponse(ex);
 		} catch (DataIntegrityViolationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
@@ -121,46 +121,22 @@ public class UserService {
 	@POST
 	@Consumes({"application/xml", "application/json"})
 	@Path("/{username}")	
-	public Response updateUser(@PathParam("username") String username, User user) {
+	public Response updateUser(@PathParam("username") String userName, User user) {
 
 		Response response;
 		try {
-			User userToBeUpdated = userBo.findByName(username);
-
-			// At this moment, user name cannot be changed to avoid error with sessions...
-			// userToBeUpdated.setUserName(user.getUserName());
-			if (user.getUserName() != null && user.getUserName() != userToBeUpdated.getUserName()) {
-				throw new ValidationException("userName cannot be changed");
-			}
-			
-			if (user.getCompany() != null) {
-				userToBeUpdated.setCompany(user.getCompany());
-			}
-			
-			if (user.getPassword() != null) {
-				userToBeUpdated.setPassword(user.getPassword());
-			}
-			
-			if (user.getEmail() != null) {
-				userToBeUpdated.setEmail(user.getEmail());
-			}
-			
-			if (user.getDisplayName() != null) {
-				userToBeUpdated.setDisplayName(user.getDisplayName());
-			}
-							
-			userBo.update(userToBeUpdated);
+			userBo.update(userName, user);
 			response = Response.status(Status.OK).build();
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
-			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+			response = ERROR_UTILS.validationErrorResponse(ex);
 		} catch (DataIntegrityViolationException ex) {
-			response = ERROR_UTILS.badRequestResponse(ex);
-		} catch (HibernateException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (UserNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (HibernateException ex) {
+			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
 		}
@@ -170,12 +146,11 @@ public class UserService {
 
 	@DELETE
 	@Path("/{username}")	
-	public Response deleteUser(@PathParam("username") String username) {
+	public Response deleteUser(@PathParam("username") String userName) {
 
 		Response response;
 		try {
-			User userToBeDeleted = userBo.findByName(username);
-			userBo.delete(userToBeDeleted);
+			userBo.delete(userName);
 			response = Response.status(Status.NO_CONTENT).build();	
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
@@ -191,11 +166,11 @@ public class UserService {
 	@GET
 	@Produces({"application/xml", "application/json"})
 	@Path("/{username}")	
-	public Response getUser(@PathParam("username") String username) {	
+	public Response getUser(@PathParam("username") String userName) {	
 
 		Response response;
 		try {
-			User user = userBo.findByName(username);
+			User user = userBo.findByName(userName);
 
 			// If the value of the attribute is null, the 
 			// attribute won't be returned in the response

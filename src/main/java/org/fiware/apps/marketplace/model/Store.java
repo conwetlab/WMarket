@@ -41,6 +41,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -55,8 +56,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 
@@ -70,9 +69,9 @@ public class Store {
 	private String url;
 	private String displayName;
 	private String name;
-	private String description;
+	private String comment;
 	private Date registrationDate;
-	private List<Description> offeringsDescriptions;
+	private List<Description> descriptions;
 	private User lasteditor;	
 	private User creator;
 	
@@ -121,13 +120,13 @@ public class Store {
 	}
 	
 	@XmlElement
-	@Column(name = "description")
-	public String getDescription() {
-		return description;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 	
-	public void setDescription(String description) {
-		this.description = description;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	@XmlElement
@@ -165,13 +164,44 @@ public class Store {
 	}
 	
 	@XmlTransient
-	@OneToMany(mappedBy="store", cascade = CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
-	public List<Description> getOfferingsDescriptions() {
-		return offeringsDescriptions;
+	@OneToMany(mappedBy="store", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	public List<Description> getDescriptions() {
+		return descriptions;
 	}
 	
-	public void setOfferingsDescriptions(List<Description> offeringsDescriptions) {
-		this.offeringsDescriptions = offeringsDescriptions;
+	public void setDescriptions(List<Description> offeringsDescriptions) {
+		this.descriptions = offeringsDescriptions;
 	}
+	
+	public void addDescription(Description description) {
+		this.descriptions.add(description);
+	}
+	
+	public void removeDescription(Description description) {
+		this.descriptions.remove(description);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		
+		if (obj instanceof Store) {
+			Store other = (Store) obj;
+			
+			if (id == other.id || name.equals(other.name)) {
+				return true;
+			}			
+		}
+	
+		return false;
+	}
+	
+	
 }

@@ -6,40 +6,41 @@
 
 var Offering = (function () {
 
+	"use strict";
+
     var Offering = function Offering(data, options) {
         this.element = document.createElement('div');
-        this.element.className = "offering";
+        this.element.className = "panel panel-default offering";
 
         var offeringHeader = this.element.appendChild(document.createElement('div'));
-            offeringHeader.className = "offering-heading";
+            offeringHeader.className = "panel-heading";
 
         this.imageElement = offeringHeader.appendChild(document.createElement('div'));
-        this.imageElement.className = "offering-image";
+        this.imageElement.className = "thumbnail thumbnail-sm";
 
         var offeringImage = this.imageElement.appendChild(document.createElement('img'));
-            offeringImage.setAttribute('src', data.imageUrl);
+            offeringImage.src = data.imageUrl;
+
+        this.nameElement = offeringHeader.appendChild(document.createElement('a'));
+        this.nameElement.className = "panel-title";
+        this.nameElement.href = [WMarket.core.contextPath, 'offerings', data.store, data.describedIn, data.name].join('/');
+        this.nameElement.textContent = data.displayName;
 
         var offeringBody = this.element.appendChild(document.createElement('div'));
-            offeringBody.className = "offering-body";
+            offeringBody.className = "panel-body";
 
-        var offeringTitle = offeringBody.appendChild(document.createElement('div'));
-            offeringTitle.className = "offering-title";
+        var store = WMarket.resources.stores.getStoreByName(data.store);
 
-        this.nameElement = offeringTitle.appendChild(document.createElement('div'));
-        this.nameElement.className = "offering-name";
-        this.nameElement.appendChild(document.createTextNode(data.displayName));
-
-        this.storeElement = offeringTitle.appendChild(document.createElement('div'));
+        this.storeElement = offeringBody.appendChild(document.createElement('a'));
         this.storeElement.className = "offering-store";
-        this.storeElement.appendChild(document.createTextNode(data.store));
+        this.storeElement.href = [WMarket.core.contextPath, 'stores', store.name, 'offerings'].join('/');
+        this.storeElement.textContent = store.displayName;
+
+        this.store = store;
 
         this.descriptionElement = offeringBody.appendChild(document.createElement('div'));
         this.descriptionElement.className = "offering-description";
-        this.descriptionElement.appendChild(document.createTextNode(data.description));
-
-        this.element.addEventListener('click', function (event) {
-            location.assign(location.href + data.store + '/' + data.describedIn + '/' + data.name + '/');
-        });
+        this.descriptionElement.textContent = data.description;
     };
 
     return Offering;

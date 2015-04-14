@@ -109,7 +109,7 @@ public class MaintenanceBoImpl implements MaintenanceBo {
 				}
 			}
 			for (Store store : storeBo.getAllStores()) {
-				for (Description service : store.getOfferingsDescriptions()) {
+				for (Description service : store.getDescriptions()) {
 					for (ServiceAttributeType attributeType : attributeTypeResolver.resolveAttributeTypesFromUri(service.getUrl())) {
 						attributeTypeBo.save(attributeType);
 					}

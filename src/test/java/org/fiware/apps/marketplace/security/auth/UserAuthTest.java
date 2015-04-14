@@ -32,10 +32,10 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.fiware.apps.marketplace.bo.UserBo;
-import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
@@ -73,9 +73,9 @@ public class UserAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void canCreateUser() throws UserNotFoundException, NotAuthorizedException {
-		User user = mock(User.class);
-		authHelper.canCreate(user);
+	public void canCreateUser() throws UserNotFoundException {
+		User user = createBasicUser(3);
+		assertThat(authHelper.canCreate(user)).isTrue();
 	}
 
 
@@ -83,9 +83,7 @@ public class UserAuthTest {
 	///////////////////////////////////// TEST UPDATE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 
-	private void testUpdate(User creator, User updater) 
-			throws NotAuthorizedException  {
-		
+	private void testUpdate(User creator, User updater, boolean canUpdate)  {
 		try {
 			when(userBoMock.getCurrentUser()).thenReturn(updater);
 		} catch (UserNotFoundException e) {
@@ -93,50 +91,45 @@ public class UserAuthTest {
 		}
 
 		// Execute the test
-		authHelper.canUpdate(creator);
+		boolean result = authHelper.canUpdate(creator);
+
+		// Check the result
+		assertThat(result).isEqualTo(canUpdate);
+
 	}
 
 	@Test
-	public void canUpdateUserSameUser() 
-			throws UserNotFoundException, NotAuthorizedException {
-		
+	public void canUpdateUserSameUser() throws UserNotFoundException {
 		User creator = createBasicUser(1);
-		testUpdate(creator, creator);
+		testUpdate(creator, creator, true);
 	}
 
 	@Test
-	public void canUpdateUser() 
-			throws UserNotFoundException, NotAuthorizedException {
-		
+	public void canUpdateUser() throws UserNotFoundException {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
-		testUpdate(creator, updater);
+		testUpdate(creator, updater, true);
 	}
 
-	@Test(expected = NotAuthorizedException.class)
-	public void canNotUpdateUserNotSameUser() 
-			throws UserNotFoundException, NotAuthorizedException {			
-		
+	@Test
+	public void canNotUpdateUserNotSameUser() throws UserNotFoundException {			
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
-		testUpdate(creator, updater);
+		testUpdate(creator, updater, false);
 	}
 
-	@Test(expected = NotAuthorizedException.class)
-	public void canNotUpdateUserNotLoggedIn() 
-			throws UserNotFoundException, NotAuthorizedException {			
-		
+	@Test
+	public void canNotUpdateUserNotLoggedIn() throws UserNotFoundException {			
 		User creator = createBasicUser(1);
 		User updater = null;
-		testUpdate(creator, updater);
+		testUpdate(creator, updater, false);
 	}
 
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////// TEST DELETE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-	
-	private void testDelete(User creator, User updater) throws NotAuthorizedException  {
+	private void testDelete(User creator, User updater, boolean canDelete)  {
 		try {
 			when(userBoMock.getCurrentUser()).thenReturn(updater);
 		} catch (UserNotFoundException e) {
@@ -144,43 +137,46 @@ public class UserAuthTest {
 		}
 
 		// Execute the test
-		authHelper.canDelete(creator);
+		boolean result = authHelper.canDelete(creator);
+
+		// Check the result
+		assertThat(result).isEqualTo(canDelete);
+
 	}
 
 	@Test
-	public void canDeleteUserSameUser() throws NotAuthorizedException {
+	public void canDeleteUserSameUser() {
 		User creator = createBasicUser(1);
-		testDelete(creator, creator);
+		testDelete(creator, creator, true);
 	}
 
 	@Test
-	public void canDeleteUser() throws NotAuthorizedException {
+	public void canDeleteUser() {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
-		testDelete(creator, updater);
+		testDelete(creator, updater, true);
 	}
 
-	@Test(expected = NotAuthorizedException.class)
-	public void canNotDeleteUserNotSameUser() throws NotAuthorizedException {			
+	@Test
+	public void canNotDeleteUserNotSameUser() {			
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
-		testDelete(creator, updater);
+		testDelete(creator, updater, false);
 	}
 
-	@Test(expected = NotAuthorizedException.class)
-	public void canNotDeleteUserNotLoggedIn() throws NotAuthorizedException {			
+	@Test
+	public void canNotDeleteUserNotLoggedIn() {			
 		User creator = createBasicUser(1);
 		User updater = null;
-		testDelete(creator, updater);
+		testDelete(creator, updater, false);
 	}
 
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////// TEST LIST //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-	
 	@Test
-	public void canList() throws NotAuthorizedException {
-		authHelper.canList();
+	public void canList() {
+		assertThat(authHelper.canList()).isTrue();
 	}
 }

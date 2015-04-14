@@ -61,21 +61,30 @@ public class OfferingBoImpl implements OfferingBo {
 	@Override
 	@Transactional(readOnly = false)
 	public void save(Offering offering) throws NotAuthorizedException {
-		offeringAuth.canCreate(offering);	// Throws exception if not authorized
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canCreate(offering)) {
+			throw new NotAuthorizedException("create offering");
+		}
+		
 		offeringDao.save(offering);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
 	public void update(Offering offering) throws NotAuthorizedException {
-		offeringAuth.canUpdate(offering);	// Throws exception if not authorized
-		offeringDao.update(offering);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canUpdate(offering)) {
+			throw new NotAuthorizedException("update offering");
+		}		offeringDao.update(offering);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
 	public void delete(Offering offering) throws NotAuthorizedException {
-		offeringAuth.canDelete(offering);	// Throws exception if not authorized
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canDelete(offering)) {
+			throw new NotAuthorizedException("delete offering");
+		}
 		offeringDao.delete(offering);
 	}
 
@@ -96,8 +105,10 @@ public class OfferingBoImpl implements OfferingBo {
 		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		
-		// Check rights (Exception is risen if user is not authorized)
-		offeringAuth.canGet(offering);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canGet(offering)) {
+			throw new NotAuthorizedException("find offering");
+		}
 		
 		return offering;
 	}
@@ -105,7 +116,11 @@ public class OfferingBoImpl implements OfferingBo {
 	@Override
 	@Transactional
 	public List<Offering> getAllOfferings() throws NotAuthorizedException {
-		offeringAuth.canList();		// Throws exception if not authorized	
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList()) {
+			throw new NotAuthorizedException("list offerings");
+		}
+		
 		return offeringDao.getAllOfferings();
 	}
 
@@ -114,7 +129,11 @@ public class OfferingBoImpl implements OfferingBo {
 	public List<Offering> getOfferingsPage(int offset, int max) 
 			throws NotAuthorizedException {
 		
-		offeringAuth.canList();		// Throws exception if not authorized	
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList()) {
+			throw new NotAuthorizedException("list offerings");
+		}
+		
 		return offeringDao.getOfferingsPage(offset, max);
 	}
 
@@ -124,7 +143,12 @@ public class OfferingBoImpl implements OfferingBo {
 			throws StoreNotFoundException, NotAuthorizedException {
 		
 		Store store = storeBo.findByName(storeName);
-		offeringAuth.canList(store);	// Throws exception if not authorized
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList(store)) {
+			throw new NotAuthorizedException("list offerings in store " + store.getName());
+		}
+		
 		return offeringDao.getAllStoreOfferings(storeName);
 	}
 
@@ -134,7 +158,12 @@ public class OfferingBoImpl implements OfferingBo {
 			int max) throws StoreNotFoundException, NotAuthorizedException {
 		
 		Store store = storeBo.findByName(storeName);
-		offeringAuth.canList(store);	// Throws exception if not authorized
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList(store)) {
+			throw new NotAuthorizedException("list offerings in store " + store.getName());
+		}
+		
 		return offeringDao.getStoreOfferingsPage(storeName, offset, max);
 	}
 
@@ -144,7 +173,12 @@ public class OfferingBoImpl implements OfferingBo {
 			throws StoreNotFoundException, DescriptionNotFoundException, NotAuthorizedException {
 		
 		Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
-		offeringAuth.canList(description);	// Throws exception if not authorized
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList(description)) {
+			throw new NotAuthorizedException("list offerings in description " + description.getName());
+		}
+		
 		return offeringDao.getAllDescriptionOfferings(storeName, descriptionName);
 	}
 
@@ -156,7 +190,12 @@ public class OfferingBoImpl implements OfferingBo {
 			NotAuthorizedException {
 		
 		Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
-		offeringAuth.canList(description);	// Throws exception if not authorized
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList(description)) {
+			throw new NotAuthorizedException("list offerings in description " + description.getName());
+		}
+		
 		return offeringDao.getDescriptionOfferingsPage(storeName, descriptionName, offset, max);
 	}
 	

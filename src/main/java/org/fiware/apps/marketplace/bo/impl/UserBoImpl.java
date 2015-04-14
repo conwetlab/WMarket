@@ -64,23 +64,34 @@ public class UserBoImpl implements UserBo {
 	// Encoder must be the same in all the platform: use the bean
 	@Autowired private PasswordEncoder encoder;
 
-
 	private static final Logger logger = LoggerFactory.getLogger(UserBoImpl.class);
 
 	@Override
 	@Transactional(readOnly=false)
 	public void save(User user) throws NotAuthorizedException, ValidationException{
-
-		// Check rights (exception is risen if user is not allowed)
-		userAuth.canCreate(user);
 		
-		// Validate the user (exception is risen if the user is not valid)
-		userValidator.validateUser(user, true);
-
-		// Some authentication methods require their own user name
-		if (user.getUserName() == null) {
-			user.setUserName(NameGenerator.getURLName(user.getDisplayName()));
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canCreate(user)) {
+			throw new NotAuthorizedException("create user");
 		}
+		
+		// Set user name based on the display name. It's possible to have to users with
+		// the same display name, but it's necessary to set a different user name for
+		// each one.
+		String basicUserName = NameGenerator.getURLName(user.getDisplayName());
+		String finalUserName = basicUserName;
+		boolean available = userDao.isUserNameAvailable(basicUserName);
+		int counter = 1;
+		
+		while(!available) {
+			finalUserName = basicUserName + "-" + counter++;
+			available = userDao.isUserNameAvailable(finalUserName);
+		}
+		
+		user.setUserName(finalUserName);
+		
+		// Exception is risen if the user is not valid
+		userValidator.validateNewUser(user);
 		
 		// Encode the password
 		user.setPassword(encoder.encode(user.getPassword()));
@@ -94,27 +105,56 @@ public class UserBoImpl implements UserBo {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(User user) throws NotAuthorizedException, ValidationException {
+	public void update(String userName, User updatedUser) 
+			throws NotAuthorizedException, ValidationException, UserNotFoundException {
 		
-		// Check rights (exception is risen if user is not allowed)
-		userAuth.canUpdate(user);
+		User userToBeUpdated = userDao.findByName(userName);
 		
-		// Validate the user (exception is risen if the user is not valid)
-		userValidator.validateUser(user, false);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canUpdate(userToBeUpdated)) {
+			throw new NotAuthorizedException("update user");
+		}
 		
-		// Encode the password
-		user.setPassword(encoder.encode(user.getPassword()));
-			
-		userDao.update(user);
+		// Exception is risen if the user is not valid
+		userValidator.validateUpdatedUser(userToBeUpdated, updatedUser);		
+
+		// At this moment, user name cannot be changed to avoid error with sessions
+		// For this reason this field is ignored
+		// userToBeUpdated.setUserName(user.getUserName());
+		// if (updatedUser.getUserName() != null && !updatedUser.getUserName().equals(userToBeUpdated.getUserName())) {
+		// 	throw new ValidationException("userName", "userName cannot be changed");
+		// }
+		
+		if (updatedUser.getCompany() != null) {
+			userToBeUpdated.setCompany(updatedUser.getCompany());
+		}
+		
+		if (updatedUser.getPassword() != null) {
+			// Encode the password
+			userToBeUpdated.setPassword(encoder.encode(updatedUser.getPassword()));
+		}
+		
+		if (updatedUser.getEmail() != null) {
+			userToBeUpdated.setEmail(updatedUser.getEmail());
+		}
+		
+		if (updatedUser.getDisplayName() != null) {
+			userToBeUpdated.setDisplayName(updatedUser.getDisplayName());
+		}
+
+		userDao.update(userToBeUpdated);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(User user) throws NotAuthorizedException {
+	public void delete(String userName) throws NotAuthorizedException, UserNotFoundException {
 		
-		// Check rights (exception is risen if user is not allowed)
-		userAuth.canDelete(user);
+		User user = userDao.findByName(userName);
 		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canDelete(user)) {
+			throw new NotAuthorizedException("delete user");
+		}		
 		userDao.delete(user);
 	}
 
@@ -125,8 +165,25 @@ public class UserBoImpl implements UserBo {
 		
 		User user = userDao.findByName(userName);
 		
-		// Check rights (exception is risen if user is not allowed)
-		userAuth.canGet(user);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canGet(user)) {
+			throw new NotAuthorizedException("find user");
+		}
+		
+		return user;
+	}
+	
+	@Override
+	@Transactional
+	public User findByEmail(String email) throws NotAuthorizedException, 
+			UserNotFoundException {
+		
+		User user = userDao.findByEmail(email);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canGet(user)) {
+			throw new NotAuthorizedException("find user");
+		}
 		
 		return user;
 	}
@@ -134,8 +191,10 @@ public class UserBoImpl implements UserBo {
 	@Override
 	@Transactional
 	public List<User> getUsersPage(int offset, int max) throws NotAuthorizedException {
-		// Check rights (exception is risen if user is not allowed)
-		userAuth.canList();
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canList()) {
+			throw new NotAuthorizedException("list users");
+		}
 		
 		return userDao.getUsersPage(offset, max);
 	}
@@ -143,9 +202,11 @@ public class UserBoImpl implements UserBo {
 	@Override
 	@Transactional
 	public List<User> getAllUsers() throws NotAuthorizedException {
-		// Check rights (exception is risen if user is not allowed)
-		userAuth.canList();
-
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canList()) {
+			throw new NotAuthorizedException("list users");
+		}
+		
 		return userDao.getAllUsers();
 	}
 
@@ -166,4 +227,9 @@ public class UserBoImpl implements UserBo {
 		return userDao.findByName(userName);
 	}
 
+	@Override
+	public boolean checkCurrentUserPassword(String password) throws UserNotFoundException{
+		User user = getCurrentUser();
+		return encoder.matches(password, user.getPassword());
+	}
 }

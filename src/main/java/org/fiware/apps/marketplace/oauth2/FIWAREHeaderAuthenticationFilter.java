@@ -35,6 +35,8 @@ package org.fiware.apps.marketplace.oauth2;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -54,20 +56,22 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.util.StringUtils;
 
 /**
- * Filter that will identify a user when the X-Auth-Header is specified in a request to the API
+ * Filter that will identify a user when the Authorization header is specified in a request to the API
  * @author aitor
  *
  */
-public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProcessingFilter{
+public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
 	private String headerName;
 	private FIWAREClient client;
+	
+	private static final Pattern AUTHORIZATION_PATTERN = 
+			Pattern.compile("^bearer ([^\\s]+)$", Pattern.CASE_INSENSITIVE);
 
 	protected FIWAREHeaderAuthenticationFilter() {
-		this("/api/", "X-Auth-Token");
+		this("/api/", "Authorization");
 	}
 
 	protected FIWAREHeaderAuthenticationFilter(String baseUrl, String headerName) {
@@ -93,22 +97,32 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 			IOException, ServletException {
 
 		Authentication auth = null;
-		String authToken = request.getHeader(headerName);
-
+		String authHeader = request.getHeader(headerName);
+		Matcher matcher = AUTHORIZATION_PATTERN.matcher(authHeader);
+				
 		try {
-			// This method can return an exception when the Token is invalid
-			// In this case, the exception is caught and the correct exceptions is thrown...
-			UserProfile profile = client.getUserProfile(authToken);
+			
+			// We only have one possible match
+			if (matcher.find()) {
+				String authToken = matcher.group(1);
+				
+				// This method can return an exception when the Token is invalid
+				// In this case, the exception is caught and the correct exceptions is thrown...
+				UserProfile profile = client.getUserProfile(authToken);
 
-			// Define authorities
-			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-	        for (String role: profile.getRoles()) {
-	            authorities.add(new SimpleGrantedAuthority(role));
-	        }
+				// Define authorities
+				Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		        for (String role: profile.getRoles()) {
+		            authorities.add(new SimpleGrantedAuthority(role));
+		        }
 
-			// new token with credentials (like previously) and user profile and authorities
-			OAuthCredentials credentials = new OAuthCredentials(null, authToken, "", client.getName());
-			auth = new ClientAuthenticationToken(credentials, client.getName(), profile, authorities);
+				// new token with credentials (like previously) and user profile and authorities
+				OAuthCredentials credentials = new OAuthCredentials(null, authToken, "", client.getName());
+				auth = new ClientAuthenticationToken(credentials, client.getName(), profile, authorities);	
+			} else {
+				// This is not supposed to happen
+				throw new IllegalStateException("Pattern is suppossed to match.");
+			}
 
 		} catch (Exception ex) {
 			// This exception should be risen in order to return a 401
@@ -132,7 +146,7 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 	 * Request Matcher that specifies when the filter should be executed. In this case we 
 	 * want the filter to be executed when the following two conditions are true:
 	 * 1) The request is to the API (/api/...)
-	 * 2) The X-Auth-Token header is present (X-Auth-Token: ...)
+	 * 2) The X-Auth-Token header is present (Authorization: ...)
 	 * @author aitor
 	 *
 	 */
@@ -149,7 +163,7 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 		@Override
 		public boolean matches(HttpServletRequest request) {
 
-			String authToken = request.getHeader(headerName);
+			String authHeader = request.getHeader(headerName);
 
 			// Get path
 			String url = request.getServletPath();
@@ -168,8 +182,9 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 				}
 				url = sb.toString();
 			}
-
-			return url.startsWith(baseUrl) && authToken != null && StringUtils.hasText(authToken);
+			
+			return url.startsWith(baseUrl) && authHeader != null && 
+					AUTHORIZATION_PATTERN.matcher(authHeader).matches();
 		}
 	}
 

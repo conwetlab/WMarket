@@ -75,7 +75,7 @@ public class AllOfferingsServiceTest {
 		// Mocks
 		User user = mock(User.class);
 		when(user.getUserName()).thenReturn(userName);
-		Exception e = new NotAuthorizedException(user, "list offerings");
+		Exception e = new NotAuthorizedException("list offerings");
 		doThrow(e).when(offeringBoMock).getOfferingsPage(anyInt(), anyInt());
 
 		// Call the method
@@ -83,7 +83,7 @@ public class AllOfferingsServiceTest {
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, 
-				e.toString());
+				e.getMessage());
 	}
 	
 	private void testListAllOfferingsInvalidParams(int offset, int max) {

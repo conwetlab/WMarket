@@ -46,8 +46,13 @@ public interface StoreDao {
 	public void delete(Store store);
 	
 	// Find by name
-	public Store findByName(String url) throws StoreNotFoundException;
-	
+	public Store findByName(String name) throws StoreNotFoundException;
+
+    // Validation
+    public boolean isNameAvailable(String name);
+    public boolean isDisplayNameAvailable(String displayName);
+    public boolean isURLAvailable(String url);
+
 	// Get all or a sublist
 	public List<Store> getStoresPage(int offset, int max);
 	public List <Store> getAllStores();

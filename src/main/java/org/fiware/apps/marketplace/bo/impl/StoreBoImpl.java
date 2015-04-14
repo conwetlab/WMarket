@@ -33,14 +33,18 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
+import java.util.Date;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.fiware.apps.marketplace.utils.NameGenerator;
@@ -54,43 +58,98 @@ public class StoreBoImpl implements StoreBo{
 	@Autowired private StoreDao storeDao;
 	@Autowired private StoreAuth storeAuth;
 	@Autowired private StoreValidator storeValidator;
-		
+	@Autowired private UserBo userBo;
+
 	@Override
 	@Transactional(readOnly=false)
 	public void save(Store store) throws NotAuthorizedException, 
 			ValidationException {
-		
-		// Check rights (exception is risen if user is not allowed)
-		storeAuth.canCreate(store);
-		
-		// Validate the store (exception is risen if the user is not valid)
-		storeValidator.validateStore(store, true);
-		
-		store.setName(NameGenerator.getURLName(store.getDisplayName()));
-		storeDao.save(store);
+
+		try {
+			// Get the currently logged-in user
+			User user = userBo.getCurrentUser();
+	
+			// Set the current date as registration date of this store
+			store.setRegistrationDate(new Date());
+	
+			// Set user as creator and latest editor of this store
+			store.setCreator(user);
+			store.setLasteditor(user);
+			
+			// Set default name based on the display name
+			store.setName(NameGenerator.getURLName(store.getDisplayName()));
+	
+			// Check rights and raise exception if user is not allowed to perform this action
+			if (!storeAuth.canCreate(store)) {
+				throw new NotAuthorizedException("create store");
+			}
+			
+			// Exception is risen if the store is not valid
+			storeValidator.validateNewStore(store);
+			
+			storeDao.save(store);
+		} catch (UserNotFoundException ex) {
+			// This exception is not supposed to happen
+			throw new RuntimeException(ex);
+		}
 		
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(Store store) throws NotAuthorizedException, 
-			ValidationException {
+	public void update(String storeName, Store updatedStore) throws NotAuthorizedException, 
+			ValidationException, StoreNotFoundException {
 		
-		// Check rights (exception is risen if user is not allowed)
-		storeAuth.canUpdate(store);
-		
-		// Validate the store (exception is risen if the user is not valid)
-		storeValidator.validateStore(store, false);
-		
-		storeDao.update(store);
+		try {
+			// Get the currently logged-in user
+			User user = userBo.getCurrentUser();
+			
+			Store storeToBeUpdate = storeDao.findByName(storeName);
+			
+			// Check rights and raise exception if user is not allowed to perform this action
+			if (!storeAuth.canUpdate(storeToBeUpdate)) {
+				throw new NotAuthorizedException("update store");
+			}
+			
+			// Exception is risen if the store is not valid
+			// Store returned by the BBDD cannot be updated if the updated store is not valid.
+			storeValidator.validateUpdatedStore(storeToBeUpdate, updatedStore);
+			
+			// Update fields
+			if (updatedStore.getUrl() != null) {
+				storeToBeUpdate.setUrl(updatedStore.getUrl());
+			}
+
+			if (updatedStore.getComment() != null) {
+				storeToBeUpdate.setComment(updatedStore.getComment());
+			}
+
+			if (updatedStore.getDisplayName() != null) {
+				storeToBeUpdate.setDisplayName(updatedStore.getDisplayName());
+			}
+			
+			storeToBeUpdate.setLasteditor(user);
+			
+			storeDao.update(storeToBeUpdate);
+			
+		} catch (UserNotFoundException ex) {
+			// This exception is not supposed to happen
+			throw new RuntimeException(ex);
+		}
 		
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(Store store) throws NotAuthorizedException {
-		// Check rights (exception is risen if user is not allowed)
-		storeAuth.canDelete(store);
+	public void delete(String storeName) throws NotAuthorizedException, StoreNotFoundException {
+		
+		Store store = storeDao.findByName(storeName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!storeAuth.canDelete(store)) {
+			throw new NotAuthorizedException("delete store");
+		}
+		
 		storeDao.delete(store);
 		
 	}
@@ -102,8 +161,10 @@ public class StoreBoImpl implements StoreBo{
 		
 		Store store = storeDao.findByName(name);
 		
-		// Check rights (exception is risen if user is not allowed)
-		storeAuth.canGet(store);
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!storeAuth.canGet(store)) {
+			throw new NotAuthorizedException("find store");
+		}
 		
 		return store;
 	}
@@ -113,8 +174,10 @@ public class StoreBoImpl implements StoreBo{
 	public List<Store> getStoresPage(int offset, int max) 
 			throws NotAuthorizedException {
 		
-		// Check rights (exception is risen if user is not allowed)
-		storeAuth.canList();
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!storeAuth.canList()) {
+			throw new NotAuthorizedException("list stores");
+		}
 		
 		return storeDao.getStoresPage(offset, max);
 	}
@@ -123,8 +186,10 @@ public class StoreBoImpl implements StoreBo{
 	@Transactional
 	public List<Store> getAllStores() throws NotAuthorizedException {
 		
-		// Check rights (exception is risen if user is not allowed)
-		storeAuth.canList();
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!storeAuth.canList()) {
+			throw new NotAuthorizedException("list stores");
+		}
 		
 		return storeDao.getAllStores();
 	}

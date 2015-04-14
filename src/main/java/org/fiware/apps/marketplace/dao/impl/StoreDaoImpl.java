@@ -46,17 +46,17 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 
 	@Override
 	public void save(Store store) {
-		getSession().saveOrUpdate(store);				
+		getSession().saveOrUpdate(store);	
 	}
 	
 	@Override
 	public void update(Store store) {
-		getSession().update(store);		
+		getSession().update(store);
 	}
 
 	@Override
 	public void delete(Store store) {
-		getSession().delete(store);		
+		getSession().delete(store);
 	}
 
 	@Override
@@ -74,6 +74,37 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 			
 	}
 	
+    @Override
+    public boolean isNameAvailable(String name) {
+		List<?> list = getSession()
+				.createQuery("from Store where name=:name")
+				.setParameter("name", name)
+				.list();
+		
+		return list.isEmpty();
+    }
+    
+    @Override
+    public boolean isDisplayNameAvailable(String displayName) {
+		List<?> list = getSession()
+				.createQuery("from Store where displayName=:displayName")
+				.setParameter("displayName", displayName)
+				.list();
+		
+		return list.isEmpty();
+    }
+    
+	@Override
+	public boolean isURLAvailable(String url) {
+		List<?> list = getSession()
+				.createQuery("from Store where url=:url")
+				.setParameter("url", url)
+				.list();
+		
+		return list.isEmpty();
+		
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Store> getStoresPage(int offset, int max) {
@@ -89,5 +120,4 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	public List <Store> getAllStores() {
 		return getSession().createCriteria(Store.class).list();
 	}
-
 }

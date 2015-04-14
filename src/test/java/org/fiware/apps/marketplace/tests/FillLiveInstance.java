@@ -69,7 +69,7 @@ public class FillLiveInstance {
 		Store store  = new Store();		
 		
 		store.setName("integrationStore");
-		store.setDescription("Integration Store Description");
+		store.setComment("Integration Store Description");
 		store.setUrl("http://www.integrationStore.com");		
 		//assertTrue(storeClient.save(store));
 		

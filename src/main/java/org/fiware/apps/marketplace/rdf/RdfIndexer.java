@@ -44,10 +44,10 @@ import org.apache.lucene.index.StaleReaderException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.fiware.apps.marketplace.model.Description;
-import org.fiware.apps.marketplace.utils.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -57,15 +57,21 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 @Service("rdfIndexer")
 public class RdfIndexer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(RdfIndexer.class);
-	
+	@Value("${lucene.IndexPath}") private String lucenePath;
 	@Autowired private RdfHelper rdfHelper;
 	
-	public void indexService(Description service) throws MalformedURLException{
+	private static final Logger logger = LoggerFactory.getLogger(RdfIndexer.class);	
+	
+	public void indexOrUpdateService(Description description) throws MalformedURLException {
 
-		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
-		Model model = rdfHelper.loadModel(service.getUrl());
-		String serviceId = service.getId().toString();
+		Model model = rdfHelper.loadModel(description.getUrl());
+		String serviceId = description.getId().toString();
+		
+		// Delete previous indexes for this description (if any)
+		// If a description is being updated, a JenaException should have been thrown previously and
+		// this method won't be called, so the previous index is not deleted.
+		deleteService(description);
+
 		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath, serviceId);	
 
 		StmtIterator indexModel = model.listStatements();
@@ -78,15 +84,14 @@ public class RdfIndexer {
 
 	}
 
-	public void deleteService(Description service){
+	public void deleteService(Description description) {
 
-		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
 		Analyzer analyzer = new StandardAnalyzer();
 		IndexWriter indexWriter = null;
 		
 		try {
 			indexWriter = new IndexWriter(lucenePath, analyzer);
-			indexWriter.deleteDocuments(new Term ("docId", service.getId().toString()));
+			indexWriter.deleteDocuments(new Term ("docId", description.getId().toString()));
 		} catch (StaleReaderException e) {
 			logger.error("Deleting Service from Index - StaleReaderException", e);
 		} catch (CorruptIndexException e) {

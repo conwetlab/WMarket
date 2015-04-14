@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.rest.v2;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,7 +44,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
-import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
@@ -52,7 +51,6 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
-import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.rest.v2.StoreService;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -66,20 +64,18 @@ import org.mockito.stubbing.Answer;
 
 public class StoreServiceTest {
 
-	@Mock private UserBo userBoMock;
 	@Mock private StoreBo storeBoMock;
 
 	@InjectMocks private StoreService storeRegistrationService;
 
 	// Default URI
-	private User user;
 	private Store store;
 	private UriInfo uri;
 
 	// Other useful constants
 	private static final String OFFSET_MAX_INVALID = "offset and/or max are not valid";
 	private static final String VALIDATION_ERROR = "Validation Exception";
-	private static final String DESCRIPTION = "This is a basic description";
+	private static final String COMMENT = "This is a basic description";
 	private static final String DISPLAY_NAME = "stOre 1";
 	private static final String NAME = "store-1";
 	private static final String URL = "https://store.lab.fi-ware.org";
@@ -100,8 +96,9 @@ public class StoreServiceTest {
 	@Before
 	public void generateValidStore() {
 		store = new Store();
-		store.setDescription(DESCRIPTION);
+		store.setComment(COMMENT);
 		store.setDisplayName(DISPLAY_NAME);
+		store.setName(NAME);
 		store.setUrl(URL);
 	}
 	
@@ -109,12 +106,6 @@ public class StoreServiceTest {
 	public void setUpUri() {
 		uri = mock(UriInfo.class);
 		when(uri.getPath()).thenReturn(PATH);
-	}
-
-	@Before
-	public void initAuthUtils() throws UserNotFoundException {
-		user = new User();
-		when(userBoMock.getCurrentUser()).thenReturn(user);
 	}
 
 
@@ -125,14 +116,14 @@ public class StoreServiceTest {
 	@Test
 	public void testCreateStoreNotAllowed() throws Exception {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "create store");
+		Exception e = new NotAuthorizedException("create store");
 		doThrow(e).when(storeBoMock).save(store);
 
 		// Call the method
 		Response res = storeRegistrationService.createStore(uri, store);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 
 		// Verify mocks
 		verify(storeBoMock).save(store);
@@ -161,28 +152,27 @@ public class StoreServiceTest {
 
 		// Check that all the parameters of the Store are correct
 		// (some of them must have been changed by the method)
-		assertThat(store.getRegistrationDate()).isNotNull();
+		// assertThat(store.getRegistrationDate()).isNotNull();
 		assertThat(store.getDisplayName()).isEqualTo(DISPLAY_NAME);
 		assertThat(store.getName()).isEqualTo(NAME);
-		assertThat(store.getDescription()).isEqualTo(DESCRIPTION);
+		assertThat(store.getComment()).isEqualTo(COMMENT);
 		assertThat(store.getUrl()).isEqualTo(URL);
-		assertThat(store.getCreator()).isEqualTo(user);
-		assertThat(store.getLasteditor()).isEqualTo(user);
+		// assertThat(store.getCreator()).isEqualTo(user);
+		// assertThat(store.getLasteditor()).isEqualTo(user);
 	}
 	
 	private void testCreateStoreGenericError(int statusCode, ErrorType errorType, 
-			String errorMsg, boolean saveInvoked) {
+			String fieldName, String errorMsg) {
 		
-		int saveTimes = saveInvoked ? 1 : 0;
-
 		// Call the method
 		Response res = storeRegistrationService.createStore(uri, store);
 
 		// Verify mocks
 		try {
-			verify(storeBoMock, times(saveTimes)).save(store);
-			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, errorMsg);
+			verify(storeBoMock).save(store);
+			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, errorMsg, fieldName);
 		} catch (Exception e) {
+			e.printStackTrace();
 			// Impossible...
 			fail("exception " + e + " not expected");
 		}
@@ -191,18 +181,20 @@ public class StoreServiceTest {
 	@Test
 	public void testCreateStoreValidationException() throws Exception {
 		// Mocks
-		doThrow(new ValidationException(VALIDATION_ERROR)).when(storeBoMock).save(store);
+		String field = "aField";
+		doThrow(new ValidationException(field, VALIDATION_ERROR)).when(storeBoMock).save(store);
 
-		testCreateStoreGenericError(400, ErrorType.BAD_REQUEST, VALIDATION_ERROR, true);
+		testCreateStoreGenericError(400, ErrorType.VALIDATION_ERROR, field, VALIDATION_ERROR);
 	}
 	
 	@Test
 	public void testCreateStoreUserNotFoundException() throws Exception {
 		// Mocks
-		doThrow(new UserNotFoundException("User Not Found exception")).when(userBoMock).getCurrentUser();
+		String exceptionMsg = "User not found";
+		doThrow(new RuntimeException(new UserNotFoundException(exceptionMsg)))
+				.when(storeBoMock).save(store);
 
-		testCreateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, 
-				"There was an error retrieving the user from the database", false);
+		testCreateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, null, exceptionMsg);
 
 	}
 	
@@ -210,7 +202,7 @@ public class StoreServiceTest {
 		// Mock
 		doThrow(exception).when(storeBoMock).save(store);
 
-		testCreateStoreGenericError(400, ErrorType.BAD_REQUEST, message, true);
+		testCreateStoreGenericError(400, ErrorType.BAD_REQUEST, null, message);
 	}
 	
 	@Test
@@ -231,7 +223,7 @@ public class StoreServiceTest {
 		String exceptionMsg = "SERVER ERROR";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).save(store);
 
-		testCreateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg, true);
+		testCreateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, null, exceptionMsg);
 	}
 
 
@@ -241,146 +233,78 @@ public class StoreServiceTest {
 
 	@Test
 	public void testUpdateStoreNotAllowed() throws Exception {
-		Store newStore = new Store();
-
 		// Mocks
-		when(storeBoMock.findByName(NAME)).thenReturn(store);
-		Exception e = new NotAuthorizedException(user, "update store");
-		doThrow(e).when(storeBoMock).update(store);
+		Exception e = new NotAuthorizedException("update store");
+		doThrow(e).when(storeBoMock).update(NAME, store);
 
 		// Call the method
-		Response res = storeRegistrationService.updateStore(NAME, newStore);
+		Response res = storeRegistrationService.updateStore(NAME, store);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 
 		// Verify mocks
-		verify(storeBoMock).update(store);	
+		verify(storeBoMock).update(NAME, store);	
 	}
 	
-	private void testUpdateStoreField(Store newStore) {
-		try {
-			// Mock
-			when(storeBoMock.findByName(NAME)).thenReturn(store);
-			
-			String previousStoreName = store.getName();
-
-			// Call the method
-			Response res = storeRegistrationService.updateStore(NAME, newStore);
-
-			// Verify mocks
-			verify(storeBoMock).update(store);
-
-			// Assertions
-			assertThat(res.getStatus()).isEqualTo(200);
-
-			// New values
-			String newStoreName = newStore.getName() != null ? newStore.getName() : store.getName();
-			assertThat(store.getName()).isEqualTo(newStoreName);
-
-			String newStoreUrl = newStore.getUrl() != null ? newStore.getUrl() : store.getUrl();
-			assertThat(store.getUrl()).isEqualTo(newStoreUrl);
-
-			String newStoreDescription = newStore.getDescription() != null ? 
-					newStore.getDescription() : store.getDescription();
-			assertThat(store.getDescription()).isEqualTo(newStoreDescription);
-			
-			// Assert that the name is not changed
-			assertThat(store.getName()).isEqualTo(previousStoreName);
-		} catch (Exception ex) {
-			// It's not supposed to happen
-			fail("Exception " + ex + " is not supposed to happen");
-		}
-	}
-
-	@Test
-	public void testUpdateStoreDisplayName() {
-		Store newStore = new Store();
-		newStore.setDisplayName("new_name");
-		testUpdateStoreField(newStore);
-	}
-
-	@Test
-	public void testUpdateStoreUrl() {
-		Store newStore = new Store();
-		newStore.setUrl("http://fi-ware.org");
-		testUpdateStoreField(newStore);
-	}
-
-	@Test
-	public void testUpdateStoreDescription() {
-		Store newStore = new Store();
-		newStore.setDescription("New Description");
-		testUpdateStoreField(newStore);
-	}
-	
-	private void testUpdateStoreGenericError(Store newStore, int status, ErrorType errorType, 
-			String message, boolean updateInvoked) {
+	private void testUpdateStoreGenericError(int status, ErrorType errorType, 
+			String field, String message) {
 		
-		int updateTimes = updateInvoked ? 1 : 0;
-
 		try {
 			// Call the method
-			Response res = storeRegistrationService.updateStore(NAME, newStore);
+			Response res = storeRegistrationService.updateStore(NAME, store);
 
 			// Assertions
-			GenericRestTestUtils.checkAPIError(res, status, errorType, message);
+			GenericRestTestUtils.checkAPIError(res, status, errorType, message, field);
 
 			// Verify mocks
-			verify(storeBoMock, times(updateTimes)).update(store);	
+			verify(storeBoMock).update(NAME, store);	
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected.");
 		}
 	}
 	
 	@Test
-	public void testUpdateStoreValidationException() throws Exception {
-		Store newStore = new Store();
-		
+	public void testUpdateStoreValidationException() throws Exception {		
 		// Mocks
-		doThrow(new ValidationException(VALIDATION_ERROR)).when(storeBoMock).update(store);
+		String field = "field";
+		doThrow(new ValidationException("field", VALIDATION_ERROR)).when(storeBoMock).update(NAME, store);
 		when(storeBoMock.findByName(NAME)).thenReturn(store);
 		
 		// Test
-		testUpdateStoreGenericError(newStore, 400, ErrorType.BAD_REQUEST, VALIDATION_ERROR, true);
+		testUpdateStoreGenericError(400, ErrorType.VALIDATION_ERROR, field, VALIDATION_ERROR);
 	}
 	
 	@Test
-	public void testUpdateStoreStoreNotFound() throws Exception {
-		Store newStore = new Store();
-		
+	public void testUpdateStoreStoreNotFound() throws Exception {		
 		//Mocks
 		String exceptionMsg = "Store not Found!";
-		doThrow(new StoreNotFoundException(exceptionMsg)).when(storeBoMock).findByName(NAME);
+		doThrow(new StoreNotFoundException(exceptionMsg)).when(storeBoMock).update(NAME, store);
 		
-		testUpdateStoreGenericError(newStore, 404, ErrorType.NOT_FOUND, exceptionMsg, false);
+		testUpdateStoreGenericError(404, ErrorType.NOT_FOUND, null, exceptionMsg);
 	}
 	
 	@Test
-	public void testUpdateStoreNotFoundException() throws Exception {
-		Store newStore = new Store();
-		
+	public void testUpdateStoreNotFoundException() throws Exception {		
 		// Mocks
-		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
+		String exceptionMsg = "user not found";
+		doThrow(new RuntimeException(new UserNotFoundException(exceptionMsg))).when(storeBoMock).update(NAME, store);
 		when(storeBoMock.findByName(NAME)).thenReturn(store);
 		
 		// Test
-		testUpdateStoreGenericError(newStore, 500, ErrorType.INTERNAL_SERVER_ERROR, 
-				"There was an error retrieving the user from the database", false);
+		testUpdateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, null, exceptionMsg);
 	}
 	
 	private void testUpdateStoreHibernateException(Exception exception, String message) {
-		Store newStore = new Store();	
-		
 		//Mocks
 		try {
-			doThrow(exception).when(storeBoMock).update(store);
+			doThrow(exception).when(storeBoMock).update(NAME, store);
 			when(storeBoMock.findByName(NAME)).thenReturn(store);
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected");
 		}
 		
-		testUpdateStoreGenericError(newStore, 400, ErrorType.BAD_REQUEST, message, true);
+		testUpdateStoreGenericError(400, ErrorType.BAD_REQUEST, null, message);
 	}
 	
 	@Test
@@ -397,56 +321,20 @@ public class StoreServiceTest {
 	
 	@Test
 	public void testUpdateStoreNotKnownException() throws Exception {
-		Store newStore = new Store();
 		String exceptionMsg = "SERVER ERROR";
-		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).update(store);
-		when(storeBoMock.findByName(NAME)).thenReturn(store);
+		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).update(NAME, store);
 
-		testUpdateStoreGenericError(newStore, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg, true);
+		testUpdateStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, null, exceptionMsg);
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// DELETE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-
-	@Test
-	public void testDeleteStoreNotAllowed() throws Exception {
-		// Mocks
-		when(storeBoMock.findByName(NAME)).thenReturn(store);
-		Exception e = new NotAuthorizedException(user, "delete store");
-		doThrow(e).when(storeBoMock).delete(store);
-
-		// Call the method
-		Response res = storeRegistrationService.deleteStore(NAME);
-
-		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
-
-		// Verify mocks
-		verify(storeBoMock).delete(store);	
-	}
-	
-	@Test
-	public void testDeleteStoreNoErrors() throws Exception {
-		// Mocks
-		when(storeBoMock.findByName(NAME)).thenReturn(store);
-
-		// Call the method
-		Response res = storeRegistrationService.deleteStore(NAME);
-
-		// Assertions
-		assertThat(res.getStatus()).isEqualTo(204);
-
-		// Verify mocks
-		verify(storeBoMock).delete(store);	
-	}
 	
 	private void testDeleteStoreGenericError(int status, ErrorType errorType, 
-			String message, boolean deleteInvoked) {
+			String message) {
 		
-		int deleteTimes = deleteInvoked ? 1 : 0;
-
 		try {
 			// Call the method
 			Response res = storeRegistrationService.deleteStore(NAME);
@@ -455,28 +343,48 @@ public class StoreServiceTest {
 			GenericRestTestUtils.checkAPIError(res, status, errorType, message);
 
 			// Verify mocks
-			verify(storeBoMock, times(deleteTimes)).delete(store);	
+			verify(storeBoMock).delete(NAME);	
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected.");
 		}
+	}
+	
+	@Test
+	public void testDeleteStoreNotAllowed() throws Exception {
+		// Mocks
+		Exception e = new NotAuthorizedException("delete store");
+		doThrow(e).when(storeBoMock).delete(NAME);
+		
+		testDeleteStoreGenericError(403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 	@Test 
 	public void testDeleteStoreStoreNotFound() throws Exception {
 		// Mocks
 		String exceptionMsg = "Store not found";
-		doThrow(new StoreNotFoundException(exceptionMsg)).when(storeBoMock).findByName(NAME);
+		doThrow(new StoreNotFoundException(exceptionMsg)).when(storeBoMock).delete(NAME);
 		
-		testDeleteStoreGenericError(404, ErrorType.NOT_FOUND, exceptionMsg, false);
+		testDeleteStoreGenericError(404, ErrorType.NOT_FOUND, exceptionMsg);
 	}
 	
 	@Test
 	public void testDeleteStoreNotKnownException() throws StoreNotFoundException, NotAuthorizedException {
 		String exceptionMsg = "SERVER ERROR";
-		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).delete(store);
-		when(storeBoMock.findByName(NAME)).thenReturn(store);
+		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock).delete(NAME);
 
-		testDeleteStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg, true);
+		testDeleteStoreGenericError(500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
+	}
+	
+	@Test
+	public void testDeleteStoreNoErrors() throws Exception {
+		// Call the method
+		Response res = storeRegistrationService.deleteStore(NAME);
+
+		// Assertions
+		assertThat(res.getStatus()).isEqualTo(204);
+
+		// Verify mocks
+		verify(storeBoMock).delete(NAME);	
 	}
 	
 	
@@ -487,14 +395,14 @@ public class StoreServiceTest {
 	@Test
 	public void testGetStoreNotAllowed() throws Exception {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "get store");
+		Exception e = new NotAuthorizedException("get store");
 		doThrow(e).when(storeBoMock).findByName(NAME);
 
 		// Call the method
 		Response res = storeRegistrationService.getStore(NAME);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 		
 		// Verify mocks
 		verify(storeBoMock).findByName(NAME);	
@@ -550,14 +458,14 @@ public class StoreServiceTest {
 	@Test
 	public void testListStoresNotAllowed() throws NotAuthorizedException {
 		// Mocks
-		Exception e = new NotAuthorizedException(user, "list stores");
+		Exception e = new NotAuthorizedException("list stores");
 		doThrow(e).when(storeBoMock).getStoresPage(anyInt(), anyInt());
 
 		// Call the method
 		Response res = storeRegistrationService.listStores(0, 100);
 
 		// Assertions
-		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.toString());
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 		
 		// Verify
 		verify(storeBoMock).getStoresPage(0, 100);

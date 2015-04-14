@@ -37,25 +37,48 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 
 public interface DescriptionDao {
 	
 	// Save, update & delete
-	public void save(Description description);
+	// public void save(Description description);
 	public void update(Description description);
-	public void delete(Description description);
+	// public void delete(Description description);
 	
 	// Find
 	public Description findByNameAndStore(String storeName, String descriptionName) 
 			throws StoreNotFoundException, DescriptionNotFoundException;
-	public Description findById(Integer id);
+	public Description findById(Integer id) throws DescriptionNotFoundException;
+	
+	// Verifications
+	public boolean isNameAvailableInStore(String storeName, String descriptionName);
+	public boolean isDisplayNameAvailableInStore(String storeName, String displayName);
+	public boolean isURLAvailableInStore(String storeName, String url);
 	
 	// Get all offerings descriptions
+	public List<Description> getUserDescriptions(String userName) 
+			throws UserNotFoundException;
 	public List<Description> getAllDescriptions();
 	public List<Description> getDescriptionsPage(int offset, int max);
 	public List<Description> getStoreDescriptions(String storeName) 
 			throws StoreNotFoundException;
 	public List<Description> getStoreDescriptionsPage(String storeName, 
 			int offset, int max) throws StoreNotFoundException;
+
+    /**
+     * Filter the current list of descriptions by the userName and storeName given.
+     *
+     * @param userName
+     * @param storeName
+     *
+     * @throws UserNotFoundException If there is not a User with the userName given.
+     * @throws StoreNotFoundException If there is not a Store with the storeName given.
+     *
+     * @return The list filtered.
+     */
+    public List<Description> filterByUserNameAndStoreName(String userName, String storeName)
+            throws UserNotFoundException, StoreNotFoundException;
+
 }

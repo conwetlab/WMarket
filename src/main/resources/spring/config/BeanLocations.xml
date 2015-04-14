@@ -6,6 +6,30 @@
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	
+	<!-- Load preferences -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/properties/database.properties</value>
+				<value>classpath:/properties/marketplace.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.fiware.apps.marketplace.utils.PropertiesUtil">
+		<property name="location">
+			<value>classpath:/properties/marketplace.properties</value>
+		</property>
+	</bean>
+	
+	<!-- Load Context Provider: TO BE REMOVED -->
+	<bean id="applicationContextProvider" class="org.fiware.apps.marketplace.utils.ApplicationContextProvider"></bean>
+	
+		
+	<!-- Security -->
+	<import resource="securityOAuth2.xml" />
 
 	<!-- Database Configuration -->
 	<import resource="../database/DataSource.xml" />

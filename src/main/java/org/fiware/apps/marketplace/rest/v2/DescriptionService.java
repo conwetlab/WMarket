@@ -34,7 +34,6 @@ package org.fiware.apps.marketplace.rest.v2;
  */
 
 import java.net.URI;
-import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -52,36 +51,26 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
-import org.fiware.apps.marketplace.bo.StoreBo;
-import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
-import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Descriptions;
-import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Description;
-import org.fiware.apps.marketplace.model.Store;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.shared.JenaException;
-
 @Component
 @Path("/api/v2/store/{storeName}/description/")	
 public class DescriptionService {
 
 	// OBJECT ATTRIBUTES //
-	@Autowired private UserBo userBo;
-	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
 
 	// CLASS ATTRIBUTES //
-	private static final String INVALID_RDF = "Your RDF could not be parsed";
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
 			LoggerFactory.getLogger(DescriptionService.class), 
 			"There is already a Description in this Store with that name");
@@ -94,16 +83,9 @@ public class DescriptionService {
 			Description description) {	
 		Response response;
 
-		try {			
-			User user = userBo.getCurrentUser();
-			Store store = storeBo.findByName(storeName);
-			description.setRegistrationDate(new Date());
-			description.setStore(store);
-			description.setCreator(user);
-			description.setLasteditor(user);
-			
+		try {
 			// Save the offerings description
-			descriptionBo.save(description);
+			descriptionBo.save(storeName, description);
 			
 			// Get the URL and return created
 			URI newURI = UriBuilder
@@ -115,18 +97,11 @@ public class DescriptionService {
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
-			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
-		} catch (JenaException ex) {
-			// When a offering description is created, the RDF is parsed to update the index
-			// If the RDF is not correct, this exception will be risen
-			response = ERROR_UTILS.badRequestResponse(INVALID_RDF);
+			response = ERROR_UTILS.validationErrorResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			//The Store is an URL... If the Store does not exist a 404
 			//should be returned instead of a 400
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
-		} catch (UserNotFoundException ex) {
-			response = ERROR_UTILS.internalServerError(
-					"There was an error retrieving the user from the database");
 		} catch (DataIntegrityViolationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
@@ -149,46 +124,16 @@ public class DescriptionService {
 		Response response;
 
 		try {
-			Description description = descriptionBo.
-					findByNameAndStore(storeName, descriptionName);
-
-			// Name cannot be changed...
-			// if (offeringDescriptionInfo.getName() != null) {
-			// 	 offeringDescription.setName(offeringDescriptionInfo.getName());
-			// }
-
-			if (descriptionInfo.getDisplayName() != null) {
-				description.setDisplayName(descriptionInfo.getDisplayName());
-			}
-
-			if (descriptionInfo.getUrl() != null) {
-				description.setUrl(descriptionInfo.getUrl());
-			}
-
-			if (descriptionInfo.getDescription() != null) {
-				description.setDescription(descriptionInfo.getDescription());
-			}
-
-			description.setLasteditor(userBo.getCurrentUser());
-
-			descriptionBo.update(description);
-			response = Response.status(Status.OK).build();
-				
+			descriptionBo.update(storeName, descriptionName, descriptionInfo);
+			response = Response.status(Status.OK).build();	
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (ValidationException ex) {
-			response = ERROR_UTILS.badRequestResponse(ex.getMessage());
-		} catch (JenaException ex) {
-			// When a offering description is created, the RDF is parsed to update the index
-			// If the RDF is not correct, this exception will be risen
-			response = ERROR_UTILS.badRequestResponse(INVALID_RDF);
+			response = ERROR_UTILS.validationErrorResponse(ex);
 		} catch (DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
-		} catch (UserNotFoundException ex) {
-			response = ERROR_UTILS.internalServerError(
-					"There was an error retrieving the user from the database");
 		} catch (DataIntegrityViolationException ex) {
 			response = ERROR_UTILS.badRequestResponse(ex);
 		} catch (HibernateException ex) {
@@ -207,10 +152,7 @@ public class DescriptionService {
 		Response response;
 
 		try {
-			Description description = descriptionBo.
-					findByNameAndStore(storeName, descriptionName);
-
-			descriptionBo.delete(description);
+			descriptionBo.delete(storeName, descriptionName);
 			response = Response.status(Status.NO_CONTENT).build();
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);

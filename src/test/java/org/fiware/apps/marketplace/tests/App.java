@@ -47,10 +47,10 @@ public class App
     	DescriptionBo serviceBo = (DescriptionBo)appContext.getBean("serviceBo");
  
     	/** insert **/
-    	Description service = new Description();
-    	service.setUrl("testurl");
-    	service.setName("HAIO");
-    	serviceBo.save(service);
+    	//Description service = new Description();
+    	//service.setUrl("testurl");
+    	//service.setName("HAIO");
+    	//serviceBo.save(service);
  
     	/** select **/
     	//Service service2 = serviceBo.findByName("testurl");

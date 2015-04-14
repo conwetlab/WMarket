@@ -46,17 +46,17 @@ public interface StoreBo {
 	// Save, update, delete
 	public void save(Store store) throws NotAuthorizedException, 
 			ValidationException;
-	public void update(Store store) throws NotAuthorizedException,
-			ValidationException;
-	public void delete(Store store) throws NotAuthorizedException;
+	public void update(String name, Store updatedStore) throws NotAuthorizedException,
+			ValidationException, StoreNotFoundException;
+	public void delete(String storeName) throws NotAuthorizedException, StoreNotFoundException;
 	
 	// Find by name
 	public Store findByName(String name) throws NotAuthorizedException, 
 			StoreNotFoundException;
 	
 	// Get all or a sublist
+	public List <Store> getAllStores() throws NotAuthorizedException;
 	public List<Store> getStoresPage(int offset, int max)
 			throws NotAuthorizedException;
-	public List <Store> getAllStores() throws NotAuthorizedException;
 	
 }

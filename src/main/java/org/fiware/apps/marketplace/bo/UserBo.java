@@ -45,12 +45,15 @@ public interface UserBo {
 	// Save, update, delete
 	public void save(User user) throws NotAuthorizedException, 
 			ValidationException;
-	public void update(User user) throws NotAuthorizedException,
-			ValidationException;
-	public void delete(User user) throws NotAuthorizedException;
+	public void update(String userName, User updatedUser) throws NotAuthorizedException,
+			ValidationException, UserNotFoundException;
+	public void delete(String userName) throws NotAuthorizedException,
+			UserNotFoundException;
 	
-	// Find by name
+	// Find by name or mail
 	public User findByName(String userName) throws NotAuthorizedException, 
+			UserNotFoundException;
+	public User findByEmail(String email) throws NotAuthorizedException,
 			UserNotFoundException;
 
 	// Get all or a sublist
@@ -61,5 +64,8 @@ public interface UserBo {
 
 	// Get logged user
 	public User getCurrentUser() throws UserNotFoundException;
+	
+	// Validation
+	public boolean checkCurrentUserPassword(String password) throws UserNotFoundException;
 
 }

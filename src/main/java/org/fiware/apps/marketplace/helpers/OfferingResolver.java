@@ -147,7 +147,7 @@ public class OfferingResolver {
 	 * @return
 	 */
 	public List<Offering> resolveOfferingsFromStore(Store store) {
-		return resolveOfferingsFromServiceDescriptions(store.getOfferingsDescriptions());
+		return resolveOfferingsFromServiceDescriptions(store.getDescriptions());
 	}
 
 	/**
@@ -184,6 +184,7 @@ public class OfferingResolver {
 			
 			Offering offering = new Offering();
 			offering.setDisplayName(getOfferingTitle(model, offeringUri));
+			// Maybe the name should depends on the creator and the version...
 			offering.setName(NameGenerator.getURLName(offering.getDisplayName()));
 			offering.setUri(offeringUri);
 			offering.setDescribedIn(offeringDescription);

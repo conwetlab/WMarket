@@ -165,9 +165,9 @@ public class OfferingsInStoreServiceTest {
 		String userName = "user-example";
 		User user = mock(User.class);
 		when(user.getUserName()).thenReturn(userName);
-		Exception e = new NotAuthorizedException(user, "list offerings");
+		Exception e = new NotAuthorizedException("list offerings");
 	
-		testListOfferingsInStoreException(e, 403, ErrorType.FORBIDDEN, e.toString());
+		testListOfferingsInStoreException(e, 403, ErrorType.FORBIDDEN, e.getMessage());
 	}
 	
 }

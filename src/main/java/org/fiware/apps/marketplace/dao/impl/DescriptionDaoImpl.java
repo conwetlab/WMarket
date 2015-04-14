@@ -37,8 +37,10 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.dao.StoreDao;
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.hibernate.Query;
@@ -48,27 +50,33 @@ import org.springframework.stereotype.Repository;
 @Repository("offeringsDescriptionDao")
 public class DescriptionDaoImpl extends MarketplaceHibernateDao implements DescriptionDao {
 	
+	@Autowired private UserDao userDao;
 	@Autowired private StoreDao storeDao;
 	private final static String TABLE_NAME = Description.class.getName();
 
-	@Override
+	/* @Override
 	public void save(Description description) {
 		getSession().saveOrUpdate(description);		
-	}
+	}*/
 
 	@Override
 	public void update(Description description) {
 		getSession().update(description);		
 	}
 
-	@Override
+	/*@Override
 	public void delete(Description description) {
 		getSession().delete(description);
-	}
+	}*/
 
 	@Override
-	public Description findById(Integer id) {
+	public Description findById(Integer id) throws DescriptionNotFoundException {
 		Object res = getSession().get(Description.class, id);
+		
+		if (res == null) {
+			throw new DescriptionNotFoundException("Description with ID " + id + " not found");
+		}
+		
 		return (Description) res;
 	}
 	
@@ -85,7 +93,7 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 		List<?> list = query.list();
 		
 		if (list.size() == 0) {
-			throw new DescriptionNotFoundException("Offerings Description " + params[0] + " not found");
+			throw new DescriptionNotFoundException("Description " + params[0] + " not found");
 		} else {
 			return (Description) list.get(0);
 		}
@@ -101,6 +109,52 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 		Object[] params  = {descriptionName , storeName};
 		String query = String.format("from %s where name = ? and store.name = ?", TABLE_NAME);
 		return this.findByQuery(query, params);				
+	}
+	
+	@Override
+	public boolean isNameAvailableInStore(String storeName, String name) {
+		List<?> list = getSession()
+				.createQuery(String.format("from %s where name = :name and store.name = :storeName", TABLE_NAME))
+				.setParameter("name", name)
+				.setParameter("storeName", storeName)
+				.list();
+		
+		return list.isEmpty();
+	}
+
+	@Override
+	public boolean isDisplayNameAvailableInStore(String storeName, String displayName) {
+		List<?> list = getSession()
+				.createQuery(String.format("from %s where displayName = :displayName and store.name = :storeName", TABLE_NAME))
+				.setParameter("displayName", displayName)
+				.setParameter("storeName", storeName)
+				.list();
+		
+		return list.isEmpty();
+	}
+	
+	@Override
+	public boolean isURLAvailableInStore(String storeName, String url) {
+		List<?> list = getSession()
+				.createQuery(String.format("from %s where url = :url and store.name = :storeName", TABLE_NAME))
+				.setParameter("url", url)
+				.setParameter("storeName", storeName)
+				.list();
+		
+		return list.isEmpty();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Description> getUserDescriptions(String userName)
+			throws UserNotFoundException {
+		
+		// Throws UserNotFoundException if the store does not exist
+		userDao.findByName(userName);
+		
+		return getSession().createQuery(String.format("from %s where creator.userName = :userName", TABLE_NAME))
+				.setParameter("userName", userName)
+				.list();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -128,8 +182,9 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Description> getStoreDescriptionsPage(String storeName,
-			int offset, int max) throws StoreNotFoundException {
+	public List<Description> getStoreDescriptionsPage(String storeName, int offset, int max) 
+			throws StoreNotFoundException {
+		
 		// Throws StoreNotFoundException if the store does not exist
 		storeDao.findByName(storeName);
 		
@@ -139,4 +194,19 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 				.setMaxResults(max)
 				.list();
 	}
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Description> filterByUserNameAndStoreName(String userName, String storeName)
+            throws UserNotFoundException, StoreNotFoundException {
+
+        userDao.findByName(userName);
+        storeDao.findByName(storeName);
+
+        return getSession().createQuery(String.format("from %s where creator.userName = :userName and store.name = :storeName", TABLE_NAME))
+                .setParameter("userName", userName)
+                .setParameter("storeName", storeName)
+                .list();
+    }
+
 }

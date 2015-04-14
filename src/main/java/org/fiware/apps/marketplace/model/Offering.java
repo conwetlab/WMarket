@@ -56,7 +56,7 @@ import org.fiware.apps.marketplace.utils.xmladapters.StoreXMLAdapter;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
-@Table(name = "offerings", uniqueConstraints = { @UniqueConstraint(columnNames = { "described_in", "name" }) })
+@Table(name = "offerings", uniqueConstraints = { @UniqueConstraint(columnNames = { "described_in", "uri" }) })
 @XmlRootElement(name = "offering")
 @IgnoreMediaTypes("application/*+json")
 public class Offering {
@@ -161,5 +161,35 @@ public class Offering {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((describedIn == null) ? 0 : describedIn.hashCode());
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj) {
+			return true;
+		} 
+		
+		if (obj instanceof Offering) {
+			Offering other = (Offering) obj;
+			
+			if (id == other.id || (this.uri.equals(other.uri) && this.describedIn.equals(other.describedIn))) {
+				return true;
+			}
+		}
+						
+		return false;
+	}
+
+
+
 }

@@ -70,19 +70,62 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 
 	@Override
 	@Transactional(readOnly = true)
-	public User findByName(String username) throws UserNotFoundException{
+	public User findByName(String userName) throws UserNotFoundException{
 		String query = String.format("from %s where userName=:userName", TABLE_NAME);
 		List<?> list = getSession()
 				.createQuery(query)
-				.setParameter("userName", username)
+				.setParameter("userName", userName)
 				.list();
 		
 		if (list.size() == 0) {
-			throw new UserNotFoundException("User " + username + " not found");
+			throw new UserNotFoundException("User " + userName + " not found");
 		} else {
 			return (User) list.get(0);
 		}
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public User findByEmail(String email) throws UserNotFoundException{
+		String query = String.format("from %s where email=:email", TABLE_NAME);
+		List<?> list = getSession()
+				.createQuery(query)
+				.setParameter("email", email)
+				.list();
+		
+		if (list.size() == 0) {
+			throw new UserNotFoundException("User with email" + email + " not found");
+		} else {
+			return (User) list.get(0);
+		}
+	}
+	
+	@Override
+	public boolean isUserNameAvailable(String userName) {
+		
+		boolean available = false;
+		
+		try {
+			findByName(userName);
+		} catch (UserNotFoundException e) {
+			available = true;
+		}
+		
+		return available;
+	}
+	
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isEmailAvailable(String email) {
+        String query = String.format("from %s where email=:email", TABLE_NAME);
+
+        List<?> list = getSession()
+                .createQuery(query)
+                .setParameter("email", email)
+                .list();
+
+        return list.isEmpty();
+    }
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -103,5 +146,4 @@ public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
 				.createCriteria(User.class)
 				.list();
 	}
-
 }

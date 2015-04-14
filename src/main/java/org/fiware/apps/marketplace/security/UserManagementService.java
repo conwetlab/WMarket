@@ -33,7 +33,7 @@ package org.fiware.apps.marketplace.security;
  * #L%
  */
 
-
+import org.apache.commons.validator.GenericValidator;
 import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
@@ -47,18 +47,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("userManagementService")
 @Transactional
-public class UserManagementService implements UserDetailsService{
+public class UserManagementService implements UserDetailsService {
 
 	@Autowired private UserDao userDao;
 	@Autowired private Assembler assembler;
 
 	@Override
-    public UserDetails loadUserByUsername(String username)
+    public UserDetails loadUserByUsername(String userName)
     	     throws UsernameNotFoundException, DataAccessException {
-		
+				
 		try {
-	        User userEntity = userDao.findByName(username);
-	        return assembler.buildUserFromUserEntity(userEntity);
+			boolean isMail = GenericValidator.isEmail(userName);	
+			User user = isMail ? userDao.findByEmail(userName) : userDao.findByName(userName);	
+	        return assembler.buildUserFromUserEntity(user);
 		} catch (UserNotFoundException ex) {
         	throw new UsernameNotFoundException("user not found");
 		}

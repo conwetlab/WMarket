@@ -12,15 +12,14 @@
 
 a {
     cursor: pointer;
-    color: rgb(95, 155, 235);
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    color: rgb(100, 150, 250);
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
     text-decoration: none;
     background-color: transparent;
 }
 
 a:hover {
-    color: rgb(30, 115, 225);
-    text-decoration: underline;
+    color: rgb(40, 80, 180);
 }
 
 /***************************************************************************************
@@ -31,18 +30,28 @@ button,
 input[type="button"],
 input[type="submit"] {
     position: relative;
-    display: inline-block;
     cursor: pointer;
     min-height: 30px;
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
 }
 
 .btn {
+    display: inline-block;
     outline: none;
-    padding: 0px 8px;
+    padding: 4px 5px;
     border: solid 1px transparent;
     border-radius: 4px;
-    min-width: 50px;
+    min-width: 35px;
+}
+
+/* Tablets, Desktops and Large Desktops */ 
+@media (min-width: 768px) {
+
+    .btn {
+        padding: 4px 8px;
+        min-width: 50px;
+    }
+
 }
 
 .btn:focus,
@@ -86,14 +95,15 @@ input[type="submit"] {
     color: rgb(255, 255, 255);
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: rgb(95, 155, 235);
-    border-color: rgb(90, 155, 235);
+    border-color: rgb(60, 130, 210);
 }
 
 .btn-primary-lighter.active,
 .btn-primary-lighter:focus,
 .btn-primary-lighter:hover {
-    background-color: rgb(75, 145, 235);
-    border-color: rgb(50, 130, 230);
+    color: rgb(255, 255, 255);
+    background-color: rgb(65, 130, 215);
+    border-color: rgb(30, 100, 190);
 }
 
 /***************************************************************************************
@@ -104,14 +114,47 @@ input[type="submit"] {
     color: rgb(255, 255, 255);
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: rgb(90, 185, 90);
-    border-color: rgb(75, 175, 75);
+    border-color: rgb(50, 150, 50);
 }
 
 .btn-success.active,
 .btn-success:focus,
 .btn-success:hover {
+    color: rgb(255, 255, 255);
     background-color: rgb(70, 155, 70);
     border-color: rgb(55, 130, 55);
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - BUTTON - CONTEXTUAL CLASS - WARNING
+ ***************************************************************************************/
+
+.btn-warning {
+    color: rgb(255, 255, 255);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: rgb(250, 180, 90);
+    border-color: rgb(230, 150, 40);
+}
+
+.btn-warning.active,
+.btn-warning:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(240, 160, 40);
+    border-color: rgb(210, 130, 20);
+}
+
+.btn-danger {
+    color: rgb(255, 255, 255);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: rgb(240, 110, 100);
+    border-color: rgb(210, 70, 60);
+}
+
+.btn-danger.active,
+.btn-danger:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(225, 75, 75);
+    border-color: rgb(160, 20, 15);
 }
 
 /***************************************************************************************
@@ -140,22 +183,102 @@ input[type="submit"] {
 }
 
 /***************************************************************************************
+ *  DEFAULT THEME - ALERT
+ ***************************************************************************************/
+
+.alert {
+    position: relative;
+    padding: 15px;
+    margin-bottom: 10px;
+    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.alert-heading {
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.alert-manager {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    z-index: 30;
+}
+
+.alert-manager .alert {
+    left: -50%;
+}
+
+.alert .alert-link {
+    font-weight: bold;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - ALERT - CONTEXTUAL CLASS
+ ***************************************************************************************/
+
+.alert-success {
+    color: rgb(60, 110, 60);
+    background-color: rgb(220, 240, 210);
+    border-color: rgb(190, 210, 180);
+}
+
+.alert-info {
+    color: rgb(60, 110, 130);
+    background-color: rgb(225, 235, 245);
+    border-color: rgb(180, 220, 220);
+}
+
+.alert-info .alert-link {
+    color: rgb(60, 110, 130);
+}
+
+.alert-info .alert-link:hover {
+    color: rgb(10, 70, 90);
+    text-decoration: underline;
+}
+
+.alert-warning {
+    color: rgb(135, 100, 60);
+    background-color: rgb(240, 240, 220);
+    border-color: rgb(230, 210, 180);
+}
+
+.alert-danger {
+    color: rgb(170, 70, 65);
+    background-color: rgb(230, 210, 210);
+    border-color: rgb(205, 175, 180);
+}
+
+/***************************************************************************************
  *  DEFAULT THEME - FORM CONTROL
  ***************************************************************************************/
 
 input[type="password"],
-input[type="text"] {
+input[type="text"],
+select {
     position: relative;
-    display: inline-block;
     min-height: 30px;
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
+}
+
+textarea {
+    position: relative;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
+    resize: none;
 }
 
 .form-control {
-    padding: 0px 8px;
+    display: block;
+    width: 100%;
+    padding: 4px 8px;
     border: solid 1px rgb(220, 220, 220);
     border-radius: 4px;
-    color: #555;
+    color: rgb(80, 80, 80);
     background-color: rgb(255, 255, 255);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
@@ -180,14 +303,18 @@ input[type="text"] {
  *  DEFAULT THEME - FORM FIELD
  ***************************************************************************************/
 
+.form-field {
+    margin-bottom: 10px;
+}
+
 .form-field > .btn-addon:last-child,
-.form-field > .form-control:not(:first-child) {
+.form-field > .btn-addon + .form-control {
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
 }
 
 .form-field > .btn-addon:first-child,
-.form-field > .form-control:not(:last-child) {
+.form-field.form-addon > .form-control:not(:last-child) {
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
@@ -200,6 +327,44 @@ input[type="text"] {
     margin-left: -5px;
 }
 
+.form-field > label {
+    display: block;
+    line-height: 20px;
+    font-weight: 700;
+    color: rgb(50, 50, 50);
+    margin-bottom: 5px;
+}
+
+.form-field > label + .form-control {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.form-field-error {
+    margin: 5px 0px 0px 10px;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
+    color: rgb(160, 60, 60);
+}
+
+.form-field.readonly .form-control {
+    cursor: default;
+    color: rgb(80, 80, 80);
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    pointer-events: none;
+    -webkit-user-select: none;
+}
+
+.form-options {
+    text-align: center;
+}
+
+form .row:last-child .form-field {
+    margin-bottom: 0px;
+}
+
+
 /***************************************************************************************
  *  DEFAULT THEME - THUMBNAIL
  ***************************************************************************************/
@@ -207,7 +372,7 @@ input[type="text"] {
 .thumbnail {
     position: relative;
     display: inline-block;
-    margin: 0px auto 10px;
+    margin: 0px auto 8px;
     padding: 3px;
     background-color: rgb(254, 254, 254);
     border: solid 1px rgb(210, 220, 230);
@@ -230,6 +395,16 @@ input[type="text"] {
 
 }
 
+.thumbnail-xs > img {
+    width: 100px;
+    height: 100px;
+}
+
+.thumbnail-sm > img {
+    width: 140px;
+    height: 140px;
+}
+
 /***************************************************************************************
  *  DEFAULT THEME - DEFINITION LIST
  ***************************************************************************************/
@@ -242,10 +417,13 @@ input[type="text"] {
 
 .dl-vertical > dt {
     font-weight: 700;
+    color: rgb(50, 50, 50);
 }
 
 .dl-vertical > dd {
     margin: 0px 0px;
+    padding-left: 5px;
+    color: rgb(80, 80, 80);
 }
 
 .dl-vertical > dd:not(:last-child) {
@@ -291,6 +469,102 @@ input[type="text"] {
 }
 
 /***************************************************************************************
+ *  DEFAULT THEME - LIST GROUP
+ ***************************************************************************************/
+
+.list-group .list-group-heading {
+    display: block;
+    margin-bottom: 5px;
+    padding: 5px;
+    font: normal 700 14px/20px Helvetica, Arial, sans-serif;
+    color: rgb(120, 160, 170);
+    border-bottom: solid 1px rgb(215, 225, 225);
+}
+
+.list-group .list-group-body {
+    display: block;
+}
+
+.list-group .list-group-body .alert {
+    margin-bottom: 5px;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - LIST GROUP - ITEM
+ ***************************************************************************************/
+
+.list-group .list-group-item {
+    display: block;
+    cursor: pointer;
+    padding: 8px 5px;
+    color: rgb(90, 90, 90);
+}
+
+.list-group .list-group-item:hover {
+    color: rgb(20, 170, 215);
+    background-color: rgb(240, 240, 240);
+}
+
+.list-group > .alert:first-child {
+    margin-top: 10px;
+}
+
+.well {
+    padding: 5px;
+    margin-bottom: 10px;
+    background-color: rgb(245, 245, 245);
+    border: 1px solid rgb(210, 220, 230);
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - NAV TABS
+ ***************************************************************************************/
+
+.nav-tabs {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.nav-tabs .tab {
+    position: relative;
+    display: table-cell;
+    width: 1%;
+    padding: 0px 5px;
+}
+
+.nav-tabs .tab:first-child {
+    padding-left: 0px;
+}
+
+.nav-tabs .tab:last-child {
+    padding-right: 0px;
+}
+
+.nav-tabs .tab > a {
+    position: relative;
+    display: block;
+    padding: 8px 10px;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+}
+
+.nav-tabs .tab > a:hover {
+    background-color: rgb(235, 240, 250);
+}
+
+.nav-tabs .tab.active > a,
+.nav-tabs .tab.active > a:hover {
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: rgb(65, 130, 215);
+}
+
+/***************************************************************************************
  *  DEFAULT THEME - PANEL
  ***************************************************************************************/
 
@@ -298,6 +572,7 @@ input[type="text"] {
     position: relative;
     display: block;
     margin-bottom: 10px;
+    background-color: rgb(254, 254, 254);
     border: solid 1px transparent;
     border-radius: 4px;
 }
@@ -305,27 +580,59 @@ input[type="text"] {
 .panel .panel-heading {
     position: relative;
     padding: 8px 10px;
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    font: normal 500 14px/20px Helvetica, Arial, sans-serif;
     text-align: center;
     border-radius: 3px 3px 0px 0px;
+}
+
+.panel .panel-heading:after {
+    content: "";
+    display: block;
+    clear: both;
 }
 
 .panel .panel-heading .panel-title {
     display: block;
     font-size: 18px;
-    line-height: 1.15;
+    line-height: 20px;
 }
 
 .panel .panel-heading .panel-subtitle {
     display: block;
 }
 
+.panel .panel-heading.with-options .panel-title {
+    position: relative;
+    display: inline-block;
+    float: left;
+}
+
+.panel .panel-heading.with-options .panel-options {
+    position: relative;
+    display: inline-block;
+    float: right;
+}
+
+.panel .panel-options .opt {
+    margin-left: 5px;
+}
+
+.panel .panel-options .opt:first-child {
+    margin-left: 0px;
+}
+
 .panel .panel-body {
     position: relative;
     padding: 10px 10px;
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
-    background-color: rgb(254, 254, 254);
-    border-radius: 0px 0px 3px 3px;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
+}
+
+.panel .panel-body .alert {
+    padding: 10px 10px;
+}
+
+.panel .panel-body > *:last-child {
+    margin-bottom: 0px;
 }
 
 /***************************************************************************************
@@ -336,9 +643,9 @@ input[type="text"] {
     border-color: rgb(210, 220, 230);
 }
 
-.panel-default .panel-heading {
-    color: rgb(110, 110, 110);
-    background-color: rgb(250, 250, 250);
+.panel-default > .panel-heading {
+    color: rgb(100, 100, 100);
+    background-color: rgb(240, 240, 240);
 }
 
 /***************************************************************************************
@@ -349,13 +656,22 @@ input[type="text"] {
     border-color: rgb(210, 220, 230);
 }
 
-.panel-default-darker .panel-heading {
-    color: rgb(225, 226, 227);
-    background-color: rgb(58, 63, 81);
+.panel-default-darker > .panel-heading {
+    color: rgb(220, 220, 230);
+    background-color: rgb(60, 65, 75);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
-.panel-default-darker .panel-heading .panel-subtitle {
-    color: rgb(145, 157, 168);
+.panel-default-darker > .panel-heading .panel-subtitle {
+    color: rgb(150, 170, 180);
+}
+
+.panel-default-darker > .panel-heading a {
+    color: rgb(180, 190, 195);
+}
+
+.panel-default-darker > .panel-heading a:hover {
+    color: rgb(100, 190, 240);
 }
 
 /***************************************************************************************
@@ -376,7 +692,7 @@ input[type="text"] {
 }
 
 .panel-sliding .panel-body {
-    padding: 0px;
+    padding: 5px;
 }
 
 .panel-sliding .panel-body .title-descriptions {
@@ -413,6 +729,37 @@ input[type="text"] {
     right: 0;
 }
 
+.panel.collapsed .panel-body {
+    display: none;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - OPTION
+ ***************************************************************************************/
+
+.opt .fa {
+    width: 12px;
+    line-height: 20px;
+}
+
+.opt {
+    cursor: pointer;
+    color: rgb(100, 150, 250);
+    background-color: transparent;
+}
+
+.opt:hover {
+    color: rgb(40, 80, 180);
+}
+
+.opt-danger {
+    color: rgb(220, 60, 50);
+}
+
+.opt-danger:hover {
+    color: rgb(170, 35, 30);
+}
+
 /***************************************************************************************
  *  DEFAULT THEME - NAVBAR
  ***************************************************************************************/
@@ -420,6 +767,7 @@ input[type="text"] {
 .navbar {
     padding: 8px 0px;
     background-color: rgb(254, 254, 254);
+    min-width: 400px;
 }
 
 .navbar .container-fluid {
@@ -441,7 +789,6 @@ input[type="text"] {
 
 }
 
-
 .navbar .navbar-header > .navbar-brand {
     color: rgb(120, 120, 120);
     font-size: 18px;
@@ -458,7 +805,12 @@ input[type="text"] {
  *  DEFAULT THEME - NAVBAR - ELEMENTS
  ***************************************************************************************/
 
+.navbar-element * {
+    margin-bottom: 0px !important;
+}
+
 .navbar-element .form-control {
+    display: inline-block;
     width: 160px;
 }
 
@@ -468,10 +820,6 @@ input[type="text"] {
         width: 300px;
     }
 
-}
-
-.navbar-element.pull-left {
-    margin-right: 0px !important;
 }
 
 /***************************************************************************************
@@ -491,68 +839,16 @@ input[type="text"] {
  *  DEFAULT THEME - OFFERING
  ***************************************************************************************/
 
-.offering {
-    cursor: pointer;
-    position: relative;
-    width: 100%;
-    margin: 0px 0px 10px;
-    background-color: transparent;
-    border: solid 1px rgb(210, 220, 230);
-    border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-}
-
-.offering-heading {
-    height: 170px;
-    padding: 5px 5px 0px;
-    background-color: rgb(254, 254, 254);
-    border-radius: 3px 3px 0px 0px;
-}
-
-.offering-image {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(58, 63, 81);
-    border: solid 1px rgb(210, 220, 230);
-}
-
-.offering-image > img {
-    position: absolute;
-    display: block;
-    top: 0px;
-    bottom: 0px;
-    width: 100%;
-    max-height: 143px;
-    margin: auto;
-}
-
-.offering-body {
-    position: relative;
-    padding: 8px 10px;
-    background-color: rgb(254, 254, 254);
-    border-radius: 0px 0px 3px 3px;
-}
-
-.offering-title {
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
-}
-
 .offering-name {
-    display: block;
-    color: rgb(50, 50, 50);
-    font-size: 18px;
+    color: rgb(70, 70, 70);
     font-weight: bold;
-    line-height: 1.15;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 
 .offering-store {
-    display: block;
-    color: rgb(170, 170, 170);
+    font-size: 16px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -566,42 +862,41 @@ input[type="text"] {
     height: 80px;
 }
 
-.offering:focus,
-.offering:hover {
-    border-color: rgb(102, 175, 233);
-    box-shadow: 0px 0px 5px rgba(102, 175, 233, 0.75);
+/* Smartphones */
+.offering {
+    position: relative;
+    width: 100%;
+    margin: 0px 0px 10px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    transition: width ease-in 100ms;
 }
 
-.offering:hover .offering-heading,
-.offering:hover .offering-body {
-    background-color: rgb(250, 250, 250);
-}
-
-.offering:hover .offering-name {
-    color: rgb(30, 180, 230);
-}
-
+/* Tablets */
 @media (min-width: 768px) {
 
     .offering {
-        width: 48%;
-        margin: 0px 1% 10px;
+        width: 48.5%;
+        margin: 0px 0.7% 10px;
     }
 
 }
 
+/* Desktops */
 @media (min-width: 992px) {
 
     .offering {
-        width: 31%;
+        width: 32.1%;
+        margin: 0px 0.55% 10px;
     }
 
 }
 
+/* Large Desktops */
 @media (min-width: 1200px) {
 
     .offering {
-        width: 23%;
+        width: 24%;
+        margin: 0px 0.5% 10px;
     }
 
 }
@@ -610,37 +905,20 @@ input[type="text"] {
  *  DEFAULT THEME - STORE
  ***************************************************************************************/
 
-.store {
-    display: table;
-    cursor: pointer;
-    width: 100%;
-    padding: 10px;
+#store-list {
+    max-height: 287px;
+    overflow-y: auto;
 }
 
-.store-heading {
-    position: relative;
-    display: table-cell;
-    vertical-align: middle;
-    width: 15%;
+.store-item .store-name {
+    padding-left: 4px;
+    font: normal 700 14px/20px Helvetica, Arial, sans-serif;
 }
 
-.store-body {
-    position: relative;
-    display: table-cell;
-    vertical-align: middle;
-    width: 85%;
-}
-
-.store-name {
-    font-weight: 700;
-}
-
-.store-add {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    margin-top: 13px;
+.store-item .store-url {
+    padding-left: 22px;
+    font: normal 400 13px/20px Helvetica, Arial, sans-serif;
+    color: rgb(120, 120, 120);
 }
 
 /***************************************************************************************
@@ -652,5 +930,15 @@ input[type="text"] {
 }
 
 .fa-avatar > .fa-circle {
-    color: rgb(35, 180, 230);
+    color: rgb(80, 190, 250);
+}
+
+.offering-in-description {
+    display: inline-block;
+    max-width: 200px;
+    margin: 0px 5px;
+}
+
+.offering-in-description:first-child {
+    margin-left: 0px;
 }

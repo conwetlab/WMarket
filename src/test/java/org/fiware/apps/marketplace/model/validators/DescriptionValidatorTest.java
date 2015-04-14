@@ -34,33 +34,48 @@ package org.fiware.apps.marketplace.model.validators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
 import java.util.Date;
+
+import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class DescriptionValidatorTest {
 	
-	private DescriptionValidator descriptionValidator = new DescriptionValidator();
+	@Mock private DescriptionDao descriptionDaoMock;
+	@InjectMocks private DescriptionValidator descriptionValidator = new DescriptionValidator();
 	
-	private static final String MISSING_FIELDS = "name and/or url cannot be null";
-	private static final String INVALID_LENGTH_PATTERN = "%s is not valid. (min length: %d, max length: %d)";
-	private static final String INVALID_URL = "url is not valid";
+	private static final String MISSING_FIELDS_MSG = "This field is required.";
+	private static final String TOO_SHORT_PATTERN = "This field must be at least %d chars.";
+	private static final String TOO_LONG_PATTERN = "This field must not exceed %d chars.";
+	private static final String INVALID_URL = "This field must be a valid URL.";
 	
-	private static Description generateValiddescription() {
+	private static Description generateValidDescription() {
 		// Additional classes
 		User creator = new User();
 		creator.setId(1);
 		
+		Store store = new Store();
+		store.setName("storeName");
+		
 		Description description = new Description();
-		description.setDisplayName("description1");
+		// Name is supposed to be auto-generated based on display name...
+		description.setName("description-1");
+		description.setDisplayName("Description 1");
 		description.setUrl("https://repo.lab.fi-ware.org/offerings/offering1.rdf");
-		description.setDescription("This is an example description");
+		description.setComment("This is an example comment");
 		description.setRegistrationDate(new Date());
-		description.setStore(new Store());
+		description.setStore(store);
 		description.setCreator(creator);
 		description.setLasteditor(creator);
 		
@@ -68,144 +83,298 @@ public class DescriptionValidatorTest {
 	}
 	
 	
-	private void assertInvalidDescription(Description description, 
-			String expectedMsg, boolean creating) {
+	private void assertInvalidNewDescription(Description description, String field, String expectedMsg) {
 		try {
-			descriptionValidator.validateDescription(description, creating);
+			descriptionValidator.validateNewDescription(description);
 			failBecauseExceptionWasNotThrown(ValidationException.class);
 		} catch (ValidationException ex) {
 			assertThat(ex).hasMessage(expectedMsg);
+			assertThat(ex.getFieldName()).isEqualTo(field);
 		}
+	}
+	
+	private void assertInvalidUpdatedDescription(Description oldDescription, Description updatedDescription, 
+			String field, String expectedMsg) {
+		try {
+			descriptionValidator.validateUpdatedDescription(oldDescription, updatedDescription);
+			failBecauseExceptionWasNotThrown(ValidationException.class);
+		} catch (ValidationException ex) {
+			assertThat(ex).hasMessage(expectedMsg);
+			assertThat(ex.getFieldName()).isEqualTo(field);
+		}
+	}
+	
+	@Before 
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+		when(descriptionDaoMock.isNameAvailableInStore(anyString(), anyString())).thenReturn(true);
+		when(descriptionDaoMock.isDisplayNameAvailableInStore(anyString(), anyString())).thenReturn(true);
+		when(descriptionDaoMock.isURLAvailableInStore(anyString(), anyString())).thenReturn(true);
+		
 	}
 	
 	@Test
 	public void testValidBasicDescription() throws ValidationException {
+		Store store = mock(Store.class);
+		when(store.getName()).thenReturn("store display name");
 		Description description = new Description();
-		description.setDisplayName("description1");
+		description.setDisplayName("description 1");
+		description.setName("description-1");
+		description.setStore(store);
 		description.setUrl("https://repo.lab.fi-ware.org/offerings/offering1.rdf");
 		
-		assertThat(descriptionValidator.validateDescription(description, true)).isTrue();
+		descriptionValidator.validateNewDescription(description);
 	}
 	
 	@Test
 	public void testValidComplexDescription() throws ValidationException {
-		Description description = generateValiddescription();
-		assertThat(descriptionValidator.validateDescription(description, true)).isTrue();
+		Description description = generateValidDescription();
+		descriptionValidator.validateNewDescription(description);
 	}
 	
 	@Test
-	public void testMissingNameOnCreation() {
-		Description description = generateValiddescription();
+	public void testMissingDisplayNameOnCreation() {
+		Description description = generateValidDescription();
 		description.setDisplayName(null);
-		assertInvalidDescription(description, MISSING_FIELDS, true);
+		
+		assertInvalidNewDescription(description, "displayName", MISSING_FIELDS_MSG);
 	}
 	
 	@Test
-	public void testMissingNameOnUpdate() throws ValidationException {
-		Description description = generateValiddescription();
-		description.setName(null);
-		assertThat(descriptionValidator.validateDescription(description, false)).isTrue();
+	public void testMissingDisplayNameOnUpdate() throws ValidationException {
+		Description oldDescription = generateValidDescription();
+		Description updatedDescription = generateValidDescription();
+		updatedDescription.setName(null);
+		
+		descriptionValidator.validateUpdatedDescription(oldDescription, updatedDescription);
 	}
 	
 	@Test
 	public void testMissingUrlOnCreation() {
-		Description description = generateValiddescription();
+		Description description = generateValidDescription();
 		description.setUrl(null);
-		assertInvalidDescription(description, MISSING_FIELDS, true);
+		
+		assertInvalidNewDescription(description, "url", MISSING_FIELDS_MSG);
 	}
 	
 	@Test
 	public void testMissingUrlOnUpdate() throws ValidationException {
-		Description description = generateValiddescription();
-		description.setUrl(null);
-		assertThat(descriptionValidator.validateDescription(description, false)).isTrue();
+		Description oldDescription = generateValidDescription();
+		Description updatedDescription = generateValidDescription();
+		updatedDescription.setUrl(null);
+		
+		descriptionValidator.validateUpdatedDescription(oldDescription, updatedDescription);	
 	}
 	
 	@Test
-	public void testMissingDescriptionOnCreation() throws ValidationException {
-		Description description = generateValiddescription();
-		description.setDescription(null);
+	public void testMissingCommentOnCreation() throws ValidationException {
+		Description description = generateValidDescription();
+		description.setComment(null);
 
-		assertThat(descriptionValidator.validateDescription(description, true)).isTrue();
+		descriptionValidator.validateNewDescription(description);
 	}
 	
 	@Test
-	public void testMissingDescriptionOnUpdate() throws ValidationException {
-		Description description = generateValiddescription();
-		description.setDescription(null);
+	public void testMissingCommentOnUpdate() throws ValidationException {
+		Description oldDescription = generateValidDescription();
+		Description updatedDescription = generateValidDescription();
+		updatedDescription.setComment(null);
 
-		assertThat(descriptionValidator.validateDescription(description, false)).isTrue();
+		descriptionValidator.validateUpdatedDescription(oldDescription, updatedDescription);
 	}
 	
 	@Test
-	public void testNameTooShort() {
-		Description description = generateValiddescription();
+	public void testDisplayNameTooShort() {
+		Description description = generateValidDescription();
 		description.setDisplayName("a");
-		assertInvalidDescription(description, 
-				String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
+		
+		assertInvalidNewDescription(description, "displayName", String.format(TOO_SHORT_PATTERN, 3));
 	}
 	
 	@Test
-	public void testNameTooLong() {
-		Description description = generateValiddescription();
-		description.setDisplayName("1234567890123456");
-		assertInvalidDescription(description, 
-				String.format(INVALID_LENGTH_PATTERN, "name", 5, 15), false);
+	public void testDispalyNameTooLong() {
+		Description description = generateValidDescription();
+		description.setDisplayName("123456789012345678901");
+		
+		assertInvalidNewDescription(description, "displayName", String.format(TOO_LONG_PATTERN, 20));
 	}
+	
+	@Test
+	public void testDisplayNameInUseOnCreation() {
+		String name = "descriptionName";
+		Description description = generateValidDescription();
+		description.setDisplayName(name);
+		
+		when(descriptionDaoMock.isDisplayNameAvailableInStore(description.getStore().getName(), name))
+				.thenReturn(false);
+		
+		assertInvalidNewDescription(description, "displayName", "This name is already in use in this Store.");
+	}
+	
+	@Test
+	public void testDisplayNameNotInUseOnUpdate() throws ValidationException {
+		String oldDisplayName = "oldDisplayName";
+		String newDisplayName = "newDisplayName";
+		
+		Description oldDescription = generateValidDescription();
+		Description updatedDescription = generateValidDescription();
+		
+		oldDescription.setDisplayName(oldDisplayName);
+		updatedDescription.setDisplayName(newDisplayName);
+		
+		descriptionValidator.validateUpdatedDescription(oldDescription, updatedDescription);
+	}
+	
+	@Test
+	public void testDisplayNameInUseByOtherUserOnUpdate() throws ValidationException {
+		String oldDisplayName = "oldDisplayName";
+		String newDisplayName = "newDisplayName";
+		
+		Description oldDescription = generateValidDescription();
+		Description updatedDescription = generateValidDescription();
+		
+		oldDescription.setDisplayName(oldDisplayName);
+		updatedDescription.setDisplayName(newDisplayName);
+		updatedDescription.setStore(oldDescription.getStore());
+		
+		when(descriptionDaoMock.isDisplayNameAvailableInStore(updatedDescription.getStore().getName(), newDisplayName))
+				.thenReturn(false);
+		
+		this.assertInvalidUpdatedDescription(oldDescription, updatedDescription, "displayName", 
+				"This name is already in use in this Store.");
+	}
+	
+	@Test
+	public void testDisplayNameInUseByTheSameUserOnUpdate() throws ValidationException {
+		String displayName = "newDisplayName";
+		
+		Description oldDescription = generateValidDescription();
+		Description updatedDescription = generateValidDescription();
+		
+		oldDescription.setDisplayName(displayName);
+		updatedDescription.setDisplayName(displayName);
+		
+		when(descriptionDaoMock.isDisplayNameAvailableInStore(updatedDescription.getStore().getName(), displayName))
+				.thenReturn(false);
+		
+		descriptionValidator.validateUpdatedDescription(oldDescription, updatedDescription);
+	}
+
 	
 	@Test
 	public void testInvalidURL1() {
-		Description description = generateValiddescription();
+		Description description = generateValidDescription();
 		description.setUrl("http://");
 
-		assertInvalidDescription(description, INVALID_URL, false);
+		assertInvalidNewDescription(description, "url", INVALID_URL);
 	}
 
 	@Test
 	public void testInvalidURL2() {
-		Description description = generateValiddescription();
+		Description description = generateValidDescription();
 		description.setUrl("repo.lab.fi-ware.org/offerings/offering1.rdf");
 
-		assertInvalidDescription(description, INVALID_URL, false);
+		assertInvalidNewDescription(description, "url", INVALID_URL);
 	}
 
 	@Test
 	public void testInvalidURL3() {
-		Description description = generateValiddescription();
+		Description description = generateValidDescription();
 		description.setUrl("https://repo.lab.fi-ware.org:222222/offerings/offering1.rdf");
 
-		assertInvalidDescription(description, INVALID_URL, false);
+		assertInvalidNewDescription(description, "url", INVALID_URL);
 	}
 
 	@Test
 	public void testInvalidURL4() {
-		Description description = generateValiddescription();
+		Description description = generateValidDescription();
 		description.setUrl("offering");
 
-		assertInvalidDescription(description, INVALID_URL, false);
+		assertInvalidNewDescription(description, "url", INVALID_URL);
 	}
 	
 	@Test
-	public void testEmptyDescription() throws ValidationException {
-		Description description = generateValiddescription();
-		description.setDescription("");
+	public void testURLInUseOnCreation() {
+		String url = "http://store.lab.fiware.org";
+		Description description = generateValidDescription();
+		description.setUrl(url);
+		
+		when(descriptionDaoMock.isURLAvailableInStore(description.getStore().getName(), url))
+				.thenReturn(false);
+		
+		assertInvalidNewDescription(description, "url", 
+				"This URL is already in use in this Store.");
+
+	}
+	
+	@Test
+	public void testURLNotInUseOnUpdate() throws ValidationException {
+		String oldUrl = "http://store-old.lab.fi-ware.org";
+		String updateUrl = "http://store.lab.fiware.org";
+		
+		Description oldDescription = generateValidDescription();
+		Description updatedDescription = generateValidDescription();
+		
+		oldDescription.setUrl(oldUrl);
+		updatedDescription.setUrl(updateUrl);
+				
+		descriptionValidator.validateUpdatedDescription(oldDescription, updatedDescription);
+	}
+	
+	@Test
+	public void testURLInUseByOtherStoreOnUpdate() {
+		String oldUrl = "http://store-old.lab.fi-ware.org";
+		String updateUrl = "http://store.lab.fiware.org";
+		
+		Description oldDescription = generateValidDescription();
+		Description updatedDescription = generateValidDescription();
+		
+		oldDescription.setUrl(oldUrl);
+		updatedDescription.setUrl(updateUrl);
+		
+		when(descriptionDaoMock.isURLAvailableInStore(updatedDescription.getStore().getName(), updateUrl))
+				.thenReturn(false);
+		
+		assertInvalidUpdatedDescription(oldDescription, updatedDescription, "url", 
+				"This URL is already in use in this Store.");
+	}
+	
+	@Test
+	public void testURLInUseByTheSameStoreOnUpdate() throws ValidationException {
+		String url = "http://store.lab.fiware.org";
+		
+		Description oldDescription = generateValidDescription();
+		Description updatedDescription = generateValidDescription();
+		
+		oldDescription.setUrl(url);
+		updatedDescription.setUrl(url);
+		
+		when(descriptionDaoMock.isURLAvailableInStore(updatedDescription.getStore().getName(), url))
+				.thenReturn(false);
+		
+		descriptionValidator.validateUpdatedDescription(oldDescription, updatedDescription);
+	}
+	
+	@Test
+	public void testEmptyComment() throws ValidationException {
+		Description description = generateValidDescription();
+		description.setComment("");
 
 		// Empty descriptions are allowed
-		assertThat(descriptionValidator.validateDescription(description, false)).isTrue();
+		descriptionValidator.validateNewDescription(description);
 	}
 
 	@Test
-	public void testDescriptionTooLong() throws ValidationException {
-		Description description = generateValiddescription();
+	public void testCommentTooLong() throws ValidationException {
+		Description description = generateValidDescription();
 
 		//240 characters (80 * 3)
-		description.setDescription(
+		description.setComment(
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 				"12345678901234567890123456789012345678901234567890123456789012345678901234567890");	
 
-		// Empty descriptions are allowed
-		assertInvalidDescription(description, String.format(INVALID_LENGTH_PATTERN, 
-				"description", 0, 200), false);	
+		// Too longs descriptions are not allowed
+		assertInvalidNewDescription(description, "comment", String.format(TOO_LONG_PATTERN, 200));
 	}
 }

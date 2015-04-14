@@ -1,7 +1,5 @@
 package org.fiware.apps.marketplace.exceptions;
 
-import org.fiware.apps.marketplace.model.User;
-
 /*
  * #%L
  * FiwareMarketplace
@@ -37,26 +35,8 @@ import org.fiware.apps.marketplace.model.User;
 public class NotAuthorizedException extends Exception {
 
 	private static final long serialVersionUID = 1L;
-	
-	private String action;
-	private User user;
-	
-	public NotAuthorizedException(User user, String action) {
-		this.user = user;
-		this.action = action;
-	}
-	
-	@Override
-	public String toString() {
-		String userName;
 		
-		if (user == null) {
-			userName = "Anonymous user";
-		} else {
-			userName = user.getUserName();
-		}
-		
-		return userName + " is not allowed to " + action;
+	public NotAuthorizedException(String action) {
+		super("You are not authorized to " + action);
 	}
-
 }

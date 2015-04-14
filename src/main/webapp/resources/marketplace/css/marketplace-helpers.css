@@ -6,6 +6,12 @@
  */
 
 
+p {
+    font: normal 400 14px/1.43 Helvetica, Arial, sans-serif;
+    color: rgb(70, 70, 70);
+    margin: 0px 0px 10px;
+}
+
 .pull-right {
     float: right;
     margin-left: 10px;
@@ -21,7 +27,7 @@
     border-top: solid 1px rgb(215, 225, 225);
 }
 
-.loading {
+.loading-state {
     padding: 10px 0px;
     font: normal 700 30px/1.15 Helvetica, Arial, sans-serif;
     text-align: center;
@@ -31,10 +37,14 @@
     font: normal 400 14px/1.43 Helvetica, Arial, sans-serif;
 }
 
+.text-default {
+    color: rgb(70, 70, 70);
+}
+
 .text-truncate {
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;    
+    white-space: nowrap;
 }
 
 .text-justify {
@@ -65,6 +75,10 @@
 
     .hidden-smartphone {
         display: none !important;
+    }
+
+    .visible-sm-margin {
+        margin-bottom: 10px !important;
     }
 
 }

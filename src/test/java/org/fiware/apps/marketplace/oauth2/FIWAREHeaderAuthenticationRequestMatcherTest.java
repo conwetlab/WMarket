@@ -50,7 +50,7 @@ public class FIWAREHeaderAuthenticationRequestMatcherTest {
 	public void testMatcher(String servletPath, String pathInfo, String queryString, 
 			String headerValue, boolean matches) {
 		
-		// Setup the servlet
+		// Setup the Servlet
 		HttpServletRequest request = mock(HttpServletRequest.class);
 		when(request.getServletPath()).thenReturn(servletPath);
 		when(request.getPathInfo()).thenReturn(pathInfo);
@@ -62,17 +62,22 @@ public class FIWAREHeaderAuthenticationRequestMatcherTest {
 	
 	@Test
 	public void testMatchesNoQueryNoPath() {
-		testMatcher(BASE_URL, null, null, "Header Val", true);
+		testMatcher(BASE_URL, null, null, "bearer Header_Val", true);
 	}
 	
 	@Test
 	public void testMatchesNoQuery() {
-		testMatcher(BASE_URL, "/store", null, "Header Val", true);
+		testMatcher(BASE_URL, "/store", null, "bearer Header-Val!!#@", true);
 	}
 	
 	@Test
 	public void testMatches() {
-		testMatcher(BASE_URL, "/store", "foo=boo", "Header Val", true);
+		testMatcher(BASE_URL, "/store", "foo=boo", "bearer Header-_.,^Val", true);
+	}
+	
+	@Test
+	public void testCaseInsensitive() {
+		testMatcher(BASE_URL, "/store", "foo=boo", "Bearer Header-_.,^Val", true);
 	}
 	
 	@Test

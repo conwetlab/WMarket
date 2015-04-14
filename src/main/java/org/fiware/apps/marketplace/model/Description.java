@@ -43,6 +43,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -58,8 +59,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.fiware.apps.marketplace.utils.xmladapters.StoreXMLAdapter;
 import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
@@ -73,7 +72,7 @@ public class Description {
 	private String url;
 	private String name;
 	private String displayName;
-	private String description;
+	private String comment;
 	private Date registrationDate;
 	private Store store;
 	private User lasteditor;	
@@ -127,19 +126,19 @@ public class Description {
 	}
 
 	@XmlElement
-	@Column(name = "description")
-	public String getDescription() {
-		return description;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@XmlElement
 	@XmlJavaTypeAdapter(StoreXMLAdapter.class)
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "store", updatable=false)
+	@JoinColumn(name = "store", nullable=false)
 	public Store getStore() {
 		return store;
 	}
@@ -183,8 +182,7 @@ public class Description {
 	}
 
 	@XmlElement
-	@OneToMany(mappedBy = "describedIn", cascade = CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany(mappedBy = "describedIn", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	public List<Offering> getOfferings() {
 		return offerings;
 	}
@@ -199,5 +197,31 @@ public class Description {
 	
 	public void addOfferings(Collection<Offering> offerings) {
 		this.offerings.addAll(offerings);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((store == null) ? 0 : store.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		
+		if (obj instanceof Description) {
+			Description other = (Description) obj;
+			
+			if (this.id == other.id || (this.name.equals(other.name) && store.equals(other.store))) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

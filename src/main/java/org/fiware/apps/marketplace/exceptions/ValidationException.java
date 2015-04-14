@@ -35,9 +35,21 @@ package org.fiware.apps.marketplace.exceptions;
 public class ValidationException extends Exception {
 	
 	private static final long serialVersionUID = 1L;
-	
-	public ValidationException(String message) {
+	private String fieldName;
+	private String fieldError;
+
+	public ValidationException(String name, String message) {
 		super(message);
+		this.fieldName = name;
+		this.fieldError = message;
+	}
+
+	public String getFieldName() {
+		return this.fieldName;
+	}
+
+	public String getFieldError() {
+		return this.fieldError;
 	}
 
 }
