@@ -223,12 +223,9 @@ public class DescriptionBoImplTest {
 				} catch (MalformedURLException ex) {
 					// It should not happen
 				}
-
-				// When the exception is thrown, the BO must delete the description from the Store
-				verify(store).removeDescription(description);
-
-				// DAO is called twice: one for adding the description and another one to remove the description
-				verify(storeDaoMock, times(2)).update(store);				
+				
+				// When an exception is thrown rollback is done so the Store is not updated with
+				// the new description
 			} else {
 				fail("Exception not expected", e);
 			}

@@ -79,7 +79,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	private static final String JENA_ERROR = "Your RDF could not be parsed.";
 		
 	@Override
-	@Transactional(readOnly=false)
+	@Transactional(readOnly=false, rollbackFor=Exception.class)
 	public void save(String storeName, Description description) 
 			throws NotAuthorizedException, 
 			ValidationException, StoreNotFoundException {
@@ -133,10 +133,8 @@ public class DescriptionBoImpl implements DescriptionBo {
 		} catch (MalformedURLException | JenaException ex) {
 			
 			// These two exceptions are only thrown if the description cannot be parsed by the RdfIndexer
-			// When the indexed cannot index the service, the description cannot be saved
-			// If this exception is thrown, store is initialized
-			store.removeDescription(description);
-			storeDao.update(store);
+			// When the indexer cannot index the service, the description cannot be attached to the Store
+			// Because of this, the we have set the rollbackFor parameter
 			
 			String errorMessage;
 			if (ex instanceof JenaException) {
@@ -152,7 +150,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	}
 
 	@Override
-	@Transactional(readOnly=false)
+	@Transactional(readOnly=false, rollbackFor=Exception.class)
 	public void update(String storeName, String descriptionName, Description updatedDescription) 
 			throws NotAuthorizedException, 
 			ValidationException, StoreNotFoundException, DescriptionNotFoundException {
