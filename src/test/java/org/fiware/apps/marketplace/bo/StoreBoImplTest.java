@@ -108,7 +108,7 @@ public class StoreBoImplTest {
 	}
 	
 	@Test(expected=ValidationException.class)
-	public void testSaveInvalidUser() throws Exception {
+	public void testSaveInvalidStore() throws Exception {
 		
 		Store store = mock(Store.class);
 		when(store.getDisplayName()).thenReturn(DISPLAY_NAME);
@@ -275,11 +275,11 @@ public class StoreBoImplTest {
 	/////////////////////////////////////// DELETE ////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testDeleteException(String userName) throws Exception {
+	private void testDeleteException(String storeName) throws Exception {
 		
 		try {			
 			// Call the method
-			storeBo.delete(userName);
+			storeBo.delete(storeName);
 			fail("Exception expected");
 		} catch (Exception e) {
 			// Verify that the DAO has not been called
