@@ -75,7 +75,7 @@ public class DescriptionBoImplTest {
 	@InjectMocks private DescriptionBoImpl descriptionBo;
 
 	private static final String STORE_NAME = "store";
-	private static final String EXPECTED_NAME = "description-display-name";
+	private static final String NAME = "description-display-name";
 	private static final String DESCRIPTION_DISPLAY_NAME = "Description Display Name";
 	private static final String DESCRIPTION_URL = "http://repo.lab.fiware.org/sampleUsdl.rdf";
 	private static final String NOT_AUTHORIZED_BASE = "You are not authorized to %s";
@@ -177,7 +177,7 @@ public class DescriptionBoImplTest {
 			// Mocks configuring
 			when(storeDaoMock.findByName(STORE_NAME)).thenReturn(store);
 			when(descriptionAuthMock.canCreate(description)).thenReturn(true);
-			when(descriptionDaoMock.findByNameAndStore(STORE_NAME, EXPECTED_NAME))
+			when(descriptionDaoMock.findByNameAndStore(STORE_NAME, NAME))
 			.thenReturn(descriptionWithId);
 			
 			if (indexerException != null) {
@@ -265,6 +265,69 @@ public class DescriptionBoImplTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// UPDATE ////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testUpdateException(String storeName, String descriptionName, 
+			Description updatedDescription) throws Exception {		
+		
+		// Call the method
+		try {
+			descriptionBo.update(storeName, descriptionName, updatedDescription);
+			fail("Exception expected");
+		} catch (Exception e) {
+			verify(descriptionDaoMock, never()).update(any(Description.class));
+			throw e;
+		}
+	}
+	
+	@Test(expected=DescriptionNotFoundException.class)
+	public void testUpdateNotFound() throws Exception {
+		
+		Description updatedDescription = mock(Description.class);
+		
+		// Configure mocks
+		doThrow(new DescriptionNotFoundException("Description not found"))
+				.when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
+		
+		// Execute the function an check that DAO has not been called
+		testUpdateException(STORE_NAME, NAME, updatedDescription);
+	}
+
+	@Test(expected=ValidationException.class)
+	public void testUpdateNotValid() throws Exception {
+		
+		Description descriptionToUpdate = mock(Description.class);
+		Description updatedDescription = mock(Description.class);
+		
+		// Configure mocks
+		doReturn(descriptionToUpdate).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
+		doThrow(new ValidationException("a field", "not valid")).when(descriptionValidatorMock)
+				.validateUpdatedDescription(descriptionToUpdate, updatedDescription);
+		when(descriptionAuthMock.canUpdate(descriptionToUpdate)).thenReturn(true);
+		
+		// Execute the function an check that DAO has not been called
+		testUpdateException(STORE_NAME, NAME, updatedDescription);
+	}
+	
+	@Test
+	public void testUpdateNotAuthorized() throws Exception {
+		try {
+			Description descriptionToUpdate = mock(Description.class);
+			Description updatedDescription = mock(Description.class);
+			
+			// Configure mocks
+			doReturn(descriptionToUpdate).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
+			when(descriptionAuthMock.canUpdate(descriptionToUpdate)).thenReturn(false);
+			
+			// Execute the function an check that DAO has not been called
+			testUpdateException(STORE_NAME, NAME, updatedDescription);
+			
+			// If the exception is not risen, the method is not properly working
+			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+
+		} catch (NotAuthorizedException ex) {
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "update description"));
+		}
+	}
 
 	private void testUpdateDescriptionField(Description newDescription) {
 		try {
@@ -275,14 +338,14 @@ public class DescriptionBoImplTest {
 
 			// Mock
 			doReturn(user).when(userBoMock).getCurrentUser();
-			doReturn(description).when(descriptionBo).findByNameAndStore(STORE_NAME, EXPECTED_NAME);
+			doReturn(description).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
 			when(descriptionAuthMock.canUpdate(description)).thenReturn(true);
 
 			// Get the 
 			String previousName = description.getName();
 
 			// Call the method
-			descriptionBo.update(STORE_NAME, EXPECTED_NAME, newDescription);
+			descriptionBo.update(STORE_NAME, NAME, newDescription);
 
 			// Verify mocks
 			verify(descriptionDaoMock).update(description);
@@ -363,13 +426,13 @@ public class DescriptionBoImplTest {
 			newOfferings.add(newOffering);
 
 			// Configure the mocks
-			doReturn(storedDescription).when(descriptionBo).findByNameAndStore(STORE_NAME, EXPECTED_NAME);
+			doReturn(storedDescription).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
 			when(descriptionAuthMock.canUpdate(storedDescription)).thenReturn(true);	// User can update
 			when(offeringResolverMock.resolveOfferingsFromServiceDescription(storedDescription))
 			.thenReturn(newOfferings);
 
 			// Call the method
-			descriptionBo.update(STORE_NAME, EXPECTED_NAME, updatedDescription);
+			descriptionBo.update(STORE_NAME, NAME, updatedDescription);
 
 			// Verify that the database has been updated
 			verify(descriptionDaoMock).update(storedDescription);
@@ -446,13 +509,13 @@ public class DescriptionBoImplTest {
 		newOfferings.add(newOffering2);
 
 		// Configure the mocks
-		doReturn(storedDescription).when(descriptionBo).findByNameAndStore(STORE_NAME, EXPECTED_NAME);
+		doReturn(storedDescription).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
 		when(descriptionAuthMock.canUpdate(storedDescription)).thenReturn(true);	// User can update
 		when(offeringResolverMock.resolveOfferingsFromServiceDescription(storedDescription))
 				.thenReturn(newOfferings);
 
 		// Call the method
-		descriptionBo.update(STORE_NAME, EXPECTED_NAME, updatedDescription);
+		descriptionBo.update(STORE_NAME, NAME, updatedDescription);
 
 		// Verify that the database has been updated
 		verify(descriptionDaoMock).update(storedDescription);
@@ -487,12 +550,12 @@ public class DescriptionBoImplTest {
 		try {
 					
 			// Configure mocks
-			doReturn(storedDescription).when(descriptionBo).findByNameAndStore(STORE_NAME, EXPECTED_NAME);
+			doReturn(storedDescription).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
 			when(descriptionAuthMock.canUpdate(storedDescription)).thenReturn(true);	// User can update
 			doThrow(indexerException).when(rdfIndexerMock).indexOrUpdateService(storedDescription);
 			
 			// Call the method
-			descriptionBo.update(STORE_NAME, EXPECTED_NAME, updatedDescription);
+			descriptionBo.update(STORE_NAME, NAME, updatedDescription);
 			
 			failBecauseExceptionWasNotThrown(ValidationException.class);
 			

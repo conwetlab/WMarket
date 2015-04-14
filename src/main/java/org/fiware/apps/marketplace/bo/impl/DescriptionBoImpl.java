@@ -156,7 +156,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			ValidationException, StoreNotFoundException, DescriptionNotFoundException {
 				
 		try {
-			Description descriptionToBeUpdated = this.findByNameAndStore(storeName, descriptionName);
+			Description descriptionToBeUpdated = descriptionDao.findByNameAndStore(storeName, descriptionName);
 			
 			// Check rights and raise exception if user is not allowed to perform this action
 			if (!descriptionAuth.canUpdate(descriptionToBeUpdated)) {
@@ -246,7 +246,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException {
 		
 		Store store = storeDao.findByName(storeName);
-		Description description = this.findByNameAndStore(storeName, descriptionName);
+		Description description = descriptionDao.findByNameAndStore(storeName, descriptionName);
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!descriptionAuth.canDelete(description)) {
