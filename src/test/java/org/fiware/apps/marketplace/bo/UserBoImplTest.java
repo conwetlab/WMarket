@@ -444,43 +444,93 @@ public class UserBoImplTest {
 		userBo.findByName(userName);
 	}
 	
-	private void testFindByNameUserFound(boolean authorized) throws Exception {
-		String userName = "username";
-		User user = new User();
-		user.setId(2);
-		user.setUserName(userName);
-		
-		// Set up mocks
-		when(userDaoMock.findByName(userName)).thenReturn(user);
-		when(userAuthMock.canGet(user)).thenReturn(authorized);
-		
-		// Call the function
-		try {
-			User returnedUser = userBo.findByName(userName);
-			// If an exception is risen, this check is not executed
-			assertThat(returnedUser).isEqualTo(user);
-		} catch (Exception ex) {
-			verify(userDaoMock).findByName(userName);
-			
-			throw ex;
-		}
-	}
-	
 	@Test
 	public void testFinByNameNotAuthorized() throws Exception{
+		String name = "username";
+		User user = mock(User.class);
+		
+		// Set up mocks
+		when(userDaoMock.findByName(name)).thenReturn(user);
+		when(userAuthMock.canGet(user)).thenReturn(true);
+		
 		try {
-			testFindByNameUserFound(false);
-			// If the exception is not risen, the method is not properly working
-			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+			// Call the function
+			userBo.findByName(name);
 		} catch (NotAuthorizedException ex) {
 			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "find user"));
 		}
-
+		
+		verify(userDaoMock).findByName(name);
 	}
 
 	@Test
 	public void testFindByName() throws Exception {
-		testFindByNameUserFound(true);
+		
+		String name = "username";
+		User user = mock(User.class);
+		
+		// Set up mocks
+		when(userDaoMock.findByName(name)).thenReturn(user);
+		when(userAuthMock.canGet(user)).thenReturn(true);
+		
+		// Call the function
+		User returnedUser = userBo.findByName(name);
+		// If an exception is risen, this check is not executed
+		assertThat(returnedUser).isEqualTo(user);
+
+		verify(userDaoMock).findByName(name);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// FIND BY MAIL /////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=UserNotFoundException.class)
+	public void testFindByEmailException() throws Exception {
+		String email = "test@example.com";
+		doThrow(new UserNotFoundException("user not found")).when(userDaoMock).findByEmail(email);
+		
+		userBo.findByEmail(email);
+	}
+	
+	@Test
+	public void testFinByMailNotAuthorized() throws Exception{
+		String email = "test@example.com";
+		User user = mock(User.class);
+		
+		// Set up mocks
+		when(userDaoMock.findByEmail(email)).thenReturn(user);
+		when(userAuthMock.canGet(user)).thenReturn(false);
+		
+		try {
+			// Call the function
+			userBo.findByEmail(email);
+		} catch (NotAuthorizedException ex) {
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "find user"));
+		}
+		
+		verify(userDaoMock).findByEmail(email);
+
+	}
+
+	@Test
+	public void testFindByEmail() throws Exception {
+		
+		String email = "test@example.com";
+		User user = mock(User.class);
+		
+		// Set up mocks
+		when(userDaoMock.findByEmail(email)).thenReturn(user);
+		when(userAuthMock.canGet(user)).thenReturn(true);
+		
+		// Call the function
+		User returnedUser = userBo.findByEmail(email);
+		// If an exception is risen, this check is not executed
+		assertThat(returnedUser).isEqualTo(user);
+
+		verify(userDaoMock).findByEmail(email);
+
 	}
 	
 	
