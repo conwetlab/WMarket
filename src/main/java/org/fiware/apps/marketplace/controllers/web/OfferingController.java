@@ -83,6 +83,8 @@ public class OfferingController extends AbstractController {
             model.addAttribute("user", user);
             model.addAttribute("title", "Catalogue - " + getContextName());
 
+            addFlashMessage(request, model);
+
             view = new ModelAndView("offering.list", model);
             builder = Response.ok();
         } catch (UserNotFoundException e) {
