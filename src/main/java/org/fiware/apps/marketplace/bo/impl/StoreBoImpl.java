@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.bo.impl;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,11 +33,17 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.List;
 
+import javax.ws.rs.Path;
+
+import org.apache.commons.codec.binary.Base64;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.controllers.MediaContentController;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
@@ -49,6 +55,7 @@ import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +66,82 @@ public class StoreBoImpl implements StoreBo{
 	@Autowired private StoreAuth storeAuth;
 	@Autowired private StoreValidator storeValidator;
 	@Autowired private UserBo userBo;
+	
+	@Value("${media.folder}") private String MEDIA_FOLDER;
+	
+	private static final String MEDIA_URL = MediaContentController.class.getAnnotation(Path.class).value();
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// AUXILIAR //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Gets the name of the file where the image of the store is saved (or where it should be saved)
+	 * @param store The store whose image name wants to be retrieved
+	 * @return The name of the file that contains the image of the store
+	 */
+	private String getStoreImageName(Store store) {
+		return "store-" + store.getName() + ".png";
+	}
+	
+	/**
+	 * Gets the full name where the image of the store is saved (or where it should be saved)
+	 * @param store The store whose image path wants to be retrieved
+	 * @return The path of the file that contains the image of the store
+	 */
+	private String getStoreImagePath(Store store) {
+		return MEDIA_FOLDER + "/" + getStoreImageName(store);
+	}
+	
+	/**
+	 * Decodes the image and saves it in the media folder
+	 * @param store The store whose image wants to be decoded and saved
+	 */
+	private void readAndSaveImage(Store store) {
+		
+		
+		String imageb64 = store.getImageBase64();
+		
+		if (imageb64 != null) {
+			
+			String imagePath = getStoreImagePath(store);
+			byte[] decodedImage = Base64.decodeBase64(imageb64);
+			
+			try (FileOutputStream fos = new FileOutputStream(imagePath)) {
+				fos.write(decodedImage);
+			} catch (Exception e) {
+				// This exception will be handled by the controller that will return
+				// 500 Internal Server Error
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
+	/**
+	 * Set imagePath based on the Media URL and the name of the store
+	 * @param store The store whose imagePath wants to be set
+	 */
+	private void setImageURL(Store store) {
+		if (new File(getStoreImagePath(store)).exists()) {
+			store.setImagePath(MEDIA_URL + "/" + getStoreImageName(store));
+		}
+	}
+	
+	/**
+	 * Set imagePath based on the Media URL and the name of the store
+	 * @param stores The list of stores whose imagePath wants to be set
+	 */
+	private void setImageURL(List<Store> stores) {
+		for (Store store: stores) {
+			setImageURL(store);
+		}
+	}
+
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// PUBLIC METHODS ///////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
 	@Transactional(readOnly=false)
@@ -86,6 +169,9 @@ public class StoreBoImpl implements StoreBo{
 			
 			// Exception is risen if the store is not valid
 			storeValidator.validateNewStore(store);
+			
+			// Save the image
+			readAndSaveImage(store);
 			
 			storeDao.save(store);
 		} catch (UserNotFoundException ex) {
@@ -128,7 +214,14 @@ public class StoreBoImpl implements StoreBo{
 				storeToBeUpdate.setDisplayName(updatedStore.getDisplayName());
 			}
 			
+			if (updatedStore.getImageBase64() != null) {
+				storeToBeUpdate.setImageBase64(updatedStore.getImageBase64());
+				readAndSaveImage(storeToBeUpdate);
+			}
+			
 			storeToBeUpdate.setLasteditor(user);
+			
+			// Save the image
 			
 			storeDao.update(storeToBeUpdate);
 			
@@ -150,6 +243,9 @@ public class StoreBoImpl implements StoreBo{
 			throw new NotAuthorizedException("delete store");
 		}
 		
+		// When the store is deleted, its image must be deleted
+		new File(getStoreImagePath(store)).delete();
+		
 		storeDao.delete(store);
 		
 	}
@@ -166,6 +262,9 @@ public class StoreBoImpl implements StoreBo{
 			throw new NotAuthorizedException("find store");
 		}
 		
+		// Set store icon URL
+		setImageURL(store);
+		
 		return store;
 	}
 	
@@ -179,7 +278,13 @@ public class StoreBoImpl implements StoreBo{
 			throw new NotAuthorizedException("list stores");
 		}
 		
-		return storeDao.getStoresPage(offset, max);
+		// Set image path
+		List<Store> stores = storeDao.getStoresPage(offset, max);
+		
+		// Set store icon URL
+		setImageURL(stores);
+		
+		return stores;
 	}
 	
 	@Override
@@ -191,6 +296,12 @@ public class StoreBoImpl implements StoreBo{
 			throw new NotAuthorizedException("list stores");
 		}
 		
-		return storeDao.getAllStores();
+		// Set image path
+		List<Store> stores = storeDao.getAllStores();
+		
+		// Set store icon URL
+		setImageURL(stores);
+		
+		return stores;
 	}
 }
