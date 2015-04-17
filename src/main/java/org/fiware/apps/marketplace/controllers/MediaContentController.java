@@ -42,9 +42,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
@@ -63,7 +61,7 @@ public class MediaContentController {
 	@GET
 	@Path("{fileName: .*}")
 	@Produces({"image/png"})
-	public Response getImage(@Context UriInfo uri, @PathParam("fileName") String fileName) {
+	public Response getImage(@PathParam("fileName") String fileName) {
 
 		try {
 			// Path need to be normalized to avoid Directory traversal attack
