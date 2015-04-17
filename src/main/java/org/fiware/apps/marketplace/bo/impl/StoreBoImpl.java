@@ -69,6 +69,7 @@ public class StoreBoImpl implements StoreBo{
 	
 	@Value("${media.folder}") private String MEDIA_FOLDER;
 	
+	// The URL that can be used to retrieve images
 	private static final String MEDIA_URL = MediaContentController.class.getAnnotation(Path.class).value();
 	
 	
@@ -100,13 +101,12 @@ public class StoreBoImpl implements StoreBo{
 	 */
 	private void readAndSaveImage(Store store) {
 		
-		
 		String imageb64 = store.getImageBase64();
 		
 		if (imageb64 != null) {
 			
-			String imagePath = getStoreImagePath(store);
-			byte[] decodedImage = Base64.decodeBase64(imageb64);
+			String imagePath = getStoreImagePath(store);			// Path
+			byte[] decodedImage = Base64.decodeBase64(imageb64);	// Decoded image
 			
 			try (FileOutputStream fos = new FileOutputStream(imagePath)) {
 				fos.write(decodedImage);
@@ -123,6 +123,7 @@ public class StoreBoImpl implements StoreBo{
 	 * @param store The store whose imagePath wants to be set
 	 */
 	private void setImageURL(Store store) {
+		// Image URL is set only if the store has one image attached
 		if (new File(getStoreImagePath(store)).exists()) {
 			store.setImagePath(MEDIA_URL + "/" + getStoreImageName(store));
 		}
@@ -220,9 +221,7 @@ public class StoreBoImpl implements StoreBo{
 			}
 			
 			storeToBeUpdate.setLasteditor(user);
-			
-			// Save the image
-			
+						
 			storeDao.update(storeToBeUpdate);
 			
 		} catch (UserNotFoundException ex) {

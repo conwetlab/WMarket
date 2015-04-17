@@ -47,6 +47,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +57,8 @@ import org.springframework.stereotype.Component;
 public class MediaContentController {
 
 	@Value("${media.folder}") private String mediaFolder;
+	
+    private static Logger logger = LoggerFactory.getLogger(MediaContentController.class);
 
 	@GET
 	@Path("{fileName: .*}")
@@ -72,17 +76,19 @@ public class MediaContentController {
 				
 				BufferedImage image = ImageIO.read(imageFile);
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				ImageIO.write(image, "png", baos);
+				ImageIO.write(image, "png", baos);		// Only PNG is accepted
 				byte[] imageData = baos.toByteArray();
 	
 				// Return the image
 				return Response.ok().entity(imageData).build();
 				
 			} else {
+				logger.warn("File Not found or Directory traversal attack");
 				return Response.status(Status.NOT_FOUND).build();
 			}
 		
 		} catch (Exception ex) {
+			logger.warn("Not expected expection", ex);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 	}
