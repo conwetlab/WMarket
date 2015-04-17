@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.impl.StoreBoImpl;
@@ -411,8 +412,7 @@ public class StoreBoImplTest {
 	@Test
 	public void testGetAllStores() throws Exception {
 		
-		@SuppressWarnings("unchecked")
-		List<Store> stores = mock(List.class);
+		List<Store> stores = new ArrayList<Store>();
 		
 		when(storeDaoMock.getAllStores()).thenReturn(stores);
 		when(storeAuthMock.canList()).thenReturn(true);
@@ -448,8 +448,7 @@ public class StoreBoImplTest {
 	@Test
 	public void testGetStoresPage() throws Exception {
 		
-		@SuppressWarnings("unchecked")
-		List<Store> stores = mock(List.class);
+		List<Store> stores = new ArrayList<Store>();
 		
 		int offset = 8;
 		int max = 22;
