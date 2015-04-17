@@ -67,7 +67,7 @@ public class StoreBoImpl implements StoreBo{
 	@Autowired private StoreValidator storeValidator;
 	@Autowired private UserBo userBo;
 	
-	@Value("${media.folder}") private String MEDIA_FOLDER;
+	@Value("${media.folder}") private String mediaFolder;
 	
 	// The URL that can be used to retrieve images
 	private static final String MEDIA_URL = MediaContentController.class.getAnnotation(Path.class).value();
@@ -92,7 +92,7 @@ public class StoreBoImpl implements StoreBo{
 	 * @return The path of the file that contains the store image
 	 */
 	private String getStoreImagePath(Store store) {
-		return MEDIA_FOLDER + "/" + getStoreImageName(store);
+		return mediaFolder + "/" + getStoreImageName(store);
 	}
 	
 	/**
@@ -109,7 +109,8 @@ public class StoreBoImpl implements StoreBo{
 			byte[] decodedImage = Base64.decodeBase64(imageb64);	// Decoded image
 			
 			try (FileOutputStream fos = new FileOutputStream(imagePath)) {
-				fos.write(decodedImage);
+				fos.write(decodedImage);	// Write image
+				setImageURL(store);			// Set its path
 			} catch (Exception e) {
 				// This exception will be handled by the controller that will return
 				// 500 Internal Server Error

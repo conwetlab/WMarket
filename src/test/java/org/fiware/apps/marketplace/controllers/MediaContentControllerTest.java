@@ -55,8 +55,8 @@ public class MediaContentControllerTest {
 	private MediaContentController controller = new MediaContentController();
 	
 	// Temporary Folders
-    @Rule public TemporaryFolder mediaDirectory = new TemporaryFolder();
-    @Rule public TemporaryFolder unaccesibleDirectory = new TemporaryFolder();
+    @Rule public TemporaryFolder mediaFolder = new TemporaryFolder();
+    @Rule public TemporaryFolder unaccesibleFolder = new TemporaryFolder();
 	
     // Static content
 	private static final String IMAGE_NAME = "image.png";
@@ -72,11 +72,11 @@ public class MediaContentControllerTest {
 	public void setUp() throws IOException {
 
 		// Put an image into the media folder
-		copyImageIntoTemporaryFolder(mediaDirectory);
+		copyImageIntoTemporaryFolder(mediaFolder);
 		
 		// Set the folder where the media is stored
 		ReflectionTestUtils.setField(controller, "mediaFolder", 
-				mediaDirectory.getRoot().getAbsoluteFile().toString());
+				mediaFolder.getRoot().getAbsolutePath());
 	}
 	
 	@Test
@@ -104,10 +104,10 @@ public class MediaContentControllerTest {
 	@Test
 	public void testDirectoryTraversalAttack() throws IOException {
 		// Copy the image into the other directory
-		copyImageIntoTemporaryFolder(unaccesibleDirectory);
+		copyImageIntoTemporaryFolder(unaccesibleFolder);
 		
 		// Try to get the image
-		Response response = controller.getImage("../" +unaccesibleDirectory.getRoot().getName() + "/" + IMAGE_NAME);
+		Response response = controller.getImage("../" +unaccesibleFolder.getRoot().getName() + "/" + IMAGE_NAME);
 		
 		// 404 should be returned (even if the image exists)
 		assertThat(response.getStatus()).isEqualTo(404);
