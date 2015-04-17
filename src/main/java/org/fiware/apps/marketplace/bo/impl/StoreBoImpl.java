@@ -77,18 +77,18 @@ public class StoreBoImpl implements StoreBo{
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Gets the name of the file where the image of the store is saved (or where it should be saved)
+	 * Gets the name of the file where the Store image is saved (or where it should be saved)
 	 * @param store The store whose image name wants to be retrieved
-	 * @return The name of the file that contains the image of the store
+	 * @return The name of the file that contains the store image
 	 */
 	private String getStoreImageName(Store store) {
 		return "store-" + store.getName() + ".png";
 	}
 	
 	/**
-	 * Gets the full name where the image of the store is saved (or where it should be saved)
+	 * Gets the path where the store image is saved (or where it should be saved)
 	 * @param store The store whose image path wants to be retrieved
-	 * @return The path of the file that contains the image of the store
+	 * @return The path of the file that contains the store image
 	 */
 	private String getStoreImagePath(Store store) {
 		return MEDIA_FOLDER + "/" + getStoreImageName(store);
