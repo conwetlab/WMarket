@@ -70,7 +70,8 @@ public class StoreBoImpl implements StoreBo{
 	@Value("${media.folder}") private String mediaFolder;
 	
 	// The URL that can be used to retrieve images
-	private static final String MEDIA_URL = MediaContentController.class.getAnnotation(Path.class).value();
+	private static final String MEDIA_BASE_URL = MediaContentController.class.getAnnotation(Path.class).value();
+	private static final String STORE_MEDIA_FOLDER = "store";
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -78,21 +79,23 @@ public class StoreBoImpl implements StoreBo{
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Gets the name of the file where the Store image is saved (or where it should be saved)
+	 * Gets the relative path where the image is located. This path can be used both to obtain the
+	 * path where the image is stored and to get the final URL used by external users to retrieve
+	 * the image using the web service. It depends on the prefix you use. 
 	 * @param store The store whose image name wants to be retrieved
-	 * @return The name of the file that contains the store image
+	 * @return Relative path where the image is located.
 	 */
-	private String getStoreImageName(Store store) {
-		return "store-" + store.getName() + ".png";
+	private String getRelativeImagePath(Store store) {
+		return STORE_MEDIA_FOLDER + "/" + store.getName() + ".png";
 	}
 	
 	/**
-	 * Gets the path where the store image is saved (or where it should be saved)
+	 * Gets the file system path where the image is stored (or where it must be stored)
 	 * @param store The store whose image path wants to be retrieved
-	 * @return The path of the file that contains the store image
+	 * @return The file system path where the image is stored
 	 */
-	private String getStoreImagePath(Store store) {
-		return mediaFolder + "/" + getStoreImageName(store);
+	private String getFileSystemImagePath(Store store) {
+		return mediaFolder + "/" + getRelativeImagePath(store);
 	}
 	
 	/**
@@ -105,7 +108,8 @@ public class StoreBoImpl implements StoreBo{
 		
 		if (imageb64 != null) {
 			
-			String imagePath = getStoreImagePath(store);			// Path
+			String imagePath = getFileSystemImagePath(store);		// Path
+			new File(imagePath).getParentFile().mkdirs();			// Create required folders
 			byte[] decodedImage = Base64.decodeBase64(imageb64);	// Decoded image
 			
 			try (FileOutputStream fos = new FileOutputStream(imagePath)) {
@@ -125,8 +129,8 @@ public class StoreBoImpl implements StoreBo{
 	 */
 	private void setImageURL(Store store) {
 		// Image URL is set only if the store has one image attached
-		if (new File(getStoreImagePath(store)).exists()) {
-			store.setImagePath(MEDIA_URL + "/" + getStoreImageName(store));
+		if (new File(getFileSystemImagePath(store)).exists()) {
+			store.setImagePath(MEDIA_BASE_URL + "/" + getRelativeImagePath(store));
 		}
 	}
 	
@@ -244,7 +248,7 @@ public class StoreBoImpl implements StoreBo{
 		}
 		
 		// When the store is deleted, its image must be deleted
-		new File(getStoreImagePath(store)).delete();
+		new File(getFileSystemImagePath(store)).delete();
 		
 		storeDao.delete(store);
 		

@@ -92,8 +92,8 @@ public class StoreBoImplTest {
 			+ "nDrmZpjl0+A5/Rv8tccxtVnE6nRZ4bPnN6gbGy3Ne6Tgawr1Cs4HIO+CS5MQ4R+95Dz3kjXxC+xtTH6FhEtBrxMMKsKOjQw4ODm"
 			+ "w3m5ubghvXOIFlyzeAnpOcjtslZV7lAf6nkw9QAmpnXEI7D8yTj769aPhoAsvOyH/72/IH8JNvDJtE0dkAAAAASUVORK5CYII=";
 	
-	private String getStoreImageName(Store store) {
-		return "store-" + store.getName() + ".png";
+	private String getRelativeImagePath(Store store) {
+		return "store/" + store.getName() + ".png";
 	}
 	
 	@Before 
@@ -176,7 +176,7 @@ public class StoreBoImplTest {
 			verify(store).setName(NAME);
 			
 			// Verify that the image has been set
-			String imageName = getStoreImageName(store);
+			String imageName = getRelativeImagePath(store);
 			
 			int setImagePathTimes = includeImage ? 1 : 0;
 			verify(store, times(setImagePathTimes)).setImagePath(MEDIA_URL + "/" + imageName);
@@ -295,7 +295,7 @@ public class StoreBoImplTest {
 			assertThat(store.getComment()).isEqualTo(newStoreDescription);
 			
 			// When the image is updated
-			String imageName = getStoreImageName(store);
+			String imageName = getRelativeImagePath(store);
 			File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), imageName).toFile();
 			if (updatedStore.getImageBase64() != null) {
 				
@@ -399,10 +399,11 @@ public class StoreBoImplTest {
 		Store store = mock(Store.class);
 		when(store.getName()).thenReturn(NAME);
 		
-		File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), getStoreImageName(store)).toFile();
+		File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), getRelativeImagePath(store)).toFile();
 		
 		// Create the image that should be deleted
 		if (fileExist) {
+			imageFile.getParentFile().mkdirs();		// Create required directories
 			imageFile.createNewFile();
 		}
 
@@ -476,11 +477,12 @@ public class StoreBoImplTest {
 		Store store = mock(Store.class);
 		when(store.getName()).thenReturn(NAME);
 		
-		String imageName = getStoreImageName(store);
+		String imageName = getRelativeImagePath(store);
 		File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), imageName).toFile();
 		
 		// Create the image that should be deleted
 		if (imageExist) {
+			imageFile.getParentFile().mkdirs();
 			imageFile.createNewFile();
 		}
 		
@@ -549,8 +551,9 @@ public class StoreBoImplTest {
 		stores.add(store2);
 		
 		// Create image for store1
-		String image1Name = getStoreImageName(store1);
+		String image1Name = getRelativeImagePath(store1);
 		File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), image1Name).toFile();
+		imageFile.getParentFile().mkdirs();		// Create required directories
 		imageFile.createNewFile();
 		
 		// Mocks
@@ -607,8 +610,9 @@ public class StoreBoImplTest {
 		stores.add(store2);
 		
 		// Create image for store1
-		String image1Name = getStoreImageName(store1);
+		String image1Name = getRelativeImagePath(store1);
 		File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), image1Name).toFile();
+		imageFile.getParentFile().mkdirs();		// Create required directories
 		imageFile.createNewFile();
 
 		// Mocks
