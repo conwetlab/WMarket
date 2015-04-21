@@ -26,12 +26,6 @@
 			<url>http://repository.jboss.com/maven2</url>
 		</repository>
 
-		<repository>
-			<id>oauth</id>
-			<name>OAuth Repository</name>
-			<url>http://oauth.googlecode.com/svn/code/maven</url>
-		</repository>
-
 		<!-- The following two repositories are required for OAuth2 -->
 		<repository>
 			<id>sonatype-nexus-snapshots</id>
@@ -187,7 +181,7 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
@@ -350,10 +344,76 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
+					<excludes>
+						<excule>**/*IT*</excule>
+					</excludes>
 					<classpathDependencyExcludes>
 						<classpathDependencyExcludes>ch.qos.logback:logback-classic</classpathDependencyExcludes>
 					</classpathDependencyExcludes>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*IT*</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+				<version>1.4.8</version>
+				<configuration>
+					<container>
+						<containerId>tomcat8x</containerId>
+						<home>${env.CATALINA_HOME}</home>
+					</container>
+					<configuration>
+						<type>existing</type>
+						<home>${env.CATALINA_HOME}</home>
+					</configuration>
+					<deployables>
+						<deployable>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>${project.artifactId}</artifactId>
+							<type>war</type>
+							<properties>
+								<context>${project.build.finalName}</context>
+							</properties>
+						</deployable>
+					</deployables>
+					<deployer>
+						<type>installed</type>
+					</deployer>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start-tomcat</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop-tomcat</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
