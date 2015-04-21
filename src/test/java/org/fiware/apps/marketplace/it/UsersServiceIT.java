@@ -39,16 +39,16 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.annotation.XmlElement;
 
 import org.junit.Test;
 
-import com.sun.xml.txw2.annotation.XmlElement;
 
 public class UsersServiceIT {
 	
 	private static final String END_POINT = "http://localhost:8080/FiwareMarketplace";
 	
-	@Test(timeout=100000000)
+	@Test
 	public void testUserCreation() throws InterruptedException {
 		
 		SerializableUser user = new SerializableUser();
@@ -57,10 +57,11 @@ public class UsersServiceIT {
 		user.setPassword("password1!a");
 		
 		Client client = ClientBuilder.newClient();
-		Response a = client.target(END_POINT + "/api/v2/user").request(MediaType.APPLICATION_JSON).post(Entity.entity(user, MediaType.APPLICATION_JSON));
+		Response response = client.target(END_POINT + "/api/v2/user").request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(user, MediaType.APPLICATION_JSON));
 						
-		assertThat(a.getStatus()).isEqualTo(201);
-		assertThat(a.getHeaderString("Location")).isEqualTo(END_POINT + "/api/v2/user/fiware-example");
+		assertThat(response.getStatus()).isEqualTo(201);
+		assertThat(response.getHeaderString("Location")).isEqualTo(END_POINT + "/api/v2/user/fiware-example");
 		
 	}
 	
