@@ -66,6 +66,20 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<version>8.0.21</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-util</artifactId>
+			<version>8.0.21</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>1.10.8</version>
@@ -366,51 +380,6 @@
 						<goals>
 							<goal>integration-test</goal>
 							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.cargo</groupId>
-				<artifactId>cargo-maven2-plugin</artifactId>
-				<version>1.4.8</version>
-				<configuration>
-					<container>
-						<containerId>tomcat8x</containerId>
-						<home>${env.CATALINA_HOME}</home>
-					</container>
-					<configuration>
-						<type>existing</type>
-						<home>${env.CATALINA_HOME}</home>
-					</configuration>
-					<deployables>
-						<deployable>
-							<groupId>${project.groupId}</groupId>
-							<artifactId>${project.artifactId}</artifactId>
-							<type>war</type>
-							<properties>
-								<context>${project.build.finalName}</context>
-							</properties>
-						</deployable>
-					</deployables>
-					<deployer>
-						<type>installed</type>
-					</deployer>
-				</configuration>
-				<executions>
-					<execution>
-						<id>start-tomcat</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>stop-tomcat</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
 						</goals>
 					</execution>
 				</executions>

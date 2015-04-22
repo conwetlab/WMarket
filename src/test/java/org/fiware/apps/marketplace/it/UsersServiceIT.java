@@ -34,6 +34,9 @@ package org.fiware.apps.marketplace.it;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -41,12 +44,47 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlElement;
 
+import org.apache.catalina.startup.Tomcat;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 
 public class UsersServiceIT {
 	
-	private static final String END_POINT = "http://localhost:8080/FiwareMarketplace";
+	private static TemporaryFolder baseDir = new TemporaryFolder();	
+	private static Tomcat tomcat = new Tomcat();
+	private static String END_POINT;
+	
+	@BeforeClass
+	public static void startUp() throws Exception {
+		
+		// Initialize baseDir and the webapps directory
+		baseDir.create();
+		File webApps = baseDir.newFolder("webapps");
+		
+		// Set up Tomcat
+		tomcat.setPort(0);											// Automatic port
+		tomcat.setBaseDir(baseDir.getRoot().getAbsolutePath());		// Base Dir
+		tomcat.addContext("/", webApps.getAbsolutePath());			// Context
+		
+		// The name of the project
+		String projectDirectory = Paths.get(".").toAbsolutePath().toString();
+		tomcat.addWebapp("FiwareMarketplace", projectDirectory + "/target/FiwareMarketplace.war");
+		
+		// Start up
+		tomcat.start();
+
+		// End Point depends on the Tomcat port
+		END_POINT = String.format("http://localhost:%d/FiwareMarketplace", tomcat.getConnector().getLocalPort());
+	}
+	
+	@AfterClass
+	public static void tearDown() {
+		// Delete
+		baseDir.delete();
+	}
 	
 	@Test
 	public void testUserCreation() throws InterruptedException {
@@ -55,6 +93,9 @@ public class UsersServiceIT {
 		user.setDisplayName("FIWARE Example");
 		user.setEmail("example_mail@fiware.com");
 		user.setPassword("password1!a");
+		
+		System.out.println(END_POINT + "/api/v2/user");
+
 		
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(END_POINT + "/api/v2/user").request(MediaType.APPLICATION_JSON)
