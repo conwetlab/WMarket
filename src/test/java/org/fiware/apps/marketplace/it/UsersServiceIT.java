@@ -54,13 +54,14 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlElement;
 
 import org.apache.catalina.startup.Tomcat;
+import org.fiware.apps.marketplace.model.APIError;
+import org.fiware.apps.marketplace.model.ErrorType;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
 
 
@@ -90,7 +91,7 @@ public class UsersServiceIT {
 		EMBEDDED_DATABASE = DB.newEmbeddedDB(port);
 		EMBEDDED_DATABASE.start();
 		EMBEDDED_DATABASE.createDB(DATABASE);
-		
+						
 		// Initialize baseDir and the webapps directory
 		baseDir.create();
 		File webApps = baseDir.newFolder("webapps");
@@ -143,29 +144,119 @@ public class UsersServiceIT {
 	}
 	
 	@Before
-	public void setUp() throws ManagedProcessException {
+	public void setUp() throws Exception {
 		// Truncate all tables...
-		EMBEDDED_DATABASE.run("TRUNCATE TABLE offerings", "root", "", DATABASE);
-		EMBEDDED_DATABASE.run("TRUNCATE TABLE descriptions", "root", "", DATABASE);
-		EMBEDDED_DATABASE.run("TRUNCATE TABLE stores", "root", "", DATABASE);
-		EMBEDDED_DATABASE.run("TRUNCATE TABLE users", "root", "", DATABASE);
+		EMBEDDED_DATABASE.run("DELETE FROM offerings;", "root", null, DATABASE);
+		EMBEDDED_DATABASE.run("DELETE FROM descriptions;", "root", null, DATABASE);
+		EMBEDDED_DATABASE.run("DELETE FROM stores;", "root", null, DATABASE);
+		EMBEDDED_DATABASE.run("DELETE FROM users;", "root", null, DATABASE);
 	}
 	
-	@Test
-	public void testUserCreation() throws InterruptedException {
-				
+	private Response createUser(String displayName, String email, String password) {
+		
 		SerializableUser user = new SerializableUser();
-		user.setDisplayName("FIWARE Example");
-		user.setEmail("example_mail@fiware.com");
-		user.setPassword("password1!a");
+		user.setDisplayName(displayName);
+		user.setEmail(email);
+		user.setPassword(password);
 		
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(END_POINT + "/api/v2/user").request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(user, MediaType.APPLICATION_JSON));
-						
+		
+		return response;
+
+	}
+	
+	private void checkAPIError(Response response, int status, String field, String message, ErrorType errorType) {
+		
+		assertThat(response.getStatus()).isEqualTo(status);
+				
+		APIError error = response.readEntity(APIError.class);
+		assertThat(error.getField()).isEqualTo(field);
+		assertThat(error.getErrorMessage()).isEqualTo(message);
+		assertThat(error.getErrorType()).isEqualTo(errorType);
+
+	}
+		
+	@Test
+	public void testUserCreation() {
+		
+		Response response = createUser("FIWARE Example", "example@example.com", "password!1a");
+		
 		assertThat(response.getStatus()).isEqualTo(201);
 		assertThat(response.getHeaderString("Location")).isEqualTo(END_POINT + "/api/v2/user/fiware-example");
+	}
+	
+	@Test
+	public void testUserCreationUserExists() throws InterruptedException {
 		
+		String mail = "example@example.com";
+		
+		createUser("FIWARE Example", mail, "password!1a");
+		Response userExistResponse = createUser("Other user name", mail, "anotherPassword!1");
+				
+		checkAPIError(userExistResponse, 400, "email", "This email is already registered.", ErrorType.VALIDATION_ERROR);		
+	}
+	
+	@Test
+	public void testUserCreationInvalidDisplayName() {
+		Response response = createUser("FIWARE Example 1", "example@example.com", "password!1");
+		checkAPIError(response, 400, "displayName", "This field only accepts letters and white spaces.", ErrorType.VALIDATION_ERROR);	
+
+	}
+	
+	@Test
+	public void testUserCreationDisplayNameMissing() {
+		Response response = createUser("", "example@example.com", "password!1");
+		// userName is got based on displayName. userName is checked previously
+		checkAPIError(response, 400, "userName", "This field is required.", ErrorType.VALIDATION_ERROR);	
+	}
+	
+	@Test
+	public void testUserCrationDisplayNameTooLong() {
+		Response response = createUser("ABCDEFGHIJKMLNOPQRSTUVWXYZABCDEFGHIJKMLNOPQRSTUVWXYZ", "example@example.com", "password!1");
+		checkAPIError(response, 400, "displayName", "This field must not exceed 30 chars.", ErrorType.VALIDATION_ERROR);	
+	}
+	
+	public void testUserCrationDisplayNameTooShort() {
+		Response response = createUser("a", "example@example.com", "password!1");
+		checkAPIError(response, 400, "displayName", "This field must be at least 3 chars.", ErrorType.VALIDATION_ERROR);	
+	}
+	
+	@Test
+	public void testUserCreationInvalidMail() {
+		Response response = createUser("FIWARE Example", "example@examplecom", "password!1");
+		checkAPIError(response, 400, "email", "This field must be a valid email.", ErrorType.VALIDATION_ERROR);	
+	}
+	
+	@Test
+	public void testUserCreationDisplayEmailMissing() {
+		Response response = createUser("FIWARE Example", "", "password!1");
+		checkAPIError(response, 400, "email", "This field is required.", ErrorType.VALIDATION_ERROR);	
+	}
+	
+	@Test
+	public void testUserCreationInvalidPassword() {
+		Response response = createUser("FIWARE Example", "example@example.com", "password!");
+		checkAPIError(response, 400, "password", "Password must contain one number, one letter and one "
+				+ "unique character such as !#$%&?", ErrorType.VALIDATION_ERROR);	
+	}
+	
+	@Test
+	public void testUserCreationDisplayPasswordMissing() {
+		Response response = createUser("FIWARE Example", "example@example.com", "");
+		checkAPIError(response, 400, "password", "This field is required.", ErrorType.VALIDATION_ERROR);	
+	}
+	
+	@Test
+	public void testUserCrationPasswordTooLong() {
+		Response response = createUser("FIWARE EXAMPLE", "example@example.com", "ABCDEFGHIJKMLNOPQRSTUVWXYZABCDEFGHIJKMLNOPQRSTU!1VWXYZ");
+		checkAPIError(response, 400, "password", "This field must not exceed 30 chars.", ErrorType.VALIDATION_ERROR);	
+	}
+	
+	public void testUserCrationPasswordTooShort() {
+		Response response = createUser("FIWARE EXAMPLE", "example@example.com", "passw1!");
+		checkAPIError(response, 400, "password", "This field must be at least 8 chars.", ErrorType.VALIDATION_ERROR);	
 	}
 	
 	public static class SerializableUser {
