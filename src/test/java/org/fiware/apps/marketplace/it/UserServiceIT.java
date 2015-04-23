@@ -58,6 +58,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.fiware.apps.marketplace.model.APIError;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.Users;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -67,7 +68,7 @@ import org.junit.rules.TemporaryFolder;
 import ch.vorburger.mariadb4j.DB;
 
 
-public class UsersServiceIT {
+public class UserServiceIT {
 	
 	private static TemporaryFolder baseDir = new TemporaryFolder();	
 	private static Tomcat tomcat = new Tomcat();
@@ -86,7 +87,8 @@ public class UsersServiceIT {
 	private final static String MESSAGE_INVALID_EMAIL = "This field must be a valid email.";
 	private final static String MESSAGE_INVALID_PASSWORD = "Password must contain one number, one letter and one "
 				+ "unique character such as !#$%&?";
-	private final static String MESSAGE_NOT_AUTHORIZED = "You are not authorized to update user";
+	private final static String MESSAGE_NOT_AUTHORIZED = "You are not authorized to %s";
+	private final static String USER_NOT_FOUND = "User %s not found";
 	
 	
 	private static int getFreePort() throws IOException {
@@ -169,13 +171,18 @@ public class UsersServiceIT {
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////// CREATE ///////////////////////////////////////
+	/////////////////////////////////////// AUXILIAR //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void checkUser(String userName, String displayName, String company) {
+	private Response getUser(String userName) {
 		Client client = ClientBuilder.newClient();
-		User user = client.target(endPoint + "/api/v2/user/" + userName).request(MediaType.APPLICATION_JSON)
-				.get(User.class);
+		return client.target(endPoint + "/api/v2/user/" + userName).request(MediaType.APPLICATION_JSON)
+				.get();
+
+	}
+	
+	private void checkUser(String userName, String displayName, String company) {
+		User user = getUser(userName).readEntity(User.class);
 		
 		assertThat(user.getUserName()).isEqualTo(userName);
 		assertThat(user.getDisplayName()).isEqualTo(displayName);
@@ -192,6 +199,13 @@ public class UsersServiceIT {
 		assertThat(error.getErrorMessage()).isEqualTo(message);
 		assertThat(error.getErrorType()).isEqualTo(errorType);
 
+	}
+	
+	private String getAuthorization(String userName, String password) {
+		String authorization = userName + ":" + password;
+		String encodedAuthorization = "Basic " + new String(Base64.encodeBase64(authorization.getBytes()));
+
+		return encodedAuthorization;
 	}
 	
 	
@@ -327,7 +341,7 @@ public class UsersServiceIT {
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////// UPDATE///////////////////////////////////////
+	//////////////////////////////////////// UPDATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	private Response updateUser(String authUserName, String authPassword, String userName, 
@@ -339,13 +353,12 @@ public class UsersServiceIT {
 		user.setPassword(newPassword);
 		user.setCompany(company);
 		
-		String authorization = authUserName + ":" + authPassword;
-		String encodedAuthorization = new String(Base64.encodeBase64(authorization.getBytes()));
+		String encodedAuthorization = getAuthorization(authUserName, authPassword);
 		
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/user/" + userName)
 				.request(MediaType.APPLICATION_JSON)
-				.header("Authorization", "Basic " + encodedAuthorization)
+				.header("Authorization", encodedAuthorization)
 				.post(Entity.entity(user, MediaType.APPLICATION_JSON));
 		
 		return response;
@@ -368,12 +381,13 @@ public class UsersServiceIT {
 		String company = "UPM";
 		
 		// Create user
-		Response createUserReq = createUser(displayName, email, password, company);
-		assertThat(createUserReq.getStatus()).isEqualTo(201);
+		Response createUserResponse = createUser(displayName, email, password, company);
+		assertThat(createUserResponse.getStatus()).isEqualTo(201);
 		
 		// Update user
-		Response updateUserReq = updateUser(userName, password, userName, newDisplayName, email, password, company);
-		assertThat(updateUserReq.getStatus()).isEqualTo(200);
+		Response updateUserResponse = updateUser(userName, password, userName, newDisplayName, 
+				email, password, company);
+		assertThat(updateUserResponse.getStatus()).isEqualTo(200);
 		
 		checkUser(userName, newDisplayName, company);
 	}
@@ -387,13 +401,13 @@ public class UsersServiceIT {
 		String company = "UPM";
 		
 		// Create user
-		Response createUserReq = createUser(displayName, email, password, company);
-		assertThat(createUserReq.getStatus()).isEqualTo(201);
+		Response createUserResponse = createUser(displayName, email, password, company);
+		assertThat(createUserResponse.getStatus()).isEqualTo(201);
 		
 		// Update user
-		Response updateUserReq = updateUser(userName, password, userName, newDisplayName, 
+		Response updateUserResponse = updateUser(userName, password, userName, newDisplayName, 
 				newEmail, newPassword, newCompany);
-		checkAPIError(updateUserReq, 400, field, errorMessage, ErrorType.VALIDATION_ERROR);	
+		checkAPIError(updateUserResponse, 400, field, errorMessage, ErrorType.VALIDATION_ERROR);	
 
 		// Check that displayName remains the same
 		checkUser(userName, displayName, company);
@@ -425,20 +439,20 @@ public class UsersServiceIT {
 		String email = "example@example.com";
 		
 		// Create user
-		Response createUserReq = createUser(displayName, email, password);
-		assertThat(createUserReq.getStatus()).isEqualTo(201);
+		Response createUserResponse = createUser(displayName, email, password);
+		assertThat(createUserResponse.getStatus()).isEqualTo(201);
 		
 		// Update user
-		Response updateUserReq = updateUser(userName, password, userName, displayName, email, newPassword);
-		assertThat(updateUserReq.getStatus()).isEqualTo(200);
+		Response updateUserResponse = updateUser(userName, password, userName, displayName, email, newPassword);
+		assertThat(updateUserResponse.getStatus()).isEqualTo(200);
 		
 		// Check that the user cannot be updated with the old password
-		Response updateUserReq1 = updateUser(userName, password, userName, displayName, email, newPassword);
-		assertThat(updateUserReq1.getStatus()).isEqualTo(401);
+		Response updateUserResponse1 = updateUser(userName, password, userName, displayName, email, newPassword);
+		assertThat(updateUserResponse1.getStatus()).isEqualTo(401);
 		
 		// Check that the user can be updated with the new password
-		Response updateUserReq2 = updateUser(userName, newPassword, userName, displayName, email, newPassword);
-		assertThat(updateUserReq2.getStatus()).isEqualTo(200);
+		Response updateUserResponse2 = updateUser(userName, newPassword, userName, displayName, email, newPassword);
+		assertThat(updateUserResponse2.getStatus()).isEqualTo(200);
 
 	}
 	
@@ -476,8 +490,9 @@ public class UsersServiceIT {
 		
 		createUser("Fiware Example", "new_email@example.com", password);
 		createUser("Other user name", repeatedEmail, "password!1a");				
-		Response updateUserReq = updateUser(userName, password, userName, null, repeatedEmail, null);
-		checkAPIError(updateUserReq, 400, "email", MESSAGE_EMAIL_ALREADY_REGISTERED, ErrorType.VALIDATION_ERROR);	
+		Response updateUserResponse = updateUser(userName, password, userName, null, repeatedEmail, null);
+		checkAPIError(updateUserResponse, 400, "email", MESSAGE_EMAIL_ALREADY_REGISTERED, 
+				ErrorType.VALIDATION_ERROR);	
 	}
 	
 	private void testUpdateCompanyError(String newCompany, String errorMessage) {
@@ -496,6 +511,23 @@ public class UsersServiceIT {
 	}
 	
 	@Test
+	public void testUpdateUserNonExisting() {
+		
+		String userName = "marketplace";
+		String displayName = "Marketplace";
+		String password = "password1!a";
+		String email = "example@example.com";
+		
+		Response createUserResponse = createUser(displayName, email, password);
+		assertThat(createUserResponse.getStatus()).isEqualTo(201);
+		
+		String userNameUpdated = userName + "a";
+		Response updateUserResponse = updateUser(userName, password, userNameUpdated, displayName, email, password);
+		checkAPIError(updateUserResponse, 404, null, String.format(USER_NOT_FOUND, userNameUpdated), 
+				ErrorType.NOT_FOUND);
+	}
+	
+	@Test
 	public void testUpdateUserWithAnotherUser() {
 		
 		String userName1 = "marketplace";
@@ -509,15 +541,171 @@ public class UsersServiceIT {
 		String email2 = "example2@example.com";
 		
 		// Create both users
-		Response createUserReq1 = createUser(displayName1, email1, password1);
-		assertThat(createUserReq1.getStatus()).isEqualTo(201);
-		Response createUserReq2 = createUser(displayName2, email2, password2);
-		assertThat(createUserReq2.getStatus()).isEqualTo(201);
+		Response createUser1Response = createUser(displayName1, email1, password1);
+		assertThat(createUser1Response.getStatus()).isEqualTo(201);
+		Response createUser2Response = createUser(displayName2, email2, password2);
+		assertThat(createUser2Response.getStatus()).isEqualTo(201);
 		
 		// Update user with another user should fail
-		Response updateUserReq = updateUser(userName2, password2, userName1, displayName1, email1, password1);
-		checkAPIError(updateUserReq, 403, null, MESSAGE_NOT_AUTHORIZED, ErrorType.FORBIDDEN);
+		Response updateUserResponse = updateUser(userName2, password2, userName1, displayName1, email1, password1);
+		checkAPIError(updateUserResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "update user"), 
+				ErrorType.FORBIDDEN);
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// DELETE ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private Response deleteUser(String authUserName, String authPassword, String userName) {
+		
+		String encodedAuthorization = getAuthorization(authUserName, authPassword);
+		
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/user/" + userName)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", encodedAuthorization)
+				.delete();
+		
+		return response;
+
+	}
+	
+	@Test
+	public void testDeleteUser() {
+		String userName = "fiware-example";
+		String displayName = "Fiware Example";
+		String password = "password1!";
+		
+		Response createResponse = createUser(displayName, "example@example.com", password);
+		assertThat(createResponse.getStatus()).isEqualTo(201);
+		
+		// Check the response code
+		Response deleteResponse = deleteUser(userName, password, userName);
+		assertThat(deleteResponse.getStatus()).isEqualTo(204);
+		
+		// Check that the user does not exist
+		Response getResponse = getUser(userName);
+		checkAPIError(getResponse, 404, null, String.format(USER_NOT_FOUND, userName), ErrorType.NOT_FOUND);
+	}
+	
+	@Test
+	public void testDeleteUserNonExisting() {
+		String userName = "marketplace";
+		String displayName = "Marketplace";
+		String password = "password1!a";
+		String email = "example@example.com";
+		
+		Response createUserResponse = createUser(displayName, email, password);
+		assertThat(createUserResponse.getStatus()).isEqualTo(201);
+		
+		String userNameUpdated = userName + "a";
+		Response deleteUserResponse = deleteUser(userName, password, userNameUpdated);
+		checkAPIError(deleteUserResponse, 404, null, String.format(USER_NOT_FOUND, userNameUpdated), 
+				ErrorType.NOT_FOUND);
+
+	}
+	
+	@Test
+	public void testDeleteUserWithAnotherUser() {
+		
+		String userName1 = "marketplace";
+		String displayName1 = "Marketplace";
+		String password1 = "password1!a";
+		String email1 = "example@example.com";
+		
+		String userName2 = "marketplacebb";
+		String displayName2 = "MarketplaceBB";
+		String password2 = "password1!b";
+		String email2 = "example2@example.com";
+		
+		// Create both users
+		Response createUserResponse1 = createUser(displayName1, email1, password1);
+		assertThat(createUserResponse1.getStatus()).isEqualTo(201);
+		Response createUserResponse2 = createUser(displayName2, email2, password2);
+		assertThat(createUserResponse2.getStatus()).isEqualTo(201);
+		
+		// Delete user with another user should fail
+		Response deleteUserResponse = deleteUser(userName2, password2, userName1);
+		checkAPIError(deleteUserResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "delete user"), 
+				ErrorType.FORBIDDEN);
+		
+		// Check that the user already exists
+		checkUser(userName1, displayName1, null);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////// LIST USERS /////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test
+	public void testListAllUsers() {
+		
+		// Create some users
+		String alphabet = "abcdef";
+		String displayNamePattern = "User %c";
+		
+		for (int i = 0; i < alphabet.length(); i++) {
+			createUser(String.format(displayNamePattern, alphabet.charAt(i)), 
+					"example" + i + "@example.com", "password!1");
+		}
+		
+		// Get all users
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/user/").request(MediaType.APPLICATION_JSON)
+				.get();
+		
+		// Check the response
+		assertThat(response.getStatus()).isEqualTo(200);
+		Users users = response.readEntity(Users.class);
+		assertThat(users.getUsers().size()).isEqualTo(alphabet.length());
+		
+		// Users are supposed to be returned in order
+		for (int i = 0; i < alphabet.length(); i++) {
+			assertThat(users.getUsers().get(i).getDisplayName())
+					.isEqualTo(String.format(displayNamePattern, alphabet.charAt(i)));
+		}
+	}
+	
+	@Test
+	public void testListSomeUsers() {
+		
+		// Create some users
+		String alphabet = "abcdefghij";
+		String displayNamePattern = "User %c";
+		
+		for (int i = 0; i < alphabet.length(); i++) {
+			createUser(String.format(displayNamePattern, alphabet.charAt(i)), 
+					"example" + i + "@example.com", "password!1");
+		}
+		
+		int offset = 3;
+		int max = 4;
+		
+		// Get some users
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/user/")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_JSON)
+				.get();
+		
+		// Check the response
+		assertThat(response.getStatus()).isEqualTo(200);
+		Users users = response.readEntity(Users.class);
+		assertThat(users.getUsers().size()).isEqualTo(max);
+		
+		// Users are supposed to be returned in order
+		for (int i = offset; i < offset + max; i++) {
+			assertThat(users.getUsers().get(i - offset).getDisplayName())
+					.isEqualTo(String.format(displayNamePattern, alphabet.charAt(i)));
+		}
+	}
+	
+	
+	
+	
 
 	
 	
