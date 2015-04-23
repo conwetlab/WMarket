@@ -35,25 +35,12 @@ package org.fiware.apps.marketplace.it;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Properties;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.fiware.apps.marketplace.model.APIError;
 import org.fiware.apps.marketplace.model.ErrorType;
@@ -62,19 +49,11 @@ import org.fiware.apps.marketplace.model.User;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.rules.TemporaryFolder;
-
-import ch.vorburger.mariadb4j.DB;
 
 public abstract class AbstractIT {
 	
-	private static TemporaryFolder baseDir = new TemporaryFolder();	
-	private static Tomcat tomcat = new Tomcat();
-	private static DB embeddedDB;
+	private static Environment environment = Environment.getInstance();
 	protected static String endPoint;
-	
-	private final static String MODIFIED_WAR_NAME = "WMarket-Integration.war";
-	private final static String DATABASE = "marketplace-test";
 	
 	protected final static String MESSAGE_INVALID_DISPLAY_NAME = 
 			"This field only accepts letters, numbers, white spaces and hyphens.";
@@ -84,83 +63,23 @@ public abstract class AbstractIT {
 	protected final static String MESSAGE_NOT_AUTHORIZED = "You are not authorized to %s";
 	protected final static String MESSAGE_INVALID_URL = "This field must be a valid URL.";
 
-	
-	private static int getFreePort() throws IOException {
-		
-		ServerSocket socket = new ServerSocket(0);
-		int port = socket.getLocalPort();
-		socket.close();
-		
-		return port;
-	}
-	
 	@BeforeClass
 	public static void startUp() throws Exception {
 		
-		// Initialize DB
-		int port = getFreePort();
-		embeddedDB = DB.newEmbeddedDB(port);
-		embeddedDB.start();
-		embeddedDB.createDB(DATABASE);
-						
-		// Initialize baseDir and the webapps directory
-		baseDir.create();
-		File webApps = baseDir.newFolder("webapps");
+		int port = environment.start();
 		
-		// Set up Tomcat
-		tomcat.setPort(0);											// Automatic port
-		tomcat.setBaseDir(baseDir.getRoot().getAbsolutePath());		// Base Dir
-		tomcat.addContext("/", webApps.getAbsolutePath());			// Context
-		
-		// Create properties
-		Properties properties = new Properties();
-		properties.setProperty("jdbc.driverClassName", "com.mysql.jdbc.Driver");
-		properties.setProperty("jdbc.url", String.format("jdbc:mysql://localhost:%d/%s", port, DATABASE));
-		properties.setProperty("jdbc.username", "root");
-		properties.setProperty("jdbc.password", "");
-		
-		File propertiesFile = baseDir.newFile("properties.properties");
-		propertiesFile.createNewFile();
-		properties.store(new FileOutputStream(propertiesFile), "");
-		
-		// Copy the WAR (the original one cannot be modified)
-		String projectDirectory = Paths.get(".").toAbsolutePath().toString();
-		String modifiedWarPath = projectDirectory + "/target/" + MODIFIED_WAR_NAME;
-		
-	    Path originalWar = Paths.get(projectDirectory + "/target/FiwareMarketplace.war");
-	    Path modifiedWar = Paths.get(modifiedWarPath);
-	    Files.copy(originalWar, modifiedWar, StandardCopyOption.REPLACE_EXISTING);
-	    
-	    // Modify properties using the file created previously
-	    FileSystem fs = FileSystems.newFileSystem(modifiedWar, null);
-        Path fileInsideZipPath = fs.getPath("WEB-INF/classes/properties/database.properties");
-        // Copy properties into the WAR
-        Files.copy(propertiesFile.toPath(), fileInsideZipPath, StandardCopyOption.REPLACE_EXISTING);
-        fs.close();
-        
-        // Add modified WAR       
-		tomcat.addWebapp("FiwareMarketplace", modifiedWarPath);
-        
-		// Start up
-		tomcat.start();
-
 		// End Point depends on the Tomcat port
-		endPoint = String.format("http://localhost:%d/FiwareMarketplace", tomcat.getConnector().getLocalPort());
+		endPoint = String.format("http://localhost:%d/FiwareMarketplace", port);
 	}
 	
 	@AfterClass
-	public static void tearDown() {
-		// Delete
-		baseDir.delete();
+	public static void tearDown() throws Exception {
+		environment.stop();
 	}
 	
 	@Before
 	public void setUp() throws Exception {
-		// Truncate all tables...
-		embeddedDB.run("DELETE FROM offerings;", "root", null, DATABASE);
-		embeddedDB.run("DELETE FROM descriptions;", "root", null, DATABASE);
-		embeddedDB.run("DELETE FROM stores;", "root", null, DATABASE);
-		embeddedDB.run("DELETE FROM users;", "root", null, DATABASE);
+		environment.cleanDB();
 	}
 	
 	
