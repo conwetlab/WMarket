@@ -57,6 +57,7 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.fiware.apps.marketplace.model.APIError;
 import org.fiware.apps.marketplace.model.ErrorType;
+import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -74,6 +75,14 @@ public abstract class AbstractIT {
 	
 	private final static String MODIFIED_WAR_NAME = "WMarket-Integration.war";
 	private final static String DATABASE = "marketplace-test";
+	
+	protected final static String MESSAGE_INVALID_DISPLAY_NAME = 
+			"This field only accepts letters, numbers, white spaces and hyphens.";
+	protected final static String MESSAGE_TOO_LONG = "This field must not exceed %d chars."; 
+	protected final static String MESSAGE_TOO_SHORT = "This field must be at least %d chars.";
+	protected final static String MESSAGE_FIELD_REQUIRED = "This field is required.";
+	protected final static String MESSAGE_NOT_AUTHORIZED = "You are not authorized to %s";
+	protected final static String MESSAGE_INVALID_URL = "This field must be a valid URL.";
 
 	
 	private static int getFreePort() throws IOException {
@@ -208,6 +217,27 @@ public abstract class AbstractIT {
 		return response;
 
 	}
+	
+	protected Response createUser(String displayName, String email, String password) {
+		return createUser(displayName, email, password, null);
+	}
+	
+	protected Response createStore(String userName, String password, String displayName, String url, String comment, 
+			String imageBase64) {
+		
+		Store store = new Store();
+		store.setDisplayName(displayName);
+		store.setUrl(url);
+		store.setComment(comment);
+		store.setImageBase64(imageBase64);
+		
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/store").request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password))
+				.post(Entity.entity(store, MediaType.APPLICATION_JSON));
+		
+		return response;
 
+	}
 
 }

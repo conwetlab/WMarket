@@ -48,27 +48,19 @@ import org.junit.Test;
 
 public class UserServiceIT extends AbstractIT {
 	
-	private final static String MESSAGE_TOO_LONG = "This field must not exceed %d chars."; 
-	private final static String MESSAGE_TOO_SHORT = "This field must be at least %d chars.";
-	private final static String MESSAGE_FIELD_REQUIRED = "This field is required.";
 	private final static String MESSAGE_INVALID_DISPLAY_NAME = 
 			"This field only accepts letters and white spaces.";
 	private final static String MESSAGE_EMAIL_ALREADY_REGISTERED = "This email is already registered.";
 	private final static String MESSAGE_INVALID_EMAIL = "This field must be a valid email.";
 	private final static String MESSAGE_INVALID_PASSWORD = "Password must contain one number, one letter and one "
 				+ "unique character such as !#$%&?";
-	private final static String MESSAGE_NOT_AUTHORIZED = "You are not authorized to %s";
 	private final static String USER_NOT_FOUND = "User %s not found";
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// CREATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-	
-	private Response createUser(String displayName, String email, String password) {
-		return createUser(displayName, email, password, null);
-	}
-		
+			
 	@Test
 	public void testUserCreation() {
 		
