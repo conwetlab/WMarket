@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.catalina.startup.Tomcat;
 import org.junit.rules.TemporaryFolder;
@@ -32,12 +33,14 @@ public class Environment {
 	private TemporaryFolder baseDir;	
 	private Tomcat tomcat;
 	private DB embeddedDB;
+	private AtomicBoolean started = new AtomicBoolean(false);
 	
 	private final static String MODIFIED_WAR_NAME = "WMarket-Integration.war";
 	private final static String DATABASE = "marketplace-test";
 	
 	/**
-	 * Make constructor private
+	 * Make constructor private in order to control the number of instances (there should be only one).
+	 * If the environ cannot be set up, a non-checked exception will be thrown.
 	 */
 	private Environment() {
 		try {
@@ -93,6 +96,10 @@ public class Environment {
 
 	}
 	
+	/**
+	 * Get the Environment instance (there is only one instance)
+	 * @return Environment instance.
+	 */
 	public static Environment getInstance() {
 		return INSTANCE;
 	}
@@ -113,24 +120,37 @@ public class Environment {
 	 * @throws Exception When Tomcat or MariaDB cannot be started
 	 */
 	public int start() throws Exception {
-		// Start up
-		embeddedDB.start();
-		embeddedDB.createDB(DATABASE);
-		tomcat.start();
+		if (!started.getAndSet(true)) {
+			// Start up
+			embeddedDB.start();
+			embeddedDB.createDB(DATABASE);
+			tomcat.start();
+		}
 		
 		// At this point, Tomcat is supposed to be initialized
 		return tomcat.getConnector().getLocalPort();
 	}
 	
+	/**
+	 * Method to stop Tomcat and MariaDB. This method is prepared to stop these services only when they
+	 * are running
+	 * @throws Exception When the services cannot be stopped
+	 */
 	public void stop() throws Exception {
-		// Stop tomcat
-		// It cannot be destroyed. Otherwise, we won't be able to restart it again
-		tomcat.stop();
-		
-		// Stop database
-		embeddedDB.stop();
+		if (started.getAndSet(false)) {
+			// Stop tomcat
+			// It cannot be destroyed. Otherwise, we won't be able to restart it again
+			tomcat.stop();
+			
+			// Stop database
+			embeddedDB.stop();
+		}
 	}
 	
+	/**
+	 * Deletes all the entries existing in the database
+	 * @throws ManagedProcessException If an error arises when the database was being cleaned
+	 */
 	public void cleanDB() throws ManagedProcessException {
 		embeddedDB.run("DELETE FROM offerings;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM descriptions;", "root", null, DATABASE);

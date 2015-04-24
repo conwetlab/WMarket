@@ -32,7 +32,6 @@ package org.fiware.apps.marketplace.it;
  * #L%
  */
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.ws.rs.client.Client;
