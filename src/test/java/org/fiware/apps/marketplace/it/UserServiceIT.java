@@ -54,8 +54,12 @@ public class UserServiceIT extends AbstractIT {
 	private final static String MESSAGE_INVALID_EMAIL = "This field must be a valid email.";
 	private final static String MESSAGE_INVALID_PASSWORD = "Password must contain one number, one letter and one "
 				+ "unique character such as !#$%&?";
-	private final static String USER_NOT_FOUND = "User %s not found";
+	private final static String MESSAGE_USER_NOT_FOUND = "User %s not found";
 	
+	
+	public void specificSetUp() {
+		// No actions are required
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// CREATE ///////////////////////////////////////
@@ -351,7 +355,7 @@ public class UserServiceIT extends AbstractIT {
 		
 		String userNameUpdated = userName + "a";
 		Response updateUserResponse = updateUser(userName, password, userNameUpdated, displayName, email, password);
-		checkAPIError(updateUserResponse, 404, null, String.format(USER_NOT_FOUND, userNameUpdated), 
+		checkAPIError(updateUserResponse, 404, null, String.format(MESSAGE_USER_NOT_FOUND, userNameUpdated), 
 				ErrorType.NOT_FOUND);
 	}
 	
@@ -385,20 +389,6 @@ public class UserServiceIT extends AbstractIT {
 	//////////////////////////////////////// DELETE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private Response deleteUser(String authUserName, String authPassword, String userName) {
-		
-		String encodedAuthorization = getAuthorization(authUserName, authPassword);
-		
-		Client client = ClientBuilder.newClient();
-		Response response = client.target(endPoint + "/api/v2/user/" + userName)
-				.request(MediaType.APPLICATION_JSON)
-				.header("Authorization", encodedAuthorization)
-				.delete();
-		
-		return response;
-
-	}
-	
 	@Test
 	public void testDeleteUser() {
 		String userName = "fiware-example";
@@ -414,7 +404,7 @@ public class UserServiceIT extends AbstractIT {
 		
 		// Check that the user does not exist
 		Response getResponse = getUser(userName);
-		checkAPIError(getResponse, 404, null, String.format(USER_NOT_FOUND, userName), ErrorType.NOT_FOUND);
+		checkAPIError(getResponse, 404, null, String.format(MESSAGE_USER_NOT_FOUND, userName), ErrorType.NOT_FOUND);
 	}
 	
 	@Test
@@ -429,7 +419,7 @@ public class UserServiceIT extends AbstractIT {
 		
 		String userNameUpdated = userName + "a";
 		Response deleteUserResponse = deleteUser(userName, password, userNameUpdated);
-		checkAPIError(deleteUserResponse, 404, null, String.format(USER_NOT_FOUND, userNameUpdated), 
+		checkAPIError(deleteUserResponse, 404, null, String.format(MESSAGE_USER_NOT_FOUND, userNameUpdated), 
 				ErrorType.NOT_FOUND);
 
 	}

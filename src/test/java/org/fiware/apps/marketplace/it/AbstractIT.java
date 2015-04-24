@@ -79,7 +79,10 @@ public abstract class AbstractIT {
 	@Before
 	public void setUp() throws Exception {
 		environment.cleanDB();
+		specificSetUp();
 	}
+
+	public abstract void specificSetUp();
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -140,8 +143,22 @@ public abstract class AbstractIT {
 		return createUser(displayName, email, password, null);
 	}
 	
-	protected Response createStore(String userName, String password, String displayName, String url, String comment, 
-			String imageBase64) {
+	protected Response deleteUser(String authUserName, String authPassword, String userName) {
+		
+		String encodedAuthorization = getAuthorization(authUserName, authPassword);
+		
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/user/" + userName)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", encodedAuthorization)
+				.delete();
+		
+		return response;
+
+	}
+	
+	private Response createOrUpdateStore(String userName, String password, String name, String displayName, String url, 
+			String comment, String imageBase64) {
 		
 		Store store = new Store();
 		store.setDisplayName(displayName);
@@ -150,12 +167,24 @@ public abstract class AbstractIT {
 		store.setImageBase64(imageBase64);
 		
 		Client client = ClientBuilder.newClient();
-		Response response = client.target(endPoint + "/api/v2/store").request(MediaType.APPLICATION_JSON)
+		Response response = client.target(endPoint + "/api/v2/store/" + name).request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password))
 				.post(Entity.entity(store, MediaType.APPLICATION_JSON));
 		
 		return response;
 
+	}
+	
+	protected Response createStore(String userName, String password, String displayName, String url, String comment, 
+			String imageBase64) {
+		
+		return createOrUpdateStore(userName, password, "", displayName, url, comment, imageBase64);
+	}
+	
+	protected Response updateStore(String userName, String password, String name, String displayName, String url, 
+			String comment, String imageBase64) {
+		
+		return createOrUpdateStore(userName, password, name, displayName, url, comment, imageBase64);
 	}
 
 }
