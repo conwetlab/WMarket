@@ -486,8 +486,7 @@ public class UserServiceIT extends AbstractIT {
 		}
 	}
 	
-	@Test
-	public void testListSomeUsers() {
+	private void testListSomeUsers(int offset, int max) {
 		
 		// Create some users
 		String alphabet = "abcdefghij";
@@ -498,9 +497,6 @@ public class UserServiceIT extends AbstractIT {
 					"example" + i + "@example.com", "password!1");
 		}
 		
-		int offset = 3;
-		int max = 4;
-		
 		// Get some users
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/user/")
@@ -510,14 +506,50 @@ public class UserServiceIT extends AbstractIT {
 				.get();
 		
 		// Check the response
+		int usersCreated = alphabet.length();
+		int expectedElements = offset + max > usersCreated ? usersCreated - offset : max;
 		assertThat(response.getStatus()).isEqualTo(200);
 		Users users = response.readEntity(Users.class);
-		assertThat(users.getUsers().size()).isEqualTo(max);
+		assertThat(users.getUsers().size()).isEqualTo(expectedElements);
 		
 		// Users are supposed to be returned in order
-		for (int i = offset; i < offset + max; i++) {
+		for (int i = offset; i < offset + expectedElements; i++) {
 			assertThat(users.getUsers().get(i - offset).getDisplayName())
 					.isEqualTo(String.format(displayNamePattern, alphabet.charAt(i)));
 		}
 	}
+	
+	@Test
+	public void testListSomeUsersInRange() {
+		testListSomeUsers(3, 4);
+	}
+	
+	@Test
+	public void testListSomeUsersNotInRange() {
+		testListSomeUsers(5, 7);
+	}
+	
+	private void testListUsersInvalidParams(int offset, int max) {
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/user/")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_JSON)
+				.get();
+		
+		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+
+	}
+	
+	@Test
+	public void testListUsersInvalidOffset() {
+		testListUsersInvalidParams(-1, 2);
+	}
+	
+	@Test
+	public void testListUsersInvalidMax() {
+		testListUsersInvalidParams(1, 0);
+	}
+
+	
 }

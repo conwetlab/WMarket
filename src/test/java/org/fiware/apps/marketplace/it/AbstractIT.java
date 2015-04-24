@@ -61,6 +61,7 @@ public abstract class AbstractIT {
 	protected final static String MESSAGE_FIELD_REQUIRED = "This field is required.";
 	protected final static String MESSAGE_NOT_AUTHORIZED = "You are not authorized to %s";
 	protected final static String MESSAGE_INVALID_URL = "This field must be a valid URL.";
+	protected final static String MESSAGE_INVALID_OFFSET_MAX = "offset and/or max are not valid";
 
 	@BeforeClass
 	public static void startUp() throws Exception {

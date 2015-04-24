@@ -497,22 +497,18 @@ public class StoreServiceIT extends AbstractIT {
 		}
 	}
 	
-	@Test
-	public void testListSomeUsers() {
+	private void testListSomeStores(int offset, int max) {
 		
 		// Create some stores
-		int STORES_CREATED = 10;
+		int storesCreated = 10;
 		String displayNamePattern = "Store %d";
 		String urlPattern = "https://store%d.lab.fiware.org";
 		
-		for (int i = 0; i < STORES_CREATED; i++) {
+		for (int i = 0; i < storesCreated; i++) {
 			createStore(USER_NAME, PASSWORD, String.format(displayNamePattern, i), 
 					String.format(urlPattern, i), null, null);
 		}
-		
-		int offset = 3;
-		int max = 4;
-		
+				
 		// Get some users
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/")
@@ -523,14 +519,48 @@ public class StoreServiceIT extends AbstractIT {
 				.get();
 		
 		// Check the response
+		int expectedElements = offset + max > storesCreated ? storesCreated - offset : max;
 		assertThat(response.getStatus()).isEqualTo(200);
 		Stores stores = response.readEntity(Stores.class);
-		assertThat(stores.getStores().size()).isEqualTo(max);
+		assertThat(stores.getStores().size()).isEqualTo(expectedElements);
 		
 		// Users are supposed to be returned in order
-		for (int i = offset; i < offset + max; i++) {
+		for (int i = offset; i < offset + expectedElements; i++) {
 			assertThat(stores.getStores().get(i - offset).getDisplayName())
 					.isEqualTo(String.format(displayNamePattern, i));
 		}
+	}
+	
+	@Test
+	public void testListSomeStoresMaxInRange() {
+		testListSomeStores(3, 4);
+	}
+	
+	@Test
+	public void testListSomeStoresMaxNotInRange() {
+		testListSomeStores(5, 7);
+	}
+	
+	private void testListStoresInvalidParams(int offset, int max) {
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/store/")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+
+	}
+	
+	@Test
+	public void testListStoresInvalidOffset() {
+		testListStoresInvalidParams(-1, 2);
+	}
+	
+	@Test
+	public void testListStoresInvalidMax() {
+		testListStoresInvalidParams(1, 0);
 	}
 }
