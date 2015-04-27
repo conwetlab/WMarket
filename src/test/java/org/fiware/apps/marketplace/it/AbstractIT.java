@@ -182,6 +182,10 @@ public abstract class AbstractIT {
 		return createOrUpdateStore(userName, password, "", displayName, url, comment, imageBase64);
 	}
 	
+	protected Response createStore(String userName, String password, String displayName, String url) {
+		return createStore(userName, password, displayName, url, null, null);
+	}
+	
 	protected Response updateStore(String userName, String password, String name, String displayName, String url, 
 			String comment, String imageBase64) {
 		

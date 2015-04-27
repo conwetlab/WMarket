@@ -5,6 +5,10 @@ import java.util.Enumeration;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.LoggerContext;
+
 public class ContextFinalizer implements ServletContextListener {
 
 	@Override
@@ -28,6 +32,10 @@ public class ContextFinalizer implements ServletContextListener {
 				java.sql.DriverManager.deregisterDriver(driver);
 			} catch (Throwable t) {}
 		}
+		
+		// Destroy loggers
+		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		lc.stop();
 		
 		try { 
 			Thread.sleep(2000L); 
