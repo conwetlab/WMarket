@@ -5,9 +5,9 @@ import java.util.Enumeration;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.slf4j.LoggerFactory;
+//import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.LoggerContext;
+//import ch.qos.logback.classic.LoggerContext;
 
 public class ContextFinalizer implements ServletContextListener {
 
@@ -34,8 +34,8 @@ public class ContextFinalizer implements ServletContextListener {
 		}
 		
 		// Destroy loggers
-		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-		lc.stop();
+		// LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		// lc.stop();
 		
 		try { 
 			Thread.sleep(2000L); 
