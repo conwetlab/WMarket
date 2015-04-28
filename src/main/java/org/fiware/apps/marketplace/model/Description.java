@@ -57,6 +57,7 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.fiware.apps.marketplace.utils.xmladapters.StoreXMLAdapter;
 import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
@@ -181,7 +182,8 @@ public class Description {
 		this.registrationDate = registrationDate;
 	}
 
-	@XmlElement
+    @XmlElement(name = "offering")
+    @JsonProperty("offerings")
 	@OneToMany(mappedBy = "describedIn", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	public List<Offering> getOfferings() {
 		return offerings;
