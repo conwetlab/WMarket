@@ -53,10 +53,9 @@ public class StoreServiceIT extends AbstractIT {
 	private final static String PASSWORD = "password1!a";
 	private final static String EMAIL = "example@example.com";
 	
-	private final static String MESSAGE_NAME_IN_USE = "This name is already in use.";
-	private final static String MESSAGE_URL_IN_USE = "This URL is already in use.";
-	private final static String MESSAGE_STORE_NOT_FOUND = "Store %s not found";
-		
+	protected final static String MESSAGE_URL_IN_USE = "This URL is already in use.";
+	protected final static String MESSAGE_NAME_IN_USE = "This name is already in use.";
+	
 	private static final String IMAGE_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAA"
 			+ "ALEwEAmpwYAAADpElEQVRIDa1WS0ubURAdk/gAN75QCApGjIItSIOuRMSiIrhzIUj7J1pL7UZ/QEH6DxIhdK8uJFio+Fi4ykLsp"
 			+ "oJ1YVqtulB8mzg9Z5r79YsIyaIDk/v4zj0z987MvSlTVXFSBkE/iLks5zB8gWYE+hLaAW2FUvah36FfoV+AT6MlPoQmh/E/Uvbz"

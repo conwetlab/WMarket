@@ -41,7 +41,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;	
 
-import org.fiware.apps.marketplace.model.APIError;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.junit.After;
@@ -58,7 +57,10 @@ public class DescriptionServiceIT extends AbstractIT {
 	private final static String STORE_NAME = "wstore";
 	private final static String STORE_URL = "http://store.lab.fiware.org";
 	
-	private String serverURL;
+	private final static String MESSAGE_NAME_IN_USE = "This name is already in use in this Store.";
+	private final static String MESSAGE_URL_IN_USE = "This URL is already in use in this Store.";
+	
+	private String serverUrl;
 	
 	@Rule
 	public WireMockRule wireMock = new WireMockRule(0);
@@ -78,7 +80,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		wireMock.start();
 		
 		// Set server URL
-		serverURL = "http://127.0.0.1:" + wireMock.port();
+		serverUrl = "http://127.0.0.1:" + wireMock.port();
 	}
 	
 	@After
@@ -140,14 +142,14 @@ public class DescriptionServiceIT extends AbstractIT {
 		String descriptionComment = "Example Comment";
 		
 		Response response = createDescription(USER_NAME, PASSWORD, STORE_NAME, displayName, 
-				serverURL, descriptionComment);	
+				serverUrl, descriptionComment);	
 		assertThat(response.getStatus()).isEqualTo(201);
 		assertThat(response.getHeaderString("Location")).isEqualTo(endPoint + "/api/v2/store/" + STORE_NAME +
 				"/description/" + descriptionName);
 		
 		// Check that the description actually exists
 		checkDescription(USER_NAME, PASSWORD, STORE_NAME, descriptionName, displayName, 
-				serverURL, descriptionComment);
+				serverUrl, descriptionComment);
 	}
 	
 	private void testCreationInvalidField(String displayName, String url, String comment, String invalidField,
@@ -159,19 +161,19 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	@Test
 	public void testCreationDisplayNameInvalid() {
-		testCreationInvalidField("OFFERING!", serverURL, "", "displayName", 
+		testCreationInvalidField("OFFERING!", serverUrl, "", "displayName", 
 				MESSAGE_INVALID_DISPLAY_NAME);
 	}
 	
 	@Test
 	public void testCreationDisplayNameTooShort() {
-		testCreationInvalidField("a", serverURL, "", "displayName", 
+		testCreationInvalidField("a", serverUrl, "", "displayName", 
 				String.format(MESSAGE_TOO_SHORT, 3));
 	}
 	
 	@Test
 	public void testCreationDisplayNameTooLong() {
-		testCreationInvalidField("abcdefghijklmnopqrstuvwxyz", serverURL, "", "displayName", 
+		testCreationInvalidField("abcdefghijklmnopqrstuvwxyz", serverUrl, "", "displayName", 
 				String.format(MESSAGE_TOO_LONG, 20));
 	}
 	
@@ -183,10 +185,88 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	@Test
 	public void testCreationCommentTooLong() {
-		testCreationInvalidField("Offering", serverURL, "12345678901234567890123456789012345678901234567890"
+		testCreationInvalidField("Offering", serverUrl, "12345678901234567890123456789012345678901234567890"
 				+ "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456"
 				+ "7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", 
 				"comment", String.format(MESSAGE_TOO_LONG, 200));
+	}
+	
+	private void testCreationFieldAlreayExists(String displayName1, String displayName2, String url1, String url2,
+			String field, String expectedMessage) {
+
+		createDescription(USER_NAME, PASSWORD, STORE_NAME, displayName1, url1, "");
+		Response response = createDescription(USER_NAME, PASSWORD, STORE_NAME, displayName2, url2, "");
+		
+		checkAPIError(response, 400, field, expectedMessage, ErrorType.VALIDATION_ERROR);
+
+	}
+	
+	@Test
+	public void testCreationDisplayNameAlreadyExists() {		
+		String displayName = "Offering 1";
+		
+		// name is based on display name and name is checked before display name...
+		testCreationFieldAlreayExists(displayName, displayName, serverUrl, serverUrl + "a", "name", 
+				MESSAGE_NAME_IN_USE);
+	}
+	
+	@Test
+	public void testCreationURLAlreadyExists() {
+		testCreationFieldAlreayExists("offering-1", "offering-2", serverUrl, serverUrl, "url", MESSAGE_URL_IN_USE);
+	}
+	
+	private void testCreationFieldAlreayExistsInAnotherStore(String displayName1, String displayName2, 
+			String url1, String url2) {
+
+		// Create another Store
+		String newStoreName = STORE_NAME + "a";
+		createStore(USER_NAME, PASSWORD, newStoreName, STORE_URL + ":8000");
+		
+		Response createResponse1 = createDescription(USER_NAME, PASSWORD, STORE_NAME, displayName1, url1, "");
+		Response createResponse2 = createDescription(USER_NAME, PASSWORD, newStoreName, displayName2, url2, "");
+		
+		// Both offerings can be created
+		assertThat(createResponse1.getStatus()).isEqualTo(201);
+		assertThat(createResponse2.getStatus()).isEqualTo(201);
+		
+	}
+	
+	@Test
+	public void testCreationDisplayNameAlreadyExistsInAnotherStore() {		
+		String displayName = "Offering 1";
+		
+		// name is based on display name and name is checked before display name...
+		testCreationFieldAlreayExistsInAnotherStore(displayName, displayName, serverUrl, serverUrl + "/a");
+	}
+	
+	@Test
+	public void testCreationURLAlreadyExistsInAnotherStore() {
+		testCreationFieldAlreayExistsInAnotherStore("offering-1", "offering-2", serverUrl, serverUrl);
+	}
+	
+	@Test
+	public void testDeleteUserWithDescription() {
+		String name = "offering-1";
+		
+		Response createStoreResponse = createDescription(USER_NAME, PASSWORD, STORE_NAME, name, serverUrl, "");
+		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
+		checkDescription(USER_NAME, PASSWORD, STORE_NAME, name, name, serverUrl, "");
+		
+		// Delete user
+		Response deleteUserResponse = deleteUser(USER_NAME, PASSWORD, USER_NAME);
+		assertThat(deleteUserResponse.getStatus()).isEqualTo(204);
+		
+		// Create another user to be able to check the store
+		String newUserName = USER_NAME + "a";
+		String email = "new_email__@example.com";
+		Response createUserResponse = createUser(newUserName, email, PASSWORD);
+		assertThat(createUserResponse.getStatus()).isEqualTo(201);
+		
+		// Check that the Store does not exist anymore
+		Response getStoreResponse = getDescription(newUserName, PASSWORD, STORE_NAME, name);
+		checkAPIError(getStoreResponse, 404, null, String.format(MESSAGE_STORE_NOT_FOUND, STORE_NAME), 
+				ErrorType.NOT_FOUND);
+		
 	}
 	
 }
