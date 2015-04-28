@@ -542,8 +542,73 @@ public class DescriptionServiceIT extends AbstractIT {
 				String.format(MESSAGE_NOT_AUTHORIZED, "update description"), ErrorType.FORBIDDEN);	
 
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// DELETE ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
 
+	private Response deleteDescription(String authUserName, String authPassword, String storeName, 
+			String descriptionName) {
+		
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + descriptionName)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(authUserName, authPassword))
+				.delete();
+		
+		return response;
+
+	}
 	
+	@Test
+	public void testDelete() {
+		
+		String name = "description-1";
+		
+		// Create the description
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, STORE_NAME, name, 
+				defaultUSDLPath, null);
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+		
+		// Delete the description
+		Response deleteDescriptionResponse = deleteDescription(USER_NAME, PASSWORD, STORE_NAME, name);
+		assertThat(deleteDescriptionResponse.getStatus()).isEqualTo(204);
+	}
 	
+	@Test
+	public void testDeleteNonExisting() {
+		
+		String name = "description-1";
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, STORE_NAME, name, 
+				defaultUSDLPath, null);
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+		
+		// Delete non-existing description
+		String descriptionToBeDeleted = name + "a";  	//This ID is supposed not to exist
+		Response deleteStoreResponse = deleteDescription(USER_NAME, PASSWORD, STORE_NAME, descriptionToBeDeleted);
+		checkAPIError(deleteStoreResponse, 404, null, 
+				String.format(MESSAGE_DESCRIPTION_NOT_FOUND, descriptionToBeDeleted), ErrorType.NOT_FOUND);	
+	}
+	
+	@Test
+	public void testDeleteWithAnotherUser() {
+		
+		String name = "description-1";
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, STORE_NAME, name, 
+				defaultUSDLPath, null);
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+
+		// Create another user
+		String newUserName = USER_NAME + "a";
+		String email = "new_email__@example.com";
+		createUser(newUserName, email, PASSWORD);
+		
+		//Delete user
+		Response deleteStoreResponse = deleteDescription(newUserName, PASSWORD, STORE_NAME, name);
+		checkAPIError(deleteStoreResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "delete description"), 
+				ErrorType.FORBIDDEN);	
+
+	}
 	
 }
