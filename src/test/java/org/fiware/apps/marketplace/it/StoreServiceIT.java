@@ -243,15 +243,14 @@ public class StoreServiceIT extends AbstractIT {
 		String url = "https://store.lab.fiware.org";
 		String comment = "commnet1";
 		
-		// Create the store
 		Response createStoreResponse = createStore(USER_NAME, PASSWORD, displayName, url, comment, null);
 		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
 		
+		// Update the store
 		String newDisplayName = "Wstore 1";
 		String newUrl = "https://store.testbed.fiware.org";
 		String newComment = "comment2";
 		
-		// Update the store
 		Response updateStoreResponse = updateStore(USER_NAME, PASSWORD, name, newDisplayName, newUrl, newComment, 
 				null);
 		assertThat(updateStoreResponse.getStatus()).isEqualTo(200);
@@ -367,7 +366,7 @@ public class StoreServiceIT extends AbstractIT {
 		Response createStoreResponse = createStore(USER_NAME, PASSWORD, displayName, "http://store.com", null, null);
 		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
 		
-		// Delete non-existing store
+		// Update non-existing store
 		String storeToBeUpdated = displayName + "a";  	//This ID is supposed not to exist
 		Response updateStoreResponse = updateStore(USER_NAME, PASSWORD, storeToBeUpdated, "new display", null, 
 				null, null);
@@ -387,7 +386,7 @@ public class StoreServiceIT extends AbstractIT {
 		String email = "new_email__@example.com";
 		createUser(newUserName, email, PASSWORD);
 		
-		//Delete user
+		//Update store with the new user
 		Response updateStoreResponse = updateStore(newUserName, PASSWORD, storeName, "new display", null, 
 				null, null);
 		checkAPIError(updateStoreResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "update store"), 
