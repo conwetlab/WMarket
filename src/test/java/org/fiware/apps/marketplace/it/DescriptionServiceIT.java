@@ -44,6 +44,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;	
 
 import org.fiware.apps.marketplace.model.Description;
+import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.junit.After;
@@ -104,12 +105,12 @@ public class DescriptionServiceIT extends AbstractIT {
 		createStore(USER_NAME, PASSWORD, STORE_NAME, STORE_URL);
 		
 		// Configure server
-		stubFor(get(urlMatching("default.rdf"))
+		stubFor(get(urlMatching("/default[0-9]*.rdf"))
 				.willReturn(aResponse()
 						.withStatus(200)
 						.withBodyFile("default.rdf")));
 		
-		stubFor(get(urlMatching("secondary.rdf"))
+		stubFor(get(urlMatching("/secondary.rdf"))
 				.willReturn(aResponse()
 						.withStatus(200)
 						.withBodyFile("secondary.rdf")));
@@ -610,5 +611,111 @@ public class DescriptionServiceIT extends AbstractIT {
 				ErrorType.FORBIDDEN);	
 
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// LIST STORES /////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test
+	public void testListAllDescriptions() {
+		
+		// Create some descriptions
+		int DESCRIPTIONS_CREATED = 6;
+		String displayNamePattern = "Store %d";
+		String urlPattern = serverUrl + "/default%d.rdf";
+		
+		for (int i = 0; i < DESCRIPTIONS_CREATED; i++) {
+			createDescription(USER_NAME, PASSWORD, STORE_NAME, String.format(displayNamePattern, i), 
+					String.format(urlPattern, i), "");
+		}
+		
+		// Get all descriptions
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/store/" + STORE_NAME + "/description")
+				.request(MediaType.APPLICATION_XML).header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		// Check the response
+		assertThat(response.getStatus()).isEqualTo(200);
+		Descriptions descriptions = response.readEntity(Descriptions.class);
+		assertThat(descriptions.getDescriptions().size()).isEqualTo(DESCRIPTIONS_CREATED);
+		
+		// Users are supposed to be returned in order
+		for (int i = 0; i < DESCRIPTIONS_CREATED; i++) {
+			Description description = descriptions.getDescriptions().get(i);
+			assertThat(description.getDisplayName()).isEqualTo(String.format(displayNamePattern, i));
+			assertThat(description.getUrl()).isEqualTo(String.format(urlPattern, i));
+		}
+	}
+	
+	private void testListSomeStores(int offset, int max) {
+		
+		// Create some descriptions
+		int DESCRIPTIONS_CREATED = 10;
+		String displayNamePattern = "Store %d";
+		String urlPattern = serverUrl + "/default%d.rdf";
+		
+		for (int i = 0; i < DESCRIPTIONS_CREATED; i++) {
+			createDescription(USER_NAME, PASSWORD, STORE_NAME, String.format(displayNamePattern, i), 
+					String.format(urlPattern, i), "");
+		}
+		
+		// Get some descriptions
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/store/" + STORE_NAME + "/description")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_XML)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		// Check the response
+		int expectedElements = offset + max > DESCRIPTIONS_CREATED ? DESCRIPTIONS_CREATED - offset : max;
+		assertThat(response.getStatus()).isEqualTo(200);
+		Descriptions descriptions = response.readEntity(Descriptions.class);
+		assertThat(descriptions.getDescriptions().size()).isEqualTo(expectedElements);
+		
+		// Users are supposed to be returned in order
+		for (int i = offset; i < offset + expectedElements; i++) {
+			Description description = descriptions.getDescriptions().get(i - offset);
+			assertThat(description.getDisplayName()).isEqualTo(String.format(displayNamePattern, i));
+			assertThat(description.getUrl()).isEqualTo(String.format(urlPattern, i));
+		}
+	}
+	
+	@Test
+	public void testListSomeStoresMaxInRange() {
+		testListSomeStores(3, 4);
+	}
+	
+	@Test
+	public void testListSomeStoresMaxNotInRange() {
+		testListSomeStores(5, 7);
+	}
+	
+	private void testListStoresInvalidParams(int offset, int max) {
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/store/" + STORE_NAME + "/description")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_XML)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+
+	}
+	
+	@Test
+	public void testListStoresInvalidOffset() {
+		testListStoresInvalidParams(-1, 2);
+	}
+	
+	@Test
+	public void testListStoresInvalidMax() {
+		testListStoresInvalidParams(1, 0);
+	}
+
 	
 }

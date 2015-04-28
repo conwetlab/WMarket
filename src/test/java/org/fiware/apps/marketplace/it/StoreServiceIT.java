@@ -479,7 +479,7 @@ public class StoreServiceIT extends AbstractIT {
 					String.format(urlPattern, i), null, null);
 		}
 		
-		// Get all users
+		// Get all stores
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/").request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD)).get();
@@ -498,16 +498,16 @@ public class StoreServiceIT extends AbstractIT {
 	private void testListSomeStores(int offset, int max) {
 		
 		// Create some stores
-		int storesCreated = 10;
+		int STORES_CREATED = 10;
 		String displayNamePattern = "Store %d";
 		String urlPattern = "https://store%d.lab.fiware.org";
 		
-		for (int i = 0; i < storesCreated; i++) {
+		for (int i = 0; i < STORES_CREATED; i++) {
 			createStore(USER_NAME, PASSWORD, String.format(displayNamePattern, i), 
 					String.format(urlPattern, i), null, null);
 		}
 				
-		// Get some users
+		// Get some stores
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/")
 				.queryParam("offset", offset)
@@ -517,7 +517,7 @@ public class StoreServiceIT extends AbstractIT {
 				.get();
 		
 		// Check the response
-		int expectedElements = offset + max > storesCreated ? storesCreated - offset : max;
+		int expectedElements = offset + max > STORES_CREATED ? STORES_CREATED - offset : max;
 		assertThat(response.getStatus()).isEqualTo(200);
 		Stores stores = response.readEntity(Stores.class);
 		assertThat(stores.getStores().size()).isEqualTo(expectedElements);
