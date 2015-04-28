@@ -35,6 +35,8 @@ package org.fiware.apps.marketplace.it;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -43,6 +45,7 @@ import javax.ws.rs.core.Response;
 
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.ErrorType;
+import org.fiware.apps.marketplace.model.Offering;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -60,6 +63,20 @@ public class DescriptionServiceIT extends AbstractIT {
 	private final static String MESSAGE_NAME_IN_USE = "This name is already in use in this Store.";
 	private final static String MESSAGE_URL_IN_USE = "This URL is already in use in this Store.";
 	
+	private final static Offering DEFAULT_OFFERING = new Offering();
+	
+	static {
+		DEFAULT_OFFERING.setDisplayName("OrionStarterKit");
+		DEFAULT_OFFERING.setImageUrl(
+				"https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png");
+		DEFAULT_OFFERING.setDescription("Offering composed of three mashable application components: "
+				+ "ngsi-source, ngsientity2poi and ngsi-updater. Those components are provided as the base "
+				+ "tools/examples for making application mashups using WireCloud and the Orion Context Broker. "
+				+ "Those resources can be used for example for showing entities coming from an Orion server inside "
+				+ "the Map Viewer widget or browsing and updating the attributes of those entities.");
+		
+	}
+	
 	private String serverUrl;
 	
 	@Rule
@@ -71,16 +88,16 @@ public class DescriptionServiceIT extends AbstractIT {
 		createStore(USER_NAME, PASSWORD, STORE_NAME, STORE_URL);
 		
 		// Configure server
-		stubFor(get(urlMatching(".*"))
+		stubFor(get(urlMatching("default.rdf"))
 				.willReturn(aResponse()
 						.withStatus(200)
-						.withBodyFile("final_usdl.rdf")));
+						.withBodyFile("default.rdf")));
 		
 		// Start up server
 		wireMock.start();
 		
 		// Set server URL
-		serverUrl = "http://127.0.0.1:" + wireMock.port();
+		serverUrl = "http://127.0.0.1:" + wireMock.port() + "/default.rdf";
 	}
 	
 	@After
@@ -101,17 +118,27 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	private void checkDescription(String userName, String password, String storeName, 
-			String descriptionName, String displayName, String url, String comment) {
+			String descriptionName, String displayName, String url, String comment, Offering... expectedOfferings) {
 		
-		Description desciption = getDescription(userName, password, storeName, descriptionName)
+		Description description = getDescription(userName, password, storeName, descriptionName)
 				.readEntity(Description.class);
 		
-		assertThat(desciption.getName()).isEqualTo(descriptionName);
-		assertThat(desciption.getDisplayName()).isEqualTo(displayName);
-		assertThat(desciption.getUrl()).isEqualTo(url);
-		assertThat(desciption.getComment()).isEqualTo(comment);
+		assertThat(description.getName()).isEqualTo(descriptionName);
+		assertThat(description.getDisplayName()).isEqualTo(displayName);
+		assertThat(description.getUrl()).isEqualTo(url);
+		assertThat(description.getComment()).isEqualTo(comment);
+		
+		// Check default offering
+		List<Offering> descriptionOfferings = description.getOfferings();
+		assertThat(descriptionOfferings.size()).isEqualTo(expectedOfferings.length);
+		
+		for (int i = 0; i < expectedOfferings.length; i++) {
+			assertThat(descriptionOfferings.get(i).getDisplayName()).isEqualTo(expectedOfferings[i].getDisplayName());
+			assertThat(descriptionOfferings.get(i).getDescription()).isEqualTo(expectedOfferings[i].getDescription());
+			assertThat(descriptionOfferings.get(i).getImageUrl()).isEqualTo(expectedOfferings[i].getImageUrl());
+
+		}
 	}
-	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// CREATE ///////////////////////////////////////
@@ -137,8 +164,8 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testCreation() {
 		
-		String displayName = "Offering 1";
-		String descriptionName = "offering-1";
+		String displayName = "Description 1";
+		String descriptionName = "description-1";
 		String descriptionComment = "Example Comment";
 		
 		Response response = createDescription(USER_NAME, PASSWORD, STORE_NAME, displayName, 
@@ -149,7 +176,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Check that the description actually exists
 		checkDescription(USER_NAME, PASSWORD, STORE_NAME, descriptionName, displayName, 
-				serverUrl, descriptionComment);
+				serverUrl, descriptionComment, DEFAULT_OFFERING);
 	}
 	
 	private void testCreationInvalidField(String displayName, String url, String comment, String invalidField,
@@ -161,7 +188,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	@Test
 	public void testCreationDisplayNameInvalid() {
-		testCreationInvalidField("OFFERING!", serverUrl, "", "displayName", 
+		testCreationInvalidField("Description!", serverUrl, "", "displayName", 
 				MESSAGE_INVALID_DISPLAY_NAME);
 	}
 	
@@ -179,13 +206,13 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	@Test
 	public void testCreationURLInvalid() {
-		testCreationInvalidField("Offering", "https:/127.0.0.1:" + wireMock.port(), "", "url", 
+		testCreationInvalidField("Description", "https:/127.0.0.1:" + wireMock.port(), "", "url", 
 				MESSAGE_INVALID_URL);
 	}
 	
 	@Test
 	public void testCreationCommentTooLong() {
-		testCreationInvalidField("Offering", serverUrl, "12345678901234567890123456789012345678901234567890"
+		testCreationInvalidField("Description", serverUrl, "12345678901234567890123456789012345678901234567890"
 				+ "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456"
 				+ "7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", 
 				"comment", String.format(MESSAGE_TOO_LONG, 200));
@@ -203,7 +230,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	@Test
 	public void testCreationDisplayNameAlreadyExists() {		
-		String displayName = "Offering 1";
+		String displayName = "Description 1";
 		
 		// name is based on display name and name is checked before display name...
 		testCreationFieldAlreayExists(displayName, displayName, serverUrl, serverUrl + "a", "name", 
@@ -215,15 +242,19 @@ public class DescriptionServiceIT extends AbstractIT {
 		testCreationFieldAlreayExists("offering-1", "offering-2", serverUrl, serverUrl, "url", MESSAGE_URL_IN_USE);
 	}
 	
-	private void testCreationFieldAlreayExistsInAnotherStore(String displayName1, String displayName2, 
-			String url1, String url2) {
+	@Test
+	public void testCreationNameAndUrlAlreayExistsInAnotherStore() {
 
 		// Create another Store
 		String newStoreName = STORE_NAME + "a";
+		String descriptionName = "description-1"; 
+		
 		createStore(USER_NAME, PASSWORD, newStoreName, STORE_URL + ":8000");
 		
-		Response createResponse1 = createDescription(USER_NAME, PASSWORD, STORE_NAME, displayName1, url1, "");
-		Response createResponse2 = createDescription(USER_NAME, PASSWORD, newStoreName, displayName2, url2, "");
+		Response createResponse1 = createDescription(USER_NAME, PASSWORD, STORE_NAME, 
+				descriptionName, serverUrl, "");
+		Response createResponse2 = createDescription(USER_NAME, PASSWORD, newStoreName, 
+				descriptionName, serverUrl, "");
 		
 		// Both offerings can be created
 		assertThat(createResponse1.getStatus()).isEqualTo(201);
@@ -232,25 +263,12 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	@Test
-	public void testCreationDisplayNameAlreadyExistsInAnotherStore() {		
-		String displayName = "Offering 1";
-		
-		// name is based on display name and name is checked before display name...
-		testCreationFieldAlreayExistsInAnotherStore(displayName, displayName, serverUrl, serverUrl + "/a");
-	}
-	
-	@Test
-	public void testCreationURLAlreadyExistsInAnotherStore() {
-		testCreationFieldAlreayExistsInAnotherStore("offering-1", "offering-2", serverUrl, serverUrl);
-	}
-	
-	@Test
 	public void testDeleteUserWithDescription() {
-		String name = "offering-1";
+		String name = "description-1";
 		
 		Response createStoreResponse = createDescription(USER_NAME, PASSWORD, STORE_NAME, name, serverUrl, "");
 		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
-		checkDescription(USER_NAME, PASSWORD, STORE_NAME, name, name, serverUrl, "");
+		checkDescription(USER_NAME, PASSWORD, STORE_NAME, name, name, serverUrl, "", DEFAULT_OFFERING);
 		
 		// Delete user
 		Response deleteUserResponse = deleteUser(USER_NAME, PASSWORD, USER_NAME);
@@ -268,5 +286,14 @@ public class DescriptionServiceIT extends AbstractIT {
 				ErrorType.NOT_FOUND);
 		
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// UPDATE ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+
+	
+	
 	
 }
