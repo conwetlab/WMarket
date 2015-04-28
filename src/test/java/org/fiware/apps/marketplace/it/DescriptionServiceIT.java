@@ -328,7 +328,8 @@ public class DescriptionServiceIT extends AbstractIT {
 	public void testDeleteUserWithDescription() {
 		String name = "description-1";
 		
-		Response createStoreResponse = createDescription(USER_NAME, PASSWORD, STORE_NAME, name, defaultUSDLPath, "");
+		Response createStoreResponse = createDescription(USER_NAME, PASSWORD, STORE_NAME, name, 
+				defaultUSDLPath, "");
 		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
 		checkDescription(USER_NAME, PASSWORD, STORE_NAME, name, name, defaultUSDLPath, "");
 		
@@ -449,6 +450,60 @@ public class DescriptionServiceIT extends AbstractIT {
 				+ "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456"
 				+ "7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", 
 				"comment", String.format(MESSAGE_TOO_LONG, 200));
+	}
+	
+	/**
+	 * This methods creates two descriptions, based on the different parameters and tries to updates the second
+	 * description based on updatedDisplayName and updatedURL. However, it's expected that one of these parameters
+	 * has been used to create the first description, so an error should arise. Error details should be contained in
+	 * field an expectedMessage.
+	 * @param nameDescription1 The name of the first description
+	 * @param urlDescription1 The URL of the first description
+	 * @param nameDescription2 The name of the second description (the one to be updated). This name is used to modify 
+	 * the description so this is not a displayName but the name (the one without spaces, ...) 
+	 * @param urlDescription2 The URL of the second description (the one to be updated)
+	 * @param updatedDisplayName The new display name to be set in the second description
+	 * @param updatedURL The new URL to be set in the second description
+	 * @param field The field that is repeated
+	 * @param expectedMessage Expected error message
+	 */
+	private void testUpdateFieldAlreayExists(
+			String nameDescription1,String urlDescription1, 
+			String nameDescription2, String urlDescription2,
+			String updatedDisplayName, String updatedURL,
+			String field, String expectedMessage) {
+		
+		Response createStore1Response = createDescription(USER_NAME, PASSWORD, STORE_NAME, nameDescription1, 
+				urlDescription1, "");
+		Response createStore2Response = createDescription(USER_NAME, PASSWORD, STORE_NAME, nameDescription2, 
+				urlDescription2, "");
+		assertThat(createStore1Response.getStatus()).isEqualTo(201);
+		assertThat(createStore2Response.getStatus()).isEqualTo(201);
+		
+		Response updateResponse = updateDescription(USER_NAME, PASSWORD, STORE_NAME, nameDescription2, 
+				updatedDisplayName, updatedURL, null);
+		checkAPIError(updateResponse, 400, field, expectedMessage, ErrorType.VALIDATION_ERROR);
+
+	}
+	
+	@Test
+	public void testUpdateDisplayNameAlreadyExists() {		
+		String displayName = "description";
+		
+		testUpdateFieldAlreayExists(
+				displayName, defaultUSDLPath, 
+				"descritpion-2", secondaryUSDLPath, 
+				displayName, null, 
+				"displayName", MESSAGE_NAME_IN_USE);	
+	}
+	
+	@Test
+	public void testUpdateURLAlreadyExists() {
+		testUpdateFieldAlreayExists(
+				"description", defaultUSDLPath, 
+				"description-2", secondaryUSDLPath, 
+				"description-2", defaultUSDLPath, 
+				"url", MESSAGE_URL_IN_USE);	
 	}
 	
 	@Test

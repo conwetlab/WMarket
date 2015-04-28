@@ -339,7 +339,7 @@ public class StoreServiceIT extends AbstractIT {
 	
 	@Test
 	public void testUpdateDisplayNameAlreadyExists() {		
-		String displayName = "Wmarket";
+		String displayName = "wmarket";
 		
 		testUpdateFieldAlreayExists(
 				displayName, "http://store1.com", 
