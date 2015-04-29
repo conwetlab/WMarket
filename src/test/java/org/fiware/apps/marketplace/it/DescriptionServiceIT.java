@@ -64,7 +64,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	private final static String MESSAGE_NAME_IN_USE = "This name is already in use in this Store.";
 	private final static String MESSAGE_URL_IN_USE = "This URL is already in use in this Store.";
 	private final static String MESSAGE_INVALID_RDF = "Your RDF could not be parsed.";
-	protected final static String MESSAGE_DESCRIPTION_NOT_FOUND = "Description %s not found";
+	private final static String MESSAGE_DESCRIPTION_NOT_FOUND = "Description %s not found";
 	
 	private final static Offering FIRST_OFFERING = new Offering();
 	private final static Offering SECOND_OFFERING = new Offering();
@@ -615,11 +615,11 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////// LIST STORES /////////////////////////////////////
+	////////////////////////////////// LIST DESCRIPTIONS //////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void testListAllDescriptions() {
+	public void testListAllDescriptionsInStore() {
 		
 		// Create some descriptions
 		int DESCRIPTIONS_CREATED = 6;
@@ -650,7 +650,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		}
 	}
 	
-	private void testListSomeStores(int offset, int max) {
+	private void testListSomeDescriptionsInStore(int offset, int max) {
 		
 		// Create some descriptions
 		int DESCRIPTIONS_CREATED = 10;
@@ -686,16 +686,16 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	@Test
-	public void testListSomeStoresMaxInRange() {
-		testListSomeStores(3, 4);
+	public void testListSomeDescriptionsMaxInRange() {
+		testListSomeDescriptionsInStore(3, 4);
 	}
 	
 	@Test
-	public void testListSomeStoresMaxNotInRange() {
-		testListSomeStores(5, 7);
+	public void testListSomeDescriptionsMaxNotInRange() {
+		testListSomeDescriptionsInStore(5, 7);
 	}
 	
-	private void testListStoresInvalidParams(int offset, int max) {
+	private void testListDescriptionsInStoreInvalidParams(int offset, int max) {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/" + STORE_NAME + "/description")
 				.queryParam("offset", offset)
@@ -709,14 +709,124 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	@Test
-	public void testListStoresInvalidOffset() {
-		testListStoresInvalidParams(-1, 2);
+	public void testListDescriptionsInStoreInvalidOffset() {
+		testListDescriptionsInStoreInvalidParams(-1, 2);
 	}
 	
 	@Test
-	public void testListStoresInvalidMax() {
-		testListStoresInvalidParams(1, 0);
+	public void testListDescriptionsInStoreInvalidMax() {
+		testListDescriptionsInStoreInvalidParams(1, 0);
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////// ALL DESCRIPTIONS  //////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	private void testListDescriptions(int offset, int max) {
+		
+		// Create an additional Store
+		String newStoreName = STORE_NAME + "a";
+		String newStoreUrl = STORE_URL + "/a";
+		Response createStoreResponse = createStore(USER_NAME, PASSWORD, newStoreName, newStoreUrl);
+		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
+		
+		// Create descriptions (2)
+		Description[] originalDescriptions = new Description[2];
+		
+		Description description0 = new Description();
+		description0.setName("default");
+		description0.setUrl(defaultUSDLPath);
 
+		Description description1 = new Description();
+		description1.setName("secondary");
+		description1.setUrl(secondaryUSDLPath);
+		
+		originalDescriptions[0] = description0;
+		originalDescriptions[1] = description1;
+		
+		// Insert descriptions (2) into the Stores (2). Total: 4 descriptions
+		String[] stores = new String[]{STORE_NAME, newStoreName};
+		
+		for (String store: stores) {
+			
+			for (Description description: originalDescriptions) {
+				Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, store, 
+						description.getName(), description.getUrl(), "");
+				assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+
+			}
+		}
+				
+		// Get all descriptions
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/descriptions")
+				.queryParam("offset", offset)
+				.matrixParam("max", max)
+				.request(MediaType.APPLICATION_XML)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		// Check that the right number of descriptions has been returned...
+		Descriptions retrievedDescriptions = response.readEntity(Descriptions.class);
+		int descriptionsCreated = stores.length * originalDescriptions.length;	// 2 descriptions
+		int expectedElements = offset + max > descriptionsCreated ? descriptionsCreated - offset : max;
+		assertThat(retrievedDescriptions.getDescriptions().size()).isEqualTo(expectedElements);
+		
+		// Check descriptions
+		for (int i = 0; i < retrievedDescriptions.getDescriptions().size(); i++) {
+			
+			Description description = retrievedDescriptions.getDescriptions().get(i);
+			int indexInGeneralArray = offset + i;
+			
+			// Check that store name is correct
+			// Store 0: [DESC0, DESC1], Store 1: [DESC2, DESC3], ...
+			int storeIndex = indexInGeneralArray / originalDescriptions.length;
+			assertThat(description.getStore().getName()).isEqualTo(stores[storeIndex]);
+			
+			// Check that the description is correct
+			// Even -> Description 1 (description1Name, defaultUSDLPath)
+			// Odd -> Description 2 (description2Name, secondaryUSDLPath)
+			int descriptionIndex = indexInGeneralArray % originalDescriptions.length;
+			assertThat(description.getName()).isEqualTo(originalDescriptions[descriptionIndex].getName());
+			assertThat(description.getUrl()).isEqualTo(originalDescriptions[descriptionIndex].getUrl());			
+		}
+		
+	}
+	
+	@Test
+	public void testListAllDescriptions() {
+		testListDescriptions(0,	100);
+	}
+	
+	@Test
+	public void testListSomeDescriptions() {
+		testListDescriptions(1, 3);
+	}
+	
+	private void testListDescriptionsInvalidParams(int offset, int max) {
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/descriptions")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_XML)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+
+	}
+	
+	@Test
+	public void testListDescriptionsInvalidOffset() {
+		testListDescriptionsInvalidParams(-1, 2);
+	}
+	
+	@Test
+	public void testListDescriptionsInvalidMax() {
+		testListDescriptionsInvalidParams(1, 0);
+	}
+	
 	
 }

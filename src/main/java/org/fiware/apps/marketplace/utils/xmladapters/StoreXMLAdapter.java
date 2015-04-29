@@ -40,8 +40,9 @@ public class StoreXMLAdapter extends XmlAdapter<String, Store>{
 
 	@Override
 	public Store unmarshal(String value) throws Exception {
-		// Not needed... 
-		return null;
+		Store store = new Store();
+		store.setName(value);
+		return store;
 	}
 
 	@Override
