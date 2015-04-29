@@ -12,7 +12,7 @@ public class DescriptionXMLAdapter extends XmlAdapter<String, Description>{
 	}
 
 	@Override
-	public Description unmarshal(String arg0) throws Exception {
+	public Description unmarshal(String value) throws Exception {
 		// Not Needed
 		return null;
 	}

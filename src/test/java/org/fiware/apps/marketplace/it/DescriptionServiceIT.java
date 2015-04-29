@@ -47,6 +47,7 @@ import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Offerings;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -829,4 +830,139 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// STORE OFFERINGS //////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private Response getStoreOfferings(String userName, String password, String storeName) {
+		Client client = ClientBuilder.newClient();
+		return client.target(endPoint + "/api/v2/store/" + storeName + "/offering/")
+				.request(MediaType.APPLICATION_XML)
+				.header("Authorization", getAuthorization(userName, password)).get();
+	}
+	
+	private Response getStoreOfferings(String userName, String password, String storeName, int offset, int max) {
+		Client client = ClientBuilder.newClient();
+		return client.target(endPoint + "/api/v2/store/" + storeName + "/offering/")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_XML)
+				.header("Authorization", getAuthorization(userName, password)).get();
+	}
+
+	
+	@Test
+	public void testStoreOfferings() {
+		
+		// Create an additional Store
+		String newStoreName = STORE_NAME + "a";
+		String newStoreUrl = STORE_URL + "/a";
+		Response createStoreResponse = createStore(USER_NAME, PASSWORD, newStoreName, newStoreUrl);
+		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
+
+		// Push each description in a different store
+		Response createDesc1Res = createDescription(USER_NAME, PASSWORD, STORE_NAME, "displayName", 
+				defaultUSDLPath, "");
+		Response createDesc2Res = createDescription(USER_NAME, PASSWORD, newStoreName, "secondary", 
+				secondaryUSDLPath, "");
+		
+		assertThat(createDesc1Res.getStatus()).isEqualTo(201);
+		assertThat(createDesc2Res.getStatus()).isEqualTo(201);
+		
+		// Get Store1 offerings
+		Response store1OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, STORE_NAME);
+		assertThat(store1OfferingResponse.getStatus()).isEqualTo(200);
+		
+		Offerings offerings = store1OfferingResponse.readEntity(Offerings.class);
+		assertThat(offerings.getOfferings().size()).isEqualTo(1);
+		
+		Offering offering = offerings.getOfferings().get(0);
+		assertThat(offering.getDisplayName()).isEqualTo(FIRST_OFFERING.getDisplayName());
+		assertThat(offering.getImageUrl()).isEqualTo(FIRST_OFFERING.getImageUrl());
+		assertThat(offering.getDescription()).isEqualTo(FIRST_OFFERING.getDescription());
+		
+		// Get Store2 offerings
+		Response store2OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, newStoreName);
+		assertThat(store2OfferingResponse.getStatus()).isEqualTo(200);
+		
+		offerings = store2OfferingResponse.readEntity(Offerings.class);
+		assertThat(offerings.getOfferings().size()).isEqualTo(2);
+		
+		Offering[] expectedOfferings = new Offering[]{FIRST_OFFERING, SECOND_OFFERING};
+		
+		for (Offering expectedOffering: expectedOfferings) {
+			
+			// Offerings can be created in different order
+			int i;
+			boolean found = false;
+			for (i = 0; i < offerings.getOfferings().size() && !found; i++) {
+				if (offerings.getOfferings().get(i).getDisplayName().equals(expectedOffering.getDisplayName())) {
+					found = true;
+				}
+			}
+			
+			assertThat(found).isTrue();
+			
+			assertThat(offerings.getOfferings().get(i - 1).getDisplayName())
+					.isEqualTo(expectedOffering.getDisplayName());
+			assertThat(offerings.getOfferings().get(i - 1).getDescription())
+					.isEqualTo(expectedOffering.getDescription());
+			assertThat(offerings.getOfferings().get(i - 1).getImageUrl())
+					.isEqualTo(expectedOffering.getImageUrl());
+		}
+	}
+	
+	private void testGetSomeStoreOfferings(int offset, int max) {
+		// We are using the description that contains two offerings
+		// and checking if offset and max works in an appropriate way
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, STORE_NAME, "displayName", 
+				secondaryUSDLPath, "");
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+		
+		// Check that the number of returned offerings is correct
+		Response storeOfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, STORE_NAME, offset, max);
+		Offerings offerings = storeOfferingResponse.readEntity(Offerings.class);
+		int offerignInDescription = 2;
+		int expectedElements = offset + max > offerignInDescription ? offerignInDescription - offset : max;
+		assertThat(offerings.getOfferings().size()).isEqualTo(expectedElements);
+	}
+	
+	@Test
+	public void testGetFirstStoreOffering() {
+		testGetSomeStoreOfferings(0, 1);
+	}
+	
+	@Test
+	public void tesGetSecondStoreOffering() {
+		testGetSomeStoreOfferings(1, 1);
+	}
+	
+	@Test
+	public void tesGetAllStoreOffering() {
+		testGetSomeStoreOfferings(0, 2);
+	}
+	
+	private void testListOfferingsInStoreInvalidParams(int offset, int max) {
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/store/" + STORE_NAME + "/offering")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_XML)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+
+	}
+	
+	@Test
+	public void testListOfferingsInStoreInvalidOffset() {
+		testListOfferingsInStoreInvalidParams(-1, 2);
+	}
+	
+	@Test
+	public void testListOfferingsInStoreInvalidMax() {
+		testListOfferingsInStoreInvalidParams(1, 0);
+	}
+
 }
