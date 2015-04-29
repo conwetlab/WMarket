@@ -108,7 +108,7 @@ Here you have a basic reference of all the status codes that you can get when yo
     "company": "Example Company"
   },
   {
-    "userName": "example-display-name",
+    "userName": "example-display-name-2",
     "displayName": "Example Display Name 2",
     "registrationDate": 2,
     "company": "Example Company 2"
@@ -195,7 +195,7 @@ Here you have a basic reference of all the status codes that you can get when yo
   "imagePath": "media/store/example-store.png"
  },
  {
-  "name": "example-store",
+  "name": "example-store-2",
   "displayName": "Example Store 2",
   "url": "https://store2.lab.fiware.org",
   "registrationDate": 2,
@@ -298,7 +298,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "offerings": [...]
  },
  {
-  "name": "example-description",
+  "name": "example-description-2",
   "displayName": "Example Description 2",
   "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
@@ -333,7 +333,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "offerings": [...]
  },
  {
-  "name": "example-description",
+  "name": "example-description-2",
   "displayName": "Example Description 2",
   "store": "example-store-1",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
