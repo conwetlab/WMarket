@@ -36,12 +36,14 @@ import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service("storeValidator")
 public class StoreValidator {
 
     @Autowired private StoreDao storeDao;
+    @Value("${media.maxSize}") private int maxImageSize;
 
     private static BasicValidator basicValidator = BasicValidator.getInstance();
 	
@@ -96,6 +98,19 @@ public class StoreValidator {
 		if (store.getComment() != null) {
 			basicValidator.validateComment(store.getComment());
 		}
+		
+		// Check image length
+		int imageLength = store.getImageBase64() != null ? store.getImageBase64().length() : 0;
+		// Conversion factor between an array of bytes and its representation in Base 64
+		int finalSizeBytes = imageLength * 3 / 4;
+		
+		if (finalSizeBytes > maxImageSize) {
+			int sizeInMB = finalSizeBytes / 1024 / 1024;
+			throw new ValidationException("imageBase64", 
+					"The image is too large. The maximum size accepted is: " + sizeInMB + " MB.");
+		}
+		
+		
 	}
 	
 	/**
