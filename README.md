@@ -260,8 +260,10 @@ Descriptions is the way of creating offerings in a Store. A description is just 
      "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
      "description": "Example offering description",
      "version": "1.0",
-     "describedIn": "example-description",
-     "store": "example-store",
+     "describedIn": {
+       "name": "example-description",
+       "store": "example-store"
+     },
      "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
     },
     [...]
@@ -356,8 +358,10 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
   "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
   "description": "Example offering description",
   "version": "1.0",
-  "describedIn": "example-description",
-  "store": "example-store",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
 }
 ```
@@ -379,8 +383,10 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
   "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
   "description": "Example offering description",
   "version": "1.0",
-  "describedIn": "example-description",
-  "store": "example-store",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
  },
  {
@@ -389,8 +395,10 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
   "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
   "description": "Another Example offering description",
   "version": "1.0",
-  "describedIn": "example-description",
-  "store": "example-store",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png"
  }
  [...]
@@ -414,8 +422,10 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
   "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
   "description": "Example offering description",
   "version": "1.0",
-  "describedIn": "example-description",
-  "store": "example-store",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
  },
  {
@@ -424,8 +434,10 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
   "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
   "description": "Another Example offering description",
   "version": "1.0",
-  "describedIn": "example-description-1",
-  "store": "example-store",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png"
  }
  [...]
@@ -449,8 +461,10 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
   "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
   "description": "Example offering description",
   "version": "1.0",
-  "describedIn": "example-description",
-  "store": "example-store",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
  },
  {
@@ -459,8 +473,10 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
   "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
   "description": "Another Example offering description",
   "version": "1.0",
-  "describedIn": "example-description-1",
-  "store": "example-store-1",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png"
  }
  [...]
