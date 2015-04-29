@@ -469,8 +469,9 @@ public class StoreServiceIT extends AbstractIT {
 	@Test
 	public void testListAllStores() {
 		
+		final int STORES_CREATED = 6;
+		
 		// Create some stores
-		int STORES_CREATED = 6;
 		String displayNamePattern = "Store %d";
 		String urlPattern = "https://store%d.lab.fiware.org";
 		
@@ -497,8 +498,9 @@ public class StoreServiceIT extends AbstractIT {
 	
 	private void testListSomeStores(int offset, int max) {
 		
+		final int STORES_CREATED = 10;
+		
 		// Create some stores
-		int STORES_CREATED = 10;
 		String displayNamePattern = "Store %d";
 		String urlPattern = "https://store%d.lab.fiware.org";
 		

@@ -610,8 +610,9 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testListAllDescriptionsInStore() {
 		
-		// Create some descriptions
 		int DESCRIPTIONS_CREATED = 6;
+		
+		// Create some descriptions
 		String displayNamePattern = "Store %d";
 		String urlPattern = serverUrl + "/default%d.rdf";
 		
@@ -641,8 +642,9 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	private void testListSomeDescriptionsInStore(int offset, int max) {
 		
-		// Create some descriptions
 		int DESCRIPTIONS_CREATED = 10;
+		
+		// Create some descriptions
 		String displayNamePattern = "Store %d";
 		String urlPattern = serverUrl + "/default%d.rdf";
 		
@@ -877,6 +879,9 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	private void testGetSomeStoreOfferings(int offset, int max) {
+		
+		int OFFERINGS_IN_DESCRIPTION = 2;
+		
 		// We are using the description that contains two offerings
 		// and checking if offset and max works in an appropriate way
 		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, STORE_NAME, "displayName", 
@@ -886,8 +891,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		// Check that the number of returned offerings is correct
 		Response storeOfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, STORE_NAME, offset, max);
 		Offerings offerings = storeOfferingResponse.readEntity(Offerings.class);
-		int offerignInDescription = 2;
-		int expectedElements = offset + max > offerignInDescription ? offerignInDescription - offset : max;
+		int expectedElements = offset + max > OFFERINGS_IN_DESCRIPTION ? OFFERINGS_IN_DESCRIPTION - offset : max;
 		assertThat(offerings.getOfferings().size()).isEqualTo(expectedElements);
 	}
 	
@@ -961,6 +965,8 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testGetAllOfferings() {
 		
+		final int TOTAL_OFFERINGS = 6;			// 6 offerings: 3 in each store.
+		
 		intializeStoresWithOfferings();
 		
 		// Get all the offerings
@@ -972,11 +978,13 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(allOfferingsResponse.getStatus()).isEqualTo(200);
 		
 		Offerings offerings = allOfferingsResponse.readEntity(Offerings.class);
-		assertThat(offerings.getOfferings().size()).isEqualTo(6);	// 6 offerings: 3 in each store.
+		assertThat(offerings.getOfferings().size()).isEqualTo(TOTAL_OFFERINGS);
 
 	}
 	
 	private void testGetSomeOfferings(int offset, int max) {
+		
+		final int TOTAL_OFFERINGS = 6;
 		
 		intializeStoresWithOfferings();
 		
@@ -991,8 +999,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(allOfferingsResponse.getStatus()).isEqualTo(200);
 		
 		Offerings offerings = allOfferingsResponse.readEntity(Offerings.class);
-		int totalOfferings = 6;
-		int expectedElements = offset + max > totalOfferings ? totalOfferings - offset : max;
+		int expectedElements = offset + max > TOTAL_OFFERINGS ? TOTAL_OFFERINGS - offset : max;
 		assertThat(offerings.getOfferings().size()).isEqualTo(expectedElements);
 
 	}
