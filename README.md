@@ -129,7 +129,8 @@ Here you have a basic reference of all the status codes that you can get when yo
 {
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
-  "comment": "Example comment"
+  "comment": "Example comment",
+  "imageBase64": "PNG_IMAGE_IN_BASE64"
 }
 ```
 
@@ -143,7 +144,8 @@ Here you have a basic reference of all the status codes that you can get when yo
 {
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
-  "comment": "Example comment"
+  "comment": "Example comment",
+  "imageBase64": "PNG_IMAGE_IN_BASE64"
 }
 ```
 
@@ -166,7 +168,8 @@ Here you have a basic reference of all the status codes that you can get when yo
   "registrationDate": 1,
   "comment": "Example comment",
   "creator": "user-1",
-  "lasteditor": "user-1"
+  "lasteditor": "user-1",
+  "imagePath": "media/store/example-store.png"
 }
 ```
 
@@ -188,7 +191,8 @@ Here you have a basic reference of all the status codes that you can get when yo
   "registrationDate": 1,
   "comment": "Example comment",
   "creator": "user-1",
-  "lasteditor": "user-1"
+  "lasteditor": "user-1",
+  "imagePath": "media/store/example-store.png"
  },
  {
   "name": "example-store",
@@ -197,7 +201,8 @@ Here you have a basic reference of all the status codes that you can get when yo
   "registrationDate": 2,
   "comment": "Example comment 2",
   "creator": "user-2",
-  "lasteditor": "user-2"
+  "lasteditor": "user-2",
+  "imagePath": "media/store/example-store.png"
  },
  [...]
 }
