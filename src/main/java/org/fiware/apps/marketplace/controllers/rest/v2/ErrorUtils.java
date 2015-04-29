@@ -100,7 +100,7 @@ public class ErrorUtils {
 	}
 	
 	public Response entityNotFoundResponse(Exception ex) {
-		logger.warn("Not Found", ex);
+		logger.warn("Not Found {}", ex.getMessage());
 		return Response.status(Status.NOT_FOUND).entity(
 				new APIError(ErrorType.NOT_FOUND, ex.getMessage())).build();
 	}

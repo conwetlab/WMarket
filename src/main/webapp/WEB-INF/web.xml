@@ -23,6 +23,10 @@
 	<listener>
 		<listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
 	</listener>
+	
+	<listener>
+		<listener-class>org.fiware.apps.marketplace.utils.ContextFinalizer</listener-class>
+	</listener>
 
 	<!-- Servlet configuration -->
 	<servlet>

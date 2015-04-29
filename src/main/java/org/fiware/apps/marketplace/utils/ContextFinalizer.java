@@ -1,11 +1,10 @@
-package org.fiware.apps.marketplace.client;
+package org.fiware.apps.marketplace.utils;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,51 +32,41 @@ package org.fiware.apps.marketplace.client;
  * #L%
  */
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Enumeration;
 
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.HttpClient;
-import org.jboss.resteasy.client.ClientExecutor;
-import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.resteasy.client.ClientRequestFactory;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
-public abstract class MarketplaceClient {
-	
-	protected String endpoint;
-	protected String user;
-	protected String pwd;
 
-	
-	public MarketplaceClient(String endpoint, String user, String pwd) {		
-		this.endpoint = endpoint;
-		this.user = user;
-		this.pwd = pwd;
+public class ContextFinalizer implements ServletContextListener {
+
+	@Override
+	public void contextInitialized(ServletContextEvent sce) {
+		// Nothing to do...
 	}
-	
-	/*protected ClientRequest createRequest(String uriString){
-		URI uri=null;
+
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
 		try {
-			uri = new URI(uriString);
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
+			com.mysql.jdbc.AbandonedConnectionCleanupThread.shutdown();
+		} catch (Throwable t) {
+			
 		}
-
-		Credentials credentials = new UsernamePasswordCredentials(user, pwd);
-		HttpClient httpClient = new HttpClient();
-		httpClient.getState().setCredentials(AuthScope.ANY, credentials);
-		httpClient.getParams().setAuthenticationPreemptive(true);
-
-		ClientExecutor clientExecutor = new ApacheHttpClientExecutor(httpClient);
-
-		ClientRequestFactory fac = new ClientRequestFactory(clientExecutor, uri);
-		ClientRequest request = fac.createRequest(uriString);		
 		
-		return request;
-		 
-	}*/
-
+		// This manually deregisters JDBC driver, which prevents Tomcat 7 from complaining about memory leaks
+		Enumeration<java .sql.Driver> drivers = java.sql.DriverManager.getDrivers();
+		while (drivers.hasMoreElements()) {
+			java.sql.Driver driver = drivers.nextElement();
+			try {
+				java.sql.DriverManager.deregisterDriver(driver);
+			} catch (Throwable t) {}
+		}
+		
+		try { 
+			Thread.sleep(2000L); 
+		} catch (Exception e) {
+			
+		}		
+	}
 
 }

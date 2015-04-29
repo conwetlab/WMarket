@@ -23,13 +23,13 @@ var Offering = (function () {
 
         this.nameElement = offeringHeader.appendChild(document.createElement('a'));
         this.nameElement.className = "panel-title";
-        this.nameElement.href = [WMarket.core.contextPath, 'offerings', data.store, data.describedIn, data.name].join('/');
+        this.nameElement.href = [WMarket.core.contextPath, 'offerings', data.describedIn.store, data.describedIn.name, data.name].join('/');
         this.nameElement.textContent = data.displayName;
 
         var offeringBody = this.element.appendChild(document.createElement('div'));
             offeringBody.className = "panel-body";
 
-        var store = WMarket.resources.stores.getStoreByName(data.store);
+        var store = WMarket.resources.stores.getStoreByName(data.describedIn.store);
 
         this.storeElement = offeringBody.appendChild(document.createElement('a'));
         this.storeElement.className = "offering-store";

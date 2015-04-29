@@ -69,8 +69,8 @@ public class AllOfferingsService {
 
 		if (offset < 0 || max <= 0) {
 			// Offset and Max should be checked
-			response = ERROR_UTILS.badRequestResponse(String.format(
-					"offset (%d) and/or max (%d) are not valid", offset, max));
+			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
+					//String.format("offset (%d) and/or max (%d) are not valid", offset, max));
 		} else {
 			try {
 				List<Offering> descriptionsPage = offeringBo.getOfferingsPage(offset, max);

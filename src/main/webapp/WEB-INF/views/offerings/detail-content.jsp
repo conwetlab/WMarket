@@ -50,11 +50,11 @@
         <div class="title-descriptions">Store Information</div>
         <dl class="dl-vertical">
           <dt>Name</dt>
-          <dd><a href="${ pageContext.request.contextPath }/stores/${ offering.store.name }/offerings">${ offering.store.displayName }</a></dd>
+          <dd><a href="${ pageContext.request.contextPath }/stores/${ offering.describedIn.store.name }/offerings">${ offering.describedIn.store.displayName }</a></dd>
           <dt>Creator Name</dt>
-          <dd>${ offering.store.creator.displayName }</dd>
+          <dd>${ offering.describedIn.store.creator.displayName }</dd>
           <dt>Registration Date</dt>
-          <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.store.registrationDate }" /></dd>
+          <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.store.registrationDate }" /></dd>
         </dl>
       </div><!-- /.panel-body -->
 

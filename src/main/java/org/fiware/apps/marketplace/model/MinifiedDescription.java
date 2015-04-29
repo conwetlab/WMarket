@@ -1,10 +1,10 @@
-package org.fiware.apps.marketplace.tests;
+package org.fiware.apps.marketplace.model;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,46 +32,45 @@ package org.fiware.apps.marketplace.tests;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.fiware.apps.marketplace.client.UserClient;
-import org.fiware.apps.marketplace.model.User;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.fiware.apps.marketplace.utils.xmladapters.StoreXMLAdapter;
 
-public class ParticipantTest {
+public class MinifiedDescription {
 	
+	private String name;
+	private Store store;
 	
-	private static final String BASE_URL = "http://localhost:8080/FiwareMarketplace/v1";	
-	private static UserClient userClient = new UserClient(BASE_URL, "demo1234", "demo1234");
+	public MinifiedDescription() {
+		// Default empty constructor
+	}
 	
-	@Test
-	@Ignore
-	public void testRegistration()  {
-	/*
-		Localuser user  = new Localuser();	
-		user.setCompany("SAP");
-		user.setEmail("demo123@sap.com");
-		user.setPassword("demo");
-		user.setUsername("demo");
-
-		assertTrue(userClient.save(user));
-
-		user  = userClient.find("demo");
-		assertEquals(user.getCompany(), "SAP");
-		
-		user.setCompany("SAP AG");
-		assertTrue(userClient.update(user, "demo"));
-		
-		user  = userClient.find("demo");
-		assertEquals(user.getCompany(), "SAP AG");
-		/*
-		assertTrue(userClient.delete("demouser"));
-		assertNull(userClient.find("demouser"));
-		*/
-		
+	public MinifiedDescription(Description description) {
+		this.name = description.getName();
+		this.store = description.getStore();
+	}
+	
+	@XmlID
+	@XmlAttribute 
+	public String getName() {
+		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@XmlElement
+	@XmlJavaTypeAdapter(StoreXMLAdapter.class)
+	public Store getStore() {
+		return store;
+	}
+
+	public void setStore(Store store) {
+		this.store = store;
+	}
+	
 }

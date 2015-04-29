@@ -64,7 +64,7 @@ public class OfferingsInStoreServiceTest {
 	@Mock private OfferingBo offeringBoMock;
 	@InjectMocks private OfferingsInStoreService offeringsInStoreService;
 	
-	private static final String OFFSET_MAX_INVALID = "offset (%d) and/or max (%d) are not valid";
+	private static final String OFFSET_MAX_INVALID = "offset and/or max are not valid";
 	private static final String STORE_NAME = "store";
 	
 	@Before 

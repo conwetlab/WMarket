@@ -1,10 +1,10 @@
-package org.fiware.apps.marketplace.client;
+package org.fiware.apps.marketplace.it;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,24 +32,55 @@ package org.fiware.apps.marketplace.client;
  * #L%
  */
 
-import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.resteasy.client.ClientResponse;
+import javax.xml.bind.annotation.XmlElement;
 
-public class ClientUtil {
-	public static void visualize(ClientRequest request, ClientResponse<String>  response, String text ){
-		System.out.println(text+"\n\n");
-		System.out.println(text+" Request:\n\n");
-		try {
-			System.out.println("Resource URL:\n"+ request.getUri());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Header:\n"+ request.getHeaders().toString());
-		System.out.println("Body:\n"+ request.getBody());
-		
-		System.out.println(text+"Response:\n\n");
-		System.out.println("Response Status:\n"+ response.getStatus());	
-		System.out.println("____________________________________________________________\n\n");
+/**
+ * This class is required because the default users is configured not to marshal 
+ * the password and the email for security reasons
+ * @author aitor
+ *
+ */
+public class SerializableUser {
+
+	private String displayName;
+	private String email;
+	private String password;
+	private String company;
+
+	@XmlElement
+	public String getDisplayName() {
+		return displayName;
 	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	@XmlElement
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@XmlElement
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@XmlElement
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
 }

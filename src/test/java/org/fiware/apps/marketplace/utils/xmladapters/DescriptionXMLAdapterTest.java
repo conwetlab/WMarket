@@ -1,10 +1,10 @@
-package org.fiware.apps.marketplace.tests;
+package org.fiware.apps.marketplace.utils.xmladapters;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
+ * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,37 +32,46 @@ package org.fiware.apps.marketplace.tests;
  * #L%
  */
 
-import org.fiware.apps.marketplace.bo.DescriptionBo;
-import org.fiware.apps.marketplace.model.Description;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class App 
-{
-    public static void main( String[] args ) throws Exception
-    {
-    	ApplicationContext appContext = 
-    	  new ClassPathXmlApplicationContext("spring/config/BeanLocations.xml");
- 
-    	DescriptionBo serviceBo = (DescriptionBo)appContext.getBean("serviceBo");
- 
-    	/** insert **/
-    	//Description service = new Description();
-    	//service.setUrl("testurl");
-    	//service.setName("HAIO");
-    	//serviceBo.save(service);
- 
-    	/** select **/
-    	//Service service2 = serviceBo.findByName("testurl");
-    	//System.out.println(service2);
- 
-    	/** update **/
-    	//service2.setName("HAIO-1");
-    	//serviceBo.update(service2);
- 
-    	/** delete **/
-    	//serviceBo.delete(service2);
- 
-    	System.out.println("Done");
-    }
+import org.fiware.apps.marketplace.model.Description;
+import org.fiware.apps.marketplace.model.MinifiedDescription;
+import org.fiware.apps.marketplace.model.Store;
+import org.junit.Test;
+
+
+public class DescriptionXMLAdapterTest {
+	
+	private DescriptionXMLAdapter adapter = new DescriptionXMLAdapter();
+	
+	@Test
+	public void testUnmarshall() throws Exception {
+		
+		Store store = new Store();
+		store.setName("store");
+		
+		MinifiedDescription minDescription = new MinifiedDescription();
+		minDescription.setName("description");
+		minDescription.setStore(store);
+		
+		Description description = adapter.unmarshal(minDescription);
+		assertThat(description.getName()).isEqualTo(minDescription.getName());
+		assertThat(description.getStore().getName()).isEqualTo(store.getName());
+	}
+	
+	@Test
+	public void testMarshallValidValue() throws Exception {
+		Store store = new Store();
+		store.setName("store");
+		
+		Description description = new Description();
+		description.setName("description");
+		description.setStore(store);
+		
+		MinifiedDescription minDescription = adapter.marshal(description);
+		assertThat(minDescription.getName()).isEqualTo(description.getName());
+		assertThat(minDescription.getStore().getName()).isEqualTo(store.getName());
+	}
+	
+
 }
