@@ -302,7 +302,8 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	@Test
 	public void testCreationURLAlreadyExists() {
-		testCreationFieldAlreayExists("offering-1", "offering-2", defaultUSDLPath, defaultUSDLPath, "url", MESSAGE_URL_IN_USE);
+		testCreationFieldAlreayExists("offering-1", "offering-2", defaultUSDLPath, defaultUSDLPath, "url", 
+				MESSAGE_URL_IN_USE);
 	}
 	
 	@Test
