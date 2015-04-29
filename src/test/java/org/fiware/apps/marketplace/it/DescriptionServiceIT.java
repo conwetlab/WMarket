@@ -73,6 +73,8 @@ public class DescriptionServiceIT extends AbstractIT {
 	static {
 		// WARN: This properties depends on the RDF files stored in "src/test/resources/__files" so if these files
 		// changes, this properties must be changed. Otherwise, tests will fail.
+		FIRST_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit"
+				+ "#Xo9ZQS2Qa3yX8fDfm");
 		FIRST_OFFERING.setDisplayName("OrionStarterKit");
 		FIRST_OFFERING.setImageUrl(
 				"https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png");
@@ -82,6 +84,8 @@ public class DescriptionServiceIT extends AbstractIT {
 				+ "Those resources can be used for example for showing entities coming from an Orion server inside "
 				+ "the Map Viewer widget or browsing and updating the attributes of those entities.");
 		
+		SECOND_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/CkanStarterKit"
+				+ "#GHbnf7dsubc19ebx4fmfgH");
 		SECOND_OFFERING.setDisplayName("CKAN starter Kit");
 		SECOND_OFFERING.setImageUrl(
 				"https://store.lab.fiware.org/media/CoNWeT__CKANStarterKit__1.2/logo-ckan_170x80.png");
@@ -138,7 +142,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	private Response getDescription(String userName, String password, String storeName, String descriptionName) {
 		Client client = ClientBuilder.newClient();
 		return client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + descriptionName)
-				.request(MediaType.APPLICATION_XML)
+				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password)).get();
 	}
 	
@@ -153,7 +157,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(description.getUrl()).isEqualTo(url);
 		assertThat(description.getComment()).isEqualTo(comment);
 		
-		// Check default offering
+		// Check offerings
 		Offering[] expectedOfferings;
 		if (url == secondaryUSDLPath) {
 			expectedOfferings = new Offering[] {FIRST_OFFERING, SECOND_OFFERING};
@@ -164,24 +168,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		List<Offering> descriptionOfferings = description.getOfferings();
 		assertThat(descriptionOfferings.size()).isEqualTo(expectedOfferings.length);
 		
-		for (int i = 0; i < expectedOfferings.length; i++) {
-			
-			// Look for the offering in the description
-			boolean found = false;
-			int j = 0;
-
-			for (j = 0; !found && j < descriptionOfferings.size(); j++) {
-				found = expectedOfferings[i].getDisplayName().equals(descriptionOfferings.get(j).getDisplayName());
-			}
-			
-			// Check that the offering has been found
-			assertThat(found).isTrue();
-			
-			// Check that all the properties are as expected			
-			assertThat(descriptionOfferings.get(j-1).getDisplayName()).isEqualTo(expectedOfferings[i].getDisplayName());
-			assertThat(descriptionOfferings.get(j-1).getDescription()).isEqualTo(expectedOfferings[i].getDescription());
-			assertThat(descriptionOfferings.get(j-1).getImageUrl()).isEqualTo(expectedOfferings[i].getImageUrl());
-
+		for (Offering expectedOffering: expectedOfferings) {
+			assertThat(expectedOffering).isIn(descriptionOfferings);
 		}
 	}
 	
@@ -211,7 +199,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		return createOrUpdateDescription(userName, password, storeName, "", displayName, url, comment);
 	}
 	
-	public void testCreation(String url) {
+	private void testCreation(String url) {
 		String displayName = "Description 1";
 		String descriptionName = "description-1";
 		String descriptionComment = "Example Comment";
@@ -363,7 +351,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		return createOrUpdateDescription(userName, password, storeName, descriptionName, displayName, url, comment);
 	}
 	
-	public void testUpdate(String newDisplayName, String newUrl, String newComment) {
+	private void testUpdate(String newDisplayName, String newUrl, String newComment) {
 		// Create Description
 		String name = "description-1";
 		String displayName = "Description-1";
@@ -635,7 +623,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		// Get all descriptions
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/" + STORE_NAME + "/description")
-				.request(MediaType.APPLICATION_XML).header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.request(MediaType.APPLICATION_JSON).header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
 		// Check the response
@@ -663,12 +651,12 @@ public class DescriptionServiceIT extends AbstractIT {
 					String.format(urlPattern, i), "");
 		}
 		
-		// Get some descriptions
+		// Get required descriptions
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/" + STORE_NAME + "/description")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
-				.request(MediaType.APPLICATION_XML)
+				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
@@ -701,7 +689,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		Response response = client.target(endPoint + "/api/v2/store/" + STORE_NAME + "/description")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
-				.request(MediaType.APPLICATION_XML)
+				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
@@ -765,7 +753,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		Response response = client.target(endPoint + "/api/v2/descriptions")
 				.queryParam("offset", offset)
 				.matrixParam("max", max)
-				.request(MediaType.APPLICATION_XML)
+				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
@@ -811,7 +799,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		Response response = client.target(endPoint + "/api/v2/descriptions")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
-				.request(MediaType.APPLICATION_XML)
+				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
@@ -831,13 +819,13 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////// STORE OFFERINGS //////////////////////////////////
+	/////////////////////////////////// STORE OFFERINGS ///////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	private Response getStoreOfferings(String userName, String password, String storeName) {
 		Client client = ClientBuilder.newClient();
 		return client.target(endPoint + "/api/v2/store/" + storeName + "/offering/")
-				.request(MediaType.APPLICATION_XML)
+				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password)).get();
 	}
 	
@@ -846,7 +834,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		return client.target(endPoint + "/api/v2/store/" + storeName + "/offering/")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
-				.request(MediaType.APPLICATION_XML)
+				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password)).get();
 	}
 
@@ -875,11 +863,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		Offerings offerings = store1OfferingResponse.readEntity(Offerings.class);
 		assertThat(offerings.getOfferings().size()).isEqualTo(1);
-		
-		Offering offering = offerings.getOfferings().get(0);
-		assertThat(offering.getDisplayName()).isEqualTo(FIRST_OFFERING.getDisplayName());
-		assertThat(offering.getImageUrl()).isEqualTo(FIRST_OFFERING.getImageUrl());
-		assertThat(offering.getDescription()).isEqualTo(FIRST_OFFERING.getDescription());
+		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
 		
 		// Get Store2 offerings
 		Response store2OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, newStoreName);
@@ -887,29 +871,9 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		offerings = store2OfferingResponse.readEntity(Offerings.class);
 		assertThat(offerings.getOfferings().size()).isEqualTo(2);
-		
-		Offering[] expectedOfferings = new Offering[]{FIRST_OFFERING, SECOND_OFFERING};
-		
-		for (Offering expectedOffering: expectedOfferings) {
-			
-			// Offerings can be created in different order
-			int i;
-			boolean found = false;
-			for (i = 0; i < offerings.getOfferings().size() && !found; i++) {
-				if (offerings.getOfferings().get(i).getDisplayName().equals(expectedOffering.getDisplayName())) {
-					found = true;
-				}
-			}
-			
-			assertThat(found).isTrue();
-			
-			assertThat(offerings.getOfferings().get(i - 1).getDisplayName())
-					.isEqualTo(expectedOffering.getDisplayName());
-			assertThat(offerings.getOfferings().get(i - 1).getDescription())
-					.isEqualTo(expectedOffering.getDescription());
-			assertThat(offerings.getOfferings().get(i - 1).getImageUrl())
-					.isEqualTo(expectedOffering.getImageUrl());
-		}
+				
+		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
+		assertThat(SECOND_OFFERING).isIn(offerings.getOfferings());
 	}
 	
 	private void testGetSomeStoreOfferings(int offset, int max) {
@@ -947,7 +911,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		Response response = client.target(endPoint + "/api/v2/store/" + STORE_NAME + "/offering")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
-				.request(MediaType.APPLICATION_XML)
+				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
@@ -964,5 +928,107 @@ public class DescriptionServiceIT extends AbstractIT {
 	public void testListOfferingsInStoreInvalidMax() {
 		testListOfferingsInStoreInvalidParams(1, 0);
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// ALL OFFERINGS ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void intializeStoresWithOfferings() {
+		// Create an additional Store
+		String newStoreName = STORE_NAME + "a";
+		String newStoreUrl = STORE_URL + "/a";
+		Response createStoreResponse = createStore(USER_NAME, PASSWORD, newStoreName, newStoreUrl);
+		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
+
+		// Push both descriptions in both stores
+		String[] stores = new String[]{STORE_NAME, newStoreName};
+		
+		for (String store: stores) {
+			
+			Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, store, 
+					"default", defaultUSDLPath, "");
+			assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+			
+			createDescriptionResponse = createDescription(USER_NAME, PASSWORD, store, 
+					"secondary", secondaryUSDLPath, "");
+			assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+			
+		}
+
+	}
+	
+	@Test
+	public void testGetAllOfferings() {
+		
+		intializeStoresWithOfferings();
+		
+		// Get all the offerings
+		Client client = ClientBuilder.newClient();
+		Response allOfferingsResponse = client.target(endPoint + "/api/v2/offerings")
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		assertThat(allOfferingsResponse.getStatus()).isEqualTo(200);
+		
+		Offerings offerings = allOfferingsResponse.readEntity(Offerings.class);
+		assertThat(offerings.getOfferings().size()).isEqualTo(6);	// 6 offerings: 3 in each store.
+
+	}
+	
+	private void testGetSomeOfferings(int offset, int max) {
+		
+		intializeStoresWithOfferings();
+		
+		// Get all the offerings
+		Client client = ClientBuilder.newClient();
+		Response allOfferingsResponse = client.target(endPoint + "/api/v2/offerings")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		assertThat(allOfferingsResponse.getStatus()).isEqualTo(200);
+		
+		Offerings offerings = allOfferingsResponse.readEntity(Offerings.class);
+		int totalOfferings = 6;
+		int expectedElements = offset + max > totalOfferings ? totalOfferings - offset : max;
+		assertThat(offerings.getOfferings().size()).isEqualTo(expectedElements);
+
+	}
+	
+	@Test
+	public void testGetFirstTwoElements() {
+		testGetSomeOfferings(0, 2);
+	}
+	
+	@Test
+	public void testGetMoreElementsThanExisting() {
+		testGetSomeOfferings(3, 9);
+	}
+	
+	private void testListOfferingsInvalidParams(int offset, int max) {
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/offerings")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+
+	}
+	
+	@Test
+	public void testListOfferingsInvalidOffset() {
+		testListOfferingsInvalidParams(-1, 2);
+	}
+	
+	@Test
+	public void testListOfferingsInvalidMax() {
+		testListOfferingsInvalidParams(1, 0);
+	}
+
 
 }

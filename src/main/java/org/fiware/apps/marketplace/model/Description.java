@@ -83,6 +83,11 @@ public class Description {
 	public Description() {
 		this.offerings = new ArrayList<Offering>();
 	}
+	
+	public Description(MinifiedDescription minDescription) {
+		this.name = minDescription.getName();
+		this.store = minDescription.getStore();
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
