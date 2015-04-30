@@ -15,21 +15,22 @@ var Offering = (function () {
         var offeringHeader = this.element.appendChild(document.createElement('div'));
             offeringHeader.className = "panel-heading";
 
-        this.imageElement = offeringHeader.appendChild(document.createElement('div'));
-        this.imageElement.className = "thumbnail thumbnail-sm";
+        this.imageElement = offeringHeader.appendChild(document.createElement('span'));
+        this.imageElement.className = "image-thumbnail";
 
         var offeringImage = this.imageElement.appendChild(document.createElement('img'));
+            offeringImage.className = "image image-rounded image-bordered";
             offeringImage.src = data.imageUrl;
 
         this.nameElement = offeringHeader.appendChild(document.createElement('a'));
         this.nameElement.className = "panel-title";
-        this.nameElement.href = [WMarket.core.contextPath, 'offerings', data.store, data.describedIn, data.name].join('/');
+        this.nameElement.href = [WMarket.core.contextPath, 'offerings', data.describedIn.store, data.describedIn.name, data.name].join('/');
         this.nameElement.textContent = data.displayName;
 
         var offeringBody = this.element.appendChild(document.createElement('div'));
             offeringBody.className = "panel-body";
 
-        var store = WMarket.resources.stores.getStoreByName(data.store);
+        var store = WMarket.resources.stores.getStoreByName(data.describedIn.store);
 
         this.storeElement = offeringBody.appendChild(document.createElement('a'));
         this.storeElement.className = "offering-store";

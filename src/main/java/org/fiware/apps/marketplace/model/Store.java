@@ -48,6 +48,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
@@ -74,6 +75,10 @@ public class Store {
 	private List<Description> descriptions;
 	private User lasteditor;	
 	private User creator;
+	
+	// Image
+	private String imagePath;
+	private String imageBase64;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -163,6 +168,29 @@ public class Store {
 		this.registrationDate = registrationDate;
 	}
 	
+	@XmlElement
+	@Transient
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+
+	// The image in B64 won't be stored in the database
+	// StoreBo will transform the b64 into bytes and will store the image in the disk
+	// Only PNG accepted
+	@XmlElement
+	@Transient
+	public String getImageBase64() {
+		return imageBase64;
+	}
+
+	public void setImageBase64(String imageBase64) {
+		this.imageBase64 = imageBase64;
+	}
+
 	@XmlTransient
 	@OneToMany(mappedBy="store", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	public List<Description> getDescriptions() {

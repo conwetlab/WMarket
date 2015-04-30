@@ -36,9 +36,15 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.Path;
+
 import org.fiware.apps.marketplace.bo.impl.StoreBoImpl;
+import org.fiware.apps.marketplace.controllers.MediaContentController;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
@@ -48,12 +54,17 @@ import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 
 public class StoreBoImplTest {
+	
+	@Rule public TemporaryFolder mediaFolder = new TemporaryFolder();
 	
 	@Mock private StoreAuth storeAuthMock;
 	@Mock private StoreValidator storeValidatorMock;
@@ -64,10 +75,35 @@ public class StoreBoImplTest {
 	private static final String NAME = "wstore";
 	private static final String DISPLAY_NAME = "WStore";
 	private static final String NOT_AUTHORIZED_BASE = "You are not authorized to %s";
+	private static final String MEDIA_URL = MediaContentController.class.getAnnotation(Path.class).value();
+	
+	private static final String IMAGE_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAA"
+			+ "ALEwEAmpwYAAADpElEQVRIDa1WS0ubURAdk/gAN75QCApGjIItSIOuRMSiIrhzIUj7J1pL7UZ/QEH6DxIhdK8uJFio+Fi4ykLsp"
+			+ "oJ1YVqtulB8mzg9Z5r79YsIyaIDk/v4zj0z987MvSlTVXFSBkE/iLks5zB8gWYE+hLaAW2FUvah36FfoV+AT6MlPoQmh/E/Uvbz"
+			+ "Y0dO7DNoHEpgKZoA7nmeJ4h+mcf7BPkrADKhUEiDwWBRcuKoWPMT+jrPF3BG0Irf8zcYF5AGAgEtLy83EkfGlnM4Eg/r60/5d0I"
+			+ "DofwEPfcWjI+Pa19fnzf2f/P3R0dHdWJi4jHO7SRkZwXrPPMVeBt+eHiQhoYGyWQyUlFRIQsLC5JIJKSrq0taWloE3svp6ans7u"
+			+ "7K5OSkDA8Py8XFhTQ3N8vZ2ZmAQ8DxC3wjcHzHBdgCyuOgd5FIRLEI30uTk5MThVO21nGAZx6r0YgwFQs+1tTU6PHxsbHf3d1pL"
+			+ "pfT+/v7As1mszYm6OrqSjs7O43jUWLEaGDaGchng87MzBg5SYoJDVNSqZQZ8AWb4w80kKIB94Ee7O3t2aJSDOC8DctdRqNRkmZ9"
+			+ "u1hhvrJCWYVsLMB1dXXWZ8CKCdfBggU3HA4THnRc6EfJEOEss4dyfX0tt7e31ufCYkKMI7y5uTE4duOWtXouMiUrKysFAZPDw0M"
+			+ "DlGLAkSMWcnl5acaqq6udAaGBHxw1NjZKW1ub1NfXy9ramgEQA6E3TxniHHftvEbcrB7a29ultrbW1uNnnx0LMnag2AHPxHR9fR"
+			+ "0cpcvQ0JCt4xXiDzINeGlKcnigTU1NBp6dnVVUrCIuXs67rOEcKlqXlpa0t7fX8L4iszH4LE2t0NxHGlhcXNTu7m4H0v7+fsVRF"
+			+ "GwnmUxqVVWVh/F57c3BQMydr10V3B53MTAwoNvb2zo4OKg4T43H40Z+fn6uR0dH1uf1wIon3q1j36d/rwqgMWcPTIYfXTXPzc0p"
+			+ "j4OklNXVVTO6sbGhW1tbistQY7GYEbrd+8j5NtgDFECa8br+hon3UGHmUKampqSnp0fGxsZkeXnZsompiKMQGLWb09WOLSj8mQb"
+			+ "nDrmZpjl0+A5/Rv8tccxtVnE6nRZ4bPnN6gbGy3Ne6Tgawr1Cs4HIO+CS5MQ4R+95Dz3kjXxC+xtTH6FhEtBrxMMKsKOjQw4ODm"
+			+ "w3m5ubghvXOIFlyzeAnpOcjtslZV7lAf6nkw9QAmpnXEI7D8yTj769aPhoAsvOyH/72/IH8JNvDJtE0dkAAAAASUVORK5CYII=";
+	
+	private String getRelativeImagePath(Store store) {
+		return "store/" + store.getName() + ".png";
+	}
 	
 	@Before 
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
+		
+		// Set media folder for testing
+		ReflectionTestUtils.setField(storeBo, "mediaFolder", mediaFolder.getRoot().getAbsolutePath());
+
+		// Sometimes we need to mock methods
 		this.storeBo = spy(this.storeBo);
 	}
 	
@@ -119,12 +155,16 @@ public class StoreBoImplTest {
 		testSaveException(store);
 	}
 	
-	@Test
-	public void testSave() {
+	private void testSave(boolean includeImage) {
 		
 		Store store = mock(Store.class);
+		when(store.getName()).thenReturn(NAME);
 		when(store.getDisplayName()).thenReturn(DISPLAY_NAME);
 		when(storeAuthMock.canCreate(store)).thenReturn(true);
+		
+		if (includeImage) {
+			when(store.getImageBase64()).thenReturn(IMAGE_BASE64);
+		}
 		
 		try {
 			storeBo.save(store);
@@ -135,11 +175,27 @@ public class StoreBoImplTest {
 			// Verify that the name has been properly set.
 			verify(store).setName(NAME);
 			
+			// Verify that the image has been set
+			String imageName = getRelativeImagePath(store);
+			
+			int setImagePathTimes = includeImage ? 1 : 0;
+			verify(store, times(setImagePathTimes)).setImagePath(MEDIA_URL + "/" + imageName);
+			assertThat(Paths.get(mediaFolder.getRoot().getAbsolutePath(), imageName).toFile().exists()).isEqualTo(includeImage);
+			
 		} catch (Exception e) {
 			fail("Exception not expected", e);
 		}
 	}
-
+	
+	@Test
+	public void testSaveWithImage() {
+		testSave(true);
+	}
+	
+	@Test
+	public void testSaveWithoutImage() {
+		testSave(false);
+	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -238,6 +294,22 @@ public class StoreBoImplTest {
 					updatedStore.getComment() : store.getComment();
 			assertThat(store.getComment()).isEqualTo(newStoreDescription);
 			
+			// When the image is updated
+			String imageName = getRelativeImagePath(store);
+			File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), imageName).toFile();
+			if (updatedStore.getImageBase64() != null) {
+				
+				assertThat(store.getImageBase64()).isEqualTo(IMAGE_BASE64);
+				
+				// Verify that the image has been set
+				assertThat(store.getImagePath()).isEqualTo(MEDIA_URL + "/" + imageName);
+				
+				// Verify that the image has been created
+				assertThat(imageFile.exists()).isTrue();		
+			} else {
+				assertThat(imageFile.exists()).isFalse();
+			}
+			
 			// Assert that the name is not changed
 			assertThat(store.getName()).isEqualTo(previousStoreName);
 			
@@ -267,6 +339,13 @@ public class StoreBoImplTest {
 	public void testUpdateStoreComment() {
 		Store newStore = new Store();
 		newStore.setComment("New Comment");
+		testUpdateStoreField(newStore);
+	}
+	
+	@Test
+	public void testUpdateStoreImage() {
+		Store newStore = new Store();
+		newStore.setImageBase64(IMAGE_BASE64);
 		testUpdateStoreField(newStore);
 	}
 	
@@ -316,9 +395,20 @@ public class StoreBoImplTest {
 		
 	}
 	
-	@Test
-	public void testDelete() throws Exception {
+	private void testDelete(boolean fileExist) throws Exception {
 		Store store = mock(Store.class);
+		when(store.getName()).thenReturn(NAME);
+		
+		File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), getRelativeImagePath(store)).toFile();
+		
+		// Create the image that should be deleted
+		if (fileExist) {
+			imageFile.getParentFile().mkdirs();		// Create required directories
+			imageFile.createNewFile();
+		}
+
+		// Check image status
+		assertThat(imageFile.exists()).isEqualTo(fileExist);
 		
 		// Configure Mock
 		doReturn(store).when(storeDaoMock).findByName(NAME);
@@ -327,10 +417,22 @@ public class StoreBoImplTest {
 		// Call the method
 		storeBo.delete(NAME);
 		
+		// Assert that image does not exist
+		assertThat(imageFile.exists()).isFalse();
+		
 		// Verify that the method has been called
 		verify(storeDaoMock).delete(store);
 	}
 	
+	@Test
+	public void testDeleteImageExist() throws Exception {
+		testDelete(true);
+	}
+	
+	@Test
+	public void testDeleteImageNotExist() throws Exception {
+		testDelete(false);
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// FIND BY NAME /////////////////////////////////////
@@ -370,9 +472,19 @@ public class StoreBoImplTest {
 
 	}
 
-	@Test
-	public void testFindByName() throws Exception {
+	private void testFindByName(boolean imageExist) throws Exception {
+		
 		Store store = mock(Store.class);
+		when(store.getName()).thenReturn(NAME);
+		
+		String imageName = getRelativeImagePath(store);
+		File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), imageName).toFile();
+		
+		// Create the image that should be deleted
+		if (imageExist) {
+			imageFile.getParentFile().mkdirs();
+			imageFile.createNewFile();
+		}
 		
 		// Set up mocks
 		when(storeDaoMock.findByName(NAME)).thenReturn(store);
@@ -384,7 +496,21 @@ public class StoreBoImplTest {
 		// Verifications
 		assertThat(returnedStore).isEqualTo(store);
 		verify(storeDaoMock).findByName(NAME);
+		
+		// Check that image path has been set
+		int setImagePathTimes = imageExist ? 1 : 0;
+		verify(store, times(setImagePathTimes)).setImagePath(MEDIA_URL + "/" + imageName);
 
+	}
+	
+	@Test
+	public void testFindByNameImageExist() throws Exception {
+		testFindByName(true);
+	}
+	
+	@Test
+	public void testFindByNameImageDoesNotExist() throws Exception {
+		testFindByName(false);
 	}
 
 	
@@ -411,9 +537,26 @@ public class StoreBoImplTest {
 	@Test
 	public void testGetAllStores() throws Exception {
 		
-		@SuppressWarnings("unchecked")
-		List<Store> stores = mock(List.class);
+		List<Store> stores = new ArrayList<Store>();
 		
+		// Add stores to the list
+		Store store1 = mock(Store.class);
+		when(store1.getName()).thenReturn(NAME);
+		
+		String storeName2 = NAME + "a";
+		Store store2 = mock(Store.class);
+		when(store2.getName()).thenReturn(storeName2);
+		
+		stores.add(store1);
+		stores.add(store2);
+		
+		// Create image for store1
+		String image1Name = getRelativeImagePath(store1);
+		File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), image1Name).toFile();
+		imageFile.getParentFile().mkdirs();		// Create required directories
+		imageFile.createNewFile();
+		
+		// Mocks
 		when(storeDaoMock.getAllStores()).thenReturn(stores);
 		when(storeAuthMock.canList()).thenReturn(true);
 		
@@ -422,6 +565,11 @@ public class StoreBoImplTest {
 		
 		// Verify that the DAO is called
 		verify(storeDaoMock).getAllStores();
+		
+		// Verify that image path has been set for image1 and has not been set for image2
+		verify(store1).setImagePath(MEDIA_URL + "/" + image1Name);
+		verify(store2, never()).setImagePath(anyString());
+
 	}
 	
 	
@@ -448,9 +596,26 @@ public class StoreBoImplTest {
 	@Test
 	public void testGetStoresPage() throws Exception {
 		
-		@SuppressWarnings("unchecked")
-		List<Store> stores = mock(List.class);
+		List<Store> stores = new ArrayList<Store>();
 		
+		// Add stores to the list
+		Store store1 = mock(Store.class);
+		when(store1.getName()).thenReturn(NAME);
+		
+		String storeName2 = NAME + "a";
+		Store store2 = mock(Store.class);
+		when(store2.getName()).thenReturn(storeName2);
+		
+		stores.add(store1);
+		stores.add(store2);
+		
+		// Create image for store1
+		String image1Name = getRelativeImagePath(store1);
+		File imageFile = Paths.get(mediaFolder.getRoot().getAbsolutePath(), image1Name).toFile();
+		imageFile.getParentFile().mkdirs();		// Create required directories
+		imageFile.createNewFile();
+
+		// Mocks
 		int offset = 8;
 		int max = 22;
 		
@@ -462,5 +627,10 @@ public class StoreBoImplTest {
 		
 		// Verify that the DAO is called
 		verify(storeDaoMock).getStoresPage(offset, max);
+		
+		// Verify that image path has been set for image1 and has not been set for image2
+		verify(store1).setImagePath(MEDIA_URL + "/" + image1Name);
+		verify(store2, never()).setImagePath(anyString());
+
 	}
 }

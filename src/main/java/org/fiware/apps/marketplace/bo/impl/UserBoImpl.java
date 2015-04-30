@@ -223,7 +223,7 @@ public class UserBoImpl implements UserBo {
 			userName = authentication.getName();
 		}
 
-		logger.warn("User: {}", userName);
+		logger.info("User: {}", userName);
 		return userDao.findByName(userName);
 	}
 

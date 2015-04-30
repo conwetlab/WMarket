@@ -38,12 +38,12 @@
 
         <form class="col-sm-8 col-sm-offset-1" name="login_form" method="post" action="<c:url value='j_spring_security_check' />">
           <div class="form-field">
-            <label class="text-plain">Email or Username</label>
-            <input class="form-control" type="text" name="username" />
+            <label class="field-label">Email or Username</label>
+            <input class="field-control" type="text" name="username" />
           </div>
           <div class="form-field">
-            <label class="text-plain">Password</label>
-            <input class="form-control" type="password" name="password" />
+            <label class="field-label">Password</label>
+            <input class="field-control" type="password" name="password" />
           </div>
           <div class="form-options">
             <button class="btn btn-primary-lighter btn-sm-10 btn-md-5" type="submit">Sign In</button>

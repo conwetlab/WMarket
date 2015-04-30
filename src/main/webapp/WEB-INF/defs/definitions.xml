@@ -73,4 +73,9 @@
         <put-attribute name="content" value="/WEB-INF/views/descriptions/detail-content.jsp" />
     </definition>
 
+    <!-- Description Resource - Offering Filter - List View -->
+    <definition name="description.offering.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/descriptions/offering-list-content.jsp" />
+    </definition>
+
 </tiles-definitions>

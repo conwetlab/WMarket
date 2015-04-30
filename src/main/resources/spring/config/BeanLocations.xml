@@ -29,7 +29,7 @@
 	
 		
 	<!-- Security -->
-	<import resource="securityOAuth2.xml" />
+	<import resource="security.xml" />
 
 	<!-- Database Configuration -->
 	<import resource="../database/DataSource.xml" />

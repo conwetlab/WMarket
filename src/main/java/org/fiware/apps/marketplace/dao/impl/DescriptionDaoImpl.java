@@ -43,6 +43,7 @@ import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -172,6 +173,7 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 				.createCriteria(Description.class)
 				.setFirstResult(offset)
 				.setMaxResults(max)
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)		// Avoid duplicates
 				.list();
 	}
 
