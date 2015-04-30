@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.dao;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,10 +39,21 @@ import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 
 public interface UserDao {
-	void save(User localuser);
-	void update(User localuser);
-	void delete(User localuser);
-	User findByName(String username) throws UserNotFoundException;
-	List<User> getUsersPage(int offset, int max);
-	List <User> getAllUsers();
+	
+	// Save, update & delete
+	public void save(User user);
+	public void update(User user);
+	public void delete(User user);
+	
+	// Find
+	public User findByName(String userName) throws UserNotFoundException;
+	public User findByEmail(String email) throws UserNotFoundException;
+
+    // For validations...
+	public boolean isUserNameAvailable(String userName);
+    public boolean isEmailAvailable(String email);
+
+	// Get all or a sublist
+	public List<User> getUsersPage(int offset, int max);
+	public List <User> getAllUsers();
 }

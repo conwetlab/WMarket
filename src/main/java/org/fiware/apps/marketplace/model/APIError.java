@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class APIError {
 	
 	private ErrorType errorType;
+	private String field;
 	private String errorMessage;
 	
 	public APIError() {
@@ -49,6 +50,12 @@ public class APIError {
 		this.errorMessage = errorMessage;
 	}
 
+	public APIError(ErrorType errorType, String field, String errorMessage) {
+		this.errorType = errorType;
+		this.field = field;
+		this.errorMessage = errorMessage;
+	}
+
 	@XmlElement(name = "type")
 	public ErrorType getErrorType() {
 		return errorType;
@@ -56,6 +63,15 @@ public class APIError {
 
 	public void setErrorType(ErrorType errorType) {
 		this.errorType = errorType;
+	}
+	
+	@XmlElement(name = "field")
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
 	}
 
 	@XmlElement(name = "message")
@@ -66,9 +82,5 @@ public class APIError {
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
-	
-	
-	
-	
 
 }

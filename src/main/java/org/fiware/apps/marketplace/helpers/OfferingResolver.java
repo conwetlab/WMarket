@@ -5,6 +5,7 @@ package org.fiware.apps.marketplace.helpers;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,9 +38,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.rdf.RdfHelper;
+import org.fiware.apps.marketplace.utils.NameGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hp.hpl.jena.rdf.model.Model;
 
@@ -49,14 +53,87 @@ import com.hp.hpl.jena.rdf.model.Model;
  * @author D058352
  *
  */
-public abstract class OfferingResolver {
+@Service("offeringResolver")
+public class OfferingResolver {
+	
+	@Autowired private RdfHelper rdfHelper;
+	
+	/**
+	 * Gets all the offerings from a USDL
+	 * @param model The USDL
+	 * @return The offerings list contained in the USDL
+	 */
+	private List<String> getOfferingUris(Model model) {
+		String query = RdfHelper.getQueryPrefixes() + "SELECT ?x WHERE { ?x a usdl:ServiceOffering . } ";
+		return rdfHelper.queryUris(model, query, "x");
+	}
+ 
+	/**
+	 * Gets all the services associated with the offering
+	 * @param offeringUri The offering whose services want to be retrieved
+	 * @param model The UDSL
+	 * @return The list of services associated with the offering
+	 */
+	private List<String> getServiceUris(Model model, String offeringUri) {
+		return rdfHelper.getObjectUris(model, offeringUri, "usdl:includes");
+	}
+
+	/**
+	 * Gets all the price plans associated with the offering
+	 * @param offeringUri The offering whose price plans want to be retrieved
+	 * @param model The UDSL
+	 * @return The list of price plans associated with the offering
+	 */
+	private List<String> getPricePlanUris(Model model, String offeringUri) {
+		return rdfHelper.getObjectUris(model, offeringUri, "usdl:hasPricePlan");
+	}
+	
+	/**
+	 * Gets the title of an offering
+	 * @param model USDL
+	 * @param offeringUri The offering URI whose title wants to be retrieved
+	 * @return The title of the offering
+	 */
+	private String getOfferingTitle(Model model, String offeringUri) {
+		return rdfHelper.getLiteral(model, offeringUri, "dcterms:title");
+	}
+	
+	/**
+	 * Gets the description of an offering
+	 * @param model USDL
+	 * @param offeringUri The offering URI whose description wants to be retrieved
+	 * @return The description of the offering
+	 */
+	private String getOfferingDescription(Model model, String offeringUri) {
+		return rdfHelper.getLiteral(model, offeringUri, "dcterms:description");
+	}
+	
+	/**
+	 * Get the version of an offering 
+	 * @param model USDL
+	 * @param offeringUri The offering URI whose version wants to be retrieved
+	 * @return The version of the offering
+	 */
+	private String getOfferingVersion(Model model, String offeringUri) {
+		return rdfHelper.getLiteral(model, offeringUri, "usdl:versionInfo");
+	}
+	
+	/**
+	 * Gets the image of an offering
+	 * @param model USDL
+	 * @param offeringUri The offering URI whose image URL wants to be retrieved
+	 * @return The image URL of the offering
+	 */
+	private String getOfferingImageUrl(Model model, String offeringUri) {
+		return rdfHelper.getObjectUri(model, offeringUri, "foaf:thumbnail");
+	}
 	
 	/**
 	 * Gets all offerings contained in the service descriptions in the given list of stores.
 	 * @param stores
 	 * @return
 	 */
-	public static List<Offering> resolveOfferingsFromStores(List<Store> stores) {
+	public List<Offering> resolveOfferingsFromStores(List<Store> stores) {
 		List<Offering> offerings = new ArrayList<Offering>();
 		for (Store store : stores) {
 			offerings.addAll(resolveOfferingsFromStore(store));
@@ -69,83 +146,54 @@ public abstract class OfferingResolver {
 	 * @param store
 	 * @return
 	 */
-	public static List<Offering> resolveOfferingsFromStore(Store store) {
-		return resolveOfferingsFromServiceDescriptions(store.getServices(), store.getUrl());
+	public List<Offering> resolveOfferingsFromStore(Store store) {
+		return resolveOfferingsFromServiceDescriptions(store.getDescriptions());
 	}
 
 	/**
 	 * Gets all offerings contained in the given service descriptions.
-	 * @param services
+	 * @param offeringDescriptions
 	 * @return
 	 */
-	public static List<Offering> resolveOfferingsFromServiceDescriptions(List<Service> services, String storeUrl) {
+	public List<Offering> resolveOfferingsFromServiceDescriptions(List<Description> offeringDescriptions) {
 		List<Offering> offerings = new ArrayList<Offering>();
-		for (Service service : services) {
-			offerings.addAll(resolveOfferingsFromServiceDescription(service, storeUrl));
+		for (Description service : offeringDescriptions) {
+			offerings.addAll(resolveOfferingsFromServiceDescription(service));
 		}
 		return offerings;
 	}
 
 	/**
-	 * Gets all offerings contained in the given service description.
-	 * @param service
-	 * @return
-	 */
-	public static List<Offering> resolveOfferingsFromServiceDescription(Service service, String storeUrl) {
-		return resolveOfferingsFromServiceDescription(service.getUrl(), storeUrl);
-	}
-
-	/**
-	 * Gets all offerings contained in the file in the given uri.
+	 * Gets all offerings contained in the file in the given URI.
 	 * @param uri
 	 * @return
 	 */
-	public static List<Offering> resolveOfferingsFromServiceDescription(String uri, String storeUrl) {
-		Model model = RdfHelper.getModelFromUri(uri);
-		if (model == null)
+	public List<Offering> resolveOfferingsFromServiceDescription(Description offeringDescription) {
+		
+		Model model = rdfHelper.getModelFromUri(offeringDescription.getUrl());
+		
+		// Just in case the model cannot be processed
+		if (model == null) {
 			return Collections.emptyList();
+		}
 
 		List<Offering> offerings = new ArrayList<Offering>();
 		List<String> offeringUris = getOfferingUris(model);
+		
 		for (String offeringUri : offeringUris) {
-			Offering offering = new Offering();
-			offering.setOfferingUri(offeringUri);
-			for (String serviceUri : getServiceUris(offeringUri, model)) {
-				offering.addServiceUri(serviceUri);
-			}
-			for (String pricePlanUri : getPricePlanUris(offeringUri, model)) {
-				offering.addPricePlanUri(pricePlanUri);
-			}
-			offering.setTitle(getOfferingTitle(offeringUri, model));
-			offering.setStoreUrl(storeUrl);
 			
-			if (offering.getPricePlanUris().size() <= 0)
-				System.out.println("Offering has no pricePlan: " + offeringUri);
-			else if (offering.getServiceUris().size() <= 0)
-				System.out.println("Offering has no service: " + offeringUri);
-			else
-				offerings.add(offering);
+			Offering offering = new Offering();
+			offering.setDisplayName(getOfferingTitle(model, offeringUri));
+			// Maybe the name should depends on the creator and the version...
+			offering.setName(NameGenerator.getURLName(offering.getDisplayName()));
+			offering.setUri(offeringUri);
+			offering.setDescribedIn(offeringDescription);
+			offering.setVersion(getOfferingVersion(model, offeringUri));
+			offering.setDescription(getOfferingDescription(model, offeringUri));
+			offering.setImageUrl(getOfferingImageUrl(model, offeringUri));
+			
+			offerings.add(offering);
 		}
 		return offerings;
-	}
-
-	private static List<String> getOfferingUris(Model model) {
-		String query = RdfHelper.queryPrefixes + "SELECT ?x WHERE { ?x a usdl:ServiceOffering . } ";
-		return RdfHelper.queryUris(query, "x", model);
-	}
-
-	private static List<String> getServiceUris(String offeringUri, Model model) {
-		String query = RdfHelper.queryPrefixes + "SELECT ?x WHERE { <" + offeringUri + "> usdl:includes ?x . } ";
-		return RdfHelper.queryUris(query, "x", model);
-	}
-
-	private static List<String> getPricePlanUris(String offeringUri, Model model) {
-		String query = RdfHelper.queryPrefixes + "SELECT ?x WHERE { <" + offeringUri + "> usdl:hasPricePlan ?x . } ";
-		return RdfHelper.queryUris(query, "x", model);
-	}
-	
-	private static String getOfferingTitle(String offeringUri, Model model) {
-		String query = RdfHelper.queryPrefixes + "SELECT ?x WHERE { <" + offeringUri + "> dcterms:title ?x . } ";
-		return RdfHelper.queryLiteral(query, "x", model);
 	}
 }

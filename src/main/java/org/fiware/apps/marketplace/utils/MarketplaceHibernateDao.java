@@ -32,15 +32,16 @@ package org.fiware.apps.marketplace.utils;
  * #L%
  */
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 
-
-public class MarketplaceHibernateDao extends HibernateDaoSupport{
+public class MarketplaceHibernateDao {
 	
-	@Autowired
-    public void anyMethodName(SessionFactory sessionFactory) {
-        setSessionFactory(sessionFactory);
-    }
+	@Autowired private SessionFactory sessionFactory;
+	
+	protected Session getSession() {
+		return this.sessionFactory.getCurrentSession();
+	}
+	
 }

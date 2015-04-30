@@ -44,23 +44,23 @@ public class SearchResultEntry {
 	
 	private List<SearchResultEntryMatch> matches = new ArrayList<SearchResultEntryMatch>();	
 
-	private Service service;
+	private Description service;
 	private Store store;
 
 	public SearchResultEntry (){
 	}
 	
-	public SearchResultEntry (Service s){
+	public SearchResultEntry (Description s){
 		store = s.getStore();
 		service = s;
 	}
 	
 	@XmlElement
-	public Service getService() {
+	public Description getService() {
 		return service;
 	}
 
-	public void setService(Service service) {
+	public void setService(Description service) {
 		this.service = service;
 	}
 

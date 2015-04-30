@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.bo;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,16 +35,37 @@ package org.fiware.apps.marketplace.bo;
 
 import java.util.List;
 
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
 
 public interface UserBo {
+
+	// Save, update, delete
+	public void save(User user) throws NotAuthorizedException, 
+			ValidationException;
+	public void update(String userName, User updatedUser) throws NotAuthorizedException,
+			ValidationException, UserNotFoundException;
+	public void delete(String userName) throws NotAuthorizedException,
+			UserNotFoundException;
 	
-	void save(User user);
-	void update(User user);
-	void delete(User luser);
-	User findByName(String username) throws UserNotFoundException;
-	List<User> getUsersPage(int offset, int max);
-	List<User> getAllUsers();
+	// Find by name or mail
+	public User findByName(String userName) throws NotAuthorizedException, 
+			UserNotFoundException;
+	public User findByEmail(String email) throws NotAuthorizedException,
+			UserNotFoundException;
+
+	// Get all or a sublist
+	public List<User> getUsersPage(int offset, int max) 
+			throws NotAuthorizedException;
+	public List<User> getAllUsers() 
+			throws NotAuthorizedException;
+
+	// Get logged user
+	public User getCurrentUser() throws UserNotFoundException;
 	
+	// Validation
+	public boolean checkCurrentUserPassword(String password) throws UserNotFoundException;
+
 }

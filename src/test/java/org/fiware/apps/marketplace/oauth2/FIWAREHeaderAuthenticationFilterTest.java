@@ -59,7 +59,9 @@ public class FIWAREHeaderAuthenticationFilterTest {
 			new FIWAREHeaderAuthenticationFilter(BASE_URL, HEADER_NAME);
 
 	public void testAttemptAuthentication(List<GrantedAuthority> roles)  {
+		
 		String authToken = "authTokenSimulation";
+		String authHeader = "bearer " + authToken;
 
 		// Profile
 		FIWAREProfile profile = new FIWAREProfile();
@@ -78,7 +80,7 @@ public class FIWAREHeaderAuthenticationFilterTest {
 
 		// Set the HTTPRequest
 		HttpServletRequest request = mock(HttpServletRequest.class);
-		when(request.getHeader(HEADER_NAME)).thenReturn(authToken);
+		when(request.getHeader(HEADER_NAME)).thenReturn(authHeader);
 
 		// Call the method
 		try {
@@ -89,7 +91,7 @@ public class FIWAREHeaderAuthenticationFilterTest {
 			ClientAuthenticationToken castedAuth = (ClientAuthenticationToken) auth;
 			assertThat(castedAuth.getUserProfile()).isEqualTo(profile);
 		} catch (Exception ex) {
-			fail("Exception " + ex + " not expected");
+			fail("Exception not expected", ex);
 		}
 	}
 
@@ -137,9 +139,6 @@ public class FIWAREHeaderAuthenticationFilterTest {
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected");
 		}
-		
-		
-		
 	}
 
 }

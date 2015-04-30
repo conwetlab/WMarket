@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.model;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,6 +48,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
@@ -60,19 +61,24 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 
 @Entity
-@Table(name = "Stores")
+@Table(name = "stores")
 @XmlRootElement(name = "store")
 @IgnoreMediaTypes("application/*+json")
 public class Store {
 	
 	private Integer id;
 	private String url;
+	private String displayName;
 	private String name;
-	private String description;
+	private String comment;
 	private Date registrationDate;
-	private List <Service> services;
+	private List<Description> descriptions;
 	private User lasteditor;	
 	private User creator;
+	
+	// Image
+	private String imagePath;
+	private String imageBase64;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -97,6 +103,17 @@ public class Store {
 		this.name = name;
 	}
 	
+	@XmlID
+	@XmlElement 
+	@Column(name = "display_name", unique = true, nullable = false)
+	public String getDisplayName() {
+		return displayName;
+	}
+	
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	
 	@XmlElement
 	@Column(name = "url", unique = true, nullable = false)
 	public String getUrl() {
@@ -108,13 +125,13 @@ public class Store {
 	}
 	
 	@XmlElement
-	@Column(name = "description")
-	public String getDescription() {
-		return description;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 	
-	public void setDescription(String description) {
-		this.description = description;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	@XmlElement
@@ -132,7 +149,7 @@ public class Store {
 	@XmlElement
 	@XmlJavaTypeAdapter(UserXMLAdapter.class)
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "last_editor", nullable=false)
+	@JoinColumn(name = "last_editor", nullable = false)
 	public User getLasteditor() {
 		return lasteditor;
 	}
@@ -151,14 +168,68 @@ public class Store {
 		this.registrationDate = registrationDate;
 	}
 	
-	@XmlTransient
-	@OneToMany(mappedBy="store",  cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	public List<Service> getServices() {
-		return services;
-	}
-	
-	public void setServices(List<Service> services) {
-		this.services = services;
+	@XmlElement
+	@Transient
+	public String getImagePath() {
+		return imagePath;
 	}
 
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+
+	// The image in B64 won't be stored in the database
+	// StoreBo will transform the b64 into bytes and will store the image in the disk
+	// Only PNG accepted
+	@XmlElement
+	@Transient
+	public String getImageBase64() {
+		return imageBase64;
+	}
+
+	public void setImageBase64(String imageBase64) {
+		this.imageBase64 = imageBase64;
+	}
+
+	@XmlTransient
+	@OneToMany(mappedBy="store", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	public List<Description> getDescriptions() {
+		return descriptions;
+	}
+	
+	public void setDescriptions(List<Description> offeringsDescriptions) {
+		this.descriptions = offeringsDescriptions;
+	}
+	
+	public void addDescription(Description description) {
+		this.descriptions.add(description);
+	}
+	
+	public void removeDescription(Description description) {
+		this.descriptions.remove(description);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		
+		if (obj instanceof Store) {
+			Store other = (Store) obj;
+			
+			if (id == other.id || name.equals(other.name)) {
+				return true;
+			}			
+		}
+	
+		return false;
+	}
+	
+	
 }

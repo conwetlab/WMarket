@@ -1,331 +1,489 @@
-Marketplace-RI
-==============
-
-Reference implementation of the Marketplace Generic Enabler
-
-
-1) Install MySQL and create a database "marketplace" for user root. Alternatively you can change the properties\database.properties file
-2) Update properties\marketplace.properties according to your environment
-3) Run the database\ddl_mysql5.sql script
-4) For development in Eclipse use " mvn eclipse:eclipse -Dwtpversion=2.0 "
-
-
-Basic Operations for Browsing:
-
-User: 		demo1234
-Password: 	demo1234
-
-All stores: 					[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/stores/
-Specific store: 				[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/[StoreName]
-All services for a given store:	[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offerings/
-Specific Offering:				[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/[StoreName]/offering/[OfferingName]
-Fulltext Search: 				[GET] http://[SYSTEM:PORT]/FiwareMarketplace/v1/search/offerings/fulltext/[SearchString]
- 
-
-CRUD Operations
-
-User: 		demo1234
-Password: 	demo1234
-
-____________________________________________________________
-### Save User
- 
-Save User Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/userManagement/user
-Header:
-{Accept-Encoding=[gzip, deflate]}
-Body:
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><user username="demoCompany"><company>demoCompany</company><email>demo1213@sap.com</email><password>demoCompany</password></user>
-Save UserResponse:
-
-
-Response Status:
-201
-____________________________________________________________
-
-
-### Find User
-
-Find User Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/userManagement/user/demoCompany
-Header:
-{Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
-Body:
-null
-Find UserResponse:
-
-
-Response Status:
-200
-____________________________________________________________
-
-
-### Update User
-
-Update User Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/userManagement/user/demoCompany
-Header:
-{Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
-Body:
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><user username="demoCompany"><company>demoCompany2</company><email>demo1213@sap.com</email><password>demoCompany</password><registrationDate>2012-06-28T14:29:44+02:00</registrationDate></user>
-Update UserResponse:
-
-
-Response Status:
-200
-____________________________________________________________
-
-### Delete User
-
-Delete User Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/userManagement/user/demoCompany
-Header:
-{Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
-Body:
-null
-Delete UserResponse:
-
-Response Status:
-200
-________________________________________________________________________________________________________________________
-________________________________________________________________________________________________________________________
-
-
-
-### Save Store
-
-
-Save Store Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/store
-Header:
-{Accept-Encoding=[gzip, deflate]}
-Body:
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><resource name="testName12356"><url>http://www.test1235.de</url></resource>
-Save StoreResponse:
-
-
-Response Status:
-201
-____________________________________________________________
-
-
-### Find Store
-
-
-Find Store Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/store/testName12356
-Header:
-{Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
-Body:
-null
-Find StoreResponse:
-
-
-Response Status:
-200
-____________________________________________________________
-
-
-### Update Store
-
-
-Update Store Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/store/testName12356
-Header:
-{Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
-Body:
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><resource name="testName12356"><creator username="demo"><company>SAP AG</company><email>demo123@sap.com</email><password>demo</password><registrationDate>2012-06-13T16:43:56+02:00</registrationDate></creator><lasteditor username="demo"><company>SAP AG</company><email>demo123@sap.com</email><password>demo</password><registrationDate>2012-06-13T16:43:56+02:00</registrationDate></lasteditor><registrationDate>2012-06-28T14:41:23+02:00</registrationDate><url>http://www.xxx.de</url></resource>
-Update StoreResponse:
-
-
-Response Status:
-200
-
-____________________________________________________________
-
-
-Delete Store
-
-
-### Delete Store Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/registration/store/testName12356
-Header:
-{Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
-Body:
-null
-Delete StoreResponse:
-
-
-Response Status:
-200
-________________________________________________________________________________________________________________________
-________________________________________________________________________________________________________________________
-### Save Service
-
-
-Save Service Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offering
-Header:
-{Accept-Encoding=[gzip, deflate]}
-Body:
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><resource name="myService"><url>http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/WarrantyManagementSolution_Master.rdf</url></resource>
-Save ServiceResponse:
-
-
-Response Status:
-201
-____________________________________________________________
-
-
-### Find Service
-
-
-Find Service Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offering/myService
-Header:
-{Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
-Body:
-null
-Find ServiceResponse:
-
-
-Response Status:
-200
-____________________________________________________________
-
-
-### Update Service
-
-
-Update Service Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offering/myService
-Header:
-{Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
-Body:
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><resource name="myService2"><creator username="demo"><company>SAP AG</company><email>demo123@sap.com</email><password>demo</password><registrationDate>2012-06-13T16:43:56+02:00</registrationDate></creator><id>14</id><lasteditor username="demo"><company>SAP AG</company><email>demo123@sap.com</email><password>demo</password><registrationDate>2012-06-13T16:43:56+02:00</registrationDate></lasteditor><registrationDate>2012-06-28T14:47:06+02:00</registrationDate><url>http://qkad00202897a.dhcp.qkal.sap.corp:7777/data/rdf/WarrantyManagementSolution_Master.rdf</url></resource>
-Update ServiceResponse:
-
-
-Response Status:
-200
-____________________________________________________________
-
-
-### Delete Service
-
-
-Delete Service Request:
-
-
-Resource URL:
-http://[SYSTEM:PORT]/FiwareMarketplace/v1/offering/store/testStore/offering/myService2
-Header:
-{Accept-Encoding=[gzip, deflate], Accept=[application/xml]}
-Body:
-null
-Delete ServiceResponse:
-
-
-Response Status:
-200
-____________________________________________________________
-
-____________________________________________________________
-
-## Rating System Operations
-
-### CREATE Operations:
-
-Create a new Rating Object Category:  
-curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA
-Create a new Rating Object:  
-curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
-Create a new Rating Category:  
-curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
-Create a new Rating:  
-curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/
-Create Rating for Category:  
-curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39/category/Quality/stars/4
-Create Textual Review:  
-curl.exe url -v -H "Content-Type: application/xml" -X PUT -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39/textualReview/Very Good Service
-
-____________________________________________________________
-
-### GET Operations:
-
-
-Get a Rating:  
-curl.exe url -v -H "Content-Type: application/xml" -X GET -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39
-
-Get a Category:  
-curl.exe url -v -H "Content-Type: application/xml" -X GET -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
-
-Get a new Rating Object:  
-curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
-
-Get a new Rating Object Category:  
-curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA
-
-All Ratings for an Object:  
-curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/ratings
-
-
-All Objects for an Object Category:  
-curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/objects
-
-All Categories for an Object Category:  
-curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/categories
-
-
-All available Object Categories:  
-curl.exe url -v -H "Content-Type: application/xml" -X GET -u  "username:password"  http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategories
-
-____________________________________________________________
-
-### DELETE Operations:
-
-Delete a Rating:  
-curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA/rating/39
-
-Delete a Category:  
-curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/category/Quality
-
-Delete a new Rating Object:  
-curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA/object/objectA
-
-Delete a new Rating Object Category:   
-curl.exe url -v -H "Content-Type: application/xml" -X DELETE -u  "username:password" http://[SYSTEM:PORT]/FiwareMarketplace/v1/rating/objectCategory/newCatA
-
+WMarket
+=======
+WMarket is the reference implementation of the FIWARE Marketplace Generic Enabler. The Marketplace provides functionality necessary for bringing together offering and demand for making business. These functions include basic services for registering business entities, publishing and retrieving offerings and demands, search and discover offerings according to specific consumer requirements as well as lateral functions like review, rating and recommendation. Besides the core functions, the Marketplace may offer value because of its "knowledge" about the market in terms of market intelligence services, pricing support, advertising, information subscription and more.
+
+Prerequisites
+-------------
+For running WMarket in your system, you need to install the following requisites. You have to install them according to your system:
+* Tomcat 8
+* MySQL
+* Java 8
+* Maven
+
+Installation
+------------
+You can install WMarket by following these steps:
+
+1. Install the prerequisites
+2. Create a database for the MarketPlace. By default, WMarket uses the database `marketplace`. 
+3. Update `src/main/resources/properties/database.properties` to set the preferences of your database.
+4. Update `src/main/resources/properties/marketplace.properties` according to your preferences.
+5. Configure the security
+ 1. If you want to use the FIWARE IdM to manage the users, ensure that the file `securityOAuth2.xml` is imported in the beans location file (`src/main/resources/spring/config/BeansLocation.xml`) and modify `src/main/resources/properties/marketplace.properties` to set your OAuth2 configuration
+ 2. If you want to use local authorization, ensure that the file `security.xml` is imported in the beans location file (`src/main/resources/spring/config/BeansLocation.xml`).
+6. Run `mvn package` to generate the WAR file.
+7. Copy the generated WAR file into the `webapps` folder of your Tomcat instance.
+
+API Reference
+-------------
+Here you have a basic reference of all the status codes that you can get when you are dealing with WMarket API:
+
+| HTTP Code | Type | Description |
+|-----------|------|------------ |
+| 200 | OK   | Your request has been properly completed |
+| 201 | Created | Your resource has been created. The `Location` header will contain the final URL of the new created resource |
+| 204 | Deleted | Your resource has been properly deleted |
+| 400 | Bad Request | The content of your request is not correct (e.g. there is already a resource with the specified name) |
+| 400 | Validation Error | One or more fields of your content is not valid. The field `field` indicates the first field with a validation error |
+| 403 | Forbidden | You have no rights to perform the query |
+| 500 | Internal server error | There was an internal error in the system so your request cannot be completed |
+
+### Users Management API
+
+#### Create a user
+
+* **Path**: `/api/v2/user`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+  "displayName": "Example Display Name",
+  "email": "example@example.com",
+  "password": "example_complex_password",
+  "company": "Example Company"
+}
+```
+
+#### Update a user
+
+* **Path**: `/api/v2/user/{USER_NAME}`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+  "displayName": "Example Display Name",
+  "email": "example@example.com",
+  "password": "example_complex_password",
+  "company": "Example Company"
+}
+```
+
+#### Delete a user
+
+* **Path**: `/api/v2/user/{USER_NAME}`
+* **Method**: DELETE
+
+#### Get a user
+
+* **Path**: `/api/v2/user/{USER_NAME}`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Content**:
+```
+{
+  "userName": "example-display-name",
+  "displayName": "Example Display Name",
+  "registrationDate": 1,
+  "company": "Example Company"
+}
+```
+
+#### List users
+
+* **Path**: `/api/v2/user`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+  {
+    "userName": "example-display-name",
+    "displayName": "Example Display Name",
+    "registrationDate": 1,
+    "company": "Example Company"
+  },
+  {
+    "userName": "example-display-name-2",
+    "displayName": "Example Display Name 2",
+    "registrationDate": 2,
+    "company": "Example Company 2"
+  },
+  [...]
+}
+```
+
+### Stores Management API
+
+#### Create a store
+
+* **Path**: `/api/v2/store`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+  "displayName": "Example Store",
+  "url": "https://store.lab.fiware.org",
+  "comment": "Example comment",
+  "imageBase64": "PNG_IMAGE_IN_BASE64"
+}
+```
+
+#### Update a store
+
+* **Path**: `/api/v2/store/{STORE_NAME}`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+  "displayName": "Example Store",
+  "url": "https://store.lab.fiware.org",
+  "comment": "Example comment",
+  "imageBase64": "PNG_IMAGE_IN_BASE64"
+}
+```
+
+#### Delete a store
+
+* **Path**: `/api/v2/store/{STORE_NAME}`
+* **Method**: DELETE
+
+#### Get a store
+
+* **Path**: `/api/v2/store/{STORE_NAME}`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Content**:
+```
+{
+  "name": "example-store",
+  "displayName": "Example Store",
+  "url": "https://store.lab.fiware.org",
+  "registrationDate": 1,
+  "comment": "Example comment",
+  "creator": "user-1",
+  "lasteditor": "user-1",
+  "imagePath": "media/store/example-store.png"
+}
+```
+
+#### List stores
+
+* **Path**: `/api/v2/store`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "name": "example-store",
+  "displayName": "Example Store",
+  "url": "https://store.lab.fiware.org",
+  "registrationDate": 1,
+  "comment": "Example comment",
+  "creator": "user-1",
+  "lasteditor": "user-1",
+  "imagePath": "media/store/example-store.png"
+ },
+ {
+  "name": "example-store-2",
+  "displayName": "Example Store 2",
+  "url": "https://store2.lab.fiware.org",
+  "registrationDate": 2,
+  "comment": "Example comment 2",
+  "creator": "user-2",
+  "lasteditor": "user-2",
+  "imagePath": "media/store/example-store.png"
+ },
+ [...]
+}
+```
+
+### Descriptions Management API
+
+Descriptions is the way of creating offerings in a Store. A description is just an URL pointing to an Linked USDL file that contains all the offerings that you want to include in the Store. [You can check more about Linked USDL by clicking here](http://linked-usdl.org/).
+
+#### Create a description
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+  "displayName": "Example Description",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+}
+```
+
+#### Update a description
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+  "displayName": "Example Description",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+}
+```
+
+#### Delete a description
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
+* **Method**: DELETE
+
+#### Get a description
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Content**:
+```
+{
+  "name": "example-description",
+  "displayName": "Example Description",
+  "store": "example-store",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+  "registrationDate": 1,
+  "creator": "user-1",
+  "lasteditor": "user-1",
+  "offerings": [
+    {
+     "name": "example-offering"
+     "displayName": "Example Offering",
+     "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+     "description": "Example offering description",
+     "version": "1.0",
+     "describedIn": {
+       "name": "example-description",
+       "store": "example-store"
+     },
+     "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
+    },
+    [...]
+  ]
+}
+```
+
+#### List descriptions in a Store
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "name": "example-description",
+  "displayName": "Example Description",
+  "store": "example-store",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+  "registrationDate": 1,
+  "creator": "user-1",
+  "lasteditor": "user-1",
+  "offerings": [...]
+ },
+ {
+  "name": "example-description-2",
+  "displayName": "Example Description 2",
+  "store": "example-store",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+  "registrationDate": 2,
+  "creator": "user-2",
+  "lasteditor": "user-2",
+  "offerings": [...]
+ }
+ [...]
+}
+```
+
+#### List all descriptions
+
+* **Path**: `/api/v2/descriptions`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "name": "example-description",
+  "displayName": "Example Description",
+  "store": "example-store",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+  "registrationDate": 1,
+  "creator": "user-1",
+  "lasteditor": "user-1",
+  "offerings": [...]
+ },
+ {
+  "name": "example-description-2",
+  "displayName": "Example Description 2",
+  "store": "example-store-1",
+  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+  "registrationDate": 2,
+  "creator": "user-2",
+  "lasteditor": "user-2",
+  "offerings": [...]
+ }
+ [...]
+}
+```
+
+### Offerings API
+
+Each descriptions contains one or more offerings, so you are provided APIs to retrieve the offerings contained in a description.
+
+#### Get an offering
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Content**:
+```
+{
+  "name": "example-offering"
+  "displayName": "Example Offering",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+  "description": "Example offering description",
+  "version": "1.0",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
+}
+```
+
+#### List offerings in a description
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "name": "example-offering"
+  "displayName": "Example Offering",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+  "description": "Example offering description",
+  "version": "1.0",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
+ },
+ {
+  "name": "example-offering-2"
+  "displayName": "Example Offering 2",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
+  "description": "Another Example offering description",
+  "version": "1.0",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png"
+ }
+ [...]
+}
+```
+
+#### List offerings in a Store
+
+* **Path**: `/api/v2/store/{STORE_NAME}/offering`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "name": "example-offering"
+  "displayName": "Example Offering",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+  "description": "Example offering description",
+  "version": "1.0",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
+ },
+ {
+  "name": "example-offering-2"
+  "displayName": "Example Offering 2",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
+  "description": "Another Example offering description",
+  "version": "1.0",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png"
+ }
+ [...]
+}
+```
+
+#### List all offerings
+
+* **Path**: `/api/v2/offerings`
+* **Method**: GET
+* **Content-Type**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+* **Content**:
+```
+[ 
+ {
+  "name": "example-offering"
+  "displayName": "Example Offering",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+  "description": "Example offering description",
+  "version": "1.0",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
+ },
+ {
+  "name": "example-offering-2"
+  "displayName": "Example Offering 2",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
+  "description": "Another Example offering description",
+  "version": "1.0",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png"
+ }
+ [...]
+}
+```

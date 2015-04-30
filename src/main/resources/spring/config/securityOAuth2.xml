@@ -15,16 +15,20 @@
 	<security:http auto-config="true" entry-point-ref="fiwareEntryPoint" use-expressions="true" disable-url-rewriting="true">
 	    <security:custom-filter before="CAS_FILTER" ref="apiHeaderFilter" />
 	    <security:custom-filter after="CAS_FILTER" ref="clientFilter" />
+	    
+	    <!-- Log the user out -->
+	    <security:logout logout-url="/logout" logout-success-url="/login?out=1" delete-cookies="JSESSIONID" invalidate-session="true" />
                         
         <!-- Default URLs that are visible for everyone -->
         <security:intercept-url pattern="/vocabulary/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/demoservices/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
+        <security:intercept-url pattern="/media/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
 		
 		<!-- When the IdM is working, users cannot be created or modified -->
-		<security:intercept-url pattern="/api/user/**" method="POST" access="denyAll" />
-		<security:intercept-url pattern="/api/user/**" method="PUT" access="denyAll" />
-		<security:intercept-url pattern="/api/user/**" method="DELETE" access="denyAll" />
-		<security:intercept-url pattern="/api/user/**" method="GET" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/api/v2/user/**" method="POST" access="denyAll" />
+		<security:intercept-url pattern="/api/v2/user/**" method="PUT" access="denyAll" />
+		<security:intercept-url pattern="/api/v2/user/**" method="DELETE" access="denyAll" />
+		<security:intercept-url pattern="/api/v2/user/**" method="GET" access="hasRole('ROLE_USER')" />
 		
 		<!-- Security rule for the rest of URLs -->
     	<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
@@ -38,12 +42,13 @@
 
 	<!-- clients definition -->
 	<bean id="fiwareClient" class="org.fiware.apps.marketplace.oauth2.FIWAREClient">
-		<property name="key" value="KEY" />
-		<property name="secret" value="SECRET" />
+		<property name="serverURL" value="${oauth2.server}" />
+		<property name="key" value="${oauth2.key}" />
+		<property name="secret" value="${oauth2.secret}" />
 	</bean>
 
 	<bean id="clients" class="org.pac4j.core.client.Clients">
-		<property name="callbackUrl" value="http://localhost:8080/FiwareMarketplace/callback" />
+		<property name="callbackUrl" value="${oauth2.callbackURL}" />
 		<property name="clients">
 			<list>
 				<ref bean="fiwareClient" />
@@ -63,7 +68,7 @@
 	<bean id="apiHeaderFilter"
 		class="org.fiware.apps.marketplace.oauth2.FIWAREHeaderAuthenticationFilter">
 		<constructor-arg name="baseUrl" value="/api/" />
-		<constructor-arg name="headerName" value="X-Auth-Token" />
+		<constructor-arg name="headerName" value="Authorization" />
 		<property name="client" ref="fiwareClient" />
 		<property name="authenticationManager" ref="authenticationManager" />
 	</bean>

@@ -31,47 +31,172 @@ package org.fiware.apps.marketplace.bo.impl;
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 
+import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.dao.OfferingDao;
+import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.security.auth.OfferingAuth;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("offeringBo")
 public class OfferingBoImpl implements OfferingBo {
+	
+	@Autowired private OfferingAuth offeringAuth;
+	@Autowired private OfferingDao offeringDao;
+	@Autowired private StoreBo storeBo;
+	@Autowired private DescriptionBo descriptionBo;
 
-	// TODO Store data in a database or similar
-
-	private HashMap<String, Offering> offeringMap;
-
-	public OfferingBoImpl() {
-		offeringMap = new HashMap<String, Offering>();
+	@Override
+	@Transactional(readOnly = false)
+	public void save(Offering offering) throws NotAuthorizedException {
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canCreate(offering)) {
+			throw new NotAuthorizedException("create offering");
+		}
+		
+		offeringDao.save(offering);
 	}
 
 	@Override
-	public void save(Offering offering) {
-		if (!offeringMap.containsKey(offering.getOfferingUri()))
-			offeringMap.put(offering.getOfferingUri(), offering);
+	@Transactional(readOnly = false)
+	public void update(Offering offering) throws NotAuthorizedException {
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canUpdate(offering)) {
+			throw new NotAuthorizedException("update offering");
+		}		offeringDao.update(offering);
 	}
 
 	@Override
-	public void delete(Offering offering) {
-		if (offeringMap.containsKey(offering.getOfferingUri()))
-			offeringMap.remove(offering.getOfferingUri());
+	@Transactional(readOnly = false)
+	public void delete(Offering offering) throws NotAuthorizedException {
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canDelete(offering)) {
+			throw new NotAuthorizedException("delete offering");
+		}
+		offeringDao.delete(offering);
 	}
 
 	@Override
-	public Offering getByUri(String uri) {
-		if (offeringMap.containsKey(uri))
-			return offeringMap.get(uri);
-		else
-			return null;
+	@Transactional
+	public Offering findByUri(String uri) throws NotAuthorizedException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public List<Offering> getAllOfferings() {
-		return new ArrayList<Offering>(offeringMap.values());
+	@Transactional
+	public Offering findOfferingByNameStoreAndDescription(String storeName, 
+			String descriptionName, String offeringName)
+			throws NotAuthorizedException, OfferingNotFoundException, 
+			StoreNotFoundException, DescriptionNotFoundException {
+		
+		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canGet(offering)) {
+			throw new NotAuthorizedException("find offering");
+		}
+		
+		return offering;
 	}
+
+	@Override
+	@Transactional
+	public List<Offering> getAllOfferings() throws NotAuthorizedException {
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList()) {
+			throw new NotAuthorizedException("list offerings");
+		}
+		
+		return offeringDao.getAllOfferings();
+	}
+
+	@Override
+	@Transactional
+	public List<Offering> getOfferingsPage(int offset, int max) 
+			throws NotAuthorizedException {
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList()) {
+			throw new NotAuthorizedException("list offerings");
+		}
+		
+		return offeringDao.getOfferingsPage(offset, max);
+	}
+
+	@Override
+	@Transactional
+	public List<Offering> getAllStoreOfferings(String storeName) 
+			throws StoreNotFoundException, NotAuthorizedException {
+		
+		Store store = storeBo.findByName(storeName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList(store)) {
+			throw new NotAuthorizedException("list offerings in store " + store.getName());
+		}
+		
+		return offeringDao.getAllStoreOfferings(storeName);
+	}
+
+	@Override
+	@Transactional
+	public List<Offering> getStoreOfferingsPage(String storeName, int offset,
+			int max) throws StoreNotFoundException, NotAuthorizedException {
+		
+		Store store = storeBo.findByName(storeName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList(store)) {
+			throw new NotAuthorizedException("list offerings in store " + store.getName());
+		}
+		
+		return offeringDao.getStoreOfferingsPage(storeName, offset, max);
+	}
+
+	@Override
+	@Transactional
+	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
+			throws StoreNotFoundException, DescriptionNotFoundException, NotAuthorizedException {
+		
+		Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList(description)) {
+			throw new NotAuthorizedException("list offerings in description " + description.getName());
+		}
+		
+		return offeringDao.getAllDescriptionOfferings(storeName, descriptionName);
+	}
+
+	@Override
+	@Transactional
+	public List<Offering> getDescriptionOfferingsPage(String storeName, 
+			String descriptionName, int offset, int max) throws 
+			StoreNotFoundException, DescriptionNotFoundException, 
+			NotAuthorizedException {
+		
+		Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canList(description)) {
+			throw new NotAuthorizedException("list offerings in description " + description.getName());
+		}
+		
+		return offeringDao.getDescriptionOfferingsPage(storeName, descriptionName, offset, max);
+	}
+	
 }

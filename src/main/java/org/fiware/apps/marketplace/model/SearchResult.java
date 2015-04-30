@@ -56,7 +56,7 @@ public class SearchResult {
 		this.searchresultentries = searchresult;
 	}
 	
-	public void addSearchResult(Service s, SearchResultEntryMatch match){
+	public void addSearchResult(Description s, SearchResultEntryMatch match){
 		boolean found = false;
 		for(SearchResultEntry sre : searchresultentries){
 			if(sre.getService().getId()==(s.getId())){

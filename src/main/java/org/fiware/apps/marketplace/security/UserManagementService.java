@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.security;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,34 +33,33 @@ package org.fiware.apps.marketplace.security;
  * #L%
  */
 
-import org.fiware.apps.marketplace.bo.UserBo;
+import org.apache.commons.validator.GenericValidator;
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("userManagementService")
-public class UserManagementService implements UserDetailsService{
+@Transactional
+public class UserManagementService implements UserDetailsService {
 
-	ApplicationContext appContext = ApplicationContextProvider.getApplicationContext();	
-	UserBo userBo = (UserBo) appContext.getBean("userBo");
-
-	@Autowired 
-	private Assembler assembler;
+	@Autowired private UserDao userDao;
+	@Autowired private Assembler assembler;
 
 	@Override
-    public UserDetails loadUserByUsername(String username)
+    public UserDetails loadUserByUsername(String userName)
     	     throws UsernameNotFoundException, DataAccessException {
-		
+				
 		try {
-	        User userEntity = userBo.findByName(username);
-	        return assembler.buildUserFromUserEntity(userEntity);
+			boolean isMail = GenericValidator.isEmail(userName);	
+			User user = isMail ? userDao.findByEmail(userName) : userDao.findByName(userName);	
+	        return assembler.buildUserFromUserEntity(user);
 		} catch (UserNotFoundException ex) {
         	throw new UsernameNotFoundException("user not found");
 		}

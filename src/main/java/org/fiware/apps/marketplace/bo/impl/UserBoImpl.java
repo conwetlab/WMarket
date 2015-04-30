@@ -33,57 +33,203 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
+import java.util.Date;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.UserDao;
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.validators.UserValidator;
+import org.fiware.apps.marketplace.security.auth.UserAuth;
+import org.fiware.apps.marketplace.utils.NameGenerator;
+import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("userBo")
 public class UserBoImpl implements UserBo {
 
-	@Autowired
-	private UserDao userDao;
-	
-	public void setStoreDao (UserDao localuser){
-		this.userDao = localuser;
-	}
-	
+	@Autowired private UserDao userDao;
+	@Autowired private UserAuth userAuth;
+	@Autowired private UserValidator userValidator;
+	// Encoder must be the same in all the platform: use the bean
+	@Autowired private PasswordEncoder encoder;
+
+	private static final Logger logger = LoggerFactory.getLogger(UserBoImpl.class);
+
 	@Override
 	@Transactional(readOnly=false)
-	public void save(User localuser) {
-		userDao.save(localuser);
+	public void save(User user) throws NotAuthorizedException, ValidationException{
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canCreate(user)) {
+			throw new NotAuthorizedException("create user");
+		}
+		
+		// Set user name based on the display name. It's possible to have to users with
+		// the same display name, but it's necessary to set a different user name for
+		// each one.
+		String basicUserName = NameGenerator.getURLName(user.getDisplayName());
+		String finalUserName = basicUserName;
+		boolean available = userDao.isUserNameAvailable(basicUserName);
+		int counter = 1;
+		
+		while(!available) {
+			finalUserName = basicUserName + "-" + counter++;
+			available = userDao.isUserNameAvailable(finalUserName);
+		}
+		
+		user.setUserName(finalUserName);
+		
+		// Exception is risen if the user is not valid
+		userValidator.validateNewUser(user);
+		
+		// Encode the password
+		user.setPassword(encoder.encode(user.getPassword()));
+		
+		// Set the registration date
+		user.setRegistrationDate(new Date());
+		
+		// Save the new user
+		userDao.save(user);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(User localuser) {
-		userDao.update(localuser);
+	public void update(String userName, User updatedUser) 
+			throws NotAuthorizedException, ValidationException, UserNotFoundException {
+		
+		User userToBeUpdated = userDao.findByName(userName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canUpdate(userToBeUpdated)) {
+			throw new NotAuthorizedException("update user");
+		}
+		
+		// Exception is risen if the user is not valid
+		userValidator.validateUpdatedUser(userToBeUpdated, updatedUser);		
+
+		// At this moment, user name cannot be changed to avoid error with sessions
+		// For this reason this field is ignored
+		// userToBeUpdated.setUserName(user.getUserName());
+		// if (updatedUser.getUserName() != null && !updatedUser.getUserName().equals(userToBeUpdated.getUserName())) {
+		// 	throw new ValidationException("userName", "userName cannot be changed");
+		// }
+		
+		if (updatedUser.getCompany() != null) {
+			userToBeUpdated.setCompany(updatedUser.getCompany());
+		}
+		
+		if (updatedUser.getPassword() != null) {
+			// Encode the password
+			userToBeUpdated.setPassword(encoder.encode(updatedUser.getPassword()));
+		}
+		
+		if (updatedUser.getEmail() != null) {
+			userToBeUpdated.setEmail(updatedUser.getEmail());
+		}
+		
+		if (updatedUser.getDisplayName() != null) {
+			userToBeUpdated.setDisplayName(updatedUser.getDisplayName());
+		}
+
+		userDao.update(userToBeUpdated);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(User localuser) {
-		userDao.delete(localuser);
+	public void delete(String userName) throws NotAuthorizedException, UserNotFoundException {
+		
+		User user = userDao.findByName(userName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canDelete(user)) {
+			throw new NotAuthorizedException("delete user");
+		}		
+		userDao.delete(user);
 	}
 
 	@Override
-	public User findByName(String username) throws UserNotFoundException {
-		return userDao.findByName(username);
+	@Transactional
+	public User findByName(String userName) throws NotAuthorizedException, 
+			UserNotFoundException {
+		
+		User user = userDao.findByName(userName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canGet(user)) {
+			throw new NotAuthorizedException("find user");
+		}
+		
+		return user;
 	}
 	
 	@Override
-	public List<User> getUsersPage(int offset, int max) {
+	@Transactional
+	public User findByEmail(String email) throws NotAuthorizedException, 
+			UserNotFoundException {
+		
+		User user = userDao.findByEmail(email);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canGet(user)) {
+			throw new NotAuthorizedException("find user");
+		}
+		
+		return user;
+	}
+
+	@Override
+	@Transactional
+	public List<User> getUsersPage(int offset, int max) throws NotAuthorizedException {
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canList()) {
+			throw new NotAuthorizedException("list users");
+		}
+		
 		return userDao.getUsersPage(offset, max);
 	}
 
 	@Override
-	public List<User> getAllUsers() {
+	@Transactional
+	public List<User> getAllUsers() throws NotAuthorizedException {
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canList()) {
+			throw new NotAuthorizedException("list users");
+		}
+		
 		return userDao.getAllUsers();
 	}
 
+	@Override
+	@Transactional
+	public User getCurrentUser() throws UserNotFoundException {
+		String userName;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		// When OAuth2 is being used, we should cast the authentication to read the correct user name
+		if (authentication instanceof ClientAuthenticationToken) {
+			userName = ((ClientAuthenticationToken) authentication).getUserProfile().getId();
+		} else {
+			userName = authentication.getName();
+		}
+
+		logger.info("User: {}", userName);
+		return userDao.findByName(userName);
+	}
+
+	@Override
+	public boolean checkCurrentUserPassword(String password) throws UserNotFoundException{
+		User user = getCurrentUser();
+		return encoder.matches(password, user.getPassword());
+	}
 }

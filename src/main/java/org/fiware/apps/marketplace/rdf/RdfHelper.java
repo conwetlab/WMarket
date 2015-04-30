@@ -5,6 +5,7 @@ package org.fiware.apps.marketplace.rdf;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,8 +38,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -52,78 +56,18 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.FileManager;
 
+@Service("rdfHelper")
 public class RdfHelper {
 
-	public static Model loadModel(String serviceURI) {
-		Model model = ModelFactory.createDefaultModel();
-
-		try {
-			URL url = new URL(serviceURI);
-			InputStream in = url.openStream();
-
-			if (in == null) {
-				throw new IllegalArgumentException("Input not found");
-			}
-
-			// read the RDF/XML file
-			model.read(in, null);
-			// write it to standard out
-			// model.write(System.out);
-			// result = result+ model.toString()
-			in.close();
-
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return model;
-	}
-
-	/**
-	 * Returns the model of the RDF-file located at the given URL or null if
-	 * reading failed.
-	 * 
-	 * @param uri
-	 * @return
-	 */
-	public static Model getModelFromUri(String uri) {
-		InputStream in = null;
-		try {	
-			int posOfHash = uri.lastIndexOf("#");
-			String shortUri = uri;
-			if(posOfHash > 0)
-				shortUri = shortUri.substring(0, posOfHash);
-			
-			Model model = ModelFactory.createDefaultModel();
-
-			// Turtle models don't seem to work...
-			FileManager.get().readModel(model, uri);
-
-			return model;
-		} catch (Exception ex) {
-			System.out.println("RdfHelper - Model could not be read: " + uri);
-			System.out.println(ex.getMessage());
-			return null;
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-			}
-		}
-	}
+	private static final Logger logger = LoggerFactory.getLogger(RdfHelper.class);
 
 	// TODO resolve prefixes reasonably...
 	/**
 	 * Preliminary List of prefixes for queries
 	 */
-	public static final String queryPrefixes = "PREFIX gr: <http://purl.org/goodrelations/v1#> "
+	private static final String QUERY_PREFIXES = "PREFIX gr: <http://purl.org/goodrelations/v1#> "
 			+ "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> "
+			+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
 			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
 			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
 			+ "PREFIX usdl: <http://www.linked-usdl.org/ns/usdl-core#>  "
@@ -137,111 +81,188 @@ public class RdfHelper {
 			+ "PREFIX os: <http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_OperatingSystem_003#> "
 			+ "PREFIX support: <http://appsnserv.testbed.fi-ware.eu/cloudservices/rdf/vocabulary/Vocabulary_Support_003#> ";
 
-	/**
-	 * Returns a list of URIs which are found via the given query.
-	 * 
-	 * @param query
-	 * @param queriedVar
-	 * @param model
-	 * @return List of found URIs or empty list
-	 */
-	public static List<String> queryUris(String query, String queriedVar,
-			Model model) {
-		List<String> uris = new ArrayList<String>();
-		for (QuerySolution solution : RdfHelper.query(query, model)) {
-			Resource res = solution.getResource(queriedVar);
-			if (res != null)
-				uris.add(res.getURI());
+	public static String getQueryPrefixes() {
+		return QUERY_PREFIXES;
+	}
+
+	public Model loadModel(String serviceURI) throws MalformedURLException {
+		Model model = ModelFactory.createDefaultModel();
+
+		URL url = new URL(serviceURI);
+
+		try (InputStream in = url.openStream()) {
+			model.read(in, null);
+		} catch (IOException e) {
+			logger.warn("Unexpected IOException", e);
+			return null;
 		}
-		return uris;
+
+		return model;
 	}
 
 	/**
-	 * Returns the first found URI found via the given query.
+	 * Returns the model of the RDF-file located at the given URL or null if
+	 * reading failed.
 	 * 
-	 * @param query
-	 * @param queriedVar
-	 * @param model
-	 * @return Found URI or null
+	 * @param uri
+	 * @return
 	 */
-	public static String queryUri(String query, String queriedVar, Model model) {
-		List<QuerySolution> solutions = RdfHelper.query(query, model);
-		if (solutions.size() > 0) {
-			Resource resource = solutions.get(0).getResource(queriedVar);
-			if (resource != null)
-				return resource.getURI();
+	public Model getModelFromUri(String uri) {		
+		int posOfHash = uri.lastIndexOf("#");
+		String shortUri = uri;
+
+		if(posOfHash > 0) {
+			shortUri = shortUri.substring(0, posOfHash);	
 		}
-		return null;
+
+		Model model = ModelFactory.createDefaultModel();
+
+		// Turtle models don't seem to work...
+		FileManager.get().readModel(model, uri);
+
+		return model;
 	}
 
 	/**
 	 * Executes the given query and returns the results as list or an empty list
 	 * when failed.
 	 * 
-	 * @param queryString
 	 * @param model
+	 * @param queryString
 	 * @return
 	 */
-	public static List<QuerySolution> query(String queryString, Model model) {
+	public List<QuerySolution> query(Model model, String queryString) {
 		Query query = null;
 		QueryExecution queryExec = null;
 		List<QuerySolution> solutions = new ArrayList<QuerySolution>();
+
 		try {
 			query = QueryFactory.create(queryString);
 			queryExec = QueryExecutionFactory.create(query, model);
 			ResultSet results = queryExec.execSelect();
-			for (; results.hasNext();) {
+
+			while(results.hasNext()) {
 				solutions.add(results.nextSolution());
 			}
 		} catch (Exception ex) {
-			System.out.println("RdfHelper - SPARQL query failed: \n"
-					+ queryString.replace(queryPrefixes, ""));
-			System.out.println(ex.getMessage());
+			logger.warn("SPARQL query failed {}", queryString.replace(QUERY_PREFIXES, ""), ex);
 		} finally {
-			if (queryExec != null)
+			if (queryExec != null) {
 				queryExec.close();
+			}
 		}
 		return solutions;
+	}
+
+	/**
+	 * Returns the literal that is found via the given query,
+	 * @param model 
+	 * @param query
+	 * @param queriedVar
+	 * @return The literal or null
+	 */
+	public String queryLiteral(Model model, String query, String queriedVar) {
+		List<QuerySolution> solutions = this.query(model, query);
+
+		if (solutions.size() > 0) {
+			Literal literal = solutions.get(0).getLiteral(queriedVar);
+
+			if (literal != null) {
+				return literal.getLexicalForm();
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns a list of URIs which are found via the given query.
+	 * 
+	 * @param model
+	 * @param query
+	 * @param queriedVar
+	 * @return List of found URIs or empty list
+	 */
+	public List<String> queryUris(Model model, String query, String queriedVar) {
+
+		List<String> uris = new ArrayList<String>();
+		for (QuerySolution solution : this.query(model, query)) {
+			Resource res = solution.getResource(queriedVar);
+
+			if (res != null) {
+				uris.add(res.getURI());
+			}
+		}
+
+		return uris;
+	}
+
+	/**
+	 * Returns the first found URI found via the given query.
+	 * 
+	 * @param model
+	 * @param query
+	 * @param queriedVar
+	 * @return Found URI or null
+	 */
+	public String queryUri(Model model, String query, String queriedVar) {
+		List<QuerySolution> solutions = this.query(model, query);
+		if (solutions.size() > 0) {
+
+			Resource resource = solutions.get(0).getResource(queriedVar);
+			if (resource != null) {
+				return resource.getURI();
+			}
+		}
+
+		return null;
 	}
 
 	/**
 	 * Returns the URI of the object of the corresponding triple or null if such
 	 * a triple does not exist.
 	 * 
+	 * @param model
 	 * @param subject
 	 * @param predicate
-	 * @param model
 	 * @return URI or null
 	 */
-	public static String getObjectUri(String subject, String predicate,
-			Model model) {
-		String query = queryPrefixes + "SELECT ?x WHERE { <" + subject + "> "
+	public String getObjectUri(Model model, String subject, String predicate) {
+		String query = QUERY_PREFIXES + "SELECT ?x WHERE { <" + subject + "> "
 				+ predicate + " ?x . } ";
-		return queryUri(query, "x", model);
+		logger.info(query);
+		return queryUri(model, query, "x");
 	}
 
-	public static List<String> getObjectUris(String subject, String predicate,
-			Model model) {
-		String query = queryPrefixes + "SELECT ?x WHERE { <" + subject + "> "
+	/**
+	 * Returns the URIs of the object of the corresponding triple or null if such
+	 * a triple does not exist.
+	 * 
+	 * @param model
+	 * @param subject
+	 * @param predicate
+	 * @return URI or null
+	 */
+	public List<String> getObjectUris(Model model, String subject, String predicate) {
+		String query = QUERY_PREFIXES + "SELECT ?x WHERE { <" + subject + "> "
 				+ predicate + " ?x . } ";
-		return queryUris(query, "x", model);
+		System.out.println(query.replace(QUERY_PREFIXES, ""));
+		return queryUris(model, query, "x");
 	}
-	
-	public static String getLiteral(String subject, String predicate, Model model) {
-		String query = queryPrefixes + "SELECT ?x WHERE { <" + subject + "> "
+
+	/**
+	 * Returns the literal of the object of the corresponding triple of null if the
+	 * literal cannot be found
+	 * 
+	 * @param model
+	 * @param subject
+	 * @param predicate
+	 * @return The literal or null
+	 */
+	public String getLiteral(Model model, String subject, String predicate) {
+		String query = QUERY_PREFIXES + "SELECT ?x WHERE { <" + subject + "> "
 				+ predicate + " ?x . } ";
-		return queryLiteral(query, "x", model);
+		return queryLiteral(model, query, "x");
 	}
-	
-	public static String queryLiteral(String query, String queriedVar, Model model) {
-		List<QuerySolution> solutions = RdfHelper.query(query, model);
-		if (solutions.size() > 0) {
-			Literal literal = solutions.get(0).getLiteral(queriedVar);
-			if (literal != null)
-				return literal.getLexicalForm();
-		}
-		return null;
-	}
-	
 
 }

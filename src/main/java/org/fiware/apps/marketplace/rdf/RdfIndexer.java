@@ -5,6 +5,7 @@ package org.fiware.apps.marketplace.rdf;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,77 +34,80 @@ package org.fiware.apps.marketplace.rdf;
  */
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.StaleReaderException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.LockObtainFailedException;
-import org.fiware.apps.marketplace.model.Service;
-import org.fiware.apps.marketplace.utils.PropertiesUtil;
+import org.fiware.apps.marketplace.model.Description;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import com.hp.hpl.jena.query.larq.IndexLARQ;
-import com.hp.hpl.jena.query.larq.LARQ;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
+@Service("rdfIndexer")
 public class RdfIndexer {
-	public static void indexService(Service service){
+	
+	@Value("${lucene.IndexPath}") private String lucenePath;
+	@Autowired private RdfHelper rdfHelper;
+	
+	private static final Logger logger = LoggerFactory.getLogger(RdfIndexer.class);	
+	
+	public void indexOrUpdateService(Description description) throws MalformedURLException {
 
-		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
+		Model model = rdfHelper.loadModel(description.getUrl());
+		String serviceId = description.getId().toString();
+		
+		// Delete previous indexes for this description (if any)
+		// If a description is being updated, a JenaException should have been thrown previously and
+		// this method won't be called, so the previous index is not deleted.
+		deleteService(description);
 
-		Model model = RdfHelper.loadModel(service.getUrl());
-
-		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath) ;	
+		IndexBuilderStringExtended larqBuilder = new IndexBuilderStringExtended(lucenePath, serviceId);	
 
 		StmtIterator indexModel = model.listStatements();
-		for ( ; indexModel.hasNext() ; ){	  			  
-			Statement a = indexModel.next() ;	
-			larqBuilder.indexStatement(a, service.getId().toString());		
+		while(indexModel.hasNext()) {	  			  
+			Statement statement = indexModel.next();	
+			larqBuilder.indexStatement(statement);
 		}
 
 		larqBuilder.closeWriter();
 
 	}
 
+	public void deleteService(Description description) {
 
-	public static void deleteService(Service service){
-
-
-		String lucenePath = (PropertiesUtil.getProperty("lucene.IndexPath"));
 		Analyzer analyzer = new StandardAnalyzer();
 		IndexWriter indexWriter = null;
+		
 		try {
-
 			indexWriter = new IndexWriter(lucenePath, analyzer);
-			indexWriter.deleteDocuments(new Term ("docId", service.getId().toString()));
-
-
+			indexWriter.deleteDocuments(new Term ("docId", description.getId().toString()));
 		} catch (StaleReaderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Deleting Service from Index - StaleReaderException", e);
 		} catch (CorruptIndexException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Deleting Service from Index - CorruptIndexException", e);
 		} catch (LockObtainFailedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Deleting Service from Index - LockObtainFailedException", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Deleting Service from Index - IOException", e);
 		}
 
 		try {
 			indexWriter.optimize();
 			indexWriter.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Deleting Service form Index (Optimizing) - IOException", e);
 		}
-
 
 	}
 

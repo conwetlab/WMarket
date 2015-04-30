@@ -46,26 +46,31 @@ import org.fiware.apps.marketplace.helpers.AttributeTypeStatisticsResolver;
 import org.fiware.apps.marketplace.helpers.OfferingResolver;
 import org.fiware.apps.marketplace.helpers.ServiceManifestationResolver;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.Service;
+import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.ServiceAttributeType;
 import org.fiware.apps.marketplace.model.ServiceAttributeTypeStatistics;
 import org.fiware.apps.marketplace.model.ServiceManifestation;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
-@org.springframework.stereotype.Service("maintenanceBo")
+@Service("maintenanceBo")
 public class MaintenanceBoImpl implements MaintenanceBo {
 
 	ApplicationContext appContext = ApplicationContextProvider.getApplicationContext();
 
-	StoreBo storeBo = (StoreBo) appContext.getBean("storeBo");
-	VocabularyBo vocabularyBo = (VocabularyBo) appContext.getBean("vocabularyBo");
-	AttributeTypeBo attributeTypeBo = (AttributeTypeBo) appContext.getBean("attributeTypeBo");
-	OfferingBo offeringBo = (OfferingBo) appContext.getBean("offeringBo");
-	ServiceManifestationBo serviceManifestationBo = (ServiceManifestationBo) appContext.getBean("serviceManifestationBo");
-	AttributeTypeStatisticsBo attributeTypeStatisticsBo = (AttributeTypeStatisticsBo) appContext.getBean("attributeTypeStatisticsBo");
-
+	@Autowired private StoreBo storeBo;
+	@Autowired private VocabularyBo vocabularyBo;
+	@Autowired private AttributeTypeBo attributeTypeBo;
+	@Autowired OfferingBo offeringBo;
+	@Autowired private ServiceManifestationBo serviceManifestationBo;
+	@Autowired private AttributeTypeStatisticsBo attributeTypeStatisticsBo;
+	@Autowired private AttributeTypeResolver attributeTypeResolver;
+	@Autowired private OfferingResolver offeringResolver;
+	@Autowired private ServiceManifestationResolver serviceManifestationResolver;
+	
 	private boolean comparisonInitializationDone = false;
 	
 	@Override
@@ -99,13 +104,13 @@ public class MaintenanceBoImpl implements MaintenanceBo {
 		try {
 			long start = System.currentTimeMillis();
 			for (String vocUri : vocabularyBo.getVocabularyUris()) {
-				for (ServiceAttributeType attributeType : AttributeTypeResolver.resolveAttributeTypesFromUri(vocUri)) {
+				for (ServiceAttributeType attributeType : attributeTypeResolver.resolveAttributeTypesFromUri(vocUri)) {
 					attributeTypeBo.save(attributeType);
 				}
 			}
 			for (Store store : storeBo.getAllStores()) {
-				for (Service service : store.getServices()) {
-					for (ServiceAttributeType attributeType : AttributeTypeResolver.resolveAttributeTypesFromUri(service.getUrl())) {
+				for (Description service : store.getDescriptions()) {
+					for (ServiceAttributeType attributeType : attributeTypeResolver.resolveAttributeTypesFromUri(service.getUrl())) {
 						attributeTypeBo.save(attributeType);
 					}
 				}
@@ -122,7 +127,7 @@ public class MaintenanceBoImpl implements MaintenanceBo {
 	private boolean initializeOfferings() {
 		try {
 			long start = System.currentTimeMillis();
-			for (Offering offering : OfferingResolver.resolveOfferingsFromStores(storeBo.getAllStores())) {
+			for (Offering offering : offeringResolver.resolveOfferingsFromStores(storeBo.getAllStores())) {
 				offeringBo.save(offering);
 			}
 			long end = System.currentTimeMillis();
@@ -137,7 +142,8 @@ public class MaintenanceBoImpl implements MaintenanceBo {
 	private boolean initializeServiceManifestations() {
 		try {
 			long start = System.currentTimeMillis();
-			for (ServiceManifestation serviceManifestation : ServiceManifestationResolver.resolveServiceManifestations(offeringBo
+			for (ServiceManifestation serviceManifestation : serviceManifestationResolver
+					.resolveServiceManifestations(offeringBo
 					.getAllOfferings())) {
 				serviceManifestationBo.save(serviceManifestation);
 			}

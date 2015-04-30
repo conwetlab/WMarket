@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+	<!-- Core - Login View -->
+	<definition name="core.login" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/core/login-form.jsp" />
+	</definition>
+
+	<!-- Core - Register Form View -->
+	<definition name="core.register" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/core/registration-form.jsp" />
+	</definition>
+
+	<!-- Core - Error View -->
+	<definition name="core.error" template="/WEB-INF/views/base.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/core/error.jsp" />
+	</definition>
+
+    <!-- User Resource - Detail View -->
+    <definition name="user.detail" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/users/detail-content.jsp" />
+    </definition>
+
+    <!-- User Resource - Description Filter - List View -->
+    <definition name="user.description.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/users/description-list-content.jsp" />
+    </definition>
+
+    <!-- Offering Resource - List View -->
+    <definition name="offering.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/offerings/list-content.jsp" />
+        <put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/list-scripts.jsp" />
+    </definition>
+
+    <!-- Offering Resource - Detail View -->
+    <definition name="offering.detail" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/offerings/detail-content.jsp" />
+        <put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/detail-scripts.jsp" />
+    </definition>
+
+    <!-- Store Resource - Create View -->
+    <definition name="store.create" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/stores/create-content.jsp" />
+    </definition>
+
+    <!-- Store Resource - Detail View -->
+    <definition name="store.detail" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/stores/detail-content.jsp" />
+    </definition>
+
+    <!-- Store Resource - Offering Filter - List View -->
+    <definition name="store.offering.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/stores/offering-list-content.jsp" />
+        <put-attribute name="extra-scripts" value="/WEB-INF/views/stores/offering-list-scripts.jsp" />
+    </definition>
+
+    <!-- Store Resource - User Description Filter - List View -->
+    <definition name="store.description.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/stores/description-list-content.jsp" />
+    </definition>
+
+    <!-- Description Resource - Create View -->
+    <definition name="description.create" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/descriptions/create-content.jsp" />
+    </definition>
+
+    <!-- Description Resource - Detail View -->
+    <definition name="description.detail" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/descriptions/detail-content.jsp" />
+    </definition>
+
+    <!-- Description Resource - Offering Filter - List View -->
+    <definition name="description.offering.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/descriptions/offering-list-content.jsp" />
+    </definition>
+
+</tiles-definitions>

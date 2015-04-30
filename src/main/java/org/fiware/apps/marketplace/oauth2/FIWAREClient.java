@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.oauth2;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,7 +34,7 @@ package org.fiware.apps.marketplace.oauth2;
 
 import java.util.Date;
 
-import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.pac4j.core.client.BaseClient;
@@ -54,16 +54,33 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 	// To store users information
-	@Autowired private UserBo userBo;
+	@Autowired private UserDao userDao;
 
 	private String scopeValue = "";
+	private String serverURL;
+
+	/**
+	 * Method to get the FIWARE IdM that is being in used
+	 * @return The FIWARE IdM that is being used to authenticate the users
+	 */
+	public String getServerURL() {
+		return this.serverURL;
+	}
+
+	/**
+	 * Method to set the FIWARE IdM that will be use to authenticate the users
+	 * @param serverURL The FIWARE IdM that will be use to authenticate the users
+	 */
+	public void setServerURL(String serverURL) {
+		this.serverURL = serverURL;
+	}
 
 	@Override
 	protected void internalInit() {
 		super.internalInit();
 
 		this.scopeValue = "";
-		this.service = new ProxyOAuth20ServiceImpl(new FIWAREApi(), 
+		this.service = new ProxyOAuth20ServiceImpl(new FIWAREApi(this.serverURL), 
 				new OAuthConfig(this.key, this.secret,
 						this.callbackUrl,
 						SignatureType.Header,
@@ -79,15 +96,15 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 	@Override
 	protected FIWAREProfile extractUserProfile(String body) {
+
 		FIWAREProfile profile = new FIWAREProfile();
-		
+
 		if (body != null) {
 			final JsonNode json = JsonHelper.getFirstNode(body);
 			profile.setId(JsonHelper.get(json, "nickName"));
 			for (final String attribute : new FIWAREAttributesDefinition().getPrincipalAttributes()) {
 				profile.addAttribute(attribute, JsonHelper.get(json, attribute));
 			}
-
 
 			// FIXME: By default, we are adding the default Role...
 			profile.addRole("ROLE_USER");
@@ -100,7 +117,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 			try {
 				// Modify the existing user
-				user = userBo.findByName(username);
+				user = userDao.findByName(username);
 			} catch (UserNotFoundException e) {
 				// Create a new user
 				user = new User();
@@ -112,9 +129,10 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 			user.setEmail(email);
 			user.setPassword("");	// Password cannot be NULL
 			user.setDisplayName(displayName);
+			user.setOauth2(true);
 
 			// Save the new user
-			userBo.save(user);
+			userDao.save(user);
 
 			return profile;
 		} else {
@@ -124,7 +142,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 	@Override
 	protected String getProfileUrl(Token arg0) {
-		return "https://account.lab.fi-ware.org/user";
+		return String.format("%s/user", this.serverURL);
 	}
 
 	@Override

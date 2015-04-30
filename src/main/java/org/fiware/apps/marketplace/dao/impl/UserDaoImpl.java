@@ -5,7 +5,7 @@ package org.fiware.apps.marketplace.dao.impl;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,48 +39,111 @@ import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
-import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("userDao")
 public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
+	
+	private static final String TABLE_NAME = User.class.getName();
 
 	@Override
+	@Transactional(readOnly = false)
 	public void save(User user) {
-		getHibernateTemplate().saveOrUpdate(user);	
+		getSession().saveOrUpdate(user);	
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public void update(User user) {
-		getHibernateTemplate().update(user);
+		// Avoid NonUniqueObjectException. This exception is risen because
+		// the user is retrieved twice (one because of the authentication and
+		// another one because of the update) and the first time is detached
+		getSession().merge(user);
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public void delete(User user) {
-		getHibernateTemplate().delete(user);
+		getSession().delete(user);
 	}
 
 	@Override
-	public User findByName(String username) throws UserNotFoundException{
-		List<?> list = getHibernateTemplate().find("from User where userName=?", username);
+	@Transactional(readOnly = true)
+	public User findByName(String userName) throws UserNotFoundException{
+		String query = String.format("from %s where userName=:userName", TABLE_NAME);
+		List<?> list = getSession()
+				.createQuery(query)
+				.setParameter("userName", userName)
+				.list();
 		
 		if (list.size() == 0) {
-			throw new UserNotFoundException("User " + username + " not found");
+			throw new UserNotFoundException("User " + userName + " not found");
 		} else {
 			return (User) list.get(0);
 		}
 	}
 	
+	@Override
+	@Transactional(readOnly = true)
+	public User findByEmail(String email) throws UserNotFoundException{
+		String query = String.format("from %s where email=:email", TABLE_NAME);
+		List<?> list = getSession()
+				.createQuery(query)
+				.setParameter("email", email)
+				.list();
+		
+		if (list.size() == 0) {
+			throw new UserNotFoundException("User with email" + email + " not found");
+		} else {
+			return (User) list.get(0);
+		}
+	}
+	
+	@Override
+	public boolean isUserNameAvailable(String userName) {
+		
+		boolean available = false;
+		
+		try {
+			findByName(userName);
+		} catch (UserNotFoundException e) {
+			available = true;
+		}
+		
+		return available;
+	}
+	
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isEmailAvailable(String email) {
+        String query = String.format("from %s where email=:email", TABLE_NAME);
+
+        List<?> list = getSession()
+                .createQuery(query)
+                .setParameter("email", email)
+                .list();
+
+        return list.isEmpty();
+    }
+	
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional(readOnly = true)
 	public List<User> getUsersPage(int offset, int max) {
-		return (List<User>) getHibernateTemplate().findByCriteria(
-				DetachedCriteria.forClass(User.class), offset, max);
+		return getSession()
+				.createCriteria(User.class)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional(readOnly = true)
 	public List<User> getAllUsers() {
-		return getHibernateTemplate().loadAll(User.class);
+		return getSession()
+				.createCriteria(User.class)
+				.list();
 	}
-
 }

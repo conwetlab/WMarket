@@ -43,9 +43,10 @@ public class StoreXMLAdapterTest {
 	
 	@Test
 	public void testUnmarshall() throws Exception {
-		// Store information is not unmarshalled. When a service is
-		// created, the store is deduced based on the URL
-		assertThat(adapter.unmarshal("content")).isEqualTo(null);
+		String storeName = "wstore";
+		Store store = new Store();
+		store.setName(storeName);
+		assertThat(adapter.unmarshal(storeName)).isEqualTo(store);
 	}
 	
 	@Test

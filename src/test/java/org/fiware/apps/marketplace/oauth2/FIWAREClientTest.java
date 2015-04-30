@@ -35,7 +35,7 @@ package org.fiware.apps.marketplace.oauth2;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
@@ -48,13 +48,15 @@ import org.pac4j.core.context.WebContext;
 
 public class FIWAREClientTest {
 
-	@Mock private UserBo userBoMock;
+	private final static String SERVER_URL = "https://account.lab.fiware.org";
+	@Mock private UserDao userDaoMock;
 	@InjectMocks private FIWAREClient client = new FIWAREClient();
 
 
 	@Before 
 	public void initMocks() {
 		MockitoAnnotations.initMocks(this);
+		this.client.setServerURL(SERVER_URL);
 	}
 
 	@Test
@@ -78,9 +80,9 @@ public class FIWAREClientTest {
 				user.setUserName(userName + "_old");
 				user.setDisplayName(displayName + "_old");
 				user.setEmail(email + "_old");
-				when(userBoMock.findByName(userName)).thenReturn(user);
+				when(userDaoMock.findByName(userName)).thenReturn(user);
 			} else {
-				doThrow(new UserNotFoundException("user not found")).when(userBoMock).findByName(userName);
+				doThrow(new UserNotFoundException("user not found")).when(userDaoMock).findByName(userName);
 			}
 
 			// Call the function
@@ -93,7 +95,7 @@ public class FIWAREClientTest {
 
 			// Capture the user saved in the database
 			ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
-			verify(userBoMock).save(captor.capture());
+			verify(userDaoMock).save(captor.capture());
 
 			User storedUser = captor.getValue();
 			assertThat(storedUser.getUserName()).isEqualTo(userName);
@@ -122,12 +124,12 @@ public class FIWAREClientTest {
 		
 		// Assertions
 		assertThat(profile).isNull();
-		verify(userBoMock, never()).save(isA(User.class));
+		verify(userDaoMock, never()).save(isA(User.class));
 	}
 
 	@Test
 	public void testGetProfileUrl() {
-		assertThat(client.getProfileUrl(null)).isEqualTo("https://account.lab.fi-ware.org/user");
+		assertThat(client.getProfileUrl(null)).isEqualTo(SERVER_URL + "/user");
 	}
 
 	private void testHasBeenCancelled(String error, boolean cancelled) {
