@@ -15,8 +15,8 @@
 
             <form class="col-sm-8 col-sm-offset-1" method="post" action="${ pageContext.request.contextPath }/descriptions/register">
               <div class="form-field">
-                <label class="text-plain">Store *</label>
-                <select class="form-control" name="storeName">
+                <label class="field-label">Store *</label>
+                <select class="field-control" name="storeName">
                   <c:forEach var="store" items="${ storeList }">
                     <c:choose>
                       <c:when test="${ not empty field_storeName and field_storeName == store.name }">
@@ -30,38 +30,39 @@
 
                 </select>
                 <c:if test="${ not empty form_error and form_error.fieldName == 'storeName' }">
-                  <div class="form-field-error">${ form_error.fieldError }</div>
+                  <p class="field-error">${ form_error.fieldError }</p>
                 </c:if>
               </div>
 
               <div class="form-field">
-                <label class="text-plain">Name *</label>
-                <input class="form-control" type="text" name="displayName" value="${ field_displayName }" />
+                <label class="field-label">Name *</label>
+                <input class="field-control" type="text" name="displayName" value="${ field_displayName }" />
 
                 <c:if test="${ not empty form_error and (form_error.fieldName == 'displayName' or form_error.fieldName == 'name') }">
-                  <div class="form-field-error">${ form_error.fieldError }</div>
+                  <p class="field-error">${ form_error.fieldError }</p>
                 </c:if>
               </div>
 
               <div class="form-field">
-                <label class="text-plain">URL to Linked USDL file * <a target="_blank" href="http://linked-usdl.org/"><span class="fa fa-info-circle"></span></a></label>
-                <input class="form-control" type="text" name="url" value="${ field_url }" />
+                <label class="field-label">URL to Linked USDL file * <a target="_blank" href="http://linked-usdl.org/"><span class="fa fa-info-circle"></span></a></label>
+                <input class="field-control" type="text" name="url" value="${ field_url }" />
 
                 <c:if test="${ not empty form_error and form_error.fieldName == 'url' }">
-                  <div class="form-field-error">${ form_error.fieldError }</div>
+                  <p class="field-error">${ form_error.fieldError }</p>
                 </c:if>
               </div>
 
               <div class="form-field">
-                <label class="text-plain">Comment</label>
-                <textarea class="form-control" name="comment" rows="4">${ field_comment }</textarea>
+                <label class="field-label">Comment</label>
+                <textarea class="field-control" name="comment" rows="4">${ field_comment }</textarea>
 
                 <c:if test="${ not empty form_error and form_error.fieldName == 'comment' }">
-                  <div class="form-field-error">${ form_error.fieldError }</div>
+                  <p class="field-error">${ form_error.fieldError }</p>
                 </c:if>
               </div>
 
-              <p class="text-plain text-default">* Required fields</p>
+              <p>* Required fields</p>
+
               <div class="form-options">
                 <button type="submit" class="btn btn-warning btn-sm-10 btn-md-5">Upload</button>
               </div>
