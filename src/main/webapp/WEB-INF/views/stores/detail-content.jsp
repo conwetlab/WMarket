@@ -114,26 +114,37 @@
       <c:otherwise>
 
         <div class="panel panel-default">
-          <div class="row panel-body">
-            <dl class="dl-vertical col-sm-10 col-md-5 visible-sm-margin">
-              <dt>Comment</dt>
-              <c:choose>
-                <c:when test="${ not empty store.comment }">
-                  <dd>${ store.comment }</dd>
-                </c:when>
-                <c:otherwise>
-                  <dd>No comment provided.</dd>
-                </c:otherwise>
-              </c:choose>
-              <dt>Website URL</dt>
-              <dd>${ store.url }</dd>
-            </dl>
-            <dl class="dl-vertical col-sm-10 col-md-5">
-              <dt>Owner name</dt>
-              <dd>${ store.creator.displayName }</dd>
-              <dt>Registration date</dt>
-              <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ store.registrationDate }" /></dd>
-            </dl>
+          <div class="panel-body">
+            <div class="dl-group dl-vertical">
+
+              <dl class="dl-block">
+                <dt>Comment</dt>
+                <c:choose>
+                  <c:when test="${ not empty store.comment }">
+                    <dd class="text-justify">${ store.comment }</dd>
+                  </c:when>
+                  <c:otherwise>
+                    <dd>No comment provided.</dd>
+                  </c:otherwise>
+                </c:choose>
+              </dl>
+
+              <dl>
+                <dt>Website URL</dt>
+                <dd>${ store.url }</dd>
+              </dl>
+
+              <dl>
+                <dt>Owner name</dt>
+                <dd>${ store.creator.displayName }</dd>
+              </dl>
+
+              <dl>
+                <dt>Registration date</dt>
+                <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ store.registrationDate }" /></dd>
+              </dl>
+
+            </div>
           </div>
         </div>
 
