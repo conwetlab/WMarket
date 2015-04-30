@@ -7,6 +7,29 @@
 
 
 /***************************************************************************************
+ *  DEFAULT THEME - GLOBALS
+ ***************************************************************************************/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    position: relative;
+    margin: 0px;
+    padding: 57px 0px 0px;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
+    color: rgb(50, 50, 50);
+    background-color: rgba(245, 247, 250, 0.95);
+}
+
+label, p {
+    position: relative;
+    display: block;
+    margin: 0px 0px 5px;
+}
+
+/***************************************************************************************
  *  DEFAULT THEME - ANCHOR
  ***************************************************************************************/
 
@@ -36,6 +59,8 @@ input[type="submit"] {
 }
 
 .btn {
+    position: relative;
+    cursor: pointer;
     display: inline-block;
     outline: none;
     padding: 4px 5px;
@@ -183,6 +208,105 @@ input[type="submit"] {
 }
 
 /***************************************************************************************
+ *  DEFAULT THEME - COMPONENT IMAGE THUMBNAIL
+ ***************************************************************************************/
+
+.image-thumbnail {
+    position: relative;
+    display: block;
+    margin: 0px 0px 10px;
+    text-align: center;
+}
+
+.image-thumbnail:last-child {
+    margin-bottom: 0px;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT IMAGE THUMBNAIL - IMAGE
+ ***************************************************************************************/
+
+.image {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.image.image-circle {
+    border-radius: 50%;
+}
+
+.image.image-rounded {
+    border-radius: 4px;
+}
+
+.image.image-bordered {
+    padding: 5px;
+    background-color: rgb(255, 255, 255);
+    border: solid 1px rgb(210, 210, 210);
+}
+
+.image > .fa {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    text-align: center;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT IMAGE THUMBNAIL - SIZES
+ ***************************************************************************************/
+
+.image-thumbnail .image {
+    width: 60px;
+    height: 60px;
+}
+
+.image-thumbnail .image > .fa {
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+}
+
+.image-thumbnail-sm .image {
+    width: 40px;
+    height: 40px;
+}
+
+.image-thumbnail-sm .image > .fa {
+    width: 16px;
+    height: 20px;
+    font-size: 20px;
+}
+
+
+.image-thumbnail-lg .image {
+    width: 80px;
+    height: 80px;
+}
+
+.image-thumbnail-lg .image > .fa {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT IMAGE THUMBNAIL - CONTEXTUAL CLASSES
+ ***************************************************************************************/
+
+.image.image-default-darker {
+    background-color: rgb(70, 70, 70);
+}
+
+.image.image-primary-ligther {
+    background-color: rgb(80, 190, 250);
+}
+
+/***************************************************************************************
  *  DEFAULT THEME - ALERT
  ***************************************************************************************/
 
@@ -272,7 +396,7 @@ textarea {
     resize: none;
 }
 
-.form-control {
+.field-control {
     display: block;
     width: 100%;
     padding: 4px 8px;
@@ -283,7 +407,7 @@ textarea {
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
-.form-control:focus {
+.field-control:focus {
     outline: 0;
     border-color: rgba(102, 175, 233, 0.9);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset,
@@ -291,8 +415,8 @@ textarea {
     z-index: 5;
 }
 
-.form-control.disabled,
-.form-control[disabled] {
+.field-control.disabled,
+.field-control[disabled] {
     pointer-events: none;
     cursor: not-allowed;
     background-color: rgb(240, 240, 240);
@@ -304,7 +428,9 @@ textarea {
  ***************************************************************************************/
 
 .form-field {
-    margin-bottom: 10px;
+    position: relative;
+    display: block;
+    margin: 0px 0px 10px;
 }
 
 .form-field > .btn-addon:last-child,
@@ -314,7 +440,7 @@ textarea {
 }
 
 .form-field > .btn-addon:first-child,
-.form-field.form-addon > .form-control:not(:last-child) {
+.form-field.form-addon > .field-control:not(:last-child) {
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
@@ -327,33 +453,10 @@ textarea {
     margin-left: -5px;
 }
 
-.form-field > label {
-    display: block;
-    line-height: 20px;
-    font-weight: 700;
-    color: rgb(50, 50, 50);
-    margin-bottom: 5px;
-}
-
-.form-field > label + .form-control {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-}
-
 .form-field-error {
     margin: 5px 0px 0px 10px;
     font: normal 400 14px/20px Helvetica, Arial, sans-serif;
     color: rgb(160, 60, 60);
-}
-
-.form-field.readonly .form-control {
-    cursor: default;
-    color: rgb(80, 80, 80);
-    background-color: transparent;
-    border-color: transparent;
-    box-shadow: none;
-    pointer-events: none;
-    -webkit-user-select: none;
 }
 
 .form-options {
@@ -364,45 +467,134 @@ form .row:last-child .form-field {
     margin-bottom: 0px;
 }
 
-
 /***************************************************************************************
- *  DEFAULT THEME - THUMBNAIL
+ *  DEFAULT THEME - COMPONENT FORM - FIELD LABEL
  ***************************************************************************************/
 
-.thumbnail {
-    position: relative;
-    display: inline-block;
-    margin: 0px auto 8px;
-    padding: 3px;
-    background-color: rgb(254, 254, 254);
-    border: solid 1px rgb(210, 220, 230);
+.field-label {
+    margin: 0px 0px 5px;
+    font-weight: 700;
 }
 
-.thumbnail > img {
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT FORM - FIELD CONTROL
+ ***************************************************************************************/
+
+.field-control {
+    margin: 0px 0px 5px;
+}
+
+.field-control.readonly,
+.field-control[readonly] {
+    cursor: default;
+    pointer-events: none;
+    background-color: rgb(245, 245, 245);
+}
+
+.field-control.static {
+    cursor: default;
+    pointer-events: none;
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT FORM - FIELD CONTROL GROUP
+ ***************************************************************************************/
+
+.field-control-group {
     position: relative;
+    display: table;
+    margin: 0px 0px 5px;
+}
+
+.field-control-group .field-control {
+    display: table-cell;
+    width: 100%;
     vertical-align: middle;
-    width: 140px;
-    height: 140px;
-    border: solid 1px rgb(210, 220, 230);
 }
 
-@media (min-width: 768px) {
-
-    .thumbnail > img {
-        width: 170px;
-        height: 180px;
-    }
-
+.field-control-group .field-control:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-.thumbnail-xs > img {
-    width: 100px;
-    height: 100px;
+.field-control-group .field-control-btn {
+    position: relative;
+    display: table-cell;
+    width: 1%;
+    vertical-align: middle;
 }
 
-.thumbnail-sm > img {
-    width: 140px;
-    height: 140px;
+.field-control-btn:last-child > .btn {
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-bottom: 5px;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT FORM - FIELD CONTROL GROUP - BUTTON FILE
+ ***************************************************************************************/
+
+.field-control-btn .btn-file {
+    vertical-align: middle;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.field-control-btn .btn-file > .field-control[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    cursor: inherit;
+    opacity: 0;
+}
+
+.field-control-btn .btn-file > .field-control[type="file"]::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT FORM - FIELD ERROR
+ ***************************************************************************************/
+
+.field-error {
+    color: rgb(160, 60, 60);
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - DEFINITION LIST
+ ***************************************************************************************/
+
+.dl-group {
+    position: relative;
+    display: table;
+    margin: 0px 0px 10px;
+}
+
+.dl-group dl {
+    position: relative;
+    display: table-cell;
+    width: 1%;
+    margin: 0px;
+    padding: 0px 10px 0px 0px;
+}
+
+.dl-group dl:last-child {
+    padding-right: 0px;
+}
+
+.dl-group dl > dt {
+    font-weight: 700;
+}
+
+.dl-group dl > dd {
+    color: rgb(80, 80, 80);
+    margin-left: 0px;
 }
 
 /***************************************************************************************
@@ -410,24 +602,53 @@ form .row:last-child .form-field {
  ***************************************************************************************/
 
 .dl-vertical {
-    position: relative;
-    margin: 0px 0px;
-    font: normal 400 14px/1.45 Helvetica, Arial, sans-serif;
+    display: block;
 }
 
-.dl-vertical > dt {
-    font-weight: 700;
-    color: rgb(50, 50, 50);
+.dl-vertical:after {
+    content: "";
+    display: block;
+    clear: both;
 }
 
-.dl-vertical > dd {
-    margin: 0px 0px;
-    padding-left: 5px;
-    color: rgb(80, 80, 80);
+.dl-vertical dl {
+    display: block;
+    padding: 0px;
+    width: 50%;
+    float: left;
+    margin-bottom: 5px;
 }
 
-.dl-vertical > dd:not(:last-child) {
-    margin-bottom: 10px;
+@media (max-width: 768px) {
+
+    .dl-vertical dl {
+        width: 100%;
+    }
+
+    .dl-vertical dl:last-child {
+        margin-bottom: 0px;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .dl-responsive dl {
+        position: relative;
+        display: block;
+        width: 100%;
+        padding: 0px;
+        margin-bottom: 5px;
+    }
+
+    .dl-responsive dl:last-child {
+        margin-bottom: 0px;
+    }
+
+}
+
+.dl-group dl.dl-block {
+    width: 100%;
 }
 
 /***************************************************************************************
@@ -512,38 +733,38 @@ form .row:last-child .form-field {
 .well {
     padding: 5px;
     margin-bottom: 10px;
-    background-color: rgb(245, 245, 245);
+    background-color: rgb(248, 248, 248);
     border: 1px solid rgb(210, 220, 230);
     border-radius: 4px;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
 }
 
 /***************************************************************************************
- *  DEFAULT THEME - NAV TABS
+ *  DEFAULT THEME - COMPONENT TAB - TAB GROUP
  ***************************************************************************************/
 
-.nav-tabs {
+.tab-group {
     position: relative;
     display: block;
     width: 100%;
 }
 
-.nav-tabs .tab {
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT TAB - TAB
+ ***************************************************************************************/
+
+.tab-group .tab {
     position: relative;
     display: table-cell;
     width: 1%;
-    padding: 0px 5px;
+    padding: 0px 10px 0px 0px;
 }
 
-.nav-tabs .tab:first-child {
-    padding-left: 0px;
-}
-
-.nav-tabs .tab:last-child {
+.tab-group .tab:last-child {
     padding-right: 0px;
 }
 
-.nav-tabs .tab > a {
+.tab-group .tab > a {
     position: relative;
     display: block;
     padding: 8px 10px;
@@ -552,16 +773,57 @@ form .row:last-child .form-field {
     border-radius: 4px;
 }
 
-.nav-tabs .tab > a:hover {
+.tab-group .tab > a:hover {
     background-color: rgb(235, 240, 250);
 }
 
-.nav-tabs .tab.active > a,
-.nav-tabs .tab.active > a:hover {
+.tab-group .tab.active > a,
+.tab-group .tab.active > a:hover {
     cursor: pointer;
     color: rgb(255, 255, 255);
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: rgb(65, 130, 215);
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT TAB - CONTEXTUAL CLASSES
+ ***************************************************************************************/
+
+.tab.tab-danger > a {
+    color: rgb(215, 120, 120);
+}
+
+.tab.tab-danger > a:hover {
+    color: rgb(160, 60, 60);
+    background-color: rgb(250, 230, 230);
+}
+
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT TAB - TAB GROUP - VERTICAL
+ ***************************************************************************************/
+
+@media (min-width: 768px) {
+
+    .tab-group-vertical .tab {
+        display: block;
+        width: 100%;
+        margin: 0px 0px 5px;
+        padding: 0px;
+    }
+
+    .tab-group-vertical .tab:last-child {
+        margin-bottom: 0px;
+    }
+
+    .tab-group-vertical .tab > a {
+        text-align: left;
+    }
+
+    .tab-group-vertical .tab > a > .fa:first-child {
+        width: 20px;
+        text-align: center;
+    }
+
 }
 
 /***************************************************************************************
@@ -579,8 +841,9 @@ form .row:last-child .form-field {
 
 .panel .panel-heading {
     position: relative;
-    padding: 8px 10px;
-    font: normal 500 14px/20px Helvetica, Arial, sans-serif;
+    display: block;
+    padding: 10px;
+    margin: 0px;
     text-align: center;
     border-radius: 3px 3px 0px 0px;
 }
@@ -591,10 +854,15 @@ form .row:last-child .form-field {
     clear: both;
 }
 
-.panel .panel-heading .panel-title {
+/***************************************************************************************
+ *  DEFAULT THEME - COMPONENT PANEL - PANEL TITLE
+ ***************************************************************************************/
+
+.panel-heading .panel-title {
+    position: relative;
     display: block;
     font-size: 18px;
-    line-height: 20px;
+    font-weight: 700;
 }
 
 .panel .panel-heading .panel-subtitle {
@@ -623,8 +891,8 @@ form .row:last-child .form-field {
 
 .panel .panel-body {
     position: relative;
+    display: block;
     padding: 10px 10px;
-    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
 }
 
 .panel .panel-body .alert {
@@ -663,7 +931,7 @@ form .row:last-child .form-field {
 }
 
 .panel-default-darker > .panel-heading .panel-subtitle {
-    color: rgb(150, 170, 180);
+    color: rgb(170, 200, 210);
 }
 
 .panel-default-darker > .panel-heading a {
@@ -839,8 +1107,12 @@ form .row:last-child .form-field {
  *  DEFAULT THEME - OFFERING
  ***************************************************************************************/
 
+.offering .panel-heading .image {
+    width: 100%;
+    height: 100px;
+}
+
 .offering-name {
-    color: rgb(70, 70, 70);
     font-weight: bold;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -910,15 +1182,32 @@ form .row:last-child .form-field {
     overflow-y: auto;
 }
 
-.store-item .store-name {
-    padding-left: 4px;
-    font: normal 700 14px/20px Helvetica, Arial, sans-serif;
+.store-heading,
+.store-body {
+    position: relative;
+    display: table-cell;
+    vertical-align: middle;
 }
 
-.store-item .store-url {
-    padding-left: 22px;
-    font: normal 400 13px/20px Helvetica, Arial, sans-serif;
-    color: rgb(120, 120, 120);
+.store-heading {
+    width: 1%;
+}
+
+.store-body {
+    width: 100%;
+    padding-left: 10px;
+}
+
+.store-body .store-name {
+    position: relative;
+    display: block;
+    font-weight: 700;
+}
+
+.store-body .store-url {
+    position: relative;
+    display: block;
+    color: rgb(100, 100, 100);
 }
 
 /***************************************************************************************
@@ -933,12 +1222,44 @@ form .row:last-child .form-field {
     color: rgb(80, 190, 250);
 }
 
-.offering-in-description {
+.offering-item {
+    position: relative;
     display: inline-block;
-    max-width: 200px;
-    margin: 0px 5px;
+    padding: 10px;
+    width: 200px;
+    vertical-align: middle;
+    color: rgb(90, 90, 90);
+    background-color: rgb(255,255,255);
+    border: solid 1px rgb(210, 220, 230);
+    border-radius: 4px;
 }
 
-.offering-in-description:first-child {
-    margin-left: 0px;
+.offering-item .offering-heading,
+.offering-item .offering-body {
+    position: relative;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.offering-item .offering-heading {
+    width: 1%;
+}
+
+.offering-item .offering-body {
+    width: 100%;
+    padding-left: 10px;
+}
+
+.offering-item .offering-version {
+    position: relative;
+    display: block;
+    color: rgb(100, 100, 100);
+}
+
+.offering-item:hover {
+    background-color: rgb(240, 240, 240);
+}
+
+.offering-item:hover .offering-name {
+    color: rgb(20, 170, 215);
 }

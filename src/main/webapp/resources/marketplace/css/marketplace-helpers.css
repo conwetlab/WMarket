@@ -6,12 +6,6 @@
  */
 
 
-p {
-    font: normal 400 14px/1.43 Helvetica, Arial, sans-serif;
-    color: rgb(70, 70, 70);
-    margin: 0px 0px 10px;
-}
-
 .pull-right {
     float: right;
     margin-left: 10px;
@@ -39,6 +33,10 @@ p {
 
 .text-default {
     color: rgb(70, 70, 70);
+}
+
+.text-bold {
+    font-weight: 700 !important;
 }
 
 .text-truncate {
@@ -73,7 +71,8 @@ p {
 
 @media (max-width: 768px) {
 
-    .hidden-smartphone {
+    .hidden-smartphone,
+    .hidden-sm {
         display: none !important;
     }
 
