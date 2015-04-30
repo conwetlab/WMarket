@@ -4,103 +4,115 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="t" uri="http://tiles.apache.org/tags-tiles" %>
 
-<t:insertTemplate template="/WEB-INF/views/stores/header.jsp" />
-
 <c:set var="isStoreOwner" value="${ store.creator.userName == user.userName }"></c:set>
 
-<c:choose>
-  <c:when test="${ isStoreOwner }">
-    <div class="row container-fluid">
-      <div class="col-sm-10 col-md-8 col-md-offset-1 col-lg-6 col-lg-offset-2">
+<div class="row container-fluid">
+
+  <div class="col-sm-10 col-md-4 col-lg-3">
+    <t:insertTemplate template="/WEB-INF/views/stores/header.jsp" />
+  </div>
+  <div class="col-sm-10 col-md-6 col-lg-5 col-lg-offset-1">
+
+    <c:choose>
+      <c:when test="${ isStoreOwner }">
+
         <div class="panel panel-default">
           <div class="panel-heading">
             <div class="panel-title">General Information</div>
           </div>
           <div class="panel-body row">
-            <form class="col-sm-10 col-lg-8 col-lg-offset-1" method="post" action="${ pageContext.request.contextPath }/stores/${ store.name }/about">
+            <form class="col-sm-10 col-lg-8 col-lg-offset-1" method="post" enctype="multipart/form-data" action="${ pageContext.request.contextPath }/stores/${ store.name }/about">
 
               <div class="form-field">
-                <label class="text-plain">Name *</label>
+                <label class="field-label">Name *</label>
                 <c:choose>
                   <c:when test="${ not empty form_error }">
-                    <input class="form-control" type="text" name="displayName" value="${ field_displayName }" />
+                    <input class="field-control" type="text" name="displayName" value="${ field_displayName }" />
+
                     <c:if test="${ form_error.fieldName == 'displayName' }">
-                      <div class="form-field-error">${ form_error.fieldError }</div>
+                      <p class="field-error">${ form_error.fieldError }</p>
                     </c:if>
+
                   </c:when>
                   <c:otherwise>
-                    <input class="form-control" type="text" name="displayName" value="${ store.displayName }" />
+                    <input class="field-control" type="text" name="displayName" value="${ store.displayName }" />
                   </c:otherwise>
                 </c:choose>
-              </div>
+              </div><!-- /.form-field -->
 
               <div class="form-field">
-                <label class="text-plain">Website URL *</label>
+                <label class="field-label">Website URL *</label>
+
                 <c:choose>
                   <c:when test="${ not empty form_error }">
-                    <input class="form-control" type="text" name="url" value="${ field_url }" />
+                    <input class="field-control" type="text" name="url" value="${ field_url }" />
+
                     <c:if test="${ form_error.fieldName == 'url' }">
-                      <div class="form-field-error">${ form_error.fieldError }</div>
+                      <p class="field-error">${ form_error.fieldError }</p>
                     </c:if>
+
                   </c:when>
                   <c:otherwise>
-                    <input class="form-control" type="text" name="url" value="${ store.url }" />
+                    <input class="field-control" type="text" name="url" value="${ store.url }" />
+                  </c:otherwise>
+                </c:choose>
+              </div><!-- /.form-field -->
+
+              <div class="form-field">
+                <label class="field-label">Image</label>
+
+                <div class="field-control-group">
+                  <input class="field-control" type="text" name="imageName" readonly />
+                  <span class="field-control-btn">
+                    <span class="btn btn-default btn-file">
+                      <span class="fa fa-folder-open"></span>
+                      <span class="text-plain">Browser</span>
+
+                      <input class="field-control" type="file" name="imageData" accept=".png" />
+                    </span>
+                  </span>
+                </div><!-- /.field-control-group -->
+
+                <c:if test="${ not empty form_error and form_error.fieldName == 'imageBase64' }">
+                  <p class="field-error">${ form_error.fieldError }</p>
+                </c:if>
+
+              </div><!-- /.form-field -->
+
+              <div class="form-field">
+                <label class="field-label">Comment</label>
+                <c:choose>
+                  <c:when test="${ not empty form_error }">
+                    <textarea class="field-control" name="comment" rows="3">${ field_comment }</textarea>
+
+                    <c:if test="${ form_error.fieldName == 'comment' }">
+                      <p class="field-error">${ form_error.fieldError }</p>
+                    </c:if>
+
+                  </c:when>
+                  <c:otherwise>
+                    <textarea class="field-control" name="comment" rows="3">${ store.comment }</textarea>
                   </c:otherwise>
                 </c:choose>
               </div>
 
               <div class="form-field">
-                <label class="text-plain">Comment</label>
-                <c:choose>
-                  <c:when test="${ not empty form_error }">
-                    <textarea class="form-control" name="comment" rows="3">${ field_comment }</textarea>
-                    <c:if test="${ form_error.fieldName == 'comment' }">
-                      <div class="form-field-error">${ form_error.fieldError }</div>
-                    </c:if>
-                  </c:when>
-                  <c:otherwise>
-                    <textarea class="form-control" name="comment" rows="3">${ store.comment }</textarea>
-                  </c:otherwise>
-                </c:choose>
+                <label class="field-label">Registration date</label>
+                <div class="field-control static"><fmt:formatDate pattern="yyyy-MM-dd" value="${ store.registrationDate }" /></div>
               </div>
 
-              <div class="form-field readonly">
-                <label class="text-plain">Registration date</label>
-                <div class="form-control"><fmt:formatDate pattern="yyyy-MM-dd" value="${ store.registrationDate }" /></div>
-              </div>
+              <p>* Required fields</p>
 
-              <p class="text-plain text-default">* Required fields</p>
               <div class="form-options">
                 <button type="submit" class="btn btn-success btn-sm-10 btn-md-5">Save changes</button>
               </div>
             </form>
           </div>
         </div>
-      </div>
-    </div><!-- /.container-fluid -->
 
-    <div class="row container-fluid">
-      <div class="col-sm-10 col-md-8 col-md-offset-1 col-lg-6 col-lg-offset-2">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <span class="panel-title">Delete operation</span>
-          </div>
-          <div class="panel-body row">
-            <form class="col-sm-10 col-lg-8 col-lg-offset-1" method="post" action="${ pageContext.request.contextPath }/stores/${ store.name }/delete">
-              <p class="text-justify">This operation cannot be undone. All the offerings and descriptions that are contained in this store will be deleted too. Please be certain.</p>
-              <div class="form-options">
-                <button type="submit" class="btn btn-danger btn-sm-10 btn-md-5">Delete store</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div><!-- /.container-fluid -->
+      </c:when>
+      <c:otherwise>
 
-  </c:when>
-  <c:otherwise>
-    <div class="row container-fluid">
-      <div class="col-sm-10 col-md-8 col-md-offset-1 col-lg-6 col-lg-offset-2">
         <div class="panel panel-default">
           <div class="row panel-body">
             <dl class="dl-vertical col-sm-10 col-md-5 visible-sm-margin">
@@ -124,7 +136,9 @@
             </dl>
           </div>
         </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </c:otherwise>
-</c:choose>
+
+      </c:otherwise>
+    </c:choose>
+
+  </div>
+</div>
