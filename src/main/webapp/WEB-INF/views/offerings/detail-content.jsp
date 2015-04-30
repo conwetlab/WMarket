@@ -1,64 +1,96 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<div id="offering-detail" class="row container-fluid">
+<div class="row container-fluid">
 
-  <div class="col-sm-10 col-md-5 col-lg-3">
+  <div class="col-sm-10 col-md-4 col-lg-3">
+
     <div class="panel panel-default">
-
       <div class="panel-heading">
-        <div class="thumbnail">
-          <img src="${ offering.imageUrl }">
-        </div>
+        <span class="image-thumbnail image-thumbnail-lg">
+          <img class="image image-rounded" src="${ offering.imageUrl }">
+        </span>
         <div class="panel-title">${ offering.displayName }</div>
       </div>
-
       <div class="panel-body">
-        <div class="list-options">
-          <button class="list-element btn btn-success">
-            <span class=" fa fa-download"></span>
-            <span class="text-plain">Download</span>
-          </button>  
+        <div class="tab-group tab-group-vertical">
+
+          <div class="tab active">
+            <a href="${ pageContext.request.contextPath }/offerings/${ offering.describedIn.store.name }/${ offering.describedIn.name }/${ offering.name }">
+              <span class="fa fa-newspaper-o"></span>
+              <span class="hidden-sm">General</span>
+            </a>
+          </div><!-- /.tab -->
+
         </div>
-      </div><!-- /.panel -->
+      </div>
+    </div><!-- /.panel -->
 
-    </div>
-  </div><!-- /.col-* -->
+  </div>
+  <div class="col-sm-10 col-md-6 col-lg-5 col-lg-offset-1">
 
-  <div class="col-sm-10 col-md-5 col-lg-7">
     <div class="panel panel-default">
-
       <div class="panel-heading">
-        <div class="panel-title">Offering information</div>
+        <div class="panel-title">General information</div>
       </div><!-- /.panel-heading -->
 
       <div class="panel-body">
-        <dl class="dl-vertical">
-          <dt>Description</dt>
-          <dd class="text-justify">${ offering.description }</dd>
-        </dl>
-        <div class="title-descriptions">Additional Information</div>
-        <dl class="dl-vertical">
-          <dt>Current Version</dt>
-          <dd>${ offering.version }</dd>
-          <dt>Developer Name</dt>
-          <dd>${ offering.describedIn.creator.displayName }</dd>
-          <dt>Upload Date</dt>
-          <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.registrationDate }" /></dd>
-        </dl>
-        <div class="title-descriptions">Store Information</div>
-        <dl class="dl-vertical">
-          <dt>Name</dt>
-          <dd><a href="${ pageContext.request.contextPath }/stores/${ offering.describedIn.store.name }/offerings">${ offering.describedIn.store.displayName }</a></dd>
-          <dt>Creator Name</dt>
-          <dd>${ offering.describedIn.store.creator.displayName }</dd>
-          <dt>Registration Date</dt>
-          <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.store.registrationDate }" /></dd>
-        </dl>
+        <div class="dl-group dl-vertical">
+
+          <dl class="dl-block">
+            <dt>Description</dt>
+            <dd class="text-justify">${ offering.description }</dd>
+          </dl>
+
+          <dl>
+            <dt>Version</dt>
+            <dd>${ offering.version }</dd>
+          </dl>
+
+          <dl>
+            <dt>Developer name</dt>
+            <dd>${ offering.describedIn.creator.displayName }</dd>
+          </dl>
+
+          <dl>
+            <dt>Upload date</dt>
+            <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.registrationDate }" /></dd>
+          </dl>
+
+        </div>
       </div><!-- /.panel-body -->
-
     </div><!-- /.panel -->
-  </div><!-- /.col-* -->
 
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <c:if test="${ not empty offering.describedIn.store.imagePath }">
+          <span class="image-thumbnail">
+            <img class="image image-circle" src="${ pageContext.request.contextPath }/${ offering.describedIn.store.imagePath }">
+          </span>
+        </c:if>
+
+        <span class="panel-title">Store information</span>
+      </div>
+      <div class="panel-body">
+        <div class="dl-group dl-vertical">
+          <dl>
+            <dt>Name</dt>
+            <dd><a href="${ pageContext.request.contextPath }/stores/${ offering.describedIn.store.name }/offerings">${ offering.describedIn.store.displayName }</a></dd>
+          </dl>
+          <dl>
+            <dt>Creator name</dt>
+            <dd>${ offering.describedIn.store.creator.displayName }</dd>
+          </dl>
+          <dl>
+            <dt>Registration date</dt>
+            <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.store.registrationDate }" /></dd>
+          </dl>
+
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.col-* -->
 </div><!-- /.row -->
