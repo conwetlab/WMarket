@@ -12,42 +12,41 @@
 
         <form class="col-sm-8 col-sm-offset-1" name="registration_form" method="post" action="${ pageContext.request.contextPath }/register">
           <div class="form-field">
-            <label class="text-plain">Full name</label>
-            <input class="form-control" type="text" name="displayName" value="${ field_displayName }" />
+            <label class="field-label">Full name</label>
+            <input class="field-control" type="text" name="displayName" value="${ field_displayName }" />
 
             <c:if test="${ not empty form_error and form_error.fieldName == 'displayName' }">
-              <div class="form-field-error">${ form_error.fieldError }</div>
+              <p class="field-error">${ form_error.fieldError }</p>
             </c:if>
           </div>
 
           <div class="form-field">
-            <label class="text-plain">E-mail</label>
-            <input class="form-control" type="text" name="email" value="${ field_email }" />
+            <label class="field-label">E-mail</label>
+            <input class="field-control" type="text" name="email" value="${ field_email }" />
 
             <c:if test="${ not empty form_error and form_error.fieldName == 'email' }">
-              <div class="form-field-error">${ form_error.fieldError }</div>
+              <p class="field-error">${ form_error.fieldError }</p>
             </c:if>
           </div>
 
           <div class="form-field">
-            <label class="text-plain">Password</label>
-            <input class="form-control" type="password" name="password" value="${ field_password }" />
+            <label class="field-label">Password</label>
+            <input class="field-control" type="password" name="password" value="${ field_password }" />
 
             <c:if test="${ not empty form_error and form_error.fieldName == 'password' }">
-              <div class="form-field-error">${ form_error.fieldError }</div>
+              <p class="field-error">${ form_error.fieldError }</p>
             </c:if>
           </div>
 
           <div class="form-field">
-            <label class="text-plain">Confirm your password</label>
-            <input class="form-control" type="password" name="passwordConfirm"  value="${ field_passwordConfirm }"/>
+            <label class="field-label">Confirm your password</label>
+            <input class="field-control" type="password" name="passwordConfirm"  value="${ field_passwordConfirm }"/>
 
             <c:if test="${ not empty form_error and form_error.fieldName == 'passwordConfirm' }">
-              <div class="form-field-error">${ form_error.fieldError }</div>
+              <p class="field-error">${ form_error.fieldError }</p>
             </c:if>
           </div>
 
-          <p class="text-plain text-default">All fields are required</p>
           <div class="form-options">
             <button class="btn btn-warning btn-sm-10 btn-md-5" type="submit">Create Account</button>
           </div>
