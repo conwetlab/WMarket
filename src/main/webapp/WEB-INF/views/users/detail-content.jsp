@@ -78,7 +78,7 @@
 
             <div class="form-field">
               <label class="field-label">OAuth2</label>
-              <input class="field-control" type="text" name="oauth2" value="Logged in through 'Identity Manager'" />
+              <div class="field-control static">Logged in through 'Identity Manager'</div>
             </div>
           </div>
         </div>
