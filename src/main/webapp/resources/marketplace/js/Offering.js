@@ -15,10 +15,11 @@ var Offering = (function () {
         var offeringHeader = this.element.appendChild(document.createElement('div'));
             offeringHeader.className = "panel-heading";
 
-        this.imageElement = offeringHeader.appendChild(document.createElement('div'));
-        this.imageElement.className = "thumbnail thumbnail-sm";
+        this.imageElement = offeringHeader.appendChild(document.createElement('span'));
+        this.imageElement.className = "image-thumbnail";
 
         var offeringImage = this.imageElement.appendChild(document.createElement('img'));
+            offeringImage.className = "image image-rounded image-bordered";
             offeringImage.src = data.imageUrl;
 
         this.nameElement = offeringHeader.appendChild(document.createElement('a'));

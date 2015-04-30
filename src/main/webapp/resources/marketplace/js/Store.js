@@ -16,18 +16,34 @@ var Store = (function () {
         var storeHeading = this.element.appendChild(document.createElement('div'));
             storeHeading.className = "store-heading";
 
-        var avatarElement = storeHeading.appendChild(document.createElement('span'));
-            avatarElement.className = "fa fa-building fa-fw";
+        var thumbnailElement = storeHeading.appendChild(document.createElement('span'));
+            thumbnailElement.className = "image-thumbnail image-thumbnail-sm";
 
-        this.nameElement = storeHeading.appendChild(document.createElement('span'));
-        this.nameElement.className = "store-name text-plain";
-        this.nameElement.appendChild(document.createTextNode(data.displayName));
+        this.imageElement = document.createElement('img');
+        this.imageElement.className = "image image-circle";
+
+        this.avatarElement = document.createElement('span');
+        this.avatarElement.className = "image image-circle image-default-darker";
+
+        var iconElement = this.avatarElement.appendChild(document.createElement('span'));
+            iconElement.className = "fa fa-building fa-inverse";
+
+        if (data.imagePath) {
+            this.imageElement.src = [WMarket.core.contextPath, data.imagePath].join('/');
+            thumbnailElement.appendChild(this.imageElement);
+        } else {
+            thumbnailElement.appendChild(this.avatarElement);
+        }
 
         this.displayName = data.displayName;
         this.name = data.name;
 
         var storeBody = this.element.appendChild(document.createElement('div'));
             storeBody.className = "store-body";
+
+        this.nameElement = storeBody.appendChild(document.createElement('span'));
+        this.nameElement.className = "store-name";
+        this.nameElement.appendChild(document.createTextNode(data.displayName));
 
         this.urlElement = storeBody.appendChild(document.createElement('span'));
         this.urlElement.className = "store-url";
