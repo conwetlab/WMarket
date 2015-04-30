@@ -36,7 +36,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.FormParam;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -50,12 +50,14 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import org.fiware.apps.marketplace.controllers.web.forms.StoreForm;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -95,14 +97,13 @@ public class StoreController extends AbstractController {
 	}
 
 	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.TEXT_HTML)
 	@Path("register")
 	public Response createView(
 			@Context UriInfo uri,
 			@Context HttpServletRequest request,
-			@FormParam("displayName") String displayName,
-			@FormParam("url") String url,
-			@FormParam("comment") String comment) throws URISyntaxException {
+			@MultipartForm StoreForm form) throws URISyntaxException {
 
 		ModelAndView view;
 		ModelMap model = new ModelMap();
@@ -117,9 +118,10 @@ public class StoreController extends AbstractController {
 			model.addAttribute("user", currentUser);
 
 			store = new Store();
-			store.setDisplayName(displayName);
-			store.setUrl(url);
-			store.setComment(comment);
+			store.setDisplayName(form.getDisplayName());
+			store.setUrl(form.getUrl());
+			store.setComment(form.getComment());
+            store.setImageBase64(form.getImageData());
 
 			getStoreBo().save(store);
 
@@ -127,7 +129,7 @@ public class StoreController extends AbstractController {
 					.path("stores").path(store.getName()).path("offerings")
 					.build();
 
-			setFlashMessage(request, "The store '" + displayName + "' was created successfully.");
+			setFlashMessage(request, "The store '" + store.getDisplayName() + "' was created successfully.");
 
 			builder = Response.seeOther(redirectURI);
 		} catch (UserNotFoundException e) {
@@ -143,9 +145,9 @@ public class StoreController extends AbstractController {
 		} catch (ValidationException e) {
 			logger.info("A form field is not valid", e);
 
-			model.addAttribute("field_displayName", displayName);
-			model.addAttribute("field_url", url);
-			model.addAttribute("field_comment", comment);
+			model.addAttribute("field_displayName", form.getDisplayName());
+			model.addAttribute("field_url", form.getUrl());
+			model.addAttribute("field_comment", form.getComment());
 
 			model.addAttribute("form_error", e);
 			view = new ModelAndView("store.create", model);
@@ -199,15 +201,14 @@ public class StoreController extends AbstractController {
 	}
 
     @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_HTML)
     @Path("{storeName}/about")
     public Response detailView(
             @Context UriInfo uri,
             @Context HttpServletRequest request,
             @PathParam("storeName") String storeName,
-            @FormParam("displayName") String displayName,
-            @FormParam("url") String url,
-            @FormParam("comment") String comment) {
+            @MultipartForm StoreForm form) {
 
         ModelAndView view;
         ModelMap model = new ModelMap();
@@ -223,9 +224,10 @@ public class StoreController extends AbstractController {
             model.addAttribute("store", currentStore);
             model.addAttribute("currentStoreView", "detail");
 
-            store.setDisplayName(displayName);
-            store.setUrl(url);
-            store.setComment(comment);
+            store.setDisplayName(form.getDisplayName());
+            store.setUrl(form.getUrl());
+            store.setComment(form.getComment());
+            store.setImageBase64(form.getImageData());
 
             getStoreBo().update(storeName, store);
 
@@ -235,7 +237,7 @@ public class StoreController extends AbstractController {
                     .path("stores").path(currentStore.getName()).path("about")
                     .build();
 
-            setFlashMessage(request, "The store '" + displayName + "' was updated successfully.");
+            setFlashMessage(request, "The store '" + store.getDisplayName() + "' was updated successfully.");
 
             builder = Response.seeOther(redirectURI);
         } catch (UserNotFoundException e) {
@@ -256,9 +258,9 @@ public class StoreController extends AbstractController {
         } catch (ValidationException e) {
             logger.info("A form field is not valid", e);
 
-            model.addAttribute("field_displayName", displayName);
-            model.addAttribute("field_url", url);
-            model.addAttribute("field_comment", comment);
+            model.addAttribute("field_displayName", form.getDisplayName());
+            model.addAttribute("field_url", form.getUrl());
+            model.addAttribute("field_comment", form.getComment());
 
             model.addAttribute("form_error", e);
             view = new ModelAndView("store.detail", model);

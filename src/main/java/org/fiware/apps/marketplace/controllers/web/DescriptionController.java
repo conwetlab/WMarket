@@ -90,6 +90,7 @@ public class DescriptionController extends AbstractController {
             model.addAttribute("title", description.getDisplayName() + " - " + getContextName());
             model.addAttribute("store", store);
             model.addAttribute("description", description);
+            model.addAttribute("currentDescriptionView", "detail");
 
             addFlashMessage(request, model);
 
@@ -193,6 +194,58 @@ public class DescriptionController extends AbstractController {
         }
 
         return builder.build();
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("offerings")
+    public Response offeringListView(
+            @Context HttpServletRequest request,
+            @PathParam("storeName") String storeName,
+            @PathParam("descriptionName") String descriptionName) {
+
+        ModelAndView view;
+        ModelMap model = new ModelMap();
+        ResponseBuilder builder;
+
+        try {
+            User user = getCurrentUser();
+            Store store = getStoreBo().findByName(storeName);
+            Description description = getDescriptionBo().findByNameAndStore(storeName, descriptionName);
+
+            model.addAttribute("user", user);
+            model.addAttribute("title", description.getDisplayName() + " - " + getContextName());
+            model.addAttribute("store", store);
+            model.addAttribute("description", description);
+            model.addAttribute("currentDescriptionView", "offeringList");
+
+            addFlashMessage(request, model);
+
+            view = new ModelAndView("description.offering.list", model);
+            builder = Response.ok();
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError();
+        } catch (NotAuthorizedException e) {
+            logger.info("User unauthorized", e);
+
+            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+            builder = Response.status(Status.UNAUTHORIZED);
+        } catch (StoreNotFoundException e) {
+            logger.info("Store not found", e);
+
+            view = buildErrorView(Status.NOT_FOUND, e.getMessage());
+            builder = Response.status(Status.NOT_FOUND);
+        } catch (DescriptionNotFoundException e) {
+            logger.info("Description not found", e);
+
+            view = buildErrorView(Status.NOT_FOUND, e.getMessage());
+            builder = Response.status(Status.NOT_FOUND);
+        }
+
+        return builder.entity(view).build();
     }
 
     @POST
