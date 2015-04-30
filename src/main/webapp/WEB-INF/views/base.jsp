@@ -10,8 +10,8 @@
     <title>${ title }</title>
 
     <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/font-awesome/css/font-awesome.css">
-    <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/marketplace-grid.css">
     <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/marketplace-theme.css">
+    <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/marketplace-grid.css">
     <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/marketplace-helpers.css">
   </head>
   <body>
@@ -30,15 +30,6 @@
                 <span class="fa fa-bars"></span>
               </button>
             </div><!-- /.navbar-element -->
-
-            <form class="navbar-element pull-left">
-              <div class="form-field form-addon">
-                <input id="search-field" class="form-control" type="text" placeholder="TODO: Not implemented yet.">
-                <button id="search" class="btn btn-default btn-addon" type="submit">
-                  <span class="fa fa-search"></span>
-                </button>
-              </div>
-            </form><!-- /.navbar-element -->
 
             <div class="navbar-element pull-right">
               <button id="toggle-right-sidebar" class="btn btn-primary-lighter" type="button">
@@ -80,9 +71,10 @@
 
         <div id="right-sidebar" class="panel panel-default-darker panel-sliding panel-sliding-right">
           <div class="panel-heading">
-            <span class="fa-avatar fa-stack">
-              <i class="fa fa-circle fa-stack-2x"></i>
-              <i class="fa fa-user fa-stack-1x fa-inverse"></i>
+            <span class="image-thumbnail">
+              <span class="image image-circle image-primary-ligther">
+                <span class="fa fa-user fa-inverse"></span>
+              </span>
             </span>
             <span class="panel-title text-truncate">${ user.displayName }</span>
             <span class="panel-subtitle text-truncate">${ user.email }</span>
@@ -226,6 +218,19 @@
           var logout = function logout() {
             document.logout_form.submit();
           };
+
+          $(document).on('change', '.field-control-group .field-control:file', function(event) {
+              var file, fieldControl;
+
+              fieldControl = this.parentElement.parentElement.previousElementSibling;
+
+              if (this.files.length) {
+                  file = this.files[0];
+                  fieldControl.value = file.name;
+              } else {
+                  fieldControl.value = "";
+              }
+          });
         </script>
         <script src="${ pageContext.request.contextPath }/resources/marketplace/js/CustomError.js"></script>
         <script src="${ pageContext.request.contextPath }/resources/marketplace/js/AlertManager.js"></script>
