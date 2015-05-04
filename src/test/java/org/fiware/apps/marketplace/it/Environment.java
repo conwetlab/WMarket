@@ -108,7 +108,7 @@ public class Environment {
 			String projectDirectory = Paths.get(".").toAbsolutePath().toString();
 			String modifiedWarPath = projectDirectory + "/target/" + MODIFIED_WAR_NAME;
 			
-		    Path originalWar = Paths.get(projectDirectory + "/target/FiwareMarketplace.war");
+		    Path originalWar = Paths.get(projectDirectory + "/target/WMarket.war");
 		    Path modifiedWar = Paths.get(modifiedWarPath);
 		    Files.copy(originalWar, modifiedWar, StandardCopyOption.REPLACE_EXISTING);
 		    

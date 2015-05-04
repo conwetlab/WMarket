@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.fiware.apps.marketplace</groupId>
-	<artifactId>FiwareMarketplace</artifactId>
+	<artifactId>WMarket</artifactId>
 	<packaging>war</packaging>
 	<version>4.3.1-SNAPSHOT</version>
-	<name>FiwareMarketplace Webapp</name>
+	<name>WMarket</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -383,7 +383,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>FiwareMarketplace</finalName>
+		<finalName>WMarket</finalName>
 		<plugins>
 
 			<plugin>
