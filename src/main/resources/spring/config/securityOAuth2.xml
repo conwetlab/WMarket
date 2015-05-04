@@ -14,8 +14,7 @@
 	<!-- urls and security configuration -->
 	<security:http auto-config="true" entry-point-ref="fiwareEntryPoint"
 		use-expressions="true" disable-url-rewriting="true">
-		<security:custom-filter before="CAS_FILTER"
-			ref="apiHeaderFilter" />
+		<security:custom-filter before="CAS_FILTER" ref="apiHeaderFilter" />
 		<security:custom-filter after="CAS_FILTER" ref="clientFilter" />
 
 		<!-- Log the user out -->
@@ -25,7 +24,10 @@
 		<security:intercept-url pattern="/vocabulary/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/demoservices/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/media/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
-
+		
+		<!-- Callback must me also accessible by anonymous users -->
+		<security:intercept-url pattern="/callback/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
+		
 		<!-- When the IdM is working, users cannot be created or modified -->
 		<security:intercept-url pattern="/api/v2/user/**" method="POST" access="denyAll" />
 		<security:intercept-url pattern="/api/v2/user/**" method="PUT" access="denyAll" />
