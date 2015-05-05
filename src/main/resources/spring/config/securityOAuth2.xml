@@ -18,7 +18,7 @@
 		<security:custom-filter after="CAS_FILTER" ref="clientFilter" />
 
 		<!-- Log the user out -->
-		<security:logout logout-url="/logout" logout-success-url="/login?out=1" delete-cookies="JSESSIONID" invalidate-session="true" />
+		<security:logout logout-url="/logout" logout-success-url="${oauth2.server}/${oauth2.signOutPath}" delete-cookies="JSESSIONID" invalidate-session="true" />
 
 		<!-- Default URLs that are visible for everyone -->
 		<security:intercept-url pattern="/vocabulary/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
