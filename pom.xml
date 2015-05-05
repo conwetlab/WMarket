@@ -13,8 +13,8 @@
 		<tiles.version>3.0.5</tiles.version>
 		<apache.version>4.3.5</apache.version>
 		<resteasy.version>3.0.10.Final</resteasy.version>
-		<spring.version>4.1.4.RELEASE</spring.version>
-		<spring_security.version>3.2.5.RELEASE</spring_security.version>
+		<spring.version>4.1.6.RELEASE</spring.version>
+		<spring_security.version>3.2.7.RELEASE</spring_security.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -362,7 +362,7 @@
 		<dependency>
 			<groupId>org.pac4j</groupId>
 			<artifactId>spring-security-pac4j</artifactId>
-			<version>1.2.4</version>
+			<version>1.2.5</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework.security</groupId>
@@ -378,7 +378,7 @@
 		<dependency>
 			<groupId>org.pac4j</groupId>
 			<artifactId>pac4j-oauth</artifactId>
-			<version>1.6.0</version>
+			<version>1.7.0</version>
 		</dependency>
 
 	</dependencies>
