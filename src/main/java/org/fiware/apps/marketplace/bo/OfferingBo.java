@@ -67,4 +67,10 @@ public interface OfferingBo {
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
 			int offset, int max) throws NotAuthorizedException, StoreNotFoundException, 
 			DescriptionNotFoundException;	
+	
+	// Bookmarking
+	public void bookmark(String storeName, String descriptionName, String offeringName) 
+			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException;
+	
 }
