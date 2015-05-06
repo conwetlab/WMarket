@@ -72,5 +72,7 @@ public interface OfferingBo {
 	public void bookmark(String storeName, String descriptionName, String offeringName) 
 			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException;
+	public List<Offering> getAllBookmarkedOfferings() throws NotAuthorizedException;
+	public List<Offering> getBookmarkedOfferingsPage(int offset, int max) throws NotAuthorizedException;
 	
 }

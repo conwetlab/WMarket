@@ -39,7 +39,6 @@ import org.fiware.apps.marketplace.bo.OfferingBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.OfferingDao;
-import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
@@ -60,7 +59,6 @@ public class OfferingBoImpl implements OfferingBo {
 	@Autowired private OfferingAuth offeringAuth;
 	@Autowired private OfferingDao offeringDao;
 	@Autowired private UserBo userBo;
-	@Autowired private UserDao userDao;
 	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
 
@@ -232,12 +230,38 @@ public class OfferingBoImpl implements OfferingBo {
 				bookmarks.add(offering);
 			}
 			
-			// The user needs to be updated in the data base. Otherwise the bookmarking
-			// won't be persisted... 
-			userDao.save(user);
-			
+			// The user is automatically updated since the method is marked as "Transactional"
+						
 		} catch (UserNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public List<Offering> getAllBookmarkedOfferings() throws NotAuthorizedException {
+		return getBookmarkedOfferingsPage(0, Integer.MAX_VALUE);
+	}
+
+	@Override
+	@Transactional
+	public List<Offering> getBookmarkedOfferingsPage(int offset, int max)
+			throws NotAuthorizedException {
+
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canListBookmarked()) {
+			throw new NotAuthorizedException("list bookmarked offerings");
+		}
+		
+		try {
+			List<Offering> offerings = userBo.getCurrentUser().getBookmarks();
+			int finalElement = offset + max;
+			int checkedMax = finalElement <= offerings.size() ? finalElement : offerings.size();
+			return userBo.getCurrentUser().getBookmarks().subList(offset, checkedMax);
+		} catch (UserNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		
+	}
+	
+	
 }

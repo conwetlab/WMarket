@@ -89,37 +89,6 @@ public class OfferingService {
 		return response;
 	}
 	
-	@GET
-	@Produces({"application/xml", "application/json"})
-	public Response listOfferingsInDescription(
-			@PathParam("storeName") String storeName, 
-			@PathParam("descriptionName") String descriptionName,
-			@DefaultValue("0") @QueryParam("offset") int offset,
-			@DefaultValue("100") @QueryParam("max") int max) {
-		
-		Response response;
-		
-		if (offset < 0 || max <= 0) {
-			// Offset and Max should be checked
-			response = ERROR_UTILS.badRequestResponse(String.format(
-					"offset (%d) and/or max (%d) are not valid", offset, max));
-		} else {
-			try {			
-				Offerings offerings = new Offerings(offeringBo.getDescriptionOfferingsPage(
-						storeName, descriptionName, offset, max));
-				response = Response.status(Status.OK).entity(offerings).build();
-			} catch (NotAuthorizedException ex) {
-				response = ERROR_UTILS.notAuthorizedResponse(ex);
-			} catch (DescriptionNotFoundException | StoreNotFoundException ex) {
-				response = ERROR_UTILS.entityNotFoundResponse(ex);
-			} catch (Exception ex) {
-				response = ERROR_UTILS.internalServerError(ex);
-			}
-		}
-		
-		return response;
-	}
-	
 	@POST
 	@Path("{offeringName}/bookmark")
 	public Response bookmark(@PathParam("storeName") String storeName, 
@@ -137,6 +106,37 @@ public class OfferingService {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
+		}
+		
+		return response;
+	}
+	
+	@GET
+	@Produces({"application/xml", "application/json"})
+	public Response listOfferingsInDescription(
+			@PathParam("storeName") String storeName, 
+			@PathParam("descriptionName") String descriptionName,
+			@DefaultValue("0") @QueryParam("offset") int offset,
+			@DefaultValue("100") @QueryParam("max") int max) {
+		
+		Response response;
+		
+		if (offset < 0 || max <= 0) {	
+			// Offset and Max should be checked
+			response = ERROR_UTILS.badRequestResponse(String.format(
+					"offset (%d) and/or max (%d) are not valid", offset, max));
+		} else {
+			try {
+				Offerings offerings = new Offerings(offeringBo.getDescriptionOfferingsPage(
+						storeName, descriptionName, offset, max));
+				response = Response.status(Status.OK).entity(offerings).build();
+			} catch (NotAuthorizedException ex) {
+				response = ERROR_UTILS.notAuthorizedResponse(ex);
+			} catch (DescriptionNotFoundException | StoreNotFoundException ex) {
+				response = ERROR_UTILS.entityNotFoundResponse(ex);
+			} catch (Exception ex) {
+				response = ERROR_UTILS.internalServerError(ex);
+			}
 		}
 		
 		return response;
