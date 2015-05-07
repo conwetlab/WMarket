@@ -79,7 +79,7 @@ public class AllOfferingsServiceTest {
 		doThrow(e).when(offeringBoMock).getOfferingsPage(anyInt(), anyInt());
 
 		// Call the method
-		Response res = allOfferingsService.listOfferings(0, 100);
+		Response res = allOfferingsService.listOfferings(0, 100, false);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, 
@@ -88,7 +88,7 @@ public class AllOfferingsServiceTest {
 	
 	private void testListAllOfferingsInvalidParams(int offset, int max) {
 		// Call the method
-		Response res = allOfferingsService.listOfferings(offset, max);
+		Response res = allOfferingsService.listOfferings(offset, max, false);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -126,7 +126,7 @@ public class AllOfferingsServiceTest {
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsService.listOfferings(offset, max);
+		Response res = allOfferingsService.listOfferings(offset, max, false);
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max);
@@ -147,7 +147,7 @@ public class AllOfferingsServiceTest {
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsService.listOfferings(offset, max);
+		Response res = allOfferingsService.listOfferings(offset, max, false);
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max);
