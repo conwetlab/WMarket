@@ -70,7 +70,7 @@ public abstract class AbstractIT {
 		int port = environment.start();
 		
 		// End Point depends on the Tomcat port
-		endPoint = String.format("http://localhost:%d/FiwareMarketplace", port);
+		endPoint = String.format("http://localhost:%d/WMarket", port);
 	}
 	
 	@AfterClass
