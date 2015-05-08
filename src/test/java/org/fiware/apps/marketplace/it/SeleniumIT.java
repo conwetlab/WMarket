@@ -55,16 +55,7 @@ public class SeleniumIT extends AbstractIT {
 		driver.quit();
 	}
 	
-	@Test
-	public void testRegisterAndLogIn() {
-		
-		String displayName = "FIWARE Example";
-		String email = "fiware@fiware.com";
-		String password = "fiware1!";
-
-		// Access the URL
-		driver.get(endPoint);
-	    
+	private void registerUser(String displayName, String email, String password, String passwordConfirm) {
 		// Access Sign Up page
 		driver.findElement(By.cssSelector("span.text-plain")).click();
 	    driver.findElement(By.name("displayName")).clear();
@@ -76,16 +67,32 @@ public class SeleniumIT extends AbstractIT {
 	    driver.findElement(By.name("password")).clear();
 	    driver.findElement(By.name("password")).sendKeys(password);
 	    driver.findElement(By.name("passwordConfirm")).clear();
-	    driver.findElement(By.name("passwordConfirm")).sendKeys(password);
+	    driver.findElement(By.name("passwordConfirm")).sendKeys(passwordConfirm);
 	    driver.findElement(By.xpath("//button[@type='submit']")).click();
-	    
-	    // Log in
+	}
+	
+	private void logIn(String userNameOrMail, String password) {
 	    driver.findElement(By.name("username")).clear();
-	    driver.findElement(By.name("username")).sendKeys(email);
+	    driver.findElement(By.name("username")).sendKeys(userNameOrMail);
 	    driver.findElement(By.name("password")).clear();
 	    driver.findElement(By.name("password")).sendKeys(password);
 	    driver.findElement(By.xpath("//button[@type='submit']")).click();
+	}
+	
+	@Test
+	public void testRegisterAndLogIn() {
+		
+		String displayName = "FIWARE Example";
+		String email = "fiware@fiware.com";
+		String password = "fiware1!";
+
+		// Access the URL
+		driver.get(endPoint);
 	    
+		registerUser(displayName, email, password, password);
+		// When the user is properly registered, the system goes back to the log in page
+		logIn(email, password);
+		
 	    // Check that the user is logged in...
 	    assertThat(driver.findElement(By.id("toggle-right-sidebar")).getText()).isEqualTo(displayName);	    
 	}
