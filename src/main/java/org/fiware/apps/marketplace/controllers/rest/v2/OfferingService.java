@@ -99,7 +99,7 @@ public class OfferingService {
 		
 		try {
 			offeringBo.bookmark(storeName, descriptionName, offeringName);
-			response = Response.status(Status.OK).build();
+			response = Response.status(Status.NO_CONTENT).build();
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (OfferingNotFoundException | StoreNotFoundException | DescriptionNotFoundException ex) {

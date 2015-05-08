@@ -36,10 +36,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -112,12 +112,8 @@ public class AllOfferingsServiceTest {
 	
 	@Test
 	public void testListAllOfferingsGetNoErrors() throws NotAuthorizedException {
-		List<Offering> oferrings = new ArrayList<Offering>();
-		for (int i = 0; i < 3; i++) {
-			Offering offering = new Offering();
-			offering.setId(i);
-			oferrings.add(offering);
-		}
+		@SuppressWarnings("unchecked")
+		List<Offering> oferrings = mock(List.class);
 		
 		// Mocks
 		when(offeringBoMock.getOfferingsPage(anyInt(), anyInt())).
@@ -130,6 +126,31 @@ public class AllOfferingsServiceTest {
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max);
+		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max);
+		
+		// Assertions
+		assertThat(res.getStatus()).isEqualTo(200);
+		assertThat(((Offerings) res.getEntity()).
+				getOfferings()).isEqualTo(oferrings);
+	}
+	
+	@Test
+	public void testListBookmarkedOfferingsGetNoErrors() throws NotAuthorizedException {
+		@SuppressWarnings("unchecked")
+		List<Offering> oferrings = mock(List.class);
+		
+		// Mocks
+		when(offeringBoMock.getBookmarkedOfferingsPage(anyInt(), anyInt())).
+				thenReturn(oferrings);
+		
+		// Call the method
+		int offset = 0;
+		int max = 100;
+		Response res = allOfferingsService.listOfferings(offset, max, true);
+		
+		// Verify
+		verify(offeringBoMock, never()).getOfferingsPage(offset, max);
+		verify(offeringBoMock).getBookmarkedOfferingsPage(offset, max);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -151,9 +172,31 @@ public class AllOfferingsServiceTest {
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max);
+		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max);
 		
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
 	}
+	
+	@Test
+	public void testListBookmarkedOfferingsException() throws NotAuthorizedException {
+		// Mocks
+		String exceptionMsg = "exception";
+		doThrow(new RuntimeException("", new Exception(exceptionMsg)))
+				.when(offeringBoMock).getBookmarkedOfferingsPage(anyInt(), anyInt());
+
+		// Call the method
+		int offset = 0;
+		int max = 100;
+		Response res = allOfferingsService.listOfferings(offset, max, true);
+		
+		// Verify
+		verify(offeringBoMock, never()).getOfferingsPage(offset, max);
+		verify(offeringBoMock).getBookmarkedOfferingsPage(offset, max);
+		
+		// Check exception
+		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
+	}
+
 
 }
