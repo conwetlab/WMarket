@@ -246,8 +246,9 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	@Test
 	public void testCreationDisplayNameTooLong() {
-		testCreationInvalidField("abcdefghijklmnopqrstuvwxyz", defaultUSDLPath, "", "displayName", 
-				String.format(MESSAGE_TOO_LONG, 20));
+		testCreationInvalidField("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+				+ "abcdefghijklmnopqrstuvw", defaultUSDLPath, "", "displayName", 
+				String.format(MESSAGE_TOO_LONG, 100));
 	}
 	
 	@Test
@@ -420,8 +421,9 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	@Test
 	public void testUpdateDisplayNameTooLong() {
-		testUpdateInvalidField("abcdefghijklmnopqrstuvwxyz", defaultUSDLPath, "", "displayName", 
-				String.format(MESSAGE_TOO_LONG, 20));
+		testUpdateInvalidField("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+				+ "abcdefghijklmnopqrstuvw", defaultUSDLPath, "", "displayName", 
+				String.format(MESSAGE_TOO_LONG, 100));
 	}
 	
 	@Test
