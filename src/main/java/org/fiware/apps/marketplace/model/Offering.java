@@ -35,12 +35,17 @@ package org.fiware.apps.marketplace.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -50,6 +55,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.fiware.apps.marketplace.utils.xmladapters.DescriptionXMLAdapter;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
@@ -67,6 +73,7 @@ public class Offering {
 	private String version;
 	private Description describedIn;
 	private String imageUrl;
+	private Set<PricePlan> pricePlans;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -151,6 +158,17 @@ public class Offering {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	
+	@XmlElement(name = "pricePlan")
+    @JsonProperty("pricePlans")
+	@OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	public Set<PricePlan> getPricePlans() {
+		return pricePlans;
+	}
+
+	public void setPricePlans(Set<PricePlan> pricePlans) {
+		this.pricePlans = pricePlans;
 	}
 
 	@Override
