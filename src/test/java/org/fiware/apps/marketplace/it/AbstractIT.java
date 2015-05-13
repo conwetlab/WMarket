@@ -55,7 +55,7 @@ public abstract class AbstractIT {
 	protected static String endPoint;
 	
 	protected final static String MESSAGE_INVALID_DISPLAY_NAME = 
-			"This field only accepts letters, numbers, white spaces and hyphens.";
+			"This field only accepts letters, numbers, white spaces, dots and hyphens.";
 	protected final static String MESSAGE_TOO_LONG = "This field must not exceed %d chars."; 
 	protected final static String MESSAGE_TOO_SHORT = "This field must be at least %d chars.";
 	protected final static String MESSAGE_FIELD_REQUIRED = "This field is required.";
