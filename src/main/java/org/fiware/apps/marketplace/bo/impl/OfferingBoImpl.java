@@ -238,6 +238,7 @@ public class OfferingBoImpl implements OfferingBo {
 	}
 
 	@Override
+	@Transactional
 	public List<Offering> getAllBookmarkedOfferings() throws NotAuthorizedException {
 		return getBookmarkedOfferingsPage(0, Integer.MAX_VALUE);
 	}
@@ -256,7 +257,7 @@ public class OfferingBoImpl implements OfferingBo {
 			List<Offering> offerings = userBo.getCurrentUser().getBookmarks();
 			int finalElement = offset + max;
 			int checkedMax = finalElement <= offerings.size() ? finalElement : offerings.size();
-			return userBo.getCurrentUser().getBookmarks().subList(offset, checkedMax);
+			return offerings.subList(offset, checkedMax);
 		} catch (UserNotFoundException e) {
 			throw new RuntimeException(e);
 		}
