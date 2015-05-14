@@ -1103,6 +1103,33 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(bookmarkedOfferingsResponse.getStatus()).isEqualTo(200);
 		bookmarkedOfferings = bookmarkedOfferingsResponse.readEntity(Offerings.class).getOfferings();
 		assertThat(bookmarkedOfferings).isEmpty();
+	}
+	
+	@Test
+	public void testBookmarkTwoOfferings() {
 		
+		String firstDescriptionName = "default";
+		String secondDescriptionName = "secondary";
+		Offering bookmarkedOffering = SECOND_OFFERING;
+		intializeStoresWithOfferings(firstDescriptionName, secondDescriptionName);
+
+		// Bookmark the offerings from different stores (same offering in different stores)
+		String[] stores = {FIRST_STORE_NAME, SECOND_STORE_NAME};
+		for (String storeName: stores) {
+			Response bookmarkResponse = bookmarkOrUnbookmarkOffering(storeName, secondDescriptionName, 
+					bookmarkedOffering.getName());
+			assertThat(bookmarkResponse.getStatus()).isEqualTo(204);
+		}
+		
+		// Check that bookmarked offerings contains both offerings
+		Response bookmarkedOfferingsResponse = getBookmarkedOfferings();
+		assertThat(bookmarkedOfferingsResponse.getStatus()).isEqualTo(200);
+		List<Offering> bookmarkedOfferings = bookmarkedOfferingsResponse.readEntity(Offerings.class).getOfferings();
+		assertThat(bookmarkedOfferings.size()).isEqualTo(stores.length);
+		
+		for (int i = 0; i < bookmarkedOfferings.size(); i++) {
+			assertThat(bookmarkedOfferings.get(i)).isEqualTo(bookmarkedOffering);
+			assertThat(bookmarkedOfferings.get(i).getDescribedIn().getStore().getName()).isEqualTo(stores[i]);
+		}
 	}
 }
