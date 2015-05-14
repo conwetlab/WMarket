@@ -97,6 +97,15 @@
         <div class="panel-body">
 
           <div class="list-group">
+            <div class="list-group-body">
+              <a class="list-group-item" href="${ pageContext.request.contextPath }/offerings/bookmarks">
+                <span class="fa fa-bookmark fa-fw"></span>
+                <span class="text-plain">My bookmarks</span>
+              </a>
+            </div>
+          </div><!-- .list-group -->
+
+          <div class="list-group">
             <div class="list-group-heading">DESCRIPTIONS</div>
             <div class="list-group-body">
               <a class="list-group-item" href="${ pageContext.request.contextPath }/descriptions">

@@ -42,6 +42,12 @@
         <put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/detail-scripts.jsp" />
     </definition>
 
+    <!-- Offering Resource - Bookmark Filter - List View -->
+    <definition name="offering.bookmark.list" template="/WEB-INF/views/base.jsp">
+        <put-attribute name="content" value="/WEB-INF/views/offerings/bookmark-list-content.jsp" />
+        <put-attribute name="extra-scripts" value="/WEB-INF/views/offerings/bookmark-list-scripts.jsp" />
+    </definition>
+
     <!-- Store Resource - Create View -->
     <definition name="store.create" template="/WEB-INF/views/base.jsp">
         <put-attribute name="content" value="/WEB-INF/views/stores/create-content.jsp" />

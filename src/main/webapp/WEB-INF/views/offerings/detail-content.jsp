@@ -24,6 +24,29 @@
             </a>
           </div><!-- /.tab -->
 
+          <c:choose>
+            <c:when test="${ not empty bookmark }">
+
+              <div class="btn-toggle-bookmark tab tab-danger">
+                <a href="javascript:WMarket.view.toggleBookmark();">
+                  <span class="fa fa-bookmark"></span>
+                  <span class="hidden-sm">Remove bookmark</span>
+                </a>
+              </div><!-- /.tab -->
+
+            </c:when>
+            <c:otherwise>
+
+              <div class="btn-toggle-bookmark tab">
+                <a href="javascript:WMarket.view.toggleBookmark();">
+                  <span class="fa fa-bookmark"></span>
+                  <span class="hidden-sm">Add bookmark</span>
+                </a>
+              </div><!-- /.tab -->
+
+            </c:otherwise>
+          </c:choose>
+
         </div>
       </div>
     </div><!-- /.panel -->
