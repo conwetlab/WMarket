@@ -68,6 +68,17 @@ WMarket.requests = (function () {
             resourceURL = replaceByName(resourceURL, requestOptions.kwargs);
         }
 
+        if ('queryString' in requestOptions) {
+            resourceURL += "?";
+            for (name in requestOptions.queryString) {
+                if (resourceURL.indexOf('?') === resourceURL.length -1) {
+                    resourceURL += name + "=" + requestOptions.queryString[name];
+                } else {
+                    resourceURL += "&" + name + "=" + requestOptions.queryString[name];
+                }
+            }
+        }
+
         return {
             'name': resourceName,
             'type': endpointType,
@@ -86,7 +97,10 @@ WMarket.requests = (function () {
         var resource;
 
         resource = getResource(requestOptions);
-        requestOptions.containment.empty().append(createLoadingSpinner());
+
+        if ('containment' in requestOptions) {
+            requestOptions.containment.empty().append(createLoadingSpinner());
+        }
 
         $.ajax({
             async: true,
@@ -96,7 +110,9 @@ WMarket.requests = (function () {
             success: function (data) {
                 var collection, i;
 
-                requestOptions.containment.empty();
+                if ('containment' in requestOptions) {
+                    requestOptions.containment.empty();
+                }
 
                 if (resource.type.indexOf('collection') != -1) {
                     collection = data[resource.name];
@@ -109,7 +125,7 @@ WMarket.requests = (function () {
 
                     RequestManager.dispatch(requestOptions.namespace);
                 } else {
-                    // TODO: Support endpoints for entries.
+                    requestOptions.onSuccess(data);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -163,6 +179,16 @@ WMarket.requests = (function () {
          */
         read: function read(requestOptions) {
             makeRequest('GET', requestOptions);
+        },
+
+        /**
+         * @function
+         * @public
+         *
+         * @param {Object.<String, *>} requestOptions
+         */
+        create: function create(requestOptions) {
+            makeRequest('POST', requestOptions);
         },
 
         /**
