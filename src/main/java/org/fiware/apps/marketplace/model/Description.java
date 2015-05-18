@@ -224,7 +224,7 @@ public class Description {
 		if (obj instanceof Description) {
 			Description other = (Description) obj;
 			
-			if (this.id == other.id || (this.name.equals(other.name) && store.equals(other.store))) {
+			if (this.name.equals(other.name) && store.equals(other.store)) {
 				return true;
 			}
 		}

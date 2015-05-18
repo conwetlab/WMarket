@@ -191,7 +191,7 @@ public class Offering {
 		if (obj instanceof Offering) {
 			Offering other = (Offering) obj;
 			
-			if (id == other.id || (this.uri.equals(other.uri) && this.describedIn.equals(other.describedIn))) {
+			if (this.uri.equals(other.uri) && this.describedIn.equals(other.describedIn)) {
 				return true;
 			}
 		}

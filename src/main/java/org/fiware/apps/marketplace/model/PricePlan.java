@@ -124,4 +124,39 @@ public class PricePlan {
 	public void setPriceComponents(Set<PriceComponent> priceComponents) {
 		this.priceComponents = priceComponents;
 	}
+
+	/**
+	 * This object is MUTABLE since user can modify its attributes at ANY TIME. Please, be careful and
+	 * set all the properties before including an instance in any collection or you may experience
+	 * unexpected behaviors.
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 37;
+		int result = 1;
+		result = prime * result + (title == null ? 0 : title.hashCode());
+		result = prime * result + (description == null ? 0 : description.hashCode());
+		result = prime * result + (priceComponents == null ? 0 : priceComponents.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj) {
+			return true;
+		}
+		
+		if (obj instanceof PricePlan) {
+		
+			PricePlan other = (PricePlan) obj;
+			return this.title.equals(other.title) && 
+					this.description.equals(other.description) &&
+					this.priceComponents.equals(other.priceComponents);		
+		}
+		
+		return false;
+	}
+	
+	
 }

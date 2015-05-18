@@ -223,7 +223,7 @@ public class Store {
 		if (obj instanceof Store) {
 			Store other = (Store) obj;
 			
-			if (id == other.id || name.equals(other.name)) {
+			if (name.equals(other.name)) {
 				return true;
 			}			
 		}

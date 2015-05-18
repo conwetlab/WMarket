@@ -35,7 +35,9 @@ package org.fiware.apps.marketplace.it;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -48,6 +50,9 @@ import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
+import org.fiware.apps.marketplace.model.PriceComponent;
+import org.fiware.apps.marketplace.model.PricePlan;
+import org.fiware.apps.marketplace.model.Store;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -71,6 +76,35 @@ public class DescriptionServiceIT extends AbstractIT {
 	private final static Offering SECOND_OFFERING = new Offering();
 	
 	static {
+		
+		PriceComponent priceComponentOff1 = new PriceComponent();
+		priceComponentOff1.setTitle("Single payment");
+		priceComponentOff1.setDescription("This component defines a single payment");
+		priceComponentOff1.setValue(1.0f);
+		priceComponentOff1.setCurrency("EUR");
+		priceComponentOff1.setUnit("single payment");
+
+		// Include the price component into the set once that its values has been set.
+		Set<PriceComponent> priceComponents = new HashSet<>();
+		priceComponents.add(priceComponentOff1);
+		
+		PricePlan pricePlanOff1 = new PricePlan();
+		pricePlanOff1.setTitle("Single Payment");
+		pricePlanOff1.setDescription("This offering needs a single payment to be acquired");
+		pricePlanOff1.setPriceComponents(priceComponents);
+		
+		// Include the price plan into the the set once that the values has been set.
+		Set<PricePlan> pricePlansOff1 = new HashSet<>();
+		pricePlansOff1.add(pricePlanOff1);
+		
+		PricePlan pricePlanOff2 = new PricePlan();
+		pricePlanOff2.setTitle("Free use");
+		pricePlanOff2.setDescription("This offering can be acquired for free");
+		pricePlanOff2.setPriceComponents(new HashSet<PriceComponent>());
+		
+		Set<PricePlan> pricePlansOff2 = new HashSet<>();
+		pricePlansOff2.add(pricePlanOff2);
+		
 		// WARN: This properties depends on the RDF files stored in "src/test/resources/__files" so if these files
 		// changes, this properties must be changed. Otherwise, tests will fail.
 		FIRST_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit"
@@ -83,6 +117,8 @@ public class DescriptionServiceIT extends AbstractIT {
 				+ "tools/examples for making application mashups using WireCloud and the Orion Context Broker. "
 				+ "Those resources can be used for example for showing entities coming from an Orion server inside "
 				+ "the Map Viewer widget or browsing and updating the attributes of those entities.");
+		FIRST_OFFERING.setPricePlans(pricePlansOff1);
+		
 		
 		SECOND_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/CkanStarterKit"
 				+ "#GHbnf7dsubc19ebx4fmfgH");
@@ -93,7 +129,7 @@ public class DescriptionServiceIT extends AbstractIT {
 				+ "the base tools/examples for making application mashups using WireCloud and CKAN. Those resources "
 				+ "can be used for example for showing data coming from CKAN's dataset inside the Map Viewer widget "
 				+ "or inside a graph widget or for browsing data inside a table widget.");
-
+		SECOND_OFFERING.setPricePlans(pricePlansOff2);
 		
 	}
 	
@@ -149,13 +185,13 @@ public class DescriptionServiceIT extends AbstractIT {
 	private void checkDescription(String userName, String password, String storeName, 
 			String descriptionName, String displayName, String url, String comment) {
 		
-		Description description = getDescription(userName, password, storeName, descriptionName)
+		Description retrievedDescription = getDescription(userName, password, storeName, descriptionName)
 				.readEntity(Description.class);
 		
-		assertThat(description.getName()).isEqualTo(descriptionName);
-		assertThat(description.getDisplayName()).isEqualTo(displayName);
-		assertThat(description.getUrl()).isEqualTo(url);
-		assertThat(description.getComment()).isEqualTo(comment);
+		assertThat(retrievedDescription.getName()).isEqualTo(descriptionName);
+		assertThat(retrievedDescription.getDisplayName()).isEqualTo(displayName);
+		assertThat(retrievedDescription.getUrl()).isEqualTo(url);
+		assertThat(retrievedDescription.getComment()).isEqualTo(comment);
 		
 		// Check offerings
 		Offering[] expectedOfferings;
@@ -165,11 +201,18 @@ public class DescriptionServiceIT extends AbstractIT {
 			expectedOfferings = new Offering[] {FIRST_OFFERING};
 		}
 		
-		List<Offering> descriptionOfferings = description.getOfferings();
+		List<Offering> descriptionOfferings = retrievedDescription.getOfferings();
 		assertThat(descriptionOfferings.size()).isEqualTo(expectedOfferings.length);
 		
 		for (Offering expectedOffering: expectedOfferings) {
-			assertThat(expectedOffering).isIn(descriptionOfferings);
+			
+			Store store = new Store();
+			store.setName(storeName);
+			
+			Description description = new Description();
+			description.setName(descriptionName);
+			description.setStore(store);
+			expectedOffering.setDescribedIn(description);			
 		}
 	}
 	
@@ -844,6 +887,9 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testStoreOfferings() {
 		
+		String description1Name = "displayname";
+		String description2Name = "secondary";
+		
 		// Create an additional Store
 		String newStoreName = STORE_NAME + "a";
 		String newStoreUrl = STORE_URL + "/a";
@@ -851,21 +897,41 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
 
 		// Push each description in a different store
-		Response createDesc1Res = createDescription(USER_NAME, PASSWORD, STORE_NAME, "displayName", 
+		Response createDesc1Res = createDescription(USER_NAME, PASSWORD, STORE_NAME, description1Name, 
 				defaultUSDLPath, "");
-		Response createDesc2Res = createDescription(USER_NAME, PASSWORD, newStoreName, "secondary", 
+		Response createDesc2Res = createDescription(USER_NAME, PASSWORD, newStoreName, description2Name, 
 				secondaryUSDLPath, "");
 		
 		assertThat(createDesc1Res.getStatus()).isEqualTo(201);
 		assertThat(createDesc2Res.getStatus()).isEqualTo(201);
+		
+		// Create store and description instances. Needed for equals
+		Store store1 = new Store();
+		store1.setName(STORE_NAME);
+		
+		Description description1 = new Description();
+		description1.setName(description1Name);
+		description1.setStore(store1);
+
+		Store store2 = new Store();
+		store2.setName(newStoreName);
+		
+		Description description2 = new Description();
+		description2.setName(description2Name);
+		description2.setStore(store2);
 		
 		// Get Store1 offerings
 		Response store1OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, STORE_NAME);
 		assertThat(store1OfferingResponse.getStatus()).isEqualTo(200);
 		
 		Offerings offerings = store1OfferingResponse.readEntity(Offerings.class);
-		assertThat(offerings.getOfferings().size()).isEqualTo(1);
+		assertThat(offerings.getOfferings().size()).isEqualTo(1);		
+		FIRST_OFFERING.setDescribedIn(description1);		// Otherwise equals will fail
 		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
+
+		// Price plans are not checked in Offering.equals
+		int index = offerings.getOfferings().indexOf(FIRST_OFFERING);
+		assertThat(offerings.getOfferings().get(index).getPricePlans()).isEqualTo(FIRST_OFFERING.getPricePlans());
 		
 		// Get Store2 offerings
 		Response store2OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, newStoreName);
@@ -873,9 +939,18 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		offerings = store2OfferingResponse.readEntity(Offerings.class);
 		assertThat(offerings.getOfferings().size()).isEqualTo(2);
-				
+		
+		FIRST_OFFERING.setDescribedIn(description2);
+		SECOND_OFFERING.setDescribedIn(description2);
 		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
 		assertThat(SECOND_OFFERING).isIn(offerings.getOfferings());
+		
+		index = offerings.getOfferings().indexOf(FIRST_OFFERING);
+		assertThat(offerings.getOfferings().get(index).getPricePlans()).isEqualTo(FIRST_OFFERING.getPricePlans());
+
+		index = offerings.getOfferings().indexOf(SECOND_OFFERING);
+		assertThat(offerings.getOfferings().get(index).getPricePlans()).isEqualTo(SECOND_OFFERING.getPricePlans());
+		
 	}
 	
 	private void testGetSomeStoreOfferings(int offset, int max) {

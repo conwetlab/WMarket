@@ -59,6 +59,7 @@ public class PriceComponent {
 	
 	// Price Component
 	private String title;
+	private String description;
 	
 	// Price
 	private String currency;
@@ -98,6 +99,16 @@ public class PriceComponent {
 	}
 	
 	@XmlElement
+	@Column(name = "description")
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	@XmlElement
 	@Column(name = "currency")
 	public String getCurrency() {
 		return currency;
@@ -126,4 +137,44 @@ public class PriceComponent {
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
+
+	/**
+	 * This object is MUTABLE since user can modify its attributes at ANY TIME. Please, be careful and
+	 * set all the properties before including an instance in any collection or you may experience
+	 * unexpected behaviors.
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (currency == null ? 0 : currency.hashCode());
+		result = prime * result + (description == null ? 0 : description.hashCode());
+		result = prime * result + (title == null ? 0 : title.hashCode());
+		result = prime * result + (unit == null ? 0 : unit.hashCode());
+		result = prime * result + Float.floatToIntBits(value);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj) {
+			return true;
+		}
+		
+		if (obj instanceof PriceComponent) {
+			
+			PriceComponent other = (PriceComponent) obj;
+			
+			return this.title.equals(other.title) &&
+					this.description.equals(other.description) &&
+					this.currency.equals(other.currency) &&
+					this.unit.equals(other.unit) &&
+					this.value == other.value;
+			
+		} 
+		
+		return false;
+	}
+	
 }

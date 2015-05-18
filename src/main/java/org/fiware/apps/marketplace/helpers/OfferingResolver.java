@@ -219,6 +219,7 @@ public class OfferingResolver {
 					PriceComponent priceComponent = new PriceComponent();
 					priceComponent.setPricePlan(pricePlan);
 					priceComponent.setTitle(getTitle(model, priceComponentUri));
+					priceComponent.setDescription(getDescription(model, priceComponentUri));
 					priceComponent.setCurrency(rdfHelper.getLiteral(model, priceComponentUri, "gr:hasCurrency"));
 					priceComponent.setUnit(rdfHelper.getLiteral(model, priceComponentUri, "gr:hasUnitOfMeasurement"));
 					priceComponent.setValue(Float.parseFloat(
