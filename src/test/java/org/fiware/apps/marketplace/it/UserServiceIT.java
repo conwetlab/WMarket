@@ -107,7 +107,7 @@ public class UserServiceIT extends AbstractIT {
 	public void testUserCreationDisplayNameMissing() {
 		Response response = createUser("", "example@example.com", "password!1");
 		// userName is got based on displayName. userName is checked previously
-		checkAPIError(response, 400, "userName", MESSAGE_FIELD_REQUIRED, ErrorType.VALIDATION_ERROR);	
+		checkAPIError(response, 400, "displayName", MESSAGE_FIELD_REQUIRED, ErrorType.VALIDATION_ERROR);	
 	}
 	
 	@Test
