@@ -79,7 +79,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		PriceComponent priceComponentOff1 = new PriceComponent();
 		priceComponentOff1.setTitle("Single payment");
-		priceComponentOff1.setDescription("This component defines a single payment");
+		priceComponentOff1.setComment("This component defines a single payment");
 		priceComponentOff1.setValue(1.0f);
 		priceComponentOff1.setCurrency("EUR");
 		priceComponentOff1.setUnit("single payment");
@@ -90,7 +90,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		PricePlan pricePlanOff1 = new PricePlan();
 		pricePlanOff1.setTitle("Single Payment");
-		pricePlanOff1.setDescription("This offering needs a single payment to be acquired");
+		pricePlanOff1.setComment("This offering needs a single payment to be acquired");
 		pricePlanOff1.setPriceComponents(priceComponents);
 		
 		// Include the price plan into the the set once that the values has been set.
@@ -99,7 +99,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		PricePlan pricePlanOff2 = new PricePlan();
 		pricePlanOff2.setTitle("Free use");
-		pricePlanOff2.setDescription("This offering can be acquired for free");
+		pricePlanOff2.setComment("This offering can be acquired for free");
 		pricePlanOff2.setPriceComponents(new HashSet<PriceComponent>());
 		
 		Set<PricePlan> pricePlansOff2 = new HashSet<>();

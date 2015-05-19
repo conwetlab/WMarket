@@ -53,18 +53,15 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @IgnoreMediaTypes("application/*+json")
 public class PriceComponent {
 	
+	// Hibernate
 	private int id;
-	
 	private PricePlan pricePlan;
 	
-	// Price Component
 	private String title;
-	private String description;
-	
-	// Price
-	private String currency;
-	private float value;
-	private String unit;
+	private String comment;
+	private float value;		// 7.7, 8.9,...
+	private String currency;	// EUR, DOL,...
+	private String unit;		// single payment, months, MB,...
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -99,13 +96,13 @@ public class PriceComponent {
 	}
 	
 	@XmlElement
-	@Column(name = "description")
-	public String getDescription() {
-		return description;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 	
-	public void setDescription(String description) {
-		this.description = description;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	@XmlElement
@@ -148,7 +145,7 @@ public class PriceComponent {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (currency == null ? 0 : currency.hashCode());
-		result = prime * result + (description == null ? 0 : description.hashCode());
+		result = prime * result + (comment == null ? 0 : comment.hashCode());
 		result = prime * result + (title == null ? 0 : title.hashCode());
 		result = prime * result + (unit == null ? 0 : unit.hashCode());
 		result = prime * result + Float.floatToIntBits(value);
@@ -167,7 +164,7 @@ public class PriceComponent {
 			PriceComponent other = (PriceComponent) obj;
 			
 			return this.title.equals(other.title) &&
-					this.description.equals(other.description) &&
+					this.comment.equals(other.comment) &&
 					this.currency.equals(other.currency) &&
 					this.unit.equals(other.unit) &&
 					this.value == other.value;

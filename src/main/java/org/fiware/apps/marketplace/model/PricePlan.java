@@ -59,17 +59,12 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @IgnoreMediaTypes("application/*+json")
 public class PricePlan {
 	
-	// Identifier
+	// Hibernate
 	private int id;
-	
-	// Offering
 	private Offering offering;
 	
-	// Title and description
 	private String title;
-	private String description;
-	
-	// Price components
+	private String comment;
 	private Set<PriceComponent> priceComponents;
 
 	@Id
@@ -105,13 +100,13 @@ public class PricePlan {
 	}
 
 	@XmlElement
-	@Column(name = "description")
-	public String getDescription() {
-		return description;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@XmlElement(name = "priceComponent")
@@ -135,7 +130,7 @@ public class PricePlan {
 		final int prime = 37;
 		int result = 1;
 		result = prime * result + (title == null ? 0 : title.hashCode());
-		result = prime * result + (description == null ? 0 : description.hashCode());
+		result = prime * result + (comment == null ? 0 : comment.hashCode());
 		result = prime * result + (priceComponents == null ? 0 : priceComponents.hashCode());
 		return result;
 	}
@@ -151,7 +146,7 @@ public class PricePlan {
 		
 			PricePlan other = (PricePlan) obj;
 			return this.title.equals(other.title) && 
-					this.description.equals(other.description) &&
+					this.comment.equals(other.comment) &&
 					this.priceComponents.equals(other.priceComponents);		
 		}
 		

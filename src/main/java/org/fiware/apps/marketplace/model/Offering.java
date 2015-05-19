@@ -191,6 +191,11 @@ public class Offering {
 		if (obj instanceof Offering) {
 			Offering other = (Offering) obj;
 			
+			// Avoid null pointer exceptions...
+			if (this.uri == null || this.describedIn == null) {
+				return false;
+			}
+			
 			if (this.uri.equals(other.uri) && this.describedIn.equals(other.describedIn)) {
 				return true;
 			}

@@ -208,7 +208,7 @@ public class OfferingResolver {
 				
 				PricePlan pricePlan = new PricePlan();
 				pricePlan.setTitle(getTitle(model, pricePlanUri));
-				pricePlan.setDescription(getDescription(model, pricePlanUri));
+				pricePlan.setComment(getDescription(model, pricePlanUri));
 				pricePlan.setOffering(offering);
 				
 				List<String> priceComponentsUris = getPriceComponentsUris(model, pricePlanUri);
@@ -219,7 +219,7 @@ public class OfferingResolver {
 					PriceComponent priceComponent = new PriceComponent();
 					priceComponent.setPricePlan(pricePlan);
 					priceComponent.setTitle(getTitle(model, priceComponentUri));
-					priceComponent.setDescription(getDescription(model, priceComponentUri));
+					priceComponent.setComment(getDescription(model, priceComponentUri));
 					priceComponent.setCurrency(rdfHelper.getLiteral(model, priceComponentUri, "gr:hasCurrency"));
 					priceComponent.setUnit(rdfHelper.getLiteral(model, priceComponentUri, "gr:hasUnitOfMeasurement"));
 					priceComponent.setValue(Float.parseFloat(

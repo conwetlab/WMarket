@@ -54,7 +54,7 @@ public class OfferingResolverTest {
 	
 	private void checkPricePlan(PricePlan pricePlan, String title, String description) {
 		assertThat(pricePlan.getTitle()).isEqualTo(title);
-		assertThat(pricePlan.getDescription()).isEqualTo(description);
+		assertThat(pricePlan.getComment()).isEqualTo(description);
 	}
 	
 	private void checkPricePlanInSet(Set<PricePlan> pricePlans, String title, String description) {
@@ -65,7 +65,7 @@ public class OfferingResolverTest {
 		while (!found && iterator.hasNext()) {
 			PricePlan pricePlan = iterator.next();
 			
-			if (pricePlan.getTitle().equals(title) && pricePlan.getDescription().equals(description)) {
+			if (pricePlan.getTitle().equals(title) && pricePlan.getComment().equals(description)) {
 				found = true;
 			}
 		}
