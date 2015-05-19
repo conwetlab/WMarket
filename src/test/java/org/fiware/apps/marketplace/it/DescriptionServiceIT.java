@@ -182,6 +182,18 @@ public class DescriptionServiceIT extends AbstractIT {
 				.header("Authorization", getAuthorization(userName, password)).get();
 	}
 	
+	/**
+	 * This method retrieves an offering from the list of obtained offerings and check if its
+	 * price plans are OK
+	 * @param offerings The list of offerings that the service has returned
+	 * @param offering The offering to be checked
+	 */
+	private void checkPricePlan(List<Offering> offerings, Offering offering) {
+		int index = offerings.indexOf(offering);
+		assertThat(offerings.get(index).getPricePlans()).isEqualTo( offering.getPricePlans());
+
+	}
+	
 	private void checkDescription(String userName, String password, String storeName, 
 			String descriptionName, String displayName, String url, String comment) {
 		
@@ -206,13 +218,25 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		for (Offering expectedOffering: expectedOfferings) {
 			
+			// We must set the description into the offering in order to make "isIn" work appropriately
+			// "isIn" is based on "equals" and it depends on the name of the offering and its description
+			
+			// A description is managed by one store
 			Store store = new Store();
 			store.setName(storeName);
 			
+			// Description.equals depends on the name and its store
 			Description description = new Description();
 			description.setName(descriptionName);
 			description.setStore(store);
-			expectedOffering.setDescribedIn(description);			
+			
+			expectedOffering.setDescribedIn(description);
+			
+			// Check that the offering is contained in the list of offerings returned by WMarket
+			assertThat(expectedOffering).isIn(descriptionOfferings);
+			
+			// Check that the price plan is correct 
+			checkPricePlan(descriptionOfferings, expectedOffering);
 		}
 	}
 	
@@ -882,7 +906,6 @@ public class DescriptionServiceIT extends AbstractIT {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password)).get();
 	}
-
 	
 	@Test
 	public void testStoreOfferings() {
@@ -890,7 +913,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		String description1Name = "displayname";
 		String description2Name = "secondary";
 		
-		// Create an additional Store
+		// Create an additional Store (@Before has created one)
 		String newStoreName = STORE_NAME + "a";
 		String newStoreUrl = STORE_URL + "/a";
 		Response createStoreResponse = createStore(USER_NAME, PASSWORD, newStoreName, newStoreUrl);
@@ -930,8 +953,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
 
 		// Price plans are not checked in Offering.equals
-		int index = offerings.getOfferings().indexOf(FIRST_OFFERING);
-		assertThat(offerings.getOfferings().get(index).getPricePlans()).isEqualTo(FIRST_OFFERING.getPricePlans());
+		checkPricePlan(offerings.getOfferings(), FIRST_OFFERING);
 		
 		// Get Store2 offerings
 		Response store2OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, newStoreName);
@@ -940,16 +962,17 @@ public class DescriptionServiceIT extends AbstractIT {
 		offerings = store2OfferingResponse.readEntity(Offerings.class);
 		assertThat(offerings.getOfferings().size()).isEqualTo(2);
 		
+		// Needed to retrieve the offerings from the list in an appropriate way. equals is based
+		// on the name and the description...
 		FIRST_OFFERING.setDescribedIn(description2);
 		SECOND_OFFERING.setDescribedIn(description2);
+		
 		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
 		assertThat(SECOND_OFFERING).isIn(offerings.getOfferings());
 		
-		index = offerings.getOfferings().indexOf(FIRST_OFFERING);
-		assertThat(offerings.getOfferings().get(index).getPricePlans()).isEqualTo(FIRST_OFFERING.getPricePlans());
-
-		index = offerings.getOfferings().indexOf(SECOND_OFFERING);
-		assertThat(offerings.getOfferings().get(index).getPricePlans()).isEqualTo(SECOND_OFFERING.getPricePlans());
+		// Price plans are not checked in Offering.equals
+		checkPricePlan(offerings.getOfferings(), FIRST_OFFERING);
+		checkPricePlan(offerings.getOfferings(), SECOND_OFFERING);
 		
 	}
 	
