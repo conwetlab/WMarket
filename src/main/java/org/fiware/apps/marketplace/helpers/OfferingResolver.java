@@ -35,8 +35,10 @@ package org.fiware.apps.marketplace.helpers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.fiware.apps.marketplace.bo.ClassificationBo;
@@ -223,6 +225,14 @@ public class OfferingResolver {
 		List<Offering> offerings = new ArrayList<Offering>();
 		List<String> offeringUris = getOfferingUris(model);
 		
+		// Classifications cache: To avoid SQL Constraint errors when the description contains 
+		// two or more offerings with the same classification
+		Map<String, Classification> createdClassifications = new HashMap<String, Classification>();
+		
+		// Services cache: To avoid SQL Constraint errors when the description contains
+		// two or more offerings with the same service
+		Map<String, Service> createdServices = new HashMap<String, Service>();
+		
 		for (String offeringUri : offeringUris) {
 			
 			Offering offering = new Offering();
@@ -280,39 +290,56 @@ public class OfferingResolver {
 			for (String serviceUri: servicesUris) {
 				
 				Service service;
+				String parserServiceUri = serviceUri.substring(1, serviceUri.length() - 1);
 				
 				try {
-					service = serviceBo.findByURI(serviceUri);
+					service = serviceBo.findByURI(parserServiceUri);
 				} catch (ServiceNotFoundException e) {
-					service = new Service();
 					
-					// Service basic properties
-					service.setUri(serviceUri);
-					service.setDisplayName(getTitle(model, serviceUri));
-					service.setComment(getDescription(model, serviceUri));
+					// Look for another offering in this description that contains the same service.
+					// Otherwise, a new service is created
+					service = createdServices.get(parserServiceUri);
 					
-					// Service classifications (a service can have more than one classification)
-					Set<Classification> serviceClassifications = new HashSet<>();
-					List<String> classificationsUris = getServiceClassifications(model, serviceUri);
-					
-					for (String classificationUri: classificationsUris) {
+					if (service == null) {
 						
-						Classification classification;
-						String classificationDisplayName = getLabel(model, classificationUri);
+						service = new Service();
 						
-						try {
-							classification = classificationBo.findByName(classificationDisplayName);
-						} catch (ClassificationNotFoundException e1) {
-							classification = new Classification();
-							classification.setName(NameGenerator.getURLName(classificationDisplayName));
-							classification.setDisplayName(classificationDisplayName);
+						// Service basic properties
+						service.setUri(serviceUri);
+						service.setDisplayName(getTitle(model, serviceUri));
+						service.setComment(getDescription(model, serviceUri));
+						
+						// Service classifications (a service can have more than one classification)
+						Set<Classification> serviceClassifications = new HashSet<>();
+						List<String> classificationsUris = getServiceClassifications(model, serviceUri);
+						
+						for (String classificationUri: classificationsUris) {
+							
+							Classification classification;
+							String classificationDisplayName = getLabel(model, classificationUri);
+							String classificationName = NameGenerator.getURLName(classificationDisplayName);
+							
+							try {
+								classification = classificationBo.findByName(classificationName);
+							} catch (ClassificationNotFoundException e1) {
+								
+								// Look for another offering/service in this description that contains
+								// the same classification. Otherwise, a new classification is created.
+								classification = createdClassifications.get(classificationName);
+								
+								if (classification == null) {
+									classification = new Classification();
+									classification.setName(classificationName);
+									classification.setDisplayName(classificationDisplayName);
+									createdClassifications.put(classificationName, classification);
+								}							
+							}
+							
+							serviceClassifications.add(classification);
 						}
 						
-						serviceClassifications.add(classification);
-					}
-					
-					service.setClassifications(serviceClassifications);
-					
+						service.setClassifications(serviceClassifications);
+					}					
 				}
 				
 				offeringClassification.addAll(service.getClassifications());

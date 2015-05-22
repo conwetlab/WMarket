@@ -229,7 +229,7 @@ public class RdfHelper {
 	 */
 	public String getObjectUri(Model model, String subject, String predicate) {
 		String query = QUERY_PREFIXES + "SELECT ?x WHERE { " + subject + " " + predicate + " ?x . } ";
-		logger.info("Executing JENA query", query.replace(QUERY_PREFIXES, ""));
+		logger.info("Executing JENA query {}", query.replace(QUERY_PREFIXES, ""));
 		return queryUri(model, query, "x");
 	}
 
@@ -244,7 +244,7 @@ public class RdfHelper {
 	 */
 	public List<String> getObjectUris(Model model, String subject, String predicate) {
 		String query = QUERY_PREFIXES + "SELECT ?x WHERE { " + subject + " " + predicate + " ?x . } ";
-		logger.info("Executing JENA query", query.replace(QUERY_PREFIXES, ""));
+		logger.info("Executing JENA query {}", query.replace(QUERY_PREFIXES, ""));
 		return queryUris(model, query, "x");
 	}
 
@@ -259,7 +259,7 @@ public class RdfHelper {
 	 */
 	public String getLiteral(Model model, String subject, String predicate) {
 		String query = QUERY_PREFIXES + "SELECT ?x WHERE { " + subject + " " + predicate + " ?x . } ";
-		logger.info("Executing JENA query", query.replace(QUERY_PREFIXES, ""));
+		logger.info("Executing JENA query {}", query.replace(QUERY_PREFIXES, ""));
 		return queryLiteral(model, query, "x");
 	}
 
