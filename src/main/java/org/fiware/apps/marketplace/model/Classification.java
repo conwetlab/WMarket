@@ -42,33 +42,32 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
-@Table(name = "price_plans")
-@XmlRootElement(name = "pricePlan")
+@Table(name = "classifications")
+@XmlRootElement(name = "classification")
 @IgnoreMediaTypes("application/*+json")
-public class PricePlan {
+public class Classification {
 	
-	// Hibernate
+	// Hibernate 
 	private int id;
-	private Offering offering;
 	
-	private String title;
-	private String comment;
-	private Set<PriceComponent> priceComponents;
+	private String name;
+	private String displayName;
+	
+	// Very important! Users will want to retrieve the best offerings of a classification
+	private Set<Offering> offering;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
 	@XmlTransient
 	public int getId() {
 		return id;
@@ -78,80 +77,61 @@ public class PricePlan {
 		this.id = id;
 	}
 
+	@XmlElement
+	@Column(name = "name", unique = true, nullable = false)
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	@XmlElement
+	@Column(name = "displayName", nullable = false)
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
 	@XmlTransient
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "offering", nullable=false)
-	public Offering getOffering() {
+	// This field is lazy, so it need to be initialized before returning it to the user
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "classifications")
+	public Set<Offering> getOffering() {
 		return offering;
 	}
 
-	public void setOffering(Offering offering) {
+	public void setOffering(Set<Offering> offering) {
 		this.offering = offering;
 	}
 
-	@XmlElement
-	@Column(name = "title")
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	@XmlElement
-	@Column(name = "comment", length = 1000)
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	@XmlElement(name = "priceComponent")
-    @JsonProperty("priceComponents")
-	@OneToMany(mappedBy = "pricePlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	public Set<PriceComponent> getPriceComponents() {
-		return priceComponents;
-	}
-
-	public void setPriceComponents(Set<PriceComponent> priceComponents) {
-		this.priceComponents = priceComponents;
-	}
-
-	/**
-	 * This object is MUTABLE since user can modify its attributes at ANY TIME. Please, be careful and
-	 * set all the properties before including an instance in any collection or you may experience
-	 * unexpected behaviors.
-	 */
 	@Override
 	public int hashCode() {
-		final int prime = 37;
+		final int prime = 71;
 		int result = 1;
-		result = prime * result + (title == null ? 0 : title.hashCode());
-		result = prime * result + (comment == null ? 0 : comment.hashCode());
-		result = prime * result + (priceComponents == null ? 0 : priceComponents.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		
 		if (this == obj) {
 			return true;
 		}
 		
-		if (obj instanceof PricePlan) {
-		
-			PricePlan other = (PricePlan) obj;
-			return this.title.equals(other.title) && 
-					this.comment.equals(other.comment) &&
-					this.priceComponents.equals(other.priceComponents);		
+		if (obj instanceof Classification) {
+			
+			Classification other = (Classification) obj;
+			
+			if (this.name != null && name.equals(other.name)) {
+				return true;
+			}
+			
 		}
-		
+	
 		return false;
 	}
-	
-	
 }

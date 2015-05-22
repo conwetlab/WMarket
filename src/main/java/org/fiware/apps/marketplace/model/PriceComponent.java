@@ -49,7 +49,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
 @Table(name = "price_components")
-@XmlRootElement(name = "price_components")
+@XmlRootElement(name = "priceComponents")
 @IgnoreMediaTypes("application/*+json")
 public class PriceComponent {
 	

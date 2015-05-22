@@ -43,7 +43,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository("userDao")
-public class UserDaoImpl  extends MarketplaceHibernateDao implements UserDao {
+public class UserDaoImpl extends MarketplaceHibernateDao implements UserDao {
 	
 	private static final String TABLE_NAME = User.class.getName();
 

@@ -44,6 +44,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -73,7 +75,13 @@ public class Offering {
 	private String version;
 	private Description describedIn;
 	private String imageUrl;
+	
+	// Price Plans & Services
 	private Set<PricePlan> pricePlans;
+	private Set<Service> services;
+	
+	// Offering classification depends on the attached services
+	private Set<Classification> classifications;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -169,6 +177,34 @@ public class Offering {
 
 	public void setPricePlans(Set<PricePlan> pricePlans) {
 		this.pricePlans = pricePlans;
+	}
+	
+	@XmlElement(name = "service")
+	@JsonProperty("services")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)	// Not many services are supposed to be attached
+	@JoinTable(name = "offerings_services", 
+		      joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+		      inverseJoinColumns = {@JoinColumn(name = "service_id", referencedColumnName = "id")})
+	public Set<Service> getServices() {
+		return services;
+	}
+
+	public void setServices(Set<Service> services) {
+		this.services = services;
+	}
+	
+	@XmlElement(name = "classification")
+	@JsonProperty("classifications")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "offerings_classifications",
+		      joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+		      inverseJoinColumns = {@JoinColumn(name = "classification_id", referencedColumnName = "id")})
+	public Set<Classification> getClassifications() {
+		return classifications;
+	}
+
+	public void setClassifications(Set<Classification> classifications) {
+		this.classifications = classifications;
 	}
 
 	@Override

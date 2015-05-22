@@ -43,60 +43,83 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
-@Table(name = "price_plans")
-@XmlRootElement(name = "pricePlan")
+@Table(name = "services")
+@XmlRootElement(name = "service")
 @IgnoreMediaTypes("application/*+json")
-public class PricePlan {
+public class Service {
 	
 	// Hibernate
 	private int id;
-	private Offering offering;
+	private Set<Offering> offerings;
 	
-	private String title;
+	// private String name;	??
+	private String uri;
+	private String displayName;	
 	private String comment;
-	private Set<PriceComponent> priceComponents;
-
+	private Set<Classification> classifications;
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
 	@XmlTransient
 	public int getId() {
 		return id;
 	}
-
+	
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	
 	@XmlTransient
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "offering", nullable=false)
-	public Offering getOffering() {
-		return offering;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "services")
+	public Set<Offering> getOfferings() {
+		return offerings;
 	}
 
-	public void setOffering(Offering offering) {
-		this.offering = offering;
+	public void setOfferings(Set<Offering> offerings) {
+		this.offerings = offerings;
+	}
+	
+	/*@XmlElement
+	@Column(name = "name", nullable = false)
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}*/
+	
+	@XmlTransient
+	@Column(name = "uri", nullable = false, unique = true)
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 	@XmlElement
-	@Column(name = "title")
-	public String getTitle() {
-		return title;
+	@Column(name = "displayName", nullable = false)
+	public String getDisplayName() {
+		return displayName;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	@XmlElement
@@ -104,54 +127,24 @@ public class PricePlan {
 	public String getComment() {
 		return comment;
 	}
-
+	
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-	@XmlElement(name = "priceComponent")
-    @JsonProperty("priceComponents")
-	@OneToMany(mappedBy = "pricePlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	public Set<PriceComponent> getPriceComponents() {
-		return priceComponents;
-	}
-
-	public void setPriceComponents(Set<PriceComponent> priceComponents) {
-		this.priceComponents = priceComponents;
-	}
-
-	/**
-	 * This object is MUTABLE since user can modify its attributes at ANY TIME. Please, be careful and
-	 * set all the properties before including an instance in any collection or you may experience
-	 * unexpected behaviors.
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 37;
-		int result = 1;
-		result = prime * result + (title == null ? 0 : title.hashCode());
-		result = prime * result + (comment == null ? 0 : comment.hashCode());
-		result = prime * result + (priceComponents == null ? 0 : priceComponents.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		
-		if (this == obj) {
-			return true;
-		}
-		
-		if (obj instanceof PricePlan) {
-		
-			PricePlan other = (PricePlan) obj;
-			return this.title.equals(other.title) && 
-					this.comment.equals(other.comment) &&
-					this.priceComponents.equals(other.priceComponents);		
-		}
-		
-		return false;
+	
+	@XmlElement(name = "classification")
+	@JsonProperty("classifications")
+	// Services are not supposed to have too many categories... (one is the most common) 
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "services_classifications", 
+		      joinColumns = {@JoinColumn(name = "service_id", referencedColumnName = "id")},
+		      inverseJoinColumns = {@JoinColumn(name = "classification_id", referencedColumnName = "id")})
+	public Set<Classification> getClassifications() {
+		return classifications;
 	}
 	
-	
+	public void setClassifications(Set<Classification> classifications) {
+		this.classifications = classifications;
+	}
+
 }

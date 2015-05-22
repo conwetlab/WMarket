@@ -39,15 +39,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.fiware.apps.marketplace.bo.ClassificationBo;
+import org.fiware.apps.marketplace.bo.ServiceBo;
+import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
+import org.fiware.apps.marketplace.model.Classification;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.PriceComponent;
 import org.fiware.apps.marketplace.model.PricePlan;
+import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.rdf.RdfHelper;
 import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.hp.hpl.jena.rdf.model.Model;
 
@@ -57,10 +62,12 @@ import com.hp.hpl.jena.rdf.model.Model;
  * @author D058352
  *
  */
-@Service("offeringResolver")
+@org.springframework.stereotype.Service("offeringResolver")
 public class OfferingResolver {
 	
 	@Autowired private RdfHelper rdfHelper;
+	@Autowired private ClassificationBo classificationBo;
+	@Autowired private ServiceBo serviceBo;
 	
 	/**
 	 * Gets all the offerings from a USDL
@@ -83,37 +90,63 @@ public class OfferingResolver {
 	}
 
 	/**
-	 * Gets all the price plans associated with the offering
+	 * Gets all the price plans URIs associated with the offering
+	 * @param model UDSL
 	 * @param offeringUri The offering whose price plans want to be retrieved
-	 * @param model The UDSL
-	 * @return The list of price plans associated with the offering
+	 * @return The list of price plans URIs associated with the offering
 	 */
 	private List<String> getPricePlanUris(Model model, String offeringUri) {
 		return rdfHelper.getObjectUris(model, offeringUri, "usdl:hasPricePlan");
 	}
 	
+	/**
+	 * Get all the price components URIs associated to a price component
+	 * @param model USDL
+	 * @param pricePlanUri The price plan whose price components want to be retrieved
+	 * @return The list of price components URIs associated to the price plan
+	 */
 	private List<String> getPriceComponentsUris(Model model, String pricePlanUri) {
 		return rdfHelper.getObjectUris(model, pricePlanUri, "price:hasPriceComponent");
 	}
 	
 	/**
+	 * Get all the classification URIs associated to a service
+	 * @param model USDL
+	 * @param serviceURI The service whose classifications want to be retrieved
+	 * @return The list of classifications URIs associated to the price plan
+	 */
+	private List<String> getServiceClassifications(Model model, String serviceURI) {
+		return rdfHelper.getObjectUris(model, serviceURI, "usdl:hasClassification");
+	}
+	
+	/**
 	 * Gets the title of an entity
 	 * @param model USDL
-	 * @param offeringUri The entity URI whose title wants to be retrieved
-	 * @return The title of the offering
+	 * @param entityURI The entity URI whose title wants to be retrieved
+	 * @return The title of the entity
 	 */
-	private String getTitle(Model model, String offeringUri) {
-		return rdfHelper.getLiteral(model, offeringUri, "dcterms:title");
+	private String getTitle(Model model, String entityURI) {
+		return rdfHelper.getLiteral(model, entityURI, "dcterms:title");
 	}
 	
 	/**
 	 * Gets the description of an entity
 	 * @param model USDL
-	 * @param offeringUri The entity URI whose description wants to be retrieved
-	 * @return The description of the offering
+	 * @param entityURI The entity URI whose description wants to be retrieved
+	 * @return The description of the entity
 	 */
-	private String getDescription(Model model, String offeringUri) {
-		return rdfHelper.getLiteral(model, offeringUri, "dcterms:description");
+	private String getDescription(Model model, String entityURI) {
+		return rdfHelper.getLiteral(model, entityURI, "dcterms:description");
+	}
+	
+	/**
+	 * Gets the label of an entity
+	 * @param model USDL
+	 * @param entityURI The entity URI whose label wants to be retrieved
+	 * @return The label of the entity
+	 */
+	private String getLabel(Model model, String entityURI) {
+		return rdfHelper.getLiteral(model, entityURI, "rdfs:label");
 	}
 	
 	/**
@@ -133,7 +166,9 @@ public class OfferingResolver {
 	 * @return The image URL of the offering
 	 */
 	private String getOfferingImageUrl(Model model, String offeringUri) {
-		return rdfHelper.getObjectUri(model, offeringUri, "foaf:thumbnail");
+		String url = rdfHelper.getObjectUri(model, offeringUri, "foaf:thumbnail");
+		// Remove '<' from the beginning and '>' from the end
+		return url.substring(1, url.length() - 1);
 	}
 	
 	/**
@@ -200,7 +235,7 @@ public class OfferingResolver {
 			offering.setDescription(getDescription(model, offeringUri));
 			offering.setImageUrl(getOfferingImageUrl(model, offeringUri));
 			
-			// Set price plans (offerings have one or more price plans)
+			// PRICE PLANS (offerings have one or more price plans)
 			List<String> pricePlansUris = getPricePlanUris(model, offeringUri);
 			Set<PricePlan> pricePlans = new HashSet<>();
 			
@@ -237,7 +272,60 @@ public class OfferingResolver {
 			// Update the price plans set with the retrieved price plans
 			offering.setPricePlans(pricePlans);
 			
+			// SERVICES
+			List<String> servicesUris = getServiceUris(model, offeringUri);
+			Set<Service> offeringServices = new HashSet<>();
+			Set<Classification> offeringClassification = new HashSet<>();
+			
+			for (String serviceUri: servicesUris) {
+				
+				Service service;
+				
+				try {
+					service = serviceBo.findByURI(serviceUri);
+				} catch (ServiceNotFoundException e) {
+					service = new Service();
+					
+					// Service basic properties
+					service.setUri(serviceUri);
+					service.setDisplayName(getTitle(model, serviceUri));
+					service.setComment(getDescription(model, serviceUri));
+					
+					// Service classifications (a service can have more than one classification)
+					Set<Classification> serviceClassifications = new HashSet<>();
+					List<String> classificationsUris = getServiceClassifications(model, serviceUri);
+					
+					for (String classificationUri: classificationsUris) {
+						
+						Classification classification;
+						String classificationDisplayName = getLabel(model, classificationUri);
+						
+						try {
+							classification = classificationBo.findByName(classificationDisplayName);
+						} catch (ClassificationNotFoundException e1) {
+							classification = new Classification();
+							classification.setName(NameGenerator.getURLName(classificationDisplayName));
+							classification.setDisplayName(classificationDisplayName);
+						}
+						
+						serviceClassifications.add(classification);
+					}
+					
+					service.setClassifications(serviceClassifications);
+					
+				}
+				
+				offeringClassification.addAll(service.getClassifications());
+				offeringServices.add(service);
+			}
+			
+			// Attach the services to the offering
+			offering.setServices(offeringServices);
+			offering.setClassifications(offeringClassification);
+			
+			// Update the list of offerings
 			offerings.add(offering);
+			
 		}
 		return offerings;
 	}
