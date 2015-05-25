@@ -67,6 +67,13 @@
     <!-- Detail View -->
     <definition name="offering.detail" extends="app.auth">
         <put-attribute name="content" value="/WEB-INF/views/offerings/detail-content.jsp" />
+        <put-attribute name="scripts.view" value="/WEB-INF/views/offerings/detail-scripts.jsp" />
+    </definition>
+
+    <!-- Bookmark List View -->
+    <definition name="offering.bookmark.list" extends="app.auth">
+        <put-attribute name="content" value="/WEB-INF/views/offerings/bookmark-list-content.jsp" />
+        <put-attribute name="scripts.view" value="/WEB-INF/views/offerings/bookmark-list-scripts.jsp" />
     </definition>
 
     <!-- STORE VIEWS -->

@@ -40,6 +40,7 @@ import java.io.File;
 import org.junit.After;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -138,6 +139,16 @@ public class SeleniumIT extends AbstractIT {
 
 		driver.findElement(By.id("toggle-left-sidebar")).click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(textContent))).click();
+	}
+
+
+	private boolean isElementPresent(By by) {
+		try {
+			driver.findElement(by);
+			return true;
+		} catch (NoSuchElementException e) {
+			return false;
+		}
 	}
 
 	// LIST OF OPERATIONS
@@ -611,6 +622,26 @@ public class SeleniumIT extends AbstractIT {
 		registerDescription("New description", defaultUSDLPath);
 		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
 		assertEquals("OrionStarterKit" + " - WMarket", driver.getTitle());
+	}
+
+	@Test
+	public void given_OfferingIsAvailable_When_BookmarkAdded_Expect_ShownInBookmarkListView() {
+		String displayName	= "FIWARE Store";
+		String url			= "http://store.fiware.es";
+
+		loginDefaultUser();
+		driver.get(endPoint + "/stores/register");
+		registerStore(displayName, url);
+
+		driver.get(endPoint + "/descriptions/register");
+
+		registerDescription("New description", defaultUSDLPath);
+
+		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
+		driver.findElement(By.linkText("Add bookmark")).click();
+		clickOnOperationPanelItem("My bookmarks");
+
+		assertTrue(isElementPresent(By.linkText("OrionStarterKit")));
 	}
 
 }

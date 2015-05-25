@@ -25,6 +25,14 @@
 <div id="left-sidebar" class="panel panel-default panel-sliding panel-sliding-left">
   <div class="panel-body">
     <div class="list-group">
+      <div class="list-group-body">
+        <a class="list-group-item" href="${ pageContext.request.contextPath }/offerings/bookmarks">
+          <span class="item-icon fa fa-bookmark"></span>
+          <span class="item-text">My bookmarks</span>
+        </a>
+      </div>
+    </div>
+    <div class="list-group">
       <div class="list-group-heading">DESCRIPTIONS</div>
       <div class="list-group-body">
         <a class="list-group-item link-list-descriptions" href="${ pageContext.request.contextPath }/descriptions">

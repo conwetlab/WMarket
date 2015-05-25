@@ -10,7 +10,8 @@
     var endpoints = {
         offerings: {
             collection: "/offerings/",
-            store_collection: "/store/%(name)s/offering/"
+            store_collection: "/store/%(name)s/offering/",
+            entry_bookmark: "/store/%(storeName)s/description/%(descriptionName)s/offering/%(offeringName)s/bookmark"
         },
         stores: {
             collection: "/store/"
@@ -94,6 +95,10 @@
 
     ns.read = function read(options) {
         makeRequest('GET', options);
+    };
+
+    ns.create = function create(options) {
+        makeRequest('POST', options);
     };
 
     ns.attach = function attach(name, type, options) {

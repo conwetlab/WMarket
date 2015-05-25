@@ -18,6 +18,28 @@
               <span class="hidden-sm">General</span>
             </a>
           </div>
+          <c:choose>
+            <c:when test="${ not empty bookmark }">
+
+              <div class="btn-toggle-bookmark tab tab-danger">
+                <a href="javascript:app.view.toggleBookmark();">
+                  <span class="fa fa-bookmark"></span>
+                  <span class="hidden-sm">Remove bookmark</span>
+                </a>
+              </div>
+
+            </c:when>
+            <c:otherwise>
+
+              <div class="btn-toggle-bookmark tab">
+                <a href="javascript:app.view.toggleBookmark();">
+                  <span class="fa fa-bookmark"></span>
+                  <span class="hidden-sm">Add bookmark</span>
+                </a>
+              </div>
+
+            </c:otherwise>
+          </c:choose>
         </div>
       </div>
     </div>
