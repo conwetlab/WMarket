@@ -68,7 +68,8 @@ public class SeleniumIT extends AbstractIT {
 	private void fillField(WebElement formElement, String fieldName, String fieldValue) {
 		String formName = formElement.getAttribute("name");
 		WebDriverWait wait = new WebDriverWait(driver, 5);
-		WebElement fieldElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("form[name='" + formName + "'] [name='" + fieldName + "']")));
+		WebElement fieldElement = wait.until(ExpectedConditions.presenceOfElementLocated(
+				By.cssSelector("form[name='" + formName + "'] [name='" + fieldName + "']")));
 
 		fieldElement.clear();
 		fieldElement.sendKeys(fieldValue);
@@ -77,7 +78,8 @@ public class SeleniumIT extends AbstractIT {
 	private void completeField(WebElement formElement, String fieldName, String fieldValue) {
 		String formName = formElement.getAttribute("name");
 		WebDriverWait wait = new WebDriverWait(driver, 5);
-		WebElement fieldElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("form[name='" + formName + "'] [name='" + fieldName + "']")));
+		WebElement fieldElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(
+				"form[name='" + formName + "'] [name='" + fieldName + "']")));
 
 		fieldElement.sendKeys(fieldValue);
 	}
@@ -105,7 +107,8 @@ public class SeleniumIT extends AbstractIT {
 
 	private void verifyAlertContent(String textContent) {
 		WebDriverWait wait = new WebDriverWait(driver, 5);
-		WebElement alert = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".alert-dismissible")));
+		WebElement alert = wait.until(ExpectedConditions.presenceOfElementLocated(
+				By.cssSelector(".alert-dismissible")));
 
 		assertEquals(textContent, alert.getText());
 	}
@@ -117,7 +120,8 @@ public class SeleniumIT extends AbstractIT {
 	private void verifyFieldError(WebElement formElement, String fieldName, String fieldErrorMessage) {
 		String formName = formElement.getAttribute("name");
 		WebDriverWait wait = new WebDriverWait(driver, 5);
-		WebElement fieldError = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("form[name='" + formName + "'] [name='" + fieldName + "'] + p.field-error")));
+		WebElement fieldError = wait.until(ExpectedConditions.presenceOfElementLocated(
+				By.cssSelector("form[name='" + formName + "'] [name='" + fieldName + "'] + p.field-error")));
 
 		assertEquals(fieldErrorMessage, fieldError.getText());
 	}
@@ -215,7 +219,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void registerStore(String displayName, String url) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name("store_create_form"));
+		WebElement formElement = driver.findElement(By.name("store_form"));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -227,7 +231,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void registerStore(String displayName, String url, String imagePath) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name("store_create_form"));
+		WebElement formElement = driver.findElement(By.name("store_form"));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -240,7 +244,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void updateStoreDisplayName(String displayName) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name("store_update_form"));
+		WebElement formElement = driver.findElement(By.name("store_form"));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -248,7 +252,7 @@ public class SeleniumIT extends AbstractIT {
 		// Submit
 		submitForm(formElement);
 
-		formElement = driver.findElement(By.name("store_update_form"));
+		formElement = driver.findElement(By.name("store_form"));
 
 		// Verify the field values
 		verifyFieldValue(formElement, "displayName", displayName);
@@ -461,7 +465,7 @@ public class SeleniumIT extends AbstractIT {
 		driver.get(endPoint + "/stores/register");
 
 		// Find form
-		WebElement formElement = driver.findElement(By.name("store_create_form"));
+		WebElement formElement = driver.findElement(By.name("store_form"));
 
 		formElement = submitFormExpectError(formElement, "displayName", "This field is required.");
 	}
@@ -473,7 +477,7 @@ public class SeleniumIT extends AbstractIT {
 		loginDefaultUser();
 		driver.get(endPoint + "/stores/register");
 
-		WebElement formElement = driver.findElement(By.name("store_create_form"));
+		WebElement formElement = driver.findElement(By.name("store_form"));
 		fillField(formElement, "displayName", displayName);
 
 		formElement = submitFormExpectError(formElement, "url", "This field is required.");
@@ -566,7 +570,8 @@ public class SeleniumIT extends AbstractIT {
 
 		registerDescription("Test description", defaultUSDLPath);
 		clickOnOperationPanelItem("My descriptions");
-		driver.findElement(By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/descriptions/test-description')]")).click();
+		driver.findElement(
+				By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/descriptions/test-description')]")).click();
 
 		updateDescription("New description");
 		verifyAlertContent("The description 'New description' was updated successfully.");
@@ -585,7 +590,8 @@ public class SeleniumIT extends AbstractIT {
 
 		registerDescription("Test description", defaultUSDLPath);
 		clickOnOperationPanelItem("My descriptions");
-		driver.findElement(By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/descriptions/test-description')]")).click();
+		driver.findElement(
+				By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/descriptions/test-description')]")).click();
 
 		driver.findElement(By.xpath("//a[contains(@href, 'javascript:deleteDescription()')]")).click();
 		verifyAlertContent("The description '" + "Test description" + "' was deleted successfully.");
