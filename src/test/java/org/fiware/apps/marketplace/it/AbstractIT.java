@@ -32,6 +32,10 @@ package org.fiware.apps.marketplace.it;
  * #L%
  */
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.ws.rs.client.Client;
@@ -43,11 +47,15 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.fiware.apps.marketplace.model.APIError;
 import org.fiware.apps.marketplace.model.ErrorType;
+import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
+
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 public abstract class AbstractIT {
 	
@@ -85,8 +93,66 @@ public abstract class AbstractIT {
 	}
 
 	public abstract void specificSetUp();
-	
-	
+
+	@Rule
+	public WireMockRule wireMock = new WireMockRule(0);
+
+	// **********************************************************************************
+	// PROTECTED HELPERS FOR API DESCRIPTIONS
+	// **********************************************************************************
+
+	protected final static Offering FIRST_OFFERING = new Offering();
+	protected final static Offering SECOND_OFFERING = new Offering();
+
+	static {
+		// WARN: This properties depends on the RDF files stored in "src/test/resources/__files" so if these files
+		// changes, this properties must be changed. Otherwise, tests will fail.
+		FIRST_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit"
+				+ "#Xo9ZQS2Qa3yX8fDfm");
+		FIRST_OFFERING.setDisplayName("OrionStarterKit");
+		FIRST_OFFERING.setImageUrl(
+				"https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png");
+		FIRST_OFFERING.setDescription("Offering composed of three mashable application components: "
+				+ "ngsi-source, ngsientity2poi and ngsi-updater. Those components are provided as the base "
+				+ "tools/examples for making application mashups using WireCloud and the Orion Context Broker. "
+				+ "Those resources can be used for example for showing entities coming from an Orion server inside "
+				+ "the Map Viewer widget or browsing and updating the attributes of those entities.");
+
+		SECOND_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/CkanStarterKit"
+				+ "#GHbnf7dsubc19ebx4fmfgH");
+		SECOND_OFFERING.setDisplayName("CKAN starter Kit");
+		SECOND_OFFERING.setImageUrl(
+				"https://store.lab.fiware.org/media/CoNWeT__CKANStarterKit__1.2/logo-ckan_170x80.png");
+		SECOND_OFFERING.setDescription("Offering composed of several mashable application components that compose "
+				+ "the base tools/examples for making application mashups using WireCloud and CKAN. Those resources "
+				+ "can be used for example for showing data coming from CKAN's dataset inside the Map Viewer widget "
+				+ "or inside a graph widget or for browsing data inside a table widget.");
+	}
+
+	protected String serverUrl;
+	protected String defaultUSDLPath;
+	protected String secondaryUSDLPath;
+
+	protected void startMockServer() {
+		stubFor(get(urlMatching("/default[0-9]*.rdf"))
+				.willReturn(aResponse()
+						.withStatus(200)
+						.withBodyFile("default.rdf")));
+
+		stubFor(get(urlMatching("/secondary.rdf"))
+				.willReturn(aResponse()
+						.withStatus(200)
+						.withBodyFile("secondary.rdf")));
+
+		// Start up server
+		wireMock.start();
+
+		// Set server URL
+		serverUrl = "http://127.0.0.1:" + wireMock.port();
+		defaultUSDLPath = serverUrl + "/default.rdf";
+		secondaryUSDLPath = serverUrl + "/secondary.rdf";
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// AUXILIAR //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
