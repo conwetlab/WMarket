@@ -154,26 +154,46 @@ public class RdfHelper {
 		}
 		return solutions;
 	}
-
+	
 	/**
-	 * Returns the literal that is found via the given query,
-	 * @param model 
+	 * Returns the literals that are found via the given query
+	 * @param model
 	 * @param query
 	 * @param queriedVar
-	 * @return The literal or null
+	 * @return
 	 */
-	public String queryLiteral(Model model, String query, String queriedVar) {
+	public List<String> queryLiterals(Model model, String query, String queriedVar) {
+		List<String> literals = new ArrayList<>();
 		List<QuerySolution> solutions = this.query(model, query);
 
 		if (solutions.size() > 0) {
 			Literal literal = solutions.get(0).getLiteral(queriedVar);
 
 			if (literal != null) {
-				return literal.getLexicalForm();
+				literals.add(literal.getLexicalForm());
 			}
 		}
 
-		return null;
+		return literals;
+	}
+
+	/**
+	 * Returns the literal that is found via the given query
+	 * @param model 
+	 * @param query
+	 * @param queriedVar
+	 * @return The literal or null
+	 */
+	public String queryLiteral(Model model, String query, String queriedVar) {
+		
+		List<String> literals = queryLiterals(model, query, queriedVar);
+		
+		if (literals.isEmpty()) {
+			return null;
+		} else {
+			return literals.get(0);
+		}
+		
 	}
 
 	/**
@@ -251,7 +271,6 @@ public class RdfHelper {
 	/**
 	 * Returns the literal of the object of the corresponding triple of null if the
 	 * literal cannot be found
-	 * 
 	 * @param model
 	 * @param subject
 	 * @param predicate
@@ -261,6 +280,20 @@ public class RdfHelper {
 		String query = QUERY_PREFIXES + "SELECT ?x WHERE { " + subject + " " + predicate + " ?x . } ";
 		logger.info("Executing JENA query {}", query.replace(QUERY_PREFIXES, ""));
 		return queryLiteral(model, query, "x");
+	}
+	
+	/**
+	 * Returns the literals of the blank nodes attached to the corresponding triples
+	 * @param model USDL
+	 * @param subject Triple subject
+	 * @param predicate Triple predicate
+	 * @return The literals of the blank nodes attached to the corresponding triples
+	 */
+	public List<String> getBlankNodesLabels(Model model, String subject, String predicate) {
+		String query = QUERY_PREFIXES + "SELECT ?y WHERE { " + subject + " " + predicate + 
+				" ?x . ?x rdfs:label ?y . } ";
+		logger.info("Executing JENA query {}", query.replace(QUERY_PREFIXES, ""));
+		return queryLiterals(model, query, "y");
 	}
 
 }

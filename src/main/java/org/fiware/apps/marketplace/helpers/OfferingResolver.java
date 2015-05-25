@@ -112,13 +112,13 @@ public class OfferingResolver {
 	}
 	
 	/**
-	 * Get all the classification URIs associated to a service
+	 * Get all the classifications associated to a service
 	 * @param model USDL
 	 * @param serviceURI The service whose classifications want to be retrieved
-	 * @return The list of classifications URIs associated to the price plan
+	 * @return The list of classifications associated to the service
 	 */
 	private List<String> getServiceClassifications(Model model, String serviceURI) {
-		return rdfHelper.getObjectUris(model, serviceURI, "usdl:hasClassification");
+		return rdfHelper.getBlankNodesLabels(model, serviceURI, "usdl:hasClassification");
 	}
 	
 	/**
@@ -139,16 +139,6 @@ public class OfferingResolver {
 	 */
 	private String getDescription(Model model, String entityURI) {
 		return rdfHelper.getLiteral(model, entityURI, "dcterms:description");
-	}
-	
-	/**
-	 * Gets the label of an entity
-	 * @param model USDL
-	 * @param entityURI The entity URI whose label wants to be retrieved
-	 * @return The label of the entity
-	 */
-	private String getLabel(Model model, String entityURI) {
-		return rdfHelper.getLiteral(model, entityURI, "rdfs:label");
 	}
 	
 	/**
@@ -311,12 +301,11 @@ public class OfferingResolver {
 						
 						// Service classifications (a service can have more than one classification)
 						Set<Classification> serviceClassifications = new HashSet<>();
-						List<String> classificationsUris = getServiceClassifications(model, serviceUri);
+						List<String> classificationsDisplayNames = getServiceClassifications(model, serviceUri);
 						
-						for (String classificationUri: classificationsUris) {
+						for (String classificationDisplayName: classificationsDisplayNames) {
 							
 							Classification classification;
-							String classificationDisplayName = getLabel(model, classificationUri);
 							String classificationName = NameGenerator.getURLName(classificationDisplayName);
 							
 							try {
@@ -354,6 +343,7 @@ public class OfferingResolver {
 			offerings.add(offering);
 			
 		}
+		
 		return offerings;
 	}
 }
