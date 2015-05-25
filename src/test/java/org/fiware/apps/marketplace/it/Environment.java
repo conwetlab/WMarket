@@ -120,7 +120,7 @@ public class Environment {
 	        fs.close();
 	        
 	        // Add modified WAR       
-			tomcat.addWebapp("FiwareMarketplace", modifiedWarPath);
+			tomcat.addWebapp("WMarket", modifiedWarPath);
 		} catch (Exception ex) {
 			// This will prevent test from starting...
 			throw new RuntimeException(ex);

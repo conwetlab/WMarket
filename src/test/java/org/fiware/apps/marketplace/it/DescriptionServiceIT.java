@@ -32,7 +32,6 @@ package org.fiware.apps.marketplace.it;
  * #L%
  */
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -49,10 +48,8 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
 import org.junit.After;
-import org.junit.Rule;
 import org.junit.Test;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 public class DescriptionServiceIT extends AbstractIT {
 	
@@ -68,77 +65,20 @@ public class DescriptionServiceIT extends AbstractIT {
 	private final static String MESSAGE_URL_IN_USE = "This URL is already in use in this Store.";
 	private final static String MESSAGE_INVALID_RDF = "Your RDF could not be parsed.";
 	private final static String MESSAGE_DESCRIPTION_NOT_FOUND = "Description %s not found";
-	
-	private final static Offering FIRST_OFFERING = new Offering();
-	private final static Offering SECOND_OFFERING = new Offering();
-	
-	static {
-		// WARN: This properties depends on the RDF files stored in "src/test/resources/__files" so if these files
-		// changes, this properties must be changed. Otherwise, tests will fail.
-		FIRST_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit"
-				+ "#Xo9ZQS2Qa3yX8fDfm");
-		FIRST_OFFERING.setName("orionstarterkit");
-		FIRST_OFFERING.setDisplayName("OrionStarterKit");
-		FIRST_OFFERING.setImageUrl(
-				"https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png");
-		FIRST_OFFERING.setDescription("Offering composed of three mashable application components: "
-				+ "ngsi-source, ngsientity2poi and ngsi-updater. Those components are provided as the base "
-				+ "tools/examples for making application mashups using WireCloud and the Orion Context Broker. "
-				+ "Those resources can be used for example for showing entities coming from an Orion server inside "
-				+ "the Map Viewer widget or browsing and updating the attributes of those entities.");
-		
-		SECOND_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/CkanStarterKit"
-				+ "#GHbnf7dsubc19ebx4fmfgH");
-		SECOND_OFFERING.setDisplayName("CKAN starter Kit");
-		SECOND_OFFERING.setName("ckan-starter-kit");
-		SECOND_OFFERING.setImageUrl(
-				"https://store.lab.fiware.org/media/CoNWeT__CKANStarterKit__1.2/logo-ckan_170x80.png");
-		SECOND_OFFERING.setDescription("Offering composed of several mashable application components that compose "
-				+ "the base tools/examples for making application mashups using WireCloud and CKAN. Those resources "
-				+ "can be used for example for showing data coming from CKAN's dataset inside the Map Viewer widget "
-				+ "or inside a graph widget or for browsing data inside a table widget.");
-
-		
-	}
-	
-	private String defaultUSDLPath;
-	private String serverUrl;
-	private String secondaryUSDLPath;
-	
-	@Rule
-	public WireMockRule wireMock = new WireMockRule(0);
 
 	@Override
 	public void specificSetUp() {
 		createUser(USER_NAME, EMAIL, PASSWORD);
 		createStore(USER_NAME, PASSWORD, FIRST_STORE_NAME, FIRST_STORE_URL);
-		
-		// Configure server
-		stubFor(get(urlMatching("/default[0-9]*.rdf"))
-				.willReturn(aResponse()
-						.withStatus(200)
-						.withBodyFile("default.rdf")));
-		
-		stubFor(get(urlMatching("/secondary.rdf"))
-				.willReturn(aResponse()
-						.withStatus(200)
-						.withBodyFile("secondary.rdf")));
-		
-		// Start up server
-		wireMock.start();
-		
-		// Set server URL
-		serverUrl = "http://127.0.0.1:" + wireMock.port();
-		defaultUSDLPath = serverUrl + "/default.rdf";
-		secondaryUSDLPath = serverUrl + "/secondary.rdf";
+
+		startMockServer();
 	}
-	
+
 	@After
 	public void stopMockServer() {
 		wireMock.stop();
 	}
-	
-	
+
 	///////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// AUXILIAR //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -1064,7 +1004,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + 
 					descriptionName + "/offering/" + offeringName + "/bookmark")
-				.request()
+				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.post(null);
 
