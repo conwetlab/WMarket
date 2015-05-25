@@ -27,6 +27,7 @@
         new app.fields.TextField('company', {
             label: "Company",
             required: false,
+            minlength: 3,
             maxlength: 30
         })
     ]);

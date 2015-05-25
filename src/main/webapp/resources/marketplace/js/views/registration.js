@@ -10,6 +10,7 @@
     ns.registrationForm = app.createForm('registration_form', [
         new app.fields.TextField('displayName', {
             label: "Full name",
+            minlength: 3,
             maxlength: 30,
             regexp: new RegExp(utils.patternDisplayName, "i"),
             errorMessages: {

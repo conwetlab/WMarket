@@ -16,7 +16,8 @@
         }),
         new app.fields.TextField('displayName', {
             label: "Name",
-            maxlength: 30,
+            minlength: 3,
+            maxlength: 20,
             regexp: new RegExp("^[A-Z]+[.-A-Z]*( [A-Z]+[.-A-Z]*)*$", "i"),
             errorMessages: {
                 invalid: "Enter at most one valid word."

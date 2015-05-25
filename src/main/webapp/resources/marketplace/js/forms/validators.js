@@ -123,7 +123,7 @@
         },
 
         checkout: function checkout(value) {
-            return value.length >= this.minlength;
+            return !value || value.length >= this.minlength;
         },
 
         code: "min_length"
@@ -159,7 +159,7 @@
         },
 
         checkout: function checkout(value) {
-            return value.length <= this.maxlength;
+            return !value || value.length <= this.maxlength;
         },
 
         code: "max_length"
@@ -188,7 +188,7 @@
     utils.members(ns.RegExpValidator, {
 
         checkout: function checkout(value) {
-            return this.regexp.test(value);
+            return !value || this.regexp.test(value);
         },
 
         code: "invalid"
@@ -224,7 +224,7 @@
         },
 
         checkout: function checkout(value) {
-            return this.schemes.indexOf(value.split("://")[0]) !== -1;
+            return !value || this.schemes.indexOf(value.split("://")[0]) !== -1;
         },
 
         code: "invalid_scheme"
