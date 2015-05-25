@@ -147,4 +147,28 @@ public class Service {
 		this.classifications = classifications;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 73;
+		int result = 1;
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else {		
+			if (obj instanceof Service) {
+				Service other = (Service) obj;
+				
+				if (this.uri.equals(other.uri)) {
+					return true;
+				}
+			}
+		}
+	
+		return false;
+	}
 }

@@ -229,7 +229,7 @@ public class OfferingResolver {
 			offering.setDisplayName(getTitle(model, offeringUri));
 			// Maybe the name should depends on the creator and the version...
 			offering.setName(NameGenerator.getURLName(offering.getDisplayName()));
-			offering.setUri(offeringUri);
+			offering.setUri(offeringUri.substring(1, offeringUri.length() - 1));
 			offering.setDescribedIn(offeringDescription);
 			offering.setVersion(getOfferingVersion(model, offeringUri));
 			offering.setDescription(getDescription(model, offeringUri));
