@@ -93,6 +93,12 @@
  *  DEFAULT THEME - LIST GROUP
  ***************************************************************************************/
 
+.list-group:after {
+    display: block;
+    clear: both;
+    content: "";
+}
+
 .list-group .list-group-heading {
     display: block;
     margin-bottom: 5px;
@@ -136,4 +142,25 @@
     text-align: center;
     line-height: 20px;
     vertical-align: baseline;
+}
+
+.list-group-item-success,
+.list-group-item-success:hover {
+    color: rgb(60, 110, 60);
+    background-color: rgb(220, 240, 210);
+    border-color: rgb(190, 210, 180);
+}
+
+.list-group-item-info,
+.list-group-item-info:hover {
+    color: rgb(60, 110, 130);
+    background-color: rgb(225, 235, 245);
+    border-color: rgb(180, 220, 220);
+}
+
+.list-group-item-warning,
+.list-group-item-warning:hover {
+    color: rgb(135, 100, 60);
+    background-color: rgb(240, 240, 220);
+    border-color: rgb(230, 210, 180);
 }

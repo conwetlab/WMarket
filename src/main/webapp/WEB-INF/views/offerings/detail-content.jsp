@@ -1,48 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="t" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div class="container">
   <div class="col-sm-10 col-md-4 col-lg-3">
-    <div class="panel panel-default">
-      <div class="panel-heading text-center">
-        <span class="image-thumbnail image-thumbnail-lg">
-          <img class="image image-rounded image-bordered" src="${ offering.imageUrl }">
-        </span>
-        <div class="panel-title">${ offering.displayName }</div>
-      </div>
-      <div class="panel-body">
-        <div class="tab-group tab-group-vertical">
-          <div class="tab active">
-            <a href="${ pageContext.request.contextPath }/offerings/${ offering.describedIn.store.name }/${ offering.describedIn.name }/${ offering.name }">
-              <span class="fa fa-newspaper-o"></span>
-              <span class="hidden-sm">General</span>
-            </a>
-          </div>
-          <c:choose>
-            <c:when test="${ not empty bookmark }">
-
-              <div class="btn-toggle-bookmark tab tab-danger">
-                <a href="javascript:app.view.toggleBookmark();">
-                  <span class="fa fa-bookmark"></span>
-                  <span class="hidden-sm">Remove bookmark</span>
-                </a>
-              </div>
-
-            </c:when>
-            <c:otherwise>
-
-              <div class="btn-toggle-bookmark tab">
-                <a href="javascript:app.view.toggleBookmark();">
-                  <span class="fa fa-bookmark"></span>
-                  <span class="hidden-sm">Add bookmark</span>
-                </a>
-              </div>
-
-            </c:otherwise>
-          </c:choose>
-        </div>
-      </div>
-    </div>
+    <t:insertTemplate template="/WEB-INF/views/offerings/header.jsp" />
   </div>
   <div class="col-sm-10 col-md-6 col-lg-5 col-lg-offset-1">
     <div class="panel panel-default">
