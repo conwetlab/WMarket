@@ -41,6 +41,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -69,6 +70,8 @@ public class SeleniumIT extends AbstractIT {
 		driver = new FirefoxDriver();
 		// Avoid Jenkinks failures
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		// Increase browser size to avoid Jenkins failures
+		driver.manage().window().setSize(new Dimension(1024, 768));
 		startMockServer();
 	}
 
