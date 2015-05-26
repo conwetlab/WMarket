@@ -35,6 +35,7 @@ package org.fiware.apps.marketplace.it;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
@@ -66,6 +67,8 @@ public class SeleniumIT extends AbstractIT {
 	@Before
 	public void setUp() {
 		driver = new FirefoxDriver();
+		// Avoid Jenkinks failures
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		startMockServer();
 	}
 
