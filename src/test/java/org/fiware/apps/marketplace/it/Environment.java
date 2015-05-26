@@ -120,7 +120,7 @@ public class Environment {
 	        fs.close();
 	        
 	        // Add modified WAR       
-			tomcat.addWebapp("FiwareMarketplace", modifiedWarPath);
+			tomcat.addWebapp("WMarket", modifiedWarPath);
 		} catch (Exception ex) {
 			// This will prevent test from starting...
 			throw new RuntimeException(ex);
@@ -186,6 +186,7 @@ public class Environment {
 	public void cleanDB() throws ManagedProcessException {
 		embeddedDB.run("DELETE FROM price_components;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM price_plans;", "root", null, DATABASE);
+		embeddedDB.run("DELETE FROM bookmarks;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM offerings;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM descriptions;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM stores;", "root", null, DATABASE);
