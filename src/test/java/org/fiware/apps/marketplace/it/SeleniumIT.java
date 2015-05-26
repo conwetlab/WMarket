@@ -37,6 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -62,8 +63,8 @@ public class SeleniumIT extends AbstractIT {
 	private static final String DESCRIPTION_CREATION_FORM = "description_create_form";
 	private static final String DESCRIPTION_UPDATE_FORM = "description_update_form";
 
-	@Override
-	public void specificSetUp() {
+	@Before
+	public void setUp() {
 		driver = new FirefoxDriver();
 		startMockServer();
 	}

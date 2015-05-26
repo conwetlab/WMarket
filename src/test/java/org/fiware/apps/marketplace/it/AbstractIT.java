@@ -87,12 +87,9 @@ public abstract class AbstractIT {
 	}
 	
 	@Before
-	public void setUp() throws Exception {
+	public void initEvironment() throws Exception {
 		environment.cleanDB();
-		specificSetUp();
 	}
-
-	public abstract void specificSetUp();
 
 	@Rule
 	public WireMockRule wireMock = new WireMockRule(0);

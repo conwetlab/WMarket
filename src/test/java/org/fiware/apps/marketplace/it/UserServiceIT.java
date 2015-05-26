@@ -54,13 +54,7 @@ public class UserServiceIT extends AbstractIT {
 	private final static String MESSAGE_INVALID_EMAIL = "This field must be a valid email.";
 	private final static String MESSAGE_INVALID_PASSWORD = "Password must contain one number, one letter and one "
 				+ "unique character such as !#$%&?";
-	private final static String MESSAGE_USER_NOT_FOUND = "User %s not found";
-	
-	
-	public void specificSetUp() {
-		// No actions are required
-	}
-	
+	private final static String MESSAGE_USER_NOT_FOUND = "User %s not found";	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// CREATE ///////////////////////////////////////

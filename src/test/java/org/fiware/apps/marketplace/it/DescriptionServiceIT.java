@@ -48,6 +48,7 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 
@@ -66,8 +67,8 @@ public class DescriptionServiceIT extends AbstractIT {
 	private final static String MESSAGE_INVALID_RDF = "Your RDF could not be parsed.";
 	private final static String MESSAGE_DESCRIPTION_NOT_FOUND = "Description %s not found";
 
-	@Override
-	public void specificSetUp() {
+	@Before
+	public void setUp() {
 		createUser(USER_NAME, EMAIL, PASSWORD);
 		createStore(USER_NAME, PASSWORD, FIRST_STORE_NAME, FIRST_STORE_URL);
 

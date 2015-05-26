@@ -45,6 +45,7 @@ import javax.ws.rs.core.Response;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
+import org.junit.Before;
 import org.junit.Test;
 
 public class StoreServiceIT extends AbstractIT {
@@ -71,8 +72,8 @@ public class StoreServiceIT extends AbstractIT {
 			+ "nDrmZpjl0+A5/Rv8tccxtVnE6nRZ4bPnN6gbGy3Ne6Tgawr1Cs4HIO+CS5MQ4R+95Dz3kjXxC+xtTH6FhEtBrxMMKsKOjQw4ODm"
 			+ "w3m5ubghvXOIFlyzeAnpOcjtslZV7lAf6nkw9QAmpnXEI7D8yTj769aPhoAsvOyH/72/IH8JNvDJtE0dkAAAAASUVORK5CYII=";
 	
-	
-	public void specificSetUp() {
+	@Before
+	public void setUp() {
 		createUser(USER_NAME, EMAIL, PASSWORD);
 	}
 	
