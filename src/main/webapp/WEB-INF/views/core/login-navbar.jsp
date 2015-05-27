@@ -6,7 +6,7 @@
     <div class="navbar-element pull-right">
       <a class="btn btn-warning btn-show-register" href="${ pageContext.request.contextPath }/register">
         <span class="btn-icon fa fa-user-plus"></span>
-        <span class="btn-text">Sign Up</span>
+        <span class="btn-text hidden-sm">Sign Up</span>
       </a>
     </div>
   </div>

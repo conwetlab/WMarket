@@ -11,7 +11,7 @@
     <div class="navbar-element pull-right">
       <button id="toggle-right-sidebar" class="btn btn-primary" type="button">
         <span class="btn-icon fa fa-user"></span>
-        <span class="btn-text hidden-smartphone">${ user.displayName }</span>
+        <span class="btn-text hidden-sm">${ user.displayName }</span>
       </button>
     </div>
   </div>

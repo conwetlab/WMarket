@@ -34,13 +34,13 @@
                 </c:otherwise>
                 </c:choose>
               >
-                <p class="value">${ priceComponent.value }<span class="currency fa fa-${ f:toLowerCase(priceComponent.currency) }"></span></p>
+                <p class="value">${ priceComponent.value }<span class="currency">${ priceComponent.currency }</span></p>
                 <c:choose>
                 <c:when test="${ f:toLowerCase(priceComponent.unit) == 'single payment' }">
                     <p class="units">1 payment</p>
                 </c:when>
                 <c:otherwise>
-                    <p class="units">/ ${ f:toLowerCase(priceComponent.unit) }</p>
+                    <p class="units">/ ${ priceComponent.unit }</p>
                 </c:otherwise>
                 </c:choose>
               </div>

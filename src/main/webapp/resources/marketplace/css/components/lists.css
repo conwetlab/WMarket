@@ -128,7 +128,7 @@
     color: rgb(90, 90, 90);
 }
 
-.list-group .list-group-item:hover {
+.list-group-item:hover {
     color: rgb(20, 170, 215);
     background-color: rgb(240, 240, 240);
 }
