@@ -18,9 +18,9 @@
             label: "Name",
             minlength: 3,
             maxlength: 20,
-            regexp: new RegExp("^[A-Z]+[.-A-Z]*( [A-Z]+[.-A-Z]*)*$", "i"),
+            regexp: new RegExp("^[A-Z]+[\\w.-]*( [\\w.-]+)*$", "i"),
             errorMessages: {
-                invalid: "Enter at most one valid word."
+                invalid: "This field must contain alphanumerics (and -,_,.)."
             }
         }),
         new app.fields.URLField('url', {

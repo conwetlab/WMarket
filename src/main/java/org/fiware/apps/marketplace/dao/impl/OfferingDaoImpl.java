@@ -102,8 +102,8 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Offering> getOfferingsPage(int offset, int max) {
-		return getSession()
-				.createCriteria(Offering.class)
+		// Avoid Hibernate Null Pointer Exception
+		return getSession().createQuery("FROM " + TABLE_NAME)
 				.setFirstResult(offset)
 				.setMaxResults(max)
 				.list();

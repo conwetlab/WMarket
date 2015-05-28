@@ -47,6 +47,7 @@ import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
+import org.fiware.apps.marketplace.model.Store;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,16 +92,28 @@ public class DescriptionServiceIT extends AbstractIT {
 				.header("Authorization", getAuthorization(userName, password)).get();
 	}
 	
+	/**
+	 * This method retrieves an offering from the list of obtained offerings and check if its
+	 * price plans are OK
+	 * @param offerings The list of offerings that the service has returned
+	 * @param offering The offering to be checked
+	 */
+	private void checkPricePlan(List<Offering> offerings, Offering offering) {
+		int index = offerings.indexOf(offering);
+		assertThat(offerings.get(index).getPricePlans()).isEqualTo( offering.getPricePlans());
+
+	}
+	
 	private void checkDescription(String userName, String password, String storeName, 
 			String descriptionName, String displayName, String url, String comment) {
 		
-		Description description = getDescription(userName, password, storeName, descriptionName)
+		Description retrievedDescription = getDescription(userName, password, storeName, descriptionName)
 				.readEntity(Description.class);
 		
-		assertThat(description.getName()).isEqualTo(descriptionName);
-		assertThat(description.getDisplayName()).isEqualTo(displayName);
-		assertThat(description.getUrl()).isEqualTo(url);
-		assertThat(description.getComment()).isEqualTo(comment);
+		assertThat(retrievedDescription.getName()).isEqualTo(descriptionName);
+		assertThat(retrievedDescription.getDisplayName()).isEqualTo(displayName);
+		assertThat(retrievedDescription.getUrl()).isEqualTo(url);
+		assertThat(retrievedDescription.getComment()).isEqualTo(comment);
 		
 		// Check offerings
 		Offering[] expectedOfferings;
@@ -110,11 +123,30 @@ public class DescriptionServiceIT extends AbstractIT {
 			expectedOfferings = new Offering[] {FIRST_OFFERING};
 		}
 		
-		List<Offering> descriptionOfferings = description.getOfferings();
+		List<Offering> descriptionOfferings = retrievedDescription.getOfferings();
 		assertThat(descriptionOfferings.size()).isEqualTo(expectedOfferings.length);
 		
 		for (Offering expectedOffering: expectedOfferings) {
+			
+			// We must set the description into the offering in order to make "isIn" work appropriately
+			// "isIn" is based on "equals" and it depends on the name of the offering and its description
+			
+			// A description is managed by one store
+			Store store = new Store();
+			store.setName(storeName);
+			
+			// Description.equals depends on the name and its store
+			Description description = new Description();
+			description.setName(descriptionName);
+			description.setStore(store);
+			
+			expectedOffering.setDescribedIn(description);
+			
+			// Check that the offering is contained in the list of offerings returned by WMarket
 			assertThat(expectedOffering).isIn(descriptionOfferings);
+			
+			// Check that the price plan is correct 
+			checkPricePlan(descriptionOfferings, expectedOffering);
 		}
 	}
 	
@@ -785,31 +817,52 @@ public class DescriptionServiceIT extends AbstractIT {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password)).get();
 	}
-
 	
 	@Test
 	public void testStoreOfferings() {
+		
+		String description1Name = "displayname";
+		String description2Name = "secondary";
 		
 		// Create an additional Store
 		Response createStoreResponse = createStore(USER_NAME, PASSWORD, SECOND_STORE_NAME, SECOND_STORE_URL);
 		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
 
 		// Push each description in a different store
-		Response createDesc1Res = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, "displayName", 
+		Response createDesc1Res = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, description1Name, 
 				defaultUSDLPath, "");
-		Response createDesc2Res = createDescription(USER_NAME, PASSWORD, SECOND_STORE_NAME, "secondary", 
+		Response createDesc2Res = createDescription(USER_NAME, PASSWORD, SECOND_STORE_NAME, description2Name, 
 				secondaryUSDLPath, "");
 		
 		assertThat(createDesc1Res.getStatus()).isEqualTo(201);
 		assertThat(createDesc2Res.getStatus()).isEqualTo(201);
+		
+		// Create store and description instances. Needed for equals
+		Store store1 = new Store();
+		store1.setName(FIRST_STORE_NAME);
+		
+		Description description1 = new Description();
+		description1.setName(description1Name);
+		description1.setStore(store1);
+
+		Store store2 = new Store();
+		store2.setName(SECOND_STORE_NAME);
+		
+		Description description2 = new Description();
+		description2.setName(description2Name);
+		description2.setStore(store2);
 		
 		// Get Store1 offerings
 		Response store1OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, FIRST_STORE_NAME);
 		assertThat(store1OfferingResponse.getStatus()).isEqualTo(200);
 		
 		Offerings offerings = store1OfferingResponse.readEntity(Offerings.class);
-		assertThat(offerings.getOfferings().size()).isEqualTo(1);
+		assertThat(offerings.getOfferings().size()).isEqualTo(1);		
+		FIRST_OFFERING.setDescribedIn(description1);		// Otherwise equals will fail
 		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
+
+		// Price plans are not checked in Offering.equals
+		checkPricePlan(offerings.getOfferings(), FIRST_OFFERING);
 		
 		// Get Store2 offerings
 		Response store2OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, SECOND_STORE_NAME);
@@ -817,9 +870,19 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		offerings = store2OfferingResponse.readEntity(Offerings.class);
 		assertThat(offerings.getOfferings().size()).isEqualTo(2);
-				
+		
+		// Needed to retrieve the offerings from the list in an appropriate way. equals is based
+		// on the name and the description...
+		FIRST_OFFERING.setDescribedIn(description2);
+		SECOND_OFFERING.setDescribedIn(description2);
+		
 		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
 		assertThat(SECOND_OFFERING).isIn(offerings.getOfferings());
+		
+		// Price plans are not checked in Offering.equals
+		checkPricePlan(offerings.getOfferings(), FIRST_OFFERING);
+		checkPricePlan(offerings.getOfferings(), SECOND_OFFERING);
+		
 	}
 	
 	private void testGetSomeStoreOfferings(int offset, int max) {
@@ -1027,11 +1090,23 @@ public class DescriptionServiceIT extends AbstractIT {
 				bookmarkedOffering.getName());
 		assertThat(bookmarkResponse.getStatus()).isEqualTo(204);
 		
+		// Set store and description for offering. Otherwise, test will fail since offering.equals is based
+		// on these fields
+		Store store = new Store();
+		store.setName(FIRST_STORE_NAME);
+		
+		Description description = new Description();
+		description.setName(secondDescriptionName);
+		description.setStore(store);
+		
+		bookmarkedOffering.setDescribedIn(description);
+		
 		// Check that bookmarked offerings contains the bookmarked offering
 		Response bookmarkedOfferingsResponse = getBookmarkedOfferings();
 		assertThat(bookmarkedOfferingsResponse.getStatus()).isEqualTo(200);
 		List<Offering> bookmarkedOfferings = bookmarkedOfferingsResponse.readEntity(Offerings.class).getOfferings();
 		assertThat(bookmarkedOfferings.size()).isEqualTo(1);
+		// bookmarkedOffering parameters MUST be properly initialized 
 		assertThat(bookmarkedOfferings.get(0)).isEqualTo(bookmarkedOffering);
 		assertThat(bookmarkedOfferings.get(0).getDescribedIn().getName()).isEqualTo(secondDescriptionName);
 		assertThat(bookmarkedOfferings.get(0).getDescribedIn().getStore().getName()).isEqualTo(FIRST_STORE_NAME);
@@ -1071,8 +1146,19 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(bookmarkedOfferings.size()).isEqualTo(stores.length);
 		
 		for (int i = 0; i < bookmarkedOfferings.size(); i++) {
+			
+			// Set store and description for offering. Otherwise, test will fail since offering.equals is based
+			// on these fields
+			Store store = new Store();
+			store.setName(stores[i]);
+			
+			Description description = new Description();
+			description.setName(secondDescriptionName);
+			description.setStore(store);
+			
+			bookmarkedOffering.setDescribedIn(description);
+			
 			assertThat(bookmarkedOfferings.get(i)).isEqualTo(bookmarkedOffering);
-			assertThat(bookmarkedOfferings.get(i).getDescribedIn().getStore().getName()).isEqualTo(stores[i]);
 		}
 	}
 }

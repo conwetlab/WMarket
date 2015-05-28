@@ -6,7 +6,7 @@
     <div class="navbar-element pull-right">
       <a class="btn btn-primary btn-show-login" href="${ pageContext.request.contextPath }/login">
         <span class="btn-icon fa fa-sign-in"></span>
-        <span class="btn-text">Sign In</span>
+        <span class="btn-text hidden-sm">Sign In</span>
       </a>
     </div>
   </div>
