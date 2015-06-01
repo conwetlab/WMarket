@@ -829,9 +829,9 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
 
 		// Push each description in a different store
-		Response createDesc1Res = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, "displayName", 
+		Response createDesc1Res = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, description1Name, 
 				defaultUSDLPath, "");
-		Response createDesc2Res = createDescription(USER_NAME, PASSWORD, SECOND_STORE_NAME, "secondary", 
+		Response createDesc2Res = createDescription(USER_NAME, PASSWORD, SECOND_STORE_NAME, description2Name, 
 				secondaryUSDLPath, "");
 		
 		assertThat(createDesc1Res.getStatus()).isEqualTo(201);
@@ -1090,11 +1090,23 @@ public class DescriptionServiceIT extends AbstractIT {
 				bookmarkedOffering.getName());
 		assertThat(bookmarkResponse.getStatus()).isEqualTo(204);
 		
+		// Set store and description for offering. Otherwise, test will fail since offering.equals is based
+		// on these fields
+		Store store = new Store();
+		store.setName(FIRST_STORE_NAME);
+		
+		Description description = new Description();
+		description.setName(secondDescriptionName);
+		description.setStore(store);
+		
+		bookmarkedOffering.setDescribedIn(description);
+		
 		// Check that bookmarked offerings contains the bookmarked offering
 		Response bookmarkedOfferingsResponse = getBookmarkedOfferings();
 		assertThat(bookmarkedOfferingsResponse.getStatus()).isEqualTo(200);
 		List<Offering> bookmarkedOfferings = bookmarkedOfferingsResponse.readEntity(Offerings.class).getOfferings();
 		assertThat(bookmarkedOfferings.size()).isEqualTo(1);
+		// bookmarkedOffering parameters MUST be properly initialized 
 		assertThat(bookmarkedOfferings.get(0)).isEqualTo(bookmarkedOffering);
 		assertThat(bookmarkedOfferings.get(0).getDescribedIn().getName()).isEqualTo(secondDescriptionName);
 		assertThat(bookmarkedOfferings.get(0).getDescribedIn().getStore().getName()).isEqualTo(FIRST_STORE_NAME);
@@ -1134,8 +1146,19 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(bookmarkedOfferings.size()).isEqualTo(stores.length);
 		
 		for (int i = 0; i < bookmarkedOfferings.size(); i++) {
+			
+			// Set store and description for offering. Otherwise, test will fail since offering.equals is based
+			// on these fields
+			Store store = new Store();
+			store.setName(stores[i]);
+			
+			Description description = new Description();
+			description.setName(secondDescriptionName);
+			description.setStore(store);
+			
+			bookmarkedOffering.setDescribedIn(description);
+			
 			assertThat(bookmarkedOfferings.get(i)).isEqualTo(bookmarkedOffering);
-			assertThat(bookmarkedOfferings.get(i).getDescribedIn().getStore().getName()).isEqualTo(stores[i]);
 		}
 	}
 }

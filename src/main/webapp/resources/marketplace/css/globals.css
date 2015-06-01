@@ -54,3 +54,10 @@ a {
 a:hover {
     color: rgb(40, 80, 180);
 }
+
+hr {
+    margin: 0px 0px 10px;
+    border-color: rgb(210, 210, 210);
+    border-style: solid;
+    border-bottom-width: 0px;
+}

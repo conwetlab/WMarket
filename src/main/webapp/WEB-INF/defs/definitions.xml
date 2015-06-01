@@ -70,6 +70,12 @@
         <put-attribute name="scripts.view" value="/WEB-INF/views/offerings/detail-scripts.jsp" />
     </definition>
 
+    <!-- PricePlan List View -->
+    <definition name="offering.priceplan.list" extends="app.auth">
+        <put-attribute name="content" value="/WEB-INF/views/offerings/priceplan-list-content.jsp" />
+        <put-attribute name="scripts.view" value="/WEB-INF/views/offerings/detail-scripts.jsp" />
+    </definition>
+
     <!-- Bookmark List View -->
     <definition name="offering.bookmark.list" extends="app.auth">
         <put-attribute name="content" value="/WEB-INF/views/offerings/bookmark-list-content.jsp" />

@@ -71,7 +71,6 @@
 
 @media (max-width: 768px) {
 
-    .hidden-smartphone,
     .hidden-sm {
         display: none !important;
     }
