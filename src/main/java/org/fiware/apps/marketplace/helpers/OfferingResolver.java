@@ -229,6 +229,7 @@ public class OfferingResolver {
 			offering.setDisplayName(getTitle(model, offeringUri));
 			// Maybe the name should depends on the creator and the version...
 			offering.setName(NameGenerator.getURLName(offering.getDisplayName()));
+			// Remove '<' from the beginning and '>' from the end
 			offering.setUri(offeringUri.substring(1, offeringUri.length() - 1));
 			offering.setDescribedIn(offeringDescription);
 			offering.setVersion(getOfferingVersion(model, offeringUri));
@@ -280,6 +281,8 @@ public class OfferingResolver {
 			for (String serviceUri: servicesUris) {
 				
 				Service service;
+				
+				// Remove '<' from the beginning and '>' from the end
 				String parserServiceUri = serviceUri.substring(1, serviceUri.length() - 1);
 				
 				try {
@@ -295,7 +298,7 @@ public class OfferingResolver {
 						service = new Service();
 						
 						// Service basic properties
-						service.setUri(serviceUri);
+						service.setUri(parserServiceUri);
 						service.setDisplayName(getTitle(model, serviceUri));
 						service.setComment(getDescription(model, serviceUri));
 						
@@ -328,6 +331,8 @@ public class OfferingResolver {
 						}
 						
 						service.setClassifications(serviceClassifications);
+						
+						createdServices.put(parserServiceUri, service);
 					}					
 				}
 				

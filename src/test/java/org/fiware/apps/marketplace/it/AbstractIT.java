@@ -125,7 +125,9 @@ public abstract class AbstractIT {
 		SECOND_OFFERING.setDescription("Offering composed of several mashable application components that compose "
 				+ "the base tools/examples for making application mashups using WireCloud and CKAN. Those resources "
 				+ "can be used for example for showing data coming from CKAN's dataset inside the Map Viewer widget "
-				+ "or inside a graph widget or for browsing data inside a table widget.");	}
+				+ "or inside a graph widget or for browsing data inside a table widget.");	
+		
+	}
 
 	protected String serverUrl;
 	protected String defaultUSDLPath;

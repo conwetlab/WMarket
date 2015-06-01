@@ -233,6 +233,14 @@ public class DescriptionBoImpl implements DescriptionBo {
 			throw new NotAuthorizedException("delete description");
 		}
 		
+		// If classifications and services are not removed from the attached offerings,
+		// the system will try to remove them from the database but this will fail since
+		// classifications and services can be attached to another offerings.
+		for (Offering offering: description.getOfferings()) {
+			offering.getClassifications().clear();
+			offering.getServices().clear();
+		}
+		
 		// Delete the description from the data base
 		// We must relay on StoreDao to remove descriptions. It's easier and safer
 		// And weird exceptions are avoided

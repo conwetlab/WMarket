@@ -182,7 +182,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		String descriptionComment = "Example Comment";
 		
 		Response response = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, displayName, url, 
-				descriptionComment);	
+				descriptionComment);
 		assertThat(response.getStatus()).isEqualTo(201);
 		assertThat(response.getHeaderString("Location")).isEqualTo(endPoint + "/api/v2/store/" + FIRST_STORE_NAME +
 				"/description/" + descriptionName);

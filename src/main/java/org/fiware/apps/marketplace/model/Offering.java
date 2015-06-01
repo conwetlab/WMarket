@@ -181,7 +181,7 @@ public class Offering {
 	
 	@XmlElement(name = "service")
 	@JsonProperty("services")
-	@ManyToMany(fetch = FetchType.EAGER)	// Not many services are supposed to be attached
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)	// Not many services are supposed to be attached
 	@JoinTable(name = "offerings_services", 
 		      joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
 		      inverseJoinColumns = {@JoinColumn(name = "service_id", referencedColumnName = "id")})
@@ -195,7 +195,7 @@ public class Offering {
 	
 	@XmlElement(name = "classification")
 	@JsonProperty("classifications")
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "offerings_classifications",
 		      joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
 		      inverseJoinColumns = {@JoinColumn(name = "classification_id", referencedColumnName = "id")})
