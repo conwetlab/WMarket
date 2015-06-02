@@ -163,7 +163,7 @@ public class Service {
 			if (obj instanceof Service) {
 				Service other = (Service) obj;
 				
-				if (this.uri.equals(other.uri)) {
+				if (this.uri != null && this.uri.equals(other.uri)) {
 					return true;
 				}
 			}

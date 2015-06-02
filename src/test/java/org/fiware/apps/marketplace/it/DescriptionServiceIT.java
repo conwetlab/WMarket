@@ -732,7 +732,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/descriptions")
 				.queryParam("offset", offset)
-				.matrixParam("max", max)
+				.queryParam("max", max)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();

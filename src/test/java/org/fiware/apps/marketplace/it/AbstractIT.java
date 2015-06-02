@@ -49,10 +49,12 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Base64;
 import org.fiware.apps.marketplace.model.APIError;
+import org.fiware.apps.marketplace.model.Classification;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.PriceComponent;
 import org.fiware.apps.marketplace.model.PricePlan;
+import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.AfterClass;
@@ -150,6 +152,8 @@ public abstract class AbstractIT {
 				+ "Those resources can be used for example for showing entities coming from an Orion server inside "
 				+ "the Map Viewer widget or browsing and updating the attributes of those entities.");
 		FIRST_OFFERING.setPricePlans(pricePlansOff1);
+		FIRST_OFFERING.setClassifications(new HashSet<Classification>());
+		FIRST_OFFERING.setServices(new HashSet<Service>());
 
 		SECOND_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/CkanStarterKit"
 				+ "#GHbnf7dsubc19ebx4fmfgH");
@@ -161,7 +165,9 @@ public abstract class AbstractIT {
 				+ "the base tools/examples for making application mashups using WireCloud and CKAN. Those resources "
 				+ "can be used for example for showing data coming from CKAN's dataset inside the Map Viewer widget "
 				+ "or inside a graph widget or for browsing data inside a table widget.");	
-		SECOND_OFFERING.setPricePlans(pricePlansOff2);	
+		SECOND_OFFERING.setPricePlans(pricePlansOff2);
+		SECOND_OFFERING.setClassifications(new HashSet<Classification>());
+		SECOND_OFFERING.setServices(new HashSet<Service>());
 	}
 
 	protected String serverUrl;

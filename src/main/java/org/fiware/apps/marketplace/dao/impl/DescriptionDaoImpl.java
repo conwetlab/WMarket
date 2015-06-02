@@ -44,6 +44,7 @@ import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -170,12 +171,17 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Description> getDescriptionsPage(int offset, int max) {
-		return getSession()
+		List<Description> descriptions = getSession()
 				.createCriteria(Description.class)
+				// stackoverflow.com/questions/11038234/pagination-with-hibernate-criteria-and-distinct-root-entity
+				// Otherwise setFirstResult and setMaxResults will fail!!!
+				.setFetchMode("offerings", FetchMode.SELECT)
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)		// Avoid duplicates
 				.setFirstResult(offset)
 				.setMaxResults(max)
-				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)		// Avoid duplicates
 				.list();
+		
+		return descriptions;
 	}
 
 	@Override
