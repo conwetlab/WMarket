@@ -33,13 +33,13 @@ package org.fiware.apps.marketplace.dao;
  */
 
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
-import org.fiware.apps.marketplace.model.Classification;
+import org.fiware.apps.marketplace.model.Category;
 
 
 public interface ClassificationDao {
 	
 	public boolean isNameAvailable(String name);
-	public Classification findByName(String name) throws ClassificationNotFoundException;
+	public Category findByName(String name) throws ClassificationNotFoundException;
 	
 
 }

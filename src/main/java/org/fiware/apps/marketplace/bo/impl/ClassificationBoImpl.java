@@ -35,7 +35,7 @@ package org.fiware.apps.marketplace.bo.impl;
 import org.fiware.apps.marketplace.bo.ClassificationBo;
 import org.fiware.apps.marketplace.dao.ClassificationDao;
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
-import org.fiware.apps.marketplace.model.Classification;
+import org.fiware.apps.marketplace.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +50,7 @@ public class ClassificationBoImpl implements ClassificationBo {
 	}
 
 	@Override
-	public Classification findByName(String name) throws ClassificationNotFoundException {
+	public Category findByName(String name) throws ClassificationNotFoundException {
 		// TODO: Authorization?
 		return classificationDao.findByName(name);
 	}

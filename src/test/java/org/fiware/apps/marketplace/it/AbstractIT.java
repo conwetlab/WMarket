@@ -49,7 +49,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Base64;
 import org.fiware.apps.marketplace.model.APIError;
-import org.fiware.apps.marketplace.model.Classification;
+import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.PriceComponent;
@@ -140,6 +140,48 @@ public abstract class AbstractIT {
 		Set<PricePlan> pricePlansOff2 = new HashSet<>();
 		pricePlansOff2.add(pricePlanOff2);
 		
+		// CATEGORIES AND SERVICES
+		Category wirecloudCategory = new Category();
+		wirecloudCategory.setDisplayName("WireCloud Component");
+		wirecloudCategory.setName("wirecloud-component");
+		
+		Category datasetCategory = new Category();
+		datasetCategory.setDisplayName("Dataset");
+		datasetCategory.setName("dataset");
+		
+		Service orionService = new Service();
+		orionService.setDisplayName("OrionStarterKit");
+		orionService.setComment("A mashuplet with different widgets and operators to use Orion CB in your dashboards");
+		orionService.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit"
+				+ "#bUvq9oTgNStSwDnuT");
+		Set<Category> orionServiceCategories = new HashSet<>();
+		orionServiceCategories.add(wirecloudCategory);
+		orionService.setCategories(orionServiceCategories);
+		
+		Service datasetService = new Service();
+		datasetService.setDisplayName("Data set");
+		datasetService.setComment("This is a description");
+		datasetService.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit"
+				+ "#bUvq9oTgNStSwDnuU");
+		Set<Category> datasetServiceCategories = new HashSet<>();
+		datasetServiceCategories.add(datasetCategory);
+		datasetService.setCategories(datasetServiceCategories);
+
+		Set<Service> servicesOff1 = new HashSet<Service>();
+		servicesOff1.add(orionService);
+		servicesOff1.add(datasetService);
+		
+		Set <Service> servicesOff2 = new HashSet<Service>();
+		servicesOff2.add(orionService);
+		
+		Set<Category> categoriesOff1 = new HashSet<Category>();
+		categoriesOff1.add(datasetCategory);
+		categoriesOff1.add(wirecloudCategory);
+		
+		Set<Category> categoriesOff2 = new HashSet<Category>();
+		categoriesOff2.add(wirecloudCategory);
+
+		
 		FIRST_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit"
 				+ "#Xo9ZQS2Qa3yX8fDfm");
 		FIRST_OFFERING.setName("orionstarterkit");
@@ -152,9 +194,9 @@ public abstract class AbstractIT {
 				+ "Those resources can be used for example for showing entities coming from an Orion server inside "
 				+ "the Map Viewer widget or browsing and updating the attributes of those entities.");
 		FIRST_OFFERING.setPricePlans(pricePlansOff1);
-		FIRST_OFFERING.setClassifications(new HashSet<Classification>());
-		FIRST_OFFERING.setServices(new HashSet<Service>());
-
+		FIRST_OFFERING.setServices(servicesOff1);
+		FIRST_OFFERING.setCategories(categoriesOff1);
+		
 		SECOND_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/CkanStarterKit"
 				+ "#GHbnf7dsubc19ebx4fmfgH");
 		SECOND_OFFERING.setDisplayName("CKAN starter Kit");
@@ -166,8 +208,8 @@ public abstract class AbstractIT {
 				+ "can be used for example for showing data coming from CKAN's dataset inside the Map Viewer widget "
 				+ "or inside a graph widget or for browsing data inside a table widget.");	
 		SECOND_OFFERING.setPricePlans(pricePlansOff2);
-		SECOND_OFFERING.setClassifications(new HashSet<Classification>());
-		SECOND_OFFERING.setServices(new HashSet<Service>());
+		SECOND_OFFERING.setServices(servicesOff2);
+		SECOND_OFFERING.setCategories(categoriesOff2);
 	}
 
 	protected String serverUrl;

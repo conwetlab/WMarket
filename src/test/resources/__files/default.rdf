@@ -31,7 +31,7 @@
     <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#bUvq9oTgNStSwDnuT">
         <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
         <dcterms:title xml:lang="en">OrionStarterKit</dcterms:title>
-        <dcterms:description xml:lang="en">Offering composed of three mashable application components: ngsi-source, ngsientity2poi and ngsi-updater. Those components are provided as the base tools/examples for making application mashups using WireCloud and the Orion Context Broker. Those resources can be used for example for showing entities coming from an Orion server inside the Map Viewer widget or browsing and updating the attributes of those entities.</dcterms:description>
+        <dcterms:description xml:lang="en">A mashuplet with different widgets and operators to use Orion CB in your dashboards</dcterms:description>
         <usdl:versionInfo>1.0</usdl:versionInfo>
         <usdl:hasClassification rdf:nodeID="ba0" />
     </usdl:Service>
@@ -74,7 +74,5 @@
 		<gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
 		<dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
 	</price:PriceComponent>
-    
-
     
 </rdf:RDF>

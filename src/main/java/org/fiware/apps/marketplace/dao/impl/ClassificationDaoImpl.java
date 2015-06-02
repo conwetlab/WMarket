@@ -36,14 +36,14 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.dao.ClassificationDao;
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
-import org.fiware.apps.marketplace.model.Classification;
+import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.stereotype.Repository;
 
 @Repository("classificationDao")
 public class ClassificationDaoImpl extends MarketplaceHibernateDao implements ClassificationDao {
 	
-	private final static String TABLE_NAME = Classification.class.getName();
+	private final static String TABLE_NAME = Category.class.getName();
 	
 	@Override
 	public boolean isNameAvailable(String name) {
@@ -61,7 +61,7 @@ public class ClassificationDaoImpl extends MarketplaceHibernateDao implements Cl
 	
 
 	@Override
-	public Classification findByName(String name) throws ClassificationNotFoundException {
+	public Category findByName(String name) throws ClassificationNotFoundException {
 		
 		List<?> list = getSession()
 				.createQuery(String.format("from %s where name=:name", TABLE_NAME))
@@ -71,7 +71,7 @@ public class ClassificationDaoImpl extends MarketplaceHibernateDao implements Cl
 		if (list.isEmpty()) {
 			throw new ClassificationNotFoundException("Classification " + name + " not found");
 		} else {
-			return (Classification) list.get(0);
+			return (Category) list.get(0);
 		}
 	}
 

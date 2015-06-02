@@ -237,7 +237,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 		// the system will try to remove them from the database but this will fail since
 		// classifications and services can be attached to another offerings.
 		for (Offering offering: description.getOfferings()) {
-			offering.getClassifications().clear();
+			offering.getCategories().clear();
 			offering.getServices().clear();
 		}
 		

@@ -68,7 +68,7 @@ public class Service {
 	private String uri;
 	private String displayName;	
 	private String comment;
-	private Set<Classification> classifications;
+	private Set<Category> categories;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -132,19 +132,19 @@ public class Service {
 		this.comment = comment;
 	}
 	
-	@XmlElement(name = "classification")
-	@JsonProperty("classifications")
+	@XmlElement(name = "category")
+	@JsonProperty("categories")
 	// Services are not supposed to have too many categories... (one is the most common) 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "services_classifications", 
+	@JoinTable(name = "services_categories", 
 		      joinColumns = {@JoinColumn(name = "service_id", referencedColumnName = "id")},
-		      inverseJoinColumns = {@JoinColumn(name = "classification_id", referencedColumnName = "id")})
-	public Set<Classification> getClassifications() {
-		return classifications;
+		      inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
+	public Set<Category> getCategories() {
+		return categories;
 	}
 	
-	public void setClassifications(Set<Classification> classifications) {
-		this.classifications = classifications;
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
 	}
 
 	@Override

@@ -34,6 +34,7 @@ package org.fiware.apps.marketplace.it;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ws.rs.client.Client;
@@ -47,6 +48,7 @@ import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
+import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.junit.After;
 import org.junit.Before;
@@ -94,14 +96,38 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	/**
 	 * This method retrieves an offering from the list of obtained offerings and check if its
-	 * price plans are OK
+	 * price plans, services and categories are OK
 	 * @param offerings The list of offerings that the service has returned
 	 * @param offering The offering to be checked
 	 */
-	private void checkPricePlan(List<Offering> offerings, Offering offering) {
+	private void checkOfferingInternalState(List<Offering> offerings, Offering offering) {
 		int index = offerings.indexOf(offering);
-		assertThat(offerings.get(index).getPricePlans()).isEqualTo( offering.getPricePlans());
+		Offering receivedOffering = offerings.get(index);
+		assertThat(receivedOffering.getPricePlans()).isEqualTo(offering.getPricePlans());
+		assertThat(offerings.get(index).getCategories()).isEqualTo(offering.getCategories());
 
+		// Services should be manually compared, since the URI is not sent to the final user and is the only
+		// field used in equals... 
+		assertThat(receivedOffering.getServices().size()).isEqualTo(offering.getServices().size());
+		for (Service service: offering.getServices()) {
+			
+			boolean found = false;
+			
+			Iterator<Service> servicesIterator = receivedOffering.getServices().iterator();
+			
+			while(servicesIterator.hasNext() && !found) {
+				Service receivedService = servicesIterator.next();
+			
+				if (service.getDisplayName().equals(receivedService.getDisplayName()) && 
+						service.getComment().equals(receivedService.getComment())) {
+					found = true;
+				}
+			}
+			
+			// When the loop ends, the service should have been found
+			assertThat(found).isTrue();
+		}
+		
 	}
 	
 	private void checkDescription(String userName, String password, String storeName, 
@@ -146,7 +172,7 @@ public class DescriptionServiceIT extends AbstractIT {
 			assertThat(expectedOffering).isIn(descriptionOfferings);
 			
 			// Check that the price plan is correct 
-			checkPricePlan(descriptionOfferings, expectedOffering);
+			checkOfferingInternalState(descriptionOfferings, expectedOffering);
 		}
 	}
 	
@@ -862,7 +888,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
 
 		// Price plans are not checked in Offering.equals
-		checkPricePlan(offerings.getOfferings(), FIRST_OFFERING);
+		checkOfferingInternalState(offerings.getOfferings(), FIRST_OFFERING);
 		
 		// Get Store2 offerings
 		Response store2OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, SECOND_STORE_NAME);
@@ -880,8 +906,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(SECOND_OFFERING).isIn(offerings.getOfferings());
 		
 		// Price plans are not checked in Offering.equals
-		checkPricePlan(offerings.getOfferings(), FIRST_OFFERING);
-		checkPricePlan(offerings.getOfferings(), SECOND_OFFERING);
+		checkOfferingInternalState(offerings.getOfferings(), FIRST_OFFERING);
+		checkOfferingInternalState(offerings.getOfferings(), SECOND_OFFERING);
 		
 	}
 	

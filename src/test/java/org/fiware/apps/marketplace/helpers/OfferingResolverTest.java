@@ -13,7 +13,7 @@ import org.fiware.apps.marketplace.bo.ClassificationBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
-import org.fiware.apps.marketplace.model.Classification;
+import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.PriceComponent;
@@ -197,8 +197,8 @@ public class OfferingResolverTest {
 				service.setDisplayName(title);
 				service.setComment(description);
 				service.setUri(serviceUri);
-				Set<Classification> classifications = new HashSet<>();
-				service.setClassifications(classifications);
+				Set<Category> classifications = new HashSet<>();
+				service.setCategories(classifications);
 				when(serviceBoMock.findByURI(serviceUri)).thenReturn(service);
 			} else {
 				doThrow(new ServiceNotFoundException("service not found")).when(serviceBoMock).findByURI(serviceUri);
@@ -225,7 +225,7 @@ public class OfferingResolverTest {
 			for (String classification: classifications) {
 
 				if (existing) {
-					Classification c = new Classification();
+					Category c = new Category();
 					c.setName(classification);
 					when(classificatioBoMock.findByName(classification)).thenReturn(c);
 				} else {
@@ -265,7 +265,7 @@ public class OfferingResolverTest {
 		float priceComponentValue = 1.23F;
 
 		// Used for comparisons
-		Classification c = new Classification();
+		Category c = new Category();
 		c.setName(serviceClassification);
 
 		// Mocking		
@@ -294,7 +294,7 @@ public class OfferingResolverTest {
 		assertThat(services.size()).isEqualTo(1);
 		Service service = (Service) services.toArray()[0];
 		checkService(service, serviceTitle, serviceDescription);
-		assertThat(c).isIn(service.getClassifications());
+		assertThat(c).isIn(service.getCategories());
 
 		// Check returned price plan
 		Set<PricePlan> pricePlans = offering.getPricePlans();
@@ -310,7 +310,7 @@ public class OfferingResolverTest {
 				priceComponentValue);
 
 		// Check offering classifications
-		assertThat(c).isIn(offering.getClassifications());
+		assertThat(c).isIn(offering.getCategories());
 
 
 	}
@@ -453,11 +453,11 @@ public class OfferingResolverTest {
 
 		// Check classifications
 		for (String classification: classifications) {
-			Classification c = new Classification();
+			Category c = new Category();
 			c.setName(classification);
 
-			assertThat(c).isIn(service.getClassifications());
-			assertThat(c).isIn(offering.getClassifications());	
+			assertThat(c).isIn(service.getCategories());
+			assertThat(c).isIn(offering.getCategories());	
 		}
 	}
 

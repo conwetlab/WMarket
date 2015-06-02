@@ -51,10 +51,10 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
-@Table(name = "classifications")
-@XmlRootElement(name = "classification")
+@Table(name = "categories")
+@XmlRootElement(name = "category")
 @IgnoreMediaTypes("application/*+json")
-public class Classification {
+public class Category {
 	
 	// Hibernate 
 	private int id;
@@ -62,7 +62,7 @@ public class Classification {
 	private String name;
 	private String displayName;
 	
-	// Very important! Users will want to retrieve the best offerings of a classification
+	// Very important! Users will want to retrieve the best offerings of a category
 	private Set<Offering> offering;
 
 	@Id
@@ -99,7 +99,7 @@ public class Classification {
 
 	@XmlTransient
 	// This field is lazy, so it need to be initialized before returning it to the user
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "classifications")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categories")
 	public Set<Offering> getOffering() {
 		return offering;
 	}
@@ -122,9 +122,9 @@ public class Classification {
 			return true;
 		}
 		
-		if (obj instanceof Classification) {
+		if (obj instanceof Category) {
 			
-			Classification other = (Classification) obj;
+			Category other = (Category) obj;
 			
 			if (this.name != null && name.equals(other.name)) {
 				return true;

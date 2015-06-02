@@ -80,8 +80,8 @@ public class Offering {
 	private Set<PricePlan> pricePlans;
 	private Set<Service> services;
 	
-	// Offering classification depends on the attached services
-	private Set<Classification> classifications;
+	// Offering categories depends on the attached services
+	private Set<Category> categories;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -193,18 +193,18 @@ public class Offering {
 		this.services = services;
 	}
 	
-	@XmlElement(name = "classification")
-	@JsonProperty("classifications")
+	@XmlElement(name = "category")
+	@JsonProperty("categories")
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "offerings_classifications",
+	@JoinTable(name = "offerings_categories",
 		      joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
-		      inverseJoinColumns = {@JoinColumn(name = "classification_id", referencedColumnName = "id")})
-	public Set<Classification> getClassifications() {
-		return classifications;
+		      inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
+	public Set<Category> getCategories() {
+		return categories;
 	}
 
-	public void setClassifications(Set<Classification> classifications) {
-		this.classifications = classifications;
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
 	}
 
 	@Override

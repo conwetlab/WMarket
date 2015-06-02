@@ -45,7 +45,7 @@ import org.fiware.apps.marketplace.bo.ClassificationBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
-import org.fiware.apps.marketplace.model.Classification;
+import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.PriceComponent;
@@ -217,7 +217,7 @@ public class OfferingResolver {
 		
 		// Classifications cache: To avoid SQL Constraint errors when the description contains 
 		// two or more offerings with the same classification
-		Map<String, Classification> createdClassifications = new HashMap<String, Classification>();
+		Map<String, Category> createdClassifications = new HashMap<String, Category>();
 		
 		// Services cache: To avoid SQL Constraint errors when the description contains
 		// two or more offerings with the same service
@@ -276,7 +276,7 @@ public class OfferingResolver {
 			// SERVICES
 			List<String> servicesUris = getServiceUris(model, offeringUri);
 			Set<Service> offeringServices = new HashSet<>();
-			Set<Classification> offeringClassification = new HashSet<>();
+			Set<Category> offeringClassification = new HashSet<>();
 			
 			for (String serviceUri: servicesUris) {
 				
@@ -303,12 +303,12 @@ public class OfferingResolver {
 						service.setComment(getDescription(model, serviceUri));
 						
 						// Service classifications (a service can have more than one classification)
-						Set<Classification> serviceClassifications = new HashSet<>();
+						Set<Category> serviceClassifications = new HashSet<>();
 						List<String> classificationsDisplayNames = getServiceClassifications(model, serviceUri);
 						
 						for (String classificationDisplayName: classificationsDisplayNames) {
 							
-							Classification classification;
+							Category classification;
 							String classificationName = NameGenerator.getURLName(classificationDisplayName);
 							
 							try {
@@ -320,7 +320,7 @@ public class OfferingResolver {
 								classification = createdClassifications.get(classificationName);
 								
 								if (classification == null) {
-									classification = new Classification();
+									classification = new Category();
 									classification.setName(classificationName);
 									classification.setDisplayName(classificationDisplayName);
 									createdClassifications.put(classificationName, classification);
@@ -330,19 +330,19 @@ public class OfferingResolver {
 							serviceClassifications.add(classification);
 						}
 						
-						service.setClassifications(serviceClassifications);
+						service.setCategories(serviceClassifications);
 						
 						createdServices.put(parserServiceUri, service);
 					}					
 				}
 				
-				offeringClassification.addAll(service.getClassifications());
+				offeringClassification.addAll(service.getCategories());
 				offeringServices.add(service);
 			}
 			
 			// Attach the services to the offering
 			offering.setServices(offeringServices);
-			offering.setClassifications(offeringClassification);
+			offering.setCategories(offeringClassification);
 			
 			// Update the list of offerings
 			offerings.add(offering);
