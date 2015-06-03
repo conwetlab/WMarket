@@ -47,7 +47,7 @@ public class OfferingAuth extends AbstractAuth<Offering> {
 	}
 	
 	/**
-	 * Determines if a user can list all the offerings described in an description.
+	 * Check if an user can list all the offerings described in an description.
 	 * @param description The description where the offerings are described
 	 * @returns true if the user is allowed to list the offerings contained in a description. False otherwise.
 	 */
@@ -56,7 +56,7 @@ public class OfferingAuth extends AbstractAuth<Offering> {
 	}
 	
 	/**
-	 * Determines if a user can list all the offerings that belongs to a Store
+	 * Check if an user can list all the offerings that belongs to a Store
 	 * @param store The store where the offerings are contained
 	 * @returns true if the user is allowed to list the offerings contained in a store. False otherwise.
 	 */
@@ -65,7 +65,7 @@ public class OfferingAuth extends AbstractAuth<Offering> {
 	}
 	
 	/**
-	 * Determines if a user can bookmark an offering
+	 * Check if an user can bookmark an offering
 	 * @param offering The offering to be bookmarked
 	 * @return true if the user is allowed to bookmark the offering. False otherwise
 	 */
@@ -74,10 +74,19 @@ public class OfferingAuth extends AbstractAuth<Offering> {
 	}
 	
 	/**
-	 * Determines if a user can list the offering that they have bookmarked
+	 * Check if an user can list the offering that they have bookmarked
 	 * @return true if the user is allowed to list his/her bookmarked offerings
 	 */
 	public boolean canListBookmarked() {
+		return true;
+	}
+	
+	/**
+	 * Check if an user can rate the provided offering
+	 * @param offering The offering to be rated
+	 * @return True if the offering can be rated by the user. False otherwise
+	 */
+	public boolean canRate(Offering offering) {
 		return true;
 	}
 

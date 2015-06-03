@@ -5,6 +5,7 @@ package org.fiware.apps.marketplace.controllers.rest;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,7 +33,7 @@ package org.fiware.apps.marketplace.controllers.rest;
  * #L%
  */
 
-import java.util.Collections;
+/*import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -86,4 +87,4 @@ public class RecommendationService {
 	}
 	
 
-}
+}*/

@@ -145,9 +145,9 @@ public class BasicValidator {
 		this.validateDisplayNameMaxLength(displayName);
 	}
 	
-	public void validateComment(String description) throws ValidationException {
-		this.validateCommentMinLength(description);
-		this.validateCommentMaxLength(description);
+	public void validateComment(String comment) throws ValidationException {
+		this.validateCommentMinLength(comment);
+		this.validateCommentMaxLength(comment);
 	}
 	
 }

@@ -32,6 +32,7 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
+import java.util.Date;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
@@ -44,10 +45,13 @@ import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.OfferingRating;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.validators.RatingValidator;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,6 +65,20 @@ public class OfferingBoImpl implements OfferingBo {
 	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
+	@Autowired private RatingValidator ratingValidator;
+	
+	private double calculateRatingAverage(Offering offering) {
+		int sum = 0;
+		List<OfferingRating> ratings = offering.getRatings();
+		
+		for (OfferingRating rating: ratings) {
+			sum += rating.getScore();
+		}
+		
+		// Cast is required. Otherwise, average will be an integer
+		return (double) sum / (double) ratings.size();
+		
+	}
 
 	@Override
 	@Transactional(readOnly = false)
@@ -263,6 +281,45 @@ public class OfferingBoImpl implements OfferingBo {
 		}
 		
 	}
-	
+
+	@Override
+	@Transactional
+	public void rate(String storeName, String descriptionName,
+			String offeringName, OfferingRating rating)
+			throws NotAuthorizedException, OfferingNotFoundException,
+			StoreNotFoundException, DescriptionNotFoundException, ValidationException {
+
+		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		
+		// Check if the user is allowed to rate the offering. An exception will be
+		// risen if the user is not allowed to do it.
+		if (!offeringAuth.canBookmark(offering)) {
+			throw new NotAuthorizedException("rate offering");
+		}
+		
+		
+		// Validate rating (exception will be risen if the rating is not valid)
+		ratingValidator.validateRating(rating);
+				
+		try {
+			// Set rating options
+			Date currentDate = new Date();
+			rating.setDate(currentDate);
+			rating.setLastModificationDate(currentDate);
+			rating.setUser(userBo.getCurrentUser());
+			rating.setOffering(offering);
+
+			// Insert rating
+			offering.getRatings().add(rating);
+			
+			// Calculate average score
+			offering.setAverageScore(calculateRatingAverage(offering));
+			
+			// Save is automatically done since this method is transactional
+		} catch (UserNotFoundException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 	
 }

@@ -35,6 +35,7 @@ package org.fiware.apps.marketplace.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -75,6 +76,10 @@ public class Offering {
 	private String version;
 	private Description describedIn;
 	private String imageUrl;
+	
+	// Ratings
+	private List<OfferingRating> ratings;
+	private double averageScore = 0.0;		// Default value
 	
 	// Price Plans & Services
 	private Set<PricePlan> pricePlans;
@@ -168,6 +173,26 @@ public class Offering {
 		this.imageUrl = imageUrl;
 	}
 	
+	@XmlTransient
+	@OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	public List<OfferingRating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<OfferingRating> ratings) {
+		this.ratings = ratings;
+	}
+
+	@XmlElement
+	@Column(name = "averageScore")
+	public double getAverageScore() {
+		return averageScore;
+	}
+
+	public void setAverageScore(double averageScore) {
+		this.averageScore = averageScore;
+	}
+
 	@XmlElement(name = "pricePlan")
     @JsonProperty("pricePlans")
 	@OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

@@ -5,6 +5,7 @@ package org.fiware.apps.marketplace.model;
  * FiwareMarketplace
  * %%
  * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,34 +35,42 @@ package org.fiware.apps.marketplace.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.List;
+import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
-@XmlRootElement(name = "ratingObjectCategory")
-public class RatingObjectCategory {
-	
+@Table(name = "ratings")
+@XmlRootElement(name = "rating")
+@IgnoreMediaTypes("application/*+json")
+public class OfferingRating {
+		
 	private Integer id;
-	private String name;
-	private List <RatingObject> ratingObjects;
-	private List <RatingCategory> ratingCategorys;
-	
+	private User user;
+	private Offering offering;
+	private int score;
+	private String comment;
+	private Date date;
+	private Date lastModificationDate;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "RATING_OBJ_CAT_ID", unique = true, nullable = false)
-	@XmlTransient
+	@Column(name = "id", unique = true, nullable = false)
+	@XmlAttribute 
 	public Integer getId() {
 		return id;
 	}
@@ -69,37 +78,67 @@ public class RatingObjectCategory {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-		
-	@XmlID
-	@XmlAttribute 
-	@Column(name = "RATING_OBJECT_CATEGORY_NAME", unique = true, nullable = false)
-	public String getName() {
-		return name;
-	}
 	
-	public void setName(String name) {
-		this.name = name;
-	}
-		
-	@XmlTransient
-	@OneToMany(mappedBy="ratingObjectCategory",  cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-	public List<RatingObject> getRatingObjects() {
-		return ratingObjects;
+	@XmlJavaTypeAdapter(UserXMLAdapter.class)
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "user", nullable=false)
+	public User getUser() {
+		return user;
 	}
 
-	public void setRatingObjects(List<RatingObject> ratingObjects) {
-		this.ratingObjects = ratingObjects;
+	public void setUser(User user) {
+		this.user = user;
 	}
-	
-	
+
 	@XmlTransient
-	@OneToMany(mappedBy="ratingObjectCategory",  cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	public List<RatingCategory> getRatingCategorys() {
-		return ratingCategorys;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "offering", nullable=false)
+	public Offering getOffering() {
+		return offering;
+	}
+
+	public void setOffering(Offering offering) {
+		this.offering = offering;
+	}
+
+	@XmlElement
+	@Column(name = "score", nullable = false)
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	@XmlElement
+	@Column(name = "comment", unique = false, nullable = true)
+	public String getComment() {
+		return comment;
 	}
 	
-	public void setRatingCategorys(List<RatingCategory> ratingCategorys) {
-		this.ratingCategorys = ratingCategorys;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
+	@XmlElement
+	@Column(name = "date", nullable = false)
+	public Date getDate() {
+		return date;
+	}
+	
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	@XmlElement
+	@Column(name = "last_modification_date", nullable = false)
+	public Date getLastModificationDate() {
+		return lastModificationDate;
+	}
+
+	public void setLastModificationDate(Date lastModificationDate) {
+		this.lastModificationDate = lastModificationDate;
+	}
+
 }

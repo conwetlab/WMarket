@@ -79,6 +79,7 @@ public class User {
 	private List<Description> descriptionsCreated;
 	private List<Description> descriptionsModified;
 	private List<Offering> bookmarks;
+	private List<OfferingRating> offeringsRatings;
 		
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -220,6 +221,16 @@ public class User {
 
 	public void setBookmarks(List<Offering> bookmarks) {
 		this.bookmarks = bookmarks;
+	}
+		
+	@XmlTransient
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	public List<OfferingRating> getOfferingsRatings() {
+		return offeringsRatings;
+	}
+
+	public void setOfferingsRatings(List<OfferingRating> offeringsRatings) {
+		this.offeringsRatings = offeringsRatings;
 	}
 
 	@Override
