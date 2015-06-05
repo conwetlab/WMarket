@@ -294,10 +294,9 @@ public class OfferingBoImpl implements OfferingBo {
 		
 		// Check if the user is allowed to rate the offering. An exception will be
 		// risen if the user is not allowed to do it.
-		if (!offeringAuth.canBookmark(offering)) {
+		if (!offeringAuth.canRate(offering)) {
 			throw new NotAuthorizedException("rate offering");
 		}
-		
 		
 		// Validate rating (exception will be risen if the rating is not valid)
 		ratingValidator.validateRating(rating);

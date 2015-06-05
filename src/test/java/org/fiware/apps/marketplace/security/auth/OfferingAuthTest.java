@@ -97,7 +97,7 @@ public class OfferingAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
-	public void canCreateOffering() 
+	public void testCanCreateOffering() 
 			throws UserNotFoundException, NotAuthorizedException {
 
 		Offering description = mock(Offering.class);
@@ -106,7 +106,7 @@ public class OfferingAuthTest {
 	}
 
 	@Test
-	public void canNotCreateOffering() throws UserNotFoundException, NotAuthorizedException {
+	public void testCanNotCreateOffering() throws UserNotFoundException, NotAuthorizedException {
 		// Set up the test
 		Store store = new Store();
 		
@@ -131,7 +131,7 @@ public class OfferingAuthTest {
 	}
 
 	@Test
-	public void canUpdateOfferingSameUser() 
+	public void testCanUpdateOfferingSameUser() 
 			throws UserNotFoundException, NotAuthorizedException {
 		
 		User creator = createBasicUser(1);
@@ -139,7 +139,7 @@ public class OfferingAuthTest {
 	}
 
 	@Test
-	public void canUpdateOffering() 
+	public void testCanUpdateOffering() 
 			throws UserNotFoundException, NotAuthorizedException {
 		
 		User creator = createBasicUser(1);
@@ -148,7 +148,7 @@ public class OfferingAuthTest {
 	}
 
 	@Test
-	public void canNotUpdateOfferingNotSameUser() 
+	public void testCanNotUpdateOfferingNotSameUser() 
 			throws UserNotFoundException, NotAuthorizedException {
 		
 		User creator = createBasicUser(1);
@@ -157,7 +157,7 @@ public class OfferingAuthTest {
 	}
 
 	@Test
-	public void canNotUpdateOfferingNotLoggedIn() 
+	public void testCanNotUpdateOfferingNotLoggedIn() 
 			throws UserNotFoundException, NotAuthorizedException {	
 		
 		User creator = createBasicUser(1);
@@ -176,27 +176,27 @@ public class OfferingAuthTest {
 	}
 
 	@Test
-	public void canDeleteOfferingSameUser() throws NotAuthorizedException {
+	public void testCanDeleteOfferingSameUser() throws NotAuthorizedException {
 		User creator = createBasicUser(1);
 		testDelete(creator, creator, true);
 	}
 
 	@Test
-	public void canDeleteOffering() throws NotAuthorizedException {
+	public void testCanDeleteOffering() throws NotAuthorizedException {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
 		testDelete(creator, updater, true);
 	}
 
 	@Test
-	public void canNotDeleteOfferingNotSameUser() throws NotAuthorizedException {			
+	public void testCanNotDeleteOfferingNotSameUser() throws NotAuthorizedException {			
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
 		testDelete(creator, updater, false);
 	}
 
 	@Test
-	public void canNotDeleteOfferingNotLoggedIn() throws NotAuthorizedException {			
+	public void testCanNotDeleteOfferingNotLoggedIn() throws NotAuthorizedException {			
 		User creator = createBasicUser(1);
 		User updater = null;
 		testDelete(creator, updater, false);
@@ -208,18 +208,40 @@ public class OfferingAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test
-	public void canList() throws NotAuthorizedException {
+	public void testCanList() throws NotAuthorizedException {
 		assertThat(authHelper.canList()).isTrue();
 	}
 	
 	@Test
-	public void canListStore() throws NotAuthorizedException {
+	public void testCanListStore() throws NotAuthorizedException {
 		assertThat(authHelper.canList(new Store())).isTrue();
 	}
 	
 	@Test
-	public void canListDescription() throws NotAuthorizedException {
+	public void testCanListDescription() throws NotAuthorizedException {
 		assertThat(authHelper.canList(new Description())).isTrue();
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// TEST BOOKMARK ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test
+	public void testCanBookmark() throws NotAuthorizedException {
+		Offering offering = mock(Offering.class);
+		assertThat(authHelper.canBookmark(offering)).isTrue();
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////// TEST RATE //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test
+	public void testCanRate() throws NotAuthorizedException {
+		Offering offering = mock(Offering.class);
+		assertThat(authHelper.canRate(offering)).isTrue();
 	}
 
 }

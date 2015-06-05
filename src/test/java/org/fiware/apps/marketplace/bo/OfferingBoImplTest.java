@@ -32,9 +32,11 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.impl.OfferingBoImpl;
@@ -43,8 +45,11 @@ import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.OfferingRating;
 import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.validators.RatingValidator;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,6 +64,7 @@ public class OfferingBoImplTest {
 	@Mock private OfferingDao offeringDaoMock;
 	@Mock private OfferingAuth offeringAuthMock;
 	@Mock private UserBo userBoMock;
+	@Mock private RatingValidator ratingValidatorMock;
 	@InjectMocks private OfferingBoImpl offeringBo;
 
 	@Before 
@@ -66,6 +72,10 @@ public class OfferingBoImplTest {
 		MockitoAnnotations.initMocks(this);
 		this.offeringBo = spy(this.offeringBo);
 	}
+		
+	///////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////// BOOKMARK ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test(expected=NotAuthorizedException.class)
 	public void testBookmarkNotAuthorized() throws Exception {
@@ -85,7 +95,7 @@ public class OfferingBoImplTest {
 		offeringBo.bookmark(storeName, descriptionName, offeringName);
 	}
 
-	private void testNotFound(Exception e) throws Exception {
+	private void testBookmarkNotFound(Exception e) throws Exception {
 
 		String storeName = "store";
 		String descriptionName = "description";
@@ -100,18 +110,18 @@ public class OfferingBoImplTest {
 	}
 
 	@Test(expected=StoreNotFoundException.class)
-	public void testStoreNotFoundException() throws Exception {
-		testNotFound(new StoreNotFoundException(""));
+	public void testBookmarkStoreNotFoundException() throws Exception {
+		testBookmarkNotFound(new StoreNotFoundException(""));
 	}
 
 	@Test(expected=DescriptionNotFoundException.class)
-	public void testDescriptionNotFoundException() throws Exception {
-		testNotFound(new DescriptionNotFoundException(""));
+	public void testBookmarkDescriptionNotFoundException() throws Exception {
+		testBookmarkNotFound(new DescriptionNotFoundException(""));
 	}
 
 	@Test(expected=OfferingNotFoundException.class)
-	public void testOfferingNotFoundException() throws Exception {
-		testNotFound(new OfferingNotFoundException(""));
+	public void testBookmarkOfferingNotFoundException() throws Exception {
+		testBookmarkNotFound(new OfferingNotFoundException(""));
 	}
 
 	private void testChangeBookmarkState(boolean offeringBookmarked) throws Exception {
@@ -153,5 +163,136 @@ public class OfferingBoImplTest {
 	@Test
 	public void testUnbookmark() throws Exception {
 		testChangeBookmarkState(true);
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// RATE /////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testRateNotFound(Exception e) throws Exception {
+
+		String storeName = "store";
+		String descriptionName = "description";
+		String offeringName = "offering";
+
+		// Configure mock
+		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, descriptionName, 
+				offeringName);
+
+		// Call the function
+		OfferingRating rating = new OfferingRating();
+		offeringBo.rate(storeName, descriptionName, offeringName, rating);
+	}
+
+	@Test(expected=StoreNotFoundException.class)
+	public void testRateStoreNotFoundException() throws Exception {
+		testRateNotFound(new StoreNotFoundException(""));
+	}
+
+	@Test(expected=DescriptionNotFoundException.class)
+	public void testRateDescriptionNotFoundException() throws Exception {
+		testRateNotFound(new DescriptionNotFoundException(""));
+	}
+
+	@Test(expected=OfferingNotFoundException.class)
+	public void testRateOfferingNotFoundException() throws Exception {
+		testRateNotFound(new OfferingNotFoundException(""));
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testRateNotAuthorized() throws Exception {
+
+		String storeName = "store";
+		String descriptionName = "description";
+		String offeringName = "offering";
+		Offering offering = mock(Offering.class);
+		
+		// Configure mock
+		doReturn(false).when(offeringAuthMock).canRate(offering);
+		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		
+		// Call the function
+		OfferingRating rating = new OfferingRating();
+		offeringBo.rate(storeName, descriptionName, offeringName, rating);
+	}
+	
+	@Test(expected=ValidationException.class)
+	public void testRateInvalid() throws Exception {
+		
+		String storeName = "store";
+		String descriptionName = "description";
+		String offeringName = "offering";
+		Offering offering = mock(Offering.class);
+		OfferingRating rating = new OfferingRating();
+		
+		// Configure mock
+		ValidationException ex = new ValidationException("score", "invalid");
+		doThrow(ex).when(ratingValidatorMock).validateRating(rating);
+		doReturn(true).when(offeringAuthMock).canRate(offering);
+		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		
+		// Call the function
+		offeringBo.rate(storeName, descriptionName, offeringName, rating);
+	}
+	
+	private void testRate(List<OfferingRating> ratings, int score, double expectedAverage) {
+		
+		try {
+	
+			String storeName = "store";
+			String descriptionName = "description";
+			String offeringName = "offering";
+			
+			// Configure offering
+			Offering offering = mock(Offering.class);
+			when(offering.getRatings()).thenReturn(ratings);
+			
+			OfferingRating rating = new OfferingRating();
+			rating.setScore(score);
+			
+			// Configure mock
+			doReturn(true).when(offeringAuthMock).canRate(offering);
+			doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, 
+					descriptionName, offeringName);
+			
+			// Call the function
+			offeringBo.rate(storeName, descriptionName, offeringName, rating);
+			
+			// Verify that offering average score has been updated
+			verify(offering).setAverageScore(expectedAverage);
+		
+		} catch (Exception ex) {
+			fail("Exception not expected", ex);
+		}
+
+	}
+	
+	@Test
+	public void testRateANonRatedOffering() {
+		int score = 4;
+		testRate(new ArrayList<OfferingRating>(), score, score);
+	}
+	
+	@Test
+	public void testRateARatedOffering() {
+		
+		// Create a list of previous ratings
+		List<OfferingRating> ratings = new ArrayList<>();
+		double sum = 0;
+		
+		for (int i = 1; i < 4; i++) {
+			OfferingRating rating = new OfferingRating();
+			rating.setScore(i);
+			ratings.add(rating);
+			
+			sum += i;
+		}
+				
+		int score = 1;
+		double newAverage = (sum + score) / (ratings.size() + 1);
+		
+		testRate(ratings, score, newAverage);
 	}
 }
