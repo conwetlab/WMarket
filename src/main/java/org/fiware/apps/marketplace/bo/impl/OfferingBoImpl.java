@@ -43,6 +43,7 @@ import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -284,7 +285,7 @@ public class OfferingBoImpl implements OfferingBo {
 
 	@Override
 	@Transactional
-	public void rate(String storeName, String descriptionName,
+	public void createRating(String storeName, String descriptionName,
 			String offeringName, OfferingRating rating)
 			throws NotAuthorizedException, OfferingNotFoundException,
 			StoreNotFoundException, DescriptionNotFoundException, ValidationException {
@@ -294,7 +295,7 @@ public class OfferingBoImpl implements OfferingBo {
 		
 		// Check if the user is allowed to rate the offering. An exception will be
 		// risen if the user is not allowed to do it.
-		if (!offeringAuth.canRate(offering)) {
+		if (!offeringAuth.canCreateRating(offering)) {
 			throw new NotAuthorizedException("rate offering");
 		}
 		
@@ -315,10 +316,52 @@ public class OfferingBoImpl implements OfferingBo {
 			// Calculate average score
 			offering.setAverageScore(calculateRatingAverage(offering));
 			
-			// Save is automatically done since this method is transactional
+			// The creating process is automatically done since this method is transactional
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
-	
+
+	@Override
+	@Transactional
+	public void updateRating(String storeName, String descriptionName,
+			String offeringName, int ratingId, OfferingRating rating)
+			throws NotAuthorizedException, OfferingNotFoundException,
+			StoreNotFoundException, DescriptionNotFoundException,
+			RatingNotFoundException, ValidationException {
+		
+		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		
+		OfferingRating tmpRating = new OfferingRating();
+		tmpRating.setId(ratingId);
+		int bbddRatingIndex = offering.getRatings().indexOf(tmpRating);
+		
+		if (bbddRatingIndex != -1) {
+			OfferingRating bbddRating = offering.getRatings().get(bbddRatingIndex);
+			
+			// Check if the user is allowed to rate the offering. An exception will be
+			// risen if the user is not allowed to do it.
+			if (!offeringAuth.canUpdateRating(bbddRating)) {
+				throw new NotAuthorizedException("rate offering");
+			}
+			
+			// Validate rating (exception will be risen if the rating is not valid)
+			ratingValidator.validateRating(rating);
+
+			// Update rating
+			bbddRating.setComment(rating.getComment());
+			bbddRating.setScore(rating.getScore());
+			bbddRating.setLastModificationDate(new Date());
+			
+			// Calculate average score
+			offering.setAverageScore(calculateRatingAverage(offering));
+			
+			// The update process is automatically done since this method is transactional			
+		} else {
+			throw new RatingNotFoundException(String.format("Rating %d not found in Offering %s "
+					+ "(Description %s, Store: %s)", ratingId, offeringName, descriptionName, storeName));
+		}
+	}
+
 }

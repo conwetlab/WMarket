@@ -42,6 +42,7 @@ import org.fiware.apps.marketplace.bo.OfferingBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -72,8 +73,14 @@ public class RatingServiceTest {
 		when(uri.getPath()).thenReturn(PATH);
 
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// CREATE ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
 
-	private void testRateException(Exception ex, int statusCode, ErrorType errorType, String message, String field) {
+	private void testCreateRatingException(Exception ex, int statusCode, ErrorType errorType, 
+			String message, String field) {
 
 		try {
 
@@ -83,10 +90,10 @@ public class RatingServiceTest {
 			OfferingRating rating = new OfferingRating();
 
 			// Mocks
-			doThrow(ex).when(offeringBoMock).rate(storeName, descriptionName, offeringName, rating);
+			doThrow(ex).when(offeringBoMock).createRating(storeName, descriptionName, offeringName, rating);
 
 			// Actual call
-			Response res = ratingService.rate(uri, storeName, descriptionName, offeringName, rating);
+			Response res = ratingService.createRating(uri, storeName, descriptionName, offeringName, rating);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -96,38 +103,38 @@ public class RatingServiceTest {
 	}
 
 	@Test
-	public void testRateNotAuthorized() {
+	public void testCreateRatingNotAuthorized() {
 		NotAuthorizedException ex = new NotAuthorizedException("rate offering");
-		testRateException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+		testCreateRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testRateStoreNotFound() {
+	public void testCreateRatingStoreNotFound() {
 		StoreNotFoundException ex = new StoreNotFoundException("store not found");
-		testRateException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+		testCreateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testRateDescriptionNotFound() {
+	public void testCreateRatingDescriptionNotFound() {
 		DescriptionNotFoundException ex = new DescriptionNotFoundException("description not found");
-		testRateException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+		testCreateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testRateOfferingNotFound() {
-		OfferingNotFoundException ex = new OfferingNotFoundException("description not found");
-		testRateException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	public void testCreateRatingOfferingNotFound() {
+		OfferingNotFoundException ex = new OfferingNotFoundException("offering not found");
+		testCreateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testRateValidationException() {
+	public void testCreateRatingValidationException() {
 		String field = "score";
 		ValidationException ex = new ValidationException(field, "invalid");
-		testRateException(ex, 400, ErrorType.VALIDATION_ERROR, ex.getMessage(), field);
+		testCreateRatingException(ex, 400, ErrorType.VALIDATION_ERROR, ex.getMessage(), field);
 	}
 	
 	@Test
-	public void testRate() throws Exception {
+	public void testCreateRating() throws Exception {
 		
 		String storeName = "store";
 		String descriptionName = "description";
@@ -142,13 +149,95 @@ public class RatingServiceTest {
 				invocation.getArgumentAt(3, OfferingRating.class).setId(id);
 				return null;
 			}
-		}).when(offeringBoMock).rate(storeName, descriptionName, offeringName, rating);
+		}).when(offeringBoMock).createRating(storeName, descriptionName, offeringName, rating);
 		
 		// Actual call
-		Response res = ratingService.rate(uri, storeName, descriptionName, offeringName, rating);
+		Response res = ratingService.createRating(uri, storeName, descriptionName, offeringName, rating);
 		
 		// Check response and headers
 		assertThat(res.getStatus()).isEqualTo(201);
 		assertThat(res.getHeaders().get("Location").get(0).toString()).isEqualTo(PATH + "/" + id);
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// UPDATE ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testUpdateRatingException(Exception ex, int statusCode, ErrorType errorType, 
+			String message, String field) {
+
+		try {
+
+			String storeName = "store";
+			String descriptionName = "description";
+			String offeringName = "offering";
+			int ratingId = 7;
+			OfferingRating rating = new OfferingRating();
+
+			// Mocks
+			doThrow(ex).when(offeringBoMock).updateRating(storeName, descriptionName, offeringName, ratingId, rating);
+
+			// Actual call
+			Response res = ratingService.updateRating(storeName, descriptionName, offeringName, ratingId, rating);
+			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
+			
+		} catch (Exception e1) {
+			fail("Exception not expected", e1);
+		}
+
+	}
+
+	@Test
+	public void testUpdateRatingNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("rate offering");
+		testUpdateRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testUpdateRatingStoreNotFound() {
+		StoreNotFoundException ex = new StoreNotFoundException("store not found");
+		testUpdateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testUpdateRatingDescriptionNotFound() {
+		DescriptionNotFoundException ex = new DescriptionNotFoundException("description not found");
+		testUpdateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testUpdateRatingOfferingNotFound() {
+		OfferingNotFoundException ex = new OfferingNotFoundException("offering not found");
+		testUpdateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testUpdateRatingRatingNotFound() {
+		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
+		testUpdateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testUpdateRatingValidationException() {
+		String field = "score";
+		ValidationException ex = new ValidationException(field, "invalid");
+		testUpdateRatingException(ex, 400, ErrorType.VALIDATION_ERROR, ex.getMessage(), field);
+	}
+	
+	@Test
+	public void testUpdateRating() throws Exception {
+		
+		String storeName = "store";
+		String descriptionName = "description";
+		String offeringName = "offering";
+		OfferingRating rating = new OfferingRating();
+		int ratingId = 9;
+		
+		// Actual call
+		Response res = ratingService.updateRating(storeName, descriptionName, offeringName, ratingId, rating);
+		
+		// Check response
+		assertThat(res.getStatus()).isEqualTo(200);
+	}	
 }

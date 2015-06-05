@@ -47,6 +47,7 @@ import org.fiware.apps.marketplace.bo.OfferingBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.OfferingRating;
@@ -64,7 +65,7 @@ public class RatingService {
 			LoggerFactory.getLogger(RatingService.class), "");
 	
 	@POST
-	public Response rate(
+	public Response createRating(
 			@Context UriInfo uri,
 			@PathParam("storeName") String storeName, 
 			@PathParam("descriptionName") String descriptionName,
@@ -77,7 +78,7 @@ public class RatingService {
 			
 			// When the object is saved in the database, the ID is automatically set
 			// so we can use it.
-			offeringBo.rate(storeName, descriptionName, offeringName, rating);
+			offeringBo.createRating(storeName, descriptionName, offeringName, rating);
 			
 			// Generate the URI and return CREATED
 			URI newURI = UriBuilder
@@ -90,6 +91,38 @@ public class RatingService {
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (OfferingNotFoundException | StoreNotFoundException | DescriptionNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (ValidationException ex) {
+			response = ERROR_UTILS.validationErrorResponse(ex);
+		}
+		
+		return response;
+		
+	}
+	
+	@POST
+	@Path("{ratingId}")
+	public Response updateRating(
+			@PathParam("storeName") String storeName, 
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName,
+			@PathParam("ratingId") int ratingId,
+			OfferingRating rating) {
+		
+		Response response;
+		
+		try {
+			
+			// When the object is saved in the database, the ID is automatically set
+			// so we can use it.
+			offeringBo.updateRating(storeName, descriptionName, offeringName, ratingId, rating);
+			
+			response = Response.ok().build();
+			
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
+		} catch (OfferingNotFoundException | StoreNotFoundException |
+				DescriptionNotFoundException | RatingNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.validationErrorResponse(ex);

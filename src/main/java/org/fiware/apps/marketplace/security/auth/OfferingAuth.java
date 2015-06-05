@@ -32,14 +32,20 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.OfferingRating;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service("offeringAuth")
 public class OfferingAuth extends AbstractAuth<Offering> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(OfferingAuth.class);
 
 	@Override
 	protected User getEntityOwner(Offering offering) {
@@ -86,8 +92,23 @@ public class OfferingAuth extends AbstractAuth<Offering> {
 	 * @param offering The offering to be rated
 	 * @return True if the offering can be rated by the user. False otherwise
 	 */
-	public boolean canRate(Offering offering) {
+	public boolean canCreateRating(Offering offering) {
 		return true;
+	}
+	
+	/**
+	 * Check if an user can update an offering rating
+	 * @param rating The offering rating to be updated
+	 * @return True if the user can update the offering rating. False otherwise
+	 */
+	public boolean canUpdateRating(OfferingRating rating) {
+		try {
+			return rating.getUser().equals(getUserBo().getCurrentUser());
+		} catch (UserNotFoundException e) {
+			// If the user cannot be retrieved, false is returned
+			logger.warn("Unexpected exception {}", e);
+			return false;
+		}
 	}
 
 }

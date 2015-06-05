@@ -42,6 +42,7 @@ import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.OfferingRating;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
@@ -52,7 +53,7 @@ import org.mockito.MockitoAnnotations;
 
 
 public class OfferingAuthTest {
-	
+
 	@Mock private UserBo userBoMock;
 	@InjectMocks private static OfferingAuth authHelper;
 
@@ -69,14 +70,14 @@ public class OfferingAuthTest {
 	private Offering setUpTestUpdateAndDelete(User creator, User updater) {
 		// Set up the test
 		Store store = new Store();
-		
+
 		Description description = new Description();
 		description.setCreator(creator);
 		description.setStore(store);
-		
+
 		Offering offering = new Offering();
 		offering.setDescribedIn(description);
-		
+
 		try {
 			when(userBoMock.getCurrentUser()).thenReturn(updater);
 		} catch (UserNotFoundException e) {
@@ -109,18 +110,18 @@ public class OfferingAuthTest {
 	public void testCanNotCreateOffering() throws UserNotFoundException, NotAuthorizedException {
 		// Set up the test
 		Store store = new Store();
-		
+
 		Description description = new Description();
 		description.setStore(store);
-		
+
 		Offering offering = new Offering();
 		offering.setDescribedIn(description);
-		
+
 		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
 		assertThat(authHelper.canCreate(offering)).isFalse();
 	}
 
-	
+
 	///////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////// TEST UPDATE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +134,7 @@ public class OfferingAuthTest {
 	@Test
 	public void testCanUpdateOfferingSameUser() 
 			throws UserNotFoundException, NotAuthorizedException {
-		
+
 		User creator = createBasicUser(1);
 		testUpdate(creator, creator, true);
 	}
@@ -141,7 +142,7 @@ public class OfferingAuthTest {
 	@Test
 	public void testCanUpdateOffering() 
 			throws UserNotFoundException, NotAuthorizedException {
-		
+
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
 		testUpdate(creator, updater, true);
@@ -150,7 +151,7 @@ public class OfferingAuthTest {
 	@Test
 	public void testCanNotUpdateOfferingNotSameUser() 
 			throws UserNotFoundException, NotAuthorizedException {
-		
+
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
 		testUpdate(creator, updater, false);
@@ -159,7 +160,7 @@ public class OfferingAuthTest {
 	@Test
 	public void testCanNotUpdateOfferingNotLoggedIn() 
 			throws UserNotFoundException, NotAuthorizedException {	
-		
+
 		User creator = createBasicUser(1);
 		User updater = null;
 		testUpdate(creator, updater, false);
@@ -169,7 +170,7 @@ public class OfferingAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////// TEST DELETE /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-	
+
 	private void testDelete(User creator, User updater, boolean canDelete) throws NotAuthorizedException  {
 		Offering offering = setUpTestUpdateAndDelete(creator, updater);
 		assertThat(authHelper.canDelete(offering)).isEqualTo(canDelete);
@@ -206,42 +207,86 @@ public class OfferingAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////// TEST LIST //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-	
+
 	@Test
 	public void testCanList() throws NotAuthorizedException {
 		assertThat(authHelper.canList()).isTrue();
 	}
-	
+
 	@Test
 	public void testCanListStore() throws NotAuthorizedException {
 		assertThat(authHelper.canList(new Store())).isTrue();
 	}
-	
+
 	@Test
 	public void testCanListDescription() throws NotAuthorizedException {
 		assertThat(authHelper.canList(new Description())).isTrue();
 	}
-	
-	
+
+
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// TEST BOOKMARK ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-	
+
 	@Test
 	public void testCanBookmark() throws NotAuthorizedException {
 		Offering offering = mock(Offering.class);
 		assertThat(authHelper.canBookmark(offering)).isTrue();
 	}
-	
-	
+
+
 	///////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////// TEST RATE //////////////////////////////////////
+	////////////////////////////////// TEST CREATE RATING /////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
+
+	@Test
+	public void testCanCreateRating() throws NotAuthorizedException {
+		Offering offering = mock(Offering.class);
+		assertThat(authHelper.canCreateRating(offering)).isTrue();
+	}
+
+
+	///////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////// TEST UPDATE RATING /////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+
+	private void updateRating(User creator, User modifier, boolean canUpdate) {	
+		try {
+			when(userBoMock.getCurrentUser()).thenReturn(modifier);
+
+			OfferingRating rating = new OfferingRating();
+			rating.setUser(creator);
+
+			assertThat(authHelper.canUpdateRating(rating)).isEqualTo(canUpdate);
+		} catch (Exception e) {
+			fail("Exception not expected", e);
+		}
+	}
 	
 	@Test
-	public void testCanRate() throws NotAuthorizedException {
-		Offering offering = mock(Offering.class);
-		assertThat(authHelper.canRate(offering)).isTrue();
+	public void testCanUpdateRatingSameUser() {
+		User creator = createBasicUser(1);
+		updateRating(creator, creator, true);
+	}
+
+	@Test
+	public void testCanUpdateRating() {
+		User creator = createBasicUser(1);
+		User updater = createBasicUser(1);
+		updateRating(creator, updater, true);
+	}
+	
+	@Test
+	public void testCanNotUpdateRatingNotSameUser() {
+		User creator = createBasicUser(1);
+		User updater = createBasicUser(2);
+		updateRating(creator, updater, false);
+	}
+	
+	@Test
+	public void testCanNotUpdateRatingNotLoggedIn() {
+		User creator = createBasicUser(1);
+		updateRating(creator, null, false);
 	}
 
 }
