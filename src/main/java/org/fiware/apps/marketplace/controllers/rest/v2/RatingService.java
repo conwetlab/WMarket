@@ -35,6 +35,7 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
 
 import java.net.URI;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -51,6 +52,7 @@ import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Ratings;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -129,7 +131,49 @@ public class RatingService {
 		}
 		
 		return response;
+	}
+	
+	@GET
+	public Response getRatings(
+			@PathParam("storeName") String storeName, 
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName) {
 		
+		Response response;
+		
+		try {
+			response = Response.ok().entity(new Ratings(offeringBo.getRatings(
+					storeName, descriptionName, offeringName))).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
+		} catch (OfferingNotFoundException | StoreNotFoundException | DescriptionNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} 
+		
+		return response;
+		
+	}
+	
+	@GET
+	@Path("{ratingId}")
+	public Response getRating(
+			@PathParam("storeName") String storeName, 
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName,
+			@PathParam("ratingId") int ratingId) {
+		Response response;
+		
+		try {
+			response = Response.ok().entity(offeringBo.getRating(
+					storeName, descriptionName, offeringName, ratingId)).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
+		} catch (OfferingNotFoundException | StoreNotFoundException |
+				DescriptionNotFoundException | RatingNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} 
+		
+		return response;
 	}
 
 }

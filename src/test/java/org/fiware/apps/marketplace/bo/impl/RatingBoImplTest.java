@@ -1,6 +1,38 @@
 package org.fiware.apps.marketplace.bo.impl;
 
-import static org.assertj.core.api.Assertions.fail;
+/*
+ * #%L
+ * FiwareMarketplace
+ * %%
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of copyright holders nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software 
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * #L%
+ */
+
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -232,6 +264,94 @@ public class RatingBoImplTest {
 		double average = (sum + updatedRating.getScore()) / ratings.size();
 		verify(entity).setAverageScore(average);		
 		
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// GET RATINGS /////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetRatingsNotAuthorized() throws Exception {
+		// Mocking
+		doReturn(false).when(ratingAuthMock).canList();
+		
+		// Actual call
+		RateableEntity entity = mock(RateableEntity.class);
+		ratingBo.getRatings(entity);
+	}
+	
+	@Test
+	public void testGetRatings() throws Exception {
+		// Mocking
+		doReturn(true).when(ratingAuthMock).canList();
+		
+		// Actual call
+		@SuppressWarnings("unchecked")
+		List<Rating> ratings = mock(List.class);
+		RateableEntity entity = mock(RateableEntity.class);
+		doReturn(ratings).when(entity).getRatings(); 
+		assertThat(ratingBo.getRatings(entity)).isEqualTo(ratings);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// GET RATING //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetRatingNotAuthorized() throws Exception {
+		
+		int ratingId = 9;
+		
+		// Mocking
+		doReturn(false).when(ratingAuthMock).canList();
+				
+		Rating rating = new Rating();
+		rating.setId(ratingId);
+		
+		List<Rating> ratings = new ArrayList<>();
+		ratings.add(rating);
+		
+		RateableEntity entity = mock(RateableEntity.class);
+		doReturn(ratings).when(entity).getRatings();
+		
+		// Actual call
+		ratingBo.getRating(entity, ratingId);
+	}
+	
+	@Test(expected=RatingNotFoundException.class)
+	public void testGetRatingRatingNotFound() throws Exception {
+		
+		// Mocking
+		doReturn(true).when(ratingAuthMock).canList();
+				
+		RateableEntity entity = mock(RateableEntity.class);
+		List<Rating> ratings = new ArrayList<>();
+		doReturn(ratings).when(entity).getRatings();
+		
+		// Actual call
+		ratingBo.getRating(entity, 9);
+	}
+	
+	@Test
+	public void testGetRating() throws Exception {
+		int ratingId = 9;
+		
+		// Mocking
+		doReturn(true).when(ratingAuthMock).canList();
+				
+		Rating rating = new Rating();
+		rating.setId(ratingId);
+		
+		List<Rating> ratings = new ArrayList<>();
+		ratings.add(rating);
+		
+		RateableEntity entity = mock(RateableEntity.class);
+		doReturn(ratings).when(entity).getRatings();
+		
+		// Actual call
+		assertThat(ratingBo.getRating(entity, ratingId)).isEqualTo(rating);
 	}
 
 }

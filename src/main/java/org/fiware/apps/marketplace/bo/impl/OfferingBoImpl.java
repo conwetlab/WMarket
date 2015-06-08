@@ -294,4 +294,28 @@ public class OfferingBoImpl implements OfferingBo {
 		ratingBo.updateRating(offering, ratingId, rating);
 	}
 
+	@Override
+	@Transactional
+	public List<Rating> getRatings(String storeName, String descriptionName,
+			String offeringName) throws NotAuthorizedException,
+			OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException {
+		
+		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		return ratingBo.getRatings(offering);
+	}
+
+	@Override
+	@Transactional
+	public Rating getRating(String storeName, String descriptionName,
+			String offeringName, int ratingId) throws NotAuthorizedException,
+			OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException, RatingNotFoundException {
+
+		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		return ratingBo.getRating(offering, ratingId);
+	}
+	
 }

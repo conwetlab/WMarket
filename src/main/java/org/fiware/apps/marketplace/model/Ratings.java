@@ -1,4 +1,13 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 /*
  * #%L
@@ -32,23 +41,29 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
-import java.util.List;
-
-import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
-import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.RateableEntity;
-import org.fiware.apps.marketplace.model.Rating;
-
-
-public interface RatingBo {
+@XmlRootElement(name = "ratings")
+@IgnoreMediaTypes("application/*+json")
+public class Ratings {
 	
-	public void createRating(RateableEntity entity, Rating newRating) 
-			throws NotAuthorizedException, ValidationException;
-	public void updateRating(RateableEntity entity, int ratingId, Rating updatedRating) 
-			throws RatingNotFoundException, NotAuthorizedException, ValidationException;
-	public List<Rating> getRatings(RateableEntity entity) throws NotAuthorizedException;
-	public Rating getRating(RateableEntity entity, int ratingId) 
-			throws NotAuthorizedException, RatingNotFoundException;
+    private List<Rating> ratings = null;
+    
+    public Ratings() {
+    	this.setRatings(new ArrayList<Rating>());
+    }
+    
+    public Ratings(List<Rating> ratings) {
+    	this.setRatings(ratings);
+    }
+ 
+    @XmlElement(name = "rating")
+    @JsonProperty("ratings")
+    public List<Rating> getRatings() {
+        return this.ratings;
+    }
+ 
+    public void setRatings(List<Rating> ratings) {
+    	this.ratings = ratings;
+    }
+
 
 }

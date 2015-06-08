@@ -35,6 +35,8 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -48,6 +50,7 @@ import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Ratings;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -190,7 +193,7 @@ public class RatingServiceTest {
 
 	@Test
 	public void testUpdateRatingNotAuthorized() {
-		NotAuthorizedException ex = new NotAuthorizedException("rate offering");
+		NotAuthorizedException ex = new NotAuthorizedException("update offering rating");
 		testUpdateRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
 	}
 	
@@ -239,5 +242,151 @@ public class RatingServiceTest {
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
-	}	
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// GET RATINGS /////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testGetRatingsException(Exception ex, int statusCode, ErrorType errorType, 
+			String message, String field) {
+
+		try {
+
+			String storeName = "store";
+			String descriptionName = "description";
+			String offeringName = "offering";
+
+			// Mocks
+			doThrow(ex).when(offeringBoMock).getRatings(storeName, descriptionName, offeringName);
+			
+			// Actual call
+			Response res = ratingService.getRatings(storeName, descriptionName, offeringName);
+			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
+			
+		} catch (Exception e1) {
+			fail("Exception not expected", e1);
+		}
+
+	}
+	
+	@Test
+	public void testGetRatingsNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering ratings");
+		testGetRatingsException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatingsStoreNotFound() {
+		StoreNotFoundException ex = new StoreNotFoundException("store not found");
+		testGetRatingsException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatingsDescriptionNotFound() {
+		DescriptionNotFoundException ex = new DescriptionNotFoundException("description not found");
+		testGetRatingsException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatingsOfferingNotFound() {
+		OfferingNotFoundException ex = new OfferingNotFoundException("offering not found");
+		testGetRatingsException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatings() throws Exception {
+		
+		String storeName = "store";
+		String descriptionName = "description";
+		String offeringName = "offering";
+		
+		// Actual call
+		@SuppressWarnings("unchecked")
+		List<Rating> ratings = mock(List.class); 
+		doReturn(ratings).when(offeringBoMock).getRatings(storeName, descriptionName, offeringName);
+		Response res = ratingService.getRatings(storeName, descriptionName, offeringName);
+		
+		// Check response
+		assertThat(res.getStatus()).isEqualTo(200);
+		assertThat(((Ratings) res.getEntity()).getRatings()).isEqualTo(ratings);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// GET RATING /////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testGetRatingException(Exception ex, int statusCode, ErrorType errorType, 
+			String message, String field) {
+
+		try {
+
+			String storeName = "store";
+			String descriptionName = "description";
+			String offeringName = "offering";
+			int ratingId = 9;
+			
+			// Mocks
+			doThrow(ex).when(offeringBoMock).getRating(storeName, descriptionName, offeringName, ratingId);
+			
+			// Actual call
+			Response res = ratingService.getRating(storeName, descriptionName, offeringName, ratingId);
+			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
+			
+		} catch (Exception e1) {
+			fail("Exception not expected", e1);
+		}
+
+	}
+	
+	@Test
+	public void testGetRatingNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering ratings");
+		testGetRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatingStoreNotFound() {
+		StoreNotFoundException ex = new StoreNotFoundException("store not found");
+		testGetRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatingDescriptionNotFound() {
+		DescriptionNotFoundException ex = new DescriptionNotFoundException("description not found");
+		testGetRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatingOfferingNotFound() {
+		OfferingNotFoundException ex = new OfferingNotFoundException("offering not found");
+		testGetRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatingRatingNotFound() {
+		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
+		testGetRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRating() throws Exception {
+		
+		String storeName = "store";
+		String descriptionName = "description";
+		String offeringName = "offering";
+		int ratingId = 9;
+		
+		// Actual call
+		Rating rating = mock(Rating.class); 
+		doReturn(rating).when(offeringBoMock).getRating(storeName, descriptionName, offeringName, ratingId);
+		Response res = ratingService.getRating(storeName, descriptionName, offeringName, ratingId);
+		
+		// Check response
+		assertThat(res.getStatus()).isEqualTo(200);
+		assertThat((Rating) res.getEntity()).isEqualTo(rating);
+	}
+
 }

@@ -68,7 +68,21 @@ public class RatingBoImpl implements RatingBo {
 		return (double) sum / (double) ratings.size();
 		
 	}
-
+	
+	private Rating getRatingById(RateableEntity entity, int ratingId) throws RatingNotFoundException {
+		Rating tmpRating = new Rating();
+		tmpRating.setId(ratingId);
+		int bbddRatingIndex = entity.getRatings().indexOf(tmpRating);
+		
+		if (bbddRatingIndex >= 0) {
+			return entity.getRatings().get(bbddRatingIndex);
+		} else {
+			throw new RatingNotFoundException(String.format("Rating %d not found in %s %s", ratingId, 
+					entity.getClass().getSimpleName(), entity.toString()));
+		}
+		
+	}
+	
 	@Override
 	@Transactional
 	public void createRating(RateableEntity entity, Rating newRating) 
@@ -109,35 +123,53 @@ public class RatingBoImpl implements RatingBo {
 	public void updateRating(RateableEntity entity, int ratingId, Rating updatedRating) 
 			throws RatingNotFoundException, NotAuthorizedException, ValidationException {
 		
-		Rating tmpRating = new Rating();
-		tmpRating.setId(ratingId);
-		int bbddRatingIndex = entity.getRatings().indexOf(tmpRating);
+		Rating bbddRating = getRatingById(entity, ratingId);
 		
-		if (bbddRatingIndex != -1) {
-			Rating bbddRating = entity.getRatings().get(bbddRatingIndex);
-			
-			// Check if the user is allowed to rate the offering. An exception will be
-			// risen if the user is not allowed to do it.
-			if (!ratingAuth.canUpdate(bbddRating)) {
-				throw new NotAuthorizedException(String.format("update rating %d in %s %s", ratingId,
-						entity.getClass().getSimpleName(), entity.toString()));
-			}
-			
-			// Validate rating (exception will be risen if the rating is not valid)
-			ratingValidator.validateRating(updatedRating);
-
-			// Update rating
-			bbddRating.setComment(updatedRating.getComment());
-			bbddRating.setScore(updatedRating.getScore());
-			bbddRating.setLastModificationDate(new Date());
-			
-			// Calculate average score
-			entity.setAverageScore(calculateRatingAverage(entity));
-			
-			// The update process is automatically done since this method is transactional			
-		} else {
-			throw new RatingNotFoundException(String.format("Rating %d not found in %s %s", ratingId, 
+		// Check if the user is allowed to rate the offering. An exception will be
+		// risen if the user is not allowed to do it.
+		if (!ratingAuth.canUpdate(bbddRating)) {
+			throw new NotAuthorizedException(String.format("update rating %d in %s %s", ratingId,
 					entity.getClass().getSimpleName(), entity.toString()));
+		}
+		
+		// Validate rating (exception will be risen if the rating is not valid)
+		ratingValidator.validateRating(updatedRating);
+
+		// Update rating
+		bbddRating.setComment(updatedRating.getComment());
+		bbddRating.setScore(updatedRating.getScore());
+		bbddRating.setLastModificationDate(new Date());
+		
+		// Calculate average score
+		entity.setAverageScore(calculateRatingAverage(entity));
+		
+		// The update process is automatically done since this method is transactional			
+	}
+
+	@Override
+	@Transactional
+	public List<Rating> getRatings(RateableEntity entity)
+			throws NotAuthorizedException {
+		
+		if (!ratingAuth.canList()) {
+			throw new NotAuthorizedException("get ratings");
+		} else {
+			return entity.getRatings();
+		}
+	}
+	
+	@Override
+	@Transactional
+	public Rating getRating(RateableEntity entity, int ratingId) 
+			throws NotAuthorizedException, RatingNotFoundException {
+		
+		Rating rating = getRatingById(entity, ratingId);	
+		
+		if (!ratingAuth.canList()) {
+			throw new NotAuthorizedException(String.format("get rating %d from %s %s", ratingId, 
+					entity.getClass().getSimpleName(), entity.toString()));
+		} else {
+			return rating;
 		}
 		
 	}

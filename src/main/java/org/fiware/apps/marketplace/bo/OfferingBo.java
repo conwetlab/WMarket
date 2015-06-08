@@ -85,4 +85,9 @@ public interface OfferingBo {
 	public void updateRating(String storeName, String descriptionName, String offeringName, int ratingId, 
 			Rating rating) throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException, RatingNotFoundException, ValidationException;	
+	public List<Rating> getRatings(String storeName, String descriptionName, String offeringName) throws 
+			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException;
+	public Rating getRating(String storeName, String descriptionName, String offeringName, int ratingId) throws 
+			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException,
+			RatingNotFoundException;
 }
