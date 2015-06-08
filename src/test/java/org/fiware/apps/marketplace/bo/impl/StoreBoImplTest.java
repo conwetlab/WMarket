@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.bo.impl;
 
 /*
  * #%L
@@ -43,6 +43,7 @@ import java.util.List;
 
 import javax.ws.rs.Path;
 
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.bo.impl.StoreBoImpl;
 import org.fiware.apps.marketplace.controllers.MediaContentController;
 import org.fiware.apps.marketplace.dao.StoreDao;

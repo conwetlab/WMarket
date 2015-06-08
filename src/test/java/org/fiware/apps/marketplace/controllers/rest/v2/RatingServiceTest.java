@@ -47,7 +47,7 @@ import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ErrorType;
-import org.fiware.apps.marketplace.model.OfferingRating;
+import org.fiware.apps.marketplace.model.Rating;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -87,7 +87,7 @@ public class RatingServiceTest {
 			String storeName = "store";
 			String descriptionName = "description";
 			String offeringName = "offering";
-			OfferingRating rating = new OfferingRating();
+			Rating rating = new Rating();
 
 			// Mocks
 			doThrow(ex).when(offeringBoMock).createRating(storeName, descriptionName, offeringName, rating);
@@ -139,14 +139,14 @@ public class RatingServiceTest {
 		String storeName = "store";
 		String descriptionName = "description";
 		String offeringName = "offering";
-		OfferingRating rating = new OfferingRating();
+		Rating rating = new Rating();
 		final int id = 9;
 		
 		// Mocks
 		doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
-				invocation.getArgumentAt(3, OfferingRating.class).setId(id);
+				invocation.getArgumentAt(3, Rating.class).setId(id);
 				return null;
 			}
 		}).when(offeringBoMock).createRating(storeName, descriptionName, offeringName, rating);
@@ -173,7 +173,7 @@ public class RatingServiceTest {
 			String descriptionName = "description";
 			String offeringName = "offering";
 			int ratingId = 7;
-			OfferingRating rating = new OfferingRating();
+			Rating rating = new Rating();
 
 			// Mocks
 			doThrow(ex).when(offeringBoMock).updateRating(storeName, descriptionName, offeringName, ratingId, rating);
@@ -231,7 +231,7 @@ public class RatingServiceTest {
 		String storeName = "store";
 		String descriptionName = "description";
 		String offeringName = "offering";
-		OfferingRating rating = new OfferingRating();
+		Rating rating = new Rating();
 		int ratingId = 9;
 		
 		// Actual call

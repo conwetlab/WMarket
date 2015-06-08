@@ -35,7 +35,7 @@ package org.fiware.apps.marketplace.model.validators;
 import static org.assertj.core.api.Assertions.*;
 
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.OfferingRating;
+import org.fiware.apps.marketplace.model.Rating;
 import org.junit.Test;
 
 public class RatingValidatorTest {
@@ -43,7 +43,7 @@ public class RatingValidatorTest {
 	private RatingValidator ratingValidator = new RatingValidator();
 	
 	private void testScore(int score) throws ValidationException {
-		OfferingRating rating = new OfferingRating();
+		Rating rating = new Rating();
 		rating.setScore(score);		
 		ratingValidator.validateRating(rating);
 	}
@@ -85,7 +85,7 @@ public class RatingValidatorTest {
 	@Test
 	public void testInvalidComment() throws ValidationException {
 		try {
-			OfferingRating rating = new OfferingRating();
+			Rating rating = new Rating();
 			rating.setScore(0);
 			rating.setComment("12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 					"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 

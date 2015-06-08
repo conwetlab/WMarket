@@ -33,17 +33,13 @@ package org.fiware.apps.marketplace.model;
  * #L%
  */
 
-import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -55,7 +51,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -66,9 +61,8 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @Table(name = "offerings", uniqueConstraints = { @UniqueConstraint(columnNames = { "described_in", "uri" }) })
 @XmlRootElement(name = "offering")
 @IgnoreMediaTypes("application/*+json")
-public class Offering {
+public class Offering extends RateableEntity {
 
-	private Integer id;
 	private String name;
 	private String displayName;
 	private String uri;
@@ -76,29 +70,13 @@ public class Offering {
 	private String version;
 	private Description describedIn;
 	private String imageUrl;
-	
-	// Ratings
-	private List<OfferingRating> ratings;
-	private double averageScore = 0.0;		// Default value
-	
+		
 	// Price Plans & Services
 	private Set<PricePlan> pricePlans;
 	private Set<Service> services;
 	
 	// Offering categories depends on the attached services
 	private Set<Category> categories;
-
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	@XmlTransient
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	@XmlID
 	@XmlAttribute 
@@ -172,26 +150,6 @@ public class Offering {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	
-	@XmlTransient
-	@OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	public List<OfferingRating> getRatings() {
-		return ratings;
-	}
-
-	public void setRatings(List<OfferingRating> ratings) {
-		this.ratings = ratings;
-	}
-
-	@XmlElement
-	@Column(name = "averageScore")
-	public double getAverageScore() {
-		return averageScore;
-	}
-
-	public void setAverageScore(double averageScore) {
-		this.averageScore = averageScore;
-	}
 
 	@XmlElement(name = "pricePlan")
     @JsonProperty("pricePlans")
@@ -263,6 +221,12 @@ public class Offering {
 		}
 						
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s (Description: %s, Store: %s)", name, describedIn.getName(), 
+				describedIn.getStore().getName());
 	}
 
 }

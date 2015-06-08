@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.bo.impl;
 
 /*
  * #%L
@@ -32,23 +32,21 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.fiware.apps.marketplace.bo.RatingBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.bo.impl.OfferingBoImpl;
 import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
-import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.OfferingRating;
+import org.fiware.apps.marketplace.model.Rating;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.RatingValidator;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
@@ -66,6 +64,7 @@ public class OfferingBoImplTest {
 	@Mock private OfferingAuth offeringAuthMock;
 	@Mock private UserBo userBoMock;
 	@Mock private RatingValidator ratingValidatorMock;
+	@Mock private RatingBo ratingBoMock;
 	@InjectMocks private OfferingBoImpl offeringBo;
 
 	@Before 
@@ -166,7 +165,6 @@ public class OfferingBoImplTest {
 		testChangeBookmarkState(true);
 	}
 	
-	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// CREATE RATING ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -182,7 +180,7 @@ public class OfferingBoImplTest {
 				offeringName);
 
 		// Call the function
-		OfferingRating rating = new OfferingRating();
+		Rating rating = new Rating();
 		offeringBo.createRating(storeName, descriptionName, offeringName, rating);
 	}
 
@@ -201,103 +199,28 @@ public class OfferingBoImplTest {
 		testCreateRatingNotFound(new OfferingNotFoundException(""));
 	}
 	
-	@Test(expected=NotAuthorizedException.class)
-	public void testCreateRatingNotAuthorized() throws Exception {
-
-		String storeName = "store";
-		String descriptionName = "description";
-		String offeringName = "offering";
-		Offering offering = mock(Offering.class);
-		
-		// Configure mock
-		doReturn(false).when(offeringAuthMock).canCreateRating(offering);
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, 
-				descriptionName, offeringName);
-		
-		// Call the function
-		OfferingRating rating = new OfferingRating();
-		offeringBo.createRating(storeName, descriptionName, offeringName, rating);
-	}
-	
-	@Test(expected=ValidationException.class)
-	public void testCreateRatingInvalid() throws Exception {
+	@Test
+	public void testCreateRating() throws Exception {
 		
 		String storeName = "store";
 		String descriptionName = "description";
 		String offeringName = "offering";
-		Offering offering = mock(Offering.class);
-		OfferingRating rating = new OfferingRating();
 		
+		Offering offering = mock(Offering.class);
+
 		// Configure mock
-		ValidationException ex = new ValidationException("score", "invalid");
-		doThrow(ex).when(ratingValidatorMock).validateRating(rating);
-		doReturn(true).when(offeringAuthMock).canCreateRating(offering);
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, 
-				descriptionName, offeringName);
+		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, descriptionName, 
+				offeringName);
 		
 		// Call the function
+		Rating rating = new Rating();
 		offeringBo.createRating(storeName, descriptionName, offeringName, rating);
+		
+		// Verify that ratingBo has been called
+		verify(ratingBoMock).createRating(offering, rating);
+		
 	}
-	
-	private void testCreateRating(List<OfferingRating> ratings, int score, double expectedAverage) {
-		
-		try {
-	
-			String storeName = "store";
-			String descriptionName = "description";
-			String offeringName = "offering";
-			
-			// Configure offering
-			Offering offering = mock(Offering.class);
-			when(offering.getRatings()).thenReturn(ratings);
-			
-			OfferingRating rating = new OfferingRating();
-			rating.setScore(score);
-			
-			// Configure mock
-			doReturn(true).when(offeringAuthMock).canCreateRating(offering);
-			doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, 
-					descriptionName, offeringName);
-			
-			// Call the function
-			offeringBo.createRating(storeName, descriptionName, offeringName, rating);
-			
-			// Verify that offering average score has been updated
-			verify(offering).setAverageScore(expectedAverage);
-		
-		} catch (Exception ex) {
-			fail("Exception not expected", ex);
-		}
 
-	}
-	
-	@Test
-	public void testCreateRatingANonRatedOffering() {
-		int score = 4;
-		testCreateRating(new ArrayList<OfferingRating>(), score, score);
-	}
-	
-	@Test
-	public void testCreteRatingARatedOffering() {
-		
-		// Create a list of previous ratings
-		List<OfferingRating> ratings = new ArrayList<>();
-		double sum = 0;
-		
-		for (int i = 1; i < 4; i++) {
-			OfferingRating rating = new OfferingRating();
-			rating.setScore(i);
-			ratings.add(rating);
-			
-			sum += i;
-		}
-				
-		int score = 1;
-		double newAverage = (sum + score) / (ratings.size() + 1);
-		
-		testCreateRating(ratings, score, newAverage);
-	}
-	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// UPDATE RATING ////////////////////////////////////
@@ -314,7 +237,7 @@ public class OfferingBoImplTest {
 				offeringName);
 
 		// Call the function
-		OfferingRating rating = new OfferingRating();
+		Rating rating = new Rating();
 		offeringBo.updateRating(storeName, descriptionName, offeringName, 9, rating);
 	}
 
@@ -333,125 +256,28 @@ public class OfferingBoImplTest {
 		testUpdateRatingNotFound(new OfferingNotFoundException(""));
 	}
 	
-	@Test(expected=RatingNotFoundException.class)
-	public void testUpdateRatingRatingNotFoundException() throws Exception {
-		String storeName = "store";
-		String descriptionName = "description";
-		String offeringName = "offering";
-		
-		Offering offering = mock(Offering.class);
-		when(offering.getRatings()).thenReturn(new ArrayList<OfferingRating>());
-
-		// Configure mock
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, descriptionName, 
-				offeringName);
-
-		// Call the function
-		OfferingRating rating = new OfferingRating();
-		offeringBo.updateRating(storeName, descriptionName, offeringName, 9, rating);
-
-	}
-	
-	private void initializeUpdateRating(String storeName, String descriptionName, String offeringName, int ratingId,
-			boolean canUpdate) throws Exception {
-		
-		// Initialize the offering and its ratings
-		Offering offering = mock(Offering.class);
-		List<OfferingRating> ratings = new ArrayList<>();
-		OfferingRating storedRating = new OfferingRating();
-		storedRating.setId(ratingId);
-		ratings.add(storedRating);
-		when(offering.getRatings()).thenReturn(ratings);
-
-		// Configure mock
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, descriptionName, 
-				offeringName);
-		doReturn(canUpdate).when(offeringAuthMock).canUpdateRating(storedRating);
-
-	}
-	
-	@Test(expected=NotAuthorizedException.class)
-	public void testUpdateRatingNotAuthorized() throws Exception {
-
-		String storeName = "store";
-		String descriptionName = "description";
-		String offeringName = "offering";
-		int ratingId = 9;
-		
-		// Initialize the offering and its ratings
-		initializeUpdateRating(storeName, descriptionName, offeringName, ratingId, false);
-
-		// Call the function
-		OfferingRating rating = new OfferingRating();
-		offeringBo.updateRating(storeName, descriptionName, offeringName, ratingId, rating);
-		
-	}
-	
-	@Test(expected=ValidationException.class)
-	public void testUpdateRatingInvalid() throws Exception {
-		
-		String storeName = "store";
-		String descriptionName = "description";
-		String offeringName = "offering";
-		int ratingId = 9;
-		OfferingRating rating = new OfferingRating();
-		
-		// Configure mocks
-		initializeUpdateRating(storeName, descriptionName, offeringName, ratingId, true);
-		ValidationException ex = new ValidationException("score", "invalid");
-		doThrow(ex).when(ratingValidatorMock).validateRating(rating);
-		
-		// Call the function
-		offeringBo.updateRating(storeName, descriptionName, offeringName, 9, rating);
-	}
-	
 	@Test
 	public void testUpdateRating() throws Exception {
 		
 		String storeName = "store";
 		String descriptionName = "description";
 		String offeringName = "offering";
-		int ratingId = 9;
 		
-		// Initialize the offering and its ratings
 		Offering offering = mock(Offering.class);
-		List<OfferingRating> ratings = new ArrayList<>();
-		
-		// The rating to be updated
-		OfferingRating storedRating = spy(new OfferingRating());
-		storedRating.setId(ratingId);
-		storedRating.setScore(3);
-		ratings.add(storedRating);
-		
-		// Add additional ratings
-		double sum = 0;
-		for (int i = 1; i < 4; i++) {
-			OfferingRating additionalRating = new OfferingRating();
-			additionalRating.setScore(i);
-			ratings.add(additionalRating);
-			
-			sum += i;
-		}
 
-		// Mocks
-		doReturn(ratings).when(offering).getRatings();
-		doReturn(true).when(offeringAuthMock).canUpdateRating(storedRating);
+		// Configure mock
 		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(storeName, descriptionName, 
 				offeringName);
-
+		
 		// Call the function
-		OfferingRating updatedRating = new OfferingRating();
-		updatedRating.setScore(2);
-		updatedRating.setComment("default comment");
-		offeringBo.updateRating(storeName, descriptionName, offeringName, ratingId, updatedRating);
+		int ratingId = 9;
+		Rating rating = new Rating();
+		offeringBo.updateRating(storeName, descriptionName, offeringName, ratingId, rating);
 		
-		// Verify that stored rating has been updated
-		verify(storedRating).setScore(updatedRating.getScore());
-		verify(storedRating).setComment(updatedRating.getComment());
-		
-		// Verify that the average is updated
-		double average = (sum + updatedRating.getScore()) / ratings.size();
-		verify(offering).setAverageScore(average);		
+		// Verify that ratingBo has been called
+		verify(ratingBoMock).updateRating(offering, ratingId, rating);
 		
 	}
+
+	
 }

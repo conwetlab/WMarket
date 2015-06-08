@@ -50,7 +50,7 @@ import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.OfferingRating;
+import org.fiware.apps.marketplace.model.Rating;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,7 +70,7 @@ public class RatingService {
 			@PathParam("storeName") String storeName, 
 			@PathParam("descriptionName") String descriptionName,
 			@PathParam("offeringName") String offeringName,
-			OfferingRating rating) {
+			Rating rating) {
 		
 		Response response;
 		
@@ -107,7 +107,7 @@ public class RatingService {
 			@PathParam("descriptionName") String descriptionName,
 			@PathParam("offeringName") String offeringName,
 			@PathParam("ratingId") int ratingId,
-			OfferingRating rating) {
+			Rating rating) {
 		
 		Response response;
 		

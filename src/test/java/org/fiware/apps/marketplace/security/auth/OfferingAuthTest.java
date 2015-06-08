@@ -42,7 +42,6 @@ import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.OfferingRating;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
@@ -232,61 +231,6 @@ public class OfferingAuthTest {
 	public void testCanBookmark() throws NotAuthorizedException {
 		Offering offering = mock(Offering.class);
 		assertThat(authHelper.canBookmark(offering)).isTrue();
-	}
-
-
-	///////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////// TEST CREATE RATING /////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////////////
-
-	@Test
-	public void testCanCreateRating() throws NotAuthorizedException {
-		Offering offering = mock(Offering.class);
-		assertThat(authHelper.canCreateRating(offering)).isTrue();
-	}
-
-
-	///////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////// TEST UPDATE RATING /////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////////////
-
-	private void updateRating(User creator, User modifier, boolean canUpdate) {	
-		try {
-			when(userBoMock.getCurrentUser()).thenReturn(modifier);
-
-			OfferingRating rating = new OfferingRating();
-			rating.setUser(creator);
-
-			assertThat(authHelper.canUpdateRating(rating)).isEqualTo(canUpdate);
-		} catch (Exception e) {
-			fail("Exception not expected", e);
-		}
-	}
-	
-	@Test
-	public void testCanUpdateRatingSameUser() {
-		User creator = createBasicUser(1);
-		updateRating(creator, creator, true);
-	}
-
-	@Test
-	public void testCanUpdateRating() {
-		User creator = createBasicUser(1);
-		User updater = createBasicUser(1);
-		updateRating(creator, updater, true);
-	}
-	
-	@Test
-	public void testCanNotUpdateRatingNotSameUser() {
-		User creator = createBasicUser(1);
-		User updater = createBasicUser(2);
-		updateRating(creator, updater, false);
-	}
-	
-	@Test
-	public void testCanNotUpdateRatingNotLoggedIn() {
-		User creator = createBasicUser(1);
-		updateRating(creator, null, false);
 	}
 
 }

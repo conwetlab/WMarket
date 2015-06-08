@@ -57,11 +57,11 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @Table(name = "ratings")
 @XmlRootElement(name = "rating")
 @IgnoreMediaTypes("application/*+json")
-public class OfferingRating {
+public class Rating {
 		
 	private Integer id;
 	private User user;
-	private Offering offering;
+	private RateableEntity ratingEntity;
 	private int score;
 	private String comment;
 	private Date date;
@@ -92,13 +92,13 @@ public class OfferingRating {
 
 	@XmlTransient
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "offering", nullable=false)
-	public Offering getOffering() {
-		return offering;
+	@JoinColumn(name = "rating", nullable=false)
+	public RateableEntity getRatingEntity() {
+		return ratingEntity;
 	}
 
-	public void setOffering(Offering offering) {
-		this.offering = offering;
+	public void setRatingEntity(RateableEntity ratingEntity) {
+		this.ratingEntity = ratingEntity;
 	}
 
 	@XmlElement
@@ -155,8 +155,8 @@ public class OfferingRating {
 			return true;
 		}
 		
-		if (obj instanceof OfferingRating) {
-			OfferingRating other = (OfferingRating) obj;
+		if (obj instanceof Rating) {
+			Rating other = (Rating) obj;
 			
 			if (this.id == other.id) {
 				return true;

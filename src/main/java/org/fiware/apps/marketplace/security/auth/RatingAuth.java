@@ -4,7 +4,7 @@ package org.fiware.apps.marketplace.security.auth;
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2014 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,53 +32,16 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
-import org.fiware.apps.marketplace.model.Description;
-import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.Rating;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.stereotype.Service;
 
-@Service("offeringAuth")
-public class OfferingAuth extends AbstractAuth<Offering> {
-	
-	@Override
-	protected User getEntityOwner(Offering offering) {
-		return offering.getDescribedIn().getCreator();
-	}
-	
-	/**
-	 * Check if an user can list all the offerings described in an description.
-	 * @param description The description where the offerings are described
-	 * @returns true if the user is allowed to list the offerings contained in a description. False otherwise.
-	 */
-	public boolean canList(Description description) {
-		return true;
-	}
-	
-	/**
-	 * Check if an user can list all the offerings that belongs to a Store
-	 * @param store The store where the offerings are contained
-	 * @returns true if the user is allowed to list the offerings contained in a store. False otherwise.
-	 */
-	public boolean canList(Store store) {
-		return true;
-	}
-	
-	/**
-	 * Check if an user can bookmark an offering
-	 * @param offering The offering to be bookmarked
-	 * @return true if the user is allowed to bookmark the offering. False otherwise
-	 */
-	public boolean canBookmark(Offering offering) {
-		return true;
-	}
-	
-	/**
-	 * Check if an user can list the offering that they have bookmarked
-	 * @return true if the user is allowed to list his/her bookmarked offerings
-	 */
-	public boolean canListBookmarked() {
-		return true;
-	}
+@Service("ratingAuth")
+public class RatingAuth extends AbstractAuth<Rating>{
 
+	@Override
+	protected User getEntityOwner(Rating rating) {
+		return rating.getUser();
+	}
+	
 }

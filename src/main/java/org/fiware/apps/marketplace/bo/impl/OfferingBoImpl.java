@@ -32,11 +32,11 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
-import java.util.Date;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.bo.RatingBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.OfferingDao;
@@ -49,10 +49,9 @@ import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.OfferingRating;
+import org.fiware.apps.marketplace.model.Rating;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.validators.RatingValidator;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,20 +65,7 @@ public class OfferingBoImpl implements OfferingBo {
 	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
-	@Autowired private RatingValidator ratingValidator;
-	
-	private double calculateRatingAverage(Offering offering) {
-		int sum = 0;
-		List<OfferingRating> ratings = offering.getRatings();
-		
-		for (OfferingRating rating: ratings) {
-			sum += rating.getScore();
-		}
-		
-		// Cast is required. Otherwise, average will be an integer
-		return (double) sum / (double) ratings.size();
-		
-	}
+	@Autowired private RatingBo ratingBo;
 
 	@Override
 	@Transactional(readOnly = false)
@@ -286,82 +272,26 @@ public class OfferingBoImpl implements OfferingBo {
 	@Override
 	@Transactional
 	public void createRating(String storeName, String descriptionName,
-			String offeringName, OfferingRating rating)
+			String offeringName, Rating rating)
 			throws NotAuthorizedException, OfferingNotFoundException,
 			StoreNotFoundException, DescriptionNotFoundException, ValidationException {
 
 		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
-		
-		// Check if the user is allowed to rate the offering. An exception will be
-		// risen if the user is not allowed to do it.
-		if (!offeringAuth.canCreateRating(offering)) {
-			throw new NotAuthorizedException("rate offering");
-		}
-		
-		// Validate rating (exception will be risen if the rating is not valid)
-		ratingValidator.validateRating(rating);
-				
-		try {
-			// Set rating options
-			Date currentDate = new Date();
-			rating.setDate(currentDate);
-			rating.setLastModificationDate(currentDate);
-			rating.setUser(userBo.getCurrentUser());
-			rating.setOffering(offering);
-
-			// Insert rating
-			offering.getRatings().add(rating);
-			
-			// Calculate average score
-			offering.setAverageScore(calculateRatingAverage(offering));
-			
-			// The creating process is automatically done since this method is transactional
-		} catch (UserNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
+		ratingBo.createRating(offering, rating);
 	}
 
 	@Override
 	@Transactional
 	public void updateRating(String storeName, String descriptionName,
-			String offeringName, int ratingId, OfferingRating rating)
+			String offeringName, int ratingId, Rating rating)
 			throws NotAuthorizedException, OfferingNotFoundException,
 			StoreNotFoundException, DescriptionNotFoundException,
 			RatingNotFoundException, ValidationException {
 		
 		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
-		
-		OfferingRating tmpRating = new OfferingRating();
-		tmpRating.setId(ratingId);
-		int bbddRatingIndex = offering.getRatings().indexOf(tmpRating);
-		
-		if (bbddRatingIndex != -1) {
-			OfferingRating bbddRating = offering.getRatings().get(bbddRatingIndex);
-			
-			// Check if the user is allowed to rate the offering. An exception will be
-			// risen if the user is not allowed to do it.
-			if (!offeringAuth.canUpdateRating(bbddRating)) {
-				throw new NotAuthorizedException("rate offering");
-			}
-			
-			// Validate rating (exception will be risen if the rating is not valid)
-			ratingValidator.validateRating(rating);
-
-			// Update rating
-			bbddRating.setComment(rating.getComment());
-			bbddRating.setScore(rating.getScore());
-			bbddRating.setLastModificationDate(new Date());
-			
-			// Calculate average score
-			offering.setAverageScore(calculateRatingAverage(offering));
-			
-			// The update process is automatically done since this method is transactional			
-		} else {
-			throw new RatingNotFoundException(String.format("Rating %d not found in Offering %s "
-					+ "(Description %s, Store: %s)", ratingId, offeringName, descriptionName, storeName));
-		}
+		ratingBo.updateRating(offering, ratingId, rating);
 	}
 
 }

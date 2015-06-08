@@ -1,8 +1,4 @@
-package org.fiware.apps.marketplace.model.validators;
-
-import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.Rating;
-import org.springframework.stereotype.Service;
+package org.fiware.apps.marketplace.model;
 
 /*
  * #%L
@@ -36,30 +32,64 @@ import org.springframework.stereotype.Service;
  * #L%
  */
 
-@Service("ratingValidator")
-public class RatingValidator {
+import static javax.persistence.GenerationType.IDENTITY;
+
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+@Entity
+@Table(name = "rateable_entity")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class RateableEntity {
 	
-	private static BasicValidator basicValidator = BasicValidator.getInstance();
+	private Integer id;
 	
-	/**
-	 * Public method to validate an offering rating
-	 * @param rating The rating to be validated
-	 * @throws ValidationException If the rating is not valid (score is lower than zero or higher than 5 // comment
-	 * length is higher than 300)
-	 */
-	public void validateRating(Rating rating) throws ValidationException {
-		
-		int score = rating.getScore();
-		
-		if (score < 0 || score > 5) {
-			throw new ValidationException("score", "Score should be an integer between 0 and 5.");
-		}
-		
-		if (rating.getComment() != null) {
-			basicValidator.validateComment(rating.getComment());
-		}
-		
-		
+	// Ratings
+	private List<Rating> ratings;
+	private double averageScore = 0.0;		// Default value
+	
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	@XmlTransient
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	@XmlTransient
+	@OneToMany(mappedBy = "ratingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
+
+	@XmlElement
+	@Column(name = "averageScore")
+	public double getAverageScore() {
+		return averageScore;
+	}
+
+	public void setAverageScore(double averageScore) {
+		this.averageScore = averageScore;
 	}
 
 }

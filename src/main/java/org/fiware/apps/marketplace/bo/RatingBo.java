@@ -1,8 +1,4 @@
-package org.fiware.apps.marketplace.model.validators;
-
-import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.Rating;
-import org.springframework.stereotype.Service;
+package org.fiware.apps.marketplace.bo;
 
 /*
  * #%L
@@ -36,30 +32,18 @@ import org.springframework.stereotype.Service;
  * #L%
  */
 
-@Service("ratingValidator")
-public class RatingValidator {
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
+import org.fiware.apps.marketplace.model.RateableEntity;
+import org.fiware.apps.marketplace.model.Rating;
+
+
+public interface RatingBo {
 	
-	private static BasicValidator basicValidator = BasicValidator.getInstance();
-	
-	/**
-	 * Public method to validate an offering rating
-	 * @param rating The rating to be validated
-	 * @throws ValidationException If the rating is not valid (score is lower than zero or higher than 5 // comment
-	 * length is higher than 300)
-	 */
-	public void validateRating(Rating rating) throws ValidationException {
-		
-		int score = rating.getScore();
-		
-		if (score < 0 || score > 5) {
-			throw new ValidationException("score", "Score should be an integer between 0 and 5.");
-		}
-		
-		if (rating.getComment() != null) {
-			basicValidator.validateComment(rating.getComment());
-		}
-		
-		
-	}
+	public void createRating(RateableEntity entity, Rating newRating) 
+			throws NotAuthorizedException, ValidationException;
+	public void updateRating(RateableEntity entity, int ratingId, Rating updatedRating) 
+			throws RatingNotFoundException, NotAuthorizedException, ValidationException;
 
 }

@@ -42,7 +42,7 @@ import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.OfferingRating;
+import org.fiware.apps.marketplace.model.Rating;
 
 public interface OfferingBo {
 	
@@ -79,10 +79,10 @@ public interface OfferingBo {
 	public List<Offering> getBookmarkedOfferingsPage(int offset, int max) throws NotAuthorizedException;
 	
 	// Rating
-	public void createRating(String storeName, String descriptionName, String offeringName, OfferingRating rating) 
+	public void createRating(String storeName, String descriptionName, String offeringName, Rating rating) 
 			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException, ValidationException;
 	public void updateRating(String storeName, String descriptionName, String offeringName, int ratingId, 
-			OfferingRating rating) throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
+			Rating rating) throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException, RatingNotFoundException, ValidationException;	
 }
