@@ -47,6 +47,7 @@ import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.controllers.MediaContentController;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -321,5 +322,15 @@ public class StoreBoImpl implements StoreBo{
 		Store store = storeDao.findByName(name);
 		ratingBo.createRating(store, rating);
 		
+	}
+
+	@Override
+	@Transactional
+	public void updateRating(String name, int ratingId, Rating rating)
+			throws NotAuthorizedException, StoreNotFoundException,
+			RatingNotFoundException, ValidationException {
+
+		Store store = storeDao.findByName(name);
+		ratingBo.updateRating(store, ratingId, rating);
 	}
 }

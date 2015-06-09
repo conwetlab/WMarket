@@ -264,6 +264,29 @@ public class OfferingBoImplTest {
 		testUpdateRatingNotFound(new OfferingNotFoundException(""));
 	}
 	
+	private void testUpdateRatingException(Exception e) throws Exception {
+		
+		// Configure mock
+		Offering offering = mock(Offering.class);
+		Rating rating = mock(Rating.class);
+		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+		doThrow(e).when(ratingBoMock).updateRating(offering, RATING_ID, rating);
+
+		// Call the function
+		offeringBo.updateRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID, rating);		
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testUpdateRatingNotAuthorizedException() throws Exception {
+		testUpdateRatingException(new NotAuthorizedException("update rating"));
+	}
+	
+	@Test(expected=ValidationException.class)
+	public void testUpdateRatingValidationException() throws Exception {
+		testUpdateRatingException(new ValidationException("score", "update rating"));
+	}
+	
 	@Test
 	public void testUpdateRating() throws Exception {
 		

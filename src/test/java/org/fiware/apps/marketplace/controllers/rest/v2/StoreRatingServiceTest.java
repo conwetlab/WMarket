@@ -37,6 +37,7 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import javax.ws.rs.core.Response;
@@ -44,6 +45,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -141,6 +143,71 @@ public class StoreRatingServiceTest {
 		// Check response and headers
 		assertThat(res.getStatus()).isEqualTo(201);
 		assertThat(res.getHeaders().get("Location").get(0).toString()).isEqualTo(PATH + "/" + RATING_ID);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// UPDATE ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testUpdateRatingException(Exception ex, int statusCode, ErrorType errorType, 
+			String message, String field) {
+
+		try {
+
+			Rating rating = new Rating();
+
+			// Mocks
+			doThrow(ex).when(storeBoMock).updateRating(STORE_NAME, RATING_ID, rating);
+
+			// Actual call
+			Response res = ratingService.updateRating(STORE_NAME, RATING_ID, rating);
+			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
+			
+		} catch (Exception e1) {
+			fail("Exception not expected", e1);
+		}
+
+	}
+
+	@Test
+	public void testUpdateRatingNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("update offering rating");
+		testUpdateRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testUpdateRatingStoreNotFound() {
+		StoreNotFoundException ex = new StoreNotFoundException("store not found");
+		testUpdateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+		
+	@Test
+	public void testUpdateRatingRatingNotFound() {
+		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
+		testUpdateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testUpdateRatingValidationException() {
+		String field = "score";
+		ValidationException ex = new ValidationException(field, "invalid");
+		testUpdateRatingException(ex, 400, ErrorType.VALIDATION_ERROR, ex.getMessage(), field);
+	}
+	
+	@Test
+	public void testUpdateRating() throws Exception {
+		
+		Rating rating = new Rating();
+		
+		// Actual call
+		Response res = ratingService.updateRating(STORE_NAME, RATING_ID, rating);
+		
+		// Check response
+		assertThat(res.getStatus()).isEqualTo(200);
+		
+		// Verify that storeBo has been properly called
+		verify(storeBoMock).updateRating(STORE_NAME, RATING_ID, rating);
 	}
 
 }

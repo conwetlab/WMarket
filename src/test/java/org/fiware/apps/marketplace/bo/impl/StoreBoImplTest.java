@@ -697,6 +697,68 @@ public class StoreBoImplTest {
 		verify(ratingBoMock).createRating(store, rating);
 		
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// UPDATE RATING ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=StoreNotFoundException.class)
+	public void testUpdateRatingNotFound() throws Exception {
+		
+		String storeName = "store";
 
+		// Configure mock
+		StoreNotFoundException e = new StoreNotFoundException("");
+		doThrow(e).when(storeDaoMock).findByName(storeName);
+
+		// Call the function
+		Rating rating = new Rating();
+		storeBo.updateRating(storeName, 9, rating);
+	}
+	
+	private void testUpdateRatingException(Exception e) throws Exception {
+		
+		String storeName = "store";
+		int ratingId = 9;
+
+		// Configure mock
+		Store store = mock(Store.class);
+		Rating rating = mock(Rating.class);
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		doThrow(e).when(ratingBoMock).updateRating(store, ratingId, rating);
+
+		// Call the function
+		storeBo.updateRating(storeName, ratingId, rating);		
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testUpdateRatingNotAuthorizedException() throws Exception {
+		testUpdateRatingException(new NotAuthorizedException("update rating"));
+	}
+	
+	@Test(expected=ValidationException.class)
+	public void testUpdateRatingValidationException() throws Exception {
+		testUpdateRatingException(new ValidationException("score", "update rating"));
+	}
+	
+	@Test
+	public void testUpdateRating() throws Exception {
+		
+		String storeName = "store";
+		Store store = mock(Store.class);
+
+		// Configure mock
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		
+		// Call the function
+		int ratingId = 9;
+		Rating rating = new Rating();
+		storeBo.updateRating(storeName, ratingId, rating);
+		
+		// Verify that ratingBo has been called
+		verify(ratingBoMock).updateRating(store, ratingId, rating);
+		
+	}
 	
 }

@@ -44,6 +44,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Rating;
@@ -93,7 +94,33 @@ public class StoreRatingService {
 		return response;
 		
 	}
-
-
+	
+	@POST
+	@Path("{ratingId}")
+	public Response updateRating(
+			@PathParam("storeName") String storeName, 
+			@PathParam("ratingId") int ratingId,
+			Rating rating) {
+		
+		Response response;
+		
+		try {
+			
+			// When the object is saved in the database, the ID is automatically set
+			// so we can use it.
+			storeBo.updateRating(storeName, ratingId, rating);
+			
+			response = Response.ok().build();
+			
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
+		} catch (StoreNotFoundException | RatingNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (ValidationException ex) {
+			response = ERROR_UTILS.validationErrorResponse(ex);
+		}
+		
+		return response;
+	}
 
 }

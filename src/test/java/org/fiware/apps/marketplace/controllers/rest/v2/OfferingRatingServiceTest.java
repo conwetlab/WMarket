@@ -235,6 +235,10 @@ public class OfferingRatingServiceTest {
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
+		
+		// Verify that storeBo has been properly called
+		verify(offeringBoMock).updateRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID, rating);
+
 	}
 	
 	

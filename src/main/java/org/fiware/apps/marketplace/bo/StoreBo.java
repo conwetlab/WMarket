@@ -36,6 +36,7 @@ package org.fiware.apps.marketplace.bo;
 import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Rating;
@@ -63,4 +64,7 @@ public interface StoreBo {
 	// Rating
 	public void createRating(String name, Rating rating) throws NotAuthorizedException, 
 			StoreNotFoundException, ValidationException;
+	public void updateRating(String name, int ratingId, Rating rating) throws NotAuthorizedException, 
+			StoreNotFoundException, RatingNotFoundException, ValidationException;
+	
 }
