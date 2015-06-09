@@ -111,7 +111,7 @@ public class OfferingBoImpl implements OfferingBo {
 			throws NotAuthorizedException, OfferingNotFoundException, 
 			StoreNotFoundException, DescriptionNotFoundException {
 		
-		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		
 		// Check rights and raise exception if user is not allowed to perform this action
@@ -214,7 +214,7 @@ public class OfferingBoImpl implements OfferingBo {
 			throws NotAuthorizedException,StoreNotFoundException, DescriptionNotFoundException, 
 			OfferingNotFoundException {
 		
-		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		
 		// Check if the user is allowed to bookmark the offering. An exception will be
@@ -277,7 +277,7 @@ public class OfferingBoImpl implements OfferingBo {
 			StoreNotFoundException, DescriptionNotFoundException, ValidationException {
 
 		// Exception is thrown if the offering, the store or the description is not found
-		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		ratingBo.createRating(offering, rating);
 	}
@@ -291,7 +291,7 @@ public class OfferingBoImpl implements OfferingBo {
 			RatingNotFoundException, ValidationException {
 		
 		// Exception is thrown if the offering, the store or the description is not found
-		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		ratingBo.updateRating(offering, ratingId, rating);
 	}
@@ -304,7 +304,7 @@ public class OfferingBoImpl implements OfferingBo {
 			DescriptionNotFoundException {
 		
 		// Exception is thrown if the offering, the store or the description is not found
-		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		return ratingBo.getRatings(offering);
 	}
@@ -317,7 +317,7 @@ public class OfferingBoImpl implements OfferingBo {
 			DescriptionNotFoundException, RatingNotFoundException {
 
 		// Exception is thrown if the offering, the store or the description is not found
-		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		return ratingBo.getRating(offering, ratingId);
 	}
@@ -330,7 +330,7 @@ public class OfferingBoImpl implements OfferingBo {
 			DescriptionNotFoundException, RatingNotFoundException {
 		
 		// Exception is thrown if the offering, the store or the description is not found
-		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		ratingBo.deleteRating(offering, ratingId);
 		

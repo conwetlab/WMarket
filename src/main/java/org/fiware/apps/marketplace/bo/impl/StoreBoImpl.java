@@ -333,4 +333,25 @@ public class StoreBoImpl implements StoreBo{
 		Store store = storeDao.findByName(name);
 		ratingBo.updateRating(store, ratingId, rating);
 	}
+
+	@Override
+	@Transactional
+	public List<Rating> getRatings(String name) throws NotAuthorizedException,
+			StoreNotFoundException {
+		
+		Store store = storeDao.findByName(name);
+		return ratingBo.getRatings(store);
+		
+	}
+
+	@Override
+	@Transactional
+	public Rating getRating(String name, int ratingId)
+			throws NotAuthorizedException, StoreNotFoundException,
+			RatingNotFoundException {
+
+		Store store = storeDao.findByName(name);
+		return ratingBo.getRating(store, ratingId);
+
+	}
 }

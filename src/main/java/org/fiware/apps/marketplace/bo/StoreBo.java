@@ -66,5 +66,8 @@ public interface StoreBo {
 			StoreNotFoundException, ValidationException;
 	public void updateRating(String name, int ratingId, Rating rating) throws NotAuthorizedException, 
 			StoreNotFoundException, RatingNotFoundException, ValidationException;
+	public List<Rating> getRatings(String name) throws NotAuthorizedException, StoreNotFoundException;
+	public Rating getRating(String name, int ratingId) throws NotAuthorizedException, StoreNotFoundException,
+			RatingNotFoundException;
 	
 }

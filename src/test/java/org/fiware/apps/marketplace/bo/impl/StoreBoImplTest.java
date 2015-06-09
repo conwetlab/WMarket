@@ -49,6 +49,7 @@ import org.fiware.apps.marketplace.bo.impl.StoreBoImpl;
 import org.fiware.apps.marketplace.controllers.MediaContentController;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Rating;
@@ -759,6 +760,121 @@ public class StoreBoImplTest {
 		// Verify that ratingBo has been called
 		verify(ratingBoMock).updateRating(store, ratingId, rating);
 		
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// GET RATINGS /////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=StoreNotFoundException.class)
+	public void testGetRatingsNotFound() throws Exception {
+		
+		String storeName = "store";
+
+		// Configure mock
+		StoreNotFoundException e = new StoreNotFoundException("");
+		doThrow(e).when(storeDaoMock).findByName(storeName);
+
+		// Call the function
+		storeBo.getRatings(storeName);
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetRatingsNotAuthorized() throws Exception {
+		
+		String storeName = "store";
+		Store store = mock(Store.class);
+		
+		// Configure mocks
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		doThrow(new NotAuthorizedException("")).when(ratingBoMock).getRatings(store);
+		
+		// Actual call
+		storeBo.getRatings(storeName);
+	}
+	
+	@Test
+	public void testGetRatings() throws Exception {
+		
+		String storeName = "store";
+		Store store = mock(Store.class);
+
+		// Configure mock
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		
+		@SuppressWarnings("unchecked")
+		List<Rating> ratings = mock(List.class);
+		doReturn(ratings).when(ratingBoMock).getRatings(store);
+		
+		// Actual call
+		assertThat(storeBo.getRatings(storeName)).isEqualTo(ratings);
+		
+		// Verify that ratingBoMock has been properly called
+		verify(ratingBoMock).getRatings(store);
+
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// GET RATING //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=StoreNotFoundException.class)
+	public void testGetRatingNotFound() throws Exception {
+		
+		String storeName = "store";
+
+		// Configure mock
+		doThrow(new StoreNotFoundException("")).when(storeDaoMock).findByName(storeName);
+
+		// Call the function
+		storeBo.getRating(storeName, 9);
+	}
+	
+	private void testGetRatingException(Exception ex) throws Exception {
+		
+		String storeName = "store";
+		int ratingId = 9;
+		Store store = mock(Store.class);
+
+		// Configure mock
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+
+		doThrow(ex).when(ratingBoMock).getRating(store, ratingId);
+		
+		// Actual call
+		storeBo.getRating(storeName, ratingId);
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetRatingNotAuthorized() throws Exception {
+		testGetRatingException(new NotAuthorizedException(""));
+	}
+	
+	@Test(expected=RatingNotFoundException.class)
+	public void testGetRatingRatingNotFound() throws Exception {
+		testGetRatingException(new RatingNotFoundException(""));
+	}
+	
+	@Test
+	public void testGetRating() throws Exception {
+				
+		String storeName = "store";
+		int ratingId = 9;
+		Store store = mock(Store.class);
+
+		// Configure mock
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+
+		Rating rating = mock(Rating.class);
+		doReturn(rating).when(ratingBoMock).getRating(store, ratingId);
+		
+		// Actual call
+		storeBo.getRating(storeName, ratingId);
+		
+		// Verify that ratingBoMock has been properly called
+		verify(ratingBoMock).getRating(store, ratingId);
 	}
 	
 }

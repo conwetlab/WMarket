@@ -69,7 +69,7 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 	}
 
 	@Override
-	public Offering findDescriptionByNameStoreAndDescription(String storeName, 
+	public Offering findByNameStoreAndDescription(String storeName, 
 			String descriptionName, String offeringName) throws OfferingNotFoundException, 
 			StoreNotFoundException, DescriptionNotFoundException{
 		

@@ -92,7 +92,7 @@ public class OfferingBoImplTest {
 		Offering offering = mock(Offering.class);
 
 		// Configure mocks
-		when(offeringDaoMock.findDescriptionByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
+		when(offeringDaoMock.findByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
 				OFFERING_NAME)).thenReturn(offering);
 		when(offeringAuthMock.canBookmark(any(Offering.class))).thenReturn(false);
 
@@ -103,7 +103,7 @@ public class OfferingBoImplTest {
 	private void testBookmarkNotFound(Exception e) throws Exception {
 
 		// Configure mock
-		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
 		// Call the function
@@ -133,7 +133,7 @@ public class OfferingBoImplTest {
 		List<Offering> bookmarked = mock(List.class);
 
 		// Configure mocks
-		when(offeringDaoMock.findDescriptionByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
+		when(offeringDaoMock.findByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
 				OFFERING_NAME)).thenReturn(offering);
 		when(offeringAuthMock.canBookmark(any(Offering.class))).thenReturn(true);
 		when(userBoMock.getCurrentUser()).thenReturn(user);
@@ -169,7 +169,7 @@ public class OfferingBoImplTest {
 	private void testCreateRatingNotFound(Exception e) throws Exception {
 
 		// Configure mock
-		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
 		// Call the function
@@ -197,7 +197,7 @@ public class OfferingBoImplTest {
 		// Configure mock
 		Offering offering = mock(Offering.class);
 		Rating rating = mock(Rating.class);
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 		doThrow(e).when(ratingBoMock).createRating(offering, rating);
 
@@ -221,7 +221,7 @@ public class OfferingBoImplTest {
 		Offering offering = mock(Offering.class);
 
 		// Configure mock
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 		
 		// Call the function
@@ -241,7 +241,7 @@ public class OfferingBoImplTest {
 	private void testUpdateRatingNotFound(Exception e) throws Exception {
 
 		// Configure mock
-		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
 		// Call the function
@@ -269,7 +269,7 @@ public class OfferingBoImplTest {
 		// Configure mock
 		Offering offering = mock(Offering.class);
 		Rating rating = mock(Rating.class);
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 		doThrow(e).when(ratingBoMock).updateRating(offering, RATING_ID, rating);
 
@@ -293,7 +293,7 @@ public class OfferingBoImplTest {
 		Offering offering = mock(Offering.class);
 
 		// Configure mock
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 		
 		// Call the function
@@ -314,7 +314,7 @@ public class OfferingBoImplTest {
 	private void testGetRatingsNotFound(Exception e) throws Exception {
 
 		// Configure mock
-		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
+		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
 				OFFERING_NAME);
 
 		// Call the function
@@ -336,13 +336,27 @@ public class OfferingBoImplTest {
 		testGetRatingsNotFound(new OfferingNotFoundException(""));
 	}
 	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetRatingsNotAuthorized() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		// Configure mocks
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+		doThrow(new NotAuthorizedException("")).when(ratingBoMock).getRatings(offering);
+		
+		// Actual call
+		offeringBo.getRatings(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
+	}
+	
 	@Test
 	public void testGetRatings() throws Exception {
 		
 		Offering offering = mock(Offering.class);
 
 		// Configure mock
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 		
 		@SuppressWarnings("unchecked")
@@ -362,7 +376,7 @@ public class OfferingBoImplTest {
 	private void testGetRatingNotFound(Exception e) throws Exception {
 
 		// Configure mock
-		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
+		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
 				OFFERING_NAME);
 
 		// Call the function
@@ -384,22 +398,29 @@ public class OfferingBoImplTest {
 		testGetRatingNotFound(new OfferingNotFoundException(""));
 	}
 	
-	@Test(expected=RatingNotFoundException.class)
-	public void testGetRatingRatingNotFoundException() throws Exception {
+	private void testGetRatingException(Exception ex) throws Exception {
 				
 		Offering offering = mock(Offering.class);
 
 		// Configure mock
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
-		RatingNotFoundException ex = new RatingNotFoundException("rating not foubd");
 		doThrow(ex).when(ratingBoMock).getRating(offering, RATING_ID);
 		
 		// Actual call
 		offeringBo.getRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
 	}
-
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetRatingNotAuthorized() throws Exception {
+		testGetRatingException(new NotAuthorizedException(""));
+	}
+	
+	@Test(expected=RatingNotFoundException.class)
+	public void testGetRatingRatingNotFound() throws Exception {
+		testGetRatingException(new RatingNotFoundException(""));
+	}
 	
 	@Test
 	public void testGetRating() throws Exception {
@@ -407,7 +428,7 @@ public class OfferingBoImplTest {
 		Offering offering = mock(Offering.class);
 
 		// Configure mock
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
 		Rating rating = mock(Rating.class);
@@ -427,7 +448,7 @@ public class OfferingBoImplTest {
 	private void testDeleteRatingNotFound(Exception e) throws Exception {
 
 		// Configure mock
-		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
 		// Call the function
@@ -455,10 +476,10 @@ public class OfferingBoImplTest {
 		Offering offering = mock(Offering.class);
 
 		// Configure mock
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
-		RatingNotFoundException ex = new RatingNotFoundException("rating not foubd");
+		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
 		doThrow(ex).when(ratingBoMock).deleteRating(offering, RATING_ID);
 		
 		// Actual call
@@ -471,7 +492,7 @@ public class OfferingBoImplTest {
 		Offering offering = mock(Offering.class);
 
 		// Configure mock
-		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 		
 		// Actual call

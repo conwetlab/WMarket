@@ -35,10 +35,13 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -51,6 +54,7 @@ import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Ratings;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -208,6 +212,106 @@ public class StoreRatingServiceTest {
 		
 		// Verify that storeBo has been properly called
 		verify(storeBoMock).updateRating(STORE_NAME, RATING_ID, rating);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// GET RATINGS /////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testGetRatingsException(Exception ex, int statusCode, ErrorType errorType, 
+			String message, String field) {
+
+		try {
+			// Mocks
+			doThrow(ex).when(storeBoMock).getRatings(STORE_NAME);
+			
+			// Actual call
+			Response res = ratingService.getRatings(STORE_NAME);
+			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
+			
+		} catch (Exception e1) {
+			fail("Exception not expected", e1);
+		}
+
+	}
+	
+	@Test
+	public void testGetRatingsNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering ratings");
+		testGetRatingsException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatingsStoreNotFound() {
+		StoreNotFoundException ex = new StoreNotFoundException("store not found");
+		testGetRatingsException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatings() throws Exception {
+				
+		// Actual call
+		@SuppressWarnings("unchecked")
+		List<Rating> ratings = mock(List.class); 
+		doReturn(ratings).when(storeBoMock).getRatings(STORE_NAME);
+		Response res = ratingService.getRatings(STORE_NAME);
+		
+		// Check response
+		assertThat(res.getStatus()).isEqualTo(200);
+		assertThat(((Ratings) res.getEntity()).getRatings()).isEqualTo(ratings);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// GET RATING /////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testGetRatingException(Exception ex, int statusCode, ErrorType errorType, 
+			String message, String field) {
+
+		try {			
+			// Mocks
+			doThrow(ex).when(storeBoMock).getRating(STORE_NAME, RATING_ID);
+			
+			// Actual call
+			Response res = ratingService.getRating(STORE_NAME, RATING_ID);
+			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
+			
+		} catch (Exception e1) {
+			fail("Exception not expected", e1);
+		}
+
+	}
+	
+	@Test
+	public void testGetRatingNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering ratings");
+		testGetRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatingStoreNotFound() {
+		StoreNotFoundException ex = new StoreNotFoundException("store not found");
+		testGetRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRatingRatingNotFound() {
+		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
+		testGetRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testGetRating() throws Exception {
+		// Actual call
+		Rating rating = mock(Rating.class); 
+		doReturn(rating).when(storeBoMock).getRating(STORE_NAME, RATING_ID);
+		Response res = ratingService.getRating(STORE_NAME, RATING_ID);
+		
+		// Check response
+		assertThat(res.getStatus()).isEqualTo(200);
+		assertThat((Rating) res.getEntity()).isEqualTo(rating);
 	}
 
 }
