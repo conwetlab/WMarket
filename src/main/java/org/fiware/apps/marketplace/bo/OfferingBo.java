@@ -90,4 +90,8 @@ public interface OfferingBo {
 	public Rating getRating(String storeName, String descriptionName, String offeringName, int ratingId) throws 
 			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException,
 			RatingNotFoundException;
+	public void deleteRating(String storeName, String descriptionName, String offeringName, int ratingId) 
+			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException, RatingNotFoundException;	
+
 }

@@ -102,8 +102,8 @@ public class OfferingBoImplTest {
 	private void testBookmarkNotFound(Exception e) throws Exception {
 
 		// Configure mock
-		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
-				OFFERING_NAME);
+		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
 
 		// Call the function
 		offeringBo.bookmark(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
@@ -168,8 +168,8 @@ public class OfferingBoImplTest {
 	private void testCreateRatingNotFound(Exception e) throws Exception {
 
 		// Configure mock
-		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
-				OFFERING_NAME);
+		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
 
 		// Call the function
 		Rating rating = new Rating();
@@ -217,8 +217,8 @@ public class OfferingBoImplTest {
 	private void testUpdateRatingNotFound(Exception e) throws Exception {
 
 		// Configure mock
-		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
-				OFFERING_NAME);
+		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
 
 		// Call the function
 		Rating rating = new Rating();
@@ -369,6 +369,69 @@ public class OfferingBoImplTest {
 		// Actual call
 		assertThat(offeringBo.getRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID))
 				.isEqualTo(rating);
+
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// DELETE RATING ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testDeleteRatingNotFound(Exception e) throws Exception {
+
+		// Configure mock
+		doThrow(e).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+
+		// Call the function
+		offeringBo.deleteRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 9);
+	}
+
+	@Test(expected=StoreNotFoundException.class)
+	public void testDeleteRatingStoreNotFoundException() throws Exception {
+		testDeleteRatingNotFound(new StoreNotFoundException(""));
+	}
+
+	@Test(expected=DescriptionNotFoundException.class)
+	public void testDeleteRatingDescriptionNotFound() throws Exception {
+		testDeleteRatingNotFound(new DescriptionNotFoundException(""));
+	}
+
+	@Test(expected=OfferingNotFoundException.class)
+	public void testDeleteRatingOfferingNotFoundException() throws Exception {
+		testDeleteRatingNotFound(new OfferingNotFoundException(""));
+	}
+	
+	@Test(expected=RatingNotFoundException.class)
+	public void testDeleteRatingRatingNotFoundException() throws Exception {
+				
+		Offering offering = mock(Offering.class);
+
+		// Configure mock
+		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+
+		RatingNotFoundException ex = new RatingNotFoundException("rating not foubd");
+		doThrow(ex).when(ratingBoMock).deleteRating(offering, RATING_ID);
+		
+		// Actual call
+		offeringBo.deleteRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
+	}
+	
+	@Test
+	public void testDeleteRating() throws Exception {
+				
+		Offering offering = mock(Offering.class);
+
+		// Configure mock
+		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+		
+		// Actual call
+		offeringBo.deleteRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
+		
+		// Verify that ratingBo has been called
+		verify(ratingBoMock).deleteRating(offering, RATING_ID);
 
 	}
 }

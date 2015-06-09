@@ -276,6 +276,7 @@ public class OfferingBoImpl implements OfferingBo {
 			throws NotAuthorizedException, OfferingNotFoundException,
 			StoreNotFoundException, DescriptionNotFoundException, ValidationException {
 
+		// Exception is thrown if the offering, the store or the description is not found
 		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		ratingBo.createRating(offering, rating);
@@ -289,6 +290,7 @@ public class OfferingBoImpl implements OfferingBo {
 			StoreNotFoundException, DescriptionNotFoundException,
 			RatingNotFoundException, ValidationException {
 		
+		// Exception is thrown if the offering, the store or the description is not found
 		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		ratingBo.updateRating(offering, ratingId, rating);
@@ -301,6 +303,7 @@ public class OfferingBoImpl implements OfferingBo {
 			OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException {
 		
+		// Exception is thrown if the offering, the store or the description is not found
 		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		return ratingBo.getRatings(offering);
@@ -313,9 +316,24 @@ public class OfferingBoImpl implements OfferingBo {
 			OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException, RatingNotFoundException {
 
+		// Exception is thrown if the offering, the store or the description is not found
 		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		return ratingBo.getRating(offering, ratingId);
+	}
+
+	@Override
+	@Transactional
+	public void deleteRating(String storeName, String descriptionName,
+			String offeringName, int ratingId) throws NotAuthorizedException,
+			OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException, RatingNotFoundException {
+		
+		// Exception is thrown if the offering, the store or the description is not found
+		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		ratingBo.deleteRating(offering, ratingId);
+		
 	}
 	
 }

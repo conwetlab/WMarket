@@ -50,5 +50,7 @@ public interface RatingBo {
 	public List<Rating> getRatings(RateableEntity entity) throws NotAuthorizedException;
 	public Rating getRating(RateableEntity entity, int ratingId) 
 			throws NotAuthorizedException, RatingNotFoundException;
+	public void deleteRating(RateableEntity entity, int ratingId) throws RatingNotFoundException, 
+			NotAuthorizedException;
 
 }

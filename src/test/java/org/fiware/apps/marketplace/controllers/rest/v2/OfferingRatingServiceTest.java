@@ -59,14 +59,19 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class RatingServiceTest {
+public class OfferingRatingServiceTest {
 
 	private UriInfo uri;
 
 	@Mock private OfferingBo offeringBoMock;
-	@InjectMocks private RatingService ratingService;
+	@InjectMocks private OfferingRatingService ratingService;
 
 	private static final String PATH = "/api/v2/store/storeName/description/descName/offering/offeringName/rating";
+	private static final String STORE_NAME = "store";
+	private static final String DESCRIPTION_NAME = "description";
+	private static final String OFFERING_NAME = "offering";
+	private static final int RATING_ID = 9;
+
 
 	@Before 
 	public void setUp() throws UserNotFoundException {
@@ -87,16 +92,13 @@ public class RatingServiceTest {
 
 		try {
 
-			String storeName = "store";
-			String descriptionName = "description";
-			String offeringName = "offering";
 			Rating rating = new Rating();
 
 			// Mocks
-			doThrow(ex).when(offeringBoMock).createRating(storeName, descriptionName, offeringName, rating);
+			doThrow(ex).when(offeringBoMock).createRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, rating);
 
 			// Actual call
-			Response res = ratingService.createRating(uri, storeName, descriptionName, offeringName, rating);
+			Response res = ratingService.createRating(uri, STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, rating);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -139,27 +141,23 @@ public class RatingServiceTest {
 	@Test
 	public void testCreateRating() throws Exception {
 		
-		String storeName = "store";
-		String descriptionName = "description";
-		String offeringName = "offering";
 		Rating rating = new Rating();
-		final int id = 9;
 		
 		// Mocks
 		doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
-				invocation.getArgumentAt(3, Rating.class).setId(id);
+				invocation.getArgumentAt(3, Rating.class).setId(RATING_ID);
 				return null;
 			}
-		}).when(offeringBoMock).createRating(storeName, descriptionName, offeringName, rating);
+		}).when(offeringBoMock).createRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, rating);
 		
 		// Actual call
-		Response res = ratingService.createRating(uri, storeName, descriptionName, offeringName, rating);
+		Response res = ratingService.createRating(uri, STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, rating);
 		
 		// Check response and headers
 		assertThat(res.getStatus()).isEqualTo(201);
-		assertThat(res.getHeaders().get("Location").get(0).toString()).isEqualTo(PATH + "/" + id);
+		assertThat(res.getHeaders().get("Location").get(0).toString()).isEqualTo(PATH + "/" + RATING_ID);
 	}
 	
 	
@@ -172,17 +170,15 @@ public class RatingServiceTest {
 
 		try {
 
-			String storeName = "store";
-			String descriptionName = "description";
-			String offeringName = "offering";
-			int ratingId = 7;
 			Rating rating = new Rating();
 
 			// Mocks
-			doThrow(ex).when(offeringBoMock).updateRating(storeName, descriptionName, offeringName, ratingId, rating);
+			doThrow(ex).when(offeringBoMock).updateRating(STORE_NAME, DESCRIPTION_NAME, 
+					OFFERING_NAME, RATING_ID, rating);
 
 			// Actual call
-			Response res = ratingService.updateRating(storeName, descriptionName, offeringName, ratingId, rating);
+			Response res = ratingService.updateRating(STORE_NAME, DESCRIPTION_NAME, 
+					OFFERING_NAME, RATING_ID, rating);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -231,14 +227,11 @@ public class RatingServiceTest {
 	@Test
 	public void testUpdateRating() throws Exception {
 		
-		String storeName = "store";
-		String descriptionName = "description";
-		String offeringName = "offering";
 		Rating rating = new Rating();
-		int ratingId = 9;
 		
 		// Actual call
-		Response res = ratingService.updateRating(storeName, descriptionName, offeringName, ratingId, rating);
+		Response res = ratingService.updateRating(STORE_NAME, DESCRIPTION_NAME, 
+				OFFERING_NAME, RATING_ID, rating);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -253,16 +246,11 @@ public class RatingServiceTest {
 			String message, String field) {
 
 		try {
-
-			String storeName = "store";
-			String descriptionName = "description";
-			String offeringName = "offering";
-
 			// Mocks
-			doThrow(ex).when(offeringBoMock).getRatings(storeName, descriptionName, offeringName);
+			doThrow(ex).when(offeringBoMock).getRatings(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
 			
 			// Actual call
-			Response res = ratingService.getRatings(storeName, descriptionName, offeringName);
+			Response res = ratingService.getRatings(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -297,16 +285,12 @@ public class RatingServiceTest {
 	
 	@Test
 	public void testGetRatings() throws Exception {
-		
-		String storeName = "store";
-		String descriptionName = "description";
-		String offeringName = "offering";
-		
+				
 		// Actual call
 		@SuppressWarnings("unchecked")
 		List<Rating> ratings = mock(List.class); 
-		doReturn(ratings).when(offeringBoMock).getRatings(storeName, descriptionName, offeringName);
-		Response res = ratingService.getRatings(storeName, descriptionName, offeringName);
+		doReturn(ratings).when(offeringBoMock).getRatings(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
+		Response res = ratingService.getRatings(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -321,18 +305,12 @@ public class RatingServiceTest {
 	private void testGetRatingException(Exception ex, int statusCode, ErrorType errorType, 
 			String message, String field) {
 
-		try {
-
-			String storeName = "store";
-			String descriptionName = "description";
-			String offeringName = "offering";
-			int ratingId = 9;
-			
+		try {			
 			// Mocks
-			doThrow(ex).when(offeringBoMock).getRating(storeName, descriptionName, offeringName, ratingId);
+			doThrow(ex).when(offeringBoMock).getRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
 			
 			// Actual call
-			Response res = ratingService.getRating(storeName, descriptionName, offeringName, ratingId);
+			Response res = ratingService.getRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -373,20 +351,76 @@ public class RatingServiceTest {
 	
 	@Test
 	public void testGetRating() throws Exception {
-		
-		String storeName = "store";
-		String descriptionName = "description";
-		String offeringName = "offering";
-		int ratingId = 9;
-		
 		// Actual call
 		Rating rating = mock(Rating.class); 
-		doReturn(rating).when(offeringBoMock).getRating(storeName, descriptionName, offeringName, ratingId);
-		Response res = ratingService.getRating(storeName, descriptionName, offeringName, ratingId);
+		doReturn(rating).when(offeringBoMock).getRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
+		Response res = ratingService.getRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
 		assertThat((Rating) res.getEntity()).isEqualTo(rating);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// DELETE RATING ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testDeleteRatingException(Exception ex, int statusCode, ErrorType errorType, 
+			String message, String field) {
+
+		try {			
+			// Mocks
+			doThrow(ex).when(offeringBoMock).deleteRating(STORE_NAME, DESCRIPTION_NAME, 
+					OFFERING_NAME, RATING_ID);
+			
+			// Actual call
+			Response res = ratingService.deleteRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
+			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
+			
+		} catch (Exception e1) {
+			fail("Exception not expected", e1);
+		}
+
+	}
+	
+	@Test
+	public void testDeleteRatingNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering ratings");
+		testDeleteRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testDeleteRatingStoreNotFound() {
+		StoreNotFoundException ex = new StoreNotFoundException("store not found");
+		testDeleteRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testDeleteRatingDescriptionNotFound() {
+		DescriptionNotFoundException ex = new DescriptionNotFoundException("description not found");
+		testDeleteRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testDeleteRatingOfferingNotFound() {
+		OfferingNotFoundException ex = new OfferingNotFoundException("offering not found");
+		testDeleteRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testDeleteRatingRatingNotFound() {
+		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
+		testDeleteRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testDeleteRating() throws Exception {
+		// Actual call
+		Response res = ratingService.deleteRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
+		
+		// Check response
+		assertThat(res.getStatus()).isEqualTo(204);
 	}
 
 }

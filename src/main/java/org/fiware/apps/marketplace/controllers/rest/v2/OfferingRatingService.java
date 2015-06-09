@@ -35,6 +35,7 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
 
 import java.net.URI;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -43,6 +44,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.OfferingBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
@@ -59,12 +61,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Path("/api/v2/store/{storeName}/description/{descriptionName}/offering/{offeringName}/rating")
-public class RatingService {
+public class OfferingRatingService {
 	
 	@Autowired private OfferingBo offeringBo;
 	
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(RatingService.class), "");
+			LoggerFactory.getLogger(OfferingRatingService.class), "");
 	
 	@POST
 	public Response createRating(
@@ -161,6 +163,7 @@ public class RatingService {
 			@PathParam("descriptionName") String descriptionName,
 			@PathParam("offeringName") String offeringName,
 			@PathParam("ratingId") int ratingId) {
+		
 		Response response;
 		
 		try {
@@ -174,6 +177,30 @@ public class RatingService {
 		} 
 		
 		return response;
+	}
+	
+	@DELETE
+	@Path("{ratingId}")
+	public Response deleteRating(			
+			@PathParam("storeName") String storeName, 
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName,
+			@PathParam("ratingId") int ratingId) {
+
+		Response response;
+		
+		try {
+			offeringBo.deleteRating(storeName, descriptionName, offeringName, ratingId);
+			response = Response.status(Status.NO_CONTENT).build();	
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
+		} catch (OfferingNotFoundException | StoreNotFoundException |
+				DescriptionNotFoundException | RatingNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} 
+		
+		return response;
+		
 	}
 
 }

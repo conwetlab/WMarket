@@ -57,7 +57,7 @@ public class RatingBoImpl implements RatingBo {
 	@Autowired private RatingAuth ratingAuth;
 	
 	private double calculateRatingAverage(RateableEntity entity) {
-		int sum = 0;
+		double sum = 0;
 		List<Rating> ratings = entity.getRatings();
 		
 		for (Rating rating: ratings) {
@@ -65,7 +65,9 @@ public class RatingBoImpl implements RatingBo {
 		}
 		
 		// Cast is required. Otherwise, average will be an integer
-		return (double) sum / (double) ratings.size();
+		// If the ratings list is empty, average score is zero. This should be controlled. Otherwise,
+		// the system will fail when the last rating is deleted.
+		return ratings.size() == 0 ? 0 : sum / (double) ratings.size();
 		
 	}
 	
@@ -151,11 +153,12 @@ public class RatingBoImpl implements RatingBo {
 	public List<Rating> getRatings(RateableEntity entity)
 			throws NotAuthorizedException {
 		
+		// Raise exception is the user is not allowed to list the ratings
 		if (!ratingAuth.canList()) {
 			throw new NotAuthorizedException("get ratings");
-		} else {
-			return entity.getRatings();
 		}
+			
+		return entity.getRatings();
 	}
 	
 	@Override
@@ -165,13 +168,34 @@ public class RatingBoImpl implements RatingBo {
 		
 		Rating rating = getRatingById(entity, ratingId);	
 		
+		// Raise exception is the user is not allowed to get the rating
 		if (!ratingAuth.canList()) {
 			throw new NotAuthorizedException(String.format("get rating %d from %s %s", ratingId, 
 					entity.getClass().getSimpleName(), entity.toString()));
-		} else {
-			return rating;
-		}
+		} 
 		
+		return rating;
+	}
+
+	@Override
+	@Transactional
+	public void deleteRating(RateableEntity entity, int ratingId)
+			throws RatingNotFoundException, NotAuthorizedException {
+		
+		Rating rating = getRatingById(entity, ratingId);
+		
+		// Raise exception is the user is not allowed to delete the rating
+		if (!ratingAuth.canDelete(rating)) {
+			throw new NotAuthorizedException(String.format("delete rating %d from %s %s", ratingId, 
+					entity.getClass().getSimpleName(), entity.toString()));
+		}
+			
+		entity.getRatings().remove(rating);
+			
+		// Calculate average score
+		entity.setAverageScore(calculateRatingAverage(entity));
+
+		// The deletion process is automatically done since this method is transactional		
 	}
 
 }

@@ -75,7 +75,6 @@ public class RatingBoImplTest {
 	//////////////////////////////////////// CREATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	
 	@Test(expected=NotAuthorizedException.class)
 	public void testCreateRatingNotAuthorized() throws Exception {
 
@@ -153,6 +152,7 @@ public class RatingBoImplTest {
 		}
 				
 		int score = 1;
+		// 1 + 1 + 2 + 3 = 7 || 7 / 4 = 1.75 (decimal numbers preferred)
 		double newAverage = (sum + score) / (ratings.size() + 1);
 		
 		testCreateRating(ratings, score, newAverage);
@@ -175,21 +175,27 @@ public class RatingBoImplTest {
 
 	}
 	
-	private RateableEntity initializeUpdateRating(int ratingId, boolean canUpdate) throws Exception {
+	private RateableEntity initializeUpdateRating(Rating rating, boolean canUpdate, 
+			List<Rating> additionalRatings) throws Exception {
 		
 		// Initialize the offering and its ratings
 		RateableEntity entity = mock(RateableEntity.class);
 		List<Rating> ratings = new ArrayList<>();
-		Rating storedRating = new Rating();
-		storedRating.setId(ratingId);
-		ratings.add(storedRating);
+		ratings.add(rating);
+		ratings.addAll(additionalRatings);
 		when(entity.getRatings()).thenReturn(ratings);
 
 		// Configure mock
-		doReturn(canUpdate).when(ratingAuthMock).canUpdate(storedRating);
+		doReturn(canUpdate).when(ratingAuthMock).canUpdate(rating);
 		
 		return entity;
 
+	}
+	
+	private RateableEntity initializeUpdateRating(int ratingId, boolean canUpdate) throws Exception {
+		Rating rating = new Rating();
+		rating.setId(ratingId);
+		return initializeUpdateRating(rating, canUpdate, new ArrayList<Rating>());
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
@@ -226,33 +232,28 @@ public class RatingBoImplTest {
 		
 		int ratingId = 9;
 		
-		// Initialize the offering and its ratings
-		RateableEntity entity = mock(RateableEntity.class);
-		List<Rating> ratings = new ArrayList<>();
-		
 		// The rating to be updated
 		Rating storedRating = spy(new Rating());
 		storedRating.setId(ratingId);
 		storedRating.setScore(3);
-		ratings.add(storedRating);
-		
-		// Add additional ratings
+
+		// Additional ratings
+		List<Rating> additionalRatings = new ArrayList<>();
 		double sum = 0;
 		for (int i = 1; i < 4; i++) {
 			Rating additionalRating = new Rating();
 			additionalRating.setScore(i);
-			ratings.add(additionalRating);
+			additionalRatings.add(additionalRating);
 			
 			sum += i;
 		}
-
-		// Mocks
-		doReturn(ratings).when(entity).getRatings();
-		doReturn(true).when(ratingAuthMock).canUpdate(storedRating);
-
+		
+		// Initialize
+		RateableEntity entity = initializeUpdateRating(storedRating, true, additionalRatings);
+		
 		// Call the function
 		Rating updatedRating = new Rating();
-		updatedRating.setScore(2);
+		updatedRating.setScore(5);
 		updatedRating.setComment("default comment");
 		ratingBo.updateRating(entity, ratingId, updatedRating);
 		
@@ -261,14 +262,14 @@ public class RatingBoImplTest {
 		verify(storedRating).setComment(updatedRating.getComment());
 		
 		// Verify that the average is updated
-		double average = (sum + updatedRating.getScore()) / ratings.size();
+		// 1 + 2 + 3 + 5 = 11 || 11 / 4 = 2.75 (decimal numbers preferred)
+		double average = (sum + updatedRating.getScore()) / (additionalRatings.size() + 1);
 		verify(entity).setAverageScore(average);		
-		
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////// GET RATINGS /////////////////////////////////////
+	//////////////////////////////////////// LIST /////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test(expected=NotAuthorizedException.class)
@@ -296,7 +297,7 @@ public class RatingBoImplTest {
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////// GET RATING //////////////////////////////////////
+	///////////////////////////////////////// GET /////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test(expected=NotAuthorizedException.class)
@@ -352,6 +353,115 @@ public class RatingBoImplTest {
 		
 		// Actual call
 		assertThat(ratingBo.getRating(entity, ratingId)).isEqualTo(rating);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// DELETE ////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+
+	@Test(expected=RatingNotFoundException.class)
+	public void testDeleteRatingRatingNotFoundException() throws Exception {
+		
+		RateableEntity entity = mock(RateableEntity.class);
+		when(entity.getRatings()).thenReturn(new ArrayList<Rating>());
+
+		// Call the function
+		ratingBo.deleteRating(entity, 9);
+
+	}
+	
+	private RateableEntity initializeDeleteRating(Rating rating, boolean canDelete, 
+			List<Rating> additionalRatings) throws Exception {
+		
+		// Initialize the offering and its ratings
+		RateableEntity entity = mock(RateableEntity.class);
+		List<Rating> ratings = new ArrayList<>();
+		ratings.add(rating);
+		ratings.addAll(additionalRatings);
+		when(entity.getRatings()).thenReturn(ratings);
+
+		// Configure mock
+		doReturn(canDelete).when(ratingAuthMock).canDelete(rating);
+		
+		return entity;
+
+	}
+	
+	private RateableEntity initializeDeleteRating(int ratingId, boolean canDelete) throws Exception {
+		Rating storedRating = new Rating();
+		storedRating.setId(ratingId);
+		return initializeDeleteRating(storedRating, canDelete, new ArrayList<Rating>());
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testDeleteRatingNotAuthorized() throws Exception {
+
+		int ratingId = 9;
+		
+		// Initialize the offering and its ratings
+		RateableEntity entity = initializeDeleteRating(ratingId, false);
+
+		// Call the function
+		ratingBo.deleteRating(entity, ratingId);
+		
+	}
+	
+	@Test
+	public void testDeleteLastRating() throws Exception {
+		
+		int ratingId = 9;
+		
+		// Initialize the offering and its ratings
+		RateableEntity entity = initializeDeleteRating(ratingId, true);
+
+		// Call the function
+		ratingBo.deleteRating(entity, ratingId);
+		
+		// Verify that the average score is zero
+		verify(entity).setAverageScore(0);
+		
+		// Verify that the rating has been deleted from the list
+		List<Rating> ratings = entity.getRatings();
+		assertThat(ratings).isEmpty();
+	}
+	
+	@Test
+	public void testDeleteRating() throws Exception {
+		
+		int ratingId = 9;
+		
+		// The rating to be deleted
+		Rating storedRating = new Rating();
+		storedRating.setId(ratingId);
+		storedRating.setScore(3);
+
+		// Additional ratings
+		double sum = 0;
+		List<Rating> additionalRatings = new ArrayList<>();
+		for (int i = 1; i < 5; i++) {
+			Rating additionalRating = new Rating();
+			additionalRating.setScore(i);
+			additionalRatings.add(additionalRating);
+			
+			sum += i;
+		}
+		
+		// Initialize mocks
+		RateableEntity entity = initializeDeleteRating(storedRating, true, additionalRatings);
+
+		// Call the function
+		ratingBo.deleteRating(entity, ratingId);
+		
+		// Verify that stored rating has been deleted
+		List<Rating> ratings = entity.getRatings();
+		assertThat(ratings).doesNotContain(storedRating);
+		
+		// Verify that the average is updated. 
+		//ratings does not contains the deleted rating at this point.
+		// 1 + 2 + 3 + 4 = 10 || 10 / 4 = 2.5 (decimal numbers preferred)
+		double average = sum / (double) additionalRatings.size();
+		verify(entity).setAverageScore(average);		
 	}
 
 }
