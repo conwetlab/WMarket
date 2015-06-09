@@ -1,11 +1,10 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.controllers.rest.v2;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
- * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,34 +32,68 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
-import java.util.List;
+import java.net.URI;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+
+import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Rating;
-import org.fiware.apps.marketplace.model.Store;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+@Path("/api/v2/store/{storeName}/rating")
+public class StoreRatingService {
+	
+	@Autowired private StoreBo storeBo;
+	
+	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
+			LoggerFactory.getLogger(StoreRatingService.class), "");
+	
+	@POST
+	public Response createRating(
+			@Context UriInfo uri,
+			@PathParam("storeName") String storeName, 
+			Rating rating) {
+		
+		Response response;
+		
+		try {
+			
+			// When the object is saved in the database, the ID is automatically set
+			// so we can use it.
+			storeBo.createRating(storeName, rating);
+			
+			// Generate the URI and return CREATED
+			URI newURI = UriBuilder
+					.fromUri(uri.getPath())
+					.path(new Integer(rating.getId()).toString())
+					.build();
+			
+			response = Response.created(newURI).build();
+			
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
+		} catch (StoreNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (ValidationException ex) {
+			response = ERROR_UTILS.validationErrorResponse(ex);
+		}
+		
+		return response;
+		
+	}
 
 
-public interface StoreBo {
-	
-	// Save, update, delete
-	public void save(Store store) throws NotAuthorizedException, 
-			ValidationException;
-	public void update(String name, Store updatedStore) throws NotAuthorizedException,
-			ValidationException, StoreNotFoundException;
-	public void delete(String storeName) throws NotAuthorizedException, StoreNotFoundException;
-	
-	// Find by name
-	public Store findByName(String name) throws NotAuthorizedException, 
-			StoreNotFoundException;
-	
-	// Get all or a sublist
-	public List <Store> getAllStores() throws NotAuthorizedException;
-	public List<Store> getStoresPage(int offset, int max)
-			throws NotAuthorizedException;
-	
-	// Rating
-	public void createRating(String name, Rating rating) throws NotAuthorizedException, 
-			StoreNotFoundException, ValidationException;
+
 }

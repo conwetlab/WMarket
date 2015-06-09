@@ -41,6 +41,7 @@ import java.util.List;
 import javax.ws.rs.Path;
 
 import org.apache.commons.codec.binary.Base64;
+import org.fiware.apps.marketplace.bo.RatingBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.controllers.MediaContentController;
@@ -49,6 +50,7 @@ import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
+import org.fiware.apps.marketplace.model.Rating;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
@@ -66,6 +68,7 @@ public class StoreBoImpl implements StoreBo{
 	@Autowired private StoreAuth storeAuth;
 	@Autowired private StoreValidator storeValidator;
 	@Autowired private UserBo userBo;
+	@Autowired private RatingBo ratingBo;
 	
 	@Value("${media.folder}") private String mediaFolder;
 	
@@ -307,5 +310,16 @@ public class StoreBoImpl implements StoreBo{
 		setImageURL(stores);
 		
 		return stores;
+	}
+
+	@Override
+	@Transactional
+	public void createRating(String name, Rating rating)
+			throws NotAuthorizedException, StoreNotFoundException,
+			ValidationException {
+		
+		Store store = storeDao.findByName(name);
+		ratingBo.createRating(store, rating);
+		
 	}
 }

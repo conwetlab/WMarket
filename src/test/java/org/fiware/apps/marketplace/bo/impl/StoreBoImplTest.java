@@ -43,6 +43,7 @@ import java.util.List;
 
 import javax.ws.rs.Path;
 
+import org.fiware.apps.marketplace.bo.RatingBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.bo.impl.StoreBoImpl;
 import org.fiware.apps.marketplace.controllers.MediaContentController;
@@ -50,6 +51,7 @@ import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
+import org.fiware.apps.marketplace.model.Rating;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
@@ -71,6 +73,7 @@ public class StoreBoImplTest {
 	@Mock private StoreValidator storeValidatorMock;
 	@Mock private StoreDao storeDaoMock;
 	@Mock private UserBo userBoMock;
+	@Mock private RatingBo ratingBoMock;
 	@InjectMocks private StoreBoImpl storeBo;
 	
 	private static final String NAME = "wstore";
@@ -634,4 +637,66 @@ public class StoreBoImplTest {
 		verify(store2, never()).setImagePath(anyString());
 
 	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// CREATE RATING ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=StoreNotFoundException.class)
+	public void testCreateRatingStoreNotFoundException() throws Exception {
+		
+		String storeName = "store";
+
+		// Configure mock
+		Exception e = new StoreNotFoundException("");
+		doThrow(e).when(storeDaoMock).findByName(storeName);
+
+		// Call the function
+		Rating rating = new Rating();
+		storeBo.createRating(storeName, rating);
+	}
+	
+	private void testCreateRatingException(Exception e) throws Exception {
+		
+		String storeName = "store";
+
+		// Configure mock
+		Store store = mock(Store.class);
+		Rating rating = mock(Rating.class);
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		doThrow(e).when(ratingBoMock).createRating(store, rating);
+
+		// Call the function
+		storeBo.createRating(storeName, rating);		
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testCreateRatingNotAuthorizedException() throws Exception {
+		testCreateRatingException(new NotAuthorizedException("create rating"));
+	}
+	
+	@Test(expected=ValidationException.class)
+	public void testCreateRatingValidationException() throws Exception {
+		testCreateRatingException(new ValidationException("score", "create rating"));
+	}
+	
+	@Test
+	public void testCreateRating() throws Exception {
+		
+		String storeName = "store";
+		Store store = mock(Store.class);
+
+		// Configure mock
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		
+		// Call the function
+		Rating rating = new Rating();
+		storeBo.createRating(storeName, rating);		
+		
+		// Verify that ratingBo has been called
+		verify(ratingBoMock).createRating(store, rating);
+		
+	}
+
+	
 }

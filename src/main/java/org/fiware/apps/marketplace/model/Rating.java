@@ -92,7 +92,7 @@ public class Rating {
 
 	@XmlTransient
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "rating", nullable=false)
+	@JoinColumn(name = "entity", nullable=false)
 	public RateableEntity getRatingEntity() {
 		return ratingEntity;
 	}

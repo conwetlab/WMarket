@@ -47,6 +47,7 @@ import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Rating;
 import org.fiware.apps.marketplace.model.User;
@@ -189,6 +190,29 @@ public class OfferingBoImplTest {
 	@Test(expected=OfferingNotFoundException.class)
 	public void testCreateRatingOfferingNotFoundException() throws Exception {
 		testCreateRatingNotFound(new OfferingNotFoundException(""));
+	}
+	
+	private void testCreateRatingException(Exception e) throws Exception {
+		
+		// Configure mock
+		Offering offering = mock(Offering.class);
+		Rating rating = mock(Rating.class);
+		doReturn(offering).when(offeringDaoMock).findDescriptionByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+		doThrow(e).when(ratingBoMock).createRating(offering, rating);
+
+		// Call the function
+		offeringBo.createRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, rating);		
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testCreateRatingNotAuthorizedException() throws Exception {
+		testCreateRatingException(new NotAuthorizedException("create rating"));
+	}
+	
+	@Test(expected=ValidationException.class)
+	public void testCreateRatingValidationException() throws Exception {
+		testCreateRatingException(new ValidationException("score", "create rating"));
 	}
 	
 	@Test
