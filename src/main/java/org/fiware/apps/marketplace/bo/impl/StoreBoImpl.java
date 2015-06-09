@@ -354,4 +354,14 @@ public class StoreBoImpl implements StoreBo{
 		return ratingBo.getRating(store, ratingId);
 
 	}
+
+	@Override
+	@Transactional
+	public void deleteRating(String name, int ratingId)
+			throws NotAuthorizedException, StoreNotFoundException,
+			RatingNotFoundException {
+
+		Store store = storeDao.findByName(name);
+		ratingBo.deleteRating(store, ratingId);
+	}
 }

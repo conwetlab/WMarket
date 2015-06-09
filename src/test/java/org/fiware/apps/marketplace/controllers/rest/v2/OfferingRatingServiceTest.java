@@ -425,6 +425,10 @@ public class OfferingRatingServiceTest {
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(204);
+		
+		// Verify that offeringBoMock has been properly called
+		verify(offeringBoMock).deleteRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
+
 	}
 
 }

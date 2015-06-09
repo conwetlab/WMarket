@@ -313,5 +313,57 @@ public class StoreRatingServiceTest {
 		assertThat(res.getStatus()).isEqualTo(200);
 		assertThat((Rating) res.getEntity()).isEqualTo(rating);
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// DELETE RATING ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testDeleteRatingException(Exception ex, int statusCode, ErrorType errorType, 
+			String message, String field) {
+
+		try {			
+			// Mocks
+			doThrow(ex).when(storeBoMock).deleteRating(STORE_NAME, RATING_ID);
+			
+			// Actual call
+			Response res = ratingService.deleteRating(STORE_NAME, RATING_ID);
+			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
+			
+		} catch (Exception e1) {
+			fail("Exception not expected", e1);
+		}
+
+	}
+	
+	@Test
+	public void testDeleteRatingNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering ratings");
+		testDeleteRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testDeleteRatingStoreNotFound() {
+		StoreNotFoundException ex = new StoreNotFoundException("store not found");
+		testDeleteRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testDeleteRatingRatingNotFound() {
+		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
+		testDeleteRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	}
+	
+	@Test
+	public void testDeleteRating() throws Exception {
+		// Actual call
+		Response res = ratingService.deleteRating(STORE_NAME, RATING_ID);
+		
+		// Check response
+		assertThat(res.getStatus()).isEqualTo(204);
+		
+		// Verify that storeBoMock has been properly called
+		verify(storeBoMock).deleteRating(STORE_NAME, RATING_ID);
+	}
 
 }

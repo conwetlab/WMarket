@@ -470,8 +470,7 @@ public class OfferingBoImplTest {
 		testDeleteRatingNotFound(new OfferingNotFoundException(""));
 	}
 	
-	@Test(expected=RatingNotFoundException.class)
-	public void testDeleteRatingRatingNotFoundException() throws Exception {
+	private void testDeleteRatingException(Exception ex) throws Exception {
 				
 		Offering offering = mock(Offering.class);
 
@@ -479,11 +478,20 @@ public class OfferingBoImplTest {
 		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
-		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
 		doThrow(ex).when(ratingBoMock).deleteRating(offering, RATING_ID);
 		
 		// Actual call
 		offeringBo.deleteRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testDeleteRatingNotAuthorized() throws Exception {
+		testDeleteRatingException(new NotAuthorizedException(""));
+	}
+	
+	@Test(expected=RatingNotFoundException.class)
+	public void testDeleteRatingRatingNotFound() throws Exception {
+		testDeleteRatingException(new RatingNotFoundException(""));
 	}
 	
 	@Test

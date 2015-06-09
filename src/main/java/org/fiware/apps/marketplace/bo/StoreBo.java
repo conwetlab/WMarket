@@ -69,5 +69,7 @@ public interface StoreBo {
 	public List<Rating> getRatings(String name) throws NotAuthorizedException, StoreNotFoundException;
 	public Rating getRating(String name, int ratingId) throws NotAuthorizedException, StoreNotFoundException,
 			RatingNotFoundException;
+	public void deleteRating(String name, int ratingId) throws NotAuthorizedException, StoreNotFoundException,
+			RatingNotFoundException;
 	
 }

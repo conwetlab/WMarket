@@ -877,4 +877,63 @@ public class StoreBoImplTest {
 		verify(ratingBoMock).getRating(store, ratingId);
 	}
 	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// DELETE RATING ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=StoreNotFoundException.class)
+	public void testDeleteRatingStoreNotFoundException() throws Exception {
+		
+		String storeName = "store";
+
+		// Configure mock
+		doThrow(new StoreNotFoundException("")).when(storeDaoMock).findByName(storeName);
+
+		// Call the function
+		storeBo.deleteRating(storeName, 9);
+	}
+	
+	private void testDeleteRatingException(Exception ex) throws Exception {
+		
+		String storeName = "store";
+		int ratingId = 9;
+		Store store = mock(Store.class);
+
+		// Configure mock
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		doThrow(ex).when(ratingBoMock).deleteRating(store, ratingId);
+		
+		// Actual call
+		storeBo.deleteRating(storeName, ratingId);
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testDeleteRatingNotAuthorized() throws Exception {
+		testDeleteRatingException(new NotAuthorizedException(""));
+	}
+	
+	@Test(expected=RatingNotFoundException.class)
+	public void testDeleteRatingRatingNotFound() throws Exception {
+		testDeleteRatingException(new RatingNotFoundException(""));
+	}
+	
+	@Test
+	public void testDeleteRating() throws Exception {
+				
+		String storeName = "store";
+		int ratingId = 9;
+		Store store = mock(Store.class);
+
+		// Configure mock
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		
+		// Actual call
+		storeBo.deleteRating(storeName, ratingId);
+		
+		// Verify that ratingBo has been called
+		verify(ratingBoMock).deleteRating(store, ratingId);
+
+	}
+	
 }

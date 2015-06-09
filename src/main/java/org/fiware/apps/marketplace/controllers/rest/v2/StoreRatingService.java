@@ -34,6 +34,7 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
 
 import java.net.URI;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -42,6 +43,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
@@ -153,6 +155,26 @@ public class StoreRatingService {
 		
 		try {
 			response = Response.ok().entity(storeBo.getRating(storeName, ratingId)).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
+		} catch (StoreNotFoundException | RatingNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} 
+		
+		return response;
+	}
+	
+	@DELETE
+	@Path("{ratingId}")
+	public Response deleteRating(			
+			@PathParam("storeName") String storeName, 
+			@PathParam("ratingId") int ratingId) {
+
+		Response response;
+		
+		try {
+			storeBo.deleteRating(storeName, ratingId);
+			response = Response.status(Status.NO_CONTENT).build();	
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (StoreNotFoundException | RatingNotFoundException ex) {
