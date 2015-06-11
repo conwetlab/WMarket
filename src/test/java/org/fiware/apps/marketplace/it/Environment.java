@@ -191,10 +191,12 @@ public class Environment {
 		embeddedDB.run("DELETE FROM categories", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM price_components;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM price_plans;", "root", null, DATABASE);
+		embeddedDB.run("DELETE FROM ratings;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM bookmarks;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM offerings;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM descriptions;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM stores;", "root", null, DATABASE);
+		embeddedDB.run("DELETE FROM rateable_entity;", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM users;", "root", null, DATABASE);
 	}
 

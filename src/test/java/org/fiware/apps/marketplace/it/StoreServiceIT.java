@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -43,6 +44,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fiware.apps.marketplace.model.ErrorType;
+import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Ratings;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
 import org.junit.Before;
@@ -565,5 +568,242 @@ public class StoreServiceIT extends AbstractIT {
 	@Test
 	public void testListStoresInvalidMax() {
 		testListStoresInvalidParams(1, 0);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// RATINGS ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private int createStoreAndRating(String storeName, String storeUrl, int score, String comment) {
+		
+		// Create the store and rating
+		createStore(USER_NAME, PASSWORD, storeName, storeUrl);
+		Response res = createStoreRating(USER_NAME, PASSWORD, storeName, score, comment);
+		assertThat(res.getStatus()).isEqualTo(201);
+		
+		// Get store and its average score
+		Store ratedStore = getStore(USER_NAME, PASSWORD, storeName).readEntity(Store.class);
+		assertThat(ratedStore.getAverageScore()).isEqualTo(score);
+		
+		String[] urlParts = res.getLocation().getPath().split("/");
+		int ratingId = Integer.parseInt(urlParts[urlParts.length - 1]); 
+		assertThat(res.getLocation().getPath()).endsWith("/api/v2/store/" + storeName + "/rating/" + ratingId);
+		
+		return ratingId;
+	}
+	
+	@Test
+	public void testRateStore() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String comment = "Basic comment";
+		
+		int ratingId = createStoreAndRating(storeName, storeUrl, score, comment);
+		checkRating(USER_NAME, PASSWORD, storeName, ratingId, score, comment);
+	}
+	
+	@Test
+	public void testRateStoreInvalid() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 7;
+		String comment = "Basic comment";
+		
+		createStore(USER_NAME, PASSWORD, storeName, storeUrl);
+		Response res = createStoreRating(USER_NAME, PASSWORD, storeName, score, comment);
+		checkAPIError(res, 400, "score", MESSAGE_INVALID_SCORE, ErrorType.VALIDATION_ERROR);		
+		
+	}
+	
+	@Test
+	public void testUpdateRating() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String comment = "Basic comment";
+
+		int ratingId = createStoreAndRating(storeName, storeUrl, score, comment);
+		
+		// Update rating
+		int newScore = 3;
+		String newComment = "This is a new comment";
+		Response updateRes = updateStoreRating(USER_NAME, PASSWORD, storeName, 
+				ratingId, newScore, newComment);
+		assertThat(updateRes.getStatus()).isEqualTo(200);
+		
+		// Check updated rating
+		checkRating(USER_NAME, PASSWORD, storeName, ratingId, newScore, newComment);
+	}
+	
+	@Test
+	public void testDeleteRating() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String comment = "Basic comment";
+		
+		int ratingId = createStoreAndRating(storeName, storeUrl, score, comment);
+		Response deleteResponse = deleteStoreRating(USER_NAME, PASSWORD, storeName, ratingId);
+		assertThat(deleteResponse.getStatus()).isEqualTo(204);
+		
+		// Get rating should return 404
+		Response getResponse = getStoreRating(USER_NAME, PASSWORD, storeName, ratingId);
+		assertThat(getResponse.getStatus()).isEqualTo(404);
+		
+		// Average score should be zero when the last rating is deleted
+		Store ratedStore = getStore(USER_NAME, PASSWORD, storeName).readEntity(Store.class);
+		assertThat(ratedStore.getAverageScore()).isEqualTo(0);
+		
+	}
+	
+	private String getCommentFromBase(String baseComment, int score) {
+		return baseComment + " " + score;
+	}
+	
+	private double createNRatings(String storeName, String baseComment, int nRatings, int initialScore) {
+		
+		double totalScore = 0;
+		
+		for (int score = initialScore; score < nRatings + initialScore; score++) {
+			String comment = getCommentFromBase(baseComment, score);
+			Response res = createStoreRating(USER_NAME, PASSWORD, storeName, score, comment);
+			assertThat(res.getStatus()).isEqualTo(201);
+			
+			totalScore += score;
+		}
+
+		return totalScore;
+	}
+	
+	@Test
+	public void testCreateNRatings() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		String baseComment = "Basic comment";
+		
+		// Create store
+		createStore(USER_NAME, PASSWORD, storeName, storeUrl);
+		
+		// Create ratings
+		int ratingsNumber = 4;
+		int start = 1;
+		double totalScore = createNRatings(storeName, baseComment, ratingsNumber, start);
+		
+		// Get average score
+		double average = totalScore / ((double) ratingsNumber);
+		Store ratedStore = getStore(USER_NAME, PASSWORD, storeName).readEntity(Store.class);
+		assertThat(ratedStore.getAverageScore()).isEqualTo(average);
+		
+		// Get ratings list and check values
+		Ratings ratings = getStoreRatings(USER_NAME, PASSWORD, storeName).readEntity(Ratings.class);
+		List<Rating> ratingsList = ratings.getRatings();
+		assertThat(ratings.getRatings()).hasSize((int) ratingsNumber);
+		
+		for (int i = 0; i < ratingsList.size(); i++) {
+			Rating rating = ratingsList.get(i);
+			
+			int score = i + start;
+			// Comment is based on the score
+			assertThat(rating.getComment()).isEqualTo(getCommentFromBase(baseComment, score));
+			assertThat(rating.getScore()).isEqualTo(score);
+			
+		}		
+	}
+	
+	@Test
+	public void testUpdateRatingComplex() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String baseComment = "Basic comment";
+		
+		int ratingId = createStoreAndRating(storeName, storeUrl, score, baseComment);
+
+		// Create additional ratings
+		int ratingsNumber = 2;
+		double totalScore = createNRatings(storeName, baseComment, ratingsNumber, 1);
+		
+		// Update initial rating
+		int newScore = 3;
+		String newComment = "This is a new comment";
+		Response updateRes = updateStoreRating(USER_NAME, PASSWORD, storeName, 
+				ratingId, newScore, newComment);
+		assertThat(updateRes.getStatus()).isEqualTo(200);
+		
+		// Check that the rating has been properly updated
+		checkRating(USER_NAME, PASSWORD, storeName, ratingId, newScore, newComment);
+		
+		// Get average score
+		double average = (totalScore + newScore) / ((double) (ratingsNumber + 1));
+		Store ratedStore = getStore(USER_NAME, PASSWORD, storeName).readEntity(Store.class);
+		assertThat(ratedStore.getAverageScore()).isEqualTo(average);
+		
+	}
+	
+	@Test
+	public void testDeleteRatingComplex() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String baseComment = "Basic comment";
+		
+		int ratingId = createStoreAndRating(storeName, storeUrl, score, baseComment);
+
+		// Create additional ratings
+		int ratingsNumber = 2;
+		double totalScore = createNRatings(storeName, baseComment, ratingsNumber, 1);
+		
+		// Update initial rating
+		Response deleteRes = deleteStoreRating(USER_NAME, PASSWORD, storeName, ratingId);
+		assertThat(deleteRes.getStatus()).isEqualTo(204);
+		
+		// Get average score
+		double average = totalScore / ratingsNumber;
+		Store ratedStore = getStore(USER_NAME, PASSWORD, storeName).readEntity(Store.class);
+		assertThat(ratedStore.getAverageScore()).isEqualTo(average);
+		
+	}
+	
+	/**
+	 * There was a bug that makes /api/v2/store/ to return several times the same store in the 
+	 * same request when the store has been rated more than once. This test checks that this
+	 * bug is fixed.
+	 */
+	@Test
+	public void testGetAllStoresWhenOneStoresHasBeenRatedSomeTimes() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		String baseComment = "Basic comment";
+		
+		// Create store
+		createStore(USER_NAME, PASSWORD, storeName, storeUrl);
+		
+		// Create ratings
+		int ratingsNumber = 4;
+		int start = 1;
+		createNRatings(storeName, baseComment, ratingsNumber, start);
+		
+		// Get all stores
+		Client client = ClientBuilder.newClient();
+		Response getAllStoresRes = client.target(endPoint + "/api/v2/store/")
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		assertThat(getAllStoresRes.getStatus()).isEqualTo(200);
+		
+		// Only one store should be returned
+		Stores stores = getAllStoresRes.readEntity(Stores.class);
+		assertThat(stores.getStores()).hasSize(1);
+		
 	}
 }

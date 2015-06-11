@@ -54,6 +54,7 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.PriceComponent;
 import org.fiware.apps.marketplace.model.PricePlan;
+import org.fiware.apps.marketplace.model.Rating;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
@@ -78,6 +79,7 @@ public abstract class AbstractIT {
 	protected final static String MESSAGE_INVALID_URL = "This field must be a valid URL.";
 	protected final static String MESSAGE_INVALID_OFFSET_MAX = "offset and/or max are not valid";
 	protected final static String MESSAGE_STORE_NOT_FOUND = "Store %s not found";
+	protected final static String MESSAGE_INVALID_SCORE = "Score should be an integer between 0 and 5.";
 
 	@BeforeClass
 	public static void startUp() throws Exception {
@@ -340,6 +342,90 @@ public abstract class AbstractIT {
 			String comment, String imageBase64) {
 		
 		return createOrUpdateStore(userName, password, name, displayName, url, comment, imageBase64);
+	}
+	
+	private Response createRating(String path, String userName, String password, int score, String comment) {
+		
+		Rating rating = new Rating();
+		rating.setScore(score);
+		rating.setComment(comment);
+		
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + path).request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password))
+				.post(Entity.entity(rating, MediaType.APPLICATION_JSON));
+		
+		return response;
+
+	}
+	
+	protected Response createStoreRating(String userName, String password, String storeName,
+			int score, String comment) {
+		return createRating("/api/v2/store/" + storeName + "/rating", userName, password, score, comment);
+	}
+	
+	protected Response createOfferingRating(String userName, String password, String storeName,
+			String descriptionName, String offeringName, int score, String comment) {
+		return createRating("/api/v2/store/" + storeName + "/description/" + descriptionName + "/offering/" + 
+			offeringName + "/rating", userName, password, score, comment);
+	}
+	
+	protected Response updateStoreRating(String userName, String password, String storeName,
+			int ratingId, int score, String comment) {
+		return createRating("/api/v2/store/" + storeName + "/rating/" + ratingId, userName, password, score, comment);
+	}
+	
+	protected Response updateOfferingRating(String userName, String password, String storeName,
+			String descriptionName, String offeringName, int ratingId, int score, String comment) {
+		return createRating("/api/v2/store/" + storeName + "/description/" + descriptionName + "/offering/" + 
+			offeringName + "/rating/" + ratingId, userName, password, score, comment);
+	}
+	
+	protected Response getStoreRating(String userName, String password, String name, int ratingId) {
+		Client client = ClientBuilder.newClient();
+		return client.target(endPoint + "/api/v2/store/" + name + "/rating/" + ratingId)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password))
+				.get();
+	}
+	
+	protected Response getStoreRatings(String userName, String password, String name) {
+		Client client = ClientBuilder.newClient();
+		return client.target(endPoint + "/api/v2/store/" + name + "/rating/")
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password))
+				.get();
+	}
+	
+	protected Response deleteRating(String path, String userName, String password) {
+		
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + path)
+				.request()
+				.header("Authorization", getAuthorization(userName, password))
+				.delete();
+		
+		return response;
+		
+	}
+	
+	protected Response deleteStoreRating(String userName, String password, String storeName, int ratingId) {
+		return deleteRating("/api/v2/store/" + storeName + "/rating/" + ratingId, userName, password);
+	}
+	
+	protected Response deleteOfferingRating(String userName, String password, String storeName,
+			String descriptionName, String offeringName, int ratingId) {
+		
+		return deleteRating("/api/v2/store/" + storeName + "/description/" + descriptionName + "/offering/" + 
+			offeringName + "/rating/" + ratingId, userName, password);
+	}
+	
+	protected void checkRating(String userName, String password, String storeName, int ratingId, 
+			int expectedScore, String expectedComment) {
+		
+		Rating rating = getStoreRating(userName, password, storeName, ratingId).readEntity(Rating.class);
+		assertThat(rating.getScore()).isEqualTo(expectedScore);
+		assertThat(rating.getComment()).isEqualTo(expectedComment);
 	}
 
 }
