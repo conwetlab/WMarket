@@ -44,7 +44,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 
 * **Path**: `/api/v2/user`
 * **Method**: POST
-* **Accept**: `application/json` or `application/xml`
+* **Content-Type**: `application/json` or `application/xml`
 * **Body**:
 ```
 {
@@ -59,7 +59,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 
 * **Path**: `/api/v2/user/{USER_NAME}`
 * **Method**: POST
-* **Accept**: `application/json` or `application/xml`
+* **Content-Type**: `application/json` or `application/xml`
 * **Body**:
 ```
 {
@@ -79,7 +79,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 
 * **Path**: `/api/v2/user/{USER_NAME}`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Content**:
 ```
 {
@@ -94,7 +94,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 
 * **Path**: `/api/v2/user`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
@@ -123,7 +123,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 
 * **Path**: `/api/v2/store`
 * **Method**: POST
-* **Accept**: `application/json` or `application/xml`
+* **Content-Type**: `application/json` or `application/xml`
 * **Body**:
 ```
 {
@@ -138,7 +138,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 
 * **Path**: `/api/v2/store/{STORE_NAME}`
 * **Method**: POST
-* **Accept**: `application/json` or `application/xml`
+* **Content-Type**: `application/json` or `application/xml`
 * **Body**:
 ```
 {
@@ -158,7 +158,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 
 * **Path**: `/api/v2/store/{STORE_NAME}`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Content**:
 ```
 {
@@ -177,7 +177,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 
 * **Path**: `/api/v2/store`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
@@ -216,7 +216,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 
 * **Path**: `/api/v2/store/{STORE_NAME}/description`
 * **Method**: POST
-* **Accept**: `application/json` or `application/xml`
+* **Content-Type**: `application/json` or `application/xml`
 * **Body**:
 ```
 {
@@ -229,7 +229,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 
 * **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
 * **Method**: POST
-* **Accept**: `application/json` or `application/xml`
+* **Content-Type**: `application/json` or `application/xml`
 * **Body**:
 ```
 {
@@ -247,7 +247,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 
 * **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Content**:
 ```
 {
@@ -280,7 +280,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 
 * **Path**: `/api/v2/store/{STORE_NAME}/description`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
@@ -315,7 +315,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 
 * **Path**: `/api/v2/descriptions`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
@@ -354,7 +354,7 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
 
 * **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Content**:
 ```
 {
@@ -375,7 +375,7 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
 
 * **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
@@ -414,7 +414,7 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
 
 * **Path**: `/api/v2/store/{STORE_NAME}/offering`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
@@ -453,7 +453,7 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
 
 * **Path**: `/api/v2/offerings`
 * **Method**: GET
-* **Content-Type**: `application/json` or `application/xml`
+* **Accept**: `application/json` or `application/xml`
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
