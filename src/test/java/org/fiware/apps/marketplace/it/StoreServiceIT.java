@@ -602,7 +602,7 @@ public class StoreServiceIT extends AbstractIT {
 		String comment = "Basic comment";
 		
 		int ratingId = createStoreAndRating(storeName, storeUrl, score, comment);
-		checkRating(USER_NAME, PASSWORD, storeName, ratingId, score, comment);
+		checkStoreRating(USER_NAME, PASSWORD, storeName, ratingId, score, comment);
 	}
 	
 	@Test
@@ -637,7 +637,7 @@ public class StoreServiceIT extends AbstractIT {
 		assertThat(updateRes.getStatus()).isEqualTo(200);
 		
 		// Check updated rating
-		checkRating(USER_NAME, PASSWORD, storeName, ratingId, newScore, newComment);
+		checkStoreRating(USER_NAME, PASSWORD, storeName, ratingId, newScore, newComment);
 	}
 	
 	@Test
@@ -739,7 +739,7 @@ public class StoreServiceIT extends AbstractIT {
 		assertThat(updateRes.getStatus()).isEqualTo(200);
 		
 		// Check that the rating has been properly updated
-		checkRating(USER_NAME, PASSWORD, storeName, ratingId, newScore, newComment);
+		checkStoreRating(USER_NAME, PASSWORD, storeName, ratingId, newScore, newComment);
 		
 		// Get average score
 		double average = (totalScore + newScore) / ((double) (ratingsNumber + 1));
@@ -762,7 +762,7 @@ public class StoreServiceIT extends AbstractIT {
 		int ratingsNumber = 2;
 		double totalScore = createNRatings(storeName, baseComment, ratingsNumber, 1);
 		
-		// Update initial rating
+		// Delete initial rating
 		Response deleteRes = deleteStoreRating(USER_NAME, PASSWORD, storeName, ratingId);
 		assertThat(deleteRes.getStatus()).isEqualTo(204);
 		

@@ -389,9 +389,30 @@ public abstract class AbstractIT {
 				.get();
 	}
 	
+	protected Response getOfferingRating(String userName, String password, String storeName, String descriptionName, 
+			String offeringName, int ratingId) {
+		
+		Client client = ClientBuilder.newClient();
+		return client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + descriptionName + 
+				"/offering/" + offeringName + "/rating/" + ratingId)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password))
+				.get();
+	}
+	
 	protected Response getStoreRatings(String userName, String password, String name) {
 		Client client = ClientBuilder.newClient();
 		return client.target(endPoint + "/api/v2/store/" + name + "/rating/")
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password))
+				.get();
+	}
+	
+	protected Response getOfferingRatings(String userName, String password, String storeName, String descriptionName,
+			String offeringName) {
+		Client client = ClientBuilder.newClient();
+		return client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + descriptionName + 
+				"/offering/" + offeringName + "/rating/")
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password))
 				.get();
@@ -420,12 +441,23 @@ public abstract class AbstractIT {
 			offeringName + "/rating/" + ratingId, userName, password);
 	}
 	
-	protected void checkRating(String userName, String password, String storeName, int ratingId, 
+	protected void checkStoreRating(String userName, String password, String storeName, int ratingId, 
 			int expectedScore, String expectedComment) {
 		
 		Rating rating = getStoreRating(userName, password, storeName, ratingId).readEntity(Rating.class);
 		assertThat(rating.getScore()).isEqualTo(expectedScore);
 		assertThat(rating.getComment()).isEqualTo(expectedComment);
 	}
+	
+	
+	protected void checkOfferingRating(String userName, String password, String storeName, String descriptionName,
+			String offeringName, int ratingId, int expectedScore, String expectedComment) {
+		
+		Rating rating = getOfferingRating(userName, password, storeName, descriptionName, offeringName, ratingId)
+				.readEntity(Rating.class);
+		assertThat(rating.getScore()).isEqualTo(expectedScore);
+		assertThat(rating.getComment()).isEqualTo(expectedComment);
+	}
+
 
 }

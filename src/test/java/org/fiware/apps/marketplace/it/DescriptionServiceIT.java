@@ -48,6 +48,8 @@ import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
+import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Ratings;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.junit.After;
@@ -917,8 +919,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// We are using the description that contains two offerings
 		// and checking if offset and max works in an appropriate way
-		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, "displayName", 
-				secondaryUSDLPath, "");
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, 
+				FIRST_STORE_NAME, "displayName", secondaryUSDLPath, "");
 		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
 		
 		// Check that the number of returned offerings is correct
@@ -1186,5 +1188,247 @@ public class DescriptionServiceIT extends AbstractIT {
 			
 			assertThat(bookmarkedOfferings.get(i)).isEqualTo(bookmarkedOffering);
 		}
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// RATINGS ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private Response getOffering(String userName, String password, String storeName, String descriptionName, 
+			String offeringName) {
+		Client client = ClientBuilder.newClient();
+		return client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + descriptionName + 
+				"/offering/" + offeringName)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password)).get();
+	}
+
+
+	private int createOfferingAndRating(String storeName, String descriptionName, String usdlPath, 
+			String offeringName, int score, String comment) {
+				
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, storeName, 
+				descriptionName, usdlPath, "");
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+
+		Response res = createOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, 
+				offeringName, score, comment);
+		assertThat(res.getStatus()).isEqualTo(201);
+		
+		// Get offering and its average score
+		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+				.readEntity(Offering.class);
+		assertThat(ratedOffering.getAverageScore()).isEqualTo(score);
+		
+		// Get rating ID
+		String[] urlParts = res.getLocation().getPath().split("/");
+		int ratingId = Integer.parseInt(urlParts[urlParts.length - 1]); 
+		assertThat(res.getLocation().getPath()).endsWith("/api/v2/store/" + storeName + "/description/" + 
+					descriptionName + "/offering/" + offeringName + "/rating/" + ratingId);
+		
+		return ratingId;
+	}
+	
+	@Test
+	public void testRateOffering() {
+
+		String storeName = FIRST_STORE_NAME;
+		String descriptionName = "default";
+		String offeringName = FIRST_OFFERING.getName();
+		
+		int score = 5;
+		String comment = "Basic comment";
+		
+		int ratingId = createOfferingAndRating(storeName, descriptionName, defaultUSDLPath, offeringName, 
+				score, comment);
+		checkOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+				ratingId, score, comment);
+	}
+	
+	@Test
+	public void testUpdateRating() {
+		
+		String storeName = FIRST_STORE_NAME;
+		String descriptionName = "default";
+		String offeringName = FIRST_OFFERING.getName();
+		
+		int score = 5;
+		String comment = "Basic comment";
+		
+		int ratingId = createOfferingAndRating(storeName, descriptionName, defaultUSDLPath, offeringName, 
+				score, comment);
+		
+		// Update rating
+		int newScore = 3;
+		String newComment = "This is a new comment";
+		Response updateRes = updateOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName,
+				ratingId, newScore, newComment);
+		assertThat(updateRes.getStatus()).isEqualTo(200);
+		
+		// Check updated rating
+		checkOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+				ratingId, newScore, newComment);
+		
+		// Check that average score has been properly updated
+		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+				.readEntity(Offering.class);
+		assertThat(ratedOffering.getAverageScore()).isEqualTo(newScore);
+
+	}
+	
+	@Test
+	public void testDeleteRating() {
+		
+		String storeName = FIRST_STORE_NAME;
+		String descriptionName = "default";
+		String offeringName = FIRST_OFFERING.getName();
+		
+		int score = 5;
+		String comment = "Basic comment";
+		
+		int ratingId = createOfferingAndRating(storeName, descriptionName, defaultUSDLPath, offeringName, 
+				score, comment);
+		Response deleteResponse = deleteOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, 
+				offeringName, ratingId);
+		assertThat(deleteResponse.getStatus()).isEqualTo(204);
+		
+		// Get rating should return 404
+		Response getResponse = getOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, 
+				offeringName, ratingId);
+		assertThat(getResponse.getStatus()).isEqualTo(404);
+		
+		// Average score should be zero when the last rating is deleted
+		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+				.readEntity(Offering.class);
+		assertThat(ratedOffering.getAverageScore()).isEqualTo(0);
+		
+	}
+	
+	private String getCommentFromBase(String baseComment, int score) {
+		return baseComment + " " + score;
+	}
+	
+	private double createNRatings(String storeName, String descriptionName, String offeringName, String baseComment, 
+			int nRatings, int initialScore) {
+		
+		double totalScore = 0;
+		
+		for (int score = initialScore; score < nRatings + initialScore; score++) {
+			String comment = getCommentFromBase(baseComment, score);
+			Response res = createOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+					score, comment);
+			assertThat(res.getStatus()).isEqualTo(201);
+			
+			totalScore += score;
+		}
+
+		return totalScore;
+	}
+	
+	@Test
+	public void testCreateNRatings() {
+		
+		String storeName = FIRST_STORE_NAME;
+		String descriptionName = "default";
+		String offeringName = FIRST_OFFERING.getName();
+		String baseComment = "Basic comment";
+		
+		// Create offering
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, storeName, 
+				descriptionName, defaultUSDLPath, "");
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+		
+		// Create ratings
+		int ratingsNumber = 4;
+		int start = 1;
+		double totalScore = createNRatings(storeName, descriptionName, offeringName, baseComment, 
+				ratingsNumber, start);
+		
+		// Get average score
+		double average = totalScore / ((double) ratingsNumber);
+		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+				.readEntity(Offering.class);
+		assertThat(ratedOffering.getAverageScore()).isEqualTo(average);
+		
+		// Get ratings list and check values
+		Ratings ratings = getOfferingRatings(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+				.readEntity(Ratings.class);
+		List<Rating> ratingsList = ratings.getRatings();
+		assertThat(ratings.getRatings()).hasSize((int) ratingsNumber);
+		
+		for (int i = 0; i < ratingsList.size(); i++) {
+			Rating rating = ratingsList.get(i);
+			
+			int score = i + start;
+			// Comment is based on the score
+			assertThat(rating.getComment()).isEqualTo(getCommentFromBase(baseComment, score));
+			assertThat(rating.getScore()).isEqualTo(score);
+			
+		}		
+	}
+	
+	@Test
+	public void testUpdateRatingComplex() {
+		
+		String storeName = FIRST_STORE_NAME;
+		String descriptionName = "default";
+		String offeringName = FIRST_OFFERING.getName();
+		int score = 5;
+		String baseComment = "Basic comment";
+		
+		int ratingId = createOfferingAndRating(storeName, descriptionName, defaultUSDLPath, offeringName, 
+				score, baseComment);
+		
+		// Create additional ratings
+		int ratingsNumber = 2;
+		double totalScore = createNRatings(storeName, descriptionName, offeringName, baseComment, ratingsNumber, 1);
+		
+		// Update initial rating
+		int newScore = 3;
+		String newComment = "This is a new comment";
+		Response updateRes = updateOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName,
+				ratingId, newScore, newComment);
+		assertThat(updateRes.getStatus()).isEqualTo(200);
+		
+		// Check that the rating has been properly updated
+		checkOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName,
+				ratingId, newScore, newComment);
+		
+		// Get average score
+		double average = (totalScore + newScore) / ((double) (ratingsNumber + 1));
+		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+				.readEntity(Offering.class);
+		assertThat(ratedOffering.getAverageScore()).isEqualTo(average);
+		
+	}
+	
+	@Test
+	public void testDeleteRatingComplex() {
+		
+		String storeName = FIRST_STORE_NAME;
+		String descriptionName = "default";
+		String offeringName = FIRST_OFFERING.getName();
+		int score = 5;
+		String baseComment = "Basic comment";
+		
+		int ratingId = createOfferingAndRating(storeName, descriptionName, defaultUSDLPath, offeringName, 
+				score, baseComment);
+		
+		// Create additional ratings
+		int ratingsNumber = 2;
+		double totalScore = createNRatings(storeName, descriptionName, offeringName, baseComment, ratingsNumber, 1);
+		
+		// Delete initial rating
+		Response deleteRes = deleteOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, 
+				offeringName, ratingId);
+		assertThat(deleteRes.getStatus()).isEqualTo(204);
+		
+		// Get average score
+		double average = totalScore / ratingsNumber;
+		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+				.readEntity(Offering.class);
+		assertThat(ratedOffering.getAverageScore()).isEqualTo(average);
+		
 	}
 }
