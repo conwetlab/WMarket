@@ -24,6 +24,7 @@
 		<listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
 	</listener>
 	
+	<!-- Start listener to avoid Memory leaks -->
 	<listener>
 		<listener-class>org.fiware.apps.marketplace.utils.ContextFinalizer</listener-class>
 	</listener>
@@ -44,7 +45,7 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
-	<!-- Servlet configuration -->
+	<!-- Load beans -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
