@@ -82,7 +82,7 @@ public class RecommendationService {
 		Response response;
 		
 		try {
-			List<Offering> offerings = categoryBo.getCategoryOfferingsSortedBy(categoryName, "rating");
+			List<Offering> offerings = categoryBo.getCategoryOfferingsSortedBy(categoryName, "averageScore");
 			response = Response.ok().entity(offerings).build();
 		} catch (ClassificationNotFoundException e) {
 			response = ERROR_UTILS.entityNotFoundResponse(e);

@@ -32,10 +32,6 @@ package org.fiware.apps.marketplace.dao.impl;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import org.fiware.apps.marketplace.dao.CategoryDao;
@@ -48,14 +44,8 @@ import org.springframework.stereotype.Repository;
 @Repository("classificationDao")
 public class CategoryDaoImpl extends MarketplaceHibernateDao implements CategoryDao {
 	
-	private final static String CATEGORY_TABLE_NAME = Category.class.getName();
-	private final static HashMap<String, Comparator<Offering>> COMPARATORS = new HashMap<>();
-	
-	static {
-		COMPARATORS.put("name", new NameComparator());
-		COMPARATORS.put("rating", new RatingComparator());
-		COMPARATORS.put("publicationDate", new PublicationDateComparator());
-	}
+	private final static String CATEGORIES_TABLE_NAME = Category.class.getName();
+	private final static String OFFERINGS_TABLE_NAME = Offering.class.getName();
 	
 	@Override
 	public boolean isNameAvailable(String name) {
@@ -76,7 +66,7 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 	public Category findByName(String categoryName) throws ClassificationNotFoundException {
 		
 		List<?> list = getSession()
-				.createQuery(String.format("from %s where name=:name", CATEGORY_TABLE_NAME))
+				.createQuery(String.format("from %s where name=:name", CATEGORIES_TABLE_NAME))
 				.setParameter("name", categoryName)
 				.list();
 		
@@ -88,74 +78,22 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 	}
 
 
+	
 	@Override
 	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String sortedBy) 
 			throws ClassificationNotFoundException {
-				
-		// Get comparator
-		Comparator<Offering> comparator = COMPARATORS.get(sortedBy);
-				
-		// If comparator is not found, exception is thrown
-		if (comparator == null) {
-			
-			String validSorters = "";
-			for (String validSorter: COMPARATORS.keySet()) {
-				
-				// Delimiter is not added with the first element
-				if (!validSorters.equals("")) {
-					validSorters += ", ";
-				}
-				
-				validSorters += validSorter;
-			}
-						
-			throw new IllegalArgumentException("Invalid param sortedBy. Valid values are: " + validSorters);
-		}
 		
-		// Create the sorted set with with the comparator and sort offerings
 		Category category = findByName(categoryName);
-		List<Offering> offerings = new ArrayList<>(category.getOfferings());
-		Collections.sort(offerings, comparator);
 				
-		return offerings;
-	}
-	
-	
-	///////////////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////// COMPARATORS /////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static class RatingComparator implements Comparator<Offering> {
-
-		@Override
-		public int compare(Offering o1, Offering o2) {
-			// Sorted based on the average score
-			if (o1.getAverageScore() < o2.getAverageScore()) {
-				return 1; 	// Offerings with higher scores will be the first ones 
-			} else if (o1.getAverageScore() == o2.getAverageScore()) {
-				return 0;
-			} else {
-				return -1;	// Offering with lower scores will be the last ones
-			}
-		}
-	}
-
-	private static class NameComparator implements Comparator<Offering> {
-
-		@Override
-		public int compare(Offering o1, Offering o2) {
-			// Sorted based on offering name
-			return o1.getName().compareTo(o2.getName());
-		}
-	}
-	
-	private static class PublicationDateComparator implements Comparator<Offering> {
-
-		@Override
-		public int compare(Offering o1, Offering o2) {
-			return o1.getDescribedIn().getRegistrationDate().
-					compareTo(o2.getDescribedIn().getRegistrationDate());
-		}	
-	}
-	
+		List<?> list = getSession()
+				.createQuery(String.format("from %s where :category in elements(categories) "
+						+ "ORDER BY %s DESC", OFFERINGS_TABLE_NAME, sortedBy))
+				.setParameter("category", category)
+				.list();
+		
+		@SuppressWarnings("unchecked")
+		List<Offering> lo = (List<Offering>) list;
+		
+		return lo;
+	}	
 }
