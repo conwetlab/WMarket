@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.dao.impl;
+package org.fiware.apps.marketplace.bo.impl;
 
 /*
  * #%L
@@ -34,45 +34,38 @@ package org.fiware.apps.marketplace.dao.impl;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.dao.ClassificationDao;
+import org.fiware.apps.marketplace.bo.CategoryBo;
+import org.fiware.apps.marketplace.dao.CategoryDao;
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
 import org.fiware.apps.marketplace.model.Category;
-import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
-import org.springframework.stereotype.Repository;
+import org.fiware.apps.marketplace.model.Offering;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Repository("classificationDao")
-public class ClassificationDaoImpl extends MarketplaceHibernateDao implements ClassificationDao {
+@Service("classificationBo")
+public class CategoryBoImpl implements CategoryBo {
 	
-	private final static String TABLE_NAME = Category.class.getName();
-	
+	@Autowired private CategoryDao classificationDao;
+
 	@Override
 	public boolean isNameAvailable(String name) {
-		
-		boolean exists = false;
-		
-		try {
-			findByName(name);
-		} catch (ClassificationNotFoundException e) {
-			exists = true;
-		}
-		
-		return exists;
+		return classificationDao.isNameAvailable(name);
 	}
-	
 
 	@Override
+	@Transactional
 	public Category findByName(String name) throws ClassificationNotFoundException {
-		
-		List<?> list = getSession()
-				.createQuery(String.format("from %s where name=:name", TABLE_NAME))
-				.setParameter("name", name)
-				.list();
-		
-		if (list.isEmpty()) {
-			throw new ClassificationNotFoundException("Classification " + name + " not found");
-		} else {
-			return (Category) list.get(0);
-		}
+		// TODO: Authorization?
+		return classificationDao.findByName(name);
 	}
 
+	@Override
+	@Transactional
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String sortedBy)
+			throws ClassificationNotFoundException {
+		
+		// TODO: Authorization?
+		return classificationDao.getCategoryOfferingsSortedBy(categoryName, sortedBy);
+	}
 }

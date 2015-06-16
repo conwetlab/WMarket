@@ -1,8 +1,5 @@
 package org.fiware.apps.marketplace.bo;
 
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
-import org.fiware.apps.marketplace.model.Category;
-
 /*
  * #%L
  * FiwareMarketplace
@@ -35,9 +32,19 @@ import org.fiware.apps.marketplace.model.Category;
  * #L%
  */
 
-public interface ClassificationBo {
+import java.util.List;
+
+import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
+import org.fiware.apps.marketplace.model.Category;
+import org.fiware.apps.marketplace.model.Offering;
+
+
+public interface CategoryBo {
 	
 	public boolean isNameAvailable(String name);
 	public Category findByName(String name) throws ClassificationNotFoundException;
+	
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String sortedBy) 
+			throws ClassificationNotFoundException;
 
 }

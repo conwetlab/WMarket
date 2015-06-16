@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.fiware.apps.marketplace.bo.ClassificationBo;
+import org.fiware.apps.marketplace.bo.CategoryBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
@@ -68,7 +68,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 public class OfferingResolver {
 	
 	@Autowired private RdfHelper rdfHelper;
-	@Autowired private ClassificationBo classificationBo;
+	@Autowired private CategoryBo classificationBo;
 	@Autowired private ServiceBo serviceBo;
 	
 	/**

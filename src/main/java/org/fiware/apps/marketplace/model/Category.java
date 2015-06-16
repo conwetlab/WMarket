@@ -63,7 +63,7 @@ public class Category {
 	private String displayName;
 	
 	// Very important! Users will want to retrieve the best offerings of a category
-	private Set<Offering> offering;
+	private Set<Offering> offerings;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -100,12 +100,12 @@ public class Category {
 	@XmlTransient
 	// This field is lazy, so it need to be initialized before returning it to the user
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categories")
-	public Set<Offering> getOffering() {
-		return offering;
+	public Set<Offering> getOfferings() {
+		return offerings;
 	}
 
-	public void setOffering(Set<Offering> offering) {
-		this.offering = offering;
+	public void setOfferings(Set<Offering> offerings) {
+		this.offerings = offerings;
 	}
 
 	@Override

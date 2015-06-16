@@ -1,9 +1,10 @@
-package org.fiware.apps.marketplace.dao;
+package org.fiware.apps.marketplace.controllers.rest.v2;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
+ * Copyright (C) 2012 SAP
  * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
@@ -32,14 +33,65 @@ package org.fiware.apps.marketplace.dao;
  * #L%
  */
 
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+
+import org.fiware.apps.marketplace.bo.CategoryBo;
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
-import org.fiware.apps.marketplace.model.Category;
+import org.fiware.apps.marketplace.model.Offering;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
-public interface ClassificationDao {
+@Component
+@Path("/api/v2/recommendation")
+public class RecommendationService {
 	
-	public boolean isNameAvailable(String name);
-	public Category findByName(String name) throws ClassificationNotFoundException;
+	@Autowired private CategoryBo categoryBo;
+	
+	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
+			LoggerFactory.getLogger(RecommendationService.class));
+
+	
+	/*@GET
+	@Produces({"application/xml", "application/json"})
+	@Path("/objectCategories")	
+	public List<RatingObjectCategory> getObjectCategories() {			
+		
+		List<RatingObjectCategory> rat = ratingBo.getRatingObjectCategories();	
+		
+		if (rat==null){
+			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Not Found").build());
+		}		
+		return rat;
+	
+	}*/
+	
+	
+	@GET
+	@Produces({"application/xml", "application/json"})
+	@Path("{category}")	
+	public Response getCategoryRecommendations(@PathParam("category") String categoryName) {
+		
+		Response response;
+		
+		try {
+			List<Offering> offerings = categoryBo.getCategoryOfferingsSortedBy(categoryName, "rating");
+			response = Response.ok().entity(offerings).build();
+		} catch (ClassificationNotFoundException e) {
+			response = ERROR_UTILS.entityNotFoundResponse(e);
+		}
+		
+		return response;
+		
+	
+	}
 	
 
 }

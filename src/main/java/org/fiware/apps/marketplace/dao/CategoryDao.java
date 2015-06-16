@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.bo.impl;
+package org.fiware.apps.marketplace.dao;
 
 /*
  * #%L
@@ -32,29 +32,19 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
-import org.fiware.apps.marketplace.bo.ClassificationBo;
-import org.fiware.apps.marketplace.dao.ClassificationDao;
+import java.util.List;
+
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
 import org.fiware.apps.marketplace.model.Category;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.fiware.apps.marketplace.model.Offering;
 
-@Service("classificationBo")
-public class ClassificationBoImpl implements ClassificationBo {
-	
-	@Autowired private ClassificationDao classificationDao;
 
-	@Override
-	public boolean isNameAvailable(String name) {
-		return classificationDao.isNameAvailable(name);
-	}
-
-	@Override
-	public Category findByName(String name) throws ClassificationNotFoundException {
-		// TODO: Authorization?
-		return classificationDao.findByName(name);
-	}
+public interface CategoryDao {
 	
+	public boolean isNameAvailable(String name);
+	public Category findByName(String categoryName) throws ClassificationNotFoundException;
 	
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String sortedBy) 
+			throws ClassificationNotFoundException;
 
 }

@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.fiware.apps.marketplace.bo.ClassificationBo;
+import org.fiware.apps.marketplace.bo.CategoryBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
@@ -34,7 +34,7 @@ public class OfferingResolverTest {
 
 	private Model model;
 
-	@Mock private ClassificationBo classificatioBoMock;
+	@Mock private CategoryBo classificatioBoMock;
 	@Mock private ServiceBo serviceBoMock;
 	@Mock private RdfHelper rdfHelperMock;
 	@InjectMocks private OfferingResolver offeringResolver;
