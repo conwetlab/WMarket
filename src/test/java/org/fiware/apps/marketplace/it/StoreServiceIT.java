@@ -513,6 +513,13 @@ public class StoreServiceIT extends AbstractIT {
 		for (int i = 0; i < STORES_CREATED; i++) {
 			createStore(USER_NAME, PASSWORD, String.format(displayNamePattern, i), 
 					String.format(urlPattern, i), null, null);
+			
+			// Ensure order
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+			}
 		}
 				
 		// Get some stores
