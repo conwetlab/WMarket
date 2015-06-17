@@ -41,6 +41,7 @@ import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Repository;
 
 @Repository("storeDao")
@@ -109,11 +110,15 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Store> getStoresPage(int offset, int max) {
+	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc) {
+		
+		Order order = desc ? Order.desc(orderBy) : Order.asc(orderBy);
+		
 		return getSession()
 				.createCriteria(Store.class)
 				.setFirstResult(offset)
 				.setMaxResults(max)
+				.addOrder(order)
 				.setFetchMode("ratings", FetchMode.SELECT)
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)		// Avoid duplicates
 				.list();

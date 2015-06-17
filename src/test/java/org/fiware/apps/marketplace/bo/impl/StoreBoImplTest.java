@@ -589,7 +589,7 @@ public class StoreBoImplTest {
 			when(storeAuthMock.canList()).thenReturn(false);
 			
 			// Call the function
-			storeBo.getStoresPage(0, 7);
+			storeBo.getStoresPage(0, 7, "name", true);
 			
 			// If the exception is not risen, the method is not properly working
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
@@ -623,15 +623,17 @@ public class StoreBoImplTest {
 		// Mocks
 		int offset = 8;
 		int max = 22;
+		String orderBy = "name";
+		boolean desc = true;
 		
-		when(storeDaoMock.getStoresPage(offset, max)).thenReturn(stores);
+		when(storeDaoMock.getStoresPage(offset, max, orderBy, desc)).thenReturn(stores);
 		when(storeAuthMock.canList()).thenReturn(true);
 		
 		// Call the function
-		assertThat(storeBo.getStoresPage(offset, max)).isEqualTo(stores);
+		assertThat(storeBo.getStoresPage(offset, max, orderBy, desc)).isEqualTo(stores);
 		
 		// Verify that the DAO is called
-		verify(storeDaoMock).getStoresPage(offset, max);
+		verify(storeDaoMock).getStoresPage(offset, max, orderBy, desc);
 		
 		// Verify that image path has been set for image1 and has not been set for image2
 		verify(store1).setImagePath(MEDIA_URL + "/" + image1Name);

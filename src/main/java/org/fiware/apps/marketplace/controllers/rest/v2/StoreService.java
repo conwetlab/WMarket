@@ -60,6 +60,7 @@ import org.fiware.apps.marketplace.model.Stores;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
 import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.hibernate.HibernateException;
+import org.hibernate.QueryException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -185,7 +186,10 @@ public class StoreService {
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
 	public Response listStores(@DefaultValue("0") @QueryParam("offset") int offset,
-			@DefaultValue("100") @QueryParam("max") int max) {
+			@DefaultValue("100") @QueryParam("max") int max,
+			@DefaultValue("registrationDate") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("false") @QueryParam("desc") boolean desc) {
+		
 		Response response;
 
 		if (offset < 0 || max <= 0) {
@@ -193,10 +197,12 @@ public class StoreService {
 			response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
 		} else {
 			try {
-				List<Store> stores = storeBo.getStoresPage(offset, max);
+				List<Store> stores = storeBo.getStoresPage(offset, max, orderBy, desc);
 				response = Response.status(Status.OK).entity(new Stores(stores)).build();
 			} catch (NotAuthorizedException ex) {
 				response = ERROR_UTILS.notAuthorizedResponse(ex);
+			} catch (QueryException ex) {
+				response = ERROR_UTILS.badRequestResponse("Stores cannot be ordered by " + orderBy + ".");
 			} catch (Exception ex) {
 				response = ERROR_UTILS.internalServerError(ex);
 			}

@@ -278,7 +278,7 @@ public class StoreBoImpl implements StoreBo{
 	
 	@Override
 	@Transactional
-	public List<Store> getStoresPage(int offset, int max) 
+	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc) 
 			throws NotAuthorizedException {
 		
 		// Check rights and raise exception if user is not allowed to perform this action
@@ -287,7 +287,7 @@ public class StoreBoImpl implements StoreBo{
 		}
 		
 		// Set image path
-		List<Store> stores = storeDao.getStoresPage(offset, max);
+		List<Store> stores = storeDao.getStoresPage(offset, max, orderBy, desc);
 		
 		// Set store icon URL
 		setImageURL(stores);
