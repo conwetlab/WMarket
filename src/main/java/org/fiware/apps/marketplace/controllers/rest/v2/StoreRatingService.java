@@ -93,6 +93,8 @@ public class StoreRatingService {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.validationErrorResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 		
 		return response;
@@ -122,6 +124,8 @@ public class StoreRatingService {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.validationErrorResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 		
 		return response;
@@ -139,7 +143,9 @@ public class StoreRatingService {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
-		} 
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex);
+		}
 		
 		return response;
 		
@@ -159,6 +165,8 @@ public class StoreRatingService {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (StoreNotFoundException | RatingNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex);
 		} 
 		
 		return response;
@@ -179,6 +187,8 @@ public class StoreRatingService {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (StoreNotFoundException | RatingNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex);
 		} 
 		
 		return response;

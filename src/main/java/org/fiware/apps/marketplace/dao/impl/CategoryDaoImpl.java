@@ -40,6 +40,7 @@ import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("classificationDao")
 public class CategoryDaoImpl extends MarketplaceHibernateDao implements CategoryDao {
@@ -60,7 +61,6 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 		
 		return exists;
 	}
-	
 
 	@Override
 	public Category findByName(String categoryName) throws ClassificationNotFoundException {
@@ -77,17 +77,16 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 		}
 	}
 
-
-	
 	@Override
-	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String sortedBy) 
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String orderBy, boolean desc) 
 			throws ClassificationNotFoundException {
 		
 		Category category = findByName(categoryName);
+		String ascOrDesc = desc ? "DESC" : "ASC";
 				
 		List<?> list = getSession()
 				.createQuery(String.format("from %s where :category in elements(categories) "
-						+ "ORDER BY %s DESC", OFFERINGS_TABLE_NAME, sortedBy))
+						+ "ORDER BY %s %s", OFFERINGS_TABLE_NAME, orderBy, ascOrDesc))
 				.setParameter("category", category)
 				.list();
 		
@@ -95,5 +94,26 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 		List<Offering> lo = (List<Offering>) list;
 		
 		return lo;
-	}	
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(readOnly = true)
+	public List<Category> getCategoriesPage(int offset, int max) {
+		return getSession()
+				.createCriteria(Category.class)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(readOnly = true)
+	public List<Category> getAllCategories() {
+		return getSession()
+				.createCriteria(Category.class)
+				.list();
+	}
+
 }

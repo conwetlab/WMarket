@@ -35,63 +35,83 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
 
 import java.util.List;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.fiware.apps.marketplace.bo.CategoryBo;
 import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
+import org.fiware.apps.marketplace.model.Categories;
+import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Offerings;
+import org.hibernate.HibernateException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 
 @Component
-@Path("/api/v2/recommendation")
-public class RecommendationService {
+@Path("/api/v2/category")
+public class CategoriesService {
 	
 	@Autowired private CategoryBo categoryBo;
 	
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(RecommendationService.class));
+			LoggerFactory.getLogger(CategoriesService.class));
 
-	
-	/*@GET
-	@Produces({"application/xml", "application/json"})
-	@Path("/objectCategories")	
-	public List<RatingObjectCategory> getObjectCategories() {			
-		
-		List<RatingObjectCategory> rat = ratingBo.getRatingObjectCategories();	
-		
-		if (rat==null){
-			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Not Found").build());
-		}		
-		return rat;
-	
-	}*/
-	
 	
 	@GET
 	@Produces({"application/xml", "application/json"})
-	@Path("{category}")	
-	public Response getCategoryRecommendations(@PathParam("category") String categoryName) {
+	public Response getObjectCategories(@DefaultValue("0") @QueryParam("offset") int offset,
+			@DefaultValue("100") @QueryParam("max") int max) {
 		
 		Response response;
 		
 		try {
-			List<Offering> offerings = categoryBo.getCategoryOfferingsSortedBy(categoryName, "averageScore");
-			response = Response.ok().entity(offerings).build();
-		} catch (ClassificationNotFoundException e) {
-			response = ERROR_UTILS.entityNotFoundResponse(e);
+			List<Category> categories = categoryBo.getCategoriesPage(offset, max);	
+			response = Response.ok().entity(new Categories(categories)).build();
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex);
 		}
 		
 		return response;
-		
 	
 	}
 	
+	@GET
+	@Produces({"application/xml", "application/json"})
+	@Path("{categoryName}")	
+	public Response getCategoryRecommendations(@PathParam("categoryName") String categoryName,
+			@DefaultValue("averageScore") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("true") @QueryParam("desc") boolean desc) {
+		
+		Response response;
+		
+		try {
+			List<Offering> offerings = categoryBo.getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
+			response = Response.ok().entity(new Offerings(offerings)).build();			
+		} catch (ClassificationNotFoundException e) {
+			response = ERROR_UTILS.entityNotFoundResponse(e);
+		} catch (HibernateException e) {
+			Throwable cause = e.getCause();
+			
+			if (cause instanceof MySQLSyntaxErrorException) {
+				// Return a more human readable message
+				response = ERROR_UTILS.badRequestResponse("Offerings cannot be ordered by " + orderBy + ".");
+			} else {
+				response = ERROR_UTILS.badRequestResponse(e);
+			}
+		} catch (Exception e) {
+			response = ERROR_UTILS.internalServerError(e);
+		}
+		
+		return response;
+	}
 
 }

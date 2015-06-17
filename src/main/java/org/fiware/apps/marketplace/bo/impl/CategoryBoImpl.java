@@ -56,16 +56,28 @@ public class CategoryBoImpl implements CategoryBo {
 	@Override
 	@Transactional
 	public Category findByName(String name) throws ClassificationNotFoundException {
-		// TODO: Authorization?
+		// TODO: Check access rights?
 		return classificationDao.findByName(name);
 	}
 
 	@Override
 	@Transactional
-	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String sortedBy)
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String orderBy, boolean desc)
 			throws ClassificationNotFoundException {
 		
-		// TODO: Authorization?
-		return classificationDao.getCategoryOfferingsSortedBy(categoryName, sortedBy);
+		// TODO: Check access rights?
+		return classificationDao.getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
+	}
+
+	@Override
+	public List<Category> getCategoriesPage(int offset, int max) {
+		// TODO: Check access rights?
+		return classificationDao.getCategoriesPage(offset, max);
+	}
+
+	@Override
+	public List<Category> getAllCategories() {
+		// TODO: Check access rights?
+		return classificationDao.getAllCategories();
 	}
 }

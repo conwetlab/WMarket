@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.model;
 
 /*
  * #%L
@@ -32,22 +32,37 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
-import org.fiware.apps.marketplace.model.Category;
-import org.fiware.apps.marketplace.model.Offering;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
-public interface CategoryBo {
+@XmlRootElement(name = "categories")
+@IgnoreMediaTypes("application/*+json")
+public class Categories {
 	
-	public boolean isNameAvailable(String name);
-	public Category findByName(String name) throws ClassificationNotFoundException;
-	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String orderBy, boolean desc) 
-			throws ClassificationNotFoundException;
-	
-	public List<Category> getCategoriesPage(int offset, int max);
-	public List<Category> getAllCategories();
-	
+    private List<Category> categories = null;
+    
+    public Categories() {
+    	this.setCategories(new ArrayList<Category>());
+    }
+    
+    public Categories(List<Category> categories) {
+    	this.setCategories(categories);
+    }
+ 
+    @XmlElement(name = "category")
+    @JsonProperty("categories")
+    public List<Category> getCategories() {
+        return this.categories;
+    }
+ 
+    public void setCategories(List<Category> categories) {
+    	this.categories = categories;
+    }
 
 }

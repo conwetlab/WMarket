@@ -43,8 +43,12 @@ public interface CategoryDao {
 	
 	public boolean isNameAvailable(String name);
 	public Category findByName(String categoryName) throws ClassificationNotFoundException;
-	
-	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String sortedBy) 
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String orderBy, boolean desc) 
 			throws ClassificationNotFoundException;
+	
+	public List<Category> getCategoriesPage(int offset, int max);
+	public List<Category> getAllCategories();
+	
+	
 
 }
