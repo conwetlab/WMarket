@@ -276,8 +276,8 @@ public class DescriptionServiceIT extends AbstractIT {
 				+ "7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", 
 				"comment", String.format(MESSAGE_TOO_LONG, 200));
 	}
-	
-	private void testCreationFieldAlreayExists(String displayName1, String displayName2, String url1, String url2,
+
+	private void testCreationFieldAlreadyExists(String displayName1, String displayName2, String url1, String url2,
 			String field, String expectedMessage) {
 
 		createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, displayName1, url1, "");
@@ -292,18 +292,18 @@ public class DescriptionServiceIT extends AbstractIT {
 		String displayName = "Description 1";
 		
 		// name is based on display name and name is checked before display name...
-		testCreationFieldAlreayExists(displayName, displayName, defaultUSDLPath, defaultUSDLPath + "a", "name", 
+		testCreationFieldAlreadyExists(displayName, displayName, defaultUSDLPath, defaultUSDLPath + "a", "displayName",
 				MESSAGE_NAME_IN_USE);
 	}
 	
 	@Test
 	public void testCreationURLAlreadyExists() {
-		testCreationFieldAlreayExists("offering-1", "offering-2", defaultUSDLPath, defaultUSDLPath, "url", 
+		testCreationFieldAlreadyExists("offering-1", "offering-2", defaultUSDLPath, defaultUSDLPath, "url",
 				MESSAGE_URL_IN_USE);
 	}
 	
 	@Test
-	public void testCreationNameAndUrlAlreayExistsInAnotherStore() {
+	public void testCreationNameAndUrlAlreadyExistsInAnotherStore() {
 
 		// Create another Store
 		String descriptionName = "description-1"; 
