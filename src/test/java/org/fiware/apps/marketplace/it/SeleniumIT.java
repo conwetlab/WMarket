@@ -38,7 +38,9 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -52,7 +54,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SeleniumIT extends AbstractIT {
 
-	private WebDriver driver;
+	private static WebDriver DRIVER;
 	
 	private static final String REQUIRED_FIELD = "This field is required.";
 	private static final String INVALID_ADDRESS = "This field must be a valid email address.";
@@ -64,20 +66,32 @@ public class SeleniumIT extends AbstractIT {
 	private static final String STORE_FORM = "store_form";
 	private static final String DESCRIPTION_CREATION_FORM = "description_create_form";
 	private static final String DESCRIPTION_UPDATE_FORM = "description_update_form";
+	
+	@BeforeClass
+	public static void initBrowser() {
+		DRIVER = new FirefoxDriver();
+		// Avoid Jenkinks failures
+		DRIVER.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		// Increase browser size to avoid Jenkins failures
+		DRIVER.manage().window().setSize(new Dimension(1024, 768));
+	}
+	
+	@AfterClass
+	public static void quitBrowser() {
+		DRIVER.quit();
+	}
 
 	@Before
 	public void setUp() {
-		driver = new FirefoxDriver();
-		// Avoid Jenkinks failures
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		// Increase browser size to avoid Jenkins failures
-		driver.manage().window().setSize(new Dimension(1024, 768));
+		// Restart cookies and browser
+		DRIVER.manage().deleteAllCookies();
+		DRIVER.get("about:blank");
+		
 		startMockServer();
 	}
 
 	@After
 	public void quitDriver() {
-		driver.quit();
 		wireMock.stop();
 	}
 
@@ -85,7 +99,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void fillField(WebElement formElement, String fieldName, String fieldValue) {
 		String formName = formElement.getAttribute("name");
-		WebDriverWait wait = new WebDriverWait(driver, 5);
+		WebDriverWait wait = new WebDriverWait(DRIVER, 5);
 		WebElement fieldElement = wait.until(ExpectedConditions.presenceOfElementLocated(
 				By.cssSelector("form[name='" + formName + "'] [name='" + fieldName + "']")));
 
@@ -95,7 +109,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void completeField(WebElement formElement, String fieldName, String fieldValue) {
 		String formName = formElement.getAttribute("name");
-		WebDriverWait wait = new WebDriverWait(driver, 5);
+		WebDriverWait wait = new WebDriverWait(DRIVER, 5);
 		WebElement fieldElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(
 				"form[name='" + formName + "'] [name='" + fieldName + "']")));
 
@@ -103,7 +117,7 @@ public class SeleniumIT extends AbstractIT {
 	}
 
 	private boolean existsElement(By by) {
-		return driver.findElements(by).size() != 0;
+		return DRIVER.findElements(by).size() != 0;
 	}
 
 	private void submitForm(WebElement formElement) {
@@ -112,7 +126,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private WebElement submitFormExpectError(WebElement formElement, String fieldName, String fieldError) {
 		String formName = formElement.getAttribute("name");
-		WebDriverWait wait = new WebDriverWait(driver, 5);
+		WebDriverWait wait = new WebDriverWait(DRIVER, 5);
 
 		// Submit
 		submitForm(formElement);
@@ -124,7 +138,7 @@ public class SeleniumIT extends AbstractIT {
 	}
 
 	private void verifyAlertContent(String textContent) {
-		WebDriverWait wait = new WebDriverWait(driver, 5);
+		WebDriverWait wait = new WebDriverWait(DRIVER, 5);
 		WebElement alert = wait.until(ExpectedConditions.presenceOfElementLocated(
 				By.cssSelector(".alert-dismissible")));
 		
@@ -137,7 +151,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void verifyFieldError(WebElement formElement, String fieldName, String fieldErrorMessage) {
 		String formName = formElement.getAttribute("name");
-		WebDriverWait wait = new WebDriverWait(driver, 5);
+		WebDriverWait wait = new WebDriverWait(DRIVER, 5);
 		WebElement fieldError = wait.until(ExpectedConditions.presenceOfElementLocated(
 				By.cssSelector("form[name='" + formName + "'] [name='" + fieldName + "'] + p.field-error")));
 
@@ -145,23 +159,23 @@ public class SeleniumIT extends AbstractIT {
 	}
 
 	private void clickOnSettingPanelItem(String textContent) {
-		WebDriverWait wait = new WebDriverWait(driver, 5);
+		WebDriverWait wait = new WebDriverWait(DRIVER, 5);
 
-		driver.findElement(By.id("toggle-right-sidebar")).click();
+		DRIVER.findElement(By.id("toggle-right-sidebar")).click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(textContent))).click();
 	}
 
 	private void clickOnOperationPanelItem(String textContent) {
-		WebDriverWait wait = new WebDriverWait(driver, 5);
+		WebDriverWait wait = new WebDriverWait(DRIVER, 5);
 
-		driver.findElement(By.id("toggle-left-sidebar")).click();
+		DRIVER.findElement(By.id("toggle-left-sidebar")).click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(textContent))).click();
 	}
 
 
 	private boolean isElementPresent(By by) {
 		try {
-			driver.findElement(by);
+			DRIVER.findElement(by);
 			return true;
 		} catch (NoSuchElementException e) {
 			return false;
@@ -172,7 +186,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void loginUser(String username, String password) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name("login_form"));
+		WebElement formElement = DRIVER.findElement(By.name("login_form"));
 
 		// Fill the form fields
 		fillField(formElement, "username", username);
@@ -186,7 +200,7 @@ public class SeleniumIT extends AbstractIT {
 		String errorMessage = "The username and password do not match.";
 
 		loginUser(username, password);
-		assertThat(driver.findElement(By.cssSelector(".alert-danger")).getText()).isEqualTo(errorMessage);
+		assertThat(DRIVER.findElement(By.cssSelector(".alert-danger")).getText()).isEqualTo(errorMessage);
 	}
 
 	private void loginDefaultUser() {
@@ -196,13 +210,13 @@ public class SeleniumIT extends AbstractIT {
 
 		createUser(displayName, email, password);
 
-		driver.get(endPoint);
+		DRIVER.get(endPoint);
 		loginUser(email, password);
 	}
 
 	private void registerUser(String displayName, String email, String password) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name(REGISTRATION_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(REGISTRATION_FORM));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -216,7 +230,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void updateUser(String email, String company) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name(ACCOUNT_UPDATE_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(ACCOUNT_UPDATE_FORM));
 
 		// Fill the form fields
 		fillField(formElement, "email", email);
@@ -225,7 +239,7 @@ public class SeleniumIT extends AbstractIT {
 		// Submit
 		submitForm(formElement);
 
-		formElement = driver.findElement(By.name(ACCOUNT_UPDATE_FORM));
+		formElement = DRIVER.findElement(By.name(ACCOUNT_UPDATE_FORM));
 
 		// Verify the field values
 		verifyFieldValue(formElement, "email", email);
@@ -234,7 +248,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void updateUserPassword(String oldPassword, String newPassword) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name("account_password_update_form"));
+		WebElement formElement = DRIVER.findElement(By.name("account_password_update_form"));
 
 		// Fill the form fields
 		fillField(formElement, "oldPassword", oldPassword);
@@ -247,7 +261,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void registerStore(String displayName, String url) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name(STORE_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(STORE_FORM));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -259,7 +273,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void registerStore(String displayName, String url, String imagePath) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name(STORE_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(STORE_FORM));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -272,7 +286,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void updateStoreDisplayName(String displayName) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name(STORE_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(STORE_FORM));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -280,17 +294,17 @@ public class SeleniumIT extends AbstractIT {
 		// Submit
 		submitForm(formElement);
 
-		formElement = driver.findElement(By.name(STORE_FORM));
+		formElement = DRIVER.findElement(By.name(STORE_FORM));
 
 		// Verify the field values
 		verifyFieldValue(formElement, "displayName", displayName);
-		assertThat(driver.findElement(By.cssSelector(".panel-title.store-displayname"))
+		assertThat(DRIVER.findElement(By.cssSelector(".panel-title.store-displayname"))
 				.getText()).isEqualTo(displayName);
 	}
 
 	private void registerDescription(String displayName, String url) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name(DESCRIPTION_CREATION_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(DESCRIPTION_CREATION_FORM));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -302,7 +316,7 @@ public class SeleniumIT extends AbstractIT {
 
 	private void updateDescription(String displayName) {
 		// Find form
-		WebElement formElement = driver.findElement(By.name(DESCRIPTION_UPDATE_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(DESCRIPTION_UPDATE_FORM));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -310,7 +324,7 @@ public class SeleniumIT extends AbstractIT {
 		// Submit
 		submitForm(formElement);
 
-		formElement = driver.findElement(By.name(DESCRIPTION_UPDATE_FORM));
+		formElement = DRIVER.findElement(By.name(DESCRIPTION_UPDATE_FORM));
 
 		// Verify the field values
 		verifyFieldValue(formElement, "displayName", displayName);
@@ -320,8 +334,8 @@ public class SeleniumIT extends AbstractIT {
 
 	@Test
 	public void when_UserIsAnonymous_Expect_RedirectLoginView() {
-		driver.get(endPoint);
-		assertThat(driver.getTitle()).isEqualTo("Sign In - WMarket");
+		DRIVER.get(endPoint);
+		assertThat(DRIVER.getTitle()).isEqualTo("Sign In - WMarket");
 	}
 
 	@Test
@@ -330,20 +344,20 @@ public class SeleniumIT extends AbstractIT {
 		String email 		= "newuser@domain.org";
 		String password 	= "fiware1!";
 
-		driver.get(endPoint + "/register");
+		DRIVER.get(endPoint + "/register");
 
 		registerUser(displayName, email, password);
 		verifyAlertContent("You was registered successfully. You can log in right now.");
 
 		loginUser(email, password);
-		assertThat(driver.findElement(By.id("toggle-right-sidebar")).getText()).isEqualTo(displayName);
+		assertThat(DRIVER.findElement(By.id("toggle-right-sidebar")).getText()).isEqualTo(displayName);
 	}
 
 	@Test
 	public void should_DisplayErrorMessage_When_RegistrationFormIsSubmitted_And_DisplayNameIsInvalid() {
-		driver.get(endPoint + "/register");
+		DRIVER.get(endPoint + "/register");
 		// Find form
-		WebElement formElement = driver.findElement(By.name(REGISTRATION_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(REGISTRATION_FORM));
 
 		// Submit
 		submitFormExpectError(formElement, "displayName", REQUIRED_FIELD);
@@ -356,10 +370,10 @@ public class SeleniumIT extends AbstractIT {
 		String password 	= "fiware1!";
 
 		createUser(displayName, email, password);
-		driver.get(endPoint + "/register");
+		DRIVER.get(endPoint + "/register");
 
 		// Find form
-		WebElement formElement = driver.findElement(By.name(REGISTRATION_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(REGISTRATION_FORM));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -381,10 +395,10 @@ public class SeleniumIT extends AbstractIT {
 		String email 		= "newuser@domain.org";
 		String password 	= "fiware1!";
 
-		driver.get(endPoint + "/register");
+		DRIVER.get(endPoint + "/register");
 
 		// Find form
-		WebElement formElement = driver.findElement(By.name(REGISTRATION_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(REGISTRATION_FORM));
 
 		// Fill the form fields
 		fillField(formElement, "displayName", displayName);
@@ -428,10 +442,10 @@ public class SeleniumIT extends AbstractIT {
 		createUser(displayName, email, password);
 
 		loginDefaultUser();
-		driver.get(endPoint + "/account");
+		DRIVER.get(endPoint + "/account");
 
 		// Find form
-		WebElement formElement = driver.findElement(By.name(ACCOUNT_UPDATE_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(ACCOUNT_UPDATE_FORM));
 
 		fillField(formElement, "email", "invalid_email");
 		formElement = submitFormExpectError(formElement, "email", INVALID_ADDRESS);
@@ -449,14 +463,14 @@ public class SeleniumIT extends AbstractIT {
 
 		loginDefaultUser();
 
-		driver.get(endPoint + "/account/password");
+		DRIVER.get(endPoint + "/account/password");
 		updateUserPassword(oldPassword, newPassword);
 
-		assertThat(driver.getTitle()).isEqualTo("Sign In - WMarket");
+		assertThat(DRIVER.getTitle()).isEqualTo("Sign In - WMarket");
 		verifyAlertContent("Your password was changed. Please sign in again.");
 
 		loginUser(email, newPassword);
-		assertThat(driver.findElement(By.id("toggle-right-sidebar")).getText()).isEqualTo(displayName);
+		assertThat(DRIVER.findElement(By.id("toggle-right-sidebar")).getText()).isEqualTo(displayName);
 	}
 
 	@Test
@@ -468,8 +482,8 @@ public class SeleniumIT extends AbstractIT {
 
 		clickOnSettingPanelItem("Settings");
 
-		driver.findElement(By.linkText("Delete account")).click();
-		assertThat(driver.getTitle()).isEqualTo("Sign In - WMarket");
+		DRIVER.findElement(By.linkText("Delete account")).click();
+		assertThat(DRIVER.getTitle()).isEqualTo("Sign In - WMarket");
 		verifyAlertContent("Your account was deleted successfully.");
 
 		loginUserExpectError(email, password);
@@ -484,17 +498,17 @@ public class SeleniumIT extends AbstractIT {
 
 		clickOnOperationPanelItem("Register a new store");
 		registerStore(displayName, url);
-		assertThat(driver.getTitle()).isEqualTo(displayName + " - Offerings - WMarket");
+		assertThat(DRIVER.getTitle()).isEqualTo(displayName + " - Offerings - WMarket");
 	}
 
 	@Test
 	public void should_DisplayErrorMessage_When_StoreCreateFormIsSubmitted_And_DisplayNameIsInvalid() {
 
 		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
+		DRIVER.get(endPoint + "/stores/register");
 
 		// Find form
-		WebElement formElement = driver.findElement(By.name(STORE_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(STORE_FORM));
 
 		formElement = submitFormExpectError(formElement, "displayName", REQUIRED_FIELD);
 	}
@@ -504,9 +518,9 @@ public class SeleniumIT extends AbstractIT {
 		String displayName 	= "FIWARE Store";
 
 		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
+		DRIVER.get(endPoint + "/stores/register");
 
-		WebElement formElement = driver.findElement(By.name(STORE_FORM));
+		WebElement formElement = DRIVER.findElement(By.name(STORE_FORM));
 		fillField(formElement, "displayName", displayName);
 
 		formElement = submitFormExpectError(formElement, "url", REQUIRED_FIELD);
@@ -524,7 +538,7 @@ public class SeleniumIT extends AbstractIT {
 		String imagePath	= image.getAbsolutePath();
 
 		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
+		DRIVER.get(endPoint + "/stores/register");
 
 		registerStore(displayName, url, imagePath);
 		assertThat(existsElement(By.xpath("//img[contains(@src, '/WMarket/media/store/fiware-store.png')]"))).isTrue();
@@ -540,7 +554,7 @@ public class SeleniumIT extends AbstractIT {
 		clickOnOperationPanelItem("Register a new store");
 		registerStore(displayName, url);
 
-		driver.findElement(By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/about')]")).click();
+		DRIVER.findElement(By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/about')]")).click();
 
 		displayName = "FIWARE New Store";
 		updateStoreDisplayName(displayName);
@@ -557,7 +571,7 @@ public class SeleniumIT extends AbstractIT {
 		clickOnOperationPanelItem("Register a new store");
 		registerStore(displayName, url);
 
-		driver.findElement(By.xpath("//a[contains(@href, 'javascript:deleteStore()')]")).click();
+		DRIVER.findElement(By.xpath("//a[contains(@href, 'javascript:deleteStore()')]")).click();
 		verifyAlertContent("The store '" + displayName + "' was deleted successfully.");
 	}
 
@@ -566,8 +580,8 @@ public class SeleniumIT extends AbstractIT {
 		loginDefaultUser();
 
 		clickOnOperationPanelItem("Upload a new description");
-		driver.findElement(By.linkText("register a store")).click();
-		assertThat(driver.getTitle()).isEqualTo("New Store - WMarket");
+		DRIVER.findElement(By.linkText("register a store")).click();
+		assertThat(DRIVER.getTitle()).isEqualTo("New Store - WMarket");
 	}
 
 	@Test
@@ -576,13 +590,13 @@ public class SeleniumIT extends AbstractIT {
 		String url			= "http://store.fiware.es";
 
 		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
+		DRIVER.get(endPoint + "/stores/register");
 		registerStore(displayName, url);
 
-		driver.get(endPoint + "/descriptions/register");
+		DRIVER.get(endPoint + "/descriptions/register");
 
 		registerDescription("New description", defaultUSDLPath);
-		assertThat(driver.getTitle()).isEqualTo(displayName + " - Offerings - WMarket");
+		assertThat(DRIVER.getTitle()).isEqualTo(displayName + " - Offerings - WMarket");
 		verifyAlertContent("The description 'New description' was uploaded successfully.");
 	}
 
@@ -592,14 +606,14 @@ public class SeleniumIT extends AbstractIT {
 		String url			= "http://store.fiware.es";
 
 		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
+		DRIVER.get(endPoint + "/stores/register");
 		registerStore(displayName, url);
 
-		driver.get(endPoint + "/descriptions/register");
+		DRIVER.get(endPoint + "/descriptions/register");
 
 		registerDescription("Test description", defaultUSDLPath);
 		clickOnOperationPanelItem("My descriptions");
-		driver.findElement(
+		DRIVER.findElement(
 				By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/descriptions/test-description')]")).click();
 
 		String newDipslayName = "New description";
@@ -613,18 +627,18 @@ public class SeleniumIT extends AbstractIT {
 		String url			= "http://store.fiware.es";
 
 		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
+		DRIVER.get(endPoint + "/stores/register");
 		registerStore(displayName, url);
 
-		driver.get(endPoint + "/descriptions/register");
+		DRIVER.get(endPoint + "/descriptions/register");
 
 		String descriptionName = "Test description";
 		registerDescription(descriptionName, defaultUSDLPath);
 		clickOnOperationPanelItem("My descriptions");
-		driver.findElement(
+		DRIVER.findElement(
 				By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/descriptions/test-description')]")).click();
 
-		driver.findElement(By.xpath("//a[contains(@href, 'javascript:deleteDescription()')]")).click();
+		DRIVER.findElement(By.xpath("//a[contains(@href, 'javascript:deleteDescription()')]")).click();
 		verifyAlertContent("The description '" + descriptionName + "' was deleted successfully.");
 	}
 
@@ -634,14 +648,14 @@ public class SeleniumIT extends AbstractIT {
 		String url			= "http://store.fiware.es";
 
 		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
+		DRIVER.get(endPoint + "/stores/register");
 		registerStore(displayName, url);
 
-		driver.get(endPoint + "/descriptions/register");
+		DRIVER.get(endPoint + "/descriptions/register");
 
 		registerDescription("New description", defaultUSDLPath);
-		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
-		assertThat(driver.getTitle()).isEqualTo("OrionStarterKit" + " - WMarket");
+		DRIVER.findElement(By.cssSelector(".offering-item .panel-title")).click();
+		assertThat(DRIVER.getTitle()).isEqualTo("OrionStarterKit" + " - WMarket");
 	}
 
 	@Test
@@ -650,15 +664,15 @@ public class SeleniumIT extends AbstractIT {
 		String url			= "http://store.fiware.es";
 
 		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
+		DRIVER.get(endPoint + "/stores/register");
 		registerStore(displayName, url);
 
-		driver.get(endPoint + "/descriptions/register");
+		DRIVER.get(endPoint + "/descriptions/register");
 
 		registerDescription("New description", defaultUSDLPath);
 
-		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
-		driver.findElement(By.linkText("Add bookmark")).click();
+		DRIVER.findElement(By.cssSelector(".offering-item .panel-title")).click();
+		DRIVER.findElement(By.linkText("Add bookmark")).click();
 		clickOnOperationPanelItem("My bookmarks");
 
 		assertThat(isElementPresent(By.linkText("OrionStarterKit"))).isTrue();
@@ -670,19 +684,19 @@ public class SeleniumIT extends AbstractIT {
 		String url = "http://store.fiware.es";
 
 		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
+		DRIVER.get(endPoint + "/stores/register");
 		registerStore(displayName, url);
 
-		driver.get(endPoint + "/descriptions/register");
+		DRIVER.get(endPoint + "/descriptions/register");
 
 		registerDescription("New description", defaultUSDLPath);
 
-		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
-		driver.findElement(By.linkText("Add bookmark")).click();
+		DRIVER.findElement(By.cssSelector(".offering-item .panel-title")).click();
+		DRIVER.findElement(By.linkText("Add bookmark")).click();
 		clickOnOperationPanelItem("My bookmarks");
 
-		driver.findElement(By.linkText("OrionStarterKit")).click();
-		driver.findElement(By.linkText("Remove bookmark")).click();
+		DRIVER.findElement(By.linkText("OrionStarterKit")).click();
+		DRIVER.findElement(By.linkText("Remove bookmark")).click();
 
 		clickOnOperationPanelItem("My bookmarks");
 		assertThat(!isElementPresent(By.linkText("OrionStarterKit"))).isTrue();
