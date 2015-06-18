@@ -513,13 +513,6 @@ public class StoreServiceIT extends AbstractIT {
 		for (int i = 0; i < STORES_CREATED; i++) {
 			createStore(USER_NAME, PASSWORD, String.format(displayNamePattern, i), 
 					String.format(urlPattern, i), null, null);
-			
-			// Ensure order
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-			}
 		}
 				
 		// Get some stores
@@ -527,6 +520,8 @@ public class StoreServiceIT extends AbstractIT {
 		Response response = client.target(endPoint + "/api/v2/store/")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
+				.queryParam("orderBy", "name")	// Order by name
+				.queryParam("desc", false)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
@@ -537,7 +532,7 @@ public class StoreServiceIT extends AbstractIT {
 		Stores stores = response.readEntity(Stores.class);
 		assertThat(stores.getStores().size()).isEqualTo(expectedElements);
 		
-		// Users are supposed to be returned in order
+		// Stores are supposed to be returned in order
 		for (int i = offset; i < offset + expectedElements; i++) {
 			assertThat(stores.getStores().get(i - offset).getDisplayName())
 					.isEqualTo(String.format(displayNamePattern, i));
@@ -811,6 +806,41 @@ public class StoreServiceIT extends AbstractIT {
 		// Only one store should be returned
 		Stores stores = getAllStoresRes.readEntity(Stores.class);
 		assertThat(stores.getStores()).hasSize(1);
+	}
+	
+	@Test
+	public void testGetStoresOrderedByScore() {
 		
+		// storesNames.length must be 5 at the most
+		String[] storeNames = new String[]{"AStore", "BStore", "CStore", "DStore", "EStore"};
+		int nStores = storeNames.length;
+		
+		for (int i = 0; i < storeNames.length; i++) {
+			String storeUrl = "http://store" + i + ".com";
+			
+			// Ensure that name order is opposite to score order
+			// AStore -> 0, BStore -> 1,...
+			createStoreAndRating(storeNames[i], storeUrl, i, "");
+		}
+		
+		// Get some stores
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/store/")
+				.queryParam("orderBy", "averageScore")	// Order by average score
+				.queryParam("desc", true)				// Descending
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		// Check the response
+		assertThat(response.getStatus()).isEqualTo(200);
+		Stores stores = response.readEntity(Stores.class);
+		assertThat(stores.getStores().size()).isEqualTo(nStores);
+		
+		// Users are supposed to be returned in order
+		for (int i = 0; i < stores.getStores().size(); i++) {
+			Store store = stores.getStores().get(i);
+			assertThat(store.getDisplayName()).isEqualTo(storeNames[nStores - i - 1]);
+		}
 	}
 }
