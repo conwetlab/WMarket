@@ -35,17 +35,17 @@ package org.fiware.apps.marketplace.model.validators;
 import static org.assertj.core.api.Assertions.*;
 
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
 import org.junit.Test;
 
-public class RatingValidatorTest {
+public class ReviewValidatorTest {
 
-	private RatingValidator ratingValidator = new RatingValidator();
+	private ReviewValidator reviewValidator = new ReviewValidator();
 	
 	private void testScore(int score) throws ValidationException {
-		Rating rating = new Rating();
-		rating.setScore(score);		
-		ratingValidator.validateRating(rating);
+		Review review = new Review();
+		review.setScore(score);		
+		reviewValidator.validateReview(review);
 	}
 
 	private void testInvalidScore(int score) {
@@ -85,13 +85,13 @@ public class RatingValidatorTest {
 	@Test
 	public void testInvalidComment() throws ValidationException {
 		try {
-			Rating rating = new Rating();
-			rating.setScore(0);
-			rating.setComment("12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
+			Review review = new Review();
+			review.setScore(0);
+			review.setComment("12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 					"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
 					"12345678901234567890123456789012345678901234567890123456789012345678901234567890");
 
-			ratingValidator.validateRating(rating);
+			reviewValidator.validateReview(review);
 		} catch (ValidationException ex) {
 			assertThat(ex.getFieldName()).isEqualTo("comment");
 			assertThat(ex.getMessage()).isEqualTo("This field must not exceed 200 chars.");

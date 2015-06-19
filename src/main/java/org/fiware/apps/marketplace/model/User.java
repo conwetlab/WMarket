@@ -79,7 +79,7 @@ public class User {
 	private List<Description> descriptionsCreated;
 	private List<Description> descriptionsModified;
 	private List<Offering> bookmarks;
-	private List<Rating> ratings;
+	private List<Review> reviews;
 		
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -225,12 +225,12 @@ public class User {
 		
 	@XmlTransient
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	public List<Rating> getRatings() {
-		return ratings;
+	public List<Review> getReviews() {
+		return reviews;
 	}
 
-	public void setRatings(List<Rating> ratings) {
-		this.ratings = ratings;
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
 	}
 
 	@Override

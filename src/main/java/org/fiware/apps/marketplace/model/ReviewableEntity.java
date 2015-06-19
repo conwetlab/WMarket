@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.security.auth;
+package org.fiware.apps.marketplace.model;
 
 /*
  * #%L
@@ -32,16 +32,64 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
-import org.fiware.apps.marketplace.model.Rating;
-import org.fiware.apps.marketplace.model.User;
-import org.springframework.stereotype.Service;
+import static javax.persistence.GenerationType.IDENTITY;
 
-@Service("ratingAuth")
-public class RatingAuth extends AbstractAuth<Rating>{
+import java.util.List;
 
-	@Override
-	protected User getEntityOwner(Rating rating) {
-		return rating.getUser();
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+@Entity
+@Table(name = "reviewable_entity")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class ReviewableEntity {
+	
+	private Integer id;
+	
+	// Reviews
+	private List<Review> reviews;
+	private double averageScore = 0.0;		// Default value
+	
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	@XmlTransient
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
+	@XmlTransient
+	@OneToMany(mappedBy = "reviewableEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
+
+	@XmlElement
+	@Column(name = "averageScore")
+	public double getAverageScore() {
+		return averageScore;
+	}
+
+	public void setAverageScore(double averageScore) {
+		this.averageScore = averageScore;
+	}
+
 }

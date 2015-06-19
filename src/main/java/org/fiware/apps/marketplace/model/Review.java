@@ -54,14 +54,14 @@ import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
-@Table(name = "ratings")
-@XmlRootElement(name = "rating")
+@Table(name = "reviews")
+@XmlRootElement(name = "review")
 @IgnoreMediaTypes("application/*+json")
-public class Rating {
+public class Review {
 		
 	private Integer id;
 	private User user;
-	private RateableEntity ratingEntity;
+	private ReviewableEntity reviewableEntity;
 	private int score;
 	private String comment;
 	private Date date;
@@ -93,12 +93,12 @@ public class Rating {
 	@XmlTransient
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "entity", nullable=false)
-	public RateableEntity getRatingEntity() {
-		return ratingEntity;
+	public ReviewableEntity getReviewableEntity() {
+		return reviewableEntity;
 	}
 
-	public void setRatingEntity(RateableEntity ratingEntity) {
-		this.ratingEntity = ratingEntity;
+	public void setReviewableEntity(ReviewableEntity reviewableEntity) {
+		this.reviewableEntity = reviewableEntity;
 	}
 
 	@XmlElement
@@ -155,8 +155,8 @@ public class Rating {
 			return true;
 		}
 		
-		if (obj instanceof Rating) {
-			Rating other = (Rating) obj;
+		if (obj instanceof Review) {
+			Review other = (Review) obj;
 			
 			if (this.id == other.id) {
 				return true;

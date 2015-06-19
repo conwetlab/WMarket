@@ -4,6 +4,7 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
  * #%L
  * FiwareMarketplace
  * %%
+ * Copyright (C) 2012 SAP
  * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
@@ -45,31 +46,35 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
-import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.Rating;
-import org.fiware.apps.marketplace.model.Ratings;
+import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.Reviews;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Path("/api/v2/store/{storeName}/rating")
-public class StoreRatingService {
+@Path("/api/v2/store/{storeName}/description/{descriptionName}/offering/{offeringName}/review")
+public class OfferingReviewService {
 	
-	@Autowired private StoreBo storeBo;
+	@Autowired private OfferingBo offeringBo;
 	
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(
-			LoggerFactory.getLogger(StoreRatingService.class), "");
+			LoggerFactory.getLogger(OfferingReviewService.class), "");
 	
 	@POST
-	public Response createRating(
+	public Response createReview(
 			@Context UriInfo uri,
 			@PathParam("storeName") String storeName, 
-			Rating rating) {
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName,
+			Review review) {
 		
 		Response response;
 		
@@ -77,19 +82,19 @@ public class StoreRatingService {
 			
 			// When the object is saved in the database, the ID is automatically set
 			// so we can use it.
-			storeBo.createRating(storeName, rating);
+			offeringBo.createReview(storeName, descriptionName, offeringName, review);
 			
 			// Generate the URI and return CREATED
 			URI newURI = UriBuilder
 					.fromUri(uri.getPath())
-					.path(new Integer(rating.getId()).toString())
+					.path(new Integer(review.getId()).toString())
 					.build();
 			
 			response = Response.created(newURI).build();
 			
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
-		} catch (StoreNotFoundException ex) {
+		} catch (OfferingNotFoundException | StoreNotFoundException | DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.validationErrorResponse(ex);
@@ -102,11 +107,13 @@ public class StoreRatingService {
 	}
 	
 	@POST
-	@Path("{ratingId}")
-	public Response updateRating(
+	@Path("{reviewId}")
+	public Response updateReview(
 			@PathParam("storeName") String storeName, 
-			@PathParam("ratingId") int ratingId,
-			Rating rating) {
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName,
+			@PathParam("reviewId") int reviewId,
+			Review review) {
 		
 		Response response;
 		
@@ -114,13 +121,14 @@ public class StoreRatingService {
 			
 			// When the object is saved in the database, the ID is automatically set
 			// so we can use it.
-			storeBo.updateRating(storeName, ratingId, rating);
+			offeringBo.updateReview(storeName, descriptionName, offeringName, reviewId, review);
 			
 			response = Response.ok().build();
 			
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
-		} catch (StoreNotFoundException | RatingNotFoundException ex) {
+		} catch (OfferingNotFoundException | StoreNotFoundException |
+				DescriptionNotFoundException | ReviewNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (ValidationException ex) {
 			response = ERROR_UTILS.validationErrorResponse(ex);
@@ -132,16 +140,19 @@ public class StoreRatingService {
 	}
 	
 	@GET
-	public Response getRatings(
-			@PathParam("storeName") String storeName) {
+	public Response getReviews(
+			@PathParam("storeName") String storeName, 
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName) {
 		
 		Response response;
 		
 		try {
-			response = Response.ok().entity(new Ratings(storeBo.getRatings(storeName))).build();
+			response = Response.ok().entity(new Reviews(offeringBo.getReviews(
+					storeName, descriptionName, offeringName))).build();
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
-		} catch (StoreNotFoundException ex) {
+		} catch (OfferingNotFoundException | StoreNotFoundException | DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
@@ -152,47 +163,54 @@ public class StoreRatingService {
 	}
 	
 	@GET
-	@Path("{ratingId}")
-	public Response getRating(
+	@Path("{reviewId}")
+	public Response getReview(
 			@PathParam("storeName") String storeName, 
-			@PathParam("ratingId") int ratingId) {
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName,
+			@PathParam("reviewId") int reviewId) {
 		
 		Response response;
 		
 		try {
-			response = Response.ok().entity(storeBo.getRating(storeName, ratingId)).build();
+			response = Response.ok().entity(offeringBo.getReview(
+					storeName, descriptionName, offeringName, reviewId)).build();
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
-		} catch (StoreNotFoundException | RatingNotFoundException ex) {
+		} catch (OfferingNotFoundException | StoreNotFoundException |
+				DescriptionNotFoundException | ReviewNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
-		} 
+		}
 		
 		return response;
 	}
 	
 	@DELETE
-	@Path("{ratingId}")
-	public Response deleteRating(			
+	@Path("{reviewId}")
+	public Response deleteReview(			
 			@PathParam("storeName") String storeName, 
-			@PathParam("ratingId") int ratingId) {
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName,
+			@PathParam("reviewId") int reviewId) {
 
 		Response response;
 		
 		try {
-			storeBo.deleteRating(storeName, ratingId);
+			offeringBo.deleteReview(storeName, descriptionName, offeringName, reviewId);
 			response = Response.status(Status.NO_CONTENT).build();	
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
-		} catch (StoreNotFoundException | RatingNotFoundException ex) {
+		} catch (OfferingNotFoundException | StoreNotFoundException |
+				DescriptionNotFoundException | ReviewNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
 		} 
 		
 		return response;
+		
 	}
-
 
 }

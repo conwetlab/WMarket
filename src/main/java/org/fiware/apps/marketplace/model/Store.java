@@ -61,7 +61,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @Table(name = "stores")
 @XmlRootElement(name = "store")
 @IgnoreMediaTypes("application/*+json")
-public class Store extends RateableEntity {
+public class Store extends ReviewableEntity {
 	
 	private String url;
 	private String displayName;

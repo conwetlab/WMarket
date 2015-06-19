@@ -1,13 +1,4 @@
-package org.fiware.apps.marketplace.model;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
+package org.fiware.apps.marketplace.bo;
 
 /*
  * #%L
@@ -41,29 +32,25 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
  * #L%
  */
 
-@XmlRootElement(name = "ratings")
-@IgnoreMediaTypes("application/*+json")
-public class Ratings {
-	
-    private List<Rating> ratings = null;
-    
-    public Ratings() {
-    	this.setRatings(new ArrayList<Rating>());
-    }
-    
-    public Ratings(List<Rating> ratings) {
-    	this.setRatings(ratings);
-    }
- 
-    @XmlElement(name = "rating")
-    @JsonProperty("ratings")
-    public List<Rating> getRatings() {
-        return this.ratings;
-    }
- 
-    public void setRatings(List<Rating> ratings) {
-    	this.ratings = ratings;
-    }
+import java.util.List;
 
+import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
+import org.fiware.apps.marketplace.model.ReviewableEntity;
+import org.fiware.apps.marketplace.model.Review;
+
+
+public interface ReviewBo {
+	
+	public void createReview(ReviewableEntity entity, Review newReview) 
+			throws NotAuthorizedException, ValidationException;
+	public void updateReview(ReviewableEntity entity, int reviewId, Review updatedReview) 
+			throws ReviewNotFoundException, NotAuthorizedException, ValidationException;
+	public List<Review> getReviews(ReviewableEntity entity) throws NotAuthorizedException;
+	public Review getReview(ReviewableEntity entity, int reviewId) 
+			throws NotAuthorizedException, ReviewNotFoundException;
+	public void deleteReview(ReviewableEntity entity, int reviewId) throws ReviewNotFoundException, 
+			NotAuthorizedException;
 
 }

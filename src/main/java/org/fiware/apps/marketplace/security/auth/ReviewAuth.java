@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.security.auth;
 
 /*
  * #%L
@@ -32,25 +32,16 @@ package org.fiware.apps.marketplace.bo;
  * #L%
  */
 
-import java.util.List;
+import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.User;
+import org.springframework.stereotype.Service;
 
-import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
-import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.RateableEntity;
-import org.fiware.apps.marketplace.model.Rating;
+@Service("ratingAuth")
+public class ReviewAuth extends AbstractAuth<Review>{
 
-
-public interface RatingBo {
+	@Override
+	protected User getEntityOwner(Review rating) {
+		return rating.getUser();
+	}
 	
-	public void createRating(RateableEntity entity, Rating newRating) 
-			throws NotAuthorizedException, ValidationException;
-	public void updateRating(RateableEntity entity, int ratingId, Rating updatedRating) 
-			throws RatingNotFoundException, NotAuthorizedException, ValidationException;
-	public List<Rating> getRatings(RateableEntity entity) throws NotAuthorizedException;
-	public Rating getRating(RateableEntity entity, int ratingId) 
-			throws NotAuthorizedException, RatingNotFoundException;
-	public void deleteRating(RateableEntity entity, int ratingId) throws RatingNotFoundException, 
-			NotAuthorizedException;
-
 }

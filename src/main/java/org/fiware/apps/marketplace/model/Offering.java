@@ -61,7 +61,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @Table(name = "offerings", uniqueConstraints = { @UniqueConstraint(columnNames = { "described_in", "uri" }) })
 @XmlRootElement(name = "offering")
 @IgnoreMediaTypes("application/*+json")
-public class Offering extends RateableEntity {
+public class Offering extends ReviewableEntity {
 
 	private String name;
 	private String displayName;

@@ -32,11 +32,11 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
-public class RatingNotFoundException extends Exception {
+public class ReviewNotFoundException extends Exception {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public RatingNotFoundException(String message) {
+	public ReviewNotFoundException(String message) {
 		super(message);
 	}
 

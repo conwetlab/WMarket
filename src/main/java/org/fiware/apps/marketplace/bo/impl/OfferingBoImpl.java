@@ -36,20 +36,20 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.OfferingBo;
-import org.fiware.apps.marketplace.bo.RatingBo;
+import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
@@ -65,7 +65,7 @@ public class OfferingBoImpl implements OfferingBo {
 	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
-	@Autowired private RatingBo ratingBo;
+	@Autowired private ReviewBo reviewBo;
 
 	@Override
 	@Transactional(readOnly = false)
@@ -271,34 +271,34 @@ public class OfferingBoImpl implements OfferingBo {
 
 	@Override
 	@Transactional
-	public void createRating(String storeName, String descriptionName,
-			String offeringName, Rating rating)
+	public void createReview(String storeName, String descriptionName,
+			String offeringName, Review review)
 			throws NotAuthorizedException, OfferingNotFoundException,
 			StoreNotFoundException, DescriptionNotFoundException, ValidationException {
 
 		// Exception is thrown if the offering, the store or the description is not found
 		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
-		ratingBo.createRating(offering, rating);
+		reviewBo.createReview(offering, review);
 	}
 
 	@Override
 	@Transactional
-	public void updateRating(String storeName, String descriptionName,
-			String offeringName, int ratingId, Rating rating)
+	public void updateReview(String storeName, String descriptionName,
+			String offeringName, int reviewId, Review review)
 			throws NotAuthorizedException, OfferingNotFoundException,
 			StoreNotFoundException, DescriptionNotFoundException,
-			RatingNotFoundException, ValidationException {
+			ReviewNotFoundException, ValidationException {
 		
 		// Exception is thrown if the offering, the store or the description is not found
 		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
-		ratingBo.updateRating(offering, ratingId, rating);
+		reviewBo.updateReview(offering, reviewId, review);
 	}
 
 	@Override
 	@Transactional
-	public List<Rating> getRatings(String storeName, String descriptionName,
+	public List<Review> getReviews(String storeName, String descriptionName,
 			String offeringName) throws NotAuthorizedException,
 			OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException {
@@ -306,33 +306,33 @@ public class OfferingBoImpl implements OfferingBo {
 		// Exception is thrown if the offering, the store or the description is not found
 		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
-		return ratingBo.getRatings(offering);
+		return reviewBo.getReviews(offering);
 	}
 
 	@Override
 	@Transactional
-	public Rating getRating(String storeName, String descriptionName,
-			String offeringName, int ratingId) throws NotAuthorizedException,
+	public Review getReview(String storeName, String descriptionName,
+			String offeringName, int reviewId) throws NotAuthorizedException,
 			OfferingNotFoundException, StoreNotFoundException,
-			DescriptionNotFoundException, RatingNotFoundException {
+			DescriptionNotFoundException, ReviewNotFoundException {
 
 		// Exception is thrown if the offering, the store or the description is not found
 		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
-		return ratingBo.getRating(offering, ratingId);
+		return reviewBo.getReview(offering, reviewId);
 	}
 
 	@Override
 	@Transactional
-	public void deleteRating(String storeName, String descriptionName,
-			String offeringName, int ratingId) throws NotAuthorizedException,
+	public void deleteReview(String storeName, String descriptionName,
+			String offeringName, int reviewId) throws NotAuthorizedException,
 			OfferingNotFoundException, StoreNotFoundException,
-			DescriptionNotFoundException, RatingNotFoundException {
+			DescriptionNotFoundException, ReviewNotFoundException {
 		
 		// Exception is thrown if the offering, the store or the description is not found
 		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
-		ratingBo.deleteRating(offering, ratingId);
+		reviewBo.deleteReview(offering, reviewId);
 		
 	}
 	

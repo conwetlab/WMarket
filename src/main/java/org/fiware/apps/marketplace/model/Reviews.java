@@ -1,8 +1,13 @@
-package org.fiware.apps.marketplace.model.validators;
+package org.fiware.apps.marketplace.model;
 
-import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.Rating;
-import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 /*
  * #%L
@@ -36,30 +41,29 @@ import org.springframework.stereotype.Service;
  * #L%
  */
 
-@Service("ratingValidator")
-public class RatingValidator {
+@XmlRootElement(name = "reviews")
+@IgnoreMediaTypes("application/*+json")
+public class Reviews {
 	
-	private static BasicValidator basicValidator = BasicValidator.getInstance();
-	
-	/**
-	 * Public method to validate an offering rating
-	 * @param rating The rating to be validated
-	 * @throws ValidationException If the rating is not valid (score is lower than zero or higher than 5 // comment
-	 * length is higher than 300)
-	 */
-	public void validateRating(Rating rating) throws ValidationException {
-		
-		int score = rating.getScore();
-		
-		if (score < 0 || score > 5) {
-			throw new ValidationException("score", "Score should be an integer between 0 and 5.");
-		}
-		
-		if (rating.getComment() != null) {
-			basicValidator.validateComment(rating.getComment());
-		}
-		
-		
-	}
+    private List<Review> reviews = null;
+    
+    public Reviews() {
+    	this.setReviews(new ArrayList<Review>());
+    }
+    
+    public Reviews(List<Review> reviews) {
+    	this.setReviews(reviews);
+    }
+ 
+    @XmlElement(name = "review")
+    @JsonProperty("reviews")
+    public List<Review> getReviews() {
+        return this.reviews;
+    }
+ 
+    public void setReviews(List<Review> reviews) {
+    	this.reviews = reviews;
+    }
+
 
 }

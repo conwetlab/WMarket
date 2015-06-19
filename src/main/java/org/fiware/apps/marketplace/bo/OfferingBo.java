@@ -38,11 +38,11 @@ import java.util.List;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
 
 public interface OfferingBo {
 	
@@ -78,20 +78,20 @@ public interface OfferingBo {
 	public List<Offering> getAllBookmarkedOfferings() throws NotAuthorizedException;
 	public List<Offering> getBookmarkedOfferingsPage(int offset, int max) throws NotAuthorizedException;
 	
-	// Rating
-	public void createRating(String storeName, String descriptionName, String offeringName, Rating rating) 
+	// Review
+	public void createReview(String storeName, String descriptionName, String offeringName, Review review) 
 			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException, ValidationException;
-	public void updateRating(String storeName, String descriptionName, String offeringName, int ratingId, 
-			Rating rating) throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
-			DescriptionNotFoundException, RatingNotFoundException, ValidationException;	
-	public List<Rating> getRatings(String storeName, String descriptionName, String offeringName) throws 
+	public void updateReview(String storeName, String descriptionName, String offeringName, int reviewId, 
+			Review review) throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException, ReviewNotFoundException, ValidationException;	
+	public List<Review> getReviews(String storeName, String descriptionName, String offeringName) throws 
 			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException;
-	public Rating getRating(String storeName, String descriptionName, String offeringName, int ratingId) throws 
+	public Review getReview(String storeName, String descriptionName, String offeringName, int reviewId) throws 
 			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException,
-			RatingNotFoundException;
-	public void deleteRating(String storeName, String descriptionName, String offeringName, int ratingId) 
+			ReviewNotFoundException;
+	public void deleteReview(String storeName, String descriptionName, String offeringName, int reviewId) 
 			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
-			DescriptionNotFoundException, RatingNotFoundException;	
+			DescriptionNotFoundException, ReviewNotFoundException;	
 
 }

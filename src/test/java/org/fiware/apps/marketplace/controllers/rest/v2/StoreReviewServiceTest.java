@@ -48,13 +48,13 @@ import javax.ws.rs.core.UriInfo;
 
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ErrorType;
-import org.fiware.apps.marketplace.model.Rating;
-import org.fiware.apps.marketplace.model.Ratings;
+import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.Reviews;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -63,16 +63,16 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class StoreRatingServiceTest {
+public class StoreReviewServiceTest {
 	
 	private UriInfo uri;
 
 	@Mock private StoreBo storeBoMock;
-	@InjectMocks private StoreRatingService ratingService;
+	@InjectMocks private StoreReviewService reviewService;
 	
-	private static final String PATH = "/api/v2/store/storeName/rating";
+	private static final String PATH = "/api/v2/store/storeName/review";
 	private static final String STORE_NAME = "store";
-	private static final int RATING_ID = 9;
+	private static final int REVIEW_ID = 9;
 	
 	@Before 
 	public void setUp() throws UserNotFoundException {
@@ -88,18 +88,18 @@ public class StoreRatingServiceTest {
 	//////////////////////////////////////// CREATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 
-	private void testCreateRatingException(Exception ex, int statusCode, ErrorType errorType, 
+	private void testCreateReviewException(Exception ex, int statusCode, ErrorType errorType, 
 			String message, String field) {
 
 		try {
 
-			Rating rating = new Rating();
+			Review review = new Review();
 
 			// Mocks
-			doThrow(ex).when(storeBoMock).createRating(STORE_NAME, rating);
+			doThrow(ex).when(storeBoMock).createReview(STORE_NAME, review);
 
 			// Actual call
-			Response res = ratingService.createRating(uri, STORE_NAME, rating);
+			Response res = reviewService.createReview(uri, STORE_NAME, review);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -109,44 +109,44 @@ public class StoreRatingServiceTest {
 	}
 
 	@Test
-	public void testCreateRatingNotAuthorized() {
+	public void testCreateReviewNotAuthorized() {
 		NotAuthorizedException ex = new NotAuthorizedException("rate offering");
-		testCreateRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+		testCreateReviewException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
 	}
 		
 	@Test
-	public void testCreateRatingStoreNotFound() {
+	public void testCreateReviewStoreNotFound() {
 		StoreNotFoundException ex = new StoreNotFoundException("store not found");
-		testCreateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+		testCreateReviewException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 		
 	@Test
-	public void testCreateRatingValidationException() {
+	public void testCreateReviewValidationException() {
 		String field = "score";
 		ValidationException ex = new ValidationException(field, "invalid");
-		testCreateRatingException(ex, 400, ErrorType.VALIDATION_ERROR, ex.getMessage(), field);
+		testCreateReviewException(ex, 400, ErrorType.VALIDATION_ERROR, ex.getMessage(), field);
 	}
 	
 	@Test
-	public void testCreateRating() throws Exception {
+	public void testCreateReview() throws Exception {
 		
-		Rating rating = new Rating();
+		Review review = new Review();
 		
 		// Mocks
 		doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
-				invocation.getArgumentAt(1, Rating.class).setId(RATING_ID);
+				invocation.getArgumentAt(1, Review.class).setId(REVIEW_ID);
 				return null;
 			}
-		}).when(storeBoMock).createRating(STORE_NAME, rating);
+		}).when(storeBoMock).createReview(STORE_NAME, review);
 		
 		// Actual call
-		Response res = ratingService.createRating(uri, STORE_NAME, rating);
+		Response res = reviewService.createReview(uri, STORE_NAME, review);
 		
 		// Check response and headers
 		assertThat(res.getStatus()).isEqualTo(201);
-		assertThat(res.getHeaders().get("Location").get(0).toString()).isEqualTo(PATH + "/" + RATING_ID);
+		assertThat(res.getHeaders().get("Location").get(0).toString()).isEqualTo(PATH + "/" + REVIEW_ID);
 	}
 	
 	
@@ -154,18 +154,18 @@ public class StoreRatingServiceTest {
 	//////////////////////////////////////// UPDATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testUpdateRatingException(Exception ex, int statusCode, ErrorType errorType, 
+	private void testUpdateReviewException(Exception ex, int statusCode, ErrorType errorType, 
 			String message, String field) {
 
 		try {
 
-			Rating rating = new Rating();
+			Review review = new Review();
 
 			// Mocks
-			doThrow(ex).when(storeBoMock).updateRating(STORE_NAME, RATING_ID, rating);
+			doThrow(ex).when(storeBoMock).updateReview(STORE_NAME, REVIEW_ID, review);
 
 			// Actual call
-			Response res = ratingService.updateRating(STORE_NAME, RATING_ID, rating);
+			Response res = reviewService.updateReview(STORE_NAME, REVIEW_ID, review);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -175,59 +175,59 @@ public class StoreRatingServiceTest {
 	}
 
 	@Test
-	public void testUpdateRatingNotAuthorized() {
-		NotAuthorizedException ex = new NotAuthorizedException("update offering rating");
-		testUpdateRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	public void testUpdateReviewNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("update offering review");
+		testUpdateReviewException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testUpdateRatingStoreNotFound() {
+	public void testUpdateReviewStoreNotFound() {
 		StoreNotFoundException ex = new StoreNotFoundException("store not found");
-		testUpdateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+		testUpdateReviewException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 		
 	@Test
-	public void testUpdateRatingRatingNotFound() {
-		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
-		testUpdateRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	public void testUpdateReviewReviewNotFound() {
+		ReviewNotFoundException ex = new ReviewNotFoundException("review not found");
+		testUpdateReviewException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testUpdateRatingValidationException() {
+	public void testUpdateReviewValidationException() {
 		String field = "score";
 		ValidationException ex = new ValidationException(field, "invalid");
-		testUpdateRatingException(ex, 400, ErrorType.VALIDATION_ERROR, ex.getMessage(), field);
+		testUpdateReviewException(ex, 400, ErrorType.VALIDATION_ERROR, ex.getMessage(), field);
 	}
 	
 	@Test
-	public void testUpdateRating() throws Exception {
+	public void testUpdateReview() throws Exception {
 		
-		Rating rating = new Rating();
+		Review review = new Review();
 		
 		// Actual call
-		Response res = ratingService.updateRating(STORE_NAME, RATING_ID, rating);
+		Response res = reviewService.updateReview(STORE_NAME, REVIEW_ID, review);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
 		
 		// Verify that storeBo has been properly called
-		verify(storeBoMock).updateRating(STORE_NAME, RATING_ID, rating);
+		verify(storeBoMock).updateReview(STORE_NAME, REVIEW_ID, review);
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////// GET RATINGS /////////////////////////////////////
+	///////////////////////////////////// GET REVIEWS /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testGetRatingsException(Exception ex, int statusCode, ErrorType errorType, 
+	private void testGetReviewsException(Exception ex, int statusCode, ErrorType errorType, 
 			String message, String field) {
 
 		try {
 			// Mocks
-			doThrow(ex).when(storeBoMock).getRatings(STORE_NAME);
+			doThrow(ex).when(storeBoMock).getReviews(STORE_NAME);
 			
 			// Actual call
-			Response res = ratingService.getRatings(STORE_NAME);
+			Response res = reviewService.getReviews(STORE_NAME);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -237,45 +237,45 @@ public class StoreRatingServiceTest {
 	}
 	
 	@Test
-	public void testGetRatingsNotAuthorized() {
-		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering ratings");
-		testGetRatingsException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	public void testGetReviewsNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering reviews");
+		testGetReviewsException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testGetRatingsStoreNotFound() {
+	public void testGetReviewsStoreNotFound() {
 		StoreNotFoundException ex = new StoreNotFoundException("store not found");
-		testGetRatingsException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+		testGetReviewsException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testGetRatings() throws Exception {
+	public void testGetReviews() throws Exception {
 				
 		// Actual call
 		@SuppressWarnings("unchecked")
-		List<Rating> ratings = mock(List.class); 
-		doReturn(ratings).when(storeBoMock).getRatings(STORE_NAME);
-		Response res = ratingService.getRatings(STORE_NAME);
+		List<Review> reviews = mock(List.class); 
+		doReturn(reviews).when(storeBoMock).getReviews(STORE_NAME);
+		Response res = reviewService.getReviews(STORE_NAME);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
-		assertThat(((Ratings) res.getEntity()).getRatings()).isEqualTo(ratings);
+		assertThat(((Reviews) res.getEntity()).getReviews()).isEqualTo(reviews);
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////// GET RATING /////////////////////////////////////
+	///////////////////////////////////// GET REVIEW //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testGetRatingException(Exception ex, int statusCode, ErrorType errorType, 
+	private void testGetReviewException(Exception ex, int statusCode, ErrorType errorType, 
 			String message, String field) {
 
 		try {			
 			// Mocks
-			doThrow(ex).when(storeBoMock).getRating(STORE_NAME, RATING_ID);
+			doThrow(ex).when(storeBoMock).getReview(STORE_NAME, REVIEW_ID);
 			
 			// Actual call
-			Response res = ratingService.getRating(STORE_NAME, RATING_ID);
+			Response res = reviewService.getReview(STORE_NAME, REVIEW_ID);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -285,49 +285,49 @@ public class StoreRatingServiceTest {
 	}
 	
 	@Test
-	public void testGetRatingNotAuthorized() {
-		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering ratings");
-		testGetRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	public void testGetReviewNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering reviews");
+		testGetReviewException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testGetRatingStoreNotFound() {
+	public void testGetReviewStoreNotFound() {
 		StoreNotFoundException ex = new StoreNotFoundException("store not found");
-		testGetRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+		testGetReviewException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testGetRatingRatingNotFound() {
-		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
-		testGetRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	public void testGetReviewReviewNotFound() {
+		ReviewNotFoundException ex = new ReviewNotFoundException("review not found");
+		testGetReviewException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testGetRating() throws Exception {
+	public void testGetReview() throws Exception {
 		// Actual call
-		Rating rating = mock(Rating.class); 
-		doReturn(rating).when(storeBoMock).getRating(STORE_NAME, RATING_ID);
-		Response res = ratingService.getRating(STORE_NAME, RATING_ID);
+		Review review = mock(Review.class); 
+		doReturn(review).when(storeBoMock).getReview(STORE_NAME, REVIEW_ID);
+		Response res = reviewService.getReview(STORE_NAME, REVIEW_ID);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
-		assertThat((Rating) res.getEntity()).isEqualTo(rating);
+		assertThat((Review) res.getEntity()).isEqualTo(review);
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////// DELETE RATING ////////////////////////////////////
+	//////////////////////////////////////// DELETE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testDeleteRatingException(Exception ex, int statusCode, ErrorType errorType, 
+	private void testDeleteReviewException(Exception ex, int statusCode, ErrorType errorType, 
 			String message, String field) {
 
 		try {			
 			// Mocks
-			doThrow(ex).when(storeBoMock).deleteRating(STORE_NAME, RATING_ID);
+			doThrow(ex).when(storeBoMock).deleteReview(STORE_NAME, REVIEW_ID);
 			
 			// Actual call
-			Response res = ratingService.deleteRating(STORE_NAME, RATING_ID);
+			Response res = reviewService.deleteReview(STORE_NAME, REVIEW_ID);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -337,33 +337,33 @@ public class StoreRatingServiceTest {
 	}
 	
 	@Test
-	public void testDeleteRatingNotAuthorized() {
-		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering ratings");
-		testDeleteRatingException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+	public void testDeleteReviewNotAuthorized() {
+		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering reviews");
+		testDeleteReviewException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testDeleteRatingStoreNotFound() {
+	public void testDeleteReviewStoreNotFound() {
 		StoreNotFoundException ex = new StoreNotFoundException("store not found");
-		testDeleteRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+		testDeleteReviewException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testDeleteRatingRatingNotFound() {
-		RatingNotFoundException ex = new RatingNotFoundException("rating not found");
-		testDeleteRatingException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+	public void testDeleteReviewReviewNotFound() {
+		ReviewNotFoundException ex = new ReviewNotFoundException("review not found");
+		testDeleteReviewException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
-	public void testDeleteRating() throws Exception {
+	public void testDeleteReview() throws Exception {
 		// Actual call
-		Response res = ratingService.deleteRating(STORE_NAME, RATING_ID);
+		Response res = reviewService.deleteReview(STORE_NAME, REVIEW_ID);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(204);
 		
 		// Verify that storeBoMock has been properly called
-		verify(storeBoMock).deleteRating(STORE_NAME, RATING_ID);
+		verify(storeBoMock).deleteReview(STORE_NAME, REVIEW_ID);
 	}
 
 }

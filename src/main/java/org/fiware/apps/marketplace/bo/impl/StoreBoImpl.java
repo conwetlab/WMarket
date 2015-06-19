@@ -41,17 +41,17 @@ import java.util.List;
 import javax.ws.rs.Path;
 
 import org.apache.commons.codec.binary.Base64;
-import org.fiware.apps.marketplace.bo.RatingBo;
+import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.controllers.MediaContentController;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
@@ -69,7 +69,7 @@ public class StoreBoImpl implements StoreBo{
 	@Autowired private StoreAuth storeAuth;
 	@Autowired private StoreValidator storeValidator;
 	@Autowired private UserBo userBo;
-	@Autowired private RatingBo ratingBo;
+	@Autowired private ReviewBo reviewBo;
 	
 	@Value("${media.folder}") private String mediaFolder;
 	
@@ -315,53 +315,53 @@ public class StoreBoImpl implements StoreBo{
 
 	@Override
 	@Transactional
-	public void createRating(String name, Rating rating)
+	public void createReview(String name, Review newReview)
 			throws NotAuthorizedException, StoreNotFoundException,
 			ValidationException {
 		
 		Store store = storeDao.findByName(name);
-		ratingBo.createRating(store, rating);
+		reviewBo.createReview(store, newReview);
 		
 	}
 
 	@Override
 	@Transactional
-	public void updateRating(String name, int ratingId, Rating rating)
+	public void updateReview(String name, int reviewId, Review updatedReview)
 			throws NotAuthorizedException, StoreNotFoundException,
-			RatingNotFoundException, ValidationException {
+			ReviewNotFoundException, ValidationException {
 
 		Store store = storeDao.findByName(name);
-		ratingBo.updateRating(store, ratingId, rating);
+		reviewBo.updateReview(store, reviewId, updatedReview);
 	}
 
 	@Override
 	@Transactional
-	public List<Rating> getRatings(String name) throws NotAuthorizedException,
+	public List<Review> getReviews(String name) throws NotAuthorizedException,
 			StoreNotFoundException {
 		
 		Store store = storeDao.findByName(name);
-		return ratingBo.getRatings(store);
+		return reviewBo.getReviews(store);
 		
 	}
 
 	@Override
 	@Transactional
-	public Rating getRating(String name, int ratingId)
+	public Review getReview(String name, int reviewId)
 			throws NotAuthorizedException, StoreNotFoundException,
-			RatingNotFoundException {
+			ReviewNotFoundException {
 
 		Store store = storeDao.findByName(name);
-		return ratingBo.getRating(store, ratingId);
+		return reviewBo.getReview(store, reviewId);
 
 	}
 
 	@Override
 	@Transactional
-	public void deleteRating(String name, int ratingId)
+	public void deleteReview(String name, int reviewId)
 			throws NotAuthorizedException, StoreNotFoundException,
-			RatingNotFoundException {
+			ReviewNotFoundException {
 
 		Store store = storeDao.findByName(name);
-		ratingBo.deleteRating(store, ratingId);
+		reviewBo.deleteReview(store, reviewId);
 	}
 }

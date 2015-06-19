@@ -35,51 +35,51 @@ package org.fiware.apps.marketplace.bo.impl;
 import java.util.Date;
 import java.util.List;
 
-import org.fiware.apps.marketplace.bo.RatingBo;
+import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.RateableEntity;
-import org.fiware.apps.marketplace.model.Rating;
-import org.fiware.apps.marketplace.model.validators.RatingValidator;
-import org.fiware.apps.marketplace.security.auth.RatingAuth;
+import org.fiware.apps.marketplace.model.ReviewableEntity;
+import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.validators.ReviewValidator;
+import org.fiware.apps.marketplace.security.auth.ReviewAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("ratingBo")
-public class RatingBoImpl implements RatingBo {
+@Service("reviewBo")
+public class ReviewBoImpl implements ReviewBo {
 	
 	@Autowired private UserBo userBo;
-	@Autowired private RatingValidator ratingValidator;
-	@Autowired private RatingAuth ratingAuth;
+	@Autowired private ReviewValidator reviewValidator;
+	@Autowired private ReviewAuth reviewAuth;
 	
-	private double calculateRatingAverage(RateableEntity entity) {
+	private double calculateReviewAverage(ReviewableEntity entity) {
 		double sum = 0;
-		List<Rating> ratings = entity.getRatings();
+		List<Review> reviews = entity.getReviews();
 		
-		for (Rating rating: ratings) {
-			sum += rating.getScore();
+		for (Review review: reviews) {
+			sum += review.getScore();
 		}
 		
 		// Cast is required. Otherwise, average will be an integer
-		// If the ratings list is empty, average score is zero. This should be controlled. Otherwise,
-		// the system will fail when the last rating is deleted.
-		return ratings.size() == 0 ? 0 : sum / (double) ratings.size();
+		// If the reviews list is empty, average score is zero. This should be controlled. Otherwise,
+		// the system will fail when the last review is deleted.
+		return reviews.size() == 0 ? 0 : sum / (double) reviews.size();
 		
 	}
 	
-	private Rating getRatingById(RateableEntity entity, int ratingId) throws RatingNotFoundException {
-		Rating tmpRating = new Rating();
-		tmpRating.setId(ratingId);
-		int bbddRatingIndex = entity.getRatings().indexOf(tmpRating);
+	private Review getReviewById(ReviewableEntity entity, int reviewId) throws ReviewNotFoundException {
+		Review tmpReview = new Review();
+		tmpReview.setId(reviewId);
+		int bbddReviewIndex = entity.getReviews().indexOf(tmpReview);
 		
-		if (bbddRatingIndex >= 0) {
-			return entity.getRatings().get(bbddRatingIndex);
+		if (bbddReviewIndex >= 0) {
+			return entity.getReviews().get(bbddReviewIndex);
 		} else {
-			throw new RatingNotFoundException(String.format("Rating %d not found in %s %s", ratingId, 
+			throw new ReviewNotFoundException(String.format("Review %d not found in %s %s", reviewId, 
 					entity.getClass().getSimpleName(), entity.toString()));
 		}
 		
@@ -87,32 +87,32 @@ public class RatingBoImpl implements RatingBo {
 	
 	@Override
 	@Transactional
-	public void createRating(RateableEntity entity, Rating newRating) 
+	public void createReview(ReviewableEntity entity, Review newReview) 
 			throws NotAuthorizedException, ValidationException {
 		
 		// Check if the user is allowed to rate the offering. An exception will be
 		// risen if the user is not allowed to do it.
-		if (!ratingAuth.canCreate(newRating)) {
+		if (!reviewAuth.canCreate(newReview)) {
 			// It is supposed not to happen
 			throw new NotAuthorizedException("rate " + entity.getClass().getSimpleName());
 		}
 		
-		// Validate rating (exception will be risen if the rating is not valid)
-		ratingValidator.validateRating(newRating);
+		// Validate review (exception will be risen if the review is not valid)
+		reviewValidator.validateReview(newReview);
 				
 		try {
-			// Set rating options
+			// Set review options
 			Date currentDate = new Date();
-			newRating.setDate(currentDate);
-			newRating.setLastModificationDate(currentDate);
-			newRating.setUser(userBo.getCurrentUser());
-			newRating.setRatingEntity(entity);
+			newReview.setDate(currentDate);
+			newReview.setLastModificationDate(currentDate);
+			newReview.setUser(userBo.getCurrentUser());
+			newReview.setReviewableEntity(entity);
 
-			// Insert rating
-			entity.getRatings().add(newRating);
+			// Insert review
+			entity.getReviews().add(newReview);
 			
 			// Calculate average score
-			entity.setAverageScore(calculateRatingAverage(entity));
+			entity.setAverageScore(calculateReviewAverage(entity));
 			
 			// The creating process is automatically done since this method is transactional
 		} catch (UserNotFoundException ex) {
@@ -122,78 +122,78 @@ public class RatingBoImpl implements RatingBo {
 
 	@Override
 	@Transactional
-	public void updateRating(RateableEntity entity, int ratingId, Rating updatedRating) 
-			throws RatingNotFoundException, NotAuthorizedException, ValidationException {
+	public void updateReview(ReviewableEntity entity, int reviewId, Review updatedReview) 
+			throws ReviewNotFoundException, NotAuthorizedException, ValidationException {
 		
-		Rating bbddRating = getRatingById(entity, ratingId);
+		Review bbddReview = getReviewById(entity, reviewId);
 		
 		// Check if the user is allowed to rate the offering. An exception will be
 		// risen if the user is not allowed to do it.
-		if (!ratingAuth.canUpdate(bbddRating)) {
-			throw new NotAuthorizedException(String.format("update rating %d in %s %s", ratingId,
+		if (!reviewAuth.canUpdate(bbddReview)) {
+			throw new NotAuthorizedException(String.format("update review %d in %s %s", reviewId,
 					entity.getClass().getSimpleName(), entity.toString()));
 		}
 		
-		// Validate rating (exception will be risen if the rating is not valid)
-		ratingValidator.validateRating(updatedRating);
+		// Validate review (exception will be risen if the review is not valid)
+		reviewValidator.validateReview(updatedReview);
 
-		// Update rating
-		bbddRating.setComment(updatedRating.getComment());
-		bbddRating.setScore(updatedRating.getScore());
-		bbddRating.setLastModificationDate(new Date());
+		// Update review
+		bbddReview.setComment(updatedReview.getComment());
+		bbddReview.setScore(updatedReview.getScore());
+		bbddReview.setLastModificationDate(new Date());
 		
 		// Calculate average score
-		entity.setAverageScore(calculateRatingAverage(entity));
+		entity.setAverageScore(calculateReviewAverage(entity));
 		
 		// The update process is automatically done since this method is transactional			
 	}
 
 	@Override
 	@Transactional
-	public List<Rating> getRatings(RateableEntity entity)
+	public List<Review> getReviews(ReviewableEntity entity)
 			throws NotAuthorizedException {
 		
-		// Raise exception is the user is not allowed to list the ratings
-		if (!ratingAuth.canList()) {
-			throw new NotAuthorizedException("get ratings");
+		// Raise exception is the user is not allowed to list the reviews
+		if (!reviewAuth.canList()) {
+			throw new NotAuthorizedException("get reviews");
 		}
 			
-		return entity.getRatings();
+		return entity.getReviews();
 	}
 	
 	@Override
 	@Transactional
-	public Rating getRating(RateableEntity entity, int ratingId) 
-			throws NotAuthorizedException, RatingNotFoundException {
+	public Review getReview(ReviewableEntity entity, int reviewId) 
+			throws NotAuthorizedException, ReviewNotFoundException {
 		
-		Rating rating = getRatingById(entity, ratingId);	
+		Review review = getReviewById(entity, reviewId);	
 		
-		// Raise exception is the user is not allowed to get the rating
-		if (!ratingAuth.canList()) {
-			throw new NotAuthorizedException(String.format("get rating %d from %s %s", ratingId, 
+		// Raise exception is the user is not allowed to get the review
+		if (!reviewAuth.canList()) {
+			throw new NotAuthorizedException(String.format("get review %d from %s %s", reviewId, 
 					entity.getClass().getSimpleName(), entity.toString()));
 		} 
 		
-		return rating;
+		return review;
 	}
 
 	@Override
 	@Transactional
-	public void deleteRating(RateableEntity entity, int ratingId)
-			throws RatingNotFoundException, NotAuthorizedException {
+	public void deleteReview(ReviewableEntity entity, int reviewId)
+			throws ReviewNotFoundException, NotAuthorizedException {
 		
-		Rating rating = getRatingById(entity, ratingId);
+		Review review = getReviewById(entity, reviewId);
 		
-		// Raise exception is the user is not allowed to delete the rating
-		if (!ratingAuth.canDelete(rating)) {
-			throw new NotAuthorizedException(String.format("delete rating %d from %s %s", ratingId, 
+		// Raise exception is the user is not allowed to delete the review
+		if (!reviewAuth.canDelete(review)) {
+			throw new NotAuthorizedException(String.format("delete review %d from %s %s", reviewId, 
 					entity.getClass().getSimpleName(), entity.toString()));
 		}
 			
-		entity.getRatings().remove(rating);
+		entity.getReviews().remove(review);
 			
 		// Calculate average score
-		entity.setAverageScore(calculateRatingAverage(entity));
+		entity.setAverageScore(calculateReviewAverage(entity));
 
 		// The deletion process is automatically done since this method is transactional		
 	}
