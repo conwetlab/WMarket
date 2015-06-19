@@ -38,9 +38,13 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.ReviewableEntity;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,12 +52,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+
 public class ReviewAuthTest {
 	
 	@Mock private UserBo userBoMock;
 	@InjectMocks private static ReviewAuth authHelper;
 	
-	@Before 
+	@Before
 	public void initMocks() {
 		MockitoAnnotations.initMocks(this);
 	}
@@ -67,19 +72,53 @@ public class ReviewAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// CREATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=UnsupportedOperationException.class) 
+	public void canCreateReviewBasicMethodNotSupported() {
+		authHelper.canCreate(new Review());
+	}
 
 	@Test
 	public void canCreateReview() throws UserNotFoundException {
 		Review review = new Review();
+		
+		// Mocking
+		ReviewableEntity entity = mock(ReviewableEntity.class);
+		List<Review> reviews = new ArrayList<>();
+		when(entity.getReviews()).thenReturn(reviews);
+		
 		when(userBoMock.getCurrentUser()).thenReturn(new User());
-		assertThat(authHelper.canCreate(review)).isTrue();
+		assertThat(authHelper.canCreate(entity, review)).isTrue();
 	}
 
 	@Test
-	public void canNotCreateReview() throws UserNotFoundException {
+	public void canNotCreateReviewUserNotFound() throws UserNotFoundException {
+		ReviewableEntity entity = mock(ReviewableEntity.class);
 		Review review = new Review();
 		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
-		assertThat(authHelper.canCreate(review)).isFalse();
+		assertThat(authHelper.canCreate(entity, review)).isFalse();
+	}
+	
+	@Test
+	public void canNotCreateReviewUserAlreadyReviewed() throws UserNotFoundException {
+		
+		Review review = new Review();
+		User user = new User();
+		user.setId(2);
+		
+		// The user has already reviewed the entity
+		List<Review> reviews = new ArrayList<>();
+		Review existingReview = new Review();
+		existingReview.setUser(user);
+		reviews.add(existingReview);
+		
+		// Set reviews
+		ReviewableEntity entity = mock(ReviewableEntity.class);
+		when(entity.getReviews()).thenReturn(reviews);
+		
+		when(userBoMock.getCurrentUser()).thenReturn(user);
+		assertThat(authHelper.canCreate(entity, review)).isFalse();
+		
 	}
 
 

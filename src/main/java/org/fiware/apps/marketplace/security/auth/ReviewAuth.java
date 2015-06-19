@@ -32,16 +32,51 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.ReviewableEntity;
 import org.fiware.apps.marketplace.model.User;
 import org.springframework.stereotype.Service;
 
 @Service("ratingAuth")
 public class ReviewAuth extends AbstractAuth<Review>{
-
+	
 	@Override
 	protected User getEntityOwner(Review rating) {
 		return rating.getUser();
+	}
+
+	@Override
+	public boolean canCreate(Review entity) {
+		// This method cannot be used
+		throw new UnsupportedOperationException();
+	}
+	
+	public boolean canCreate(ReviewableEntity entity, Review review) {
+		
+		boolean canCreate = false;
+		
+		try {
+			
+			// Check if the user has created another review for the same entity
+			Set<User> users = new HashSet<>();
+			
+			for (Review previousReviews: entity.getReviews()) {
+				users.add(previousReviews.getUser());
+			}
+			
+			if (!users.contains(getUserBo().getCurrentUser())) {
+				canCreate = true;
+			}
+			
+		} catch (UserNotFoundException ex) {
+			// Nothing to do...
+		}
+		
+		return canCreate;
 	}
 	
 }

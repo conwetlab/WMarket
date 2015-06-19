@@ -92,9 +92,9 @@ public class ReviewBoImpl implements ReviewBo {
 		
 		// Check if the user is allowed to rate the offering. An exception will be
 		// risen if the user is not allowed to do it.
-		if (!reviewAuth.canCreate(newReview)) {
-			// It is supposed not to happen
-			throw new NotAuthorizedException("rate " + entity.getClass().getSimpleName());
+		if (!reviewAuth.canCreate(entity, newReview)) {
+			throw new NotAuthorizedException("review " + entity.getClass().getSimpleName(), 
+					"An entity can only be reviewed once");
 		}
 		
 		// Validate review (exception will be risen if the review is not valid)

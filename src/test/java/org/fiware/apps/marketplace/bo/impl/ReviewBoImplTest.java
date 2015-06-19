@@ -92,14 +92,14 @@ public class ReviewBoImplTest {
 	public void testCreateReviewInvalid() throws Exception {
 		
 		Review review = new Review();
+		ReviewableEntity entity = mock(ReviewableEntity.class);
 		
 		// Configure mock
 		ValidationException ex = new ValidationException("score", "invalid");
 		doThrow(ex).when(reviewValidatorMock).validateReview(review);
-		doReturn(true).when(reviewAuthMock).canCreate(review);
+		doReturn(true).when(reviewAuthMock).canCreate(entity, review);
 		
 		// Call the function
-		ReviewableEntity entity = mock(ReviewableEntity.class);
 		reviewBo.createReview(entity, review);
 	}
 	
@@ -116,7 +116,7 @@ public class ReviewBoImplTest {
 			review.setScore(score);
 			
 			// Configure mock
-			doReturn(true).when(reviewAuthMock).canCreate(review);
+			doReturn(true).when(reviewAuthMock).canCreate(entity, review);
 			
 			// Call the function
 			reviewBo.createReview(entity, review);

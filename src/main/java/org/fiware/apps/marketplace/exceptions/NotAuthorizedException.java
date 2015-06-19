@@ -39,4 +39,10 @@ public class NotAuthorizedException extends Exception {
 	public NotAuthorizedException(String action) {
 		super("You are not authorized to " + action);
 	}
+	
+	public NotAuthorizedException(String action, String additionalMessage) {
+		super("You are not authorized to " + action + ". " + additionalMessage);
+
+	}
+	
 }
