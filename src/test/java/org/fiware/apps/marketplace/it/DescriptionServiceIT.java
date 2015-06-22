@@ -695,6 +695,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	private void testListDescriptionsInStoreInvalidParams(int offset, int max) {
+		
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/" + FIRST_STORE_NAME + "/description")
 				.queryParam("offset", offset)
@@ -716,7 +717,6 @@ public class DescriptionServiceIT extends AbstractIT {
 	public void testListDescriptionsInStoreInvalidMax() {
 		testListDescriptionsInStoreInvalidParams(1, 0);
 	}
-	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////// ALL DESCRIPTIONS  //////////////////////////////////
@@ -945,27 +945,34 @@ public class DescriptionServiceIT extends AbstractIT {
 		testGetSomeStoreOfferings(0, 2);
 	}
 	
-	private void testListOfferingsInStoreInvalidParams(int offset, int max) {
+	private void testListOfferingsInStoreInvalidParams(int offset, int max, String orderBy, String expectedMessage) {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/" + FIRST_STORE_NAME + "/offering")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
+				.queryParam("orderBy", orderBy)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
-		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+		checkAPIError(response, 400, null, expectedMessage, ErrorType.BAD_REQUEST);
 
 	}
 	
 	@Test
 	public void testListOfferingsInStoreInvalidOffset() {
-		testListOfferingsInStoreInvalidParams(-1, 2);
+		testListOfferingsInStoreInvalidParams(-1, 2, "id", MESSAGE_INVALID_OFFSET_MAX);
 	}
 	
 	@Test
 	public void testListOfferingsInStoreInvalidMax() {
-		testListOfferingsInStoreInvalidParams(1, 0);
+		testListOfferingsInStoreInvalidParams(1, 0, "id", MESSAGE_INVALID_OFFSET_MAX);
+	}
+	
+	@Test
+	public void testListOfferingsInStoreInvalidOrderBy() {
+		String orderBy = "namea";
+		testListOfferingsInStoreInvalidParams(1, 1, orderBy, "Offerings cannot be ordered by " + orderBy + ".");
 	}
 	
 	
@@ -1047,27 +1054,34 @@ public class DescriptionServiceIT extends AbstractIT {
 		testGetSomeOfferings(3, 9);
 	}
 	
-	private void testListOfferingsInvalidParams(int offset, int max) {
+	private void testListOfferingsInvalidParams(int offset, int max, String orderBy, String expectedMessage) {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/offerings")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
+				.queryParam("orderBy", orderBy)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
-		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+		checkAPIError(response, 400, null, expectedMessage, ErrorType.BAD_REQUEST);
 
 	}
 	
 	@Test
 	public void testListOfferingsInvalidOffset() {
-		testListOfferingsInvalidParams(-1, 2);
+		testListOfferingsInvalidParams(-1, 2, "id", MESSAGE_INVALID_OFFSET_MAX);
 	}
 	
 	@Test
 	public void testListOfferingsInvalidMax() {
-		testListOfferingsInvalidParams(1, 0);
+		testListOfferingsInvalidParams(1, 0, "id", MESSAGE_INVALID_OFFSET_MAX); 
+	}
+	
+	@Test
+	public void testListOfferingsInvalidOrderBy() {
+		String orderBy = "namea";
+		testListOfferingsInvalidParams(1, 1, orderBy, "Offerings cannot be ordered by " + orderBy + "."); 
 	}
 	
 	

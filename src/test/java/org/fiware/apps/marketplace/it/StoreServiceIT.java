@@ -552,27 +552,34 @@ public class StoreServiceIT extends AbstractIT {
 		testListSomeStores(5, 7);
 	}
 	
-	private void testListStoresInvalidParams(int offset, int max) {
+	private void testListStoresInvalidParams(int offset, int max, String orderBy, String expectedMessage) {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
+				.queryParam("orderBy", orderBy)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
-		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+		checkAPIError(response, 400, null, expectedMessage, ErrorType.BAD_REQUEST);
 
 	}
 	
 	@Test
 	public void testListStoresInvalidOffset() {
-		testListStoresInvalidParams(-1, 2);
+		testListStoresInvalidParams(-1, 2, "id", MESSAGE_INVALID_OFFSET_MAX);
 	}
 	
 	@Test
 	public void testListStoresInvalidMax() {
-		testListStoresInvalidParams(1, 0);
+		testListStoresInvalidParams(1, 0, "id", MESSAGE_INVALID_OFFSET_MAX);
+	}
+	
+	@Test
+	public void testListStoresInvalidOrderBy() {
+		String orderBy = "namea";
+		testListStoresInvalidParams(1, 1, orderBy, "Stores cannot be ordered by " + orderBy + ".");
 	}
 	
 	
