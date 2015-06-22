@@ -7,6 +7,11 @@
       <img class="image image-rounded image-bordered" src="${ offering.imageUrl }">
     </span>
     <div class="panel-title">${ offering.displayName }</div>
+    <div class="panel-subtitle offering-categories">
+    <c:forEach var="category" items="${ offering.categories }">
+      <span class="label label-success">${ category.displayName }</span>
+    </c:forEach>
+    </div>
   </div>
   <div class="panel-body">
     <div class="tab-group tab-group-vertical">
@@ -38,6 +43,21 @@
         <a href="${ pageContext.request.contextPath }/offerings/${ offering.describedIn.store.name }/${ offering.describedIn.name }/${ offering.name }/priceplans">
           <span class="fa fa-credit-card"></span>
           <span class="hidden-sm">Payment plans</span>
+        </a>
+      </div>
+      <div
+        <c:choose>
+          <c:when test="${ currentView == 'services' }">
+            class="tab active"
+          </c:when>
+          <c:otherwise>
+            class="tab"
+          </c:otherwise>
+        </c:choose>
+      >
+        <a href="${ pageContext.request.contextPath }/offerings/${ offering.describedIn.store.name }/${ offering.describedIn.name }/${ offering.name }/services">
+          <span class="fa fa-server"></span>
+          <span class="hidden-sm">Services</span>
         </a>
       </div>
       <c:choose>

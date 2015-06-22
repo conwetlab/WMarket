@@ -38,7 +38,9 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -52,32 +54,46 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SeleniumIT extends AbstractIT {
 
-	private WebDriver driver;
+	private static WebDriver driver;
 	
 	private static final String REQUIRED_FIELD = "This field is required.";
 	private static final String INVALID_ADDRESS = "This field must be a valid email address.";
 	private static final String EMAIL_REGISTERED = "This email is already registered.";
 	private static final String INVALID_URL = "This field must be a valid URL.";
-	
+	private static final String MIN_LENGTH = "This field must contain at least %d chars.";
+	private static final String MAX_LENGTH = "This field must not exceed %d chars.";
+	private static final String DESCRIPTION_REGISTERED = "This name is already in use in this Store.";
 	private static final String ACCOUNT_UPDATE_FORM = "account_update_form";
 	private static final String REGISTRATION_FORM = "registration_form";
 	private static final String STORE_FORM = "store_form";
 	private static final String DESCRIPTION_CREATION_FORM = "description_create_form";
 	private static final String DESCRIPTION_UPDATE_FORM = "description_update_form";
-
-	@Before
-	public void setUp() {
+	
+	@BeforeClass
+	public static void initBrowser() {
 		driver = new FirefoxDriver();
 		// Avoid Jenkinks failures
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		// Increase browser size to avoid Jenkins failures
 		driver.manage().window().setSize(new Dimension(1024, 768));
+	}
+	
+	@AfterClass
+	public static void quitBrowser() {
+		driver.quit();
+	}
+
+	@Before
+	public void setUp() {
+		// Restart cookies and browser
+		driver.manage().deleteAllCookies();
+		driver.get("about:blank");
+		
 		startMockServer();
 	}
 
 	@After
 	public void quitDriver() {
-		driver.quit();
 		wireMock.stop();
 	}
 
@@ -584,6 +600,40 @@ public class SeleniumIT extends AbstractIT {
 		registerDescription("New description", defaultUSDLPath);
 		assertThat(driver.getTitle()).isEqualTo(displayName + " - Offerings - WMarket");
 		verifyAlertContent("The description 'New description' was uploaded successfully.");
+	}
+
+	@Test
+	public void should_DisplayErrorMessage_When_DescriptionCreateFormIsSubmitted_And_DisplayNameIsInvalid() {
+		String displayName = "FIWARE Store";
+		String url = "http://store.fiware.es";
+		String descriptionDisplayName = "New description";
+
+		loginDefaultUser();
+		driver.get(endPoint + "/stores/register");
+
+		registerStore(displayName, url);
+		driver.get(endPoint + "/descriptions/register");
+
+		registerDescription(descriptionDisplayName, defaultUSDLPath);
+		driver.get(endPoint + "/descriptions/register");
+
+		// Find form
+		WebElement formElement = driver.findElement(By.name(DESCRIPTION_CREATION_FORM));
+
+		formElement = submitFormExpectError(formElement, "displayName", REQUIRED_FIELD);
+
+		fillField(formElement, "displayName", "FI");
+		formElement = submitFormExpectError(formElement, "displayName", String.format(MIN_LENGTH, 3));
+
+		fillField(formElement, "displayName", "FIWARE Store extra chars");
+		formElement = submitFormExpectError(formElement, "displayName", String.format(MAX_LENGTH, 20));
+
+		fillField(formElement, "displayName", "FIWARE $invalid");
+		formElement = submitFormExpectError(formElement, "displayName", "This field must contain alphanumerics (and -,_,.).");
+
+		fillField(formElement, "displayName", descriptionDisplayName);
+		fillField(formElement, "url", defaultUSDLPath);
+		formElement = submitFormExpectError(formElement, "displayName", DESCRIPTION_REGISTERED);
 	}
 
 	@Test
