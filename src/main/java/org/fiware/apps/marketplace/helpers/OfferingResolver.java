@@ -43,7 +43,7 @@ import java.util.Set;
 
 import org.fiware.apps.marketplace.bo.CategoryBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
+import org.fiware.apps.marketplace.exceptions.CategoryNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
 import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Offering;
@@ -313,7 +313,7 @@ public class OfferingResolver {
 							
 							try {
 								classification = classificationBo.findByName(classificationName);
-							} catch (ClassificationNotFoundException e1) {
+							} catch (CategoryNotFoundException e1) {
 								
 								// Look for another offering/service in this description that contains
 								// the same classification. Otherwise, a new classification is created.

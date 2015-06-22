@@ -44,7 +44,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.fiware.apps.marketplace.bo.CategoryBo;
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
+import org.fiware.apps.marketplace.exceptions.CategoryNotFoundException;
 import org.fiware.apps.marketplace.model.Categories;
 import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Offering;
@@ -96,7 +96,7 @@ public class CategoriesService {
 		try {
 			List<Offering> offerings = categoryBo.getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
 			response = Response.ok().entity(new Offerings(offerings)).build();			
-		} catch (ClassificationNotFoundException e) {
+		} catch (CategoryNotFoundException e) {
 			response = ERROR_UTILS.entityNotFoundResponse(e);
 		} catch (QueryException | SQLGrammarException ex) {
 			response = ERROR_UTILS.badRequestResponse("Offerings cannot be ordered by " + orderBy + ".");

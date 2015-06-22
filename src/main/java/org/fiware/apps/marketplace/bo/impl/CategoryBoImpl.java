@@ -36,7 +36,7 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.bo.CategoryBo;
 import org.fiware.apps.marketplace.dao.CategoryDao;
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
+import org.fiware.apps.marketplace.exceptions.CategoryNotFoundException;
 import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Offering;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class CategoryBoImpl implements CategoryBo {
 
 	@Override
 	@Transactional
-	public Category findByName(String name) throws ClassificationNotFoundException {
+	public Category findByName(String name) throws CategoryNotFoundException {
 		// TODO: Check access rights?
 		return categoryDao.findByName(name);
 	}
@@ -63,7 +63,7 @@ public class CategoryBoImpl implements CategoryBo {
 	@Override
 	@Transactional
 	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String orderBy, boolean desc)
-			throws ClassificationNotFoundException {
+			throws CategoryNotFoundException {
 		
 		// TODO: Check access rights?
 		return categoryDao.getCategoryOfferingsSortedBy(categoryName, orderBy, desc);

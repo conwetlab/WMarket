@@ -32,11 +32,11 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
-public class ClassificationNotFoundException extends Exception {
+public class CategoryNotFoundException extends Exception {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public ClassificationNotFoundException(String message) {
+	public CategoryNotFoundException(String message) {
 		super(message);
 	}
 

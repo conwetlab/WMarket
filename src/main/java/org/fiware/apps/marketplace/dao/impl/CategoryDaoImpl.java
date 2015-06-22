@@ -35,7 +35,7 @@ package org.fiware.apps.marketplace.dao.impl;
 import java.util.List;
 
 import org.fiware.apps.marketplace.dao.CategoryDao;
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
+import org.fiware.apps.marketplace.exceptions.CategoryNotFoundException;
 import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
@@ -55,7 +55,7 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 		
 		try {
 			findByName(name);
-		} catch (ClassificationNotFoundException e) {
+		} catch (CategoryNotFoundException e) {
 			exists = true;
 		}
 		
@@ -63,7 +63,7 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 	}
 
 	@Override
-	public Category findByName(String categoryName) throws ClassificationNotFoundException {
+	public Category findByName(String categoryName) throws CategoryNotFoundException {
 		
 		List<?> list = getSession()
 				.createQuery(String.format("from %s where name=:name", CATEGORIES_TABLE_NAME))
@@ -71,7 +71,7 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 				.list();
 		
 		if (list.isEmpty()) {
-			throw new ClassificationNotFoundException("Category " + categoryName + " not found");
+			throw new CategoryNotFoundException("Category " + categoryName + " not found");
 		} else {
 			return (Category) list.get(0);
 		}
@@ -79,7 +79,7 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 
 	@Override
 	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String orderBy, boolean desc) 
-			throws ClassificationNotFoundException {
+			throws CategoryNotFoundException {
 		
 		Category category = findByName(categoryName);
 		String ascOrDesc = desc ? "DESC" : "ASC";
