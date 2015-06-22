@@ -46,18 +46,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("classificationBo")
 public class CategoryBoImpl implements CategoryBo {
 	
-	@Autowired private CategoryDao classificationDao;
+	@Autowired private CategoryDao categoryDao;
 
 	@Override
 	public boolean isNameAvailable(String name) {
-		return classificationDao.isNameAvailable(name);
+		return categoryDao.isNameAvailable(name);
 	}
 
 	@Override
 	@Transactional
 	public Category findByName(String name) throws ClassificationNotFoundException {
 		// TODO: Check access rights?
-		return classificationDao.findByName(name);
+		return categoryDao.findByName(name);
 	}
 
 	@Override
@@ -66,18 +66,18 @@ public class CategoryBoImpl implements CategoryBo {
 			throws ClassificationNotFoundException {
 		
 		// TODO: Check access rights?
-		return classificationDao.getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
+		return categoryDao.getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
 	}
 
 	@Override
 	public List<Category> getCategoriesPage(int offset, int max) {
 		// TODO: Check access rights?
-		return classificationDao.getCategoriesPage(offset, max);
+		return categoryDao.getCategoriesPage(offset, max);
 	}
 
 	@Override
 	public List<Category> getAllCategories() {
 		// TODO: Check access rights?
-		return classificationDao.getAllCategories();
+		return categoryDao.getAllCategories();
 	}
 }

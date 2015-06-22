@@ -52,5 +52,8 @@ public interface ReviewBo {
 			throws NotAuthorizedException, ReviewNotFoundException;
 	public void deleteReview(ReviewableEntity entity, int reviewId) throws ReviewNotFoundException, 
 			NotAuthorizedException;
+	public Review getUserReview(ReviewableEntity entity) throws ReviewNotFoundException, 
+			NotAuthorizedException;
+	
 
 }

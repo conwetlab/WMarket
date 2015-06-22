@@ -33,6 +33,7 @@ package org.fiware.apps.marketplace.bo.impl;
  */
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.ReviewBo;
@@ -43,6 +44,7 @@ import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ReviewableEntity;
 import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.ReviewValidator;
 import org.fiware.apps.marketplace.security.auth.ReviewAuth;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,6 +198,34 @@ public class ReviewBoImpl implements ReviewBo {
 		entity.setAverageScore(calculateReviewAverage(entity));
 
 		// The deletion process is automatically done since this method is transactional		
+	}
+
+	@Override
+	public Review getUserReview(ReviewableEntity entity)
+			throws ReviewNotFoundException, NotAuthorizedException {
+		
+		try {
+			
+			Review userReview = null;
+			User user = userBo.getCurrentUser();
+			Iterator<Review> it = entity.getReviews().iterator();
+			
+			while (userReview == null && it.hasNext()) {
+				Review review = it.next();
+				userReview = review.getUser().equals(user) ? review : null;
+			}
+			
+			// Throw exception if the user has not reviewed the offering
+			if (userReview == null) {
+				throw new ReviewNotFoundException("User " + user.getUserName() + " has not reviewed this entity");
+			}
+			
+			return userReview;
+			
+		} catch (UserNotFoundException e) {
+			throw new RuntimeException(e);
+		}	
+		
 	}
 
 }
