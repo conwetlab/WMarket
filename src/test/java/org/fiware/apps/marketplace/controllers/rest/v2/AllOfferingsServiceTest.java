@@ -42,6 +42,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -52,6 +53,8 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
 import org.fiware.apps.marketplace.model.User;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -207,6 +210,36 @@ public class AllOfferingsServiceTest {
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
 	}
+	
+	// Exceptions that can be thrown when orderBy is invalid
+	private void testListSQLException(Exception exception) throws NotAuthorizedException {
+		// Mocks
+		doThrow(exception).when(offeringBoMock).getOfferingsPage(anyInt(), anyInt(), anyString(), anyBoolean());
 
-
+		// Call the method
+		int offset = 0;
+		int max = 100;
+		String orderBy = "name";
+		boolean desc = true;
+		Response res = allOfferingsService.listOfferings(offset, max, false, orderBy, desc);
+		
+		// Verify
+		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
+		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max);
+		
+		// Check exception
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
+				"Offerings cannot be ordered by " + orderBy + ".");
+	}
+	
+	@Test
+	public void testListSQLGrammarException() throws NotAuthorizedException {
+		testListSQLException(new SQLGrammarException("", new SQLException()));
+	}
+	
+	@Test
+	public void testListQueryException() throws NotAuthorizedException {
+		testListSQLException(new QueryException(""));
+	}
+	
 }

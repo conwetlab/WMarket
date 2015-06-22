@@ -42,6 +42,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,8 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
 import org.fiware.apps.marketplace.model.User;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -127,7 +130,7 @@ public class OfferingsInStoreServiceTest {
 				getOfferings()).isEqualTo(oferrings);
 	}
 	
-	private void testListOfferingsInStoreException(Exception expectedException, int errorCode, 
+	private void testListOfferingsInStoreException(String orderBy, Exception expectedException, int errorCode, 
 			ErrorType errorType, String message) {
 		
 		try {
@@ -138,7 +141,6 @@ public class OfferingsInStoreServiceTest {
 			// Call the method
 			int offset = 0;
 			int max = 100;
-			String orderBy = "averageScore";
 			boolean desc = true;
 			Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max, orderBy, desc);
 			
@@ -155,14 +157,14 @@ public class OfferingsInStoreServiceTest {
 	@Test
 	public void testListOfferingsInStoreRunTimeException() {
 		String message = "exception";
-		testListOfferingsInStoreException(new RuntimeException("", new Exception(message)), 
+		testListOfferingsInStoreException("name", new RuntimeException("", new Exception(message)), 
 				500, ErrorType.INTERNAL_SERVER_ERROR, message);
 	}
 	
 	@Test
 	public void testListOfferingsInStoreStoreNotFoundException() {
 		String message = "exception";
-		testListOfferingsInStoreException(new StoreNotFoundException(message), 
+		testListOfferingsInStoreException("name", new StoreNotFoundException(message), 
 				404, ErrorType.NOT_FOUND, message);
 	}
 	
@@ -173,7 +175,22 @@ public class OfferingsInStoreServiceTest {
 		when(user.getUserName()).thenReturn(userName);
 		Exception e = new NotAuthorizedException("list offerings");
 	
-		testListOfferingsInStoreException(e, 403, ErrorType.FORBIDDEN, e.getMessage());
+		testListOfferingsInStoreException("name", e, 403, ErrorType.FORBIDDEN, e.getMessage());
+	}
+	
+	
+	@Test
+	public void testListAllOfferingsInStoreSQLGrammarException() throws NotAuthorizedException {
+		String orderBy = "name";
+		testListOfferingsInStoreException(orderBy, new SQLGrammarException("", new SQLException()), 400, 
+				ErrorType.BAD_REQUEST, "Offerings cannot be ordered by " + orderBy + ".");
+	}
+	
+	@Test
+	public void testListAllOfferingsInStoreQueryException() throws NotAuthorizedException {
+		String orderBy = "name";
+		testListOfferingsInStoreException(orderBy, new QueryException(""), 400, 
+				ErrorType.BAD_REQUEST, "Offerings cannot be ordered by " + orderBy + ".");
 	}
 	
 }

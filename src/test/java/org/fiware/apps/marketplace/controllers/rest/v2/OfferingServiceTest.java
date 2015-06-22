@@ -43,6 +43,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,8 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
 import org.fiware.apps.marketplace.model.User;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -206,7 +209,7 @@ public class OfferingServiceTest {
 		testListAllOfferingsInDescriptionInvalidParams(-1, -1);
 	}
 	
-	private void testListAllOfferingsInDescriptionException(Exception e, int httpCode, 
+	private void testListAllOfferingsInDescriptionException(String orderBy, Exception e, int httpCode, 
 			ErrorType errorType, String message) {
 		
 		try {
@@ -218,7 +221,6 @@ public class OfferingServiceTest {
 			String storeName = "store";
 			int offset = 0;
 			int max = 100;
-			String orderBy = "name";
 			boolean desc = true;
 			
 			// Call the method
@@ -239,7 +241,7 @@ public class OfferingServiceTest {
 	}
 	
 	private void testListAllOfferingsInDescription404(Exception e) {
-		testListAllOfferingsInDescriptionException(e, 404, ErrorType.NOT_FOUND, e.getMessage());
+		testListAllOfferingsInDescriptionException("name", e, 404, ErrorType.NOT_FOUND, e.getMessage());
 	}
 	
 	@Test
@@ -247,7 +249,21 @@ public class OfferingServiceTest {
 		User user = mock(User.class);
 		when(user.getUserName()).thenReturn("userName");
 		Exception e = new NotAuthorizedException("list offerings");
-		testListAllOfferingsInDescriptionException(e, 403, ErrorType.FORBIDDEN, e.getMessage());
+		testListAllOfferingsInDescriptionException("name", e, 403, ErrorType.FORBIDDEN, e.getMessage());
+	}
+	
+	@Test
+	public void testListAllOfferingsInDescriptionSQLGrammarException() throws NotAuthorizedException {
+		String orderBy = "name";
+		testListAllOfferingsInDescriptionException(orderBy, new SQLGrammarException("", new SQLException()), 400, 
+				ErrorType.BAD_REQUEST, "Offerings cannot be ordered by " + orderBy + ".");
+	}
+	
+	@Test
+	public void testListAllOfferingsInDescriptionQueryException() throws NotAuthorizedException {
+		String orderBy = "name";
+		testListAllOfferingsInDescriptionException(orderBy, new QueryException(""), 400, 
+				ErrorType.BAD_REQUEST, "Offerings cannot be ordered by " + orderBy + ".");
 	}
 	
 	@Test
