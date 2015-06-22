@@ -68,7 +68,7 @@ public class AllOfferingsService {
 	public Response listOfferings(@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max,
 			@DefaultValue("false") @QueryParam("bookmarked") boolean bookmarked,
-			@DefaultValue("describedIn.registrationDate") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("id") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("false") @QueryParam("desc") boolean desc) {
 		
 		Response response;

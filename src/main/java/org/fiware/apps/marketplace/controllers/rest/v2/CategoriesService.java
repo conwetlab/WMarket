@@ -49,12 +49,12 @@ import org.fiware.apps.marketplace.model.Categories;
 import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
-import org.hibernate.HibernateException;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 
 @Component
 @Path("/api/v2/category")
@@ -98,15 +98,8 @@ public class CategoriesService {
 			response = Response.ok().entity(new Offerings(offerings)).build();			
 		} catch (ClassificationNotFoundException e) {
 			response = ERROR_UTILS.entityNotFoundResponse(e);
-		} catch (HibernateException e) {
-			Throwable cause = e.getCause();
-			
-			if (cause instanceof MySQLSyntaxErrorException) {
-				// Return a more human readable message
-				response = ERROR_UTILS.badRequestResponse("Offerings cannot be ordered by " + orderBy + ".");
-			} else {
-				response = ERROR_UTILS.badRequestResponse(e);
-			}
+		} catch (QueryException | SQLGrammarException ex) {
+			response = ERROR_UTILS.badRequestResponse("Offerings cannot be ordered by " + orderBy + ".");
 		} catch (Exception e) {
 			response = ERROR_UTILS.internalServerError(e);
 		}
