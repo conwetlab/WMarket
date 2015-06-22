@@ -33,6 +33,7 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
  */
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
@@ -175,10 +176,12 @@ public class OfferingServiceTest {
 	private void testListAllOfferingsInDescriptionInvalidParams(int offset, int max) {
 		try {
 			// Call the method
-			Response res = offeringService.listOfferingsInDescription("store", "description", offset, max);
+			Response res = offeringService.listOfferingsInDescription("store", "description", offset, max, 
+					"averageScore", false);
 	
 			// Verify the 
-			verify(offeringBoMock, never()).getDescriptionOfferingsPage(anyString(), anyString(), anyInt(), anyInt());
+			verify(offeringBoMock, never()).getDescriptionOfferingsPage(anyString(), anyString(), 
+					anyInt(), anyInt(), anyString(), anyBoolean());
 			
 			// Assertions
 			GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -208,20 +211,23 @@ public class OfferingServiceTest {
 		
 		try {
 			doThrow(e).when(offeringBoMock).getDescriptionOfferingsPage(anyString(), 
-					anyString(), anyInt(), anyInt());
+					anyString(), anyInt(), anyInt(), anyString(), anyBoolean());
 			
 			// Call the method
 			String descriptionName = "description";
 			String storeName = "store";
 			int offset = 0;
 			int max = 100;
+			String orderBy = "name";
+			boolean desc = true;
 			
 			// Call the method
-			Response res = offeringService.listOfferingsInDescription(storeName, descriptionName, offset, max);
+			Response res = offeringService.listOfferingsInDescription(storeName, descriptionName, offset, 
+					max, orderBy, desc);
 			
 			// Verify that the BO has been called with the correct arguments
 			verify(offeringBoMock).getDescriptionOfferingsPage(storeName, 
-					descriptionName, offset, max);
+					descriptionName, offset, max, orderBy, desc);
 			
 			// Check the response
 			GenericRestTestUtils.checkAPIError(res, httpCode, errorType, 
@@ -263,6 +269,8 @@ public class OfferingServiceTest {
 		String descriptionName = "description";
 		int offset = 0;
 		int max = 100;
+		String orderBy = "averageScore";
+		boolean desc = false;
 		
 		List<Offering> oferrings = new ArrayList<Offering>();
 		for (int i = 0; i < 3; i++) {
@@ -272,14 +280,16 @@ public class OfferingServiceTest {
 		}
 		
 		// Mocks
-		when(offeringBoMock.getDescriptionOfferingsPage(eq(storeName), eq(descriptionName), anyInt(), anyInt())).
-				thenReturn(oferrings);
+		when(offeringBoMock.getDescriptionOfferingsPage(eq(storeName), eq(descriptionName), anyInt(), anyInt(),
+				anyString(), anyBoolean())).thenReturn(oferrings);
 		
 		// Call the method
-		Response res = offeringService.listOfferingsInDescription(storeName, descriptionName, offset, max);
+		Response res = offeringService.listOfferingsInDescription(storeName, descriptionName, offset, 
+				max, orderBy, desc);
 		
 		// Verify
-		verify(offeringBoMock).getDescriptionOfferingsPage(storeName, descriptionName, offset, max);
+		verify(offeringBoMock).getDescriptionOfferingsPage(storeName, descriptionName, offset, 
+				max, orderBy, desc);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);

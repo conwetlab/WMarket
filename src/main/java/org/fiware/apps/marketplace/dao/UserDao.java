@@ -36,6 +36,7 @@ package org.fiware.apps.marketplace.dao;
 import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.User;
 
 public interface UserDao {
@@ -55,5 +56,6 @@ public interface UserDao {
 
 	// Get all or a sublist
 	public List<User> getUsersPage(int offset, int max);
-	public List <User> getAllUsers();
+	public List<User> getAllUsers();
+	
 }

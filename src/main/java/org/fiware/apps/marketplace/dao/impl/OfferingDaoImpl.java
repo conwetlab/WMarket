@@ -94,53 +94,62 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 		}
 	}
 
-	@Override
+	/*@Override
 	public List<Offering> getAllOfferings() {
 		return getOfferingsPage(0, Integer.MAX_VALUE);
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Offering> getOfferingsPage(int offset, int max) {
+	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc) {
+		
+		String descText = desc ? "DESC" : "ASC";
+		
 		// Avoid Hibernate Null Pointer Exception
-		return getSession().createQuery("FROM " + TABLE_NAME)
+		return getSession().createQuery("FROM " + TABLE_NAME + " ORDER BY " + orderBy + " " + descText)
 				.setFirstResult(offset)
 				.setMaxResults(max)
 				.list();
 	}
 
-	@Override
+	/*@Override
 	public List<Offering> getAllStoreOfferings(String storeName) 
 			throws StoreNotFoundException {
 		return getStoreOfferingsPage(storeName, 0, Integer.MAX_VALUE);
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset,	
-			int max) throws StoreNotFoundException {
+			int max, String orderBy, boolean desc) throws StoreNotFoundException {
+		
+		String descText = desc ? "DESC" : "ASC";
 		
 		// Throw exceptions if the Store or the Description does not exist
 		storeDao.findByName(storeName);
 		
 		// Get the offerings
-		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE describedIn.store.name = :storeName")
+		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE describedIn.store.name = :storeName" + " " + 
+				"ORDER BY " + orderBy + " " + descText)
 				.setParameter("storeName", storeName)
 				.setFirstResult(offset)
 				.setMaxResults(max)
 				.list();
 	}
 
-	@Override
+	/*@Override
 	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
 			throws StoreNotFoundException, DescriptionNotFoundException {
 		return getDescriptionOfferingsPage(storeName, descriptionName, 0, Integer.MAX_VALUE);
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName,
-			int offset, int max) throws StoreNotFoundException, DescriptionNotFoundException {
+			int offset, int max, String orderBy, boolean desc) throws StoreNotFoundException, 
+			DescriptionNotFoundException {
+		
+		String descText = desc ? "DESC" : "ASC";
 		
 		// Throw exceptions if the Store or the Description does not exist
 		storeDao.findByName(storeName);
@@ -148,7 +157,8 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 		
 		// Get the offerings
 		return getSession().createQuery("FROM " + TABLE_NAME + " "
-				+ "WHERE describedIn.name = :descriptionName AND describedIn.store.name = :storeName")
+				+ "WHERE describedIn.name = :descriptionName AND describedIn.store.name = :storeName " + " " + 
+				"ORDER BY " + orderBy + " " + descText)
 				.setParameter("descriptionName", descriptionName)
 				.setParameter("storeName", storeName)
 				.setFirstResult(offset)

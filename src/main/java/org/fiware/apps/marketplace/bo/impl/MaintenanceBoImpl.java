@@ -144,7 +144,7 @@ public class MaintenanceBoImpl implements MaintenanceBo {
 			long start = System.currentTimeMillis();
 			for (ServiceManifestation serviceManifestation : serviceManifestationResolver
 					.resolveServiceManifestations(offeringBo
-					.getAllOfferings())) {
+					.getOfferingsPage(0, Integer.MAX_VALUE, "describedIn.registrationDate", false))) {
 				serviceManifestationBo.save(serviceManifestation);
 			}
 			serviceManifestationBo.sort();

@@ -33,7 +33,9 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
  */
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -74,7 +76,7 @@ public class OfferingsInStoreServiceTest {
 	
 	private void testListOfferingsInStoreInvalidParams(int offset, int max) {
 		// Call the method
-		Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max);
+		Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max, "name", true);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -106,16 +108,18 @@ public class OfferingsInStoreServiceTest {
 		}
 		
 		// Mocks
-		when(offeringBoMock.getStoreOfferingsPage(eq(STORE_NAME), anyInt(), anyInt())).
+		when(offeringBoMock.getStoreOfferingsPage(eq(STORE_NAME), anyInt(), anyInt(), anyString(), anyBoolean())).
 				thenReturn(oferrings);
 		
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max);
+		String orderBy = "name";
+		boolean desc = false;
+		Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max, orderBy, desc);
 		
 		// Verify
-		verify(offeringBoMock).getStoreOfferingsPage(STORE_NAME, offset, max);
+		verify(offeringBoMock).getStoreOfferingsPage(STORE_NAME, offset, max, orderBy, desc);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -129,15 +133,17 @@ public class OfferingsInStoreServiceTest {
 		try {
 			// Mocks
 			doThrow(expectedException).when(offeringBoMock)
-					.getStoreOfferingsPage(eq(STORE_NAME), anyInt(), anyInt());
+					.getStoreOfferingsPage(eq(STORE_NAME), anyInt(), anyInt(), anyString(), anyBoolean());
 	
 			// Call the method
 			int offset = 0;
 			int max = 100;
-			Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max);
+			String orderBy = "averageScore";
+			boolean desc = true;
+			Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max, orderBy, desc);
 			
 			// Verify
-			verify(offeringBoMock).getStoreOfferingsPage(STORE_NAME, offset, max);
+			verify(offeringBoMock).getStoreOfferingsPage(STORE_NAME, offset, max, orderBy, desc);
 			
 			// Check exception
 			GenericRestTestUtils.checkAPIError(res, errorCode, errorType, message);

@@ -59,16 +59,17 @@ public interface OfferingBo {
 			DescriptionNotFoundException;
 	
 	// Get all or a sublist based on some criteria
-	public List<Offering> getAllOfferings() throws NotAuthorizedException;
-	public List<Offering> getOfferingsPage(int offset, int max) throws NotAuthorizedException;
-	public List<Offering> getAllStoreOfferings(String storeName) 
+	// public List<Offering> getAllOfferings() throws NotAuthorizedException;
+	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc) 
+			throws NotAuthorizedException;
+	// public List<Offering> getAllStoreOfferings(String storeName) 
+	// 		throws StoreNotFoundException, NotAuthorizedException;
+	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max, String orderBy, boolean desc) 
 			throws StoreNotFoundException, NotAuthorizedException;
-	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max) 
-			throws StoreNotFoundException, NotAuthorizedException;
-	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
-			throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException;
+	// public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
+	// 		throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException;
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
-			int offset, int max) throws NotAuthorizedException, StoreNotFoundException, 
+			int offset, int max, String orderBy, boolean desc) throws NotAuthorizedException, StoreNotFoundException, 
 			DescriptionNotFoundException;	
 	
 	// Bookmarking
@@ -76,7 +77,8 @@ public interface OfferingBo {
 			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException;
 	public List<Offering> getAllBookmarkedOfferings() throws NotAuthorizedException;
-	public List<Offering> getBookmarkedOfferingsPage(int offset, int max) throws NotAuthorizedException;
+	public List<Offering> getBookmarkedOfferingsPage(int offset, int max) 
+			throws NotAuthorizedException;
 	
 	// Review
 	public void createReview(String storeName, String descriptionName, String offeringName, Review review) 

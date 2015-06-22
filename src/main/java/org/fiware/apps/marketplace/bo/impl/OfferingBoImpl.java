@@ -122,7 +122,7 @@ public class OfferingBoImpl implements OfferingBo {
 		return offering;
 	}
 
-	@Override
+	/*@Override
 	@Transactional
 	public List<Offering> getAllOfferings() throws NotAuthorizedException {
 		// Check rights and raise exception if user is not allowed to perform this action
@@ -131,11 +131,11 @@ public class OfferingBoImpl implements OfferingBo {
 		}
 		
 		return offeringDao.getAllOfferings();
-	}
+	}*/
 
 	@Override
 	@Transactional
-	public List<Offering> getOfferingsPage(int offset, int max) 
+	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc) 
 			throws NotAuthorizedException {
 		
 		// Check rights and raise exception if user is not allowed to perform this action
@@ -143,10 +143,10 @@ public class OfferingBoImpl implements OfferingBo {
 			throw new NotAuthorizedException("list offerings");
 		}
 		
-		return offeringDao.getOfferingsPage(offset, max);
+		return offeringDao.getOfferingsPage(offset, max, orderBy, desc);
 	}
 
-	@Override
+	/*@Override
 	@Transactional
 	public List<Offering> getAllStoreOfferings(String storeName) 
 			throws StoreNotFoundException, NotAuthorizedException {
@@ -159,12 +159,12 @@ public class OfferingBoImpl implements OfferingBo {
 		}
 		
 		return offeringDao.getAllStoreOfferings(storeName);
-	}
+	}*/
 
 	@Override
 	@Transactional
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset,
-			int max) throws StoreNotFoundException, NotAuthorizedException {
+			int max, String orderBy, boolean desc) throws StoreNotFoundException, NotAuthorizedException {
 		
 		Store store = storeBo.findByName(storeName);
 		
@@ -173,10 +173,10 @@ public class OfferingBoImpl implements OfferingBo {
 			throw new NotAuthorizedException("list offerings in store " + store.getName());
 		}
 		
-		return offeringDao.getStoreOfferingsPage(storeName, offset, max);
+		return offeringDao.getStoreOfferingsPage(storeName, offset, max, orderBy, desc);
 	}
 
-	@Override
+	/*@Override
 	@Transactional
 	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
 			throws StoreNotFoundException, DescriptionNotFoundException, NotAuthorizedException {
@@ -189,13 +189,13 @@ public class OfferingBoImpl implements OfferingBo {
 		}
 		
 		return offeringDao.getAllDescriptionOfferings(storeName, descriptionName);
-	}
+	}*/
 
 	@Override
 	@Transactional
 	public List<Offering> getDescriptionOfferingsPage(String storeName, 
-			String descriptionName, int offset, int max) throws 
-			StoreNotFoundException, DescriptionNotFoundException, 
+			String descriptionName, int offset, int max, String orderBy, boolean desc)
+			throws StoreNotFoundException, DescriptionNotFoundException, 
 			NotAuthorizedException {
 		
 		Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
@@ -205,7 +205,7 @@ public class OfferingBoImpl implements OfferingBo {
 			throw new NotAuthorizedException("list offerings in description " + description.getName());
 		}
 		
-		return offeringDao.getDescriptionOfferingsPage(storeName, descriptionName, offset, max);
+		return offeringDao.getDescriptionOfferingsPage(storeName, descriptionName, offset, max, orderBy, desc);
 	}
 
 	@Override

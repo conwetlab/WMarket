@@ -33,7 +33,9 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
  */
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -76,19 +78,19 @@ public class AllOfferingsServiceTest {
 		User user = mock(User.class);
 		when(user.getUserName()).thenReturn(userName);
 		Exception e = new NotAuthorizedException("list offerings");
-		doThrow(e).when(offeringBoMock).getOfferingsPage(anyInt(), anyInt());
+		doThrow(e).when(offeringBoMock).getOfferingsPage(anyInt(), anyInt(), anyString(), anyBoolean());
 
 		// Call the method
-		Response res = allOfferingsService.listOfferings(0, 100, false);
+		Response res = allOfferingsService.listOfferings(0, 100, false, "name", false);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, 
 				e.getMessage());
 	}
 	
-	private void testListAllOfferingsInvalidParams(int offset, int max) {
+	private void testListAllOfferingsInvalidParams(int offset, int max, String orderBy, boolean desc) {
 		// Call the method
-		Response res = allOfferingsService.listOfferings(offset, max, false);
+		Response res = allOfferingsService.listOfferings(offset, max, false, orderBy, desc);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -97,17 +99,17 @@ public class AllOfferingsServiceTest {
 	
 	@Test
 	public void testListAllOfferingsInvalidOffset() {
-		testListAllOfferingsInvalidParams(-1, 100);
+		testListAllOfferingsInvalidParams(-1, 100, "name", true);
 	}
 	
 	@Test
 	public void testListAllOfferingsInvalidMax() {
-		testListAllOfferingsInvalidParams(0, -1);
+		testListAllOfferingsInvalidParams(0, -1, "name", true);
 	}
 	
 	@Test
 	public void testListAllOfferingsInvalidOffsetMax() {
-		testListAllOfferingsInvalidParams(-1, -1);
+		testListAllOfferingsInvalidParams(-1, -1, "name", true);
 	}
 	
 	@Test
@@ -116,16 +118,18 @@ public class AllOfferingsServiceTest {
 		List<Offering> oferrings = mock(List.class);
 		
 		// Mocks
-		when(offeringBoMock.getOfferingsPage(anyInt(), anyInt())).
+		when(offeringBoMock.getOfferingsPage(anyInt(), anyInt(), anyString(), anyBoolean())).
 				thenReturn(oferrings);
 		
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsService.listOfferings(offset, max, false);
+		String orderBy = "name";
+		boolean desc = true;
+		Response res = allOfferingsService.listOfferings(offset, max, false, orderBy, desc);
 		
 		// Verify
-		verify(offeringBoMock).getOfferingsPage(offset, max);
+		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
 		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max);
 		
 		// Assertions
@@ -146,10 +150,12 @@ public class AllOfferingsServiceTest {
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsService.listOfferings(offset, max, true);
+		String orderBy = "averageScore";
+		boolean desc = false;
+		Response res = allOfferingsService.listOfferings(offset, max, true, orderBy, desc);
 		
 		// Verify
-		verify(offeringBoMock, never()).getOfferingsPage(offset, max);
+		verify(offeringBoMock, never()).getOfferingsPage(offset, max, orderBy, desc);
 		verify(offeringBoMock).getBookmarkedOfferingsPage(offset, max);
 		
 		// Assertions
@@ -163,15 +169,17 @@ public class AllOfferingsServiceTest {
 		// Mocks
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg)))
-				.when(offeringBoMock).getOfferingsPage(anyInt(), anyInt());
+				.when(offeringBoMock).getOfferingsPage(anyInt(), anyInt(), anyString(), anyBoolean());
 
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsService.listOfferings(offset, max, false);
+		String orderBy = "describedIn.registrationDate";
+		boolean desc = false;
+		Response res = allOfferingsService.listOfferings(offset, max, false, orderBy, desc);
 		
 		// Verify
-		verify(offeringBoMock).getOfferingsPage(offset, max);
+		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
 		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max);
 		
 		// Check exception
@@ -188,10 +196,12 @@ public class AllOfferingsServiceTest {
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsService.listOfferings(offset, max, true);
+		String orderBy = "name";
+		boolean desc = true;
+		Response res = allOfferingsService.listOfferings(offset, max, true, orderBy, desc);
 		
 		// Verify
-		verify(offeringBoMock, never()).getOfferingsPage(offset, max);
+		verify(offeringBoMock, never()).getOfferingsPage(offset, max, orderBy, desc);
 		verify(offeringBoMock).getBookmarkedOfferingsPage(offset, max);
 		
 		// Check exception
