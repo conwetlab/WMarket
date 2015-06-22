@@ -215,6 +215,60 @@ public class OfferingController extends AbstractController {
 		return builder.entity(view).build();
 	}
 
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	@Path("{storeName}/{descriptionName}/{offeringName}/services")
+	public Response serviceListView(
+			@PathParam("storeName") String storeName,
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName) {
+
+		ModelAndView view;
+		ModelMap model = new ModelMap();
+		ResponseBuilder builder;
+
+        try {
+            model.addAttribute("user", getCurrentUser());
+
+            Offering offering = offeringBo.findOfferingByNameStoreAndDescription(
+                    storeName, descriptionName, offeringName);
+
+            model.addAttribute("offering", offering);
+            model.addAttribute("title", "Services - " + offering.getDisplayName() + " - " + getContextName());
+            model.addAttribute("currentView", "services");
+
+            view = new ModelAndView("offering.service.list", model);
+            builder = Response.ok();
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError();
+        } catch (NotAuthorizedException e) {
+            logger.info("User unauthorized", e);
+
+            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+            builder = Response.status(Status.UNAUTHORIZED);
+        } catch (OfferingNotFoundException e) {
+            logger.info("Offering not found", e);
+
+            view = buildErrorView(Status.NOT_FOUND, e.getMessage());
+            builder = Response.status(Status.NOT_FOUND);
+        } catch (StoreNotFoundException e) {
+            logger.info("Store not found", e);
+
+            view = buildErrorView(Status.NOT_FOUND, e.getMessage());
+            builder = Response.status(Status.NOT_FOUND);
+        } catch (DescriptionNotFoundException e) {
+            logger.info("Description not found", e);
+
+            view = buildErrorView(Status.NOT_FOUND, e.getMessage());
+            builder = Response.status(Status.NOT_FOUND);
+        }
+
+		return builder.entity(view).build();
+	}
+
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("bookmarks")
