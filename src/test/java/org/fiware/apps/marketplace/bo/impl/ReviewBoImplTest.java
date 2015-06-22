@@ -47,9 +47,11 @@ import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.bo.impl.ReviewBoImpl;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.ReviewableEntity;
 import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.ReviewValidator;
 import org.fiware.apps.marketplace.security.auth.ReviewAuth;
 import org.junit.Before;
@@ -463,5 +465,77 @@ public class ReviewBoImplTest {
 		double average = sum / (double) additionalReviews.size();
 		verify(entity).setAverageScore(average);		
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////// GET USER REVIEW IN ENTITY //////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void initReviewEntity(ReviewableEntity entity, User currentUser, Review currentUserReview) {
+		
+		User reviewer = new User();
+		reviewer.setId(currentUser.getId() + 1);
+		
+		// List of reviews
+		List<Review> reviews = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			Review review = new Review();
+			review.setUser(reviewer);
+			reviews.add(review);
+		}
+		
+		// Add one review created by the current user
+		if (currentUserReview != null) {
+			reviews.add(currentUserReview);
+		}
+		
+		// Mocking
+		try {
+			when(userBoMock.getCurrentUser()).thenReturn(currentUser);
+			when(entity.getReviews()).thenReturn(reviews);
+		} catch (Exception e) {
+			fail("Exception not expected", e);
+		}
 
+	}
+	
+	@Test(expected=ReviewNotFoundException.class)
+	public void testUserHasNotReviewedTheOffering() throws Exception {
+		
+		User user = new User();
+		user.setId(0);
+		ReviewableEntity entity = mock(ReviewableEntity.class);
+		initReviewEntity(entity, user, null);
+		
+		// Call the function
+		reviewBo.getUserReview(entity);
+	}
+	
+	@Test
+	public void testUserHasReviewedTheOffering() throws Exception {
+		
+		User user = new User();
+		user.setId(0);
+		
+		Review review = new Review();
+		review.setUser(user);
+		
+		ReviewableEntity entity = mock(ReviewableEntity.class);
+		initReviewEntity(entity, user, review);
+		
+		// Call the function
+		assertThat(reviewBo.getUserReview(entity)).isEqualTo(review);
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void testRuntimeException() throws Exception {
+		
+		ReviewableEntity entity = mock(ReviewableEntity.class);
+		
+		// Mock
+		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
+		
+		// Call the function
+		reviewBo.getUserReview(entity);
+	}
 }
