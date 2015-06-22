@@ -1247,6 +1247,26 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	@Test
+	public void testUserCannotReviewOneStoreTwice() {
+		
+		String storeName = FIRST_STORE_NAME;
+		String descriptionName = "default";
+		String offeringName = FIRST_OFFERING.getName();
+		
+		int score = 5;
+		String comment = "Basic comment";
+		
+		createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
+				score, comment);
+
+		// Create another review for the same offering with the same user
+		Response res = createOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, 
+				offeringName, score, comment);
+		checkAPIError(res, 403, null, "You are not authorized to review Offering. An entity can only be reviewed once", 
+				ErrorType.FORBIDDEN);
+	}
+	
+	@Test
 	public void testUpdateReview() {
 		
 		String storeName = FIRST_STORE_NAME;
@@ -1313,10 +1333,20 @@ public class DescriptionServiceIT extends AbstractIT {
 			int nReviews, int initialScore) {
 		
 		double totalScore = 0;
+		String alphabet = "abcdefghijklmonpqrstuvwxyz";
 		
 		for (int score = initialScore; score < nReviews + initialScore; score++) {
+			
+			// Create user for review
+			char userSuffix = alphabet.charAt(score % alphabet.length());
+			String userName = "userforrating" + userSuffix;
+			String email = "rating" + userSuffix + "@example.com";
+			Response createUserRes = createUser(userName, email, PASSWORD);
+			assertThat(createUserRes.getStatus()).isEqualTo(201);
+
+			// Review the offering with the new user (one user can only review one offering once)
 			String comment = getCommentFromBase(baseComment, score);
-			Response res = createOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+			Response res = createOfferingReview(userName, PASSWORD, storeName, descriptionName, offeringName, 
 					score, comment);
 			assertThat(res.getStatus()).isEqualTo(201);
 			

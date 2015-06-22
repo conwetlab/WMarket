@@ -611,6 +611,22 @@ public class StoreServiceIT extends AbstractIT {
 	}
 	
 	@Test
+	public void testUserCannotReviewOneStoreTwice() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String comment = "Basic comment";
+		
+		createStoreAndReview(storeName, storeUrl, score, comment);
+
+		// Create another review for the same store with the same user
+		Response res = createStoreReview(USER_NAME, PASSWORD, storeName, score, comment);
+		checkAPIError(res, 403, null, "You are not authorized to review Store. An entity can only be reviewed once", 
+				ErrorType.FORBIDDEN);
+	}
+	
+	@Test
 	public void testReviewStoreInvalid() {
 		
 		String storeName = "store";
@@ -674,10 +690,20 @@ public class StoreServiceIT extends AbstractIT {
 	private double createNReviews(String storeName, String baseComment, int nReviews, int initialScore) {
 		
 		double totalScore = 0;
+		String alphabet = "abcdefghijklmonpqrstuvwxyz";
 		
 		for (int score = initialScore; score < nReviews + initialScore; score++) {
+			
+			// Create user for review
+			char userSuffix = alphabet.charAt(score % alphabet.length());
+			String userName = "userforrating" + userSuffix;
+			String email = "rating" + userSuffix + "@example.com";
+			Response createUserRes = createUser(userName, email, PASSWORD);
+			assertThat(createUserRes.getStatus()).isEqualTo(201);
+			
+			// Review the offering with the new user (one user can only review one store once)
 			String comment = getCommentFromBase(baseComment, score);
-			Response res = createStoreReview(USER_NAME, PASSWORD, storeName, score, comment);
+			Response res = createStoreReview(userName, PASSWORD, storeName, score, comment);
 			assertThat(res.getStatus()).isEqualTo(201);
 			
 			totalScore += score;
