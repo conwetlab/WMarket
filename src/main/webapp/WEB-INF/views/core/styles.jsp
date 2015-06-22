@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/grid.css">
 <!-- Default App - Components CSS Links -->
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/buttons.css">
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/labels.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/images.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/fields.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/alerts.css">
@@ -16,5 +17,6 @@
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/stores.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/offerings.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/payment-plans.css">
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/services.css">
 <!-- Default App - Helpers CSS Links -->
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/helpers.css">
