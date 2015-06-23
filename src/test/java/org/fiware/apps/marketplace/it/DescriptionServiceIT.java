@@ -34,15 +34,20 @@ package org.fiware.apps.marketplace.it;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;	
 
+import org.fiware.apps.marketplace.model.Categories;
+import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.ErrorType;
@@ -1475,4 +1480,113 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(reviewdOffering.getAverageScore()).isEqualTo(average);
 		
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// CATEGORIES //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private Response getCategories(String userName, String password) {		
+		Client client = ClientBuilder.newClient();
+		return client.target(endPoint + "/api/v2/category/")
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password)).get();
+	}
+	
+	private Response getCategoryRecommendations(String userName, String password, String category, String orderBy) {		
+		
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(endPoint + "/api/v2/category/" + category);
+		
+		// Include order when parameter is not null. BY default, offerings are ordered by score
+		if (orderBy != null) {
+			target = target.queryParam("orderBy", orderBy);
+		}
+		
+		return target.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password)).get();
+	}
+	
+	@Test
+	public void testGetCategories() {
+		
+		// Create one offering. This offering is contained in two categories
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				"description", defaultUSDLPath, "");
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+		
+		// Get categories
+		Response getCategoriesResponse = getCategories(USER_NAME, PASSWORD);
+		assertThat(getCategoriesResponse.getStatus()).isEqualTo(200);
+		
+		// Check that all the categories are included
+		Categories categories = getCategoriesResponse.readEntity(Categories.class);
+		List<Category> categoriesList = categories.getCategories();
+		assertThat(categoriesList).containsAll(FIRST_OFFERING.getCategories());		
+	}
+	
+	@Test
+	public void testGetCategoryRecommendations() {
+		
+		String descriptionName = "description";
+		
+		// Create two offerings
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, secondaryUSDLPath, "");
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+		
+		// Review both offerings. First one with 1 starts and second one with 5 starts
+		Response createFirstRatingResponse = createOfferingReview(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, FIRST_OFFERING.getName(), 1, "");
+		assertThat(createFirstRatingResponse.getStatus()).isEqualTo(201);
+		Response createSecondRatingResponse = createOfferingReview(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, SECOND_OFFERING.getName(), 5, "");
+		assertThat(createSecondRatingResponse.getStatus()).isEqualTo(201);
+		
+		// Get the category in common between the two offerings
+		Set<Category> commonCategories = new HashSet<>(FIRST_OFFERING.getCategories());
+		commonCategories.retainAll(SECOND_OFFERING.getCategories());
+		String categoryName = commonCategories.iterator().next().getName();
+		
+		// Get category recommendations (offerings should be ordered by score: second offering
+		// should be the first one in the list)
+		Response getRecommendationsResponse = getCategoryRecommendations(USER_NAME, PASSWORD, categoryName, null);
+		assertThat(getRecommendationsResponse.getStatus()).isEqualTo(200);
+		Offerings offerings = getRecommendationsResponse.readEntity(Offerings.class);
+		List<Offering> offeringsList = offerings.getOfferings();
+		
+		// Set offerings description since offering.equals depends on it
+		Store store = new Store();
+		store.setName(FIRST_STORE_NAME);
+		
+		Description description = new Description();
+		description.setName(descriptionName);
+		description.setStore(store);
+		
+		FIRST_OFFERING.setDescribedIn(description);
+		SECOND_OFFERING.setDescribedIn(description);
+
+		// Check that offerings has been returned in the correct order
+		assertThat(offeringsList.get(0)).isEqualTo(SECOND_OFFERING);
+		assertThat(offeringsList.get(1)).isEqualTo(FIRST_OFFERING);
+
+	}
+	
+	@Test
+	public void testGetCategoriesInvalidOrder() {
+		
+		// Create one offering.
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				"description", defaultUSDLPath, "");
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+		
+		// Get offerings for one category with invalid order
+		String categoryName = FIRST_OFFERING.getCategories().iterator().next().getName();
+		String orderBy = "namea";
+		Response getRecommendationsResponse = getCategoryRecommendations(USER_NAME, PASSWORD, categoryName, orderBy);
+		assertThat(getRecommendationsResponse.getStatus()).isEqualTo(400);
+		checkAPIError(getRecommendationsResponse, 400, null, 
+				"Offerings cannot be ordered by " + orderBy + ".", ErrorType.BAD_REQUEST);
+	}
+
 }

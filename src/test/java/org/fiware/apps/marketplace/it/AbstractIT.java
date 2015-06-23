@@ -67,8 +67,16 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 public abstract class AbstractIT {
 	
-	private static Environment environment = Environment.getInstance();
+	protected String serverUrl;
+	protected String defaultUSDLPath;
+	protected String secondaryUSDLPath;
+	
+	// Mock server
+	@Rule public WireMockRule wireMock = new WireMockRule(0);
+
+	// Environment information
 	protected static String endPoint;
+	private static Environment environment = Environment.getInstance();
 	
 	protected final static String MESSAGE_INVALID_DISPLAY_NAME = 
 			"This field only accepts letters, numbers, white spaces, dots and hyphens.";
@@ -80,39 +88,20 @@ public abstract class AbstractIT {
 	protected final static String MESSAGE_INVALID_OFFSET_MAX = "offset and/or max are not valid";
 	protected final static String MESSAGE_STORE_NOT_FOUND = "Store %s not found";
 	protected final static String MESSAGE_INVALID_SCORE = "Score should be an integer between 0 and 5.";
-
-	@BeforeClass
-	public static void startUp() throws Exception {
-		
-		int port = environment.start();
-		
-		// End Point depends on the Tomcat port
-		endPoint = String.format("http://localhost:%d/WMarket", port);
-	}
 	
-	@AfterClass
-	public static void tearDown() throws Exception {
-		environment.stop();
-	}
-	
-	@Before
-	public void initEvironment() throws Exception {
-		environment.cleanDB();
-	}
-
-	@Rule
-	public WireMockRule wireMock = new WireMockRule(0);
-
 	// **********************************************************************************
-	// PROTECTED HELPERS FOR API DESCRIPTIONS
+	// PROTECTED HELPERS FOR DESCRIPTIONS. INSTANCES ARE NOT SHARED BETWEEN TESTS
 	// **********************************************************************************
 
-	protected final static Offering FIRST_OFFERING = new Offering();
-	protected final static Offering SECOND_OFFERING = new Offering();
+	protected final Offering FIRST_OFFERING = new Offering();
+	protected final Offering SECOND_OFFERING = new Offering();
 
-	static {
+	private void initOfferings() {
 		// WARN: This properties depends on the RDF files stored in "src/test/resources/__files" so if these files
 		// changes, this properties must be changed. Otherwise, tests will fail.
+		
+		// defaultUSDLPath only contains the first offering
+		// secondaryUSDLPath contains both the first offering and the second one 
 		
 		PriceComponent priceComponentOff1 = new PriceComponent();
 		priceComponentOff1.setTitle("Single payment");
@@ -182,7 +171,6 @@ public abstract class AbstractIT {
 		
 		Set<Category> categoriesOff2 = new HashSet<Category>();
 		categoriesOff2.add(wirecloudCategory);
-
 		
 		FIRST_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit"
 				+ "#Xo9ZQS2Qa3yX8fDfm");
@@ -213,10 +201,26 @@ public abstract class AbstractIT {
 		SECOND_OFFERING.setServices(servicesOff2);
 		SECOND_OFFERING.setCategories(categoriesOff2);
 	}
-
-	protected String serverUrl;
-	protected String defaultUSDLPath;
-	protected String secondaryUSDLPath;
+	
+	@BeforeClass
+	public static void startUp() throws Exception {
+		
+		int port = environment.start();
+		
+		// End Point depends on the Tomcat port
+		endPoint = String.format("http://localhost:%d/WMarket", port);
+	}
+	
+	@Before
+	public void initEvironment() throws Exception {
+		environment.cleanDB();
+		initOfferings();
+	}
+	
+	@AfterClass
+	public static void tearDown() throws Exception {
+		environment.stop();
+	}
 
 	protected void startMockServer() {
 		stubFor(get(urlMatching("/default[0-9]*.rdf"))
@@ -459,6 +463,5 @@ public abstract class AbstractIT {
 		assertThat(review.getScore()).isEqualTo(expectedScore);
 		assertThat(review.getComment()).isEqualTo(expectedComment);
 	}
-
 
 }
