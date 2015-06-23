@@ -68,7 +68,7 @@ public class CategoriesService {
 	
 	@GET
 	@Produces({"application/xml", "application/json"})
-	public Response getObjectCategories(@DefaultValue("0") @QueryParam("offset") int offset,
+	public Response getCategories(@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max) {
 		
 		Response response;
