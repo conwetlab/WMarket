@@ -44,12 +44,14 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +66,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class OfferingController extends AbstractController {
 
     @Autowired private OfferingBo offeringBo;
+    @Autowired private ReviewBo reviewBo;
 
     private static Logger logger = LoggerFactory.getLogger(OfferingController.class);
 
@@ -124,6 +127,10 @@ public class OfferingController extends AbstractController {
                 model.addAttribute("bookmark", true);
             }
 
+            try {
+				model.addAttribute("review", reviewBo.getUserReview(offering));
+			} catch (Exception e) {}
+
             view = new ModelAndView("offering.detail", model);
             builder = Response.ok();
         } catch (UserNotFoundException e) {
@@ -178,6 +185,10 @@ public class OfferingController extends AbstractController {
             model.addAttribute("offering", offering);
             model.addAttribute("title", offering.getDisplayName() + " - " + getContextName());
             model.addAttribute("currentView", "priceplans");
+
+            try {
+				model.addAttribute("review", reviewBo.getUserReview(offering));
+			} catch (Exception e) {}
 
             if (offeringBo.getAllBookmarkedOfferings().contains(offering)) {
                 model.addAttribute("bookmark", true);
@@ -236,6 +247,10 @@ public class OfferingController extends AbstractController {
             model.addAttribute("offering", offering);
             model.addAttribute("title", "Services - " + offering.getDisplayName() + " - " + getContextName());
             model.addAttribute("currentView", "services");
+
+            try {
+				model.addAttribute("review", reviewBo.getUserReview(offering));
+			} catch (Exception e) {}
 
             view = new ModelAndView("offering.service.list", model);
             builder = Response.ok();

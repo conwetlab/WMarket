@@ -99,18 +99,19 @@
     <!-- Detail View -->
     <definition name="store.detail" extends="app.auth">
         <put-attribute name="content" value="/WEB-INF/views/stores/detail-content.jsp" />
-        <put-attribute name="scripts.view" value="/WEB-INF/views/stores/form-scripts.jsp" />
+        <put-attribute name="scripts.view" value="/WEB-INF/views/stores/detail-scripts.jsp" />
     </definition>
 
     <!-- Description List View -->
     <definition name="store.description.list" extends="app.auth">
         <put-attribute name="content" value="/WEB-INF/views/stores/description-list-content.jsp" />
+        <put-attribute name="scripts.view" value="/WEB-INF/views/stores/detail-scripts.jsp" />
     </definition>
 
     <!-- Offering List View -->
     <definition name="store.offering.list" extends="app.auth">
         <put-attribute name="content" value="/WEB-INF/views/stores/offering-list-content.jsp" />
-        <put-attribute name="scripts.view" value="/WEB-INF/views/stores/offering-list-scripts.jsp" />
+        <put-attribute name="scripts.view" value="/WEB-INF/views/stores/detail-scripts.jsp" />
     </definition>
 
     <!-- DESCRIPTION VIEWS -->

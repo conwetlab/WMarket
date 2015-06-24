@@ -70,4 +70,14 @@
     </c:otherwise>
   </c:choose>
   </div>
+  <div class="row">
+    <div class="col-sm-10 col-md-6 col-md-offset-4 col-lg-7 col-lg-offset-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span class="panel-title">User reviews</span>
+        </div>
+        <div class="panel-body store-reviews"></div>
+      </div>
+    </div>
+  </div>
 </div>

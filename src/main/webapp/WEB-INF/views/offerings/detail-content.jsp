@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div class="container">
+  <div class="row">
   <div class="col-sm-10 col-md-4 col-lg-3">
     <t:insertTemplate template="/WEB-INF/views/offerings/header.jsp" />
   </div>
@@ -51,6 +52,17 @@
             <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.store.registrationDate }" /></dd>
           </dl>
         </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-10 col-md-6 col-md-offset-4 col-lg-7 col-lg-offset-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span class="panel-title">User reviews</span>
+        </div>
+        <div class="panel-body offering-reviews"></div>
       </div>
     </div>
   </div>
