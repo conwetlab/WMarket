@@ -105,9 +105,24 @@ public class DescriptionServiceIT extends AbstractIT {
 	 * This method retrieves an offering from the list of obtained offerings and check if its
 	 * price plans, services and categories are OK
 	 * @param offerings The list of offerings that the service has returned
+	 * @param storeName The name of the store where the offering is registered
+	 * @param descriptionName The of the the description that contains the offering
 	 * @param offering The offering to be checked
 	 */
-	private void checkOfferingInternalState(List<Offering> offerings, Offering offering) {
+	private void checkOfferingInternalState(List<Offering> offerings, String storeName, String descriptionName, 
+			Offering offering) {
+		
+		// Required for indexOf to work
+		Store store = new Store();
+		store.setName(storeName);
+		
+		Description description = new Description();
+		description.setName(descriptionName);
+		description.setStore(store);
+		
+		offering.setDescribedIn(description);
+				
+		// Get offering from the list
 		int index = offerings.indexOf(offering);
 		Offering receivedOffering = offerings.get(index);
 		assertThat(receivedOffering.getPricePlans()).isEqualTo(offering.getPricePlans());
@@ -137,6 +152,29 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 	}
 	
+	private void checkOfferingInList(String storeName, String descriptionName, 
+			Offering offering, List<Offering> offeringsList) {
+		
+		// We must set the description into the offering in order to make "isIn" work appropriately
+		// "isIn" is based on "equals" and it depends on the URL of the offering and its description
+
+		
+		// A description is managed by one store
+		Store store = new Store();
+		store.setName(storeName);
+		
+		// Description.equals depends on the name and its store
+		Description description = new Description();
+		description.setName(descriptionName);
+		description.setStore(store);
+		
+		offering.setDescribedIn(description);
+		
+		// Check that the offering is contained in the list of offerings returned by WMarket
+		assertThat(offering).isIn(offeringsList);
+		
+	}
+	
 	private void checkDescription(String userName, String password, String storeName, 
 			String descriptionName, String displayName, String url, String comment) {
 		
@@ -161,25 +199,10 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		for (Offering expectedOffering: expectedOfferings) {
 			
-			// We must set the description into the offering in order to make "isIn" work appropriately
-			// "isIn" is based on "equals" and it depends on the name of the offering and its description
-			
-			// A description is managed by one store
-			Store store = new Store();
-			store.setName(storeName);
-			
-			// Description.equals depends on the name and its store
-			Description description = new Description();
-			description.setName(descriptionName);
-			description.setStore(store);
-			
-			expectedOffering.setDescribedIn(description);
-			
-			// Check that the offering is contained in the list of offerings returned by WMarket
-			assertThat(expectedOffering).isIn(descriptionOfferings);
+			checkOfferingInList(storeName, descriptionName, expectedOffering, descriptionOfferings);
 			
 			// Check that the price plan is correct 
-			checkOfferingInternalState(descriptionOfferings, expectedOffering);
+			checkOfferingInternalState(descriptionOfferings, storeName, descriptionName, expectedOffering);
 		}
 	}
 	
@@ -772,7 +795,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Check that the right number of descriptions has been returned...
 		Descriptions retrievedDescriptions = response.readEntity(Descriptions.class);
-		int descriptionsCreated = stores.length * originalDescriptions.length;	// 2 descriptions
+		int descriptionsCreated = stores.length * originalDescriptions.length;	// 4 descriptions
 		int expectedElements = offset + max > descriptionsCreated ? descriptionsCreated - offset : max;
 		assertThat(retrievedDescriptions.getDescriptions().size()).isEqualTo(expectedElements);
 		
@@ -870,32 +893,16 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(createDesc1Res.getStatus()).isEqualTo(201);
 		assertThat(createDesc2Res.getStatus()).isEqualTo(201);
 		
-		// Create store and description instances. Needed for equals
-		Store store1 = new Store();
-		store1.setName(FIRST_STORE_NAME);
-		
-		Description description1 = new Description();
-		description1.setName(description1Name);
-		description1.setStore(store1);
-
-		Store store2 = new Store();
-		store2.setName(SECOND_STORE_NAME);
-		
-		Description description2 = new Description();
-		description2.setName(description2Name);
-		description2.setStore(store2);
-		
 		// Get Store1 offerings
 		Response store1OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, FIRST_STORE_NAME);
 		assertThat(store1OfferingResponse.getStatus()).isEqualTo(200);
 		
 		Offerings offerings = store1OfferingResponse.readEntity(Offerings.class);
-		assertThat(offerings.getOfferings().size()).isEqualTo(1);		
-		FIRST_OFFERING.setDescribedIn(description1);		// Otherwise equals will fail
-		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
+		assertThat(offerings.getOfferings().size()).isEqualTo(1);
+		checkOfferingInList(FIRST_STORE_NAME, description1Name, FIRST_OFFERING, offerings.getOfferings());
 
 		// Price plans are not checked in Offering.equals
-		checkOfferingInternalState(offerings.getOfferings(), FIRST_OFFERING);
+		checkOfferingInternalState(offerings.getOfferings(), FIRST_STORE_NAME, description1Name, FIRST_OFFERING);
 		
 		// Get Store2 offerings
 		Response store2OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, SECOND_STORE_NAME);
@@ -906,15 +913,12 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Needed to retrieve the offerings from the list in an appropriate way. equals is based
 		// on the name and the description...
-		FIRST_OFFERING.setDescribedIn(description2);
-		SECOND_OFFERING.setDescribedIn(description2);
-		
-		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
-		assertThat(SECOND_OFFERING).isIn(offerings.getOfferings());
-		
+		checkOfferingInList(SECOND_STORE_NAME, description2Name, FIRST_OFFERING, offerings.getOfferings());
+		checkOfferingInList(SECOND_STORE_NAME, description2Name, SECOND_OFFERING, offerings.getOfferings());
+
 		// Price plans are not checked in Offering.equals
-		checkOfferingInternalState(offerings.getOfferings(), FIRST_OFFERING);
-		checkOfferingInternalState(offerings.getOfferings(), SECOND_OFFERING);
+		checkOfferingInternalState(offerings.getOfferings(), SECOND_STORE_NAME, description2Name, FIRST_OFFERING);
+		checkOfferingInternalState(offerings.getOfferings(), SECOND_STORE_NAME, description2Name, SECOND_OFFERING);
 		
 	}
 	
