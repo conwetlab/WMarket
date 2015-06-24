@@ -33,12 +33,15 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
  */
 
 import java.net.URI;
+import java.util.List;
 
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -50,6 +53,7 @@ import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
+import org.fiware.apps.marketplace.model.DetailedReview;
 import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Reviews;
 import org.slf4j.LoggerFactory;
@@ -133,12 +137,24 @@ public class StoreReviewService {
 	
 	@GET
 	public Response getReviews(
-			@PathParam("storeName") String storeName) {
+			@PathParam("storeName") String storeName,
+			@DefaultValue("false") @QueryParam("detailed") boolean detailed) {
 		
 		Response response;
 		
 		try {
-			response = Response.ok().entity(new Reviews(storeBo.getReviews(storeName))).build();
+			
+			List<Review> reviews = storeBo.getReviews(storeName);
+			
+			// Replace reviews by detailed reviews when query param is set
+			if (detailed) {
+				for (int i = 0; i < reviews.size(); i++) {
+					reviews.set(i, new DetailedReview(reviews.get(i)));
+				}
+			}
+			
+			response = Response.ok().entity(new Reviews(reviews)).build();
+
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (StoreNotFoundException ex) {
@@ -155,12 +171,20 @@ public class StoreReviewService {
 	@Path("{reviewId}")
 	public Response getReview(
 			@PathParam("storeName") String storeName, 
-			@PathParam("reviewId") int reviewId) {
+			@PathParam("reviewId") int reviewId,
+			@DefaultValue("false") @QueryParam("detailed") boolean detailed) {
 		
 		Response response;
 		
 		try {
-			response = Response.ok().entity(storeBo.getReview(storeName, reviewId)).build();
+			
+			Review review = storeBo.getReview(storeName, reviewId);
+			
+			if (detailed) {
+				review = new DetailedReview(review);
+			}
+			
+			response = Response.ok().entity(review).build();
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (StoreNotFoundException | ReviewNotFoundException ex) {
@@ -193,6 +217,5 @@ public class StoreReviewService {
 		
 		return response;
 	}
-
 
 }

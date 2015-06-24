@@ -41,6 +41,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -52,9 +53,11 @@ import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
+import org.fiware.apps.marketplace.model.DetailedReview;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Reviews;
+import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -68,7 +71,7 @@ public class StoreReviewServiceTest {
 	private UriInfo uri;
 
 	@Mock private StoreBo storeBoMock;
-	@InjectMocks private StoreReviewService reviewService;
+	@InjectMocks private StoreReviewService reviewsService;
 	
 	private static final String PATH = "/api/v2/store/storeName/review";
 	private static final String STORE_NAME = "store";
@@ -99,7 +102,7 @@ public class StoreReviewServiceTest {
 			doThrow(ex).when(storeBoMock).createReview(STORE_NAME, review);
 
 			// Actual call
-			Response res = reviewService.createReview(uri, STORE_NAME, review);
+			Response res = reviewsService.createReview(uri, STORE_NAME, review);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -142,7 +145,7 @@ public class StoreReviewServiceTest {
 		}).when(storeBoMock).createReview(STORE_NAME, review);
 		
 		// Actual call
-		Response res = reviewService.createReview(uri, STORE_NAME, review);
+		Response res = reviewsService.createReview(uri, STORE_NAME, review);
 		
 		// Check response and headers
 		assertThat(res.getStatus()).isEqualTo(201);
@@ -165,7 +168,7 @@ public class StoreReviewServiceTest {
 			doThrow(ex).when(storeBoMock).updateReview(STORE_NAME, REVIEW_ID, review);
 
 			// Actual call
-			Response res = reviewService.updateReview(STORE_NAME, REVIEW_ID, review);
+			Response res = reviewsService.updateReview(STORE_NAME, REVIEW_ID, review);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -205,7 +208,7 @@ public class StoreReviewServiceTest {
 		Review review = new Review();
 		
 		// Actual call
-		Response res = reviewService.updateReview(STORE_NAME, REVIEW_ID, review);
+		Response res = reviewsService.updateReview(STORE_NAME, REVIEW_ID, review);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -227,7 +230,7 @@ public class StoreReviewServiceTest {
 			doThrow(ex).when(storeBoMock).getReviews(STORE_NAME);
 			
 			// Actual call
-			Response res = reviewService.getReviews(STORE_NAME);
+			Response res = reviewsService.getReviews(STORE_NAME, false);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -255,11 +258,42 @@ public class StoreReviewServiceTest {
 		@SuppressWarnings("unchecked")
 		List<Review> reviews = mock(List.class); 
 		doReturn(reviews).when(storeBoMock).getReviews(STORE_NAME);
-		Response res = reviewService.getReviews(STORE_NAME);
+		Response res = reviewsService.getReviews(STORE_NAME, false);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
 		assertThat(((Reviews) res.getEntity()).getReviews()).isEqualTo(reviews);
+	}
+	
+	@Test
+	public void testGetDetailedReviews() throws Exception {
+		
+		// Mocking
+		User user = mock(User.class);
+		Review review1 = mock(Review.class);
+		when(review1.getUser()).thenReturn(user);
+		Review review2 = mock(Review.class);
+		when(review2.getUser()).thenReturn(user);
+		
+		List<Review> reviews = new ArrayList<>();
+		reviews.add(review1);
+		reviews.add(review2);
+		
+		doReturn(reviews).when(storeBoMock).getReviews(STORE_NAME);
+		
+		// Actual call
+		Response res = reviewsService.getReviews(STORE_NAME, true);
+		
+		// Check response
+		assertThat(res.getStatus()).isEqualTo(200);
+		
+		List<Review> returnedReviews = ((Reviews) res.getEntity()).getReviews();
+		assertThat(returnedReviews).isNotEmpty();
+		
+		// Reviews should be instances of DetailedReview
+		for (Review review: reviews) {
+			assertThat(review).isInstanceOf(DetailedReview.class);
+		}
 	}
 	
 	
@@ -275,7 +309,7 @@ public class StoreReviewServiceTest {
 			doThrow(ex).when(storeBoMock).getReview(STORE_NAME, REVIEW_ID);
 			
 			// Actual call
-			Response res = reviewService.getReview(STORE_NAME, REVIEW_ID);
+			Response res = reviewsService.getReview(STORE_NAME, REVIEW_ID, false);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -307,11 +341,37 @@ public class StoreReviewServiceTest {
 		// Actual call
 		Review review = mock(Review.class); 
 		doReturn(review).when(storeBoMock).getReview(STORE_NAME, REVIEW_ID);
-		Response res = reviewService.getReview(STORE_NAME, REVIEW_ID);
+		Response res = reviewsService.getReview(STORE_NAME, REVIEW_ID, false);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
 		assertThat((Review) res.getEntity()).isEqualTo(review);
+	}
+	
+	@Test
+	public void testGetDetailedReview() throws Exception {
+		// Actual call
+		User user = mock(User.class);
+		Review review = mock(Review.class); 
+		when(review.getUser()).thenReturn(user);
+		doReturn(review).when(storeBoMock).getReview(STORE_NAME, REVIEW_ID);
+		Response res = reviewsService.getReview(STORE_NAME, REVIEW_ID, true);
+		
+		// Check response
+		assertThat(res.getStatus()).isEqualTo(200);
+		
+		DetailedReview returnedReview = (DetailedReview) res.getEntity();
+		assertThat(returnedReview).isInstanceOf(DetailedReview.class);
+		assertThat(returnedReview.getId()).isEqualTo(review.getId());
+		assertThat(returnedReview.getUser()).isEqualTo(review.getUser());
+		assertThat(returnedReview.getScore()).isEqualTo(review.getScore());
+		assertThat(returnedReview.getComment()).isEqualTo(review.getComment());
+		assertThat(returnedReview.getLastModificationDate()).isEqualTo(review.getLastModificationDate());
+		
+		// Check that Password & mail has been set to null in order to avoid including them in the JSON/XML
+		verify(user).setPassword(null);
+		verify(user).setEmail(null);
+
 	}
 	
 	
@@ -327,7 +387,7 @@ public class StoreReviewServiceTest {
 			doThrow(ex).when(storeBoMock).deleteReview(STORE_NAME, REVIEW_ID);
 			
 			// Actual call
-			Response res = reviewService.deleteReview(STORE_NAME, REVIEW_ID);
+			Response res = reviewsService.deleteReview(STORE_NAME, REVIEW_ID);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -357,7 +417,7 @@ public class StoreReviewServiceTest {
 	@Test
 	public void testDeleteReview() throws Exception {
 		// Actual call
-		Response res = reviewService.deleteReview(STORE_NAME, REVIEW_ID);
+		Response res = reviewsService.deleteReview(STORE_NAME, REVIEW_ID);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(204);

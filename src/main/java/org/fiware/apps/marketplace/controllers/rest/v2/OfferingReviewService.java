@@ -34,12 +34,15 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
  */
 
 import java.net.URI;
+import java.util.List;
 
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -53,11 +56,13 @@ import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
+import org.fiware.apps.marketplace.model.DetailedReview;
 import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Reviews;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 
 @Component
 @Path("/api/v2/store/{storeName}/description/{descriptionName}/offering/{offeringName}/review")
@@ -143,13 +148,23 @@ public class OfferingReviewService {
 	public Response getReviews(
 			@PathParam("storeName") String storeName, 
 			@PathParam("descriptionName") String descriptionName,
-			@PathParam("offeringName") String offeringName) {
+			@PathParam("offeringName") String offeringName,
+			@DefaultValue("false") @QueryParam("detailed") boolean detailed) {
 		
 		Response response;
 		
 		try {
-			response = Response.ok().entity(new Reviews(offeringBo.getReviews(
-					storeName, descriptionName, offeringName))).build();
+			
+			List<Review> reviews = offeringBo.getReviews(storeName, descriptionName, offeringName);
+			
+			// Replace reviews by detailed reviews when query param is set
+			if (detailed) {
+				for (int i = 0; i < reviews.size(); i++) {
+					reviews.set(i, new DetailedReview(reviews.get(i)));
+				}
+			}
+			
+			response = Response.ok().entity(new Reviews(reviews)).build();
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (OfferingNotFoundException | StoreNotFoundException | DescriptionNotFoundException ex) {
@@ -168,13 +183,21 @@ public class OfferingReviewService {
 			@PathParam("storeName") String storeName, 
 			@PathParam("descriptionName") String descriptionName,
 			@PathParam("offeringName") String offeringName,
-			@PathParam("reviewId") int reviewId) {
+			@PathParam("reviewId") int reviewId,
+			@DefaultValue("false") @QueryParam("detailed") boolean detailed) {
 		
 		Response response;
 		
 		try {
-			response = Response.ok().entity(offeringBo.getReview(
-					storeName, descriptionName, offeringName, reviewId)).build();
+			
+			Review review = offeringBo.getReview(storeName, descriptionName, offeringName, reviewId);
+			
+			// Transform the review in a detailed review
+			if (detailed) {
+				review = new DetailedReview(review);
+			}
+			
+			response = Response.ok().entity(review).build();
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (OfferingNotFoundException | StoreNotFoundException |
