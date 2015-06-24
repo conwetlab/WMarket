@@ -75,7 +75,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	private final static String MESSAGE_NAME_IN_USE = "This name is already in use in this Store.";
 	private final static String MESSAGE_URL_IN_USE = "This URL is already in use in this Store.";
 	private final static String MESSAGE_INVALID_RDF = "Your RDF could not be parsed.";
-	private final static String MESSAGE_DESCRIPTION_NOT_FOUND = "Description %s not found";
+	private final static String MESSAGE_DESCRIPTION_NOT_FOUND = "Description %s not found in Store %s";
 
 	@Before
 	public void setUp() {
@@ -545,8 +545,10 @@ public class DescriptionServiceIT extends AbstractIT {
 		String descriptionToBeUpdated = displayName + "a";  	//This ID is supposed not to exist
 		Response updateDescriptionResponse = updateDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
 				descriptionToBeUpdated, "new display", null, null);
+		
 		checkAPIError(updateDescriptionResponse, 404, null, 
-				String.format(MESSAGE_DESCRIPTION_NOT_FOUND, descriptionToBeUpdated), ErrorType.NOT_FOUND);	
+				String.format(MESSAGE_DESCRIPTION_NOT_FOUND, descriptionToBeUpdated, 
+						FIRST_STORE_NAME), ErrorType.NOT_FOUND);	
 	}
 	
 	@Test
@@ -613,9 +615,11 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Delete non-existing description
 		String descriptionToBeDeleted = name + "a";  	//This ID is supposed not to exist
-		Response deleteStoreResponse = deleteDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, descriptionToBeDeleted);
+		Response deleteStoreResponse = deleteDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionToBeDeleted);
 		checkAPIError(deleteStoreResponse, 404, null, 
-				String.format(MESSAGE_DESCRIPTION_NOT_FOUND, descriptionToBeDeleted), ErrorType.NOT_FOUND);	
+				String.format(MESSAGE_DESCRIPTION_NOT_FOUND, descriptionToBeDeleted, 
+						FIRST_STORE_NAME), ErrorType.NOT_FOUND);	
 	}
 	
 	@Test

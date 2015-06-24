@@ -45,7 +45,6 @@ import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -82,7 +81,7 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 		return (Description) res;
 	}
 
-	private Description findByQuery(String queryString, Object[] params) 
+	/*private Description findByQuery(String queryString, Object[] params) 
 			throws DescriptionNotFoundException {
 
 		Query query = getSession()
@@ -99,18 +98,28 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 		} else {
 			return (Description) list.get(0);
 		}
-	}
+	}*/
 
 	@Override
 	public Description findByNameAndStore(String storeName, String descriptionName) 
 			throws DescriptionNotFoundException, StoreNotFoundException {
-
+		
 		// Throws StoreNotFoundException if the Store does not exist
 		storeDao.findByName(storeName);
+		
+		List<?> list = getSession()
+				.createQuery(String.format("from %s where name = :descriptionName and store.name = :storeName", 
+						TABLE_NAME))
+				.setParameter("descriptionName", descriptionName)
+				.setParameter("storeName", storeName)
+				.list();
 
-		Object[] params  = {descriptionName , storeName};
-		String query = String.format("from %s where name = ? and store.name = ?", TABLE_NAME);
-		return this.findByQuery(query, params);				
+		if (list.isEmpty()) {
+			throw new DescriptionNotFoundException("Description " + descriptionName + 
+					" not found in Store " + storeName);
+		} else {
+			return (Description) list.get(0);
+		}		
 	}
 
 	@Override
