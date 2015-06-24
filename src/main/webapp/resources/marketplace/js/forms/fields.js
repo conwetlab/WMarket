@@ -152,6 +152,20 @@
             return this;
         },
 
+        empty: function empty() {
+            this.control.val("");
+            return this.clean();
+        },
+
+        get: function () {
+            return this.element;
+        },
+
+        remove: function () {
+            this.element.remove();
+            return this;
+        },
+
         validate: function validate() {
             if (this.readonly) {
                 return this;

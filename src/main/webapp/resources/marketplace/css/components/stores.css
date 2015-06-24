@@ -25,6 +25,11 @@
     width: 1%;
 }
 
+.store-heading .rating-value {
+    right: 3px;
+    top: 2px;
+}
+
 .store-body {
     width: 100%;
     padding-left: 10px;
@@ -42,4 +47,8 @@
 
 .store-body .store-url {
     color: rgb(100, 100, 100);
+}
+
+.store-displayname {
+    margin-bottom: 10px;
 }

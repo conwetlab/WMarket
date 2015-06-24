@@ -120,4 +120,104 @@
         }
     };
 
+    var defaults = {
+        method: "",
+        kwargs: {},
+        queryString: {},
+        data: {}
+    };
+
+    function createRequestSpinner() {
+        return $('<div class="pending-state">')
+            .append($('<span class="fa fa-spinner fa-pulse">'));
+    }
+
+    function parseQS(queryString) {
+        var result = "",
+            keys = Object.keys(queryString);
+
+        if (keys.length) {
+            result += "?";
+
+            for (var i = 0; i < keys.length; i++) {
+                result += keys[i] + "=" + queryString[keys[i]];
+                if ((keys.length - 1) !== i) {
+                    result += "&";
+                }
+            }
+        }
+
+        return result;
+    }
+
+    function sendRequest(method, type, url, options) {
+        options = utils.update(defaults, options);
+
+        var settings = {
+                method: options.method ? options.method : method,
+                url: utils.format(url, options.kwargs) + parseQS(options.queryString),
+                contentType: 'application/json',
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                }
+            },
+            $spinner;
+
+        switch (settings.method) {
+        case 'GET':
+            settings.dataType = 'json';
+            if (type == 'collection') {
+                $spinner = createRequestSpinner();
+                options.$target.empty().append($spinner);
+ 
+                settings.success = function (data, textStatus, jqXHR) {
+                    var models = Object.keys(data);
+
+                    $spinner.remove();
+
+                    if (models.length && data[models[0]].length) {
+                        options.success(data[models[0]], jqXHR, options.$target);
+                    } else {
+                        options.$target.append(options.$alert);
+                    }
+                };
+            } else {
+                settings.success = function (data, textStatus, jqXHR) {
+                    options.success(data, jqXHR);
+                };
+            }
+            break;
+        case 'POST':
+        case 'PUT':
+            settings.data = JSON.stringify(options.data);
+        case 'DELETE':
+            settings.success = function (data, textStatus, jqXHR) {
+                options.success(jqXHR);
+            };
+            break;
+        }
+
+        $.ajax(settings);
+    }
+
+    ns.list = function list(url, options) {
+        sendRequest('GET', 'collection', url, options);
+    };
+
+    ns.create = function create(url, options) {
+        sendRequest('POST', 'collection', url, options);
+    };
+
+    ns.find = function find(url, options) {
+        sendRequest('GET', 'entry', url, options);
+    };
+
+    ns.update = function update(url, options) {
+        sendRequest('PUT', 'entry', url, options);
+    };
+
+    ns.destroy = function destroy(url, options) {
+        sendRequest('DELETE', 'entry', url, options);
+    };
+
 })(app.requests, app.utils);

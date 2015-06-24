@@ -7,6 +7,29 @@
 
     "use strict";
 
+    var baseArgs = {
+        store: ns.storeName,
+        description: ns.descriptionName,
+        offering: ns.offeringName
+    };
+
+    ns.model = 'offering';
+
+    ns.urls = {
+        entry: app.urls.get('offering:entry', baseArgs),
+        review_collection: app.urls.get('offering:entry:review:collection', baseArgs),
+        review_entry: app.urls.get('offering:entry:review:entry', baseArgs)
+    };
+
+    ns.$ratingOverall = $('.rating-overall > .fa-star');
+    ns.$reviewList = $('.offering-reviews');
+
+    ns.find = function find(next) {
+        app.requests.find(ns.urls.entry, {
+            success: next
+        });
+    };
+
     ns.btnToggleBookmark = $('.btn-toggle-bookmark');
 
     ns.toggleBookmark = function toggleBookmark() {

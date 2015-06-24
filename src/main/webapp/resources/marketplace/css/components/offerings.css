@@ -53,6 +53,11 @@
     height: 100px;
 }
 
+.offering-item .image-thumbnail .rating-value {
+    right: 5px;
+    top: 5px;
+}
+
 .offering-store {
     display: block;
     margin-bottom: 5px;
@@ -70,7 +75,12 @@
 }
 
 .offering-categories {
-    margin: 10px 0px 0px;
+    margin: 5px 0px;
+}
+
+.offering-reviews {
+    max-height: 440px;
+    overflow-y: auto;
 }
 
 /****************************************************************************************

@@ -1,0 +1,122 @@
+@CHARSET "UTF-8";
+
+/**
+ * Copyright (c) 2015, CoNWeT Lab., Universidad Politécnica de Madrid
+ * Code licensed under BSD 3-Clause (https://github.com/conwetlab/WMarket/blob/master/LICENSE)
+ */
+
+/****************************************************************************************
+ * COMPONENT MODAL
+ ****************************************************************************************/
+
+.modal:before {
+    position: fixed;
+    display: none;
+    content: "";
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.modal.slipped:before {
+    display: block;
+    background-color: rgb(0, 0, 0);
+    opacity: 0.5;
+}
+
+.modal .modal-dialog {
+    position: absolute;
+    display: block;
+    top: -100%;
+    left: 0;
+    right: 0;
+    width: auto;
+    margin: 0px 10px;
+    transition: top .5s ease-in-out;
+    z-index: 1010;
+}
+
+.modal.slipped .modal-dialog {
+    top: 30px;
+}
+
+.modal-content {
+    position: relative;
+    display: block;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(230, 220, 230);
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .75);
+}
+
+@media (min-width: 768px) {
+
+    .modal .modal-dialog {
+        width: 500px;
+        margin: 0px auto;
+    }
+
+    .modal .modal-body form {
+        margin: 0px 80px;
+    }
+
+}
+
+.modal-heading {
+    position: relative;
+    display: block;
+    padding: 15px 10px;
+    border-bottom: 1px solid rgb(230, 220, 230);
+}
+
+.modal-heading .modal-title {
+    font: normal 700 18px/20px Helvetica, Arial, sans-serif;
+    color: rgb(100, 100, 100);
+}
+
+.modal-heading .btn-close {
+    margin: 0;
+    padding: 0;
+    float: right;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 20px;
+    color: rgb(0, 0, 0);
+    text-shadow: 0 1px 0 rgb(255, 255, 255);
+    opacity: .2;
+    cursor: pointer;
+    background: 0 0;
+    border: 0;
+}
+.modal-heading .btn-close:hover {
+    opacity: .5;
+}
+
+.modal-body {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+
+.modal-body form {
+    margin: 0px 20px;
+}
+
+.modal-footer {
+    position: relative;
+    display: block;
+    padding: 10px 10px;
+    border-top: 1px solid rgb(230, 220, 230);
+    text-align: right;
+}
+
+.modal-footer .btn {
+    margin-bottom: 0;
+}
+
+.modal-footer .btn + .btn {
+    margin-left: 5px;
+}

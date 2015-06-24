@@ -27,5 +27,34 @@
         return new app.forms.FormValidator(formName, formFields);
     };
 
-})(app);
+    ns.bindModal = function bindModal($source, selector, options) {
+        $source.on('click', function (event) {
+            findModal(selector, $(this), options.context, {
+                before: options.before,
+                submit: options.submit,
+                after: options.after
+            });
+        });
+    };
 
+    function showModal() {
+        this.addClass('slipped');
+    }
+
+    function hideModal() {
+        this.removeClass('slipped');
+    }
+
+    function findModal(selector, $source, context, callbacks) {
+        var $modal = $(selector);
+
+        $modal.find('[data-cancel]').off('click').on('click', function (event) {
+            callbacks.after(context, hideModal.bind($modal));
+        });
+        $modal.find('[data-submit]').off('click').on('click', function (event) {
+            callbacks.submit(context, $(this), hideModal.bind($modal));
+        });
+        callbacks.before(context, $source, $modal, showModal.bind($modal));
+    };
+
+})(app);

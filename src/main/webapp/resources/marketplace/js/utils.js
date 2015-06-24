@@ -118,6 +118,8 @@
         return target;
     };
 
+    ns.format = ns.formatString;
+
     ns.cloneObject = function cloneObject(source) {
         var target = {};
 
@@ -146,6 +148,8 @@
 
         return target;
     };
+
+    ns.update = ns.updateObject;
 
     ns.patternEmail = emailRE.user + "@" + emailRE.domain;
 
