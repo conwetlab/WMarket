@@ -211,7 +211,7 @@ public class User {
 	}
 
 	@XmlTransient
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "bookmarks", 
 		      joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
 		      inverseJoinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")})

@@ -34,6 +34,7 @@ package org.fiware.apps.marketplace.model;
  */
 
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -51,6 +52,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -77,6 +79,8 @@ public class Offering extends ReviewableEntity {
 	
 	// Offering categories depends on the attached services
 	private Set<Category> categories;
+	
+	private List<User> usersBookmarkedMe;
 
 	@XmlID
 	@XmlAttribute 
@@ -188,6 +192,19 @@ public class Offering extends ReviewableEntity {
 
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
+	}
+	
+	@XmlTransient
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "bookmarks", 
+    		joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+    		inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
+	public List<User> getUsersBookmarkedMe() {
+		return usersBookmarkedMe;
+	}
+
+	public void setUsersBookmarkedMe(List<User> usersBookmarkedMe) {
+		this.usersBookmarkedMe = usersBookmarkedMe;
 	}
 
 	@Override
