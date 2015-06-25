@@ -404,20 +404,29 @@ public abstract class AbstractIT {
 				.get();
 	}
 	
-	protected Response getStoreReviews(String userName, String password, String name) {
+	protected Response getStoreReviews(String userName, String password, String name, int offset, int max,
+			String orderBy, boolean desc) {
 		Client client = ClientBuilder.newClient();
 		return client.target(endPoint + "/api/v2/store/" + name + "/review/")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.queryParam("orderBy", orderBy)
+				.queryParam("desc", desc)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password))
 				.get();
 	}
 	
 	protected Response getOfferingReviews(String userName, String password, String storeName, String descriptionName,
-			String offeringName) {
+			String offeringName, int offset, int max, String orderBy, boolean desc) {
 		
 		Client client = ClientBuilder.newClient();
 		return client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + descriptionName + 
 				"/offering/" + offeringName + "/review/")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.queryParam("orderBy", orderBy)
+				.queryParam("desc", desc)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password))
 				.get();

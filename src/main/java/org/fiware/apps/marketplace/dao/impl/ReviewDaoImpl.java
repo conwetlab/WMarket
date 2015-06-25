@@ -22,9 +22,9 @@ public class ReviewDaoImpl extends MarketplaceHibernateDao implements ReviewDao 
 		List<Review> list = getSession()
 				.createQuery(String.format("from %s where reviewableEntity=:entity ORDER BY %s %s", 
 						TABLE_NAME, orderBy, descString))
+				.setParameter("entity", entity)
 				.setFirstResult(offset)
 				.setMaxResults(max)
-				.setParameter("entity", entity)
 				.list();
 		
 		return list;

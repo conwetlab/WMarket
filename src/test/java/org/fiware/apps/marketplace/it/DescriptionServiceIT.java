@@ -1398,9 +1398,9 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Create reviews
 		int reviewsNumber = 4;
-		int start = 1;
+		int initialScore = 1;
 		double totalScore = createNReviews(storeName, descriptionName, offeringName, baseComment, 
-				reviewsNumber, start);
+				reviewsNumber, initialScore);
 		
 		// Get average score
 		double average = totalScore / ((double) reviewsNumber);
@@ -1409,20 +1409,38 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(reviewdOffering.getAverageScore()).isEqualTo(average);
 		
 		// Get reviews list and check values
-		Reviews reviews = getOfferingReviews(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
-				.readEntity(Reviews.class);
+		Reviews reviews = getOfferingReviews(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+				0, 100, "id", false).readEntity(Reviews.class);
 		List<Review> reviewsList = reviews.getReviews();
 		assertThat(reviews.getReviews()).hasSize((int) reviewsNumber);
 		
 		for (int i = 0; i < reviewsList.size(); i++) {
 			Review review = reviewsList.get(i);
 			
-			int score = i + start;
+			int score = i + initialScore;
 			// Comment is based on the score
 			assertThat(review.getComment()).isEqualTo(getCommentFromBase(baseComment, score));
 			assertThat(review.getScore()).isEqualTo(score);
 			
-		}		
+		}
+		
+		// Get two reviews: ordered by score DESC, offset is 1
+		int max = 2;
+		int secondBestScore = initialScore + reviewsNumber - 2;
+		reviews = getOfferingReviews(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+				1, 2, "score", true).readEntity(Reviews.class);
+		reviewsList = reviews.getReviews();
+		assertThat(reviewsList).hasSize(max);
+		
+		for (int i = 0; i < reviewsList.size(); i++) {
+			Review review = reviewsList.get(i);
+			
+			int score = secondBestScore - i;
+			// Comment is based on the score
+			assertThat(review.getComment()).isEqualTo(getCommentFromBase(baseComment, score));
+			assertThat(review.getScore()).isEqualTo(score);
+			
+		}
 	}
 	
 	@Test
