@@ -87,7 +87,7 @@ public abstract class AbstractIT {
 	protected final static String MESSAGE_INVALID_URL = "This field must be a valid URL.";
 	protected final static String MESSAGE_INVALID_OFFSET_MAX = "offset and/or max are not valid";
 	protected final static String MESSAGE_STORE_NOT_FOUND = "Store %s not found";
-	protected final static String MESSAGE_INVALID_SCORE = "Score should be an integer between 0 and 5.";
+	protected final static String MESSAGE_INVALID_SCORE = "Score should be an integer between 1 and 5.";
 	
 	// **********************************************************************************
 	// PROTECTED HELPERS FOR DESCRIPTIONS. INSTANCES ARE NOT SHARED BETWEEN TESTS

@@ -847,16 +847,16 @@ public class StoreServiceIT extends AbstractIT {
 	@Test
 	public void testGetStoresOrderedByScore() {
 		
-		// storesNames.length must be 5 at the most
-		String[] storeNames = new String[]{"AStore", "BStore", "CStore", "DStore", "EStore"};
+		// storesNames.length must be 4 at the most
+		String[] storeNames = new String[]{"AStore", "BStore", "CStore", "DStore"};
 		int nStores = storeNames.length;
 		
 		for (int i = 0; i < storeNames.length; i++) {
 			String storeUrl = "http://store" + i + ".com";
 			
 			// Ensure that name order is opposite to score order
-			// AStore -> 0, BStore -> 1,...
-			createStoreAndReview(storeNames[i], storeUrl, i, "");
+			// AStore -> 1, BStore -> 2,...
+			createStoreAndReview(storeNames[i], storeUrl, i + 1, "");
 		}
 		
 		// Get some stores
