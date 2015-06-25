@@ -28,7 +28,7 @@
           </dl>
           <dl>
             <dt>Upload date</dt>
-            <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.registrationDate }" /></dd>
+            <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.createdAt }" /></dd>
           </dl>
         </div>
       </div>
@@ -49,7 +49,7 @@
           </dl>
           <dl>
             <dt>Registration date</dt>
-            <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.store.registrationDate }" /></dd>
+            <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ offering.describedIn.store.createdAt }" /></dd>
           </dl>
         </div>
       </div>

@@ -66,7 +66,7 @@ public class StoreValidatorTest {
 		store.setName("name");
 		store.setDisplayName("store-. ");
 		store.setUrl("https://store.lab.fiware.org");
-		store.setRegistrationDate(new Date());
+		store.setCreatedAt(new Date());
 
 		return store;
 	}

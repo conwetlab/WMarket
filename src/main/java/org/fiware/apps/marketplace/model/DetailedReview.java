@@ -18,8 +18,8 @@ public class DetailedReview extends Review {
 		this.setScore(review.getScore());
 		this.setComment(review.getComment());
 		this.setReviewableEntity(this.getReviewableEntity());
-		this.setLastModificationDate(review.getLastModificationDate());
-		this.setPublicationDate(review.getPublicationDate());
+		this.setUpdatedAt(review.getUpdatedAt());
+		this.setCreatedAt(review.getCreatedAt());
 		this.setUser(review.getUser());
 		
 		// Set user password & mail to null in order to avoid returning these values

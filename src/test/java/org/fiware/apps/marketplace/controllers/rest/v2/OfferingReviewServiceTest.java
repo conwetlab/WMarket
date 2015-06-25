@@ -462,7 +462,7 @@ public class OfferingReviewServiceTest {
 		assertThat(returnedReview.getUser()).isEqualTo(review.getUser());
 		assertThat(returnedReview.getScore()).isEqualTo(review.getScore());
 		assertThat(returnedReview.getComment()).isEqualTo(review.getComment());
-		assertThat(returnedReview.getLastModificationDate()).isEqualTo(review.getLastModificationDate());
+		assertThat(returnedReview.getUpdatedAt()).isEqualTo(review.getUpdatedAt());
 		
 		// Check that Password & mail has been set to null in order to avoid including them in the JSON/XML
 		verify(user).setPassword(null);

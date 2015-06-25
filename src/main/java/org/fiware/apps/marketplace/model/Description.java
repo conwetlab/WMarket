@@ -74,7 +74,7 @@ public class Description {
 	private String name;
 	private String displayName;
 	private String comment;
-	private Date registrationDate;
+	private Date createdAt;
 	private Store store;
 	private User lasteditor;	
 	private User creator;
@@ -178,13 +178,13 @@ public class Description {
 	}
 
 	@XmlElement
-	@Column(name = "registration_date")
-	public Date getRegistrationDate() {
-		return registrationDate;
+	@Column(name = "created_at")
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setCreatedAt(Date registrationDate) {
+		this.createdAt = registrationDate;
 	}
 
     @XmlElement(name = "offering")

@@ -121,7 +121,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 			} catch (UserNotFoundException e) {
 				// Create a new user
 				user = new User();
-				user.setRegistrationDate(new Date());
+				user.setCreatedAt(new Date());
 			}
 
 			// Set field values

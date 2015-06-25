@@ -107,8 +107,8 @@ public class ReviewBoImpl implements ReviewBo {
 		try {
 			// Set review options
 			Date currentDate = new Date();
-			newReview.setPublicationDate(currentDate);
-			newReview.setLastModificationDate(currentDate);
+			newReview.setCreatedAt(currentDate);
+			newReview.setUpdatedAt(currentDate);
 			newReview.setUser(userBo.getCurrentUser());
 			newReview.setReviewableEntity(entity);
 
@@ -143,7 +143,7 @@ public class ReviewBoImpl implements ReviewBo {
 
 		// Update review
 		bbddReview.setScore(updatedReview.getScore());
-		bbddReview.setLastModificationDate(new Date());
+		bbddReview.setUpdatedAt(new Date());
 		if (updatedReview.getComment() != null) {
 			bbddReview.setComment(updatedReview.getComment());
 		}

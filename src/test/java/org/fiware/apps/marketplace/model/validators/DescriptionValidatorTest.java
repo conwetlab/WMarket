@@ -74,7 +74,7 @@ public class DescriptionValidatorTest {
 		description.setDisplayName("Description 1.-");
 		description.setUrl("https://repo.lab.fi-ware.org/offerings/offering1.rdf");
 		description.setComment("This is an example comment");
-		description.setRegistrationDate(new Date());
+		description.setCreatedAt(new Date());
 		description.setStore(store);
 		description.setCreator(creator);
 		description.setLasteditor(creator);

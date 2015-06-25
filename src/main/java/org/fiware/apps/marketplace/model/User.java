@@ -70,7 +70,7 @@ public class User {
 	private String displayName;
 	private String password;
 	private String email;
-	private Date registrationDate;
+	private Date createdAt;
 	private String company;
 	private boolean oauth2 = false;		// False by default
 	// This lists are needed to allow cascade deletion
@@ -141,13 +141,13 @@ public class User {
 	}
 	
 	@XmlElement
-	@Column(name = "registration_date", nullable = false)
-	public Date getRegistrationDate() {
-		return registrationDate;
+	@Column(name = "created_at", nullable = false)
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 	
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 	@XmlElement

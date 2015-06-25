@@ -99,7 +99,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			}
 			
 			// Set basic fields
-			description.setRegistrationDate(new Date());
+			description.setCreatedAt(new Date());
 			description.setStore(store);
 			description.setCreator(user);
 			description.setLasteditor(user);

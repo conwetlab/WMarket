@@ -16,7 +16,7 @@
             $('<div class="author-name">').text(data.user.displayName),
             $('<div class="author-rating">').append(
                 $('<span class="fa fa-star">').text(data.score),
-                $('<span class="review-date">').append(formatDate(data.lastModificationDate))));
+                $('<span class="review-date">').append(formatDate(data.updatedAt))));
 
         this.element = $('<div class="review">').append(
             $('<div class="review-heading">').append(authorAvatar, reviewAuthor),

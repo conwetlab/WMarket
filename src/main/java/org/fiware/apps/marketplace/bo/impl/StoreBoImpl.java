@@ -163,7 +163,7 @@ public class StoreBoImpl implements StoreBo{
 			User user = userBo.getCurrentUser();
 	
 			// Set the current date as registration date of this store
-			store.setRegistrationDate(new Date());
+			store.setCreatedAt(new Date());
 	
 			// Set user as creator and latest editor of this store
 			store.setCreator(user);

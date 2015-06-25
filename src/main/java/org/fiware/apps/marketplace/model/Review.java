@@ -64,8 +64,8 @@ public class Review {
 	private ReviewableEntity reviewableEntity;
 	private int score;
 	private String comment;
-	private Date publicationDate;
-	private Date lastModificationDate;
+	private Date createdAt;
+	private Date updatedAt;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -122,23 +122,23 @@ public class Review {
 	}
 	
 	@XmlElement
-	@Column(name = "publication_date", nullable = false)
-	public Date getPublicationDate() {
-		return publicationDate;
+	@Column(name = "created_at", nullable = false)
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 	
-	public void setPublicationDate(Date publicationDate) {
-		this.publicationDate = publicationDate;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	@XmlElement
-	@Column(name = "last_modification_date", nullable = false)
-	public Date getLastModificationDate() {
-		return lastModificationDate;
+	@Column(name = "updatedAt", nullable = false)
+	public Date getUpdatedAt() {
+		return updatedAt;
 	}
 
-	public void setLastModificationDate(Date lastModificationDate) {
-		this.lastModificationDate = lastModificationDate;
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	@Override
