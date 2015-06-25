@@ -177,7 +177,7 @@ public class ReviewBoImpl implements ReviewBo {
 			throw new NotAuthorizedException("get reviews");
 		}
 		
-		return reviewDao.getReviewsPage(entity, max, orderBy, desc);
+		return reviewDao.getReviewsPage(entity, offset, max, orderBy, desc);
 	}
 	
 	@Override

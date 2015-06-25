@@ -326,7 +326,7 @@ public class ReviewBoImplTest {
 		// Mocking
 		@SuppressWarnings("unchecked")
 		List<Review> reviews = mock(List.class);
-		doReturn(reviews).when(reviewDaoMock).getReviewsPage(entity, max, orderBy, desc);
+		doReturn(reviews).when(reviewDaoMock).getReviewsPage(entity, offset, max, orderBy, desc);
 		doReturn(true).when(reviewAuthMock).canList();
 		
 		// Actual call

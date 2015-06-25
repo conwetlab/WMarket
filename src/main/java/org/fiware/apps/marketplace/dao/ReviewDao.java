@@ -39,6 +39,6 @@ import org.fiware.apps.marketplace.model.ReviewableEntity;
 
 public interface ReviewDao {
 	
-	public List<Review> getReviewsPage(ReviewableEntity entity, int max, String orderBy, boolean desc);
+	public List<Review> getReviewsPage(ReviewableEntity entity, int offset, int max, String orderBy, boolean desc);
 
 }

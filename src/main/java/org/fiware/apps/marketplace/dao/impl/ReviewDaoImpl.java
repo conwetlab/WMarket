@@ -14,7 +14,7 @@ public class ReviewDaoImpl extends MarketplaceHibernateDao implements ReviewDao 
 	private static final String TABLE_NAME = Review.class.getName();
 
 	@Override
-	public List<Review> getReviewsPage(ReviewableEntity entity, int max, String orderBy, boolean desc) {
+	public List<Review> getReviewsPage(ReviewableEntity entity, int offset, int max, String orderBy, boolean desc) {
 		
 		String descString = desc ? "DESC" : "ASC";
 		
@@ -22,6 +22,8 @@ public class ReviewDaoImpl extends MarketplaceHibernateDao implements ReviewDao 
 		List<Review> list = getSession()
 				.createQuery(String.format("from %s where reviewableEntity=:entity ORDER BY %s %s", 
 						TABLE_NAME, orderBy, descString))
+				.setFirstResult(offset)
+				.setMaxResults(max)
 				.setParameter("entity", entity)
 				.list();
 		
