@@ -56,6 +56,8 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.DetailedReview;
 import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Reviews;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -138,13 +140,17 @@ public class StoreReviewService {
 	@GET
 	public Response getReviews(
 			@PathParam("storeName") String storeName,
+			@DefaultValue("0") @QueryParam("offset") int offset,
+			@DefaultValue("100") @QueryParam("max") int max,
+			@DefaultValue("id") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("false") @QueryParam("desc") boolean desc,
 			@DefaultValue("false") @QueryParam("detailed") boolean detailed) {
 		
 		Response response;
 		
 		try {
 			
-			List<Review> reviews = storeBo.getReviews(storeName);
+			List<Review> reviews = storeBo.getReviewsPage(storeName, offset, max, orderBy, desc);
 			
 			// Replace reviews by detailed reviews when query param is set
 			if (detailed) {
@@ -159,6 +165,8 @@ public class StoreReviewService {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (StoreNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (QueryException | SQLGrammarException ex) {
+			response = ERROR_UTILS.badRequestResponse("Reviews cannot be ordered by " + orderBy + ".");
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
 		}

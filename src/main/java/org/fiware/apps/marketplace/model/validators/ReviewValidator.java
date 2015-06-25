@@ -41,11 +41,13 @@ public class ReviewValidator {
 	
 	private static BasicValidator basicValidator = BasicValidator.getInstance();
 	
+	private static final int MAX_COMMENT_LENGTH = 1000;
+	
 	/**
 	 * Public method to validate an offering review
 	 * @param review The review to be validated
 	 * @throws ValidationException If the review is not valid (score is lower than zero or higher than 5 // comment
-	 * length is higher than 300)
+	 * length is higher than 1000)
 	 */
 	public void validateReview(Review review) throws ValidationException {
 		
@@ -56,9 +58,8 @@ public class ReviewValidator {
 		}
 		
 		if (review.getComment() != null) {
-			basicValidator.validateComment(review.getComment());
+			basicValidator.validateMaxLength("comment", review.getComment(), MAX_COMMENT_LENGTH);
 		}
-		
 		
 	}
 

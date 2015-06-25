@@ -10,7 +10,7 @@
     ns.review.list = function list($target, next) {
         app.requests.list(ns.urls.review_collection, {
             $target: $target,
-            queryString: { detailed: true },
+            queryString: { detailed: true, orderBy: 'lastModificationDate', desc: true },
             success: next,
             $alert: app.createAlert('warning', utils.format('This %(model)s does not have reviews yet. You can be the first.', {
                 model: ns.model
@@ -76,7 +76,7 @@
     app.bindModal($('.rating[data-target] :radio'), ns.review.$rating.attr('data-target'), {
         context: { comment: new app.fields.LongTextField('comment', {
             label: "Comment",
-            maxlength: 200,
+            maxlength: 1000,
             controlAttrs: { rows: 4 }
         })},
         before: function (context, $source, $modal, next) {

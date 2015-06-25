@@ -44,6 +44,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -85,6 +86,14 @@ public class SeleniumIT extends AbstractIT {
 
 	@Before
 	public void setUp() {
+		
+		try {
+			// Close alerts if present
+			driver.switchTo().alert().accept();
+		} catch (NoAlertPresentException ex) {
+			// Nothing to do...
+		}
+		
 		// Restart cookies and browser
 		driver.manage().deleteAllCookies();
 		driver.get("about:blank");

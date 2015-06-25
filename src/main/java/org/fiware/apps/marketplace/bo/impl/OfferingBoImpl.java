@@ -308,6 +308,20 @@ public class OfferingBoImpl implements OfferingBo {
 				descriptionName, offeringName);
 		return reviewBo.getReviews(offering);
 	}
+	
+	@Override
+	@Transactional
+	public List<Review> getReviewsPage(String storeName,
+			String descriptionName, String offeringName, int offset, int max,
+			String orderBy, boolean desc) throws NotAuthorizedException,
+			OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException {
+
+		// Exception is thrown if the offering, the store or the description is not found
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		return reviewBo.getReviewsPage(offering, offset, max, orderBy, desc);
+	}
 
 	@Override
 	@Transactional

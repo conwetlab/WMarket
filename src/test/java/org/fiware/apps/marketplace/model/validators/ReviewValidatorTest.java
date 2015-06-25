@@ -84,17 +84,25 @@ public class ReviewValidatorTest {
 
 	@Test
 	public void testInvalidComment() throws ValidationException {
+		
+		int maxChars = 1000;
+		
 		try {
+			
+			String comment = "";
+			for (int i = 0; i < maxChars + 1; i++) {
+				comment += "a";
+			}
+			
 			Review review = new Review();
 			review.setScore(0);
-			review.setComment("12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
-					"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
-					"12345678901234567890123456789012345678901234567890123456789012345678901234567890");
+			review.setComment(comment);
 
 			reviewValidator.validateReview(review);
+			failBecauseExceptionWasNotThrown(ValidationException.class);
 		} catch (ValidationException ex) {
 			assertThat(ex.getFieldName()).isEqualTo("comment");
-			assertThat(ex.getMessage()).isEqualTo("This field must not exceed 200 chars.");
+			assertThat(ex.getMessage()).isEqualTo("This field must not exceed " + maxChars + " chars.");
 		}
 	}
 }

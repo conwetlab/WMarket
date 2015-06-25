@@ -89,6 +89,9 @@ public interface OfferingBo {
 			DescriptionNotFoundException, ReviewNotFoundException, ValidationException;	
 	public List<Review> getReviews(String storeName, String descriptionName, String offeringName) throws 
 			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException;
+	public List<Review> getReviewsPage(String storeName, String descriptionName, String offeringName, 
+			int offset, int max, String orderBy, boolean desc) throws NotAuthorizedException, 
+			OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException;
 	public Review getReview(String storeName, String descriptionName, String offeringName, int reviewId) throws 
 			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException,
 			ReviewNotFoundException;

@@ -253,11 +253,19 @@ public class OfferingReviewServiceTest {
 			String message, String field) {
 
 		try {
+			
+			int offset = 0;
+			int max = 100;
+			String orderBy = "id";
+			boolean desc = false;
+			
 			// Mocks
-			doThrow(ex).when(offeringBoMock).getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
+			doThrow(ex).when(offeringBoMock).getReviewsPage(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME,
+					offset, max, orderBy, desc);
 			
 			// Actual call
-			Response res = reviewsService.getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, false);
+			Response res = reviewsService.getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 
+					0, 100, "id", false, false);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -293,12 +301,19 @@ public class OfferingReviewServiceTest {
 	@Test
 	public void testGetReviews() throws Exception {
 
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = false;
+		
 		@SuppressWarnings("unchecked")
 		List<Review> reviews = mock(List.class); 
-		doReturn(reviews).when(offeringBoMock).getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
+		doReturn(reviews).when(offeringBoMock).getReviewsPage(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME,
+				offset, max, orderBy, desc);
 		
 		// Actual call
-		Response res = reviewsService.getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, false);
+		Response res = reviewsService.getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 
+				0, 100, "id", false, false);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -319,10 +334,17 @@ public class OfferingReviewServiceTest {
 		reviews.add(review1);
 		reviews.add(review2);
 		
-		doReturn(reviews).when(offeringBoMock).getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = false;
+		
+		doReturn(reviews).when(offeringBoMock).getReviewsPage(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 
+				offset, max, orderBy, desc);
 		
 		// Actual call
-		Response res = reviewsService.getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, true);
+		Response res = reviewsService.getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 
+				offset, max, orderBy, desc, true);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);

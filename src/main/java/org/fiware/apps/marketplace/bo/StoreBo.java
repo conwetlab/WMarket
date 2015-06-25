@@ -67,6 +67,8 @@ public interface StoreBo {
 	public void updateReview(String name, int reviewId, Review review) throws NotAuthorizedException, 
 			StoreNotFoundException, ReviewNotFoundException, ValidationException;
 	public List<Review> getReviews(String name) throws NotAuthorizedException, StoreNotFoundException;
+	public List<Review> getReviewsPage(String name, int offset, int max, String orderBy, boolean desc) 
+			throws NotAuthorizedException, StoreNotFoundException;
 	public Review getReview(String name, int reviewId) throws NotAuthorizedException, StoreNotFoundException,
 			ReviewNotFoundException;
 	public void deleteReview(String name, int reviewId) throws NotAuthorizedException, StoreNotFoundException,

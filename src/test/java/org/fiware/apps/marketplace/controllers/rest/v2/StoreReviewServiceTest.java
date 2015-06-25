@@ -226,11 +226,17 @@ public class StoreReviewServiceTest {
 			String message, String field) {
 
 		try {
+			
+			int offset = 0;
+			int max = 100;
+			String orderBy = "id";
+			boolean desc = false;
+			
 			// Mocks
-			doThrow(ex).when(storeBoMock).getReviews(STORE_NAME);
+			doThrow(ex).when(storeBoMock).getReviewsPage(STORE_NAME, offset, max, orderBy, desc);
 			
 			// Actual call
-			Response res = reviewsService.getReviews(STORE_NAME, false);
+			Response res = reviewsService.getReviews(STORE_NAME, offset, max, orderBy, desc, false);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -253,12 +259,19 @@ public class StoreReviewServiceTest {
 	
 	@Test
 	public void testGetReviews() throws Exception {
+		
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = false;
 				
-		// Actual call
+		// Mock
 		@SuppressWarnings("unchecked")
 		List<Review> reviews = mock(List.class); 
-		doReturn(reviews).when(storeBoMock).getReviews(STORE_NAME);
-		Response res = reviewsService.getReviews(STORE_NAME, false);
+		doReturn(reviews).when(storeBoMock).getReviewsPage(STORE_NAME, offset, max, orderBy, desc);
+		
+		// Actual call
+		Response res = reviewsService.getReviews(STORE_NAME, offset, max, orderBy, desc, false);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -279,10 +292,15 @@ public class StoreReviewServiceTest {
 		reviews.add(review1);
 		reviews.add(review2);
 		
-		doReturn(reviews).when(storeBoMock).getReviews(STORE_NAME);
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = false;
+		
+		doReturn(reviews).when(storeBoMock).getReviewsPage(STORE_NAME, offset, max, orderBy, desc);
 		
 		// Actual call
-		Response res = reviewsService.getReviews(STORE_NAME, true);
+		Response res = reviewsService.getReviews(STORE_NAME, offset, max, orderBy, desc, true);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);

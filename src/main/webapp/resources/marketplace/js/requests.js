@@ -157,8 +157,15 @@
                 method: options.method ? options.method : method,
                 url: utils.format(url, options.kwargs) + parseQS(options.queryString),
                 contentType: 'application/json',
+                headers: {
+                	Accept: 'application/json'
+                },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    alert(jqXHR.responseText);
+                	var errorInfo = JSON.parse(jqXHR.responseText);
+                	var message = errorInfo.error.field != null ? errorInfo.error.field + ': ' : '';
+                	message += errorInfo.error.message;
+                	
+                	alert(message);
                 }
             },
             $spinner;

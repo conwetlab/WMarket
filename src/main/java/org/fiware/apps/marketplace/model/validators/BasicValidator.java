@@ -104,7 +104,7 @@ public class BasicValidator {
 	}
 
 	public void validateMaxLength(String fieldName, String fieldValue, int maxLength) throws ValidationException {
-		if (fieldValue == null || fieldValue.length() >= maxLength) {
+		if (fieldValue == null || fieldValue.length() > maxLength) {
 			throw new ValidationException(fieldName, 
 					String.format("This field must not exceed %d chars.", maxLength));
 		}

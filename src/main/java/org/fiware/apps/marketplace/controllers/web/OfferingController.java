@@ -51,7 +51,6 @@ import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

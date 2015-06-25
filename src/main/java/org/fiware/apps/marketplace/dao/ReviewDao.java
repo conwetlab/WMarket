@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.dao;
 
 /*
  * #%L
@@ -34,28 +34,11 @@ package org.fiware.apps.marketplace.bo;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
-import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.ReviewableEntity;
 import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.ReviewableEntity;
 
-
-public interface ReviewBo {
+public interface ReviewDao {
 	
-	public void createReview(ReviewableEntity entity, Review newReview) 
-			throws NotAuthorizedException, ValidationException;
-	public void updateReview(ReviewableEntity entity, int reviewId, Review updatedReview) 
-			throws ReviewNotFoundException, NotAuthorizedException, ValidationException;
-	public List<Review> getReviews(ReviewableEntity entity) throws NotAuthorizedException;
-	public List<Review> getReviewsPage(ReviewableEntity entity, int offset, int max, String orderBy, boolean desc)
-			throws NotAuthorizedException;
- 	public Review getReview(ReviewableEntity entity, int reviewId) 
-			throws NotAuthorizedException, ReviewNotFoundException;
-	public void deleteReview(ReviewableEntity entity, int reviewId) throws ReviewNotFoundException, 
-			NotAuthorizedException;
-	public Review getUserReview(ReviewableEntity entity) throws ReviewNotFoundException, 
-			NotAuthorizedException;
-	
+	public List<Review> getReviewsPage(ReviewableEntity entity, int max, String orderBy, boolean desc);
 
 }

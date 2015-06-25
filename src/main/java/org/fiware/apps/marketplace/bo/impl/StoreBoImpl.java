@@ -341,7 +341,16 @@ public class StoreBoImpl implements StoreBo{
 		
 		Store store = storeDao.findByName(name);
 		return reviewBo.getReviews(store);
-		
+	}
+	
+	@Override
+	@Transactional
+	public List<Review> getReviewsPage(String name, int offset, int max,
+			String orderBy, boolean desc) throws NotAuthorizedException,
+			StoreNotFoundException {
+
+		Store store = storeDao.findByName(name);
+		return reviewBo.getReviewsPage(store, offset, max, orderBy, desc);
 	}
 
 	@Override

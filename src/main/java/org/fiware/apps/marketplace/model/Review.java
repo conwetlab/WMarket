@@ -64,7 +64,7 @@ public class Review {
 	private ReviewableEntity reviewableEntity;
 	private int score;
 	private String comment;
-	private Date date;
+	private Date publicationDate;
 	private Date lastModificationDate;
 	
 	@Id
@@ -112,7 +112,7 @@ public class Review {
 	}
 
 	@XmlElement
-	@Column(name = "comment", unique = false, nullable = true)
+	@Column(name = "comment", unique = false, nullable = true, length=1000)
 	public String getComment() {
 		return comment;
 	}
@@ -122,13 +122,13 @@ public class Review {
 	}
 	
 	@XmlElement
-	@Column(name = "date", nullable = false)
-	public Date getDate() {
-		return date;
+	@Column(name = "publication_date", nullable = false)
+	public Date getPublicationDate() {
+		return publicationDate;
 	}
 	
-	public void setDate(Date date) {
-		this.date = date;
+	public void setPublicationDate(Date publicationDate) {
+		this.publicationDate = publicationDate;
 	}
 
 	@XmlElement

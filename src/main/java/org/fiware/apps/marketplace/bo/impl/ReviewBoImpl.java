@@ -38,6 +38,7 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.dao.ReviewDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
@@ -54,6 +55,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("reviewBo")
 public class ReviewBoImpl implements ReviewBo {
 	
+	@Autowired private ReviewDao reviewDao;
 	@Autowired private UserBo userBo;
 	@Autowired private ReviewValidator reviewValidator;
 	@Autowired private ReviewAuth reviewAuth;
@@ -105,7 +107,7 @@ public class ReviewBoImpl implements ReviewBo {
 		try {
 			// Set review options
 			Date currentDate = new Date();
-			newReview.setDate(currentDate);
+			newReview.setPublicationDate(currentDate);
 			newReview.setLastModificationDate(currentDate);
 			newReview.setUser(userBo.getCurrentUser());
 			newReview.setReviewableEntity(entity);
@@ -140,9 +142,11 @@ public class ReviewBoImpl implements ReviewBo {
 		reviewValidator.validateReview(updatedReview);
 
 		// Update review
-		bbddReview.setComment(updatedReview.getComment());
 		bbddReview.setScore(updatedReview.getScore());
 		bbddReview.setLastModificationDate(new Date());
+		if (updatedReview.getComment() != null) {
+			bbddReview.setComment(updatedReview.getComment());
+		}
 		
 		// Calculate average score
 		entity.setAverageScore(calculateReviewAverage(entity));
@@ -161,6 +165,19 @@ public class ReviewBoImpl implements ReviewBo {
 		}
 			
 		return entity.getReviews();
+	}
+	
+	@Override
+	@Transactional
+	public List<Review> getReviewsPage(ReviewableEntity entity, int offset,
+			int max, String orderBy, boolean desc) throws NotAuthorizedException {
+		
+		// Raise exception is the user is not allowed to list the reviews
+		if (!reviewAuth.canList()) {
+			throw new NotAuthorizedException("get reviews");
+		}
+		
+		return reviewDao.getReviewsPage(entity, max, orderBy, desc);
 	}
 	
 	@Override
@@ -227,5 +244,4 @@ public class ReviewBoImpl implements ReviewBo {
 		}	
 		
 	}
-
 }
