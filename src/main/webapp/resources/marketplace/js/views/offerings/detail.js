@@ -17,6 +17,7 @@
 
     ns.urls = {
         entry: app.urls.get('offering:entry', baseArgs),
+        entry_bookmark: app.urls.get('offering:bookmark', baseArgs),
         review_collection: app.urls.get('offering:entry:review:collection', baseArgs),
         review_entry: app.urls.get('offering:entry:review:entry', baseArgs)
     };
@@ -33,14 +34,8 @@
     ns.btnToggleBookmark = $('.btn-toggle-bookmark');
 
     ns.toggleBookmark = function toggleBookmark() {
-        app.requests.create({
-            namespace: "offerings:entry_bookmark",
-            kwargs: {
-                descriptionName: ns.descriptionName,
-                storeName: ns.storeName,
-                offeringName: ns.offeringName
-            },
-            onSuccess: function () {
+        app.requests.create(ns.urls.entry_bookmark, {
+            success: function () {
                 if (ns.btnToggleBookmark.hasClass('tab-danger')) {
                     ns.btnToggleBookmark
                         .removeClass('tab-danger')
