@@ -819,6 +819,64 @@ public class StoreBoImplTest {
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////// GET REVIEWS PAGE //////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+
+	@Test(expected=StoreNotFoundException.class)
+	public void testGetReviewsPageStoreNotFoundException() throws Exception {
+		
+		String storeName = "store";
+
+		// Configure mock
+		doThrow(new StoreNotFoundException("")).when(storeDaoMock).findByName(storeName);
+
+		// Call the function
+		storeBo.getReviewsPage(storeName, 0, 100, "id", false);
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetReviewsPageNotAuthorized() throws Exception {
+		
+		String storeName = "store";
+		Store store = mock(Store.class);
+		
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = true;
+		
+		// Configure mocks
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		doThrow(new NotAuthorizedException("")).when(reviewBoMock).getReviewsPage(store, offset, max, orderBy, desc);
+		
+		// Actual call
+		storeBo.getReviewsPage(storeName, offset, max, orderBy, desc);
+	}
+	
+	@Test
+	public void testGetReviewsPage() throws Exception {
+		
+		String storeName = "store";
+		Store store = mock(Store.class);
+		
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = true;
+
+		// Configure mock
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		
+		@SuppressWarnings("unchecked")
+		List<Review> reviews = mock(List.class);
+		doReturn(reviews).when(reviewBoMock).getReviewsPage(store, offset, max, orderBy, desc);
+		
+		// Actual call
+		assertThat(storeBo.getReviewsPage(storeName, offset, max, orderBy, desc)).isEqualTo(reviews);
+
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////// GET REVIEW //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	

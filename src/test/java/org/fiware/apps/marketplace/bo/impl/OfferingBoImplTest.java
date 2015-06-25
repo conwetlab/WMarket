@@ -370,6 +370,79 @@ public class OfferingBoImplTest {
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////// GET REVIEWS PAGE //////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testGetReviewsPageNotFound(Exception e) throws Exception {
+
+		// Configure mock
+		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
+				OFFERING_NAME);
+
+		// Call the function
+		offeringBo.getReviewsPage(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 0, 100, "id", false);
+	}
+
+	@Test(expected=StoreNotFoundException.class)
+	public void testGetReviewsPageStoreNotFoundException() throws Exception {
+		testGetReviewsPageNotFound(new StoreNotFoundException(""));
+	}
+
+	@Test(expected=DescriptionNotFoundException.class)
+	public void testGetReviewsPageDescriptionNotFound() throws Exception {
+		testGetReviewsPageNotFound(new DescriptionNotFoundException(""));
+	}
+
+	@Test(expected=OfferingNotFoundException.class)
+	public void testGetReviewsPageOfferingNotFoundException() throws Exception {
+		testGetReviewsPageNotFound(new OfferingNotFoundException(""));
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetReviewsPageNotAuthorized() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = true;
+		
+		// Configure mocks
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+		doThrow(new NotAuthorizedException("")).when(reviewBoMock).getReviewsPage(offering, offset, max, orderBy, desc);
+		
+		// Actual call
+		offeringBo.getReviewsPage(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, offset, max, orderBy, desc);
+	}
+	
+	@Test
+	public void testGetReviewsPage() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = true;
+
+		// Configure mock
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+		
+		@SuppressWarnings("unchecked")
+		List<Review> reviews = mock(List.class);
+		doReturn(reviews).when(reviewBoMock).getReviewsPage(offering, offset, max, orderBy, desc);
+		
+		// Actual call
+		assertThat(offeringBo.getReviewsPage(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 
+				offset, max, orderBy, desc)).isEqualTo(reviews);
+
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////// GET REVIEW //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	

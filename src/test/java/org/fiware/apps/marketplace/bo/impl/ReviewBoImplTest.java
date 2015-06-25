@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.bo.impl.ReviewBoImpl;
+import org.fiware.apps.marketplace.dao.ReviewDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
@@ -62,6 +63,7 @@ import org.mockito.MockitoAnnotations;
 
 public class ReviewBoImplTest {
 	
+	@Mock private ReviewDao reviewDaoMock;
 	@Mock private UserBo userBoMock;
 	@Mock private ReviewValidator reviewValidatorMock;
 	@Mock private ReviewAuth reviewAuthMock;
@@ -295,6 +297,40 @@ public class ReviewBoImplTest {
 		ReviewableEntity entity = mock(ReviewableEntity.class);
 		doReturn(reviews).when(entity).getReviews(); 
 		assertThat(reviewBo.getReviews(entity)).isEqualTo(reviews);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////// LIST PAGE //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetReviewsPageNotAuthorized() throws Exception {
+		// Mocking
+		doReturn(false).when(reviewAuthMock).canList();
+		
+		// Actual call
+		ReviewableEntity entity = mock(ReviewableEntity.class);
+		reviewBo.getReviewsPage(entity, 0, 100, "id", false);
+	}
+	
+	@Test
+	public void testGetReviewsPage() throws Exception {
+		
+		ReviewableEntity entity = mock(ReviewableEntity.class);
+		int offset = 8;
+		int max = 2;
+		String orderBy = "abc";
+		boolean desc = false;
+		
+		// Mocking
+		@SuppressWarnings("unchecked")
+		List<Review> reviews = mock(List.class);
+		doReturn(reviews).when(reviewDaoMock).getReviewsPage(entity, max, orderBy, desc);
+		doReturn(true).when(reviewAuthMock).canList();
+		
+		// Actual call
+		assertThat(reviewBo.getReviewsPage(entity, offset, max, orderBy, desc)).isEqualTo(reviews);
 	}
 	
 	

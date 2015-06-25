@@ -35,6 +35,7 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,8 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Reviews;
 import org.fiware.apps.marketplace.model.User;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -68,6 +71,8 @@ public class OfferingReviewServiceTest {
 
 	@Mock private OfferingBo offeringBoMock;
 	@InjectMocks private OfferingReviewService reviewsService;
+	
+	private static final String MESSAGE_INVALID_ORDER = "Reviews cannot be ordered by %s.";
 
 	private static final String PATH = "/api/v2/store/storeName/description/descName/offering/offeringName/review";
 	private static final String STORE_NAME = "store";
@@ -249,14 +254,13 @@ public class OfferingReviewServiceTest {
 	/////////////////////////////////////// GET LIST //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testGetReviewsException(Exception ex, int statusCode, ErrorType errorType, 
+	private void testGetReviewsException(String orderBy, Exception ex, int statusCode, ErrorType errorType, 
 			String message, String field) {
 
 		try {
 			
 			int offset = 0;
 			int max = 100;
-			String orderBy = "id";
 			boolean desc = false;
 			
 			// Mocks
@@ -265,7 +269,7 @@ public class OfferingReviewServiceTest {
 			
 			// Actual call
 			Response res = reviewsService.getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 
-					0, 100, "id", false, false);
+					0, 100, orderBy, desc, false);
 			GenericRestTestUtils.checkAPIError(res, statusCode, errorType, message, field);
 			
 		} catch (Exception e1) {
@@ -277,26 +281,43 @@ public class OfferingReviewServiceTest {
 	@Test
 	public void testGetReviewsNotAuthorized() {
 		NotAuthorizedException ex = new NotAuthorizedException("retrieve offering reviews");
-		testGetReviewsException(ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
+		testGetReviewsException("id", ex, 403, ErrorType.FORBIDDEN, ex.getMessage(), null);
 	}
 	
 	@Test
 	public void testGetReviewsStoreNotFound() {
 		StoreNotFoundException ex = new StoreNotFoundException("store not found");
-		testGetReviewsException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+		testGetReviewsException("id", ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
 	public void testGetReviewsDescriptionNotFound() {
 		DescriptionNotFoundException ex = new DescriptionNotFoundException("description not found");
-		testGetReviewsException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+		testGetReviewsException("id", ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
 	
 	@Test
 	public void testGetReviewsOfferingNotFound() {
 		OfferingNotFoundException ex = new OfferingNotFoundException("offering not found");
-		testGetReviewsException(ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
+		testGetReviewsException("id", ex, 404, ErrorType.NOT_FOUND, ex.getMessage(), null);
 	}
+	
+	@Test
+	public void testGetReviewsInvalidOrder1() {
+		String orderBy = "namea";
+		QueryException ex = new QueryException(new SQLException());
+		testGetReviewsException(orderBy, ex, 400, ErrorType.BAD_REQUEST, 
+				String.format(MESSAGE_INVALID_ORDER, orderBy), null);
+	}
+	
+	@Test
+	public void testGetReviewsInvalidOrder2() {
+		String orderBy = "namea";
+		SQLGrammarException ex = new SQLGrammarException("", new SQLException());
+		testGetReviewsException(orderBy, ex, 400, ErrorType.BAD_REQUEST, 
+				String.format(MESSAGE_INVALID_ORDER, orderBy), null);
+	}
+	
 	
 	@Test
 	public void testGetReviews() throws Exception {
