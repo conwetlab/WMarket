@@ -53,13 +53,13 @@ public class ReviewValidatorTest {
 			testScore(score);
 		} catch (ValidationException ex) {
 			assertThat(ex.getFieldName()).isEqualTo("score");
-			assertThat(ex.getMessage()).isEqualTo("Score should be an integer between 0 and 5.");
+			assertThat(ex.getMessage()).isEqualTo("Score should be an integer between 1 and 5.");
 		}
 	}
 
 	@Test
 	public void testInvalidScore1() {
-		testInvalidScore(-1);
+		testInvalidScore(0);
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class ReviewValidatorTest {
 
 	@Test
 	public void testValidScore1() throws ValidationException {
-		testScore(0);
+		testScore(1);
 	}
 
 	@Test
@@ -95,7 +95,7 @@ public class ReviewValidatorTest {
 			}
 			
 			Review review = new Review();
-			review.setScore(0);
+			review.setScore(1);
 			review.setComment(comment);
 
 			reviewValidator.validateReview(review);

@@ -53,8 +53,8 @@ public class ReviewValidator {
 		
 		int score = review.getScore();
 		
-		if (score < 0 || score > 5) {
-			throw new ValidationException("score", "Score should be an integer between 0 and 5.");
+		if (score < 1 || score > 5) {
+			throw new ValidationException("score", "Score should be an integer between 1 and 5.");
 		}
 		
 		if (review.getComment() != null) {
