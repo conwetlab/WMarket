@@ -1116,17 +1116,20 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	/**
 	 * This method bookmarks or unbookmarks an offering depending on its previous state
+	 * @param userName User that will bookmark the offering
+	 * @param password user's password
 	 * @param storeName The name of the store where the offering to be bookmarked is contained
 	 * @param descriptionName The name of the descritpion where the offering to be bookmarked is described 
 	 * @param offeringName The name of the offering to be bookmarked
 	 * @return The response from the server
 	 */
-	private Response bookmarkOrUnbookmarkOffering(String storeName, String descriptionName, String offeringName) {
+	private Response bookmarkOrUnbookmarkOffering(String userName, String password,String storeName, 
+			String descriptionName, String offeringName) {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + 
 					descriptionName + "/offering/" + offeringName + "/bookmark")
 				.request(MediaType.APPLICATION_JSON)
-				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.header("Authorization", getAuthorization(userName, password))
 				.post(null);
 
 		return response;
@@ -1141,8 +1144,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		Offering bookmarkedOffering = SECOND_OFFERING;
 		
 		// Bookmark one offering
-		Response bookmarkResponse = bookmarkOrUnbookmarkOffering(FIRST_STORE_NAME, secondDescriptionName, 
-				bookmarkedOffering.getName());
+		Response bookmarkResponse = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD,FIRST_STORE_NAME, 
+				secondDescriptionName, bookmarkedOffering.getName());
 		assertThat(bookmarkResponse.getStatus()).isEqualTo(204);
 		
 		// Set store and description for offering. Otherwise, test will fail since offering.equals is based
@@ -1167,8 +1170,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(bookmarkedOfferings.get(0).getDescribedIn().getStore().getName()).isEqualTo(FIRST_STORE_NAME);
 		
 		// Unbookmark the offering
-		Response unbookmarkResponse = bookmarkOrUnbookmarkOffering(FIRST_STORE_NAME, secondDescriptionName, 
-				bookmarkedOffering.getName());
+		Response unbookmarkResponse = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD,FIRST_STORE_NAME, 
+				secondDescriptionName, bookmarkedOffering.getName());
 		assertThat(unbookmarkResponse.getStatus()).isEqualTo(204);
 
 		// Check that bookmarked offerings is empty
@@ -1189,8 +1192,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		// Bookmark the offerings from different stores (same offering in different stores)
 		String[] stores = {FIRST_STORE_NAME, SECOND_STORE_NAME};
 		for (String storeName: stores) {
-			Response bookmarkResponse = bookmarkOrUnbookmarkOffering(storeName, secondDescriptionName, 
-					bookmarkedOffering.getName());
+			Response bookmarkResponse = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD, storeName, 
+					secondDescriptionName, bookmarkedOffering.getName());
 			assertThat(bookmarkResponse.getStatus()).isEqualTo(204);
 		}
 		
@@ -1217,6 +1220,57 @@ public class DescriptionServiceIT extends AbstractIT {
 		}
 	}
 	
+	/**
+	 * Test for a know bug (fixed): When an user tries to remove an offering that has been
+	 * bookmarked, the system throws an exception 
+	 */
+	@Test
+	public void testRemoveBookmarkedOffering() {
+		
+		String descriptionName = "description";
+		Response createDescRes = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, defaultUSDLPath, "");
+		assertThat(createDescRes.getStatus()).isEqualTo(201);
+		
+		// Bookmark the offering
+		Response bookmarkRes = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, FIRST_OFFERING.getName());
+		assertThat(bookmarkRes.getStatus()).isEqualTo(204);
+		
+		// Delete the offering
+		Response deleteRes = deleteDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, descriptionName);
+		assertThat(deleteRes.getStatus()).isEqualTo(204);
+	}
+	
+	/**
+	 * Test for a know bug (fixed): When a user bookmarks an offering, the system throws an
+	 * exception when this user tries to remove their own account.
+	 */
+	@Test
+	public void testRemoveUserWithBookmarkedOfferings() {
+		
+		// Create an offering
+		String descriptionName = "description";
+		Response createDescRes = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, defaultUSDLPath, "");
+		assertThat(createDescRes.getStatus()).isEqualTo(201);
+		
+		// Create another user
+		String userName = USER_NAME + "A";
+		String email = "example3@example.com";
+		Response createUserRes = createUser(userName, email, PASSWORD);
+		assertThat(createUserRes.getStatus()).isEqualTo(201);
+		
+		// Bookmark the offering with the new user
+		Response bookmarkRes = bookmarkOrUnbookmarkOffering(userName, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, FIRST_OFFERING.getName());
+		assertThat(bookmarkRes.getStatus()).isEqualTo(204);
+		
+		// Delete the user
+		Response deleteUserRes = deleteUser(userName, PASSWORD, userName);
+		assertThat(deleteUserRes.getStatus()).isEqualTo(204);
+		
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// REVIEWS ///////////////////////////////////////
