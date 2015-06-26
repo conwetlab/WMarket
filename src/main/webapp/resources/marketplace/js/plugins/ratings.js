@@ -108,12 +108,14 @@
 
                     ns.review[action](review, function () {
                         context.comment.empty().remove();
+                        app.showAlert('success', "The review was <strong>" + action + "d</strong> successfully.");
                         next();
                     });
                 }
             } else {
                 ns.review.destroy(function () {
                     context.comment.empty().remove();
+                    app.showAlert('success', "The review was <strong>removed</strong> successfully.");
                     next();
                 });
             }
