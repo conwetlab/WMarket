@@ -53,7 +53,7 @@
           </dl>
           <dl>
             <dt>Website URL</dt>
-            <dd>${ store.url }</dd>
+            <dd><a href="${ store.url }" target="_blank">${ store.url }</a></dd>
           </dl>
           <dl>
             <dt>Owner name</dt>

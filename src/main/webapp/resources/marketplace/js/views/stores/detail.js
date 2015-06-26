@@ -6,9 +6,7 @@
 (function (ns) {
 
     var baseArgs = {
-        store: ns.storeName,
-        //description: ns.descriptionName,
-        //offering: ns.offeringName
+        store: ns.storeName
     };
 
     ns.model = 'store';
