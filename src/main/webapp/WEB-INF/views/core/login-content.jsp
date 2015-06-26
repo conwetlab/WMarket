@@ -10,7 +10,7 @@
   </c:when>
   <c:when test="${ param.out == 2 }">
     <div class="alert alert-info">
-      <span class="fa fa-check-circle"></span> Your account was deleted successfully.
+      <span class="fa fa-info-circle"></span> Your account was deleted successfully.
     </div>
   </c:when>
   <c:when test="${ param.out == 3 }">

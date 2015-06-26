@@ -37,6 +37,15 @@
         });
     };
 
+    ns.showAlert = function showAlert(type, message) {
+        var $alert = ns.createAlert(type, message, '.alert-dismissible');
+        var $alertManager = $('<div>').addClass('alert-manager').append($alert).appendTo(document.body);
+
+        $alert.delay(2000).slideUp(500, function () {
+            $alertManager.remove();
+        });
+    };
+
     function showModal() {
         this.addClass('slipped');
     }
