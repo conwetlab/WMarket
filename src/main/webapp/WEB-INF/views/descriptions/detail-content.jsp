@@ -2,6 +2,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="t" uri="http://tiles.apache.org/tags-tiles" %>
 
+<c:set var="isOwner" value="${ description.creator.userName == user.userName }"></c:set>
+
 <div class="container">
   <div class="col-sm-10 col-md-4 col-lg-3">
     <t:insertTemplate template="/WEB-INF/views/descriptions/header.jsp" />
@@ -26,6 +28,38 @@
             </button>
           </div>
         </form>
+
+      </c:when>
+      <c:otherwise>
+
+        <div class="dl-group">
+          <dl class="dl-block">
+            <dt>Comment</dt>
+            <c:choose>
+              <c:when test="${ not empty description.comment }">
+                <dd class="text-justify">${ description.comment }</dd>
+              </c:when>
+              <c:otherwise>
+                <dd>No comment provided.</dd>
+              </c:otherwise>
+            </c:choose>
+          </dl>
+          <dl>
+            <dt>Name</dt>
+            <dd>${ description.displayName }</dd>
+          </dl>
+          <dl>
+            <dt>Creator name</dt>
+            <dd>${ description.creator.displayName }</dd>
+          </dl>
+          <dl>
+            <dt>Upload date</dt>
+            <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ description.createdAt }" /></dd>
+          </dl>
+        </div>
+
+      </c:otherwise>
+      </c:choose>
       </div>
     </div>
     <div class="panel panel-default">

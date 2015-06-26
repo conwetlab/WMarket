@@ -1,6 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="t" uri="http://tiles.apache.org/tags-tiles" %>
 
+<c:set var="isOwner" value="${ description.creator.userName == user.userName }"></c:set>
+
 <div class="panel panel-default">
   <div class="panel-heading text-center">
     <span class="image-thumbnail">
@@ -43,15 +45,21 @@
           <span class="hidden-sm">Offerings</span>
         </a>
       </div>
+      <c:if test="${ isOwner }">
+
       <div class="tab tab-danger">
         <a href="javascript:deleteDescription()">
           <span class="fa fa-trash"></span>
           <span class="hidden-sm">Delete description</span>
         </a>
       </div>
+
+      </c:if>
     </div>
   </div>
 </div>
+
+<c:if test="${ isOwner }">
 
 <form name="description_delete_form" method="post" action="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }/delete">
   <!-- <p class="text-justify">This operation cannot be undone. All the offerings are contained in this description will be deleted too. Please be certain.</p> -->
@@ -62,3 +70,5 @@
     document.description_delete_form.submit();
   };
 </script>
+
+</c:if>
