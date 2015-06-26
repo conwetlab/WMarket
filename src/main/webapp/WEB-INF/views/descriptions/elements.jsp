@@ -30,7 +30,7 @@
       </dl>
       <dl>
         <dt>Upload date</dt>
-        <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ description.createdAt }" /></dd>
+        <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ description.createdAt }" /></dd>
       </dl>
     </div>
     <p class="text-bold">Offerings</p>

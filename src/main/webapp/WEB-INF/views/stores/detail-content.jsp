@@ -20,7 +20,7 @@
         <form class="col-md-8 col-md-offset-1" name="store_form" method="post" enctype="multipart/form-data" action="${ pageContext.request.contextPath }/stores/${ store.name }/about">
           <div class="form-field">
             <label class="field-label">Registration date</label>
-            <div class="field-control static"><fmt:formatDate pattern="yyyy-MM-dd" value="${ store.createdAt }" /></div>
+            <div class="field-control static date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ store.createdAt }" /></div>
           </div>
           <div class="form-options">
             <button type="submit" class="btn btn-success">
@@ -61,7 +61,7 @@
           </dl>
           <dl>
             <dt>Registration date</dt>
-            <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ store.createdAt }" /></dd>
+            <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ store.createdAt }" /></dd>
           </dl>
         </div>
       </div>

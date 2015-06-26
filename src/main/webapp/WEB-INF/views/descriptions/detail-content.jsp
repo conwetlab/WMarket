@@ -12,10 +12,13 @@
         <span class="panel-title">General information</span>
       </div>
       <div class="panel-body">
+      <c:choose>
+      <c:when test="${ isOwner }">
+
         <form  class="col-md-8 col-md-offset-1" name="description_update_form" method="post" action="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }">
           <div class="form-field">
             <label class="field-label">Upload Date</label>
-            <div class="field-control static"><fmt:formatDate pattern="yyyy-MM-dd" value="${ description.createdAt }" /></div>
+            <div class="field-control static date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ description.createdAt }" /></div>
           </div>
           <div class="form-options">
             <button type="submit" class="btn btn-success">
@@ -41,7 +44,7 @@
           </dl>
           <dl>
             <dt>Registration date</dt>
-            <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ store.createdAt }" /></dd>
+            <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ store.createdAt }" /></dd>
           </dl>
         </div>
       </div>
