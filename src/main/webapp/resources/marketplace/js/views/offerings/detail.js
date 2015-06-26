@@ -17,7 +17,7 @@
 
     ns.urls = {
         entry: app.urls.get('offering:entry', baseArgs),
-        entry_bookmark: app.urls.get('offering:bookmark', baseArgs),
+        entry_bookmark: app.urls.get('offering:entry:bookmark:entry', baseArgs),
         review_collection: app.urls.get('offering:entry:review:collection', baseArgs),
         review_entry: app.urls.get('offering:entry:review:entry', baseArgs)
     };
@@ -41,11 +41,13 @@
                         .removeClass('tab-danger')
                         .find('.hidden-sm')
                         .text('Add bookmark');
+                    app.showAlert('success', "The offering was </strong>removed from bookmarks</strong> successfully.");
                 } else {
                     ns.btnToggleBookmark
                         .addClass('tab-danger')
                         .find('.hidden-sm')
                         .text('Remove bookmark');
+                    app.showAlert('success', "The offering was <strong>add to bookmarks</strong> successfully.");
                 }
             }
         });

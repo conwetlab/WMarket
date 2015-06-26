@@ -10,8 +10,7 @@
 
         offering: {
             collection: "/offering",
-            entry: "/store/%(store)s/description/%(description)s/offering/%(offering)s",
-            bookmark: "/store/%(store)s/description/%(description)s/offering/%(offering)s/bookmark"
+            entry: "/store/%(store)s/description/%(description)s/offering/%(offering)s"
         },
 
         store: {
