@@ -1270,6 +1270,11 @@ public class DescriptionServiceIT extends AbstractIT {
 		Response deleteUserRes = deleteUser(userName, PASSWORD, userName);
 		assertThat(deleteUserRes.getStatus()).isEqualTo(204);
 		
+		// Check that the offering has not been deleted
+		Response getOffRes = getOffering(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, FIRST_OFFERING.getName());
+		assertThat(getOffRes.getStatus()).isEqualTo(200);
+		
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
