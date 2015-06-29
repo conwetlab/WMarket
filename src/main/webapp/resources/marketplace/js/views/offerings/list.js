@@ -19,10 +19,15 @@
                 entry: app.urls.get('category:entry') + '/offering'
             },
 
+            models: {},
+
             filter: function filter(category, next) {
                 app.requests.list(ns.category.urls.entry, {
                     kwargs: { category: category },
-                    success: next
+                    success: next,
+                    failure: function () {
+                        ns.$scope.append(app.createAlert('warning', "No available offerings in <strong>" + ns.category.models[category].displayName + "</strong>."))
+                    }
                 });
             }
 
@@ -51,6 +56,7 @@
             ns.category.list(function (categories) {
                 $spinner.remove();
                 categories.forEach(function (data) {
+                    ns.category.models[data.name] = data;
                     ns.category.filter(data.name, function (offerings) {
                         var category = new app.components.Category(data, offerings);
                         ns.$scope.append(category.get());
