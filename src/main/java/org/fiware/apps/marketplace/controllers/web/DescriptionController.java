@@ -93,6 +93,7 @@ public class DescriptionController extends AbstractController {
             model.addAttribute("store", store);
             model.addAttribute("description", description);
             model.addAttribute("currentDescriptionView", "detail");
+            model.addAttribute("viewName", "detail");
 
             addFlashMessage(request, model);
 

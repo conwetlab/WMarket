@@ -48,7 +48,7 @@
       <c:if test="${ isOwner }">
 
       <div class="tab tab-danger">
-        <a href="javascript:deleteDescription()">
+        <a class="delete-description">
           <span class="fa fa-trash"></span>
           <span class="hidden-sm">Delete description</span>
         </a>
@@ -61,14 +61,24 @@
 
 <c:if test="${ isOwner }">
 
-<form name="description_delete_form" method="post" action="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }/delete">
-  <!-- <p class="text-justify">This operation cannot be undone. All the offerings are contained in this description will be deleted too. Please be certain.</p> -->
-</form>
-
-<script>
-  var deleteDescription = function deleteDescription() {
-    document.description_delete_form.submit();
-  };
-</script>
+<div class="modal modal-delete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-heading">
+        <button type="button" class="btn-close" data-cancel>&times;</button>
+        <span class="modal-title">Delete store</span>
+      </div>
+      <div class="modal-body">
+        <form name="description_delete_form" method="post" action="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }/delete">
+          <p class="text-justify">This operation cannot be undone. All the offerings are contained in this description will be deleted too. Please be certain.</p>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-delete" data-submit>Delete</button>
+        <button type="button" class="btn btn-default" data-cancel>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </c:if>

@@ -136,6 +136,7 @@
     <!-- Offering List View -->
     <definition name="description.offering.list" extends="app.auth">
         <put-attribute name="content" value="/WEB-INF/views/descriptions/offering-list-content.jsp" />
+        <put-attribute name="scripts.view" value="/WEB-INF/views/descriptions/detail-scripts.jsp" />
     </definition>
 
 </tiles-definitions>
