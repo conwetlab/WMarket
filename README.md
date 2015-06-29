@@ -497,6 +497,13 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
 }
 ```
 
+#### Bookmark/Unbookmark an offering
+
+Changes the state of the bookmark: if the offering has already been bookmarked by the user, the offering will be unbookmarked. Otherwise, the offering will be bookmarked.
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/bookmark`
+* **Method**: POST
+
 #### List offerings in a description
 
 * **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering`
@@ -740,7 +747,8 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
  * **orderBy**: Order used to retrieve the stores (by default: `id`) 
- * **desc**: Descending order (by default: `false`) 
+ * **desc**: Descending order (by default: `false`)
+ * **bookmarked**: Set to `true` to only retrieve the offerings bookmarked by the logged user.
 * **Content**:
 ```
 [ 
