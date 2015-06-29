@@ -50,10 +50,10 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Body**:
 ```
 {
-  "displayName": "Example Display Name",
-  "email": "example@example.com",
-  "password": "example_complex_password",
-  "company": "Example Company"
+ "displayName": "Example Display Name",
+ "email": "example@example.com",
+ "password": "example_complex_password",
+ "company": "Example Company"
 }
 ```
 
@@ -65,10 +65,10 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Body**:
 ```
 {
-  "displayName": "Example Display Name",
-  "email": "example@example.com",
-  "password": "example_complex_password",
-  "company": "Example Company"
+ "displayName": "Example Display Name",
+ "email": "example@example.com",
+ "password": "example_complex_password",
+ "company": "Example Company"
 }
 ```
 
@@ -85,10 +85,10 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Content**:
 ```
 {
-  "userName": "example-display-name",
-  "displayName": "Example Display Name",
-  "createdAt": 1,
-  "company": "Example Company"
+ "userName": "example-display-name",
+ "displayName": "Example Display Name",
+ "createdAt": 1,
+ "company": "Example Company"
 }
 ```
 
@@ -102,20 +102,22 @@ Here you have a basic reference of all the status codes that you can get when yo
  * **offset**: The first element to be retrieved
 * **Content**:
 ```
-[ 
+{
+ "users": [
   {
-    "userName": "example-display-name",
-    "displayName": "Example Display Name",
-    "createdAt": 1,
-    "company": "Example Company"
+   "userName": "example-display-name",
+   "displayName": "Example Display Name",
+   "createdAt": 1,
+   "company": "Example Company"
   },
   {
-    "userName": "example-display-name-2",
-    "displayName": "Example Display Name 2",
-    "createdAt": 2,
-    "company": "Example Company 2"
+   "userName": "example-display-name-2",
+   "displayName": "Example Display Name 2",
+   "createdAt": 2,
+   "company": "Example Company 2"
   },
   [...]
+ ]
 }
 ```
 
@@ -129,10 +131,10 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Body**:
 ```
 {
-  "displayName": "Example Store",
-  "url": "https://store.lab.fiware.org",
-  "comment": "Example comment",
-  "imageBase64": "PNG_IMAGE_IN_BASE64"
+ "displayName": "Example Store",
+ "url": "https://store.lab.fiware.org",
+ "comment": "Example comment",
+ "imageBase64": "PNG_IMAGE_IN_BASE64"
 }
 ```
 
@@ -144,10 +146,10 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Body**:
 ```
 {
-  "displayName": "Example Store",
-  "url": "https://store.lab.fiware.org",
-  "comment": "Example comment",
-  "imageBase64": "PNG_IMAGE_IN_BASE64"
+ "displayName": "Example Store",
+ "url": "https://store.lab.fiware.org",
+ "comment": "Example comment",
+ "imageBase64": "PNG_IMAGE_IN_BASE64"
 }
 ```
 
@@ -164,15 +166,15 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Content**:
 ```
 {
-  "name": "example-store",
-  "displayName": "Example Store",
-  "url": "https://store.lab.fiware.org",
-  "createdAt": 1,
-  "comment": "Example comment",
-  "creator": "user-1",
-  "lasteditor": "user-1",
-  "imagePath": "media/store/example-store.png",
-  "averageScore": 3.5
+ "name": "example-store",
+ "displayName": "Example Store",
+ "url": "https://store.lab.fiware.org",
+ "createdAt": 1,
+ "comment": "Example comment",
+ "creator": "user-1",
+ "lasteditor": "user-1",
+ "imagePath": "media/store/example-store.png",
+ "averageScore": 3.5
 }
 ```
 
@@ -188,30 +190,32 @@ Here you have a basic reference of all the status codes that you can get when yo
  * **desc**: Descending order (by default: `false`) 
 * **Content**:
 ```
-[
- {
-  "name": "example-store",
-  "displayName": "Example Store",
-  "url": "https://store.lab.fiware.org",
-  "createdAt": 1,
-  "comment": "Example comment",
-  "creator": "user-1",
-  "lasteditor": "user-1",
-  "imagePath": "media/store/example-store.png",
-  "averageScore": 3.5
- },
- {
-  "name": "example-store-2",
-  "displayName": "Example Store 2",
-  "url": "https://store2.lab.fiware.org",
-  "createdAt": 2,
-  "comment": "Example comment 2",
-  "creator": "user-2",
-  "lasteditor": "user-2",
-  "imagePath": "media/store/example-store.png"
-  "averageScore": 2.1
- },
- [...]
+{
+ "stores": [
+  {
+   "name": "example-store",
+   "displayName": "Example Store",
+   "url": "https://store.lab.fiware.org",
+   "createdAt": 1,
+   "comment": "Example comment",
+   "creator": "user-1",
+   "lasteditor": "user-1",
+   "imagePath": "media/store/example-store.png",
+   "averageScore": 3.5
+  },
+  {
+   "name": "example-store-2",
+   "displayName": "Example Store 2",
+   "url": "https://store2.lab.fiware.org",
+   "createdAt": 2,
+   "comment": "Example comment 2",
+   "creator": "user-2",
+   "lasteditor": "user-2",
+   "imagePath": "media/store/example-store.png"
+   "averageScore": 2.1
+  },
+  [...]
+ ]
 }
 ```
 
@@ -274,25 +278,27 @@ Here you have a basic reference of all the status codes that you can get when yo
  * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
 * **Content**:
 ```
-[
- {
-  "id": 1
-  "score": 5,
-  "user": "fran",
-  "comment": "Example Comment",
-  "createdAt": 1435248117000,
-  "updatedAt": 1435248117000
- },
+{
+ "reviews": [
   {
-  "id": 1
-  "score": 2,
-  "user": "aitor",
-  "comment": "Comment #2",
-  "createdAt": 1435248118000,
-  "updatedAt": 1435248119000
- },
- [...]
-]
+   "id": 1
+   "score": 5,
+   "user": "fran",
+   "comment": "Example Comment",
+   "createdAt": 1435248117000,
+   "updatedAt": 1435248117000
+  },
+  {
+   "id": 1
+   "score": 2,
+   "user": "aitor",
+   "comment": "Comment #2",
+   "createdAt": 1435248118000,
+   "updatedAt": 1435248119000
+  },
+  [...]
+ ]
+}
 ```
 
 
@@ -308,8 +314,8 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 * **Body**:
 ```
 {
-  "displayName": "Example Description",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+ "displayName": "Example Description",
+ "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
 }
 ```
 
@@ -321,8 +327,8 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 * **Body**:
 ```
 {
-  "displayName": "Example Description",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+ "displayName": "Example Description",
+ "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
 }
 ```
 
@@ -339,14 +345,14 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 * **Content**:
 ```
 {
-  "name": "example-description",
-  "displayName": "Example Description",
-  "store": "example-store",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-  "createdAt": 1,
-  "creator": "user-1",
-  "lasteditor": "user-1",
-  "offerings": [...]
+ "name": "example-description",
+ "displayName": "Example Description",
+ "store": "example-store",
+ "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+ "createdAt": 1,
+ "creator": "user-1",
+ "lasteditor": "user-1",
+ "offerings": [...]
 }
 ```
 
@@ -360,28 +366,30 @@ Descriptions is the way of creating offerings in a Store. A description is just 
  * **offset**: The first element to be retrieved
 * **Content**:
 ```
-[ 
- {
-  "name": "example-description",
-  "displayName": "Example Description",
-  "store": "example-store",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-  "createdAt": 1,
-  "creator": "user-1",
-  "lasteditor": "user-1",
-  "offerings": [...]
- },
- {
-  "name": "example-description-2",
-  "displayName": "Example Description 2",
-  "store": "example-store",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
-  "createdAt": 2,
-  "creator": "user-2",
-  "lasteditor": "user-2",
-  "offerings": [...]
- }
- [...]
+{
+ "descriptions": [
+  {
+   "name": "example-description",
+   "displayName": "Example Description",
+   "store": "example-store",
+   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+   "createdAt": 1,
+   "creator": "user-1",
+   "lasteditor": "user-1",
+   "offerings": [...]
+  },
+  {
+   "name": "example-description-2",
+   "displayName": "Example Description 2",
+   "store": "example-store",
+   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+   "createdAt": 2,
+   "creator": "user-2",
+   "lasteditor": "user-2",
+   "offerings": [...]
+  }
+  [...]
+ ]
 }
 ```
 
@@ -395,28 +403,30 @@ Descriptions is the way of creating offerings in a Store. A description is just 
  * **offset**: The first element to be retrieved
 * **Content**:
 ```
-[ 
- {
-  "name": "example-description",
-  "displayName": "Example Description",
-  "store": "example-store",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-  "createdAt": 1,
-  "creator": "user-1",
-  "lasteditor": "user-1",
-  "offerings": [...]
- },
- {
-  "name": "example-description-2",
-  "displayName": "Example Description 2",
-  "store": "example-store-1",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
-  "createdAt": 2,
-  "creator": "user-2",
-  "lasteditor": "user-2",
-  "offerings": [...]
- }
- [...]
+{
+ "descriptions": [
+  {
+   "name": "example-description",
+   "displayName": "Example Description",
+   "store": "example-store",
+   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+   "createdAt": 1,
+   "creator": "user-1",
+   "lasteditor": "user-1",
+   "offerings": [...]
+  },
+  {
+   "name": "example-description-2",
+   "displayName": "Example Description 2",
+   "store": "example-store-1",
+   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+   "createdAt": 2,
+   "creator": "user-2",
+   "lasteditor": "user-2",
+   "offerings": [...]
+  }
+  [...]
+ ]
 }
 ```
 
@@ -503,11 +513,13 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
  * **desc**: Descending order (by default: `false`) 
 * **Content**:
 ```
-[ 
- {OFFERING 1},
- {OFFERING 2},
- [...]
-]
+{ 
+ "offerings": [
+  {OFFERING 1},
+  {OFFERING 2},
+  [...]
+ ]
+}
 ```
 
 #### List offerings in a Store
@@ -522,11 +534,13 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
  * **desc**: Descending order (by default: `false`) 
 * **Content**:
 ```
-[ 
- {OFFERING 1},
- {OFFERING 2},
- [...]
-]
+{ 
+ "offerings": [
+  {OFFERING 1},
+  {OFFERING 2},
+  [...]
+ ]
+}
 ```
 
 #### List all offerings
@@ -542,11 +556,13 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
  * **bookmarked**: Set to `true` to only retrieve the offerings bookmarked by the logged user.
 * **Content**:
 ```
-[ 
- {OFFERING 1},
- {OFFERING 2},
- [...]
-]
+{ 
+ "offerings": [
+  {OFFERING 1},
+  {OFFERING 2},
+  [...]
+ ]
+}
 ```
 
 #### Review Offering
@@ -608,25 +624,27 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
  * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
 * **Content**:
 ```
-[
- {
-  "id": 1
-  "score": 5,
-  "user": "fran",
-  "comment": "Example Comment",
-  "createdAt": 1435248117000,
-  "updatedAt": 1435248117000
- },
+{
+ "reviews": [
   {
-  "id": 1
-  "score": 2,
-  "user": "aitor",
-  "comment": "Comment #2",
-  "createdAt": 1435248118000,
-  "updatedAt": 1435248119000
- },
- [...]
-]
+   "id": 1
+   "score": 5,
+   "user": "fran",
+   "comment": "Example Comment",
+   "createdAt": 1435248117000,
+   "updatedAt": 1435248117000
+  },
+  {
+   "id": 1
+   "score": 2,
+   "user": "aitor",
+   "comment": "Comment #2",
+   "createdAt": 1435248118000,
+   "updatedAt": 1435248119000
+  },
+  [...]
+ ]
+}
 ```
 
 ### Categories Management API
@@ -661,9 +679,11 @@ Once that some offerings have been created, the system will provide an API to ac
  * **desc**: Descending order (by default: `true`) 
 * **Content**:
 ```
-[ 
- {OFFERING 1},
- {OFFERING 2},
- [...]
-]
+{ 
+ "offerings": [
+  {OFFERING 1},
+  {OFFERING 2},
+  [...]
+ ]
+}
 ```
