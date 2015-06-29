@@ -87,7 +87,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 {
   "userName": "example-display-name",
   "displayName": "Example Display Name",
-  "registrationDate": 1,
+  "createdAt": 1,
   "company": "Example Company"
 }
 ```
@@ -106,13 +106,13 @@ Here you have a basic reference of all the status codes that you can get when yo
   {
     "userName": "example-display-name",
     "displayName": "Example Display Name",
-    "registrationDate": 1,
+    "createdAt": 1,
     "company": "Example Company"
   },
   {
     "userName": "example-display-name-2",
     "displayName": "Example Display Name 2",
-    "registrationDate": 2,
+    "createdAt": 2,
     "company": "Example Company 2"
   },
   [...]
@@ -167,11 +167,12 @@ Here you have a basic reference of all the status codes that you can get when yo
   "name": "example-store",
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
-  "registrationDate": 1,
+  "createdAt": 1,
   "comment": "Example comment",
   "creator": "user-1",
   "lasteditor": "user-1",
-  "imagePath": "media/store/example-store.png"
+  "imagePath": "media/store/example-store.png",
+  "averageScore": 3.5
 }
 ```
 
@@ -183,32 +184,119 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
+ * **orderBy**: Order used to retrieve the stores (by default: `id`) 
+ * **desc**: Descending order (by default: `false`) 
 * **Content**:
 ```
-[ 
+[
  {
   "name": "example-store",
   "displayName": "Example Store",
   "url": "https://store.lab.fiware.org",
-  "registrationDate": 1,
+  "createdAt": 1,
   "comment": "Example comment",
   "creator": "user-1",
   "lasteditor": "user-1",
-  "imagePath": "media/store/example-store.png"
+  "imagePath": "media/store/example-store.png",
+  "averageScore": 3.5
  },
  {
   "name": "example-store-2",
   "displayName": "Example Store 2",
   "url": "https://store2.lab.fiware.org",
-  "registrationDate": 2,
+  "createdAt": 2,
   "comment": "Example comment 2",
   "creator": "user-2",
   "lasteditor": "user-2",
   "imagePath": "media/store/example-store.png"
+  "averageScore": 2.1
  },
  [...]
 }
 ```
+
+#### Review store
+
+* **Path**: `/api/v2/store/{STORE_NAME}/review`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+ "score": 5,
+ "comment": "Example Comment"
+}
+```
+
+#### Update Store Review
+
+* **Path**: `/api/v2/store/{STORE_NAME}/review/{REVIEW_ID}`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+ "score": 5,
+ "comment": "Example Comment"
+}
+```
+
+#### Delete Store Review
+
+* **Path**: `/api/v2/store/{STORE_NAME}/review/{REVIEW_ID}`
+* **Method**: DELETE
+
+#### Get Store Review
+
+* **Path**: `/api/v2/store/{STORE_NAME}/review/{REVIEW_ID}`
+* **Method**: GET
+* **Accept**: `application/json` or `application/xml`
+* **Params**:
+ * **detailed**: Set to `true` if you want to retrieve in the same request all the information about the user that created the review (`userName`, `displayName`,...) (by default: `false`)
+* **Content**:
+```
+{
+ "id": 1
+ "score": 5,
+ "user": "fran",
+ "comment": "Example Comment",
+ "createdAt": 1435248117000,
+ "updatedAt": 1435248117000
+
+}
+```
+
+#### Get Store Reviews
+
+* **Path**: `/api/v2/store/{STORE_NAME}/review/`
+* **Method**: GET
+* **Accept**: `application/json` or `application/xml`
+* **Params**:
+ * **detailed**: Set to `true` if you want to retrieve in the same request all the information about the user that created the review (`userName`, `displayName`,...) (by default: `false`)
+* **Content**:
+```
+[
+ {
+  "id": 1
+  "score": 5,
+  "user": "fran",
+  "comment": "Example Comment",
+ 	"createdAt": 1435248117000,
+ 	"updatedAt": 1435248117000
+ },
+  {
+  "id": 1
+  "score": 2,
+  "user": "aitor",
+  "comment": "Comment #2",
+ 	"createdAt": 1435248118000,
+ 	"updatedAt": 1435248119000
+ },
+ [...]
+]
+```
+
+
 
 ### Descriptions Management API
 
