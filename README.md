@@ -927,3 +927,140 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
  [...]
 ]
 ```
+
+### Categories Management API
+
+Once that some offerings have been created, the system will provide an API tto access the different categories of offerings.
+
+#### Get all the Categories
+* **Path**: `/api/v2/category`
+* **Method**: GET
+* **Accept**: `application/json` or `application/xml`
+* **Content**:
+```
+{
+ "categories": [
+  {
+   "name": "data-set",
+   "displayName": "Data set"
+  },
+  [...]
+ ]
+}
+```
+
+#### Get offerings contained in a category
+* **Path**: `/api/v2/category/{CATEGORY_NAME}/offering`
+* **Method**: GET
+* **Accept**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+ * **orderBy**: Order used to retrieve the stores (by default: `averageScore`) 
+ * **desc**: Descending order (by default: `true`) 
+* **Content**:
+```
+[ 
+ {
+  "name": "example-offering"
+  "displayName": "Example Offering",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
+  "description": "Example offering description",
+  "version": "1.0",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
+  "pricePlans": [
+   {
+    "title": "PRICE_PLAN_NAME",
+    "comment": "PRICE_PLAN_DESCRIPTION",
+    "priceComponents": [
+     {
+      "title": "Single payment",
+      "comment": "This component defines a single payment",
+      "value": 1,
+      "currency": "EUR",
+      "unit": "single payment"
+     },
+     [...]
+    ],
+   },
+   [...]
+  ],
+  "services": [
+   {
+    "displayName": "SERVICE_NAME",
+    "comment": "SERVICE_DESCRIPTION",
+    "category": [
+     {
+      "name": "wirecloud-component",
+      "displayName": "WireCloud Component"
+     },
+     [...]
+    ]
+   },
+   [...]
+  ],
+  "categories": [
+   {
+    "name": "data-set",
+    "displayName": "Data set"
+   },
+   [...]
+  ]
+ },
+ {
+  "name": "example-offering-2"
+  "displayName": "Example Offering 2",
+  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
+  "description": "Another Example offering description",
+  "version": "1.0",
+  "describedIn": {
+    "name": "example-description",
+    "store": "example-store"
+  },
+  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
+  "pricePlans": [
+   {
+    "title": "PRICE_PLAN_NAME",
+    "comment": "PRICE_PLAN_DESCRIPTION",
+    "priceComponents": [
+     {
+      "title": "Single payment",
+      "comment": "This component defines a single payment",
+      "value": 1,
+      "currency": "EUR",
+      "unit": "single payment"
+     },
+     [...]
+    ],
+   },
+   [...]
+  ],
+  "services": [
+   {
+    "displayName": "SERVICE_NAME",
+    "comment": "SERVICE_DESCRIPTION",
+    "category": [
+     {
+      "name": "wirecloud-component",
+      "displayName": "WireCloud Component"
+     },
+     [...]
+    ]
+   },
+   [...]
+  ],
+  "categories": [
+   {
+    "name": "data-set",
+    "displayName": "Data set"
+   },
+   [...]
+  ]
+ },
+ [...]
+}
+```
