@@ -15,7 +15,7 @@
         var reviewAuthor = $('<div class="review-author">').append(
             $('<div class="author-name">').text(data.user.displayName),
             $('<div class="author-rating">').append(
-                $('<span class="fa fa-star">').text(data.score),
+                createRating(data.score),
                 $('<span class="review-date">').append(formatDate(data.updatedAt))));
 
         this.element = $('<div class="review">').append(
@@ -62,6 +62,20 @@
         var timeAgo = $.now() - updated;
 
         return timeAgo < ONE_DAY ? '<span class="recent-review">' + formatHours(timeAgo) + '</span>' : '';
+    }
+
+    function createRating(score) {
+        var rating = $('<span class="rating-readonly">');
+
+        [5,4,3,2,1].forEach(function (value) {
+            var star = $('<span class="star">').attr('data-value', value);
+            if (score == value) {
+                star.addClass('active');
+            }
+            rating.append(star);
+        });
+
+        return rating;
     }
 
 })(app.components, app.utils);

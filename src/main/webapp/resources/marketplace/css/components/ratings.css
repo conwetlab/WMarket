@@ -85,3 +85,34 @@
     color: rgb(255, 255, 255);
     text-shadow: 0px 1px 3px rgb(0, 0, 0);
 }
+
+/****************************************************************************************
+ * COMPONENT RATING READ-ONLY
+ ****************************************************************************************/
+
+.rating-readonly {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+}
+
+.rating-readonly .star {
+    display: inline-block;
+    font-family: FontAwesome;
+    vertical-align: baseline;
+}
+
+.rating-readonly .star:before {
+    content: "\f005";
+    color: rgb(220, 220, 230);
+    margin-right: 2px;
+}
+
+.rating-readonly .star:first-child:before {
+    margin-right: 0;
+}
+
+.rating-readonly .star.active:before,
+.rating-readonly .star.active ~ .star:before {
+    color: rgb(250, 205, 70);
+}
