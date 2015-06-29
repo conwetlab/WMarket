@@ -111,6 +111,11 @@
     // NAMESPACE DEFINITION
     // **********************************************************************************
 
+    ns.createSpinner = function createSpinner() {
+        return $('<div class="pending-state">')
+            .append($('<span class="fa fa-spinner fa-pulse">'));
+    };
+
     ns.formatString = function formatString(target, namedArgs) {
         for (var name in namedArgs) {
             target = target.replace("%(" + name + ")s", namedArgs[name]);
@@ -119,6 +124,19 @@
     };
 
     ns.format = ns.formatString;
+
+    ns.isPlainObject = function isPlainObject(source) {
+
+        if (typeof source !== 'object') {
+            return false;
+        }
+
+        if (source.constructor && !Object.hasOwnProperty.call(source.constructor.prototype, 'isPrototypeOf')) {
+            return false;
+        }
+
+        return true;
+    };
 
     ns.cloneObject = function cloneObject(source) {
         var target = {};

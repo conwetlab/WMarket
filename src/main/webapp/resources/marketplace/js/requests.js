@@ -106,16 +106,24 @@
             requests[name] = [];
         }
 
-        requests[name].push({
-            type: type,
-            options: options
-        });
+        if (options != null) {
+            requests[name].push({
+                type: type,
+                options: options
+            });
+        } else {
+            requests[name].push(type);
+        }
     };
 
     ns.dispatch = function dispatch(name) {
         if (name in requests) {
             requests[name].forEach(function (request) {
-                ns[request.type](request.options);
+                if (utils.isPlainObject(request)) {
+                    ns[request.type](request.options);
+                } else {
+                    request();
+                }
             });
         }
     };
@@ -175,7 +183,9 @@
             settings.dataType = 'json';
             if (type == 'collection') {
                 $spinner = createRequestSpinner();
-                options.$target.empty().append($spinner);
+                if (options.$target != null){
+                    options.$target.empty().append($spinner);
+                }
  
                 settings.success = function (data, textStatus, jqXHR) {
                     var models = Object.keys(data);
@@ -185,7 +195,9 @@
                     if (models.length && data[models[0]].length) {
                         options.success(data[models[0]], jqXHR, options.$target);
                     } else {
-                        options.$target.append(options.$alert);
+                        if (options.$target != null){
+                            options.$target.append(options.$alert);
+                        }
                     }
                 };
             } else {

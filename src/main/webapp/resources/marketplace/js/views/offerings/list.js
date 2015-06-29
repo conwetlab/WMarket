@@ -3,21 +3,78 @@
  * Code licensed under BSD 3-Clause (https://github.com/conwetlab/WMarket/blob/master/LICENSE)
  */
 
-(function (ns) {
 
-    "use strict";
+(function (ns, utils) {
 
-    ns.offeringList = $('.offering-group');
+    ns.model = 'offering';
 
-    app.requests.attach('stores:collection', 'read', {
-        namespace: "offerings:collection",
-        container: ns.offeringList,
-        alert: app.createAlert('warning', "No offering available.", 'col-sm-10'),
-        onSuccess: function (collection, container) {
-            collection.forEach(function (offeringInfo) {
-                container.append(app.createOffering(offeringInfo).element);
+    var $categoryList = $('[app-group="category"]'),
+        $offeringList = $('[app-filter="category"]');
+
+    if ($categoryList.length || $offeringList.length) {
+        ns.category = {
+
+            urls: {
+                collection: app.urls.get('category:collection'),
+                entry: app.urls.get('category:entry') + '/offering'
+            },
+
+            filter: function filter(category, next) {
+                app.requests.list(ns.category.urls.entry, {
+                    kwargs: { category: category },
+                    success: next
+                });
+            }
+
+        };
+    }
+
+    // ==================================================================================
+    // GROUP BY - CATEGORY
+    // ==================================================================================
+
+    if ($categoryList.length) {
+        ns.$scope = $categoryList;
+
+        ns.category.list = function list(next) {
+            app.requests.list(ns.category.urls.collection, {
+                success: next
             });
-        }
-    });
+        };
 
-})(app.view);
+        app.requests.attach('stores:collection', function () {
+            var $spinner = utils.createSpinner();
+            ns.$scope.append($spinner);
+            ns.category.list(function (categories) {
+                $spinner.remove();
+                categories.forEach(function (data) {
+                    ns.category.filter(data.name, function (offerings) {
+                        var category = new app.components.Category(data, offerings);
+                        ns.$scope.append(category.get());
+                        category.setUp();
+                    });
+                });
+            });
+        });
+    }
+
+    // ==================================================================================
+    // FILTER BY - CATEGORY
+    // ==================================================================================
+
+    if ($offeringList.length) {
+        ns.$scope = $offeringList;
+
+        app.requests.attach('stores:collection', function () {
+            var $spinner = utils.createSpinner();
+            ns.$scope.append($spinner);
+            ns.category.filter(ns.categoryName, function (offerings) {
+                $spinner.remove();
+                offerings.forEach(function (data) {
+                    ns.$scope.append(app.createOffering(data).get());
+                });
+            });
+        });
+    }
+
+})(app.view, app.utils);

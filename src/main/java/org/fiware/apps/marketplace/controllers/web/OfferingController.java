@@ -71,36 +71,6 @@ public class OfferingController extends AbstractController {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public Response listView(
-            @Context HttpServletRequest request) {
-
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
-        User user;
-
-        try {
-            user = getCurrentUser();
-
-            model.addAttribute("user", user);
-            model.addAttribute("title", "Catalogue - " + getContextName());
-
-            addFlashMessage(request, model);
-
-            view = new ModelAndView("offering.list", model);
-            builder = Response.ok();
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
-
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError();
-        }
-
-        return builder.entity(view).build();
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
     @Path("{storeName}/{descriptionName}/{offeringName}")
     public Response detailView(
             @PathParam("storeName") String storeName,

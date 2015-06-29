@@ -304,8 +304,7 @@ public class StoreController extends AbstractController {
 
             setFlashMessage(request, "The store '" + displayName + "' was deleted successfully.");
 
-            URI redirectURI = UriBuilder.fromUri(uri.getBaseUri())
-                    .path("offerings").build();
+            URI redirectURI = UriBuilder.fromUri(uri.getBaseUri()).build();
             builder = Response.seeOther(redirectURI);
         } catch (NotAuthorizedException e) {
             logger.info("User unauthorized", e);

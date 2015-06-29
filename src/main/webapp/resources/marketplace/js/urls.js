@@ -22,6 +22,11 @@
 
     var service = {
 
+        category: {
+            collection: "/category",
+            entry: "/category/%(category)s"
+        },
+
         bookmark: {
             entry: "/bookmark"
         },

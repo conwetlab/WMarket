@@ -31,18 +31,27 @@
             $('<a class="panel-title">').text(this.displayName).attr('href', [
                 app.contextPath,
                 'offerings',
-                this.store.name,
+                this.describedIn.store,
                 this.describedIn.name,
                 this.name
             ].join('/')));
 
         var offeringBody = $('<div class="panel-body">').append(
-            $('<a class="offering-store">').text(this.store.displayName).attr('href', [
-                app.contextPath, 'stores', this.store.name, 'offerings'
+            $('<a class="offering-store">').text(this.store ? this.store.displayName : this.describedIn.store).attr('href', [
+                app.contextPath, 'stores', this.describedIn.store, 'offerings'
             ].join('/')),
             $('<div class="offering-description">').text(this.description));
 
         this.element.append(offeringHeading, offeringBody);
+    };
+
+    ns.Offering.prototype.addClass = function addClass(classList) {
+        this.element.addClass(classList);
+        return this;
+    };
+
+    ns.Offering.prototype.get = function get() {
+        return this.element;
     };
 
 })(app.components);
