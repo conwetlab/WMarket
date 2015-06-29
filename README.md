@@ -908,7 +908,7 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
 
 #### Get Offering Reviews
 
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/{REVIEW_ID}`
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/`
 * **Method**: GET
 * **Accept**: `application/json` or `application/xml`
 * **Params**:
