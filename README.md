@@ -938,7 +938,7 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
 
 ### Categories Management API
 
-Once that some offerings have been created, the system will provide an API tto access the different categories of offerings.
+Once that some offerings have been created, the system will provide an API to access the different categories of offerings.
 
 #### Get all the Categories
 * **Path**: `/api/v2/category`
