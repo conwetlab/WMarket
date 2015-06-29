@@ -262,7 +262,6 @@ Here you have a basic reference of all the status codes that you can get when yo
  "comment": "Example Comment",
  "createdAt": 1435248117000,
  "updatedAt": 1435248117000
-
 }
 ```
 
@@ -281,16 +280,16 @@ Here you have a basic reference of all the status codes that you can get when yo
   "score": 5,
   "user": "fran",
   "comment": "Example Comment",
- 	"createdAt": 1435248117000,
- 	"updatedAt": 1435248117000
+  "createdAt": 1435248117000,
+  "updatedAt": 1435248117000
  },
   {
   "id": 1
   "score": 2,
   "user": "aitor",
   "comment": "Comment #2",
- 	"createdAt": 1435248118000,
- 	"updatedAt": 1435248119000
+  "createdAt": 1435248118000,
+  "updatedAt": 1435248119000
  },
  [...]
 ]
@@ -630,7 +629,6 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
  "comment": "Example Comment",
  "createdAt": 1435248117000,
  "updatedAt": 1435248117000
-
 }
 ```
 
@@ -649,16 +647,16 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
   "score": 5,
   "user": "fran",
   "comment": "Example Comment",
- 	"createdAt": 1435248117000,
- 	"updatedAt": 1435248117000
+  "createdAt": 1435248117000,
+  "updatedAt": 1435248117000
  },
   {
   "id": 1
   "score": 2,
   "user": "aitor",
   "comment": "Comment #2",
- 	"createdAt": 1435248118000,
- 	"updatedAt": 1435248119000
+  "createdAt": 1435248118000,
+  "updatedAt": 1435248119000
  },
  [...]
 ]
