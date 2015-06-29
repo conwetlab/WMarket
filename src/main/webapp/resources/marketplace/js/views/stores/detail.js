@@ -26,4 +26,17 @@
         });
     };
 
+    app.bindModal($('.delete-store'), '.modal-delete', {
+        context: {},
+        before: function (context, $source, $modal, next) {
+            next();
+        },
+        submit: function (context, $btn, next) {
+            document.forms.store_delete_form.submit();
+        },
+        after: function (context, next) {
+            next();
+        }
+    });
+
 })(app.view);
