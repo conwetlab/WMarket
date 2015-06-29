@@ -346,21 +346,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "createdAt": 1,
   "creator": "user-1",
   "lasteditor": "user-1",
-  "offerings": [
-    {
-     "name": "example-offering"
-     "displayName": "Example Offering",
-     "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
-     "description": "Example offering description",
-     "version": "1.0",
-     "describedIn": {
-       "name": "example-description",
-       "store": "example-store"
-     },
-     "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
-    },
-    [...]
-  ]
+  "offerings": [...]
 }
 ```
 
@@ -518,110 +504,10 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
 * **Content**:
 ```
 [ 
- {
-  "name": "example-offering"
-  "displayName": "Example Offering",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
-  "description": "Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
-  "averageScore": 3.5,
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
- {
-  "name": "example-offering-2"
-  "displayName": "Example Offering 2",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
-  "description": "Another Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
-  "averageScore": 2.1,
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
+ {OFFERING 1},
+ {OFFERING 2},
  [...]
-}
+]
 ```
 
 #### List offerings in a Store
@@ -637,110 +523,10 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
 * **Content**:
 ```
 [ 
- {
-  "name": "example-offering"
-  "displayName": "Example Offering",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
-  "description": "Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
-  "averageScore": 3.5,
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
- {
-  "name": "example-offering-2"
-  "displayName": "Example Offering 2",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
-  "description": "Another Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
-  "averageScore": 2.1,
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
+ {OFFERING 1},
+ {OFFERING 2},
  [...]
-}
+]
 ```
 
 #### List all offerings
@@ -757,110 +543,10 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
 * **Content**:
 ```
 [ 
- {
-  "name": "example-offering"
-  "displayName": "Example Offering",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
-  "description": "Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
-  "averageScore": 3.5,
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
- {
-  "name": "example-offering-2"
-  "displayName": "Example Offering 2",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
-  "description": "Another Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
-  "averageScore": 2.1,
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
+ {OFFERING 1},
+ {OFFERING 2},
  [...]
-}
+]
 ```
 
 #### Review Offering
@@ -976,106 +662,8 @@ Once that some offerings have been created, the system will provide an API to ac
 * **Content**:
 ```
 [ 
- {
-  "name": "example-offering"
-  "displayName": "Example Offering",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
-  "description": "Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
- {
-  "name": "example-offering-2"
-  "displayName": "Example Offering 2",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
-  "description": "Another Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
+ {OFFERING 1},
+ {OFFERING 2},
  [...]
-}
+]
 ```
