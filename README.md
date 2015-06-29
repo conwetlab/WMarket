@@ -252,7 +252,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Method**: GET
 * **Accept**: `application/json` or `application/xml`
 * **Params**:
- * **detailed**: Set to `true` if you want to retrieve in the same request all the information about the user that created the review (`userName`, `displayName`,...) (by default: `false`)
+ * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
 * **Content**:
 ```
 {
@@ -272,7 +272,7 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Method**: GET
 * **Accept**: `application/json` or `application/xml`
 * **Params**:
- * **detailed**: Set to `true` if you want to retrieve in the same request all the information about the user that created the review (`userName`, `displayName`,...) (by default: `false`)
+ * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
 * **Content**:
 ```
 [
