@@ -456,6 +456,7 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
    "store": "example-store"
  },
  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
+ "averageScore": 3.5,
  "pricePlans": [
   {
    "title": "PRICE_PLAN_NAME",
@@ -528,6 +529,7 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
     "store": "example-store"
   },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
+  "averageScore": 3.5,
   "pricePlans": [
    {
     "title": "PRICE_PLAN_NAME",
@@ -578,6 +580,7 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
     "store": "example-store"
   },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
+  "averageScore": 2.1,
   "pricePlans": [
    {
     "title": "PRICE_PLAN_NAME",
@@ -645,6 +648,7 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
     "store": "example-store"
   },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
+  "averageScore": 3.5,
   "pricePlans": [
    {
     "title": "PRICE_PLAN_NAME",
@@ -695,6 +699,7 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
     "store": "example-store"
   },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
+  "averageScore": 2.1,
   "pricePlans": [
    {
     "title": "PRICE_PLAN_NAME",
@@ -763,6 +768,7 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
     "store": "example-store"
   },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
+  "averageScore": 3.5,
   "pricePlans": [
    {
     "title": "PRICE_PLAN_NAME",
@@ -813,6 +819,7 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
     "store": "example-store"
   },
   "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
+  "averageScore": 2.1,
   "pricePlans": [
    {
     "title": "PRICE_PLAN_NAME",
