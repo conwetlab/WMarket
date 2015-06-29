@@ -198,6 +198,9 @@
                         if (options.$target != null){
                             options.$target.append(options.$alert);
                         }
+                        if (options.failure != null) {
+                            options.failure();
+                        }
                     }
                 };
             } else {

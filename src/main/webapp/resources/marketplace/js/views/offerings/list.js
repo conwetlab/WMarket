@@ -38,7 +38,10 @@
 
         ns.category.list = function list(next) {
             app.requests.list(ns.category.urls.collection, {
-                success: next
+                success: next,
+                failure: function () {
+                    ns.$scope.empty().append(app.createAlert('warning', "No available offerings."));
+                }
             });
         };
 
