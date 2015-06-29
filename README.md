@@ -297,7 +297,6 @@ Here you have a basic reference of all the status codes that you can get when yo
 ```
 
 
-
 ### Descriptions Management API
 
 Descriptions is the way of creating offerings in a Store. A description is just an URL pointing to an Linked USDL file that contains all the offerings that you want to include in the Store. [You can check more about Linked USDL by clicking here](http://linked-usdl.org/).
@@ -345,7 +344,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "displayName": "Example Description",
   "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-  "registrationDate": 1,
+  "createdAt": 1,
   "creator": "user-1",
   "lasteditor": "user-1",
   "offerings": [
@@ -382,7 +381,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "displayName": "Example Description",
   "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-  "registrationDate": 1,
+  "createdAt": 1,
   "creator": "user-1",
   "lasteditor": "user-1",
   "offerings": [...]
@@ -392,7 +391,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "displayName": "Example Description 2",
   "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
-  "registrationDate": 2,
+  "createdAt": 2,
   "creator": "user-2",
   "lasteditor": "user-2",
   "offerings": [...]
@@ -417,7 +416,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "displayName": "Example Description",
   "store": "example-store",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-  "registrationDate": 1,
+  "createdAt": 1,
   "creator": "user-1",
   "lasteditor": "user-1",
   "offerings": [...]
@@ -427,7 +426,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
   "displayName": "Example Description 2",
   "store": "example-store-1",
   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
-  "registrationDate": 2,
+  "createdAt": 2,
   "creator": "user-2",
   "lasteditor": "user-2",
   "offerings": [...]
@@ -469,6 +468,8 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
+ * **orderBy**: Order used to retrieve the stores (by default: `id`) 
+ * **desc**: Descending order (by default: `false`) 
 * **Content**:
 ```
 [ 
@@ -508,6 +509,8 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
+ * **orderBy**: Order used to retrieve the stores (by default: `id`) 
+ * **desc**: Descending order (by default: `false`) 
 * **Content**:
 ```
 [ 
@@ -547,6 +550,8 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
 * **Params**:
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
+ * **orderBy**: Order used to retrieve the stores (by default: `id`) 
+ * **desc**: Descending order (by default: `false`) 
 * **Content**:
 ```
 [ 
@@ -576,4 +581,85 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
  }
  [...]
 }
+```
+
+#### Review Offering
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+ "score": 5,
+ "comment": "Example Comment"
+}
+```
+
+#### Update Offering Review
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/{REVIEW_ID}`
+* **Method**: POST
+* **Accept**: `application/json` or `application/xml`
+* **Body**:
+```
+{
+ "score": 5,
+ "comment": "Example Comment"
+}
+```
+
+#### Delete Offering Review
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/{REVIEW_ID}`
+* **Method**: DELETE
+
+#### Get Offering Review
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/{REVIEW_ID}`
+* **Method**: GET
+* **Accept**: `application/json` or `application/xml`
+* **Params**:
+ * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
+* **Content**:
+```
+{
+ "id": 1
+ "score": 5,
+ "user": "fran",
+ "comment": "Example Comment",
+ "createdAt": 1435248117000,
+ "updatedAt": 1435248117000
+
+}
+```
+
+#### Get Offering Reviews
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/{REVIEW_ID}`
+* **Method**: GET
+* **Accept**: `application/json` or `application/xml`
+* **Params**:
+ * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
+* **Content**:
+```
+[
+ {
+  "id": 1
+  "score": 5,
+  "user": "fran",
+  "comment": "Example Comment",
+ 	"createdAt": 1435248117000,
+ 	"updatedAt": 1435248117000
+ },
+  {
+  "id": 1
+  "score": 2,
+  "user": "aitor",
+  "comment": "Comment #2",
+ 	"createdAt": 1435248118000,
+ 	"updatedAt": 1435248119000
+ },
+ [...]
+]
 ```
