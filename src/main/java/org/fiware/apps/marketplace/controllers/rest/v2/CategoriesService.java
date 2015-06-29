@@ -91,7 +91,7 @@ public class CategoriesService {
 	
 	@GET
 	@Produces({"application/xml", "application/json"})
-	@Path("{categoryName}")	
+	@Path("{categoryName}/offering")	
 	public Response getCategoryRecommendations(@PathParam("categoryName") String categoryName,
 			@DefaultValue("0") @QueryParam("offset") int offset,
 			@DefaultValue("100") @QueryParam("max") int max,

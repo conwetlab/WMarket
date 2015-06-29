@@ -1582,7 +1582,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	private Response getCategoryRecommendations(String userName, String password, String category, String orderBy) {		
 		
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(endPoint + "/api/v2/category/" + category);
+		WebTarget target = client.target(endPoint + "/api/v2/category/" + category + "/offering");
 		
 		// Include order when parameter is not null. BY default, offerings are ordered by score
 		if (orderBy != null) {
