@@ -74,8 +74,13 @@ public class CategoriesService {
 		Response response;
 		
 		try {
-			List<Category> categories = categoryBo.getCategoriesPage(offset, max);	
-			response = Response.ok().entity(new Categories(categories)).build();
+			if (offset < 0 || max <= 0) {
+				// Offset and Max should be checked
+				response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
+			} else {
+				List<Category> categories = categoryBo.getCategoriesPage(offset, max);	
+				response = Response.ok().entity(new Categories(categories)).build();
+			}
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
 		}
@@ -88,14 +93,22 @@ public class CategoriesService {
 	@Produces({"application/xml", "application/json"})
 	@Path("{categoryName}")	
 	public Response getCategoryRecommendations(@PathParam("categoryName") String categoryName,
+			@DefaultValue("0") @QueryParam("offset") int offset,
+			@DefaultValue("100") @QueryParam("max") int max,
 			@DefaultValue("averageScore") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("true") @QueryParam("desc") boolean desc) {
 		
 		Response response;
 		
 		try {
-			List<Offering> offerings = categoryBo.getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
-			response = Response.ok().entity(new Offerings(offerings)).build();			
+			if (offset < 0 || max <= 0) {
+				// Offset and Max should be checked
+				response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
+			} else {
+				List<Offering> offerings = categoryBo.getCategoryOfferingsSortedBy(categoryName, offset, max, 
+						orderBy, desc);
+				response = Response.ok().entity(new Offerings(offerings)).build();
+			}
 		} catch (CategoryNotFoundException e) {
 			response = ERROR_UTILS.entityNotFoundResponse(e);
 		} catch (QueryException | SQLGrammarException ex) {

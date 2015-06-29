@@ -133,7 +133,7 @@ public class AllOfferingsServiceTest {
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
-		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max);
+		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -147,7 +147,7 @@ public class AllOfferingsServiceTest {
 		List<Offering> oferrings = mock(List.class);
 		
 		// Mocks
-		when(offeringBoMock.getBookmarkedOfferingsPage(anyInt(), anyInt())).
+		when(offeringBoMock.getBookmarkedOfferingsPage(anyInt(), anyInt(), anyString(), anyBoolean())).
 				thenReturn(oferrings);
 		
 		// Call the method
@@ -159,7 +159,7 @@ public class AllOfferingsServiceTest {
 		
 		// Verify
 		verify(offeringBoMock, never()).getOfferingsPage(offset, max, orderBy, desc);
-		verify(offeringBoMock).getBookmarkedOfferingsPage(offset, max);
+		verify(offeringBoMock).getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -183,7 +183,7 @@ public class AllOfferingsServiceTest {
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
-		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max);
+		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 		
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
@@ -194,7 +194,7 @@ public class AllOfferingsServiceTest {
 		// Mocks
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg)))
-				.when(offeringBoMock).getBookmarkedOfferingsPage(anyInt(), anyInt());
+				.when(offeringBoMock).getBookmarkedOfferingsPage(anyInt(), anyInt(), anyString(), anyBoolean());
 
 		// Call the method
 		int offset = 0;
@@ -205,7 +205,7 @@ public class AllOfferingsServiceTest {
 		
 		// Verify
 		verify(offeringBoMock, never()).getOfferingsPage(offset, max, orderBy, desc);
-		verify(offeringBoMock).getBookmarkedOfferingsPage(offset, max);
+		verify(offeringBoMock).getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 		
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
@@ -225,7 +225,7 @@ public class AllOfferingsServiceTest {
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
-		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max);
+		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 		
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 

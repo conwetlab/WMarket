@@ -61,6 +61,8 @@ import org.mockito.MockitoAnnotations;
 
 public class CategoriesServiceTest {
 	
+	private static final String OFFSET_MAX_INVALID = "offset and/or max are not valid";
+	
 	@Mock private CategoryBo categoryBoMock;
 	@InjectMocks private CategoriesService service;
 	
@@ -128,37 +130,42 @@ public class CategoriesServiceTest {
 	public void testGetCategoryRecommendations() throws Exception {
 		
 		String categoryName = "dataset";
+		int offset = 8;
+		int max = 90;
 		String orderBy = "age";
 		boolean desc = false;
 		
 		// Mock
 		@SuppressWarnings("unchecked")
 		List<Offering> offerings = mock(List.class);
-		when(categoryBoMock.getCategoryOfferingsSortedBy(categoryName, orderBy, desc)).thenReturn(offerings);
+		when(categoryBoMock.getCategoryOfferingsSortedBy(categoryName, offset, max, orderBy, desc))
+				.thenReturn(offerings);
 		
 		// Call the function
-		Response res = service.getCategoryRecommendations(categoryName, orderBy, desc);
+		Response res = service.getCategoryRecommendations(categoryName, offset, max, orderBy, desc);
 		
 		// Check response
 		assertThat(res.getStatus()).isEqualTo(200);
 		assertThat(((Offerings) res.getEntity()).getOfferings()).isEqualTo(offerings);
 		
 		// Verify that categoryBoMock has been properly called
-		verify(categoryBoMock).getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
+		verify(categoryBoMock).getCategoryOfferingsSortedBy(categoryName, offset, max, orderBy, desc);
 	}
 	
 	private void testGetCategoryRecommendationsException(String orderBy, Exception ex,
 			int errorStatus, ErrorType errorType, String expectedErrorMsg) {
 		
 		String categoryName = "dataset";
+		int offset = 8;
+		int max = 90;
 		boolean desc = false;
 		
 		try {
 			// Mock
-			doThrow(ex).when(categoryBoMock).getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
+			doThrow(ex).when(categoryBoMock).getCategoryOfferingsSortedBy(categoryName, offset, max, orderBy, desc);
 			
 			// Call the function
-			Response res = service.getCategoryRecommendations(categoryName, orderBy, desc);
+			Response res = service.getCategoryRecommendations(categoryName, offset, max, orderBy, desc);
 			
 			// Check response
 			assertThat(res.getStatus()).isEqualTo(errorStatus);
@@ -167,7 +174,7 @@ public class CategoriesServiceTest {
 			assertThat(error.getErrorMessage()).isEqualTo(expectedErrorMsg);
 			
 			// Verify that categoryBoMock has been properly called
-			verify(categoryBoMock).getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
+			verify(categoryBoMock).getCategoryOfferingsSortedBy(categoryName, offset, max, orderBy, desc);
 			
 		} catch (Exception e) {
 			fail("Exception not expected", e);
@@ -204,5 +211,22 @@ public class CategoriesServiceTest {
 		testGetCategoryRecommendationsException("name", new RuntimeException(new Exception(categoryExceptionMsg)), 
 				500, ErrorType.INTERNAL_SERVER_ERROR, categoryExceptionMsg);
 	}
-
+	
+	private void testGetCategoryRecommendationsInvalidOffsetMax(int offset, int max) {
+		// Actual call
+		Response res = service.getCategoryRecommendations("category", offset, max, "id", false);
+		
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, OFFSET_MAX_INVALID);
+	}
+	
+	@Test
+	public void testGetCategoryRecommendationsInvalidOffset() {
+		testGetCategoryRecommendationsInvalidOffsetMax(-1, 1);
+	}
+	
+	@Test
+	public void testGetCategoryRecommendationsInvalidMax() {
+		testGetCategoryRecommendationsInvalidOffsetMax(0, 0);
+	}
+	
 }

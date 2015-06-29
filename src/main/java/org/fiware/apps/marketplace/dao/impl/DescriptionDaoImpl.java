@@ -138,9 +138,9 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 		List<?> list = getSession()
 				.createQuery(String.format("from %s where displayName = :displayName and store.name = :storeName", 
 						TABLE_NAME))
-						.setParameter("displayName", displayName)
-						.setParameter("storeName", storeName)
-						.list();
+				.setParameter("displayName", displayName)
+				.setParameter("storeName", storeName)
+				.list();
 
 		return list.isEmpty();
 	}
@@ -222,7 +222,7 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 		storeDao.findByName(storeName);
 
 		return getSession().createQuery(String.format("from %s where creator.userName = :userName and "
-				+ "store.name = :storeName", TABLE_NAME))
+						+ "store.name = :storeName", TABLE_NAME))
 				.setParameter("userName", userName)
 				.setParameter("storeName", storeName)
 				.list();

@@ -37,10 +37,13 @@ import java.util.List;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.dao.StoreDao;
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +51,7 @@ import org.springframework.stereotype.Service;
 @Service("offeringDao")
 public class OfferingDaoImpl extends MarketplaceHibernateDao implements OfferingDao  {
 	
+	@Autowired private UserDao userDao;
 	@Autowired private StoreDao storeDao;
 	@Autowired private DescriptionDao descriptionDao;
 	
@@ -79,8 +83,8 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 		
 		// Get the Offering
 		List<?> offerings = getSession().createQuery("from " + TABLE_NAME + " WHERE "
-				+ "describedIn.name = :descriptionName AND describedIn.store.name = :storeName "
-				+ "AND name = :offeringName")
+						+ "describedIn.name = :descriptionName AND describedIn.store.name = :storeName "
+						+ "AND name = :offeringName")
 				.setParameter("storeName", storeName)
 				.setParameter("descriptionName", descriptionName)
 				.setParameter("offeringName", offeringName)
@@ -129,8 +133,8 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 		storeDao.findByName(storeName);
 		
 		// Get the offerings
-		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE describedIn.store.name = :storeName" + " " + 
-				"ORDER BY " + orderBy + " " + descText)
+		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE describedIn.store.name = :storeName" + " "
+						+ "ORDER BY " + orderBy + " " + descText)
 				.setParameter("storeName", storeName)
 				.setFirstResult(offset)
 				.setMaxResults(max)
@@ -157,13 +161,33 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 		
 		// Get the offerings
 		return getSession().createQuery("FROM " + TABLE_NAME + " "
-				+ "WHERE describedIn.name = :descriptionName AND describedIn.store.name = :storeName " + " " + 
-				"ORDER BY " + orderBy + " " + descText)
+						+ "WHERE describedIn.name = :descriptionName AND describedIn.store.name = :storeName " + " "
+						+ "ORDER BY " + orderBy + " " + descText)
 				.setParameter("descriptionName", descriptionName)
 				.setParameter("storeName", storeName)
 				.setFirstResult(offset)
 				.setMaxResults(max)
 				.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Offering> getUserBookmarkedOfferings(String userName,
+			int offset, int max, String orderBy, boolean desc)
+			throws UserNotFoundException {
+		
+		String descText = desc ? "DESC" : "ASC";
+		
+		// Throws exception if user does not exist
+		User user = userDao.findByName(userName);
+		
+		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE :user IN elements(usersBookmarkedMe) "
+						+ "ORDER BY " + orderBy + " " + descText)
+				.setParameter("user", user)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
+		
 	}
 
 }

@@ -171,6 +171,9 @@ public class StoreBoImpl implements StoreBo{
 			
 			// Set default name based on the display name
 			store.setName(NameGenerator.getURLName(store.getDisplayName()));
+			
+			// Set average score to zero
+			store.setAverageScore(0);
 	
 			// Check rights and raise exception if user is not allowed to perform this action
 			if (!storeAuth.canCreate(store)) {

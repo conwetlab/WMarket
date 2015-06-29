@@ -180,12 +180,16 @@ public class StoreBoImplTest {
 			// Verify that the name has been properly set.
 			verify(store).setName(NAME);
 			
+			// Verify that averageScore has been set to zero
+			verify(store).setAverageScore(0);
+			
 			// Verify that the image has been set
 			String imageName = getRelativeImagePath(store);
 			
 			int setImagePathTimes = includeImage ? 1 : 0;
 			verify(store, times(setImagePathTimes)).setImagePath(MEDIA_URL + "/" + imageName);
-			assertThat(Paths.get(mediaFolder.getRoot().getAbsolutePath(), imageName).toFile().exists()).isEqualTo(includeImage);
+			assertThat(Paths.get(mediaFolder.getRoot().getAbsolutePath(), imageName).toFile().exists())
+					.isEqualTo(includeImage);
 			
 		} catch (Exception e) {
 			fail("Exception not expected", e);

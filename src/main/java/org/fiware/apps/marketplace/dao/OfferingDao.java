@@ -37,6 +37,7 @@ import java.util.List;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
 
 public interface OfferingDao {
@@ -63,6 +64,9 @@ public interface OfferingDao {
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
 			int offset, int max, String orderBy, boolean desc) throws StoreNotFoundException, 
 			DescriptionNotFoundException;
+	
+	public List<Offering> getUserBookmarkedOfferings(String userName, int offset, int max, String orderBy, 
+			boolean desc) throws UserNotFoundException;
 	
 
 }

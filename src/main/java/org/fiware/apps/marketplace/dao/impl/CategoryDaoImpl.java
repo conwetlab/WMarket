@@ -78,8 +78,8 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 	}
 
 	@Override
-	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String orderBy, boolean desc) 
-			throws CategoryNotFoundException {
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, int offset, int max, 
+			String orderBy, boolean desc) throws CategoryNotFoundException {
 		
 		Category category = findByName(categoryName);
 		String ascOrDesc = desc ? "DESC" : "ASC";
@@ -88,6 +88,8 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 				.createQuery(String.format("from %s where :category in elements(categories) "
 						+ "ORDER BY %s %s", OFFERINGS_TABLE_NAME, orderBy, ascOrDesc))
 				.setParameter("category", category)
+				.setFirstResult(offset)
+				.setMaxResults(max)
 				.list();
 		
 		@SuppressWarnings("unchecked")

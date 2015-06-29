@@ -81,6 +81,7 @@ public class StoreReviewServiceTest {
 	private static final int REVIEW_ID = 9;
 	
 	private static final String MESSAGE_INVALID_ORDER = "Reviews cannot be ordered by %s.";
+	private static final String OFFSET_MAX_INVALID = "offset and/or max are not valid";
 	
 	@Before 
 	public void setUp() throws UserNotFoundException {
@@ -275,6 +276,23 @@ public class StoreReviewServiceTest {
 		SQLGrammarException ex = new SQLGrammarException("", new SQLException());
 		testGetReviewsException(orderBy, ex, 400, ErrorType.BAD_REQUEST, 
 				String.format(MESSAGE_INVALID_ORDER, orderBy), null);
+	}
+	
+	private void testGetReviewsInvalidOffsetMax(int offset, int max) {
+		// Actual call
+		Response res = reviewsService.getReviews(STORE_NAME, offset, max, "id", false, false);
+		
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, OFFSET_MAX_INVALID);
+	}
+	
+	@Test
+	public void testGetReviewsInvalidOffset() {
+		testGetReviewsInvalidOffsetMax(-1, 1);
+	}
+	
+	@Test
+	public void testGetReviewsInvalidMax() {
+		testGetReviewsInvalidOffsetMax(0, 0);
 	}
 	
 	@Test

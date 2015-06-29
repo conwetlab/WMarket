@@ -77,7 +77,7 @@ public interface OfferingBo {
 			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException;
 	public List<Offering> getAllBookmarkedOfferings() throws NotAuthorizedException;
-	public List<Offering> getBookmarkedOfferingsPage(int offset, int max) 
+	public List<Offering> getBookmarkedOfferingsPage(int offset, int max, String orderBy, boolean desc) 
 			throws NotAuthorizedException;
 	
 	// Review

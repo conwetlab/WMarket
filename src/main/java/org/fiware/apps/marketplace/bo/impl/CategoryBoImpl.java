@@ -62,11 +62,11 @@ public class CategoryBoImpl implements CategoryBo {
 
 	@Override
 	@Transactional
-	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String orderBy, boolean desc)
-			throws CategoryNotFoundException {
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, int offset, int max, 
+			String orderBy, boolean desc) throws CategoryNotFoundException {
 		
 		// TODO: Check access rights?
-		return categoryDao.getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
+		return categoryDao.getCategoryOfferingsSortedBy(categoryName, offset, max, orderBy, desc);
 	}
 
 	@Override

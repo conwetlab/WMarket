@@ -245,12 +245,12 @@ public class OfferingBoImpl implements OfferingBo {
 	@Override
 	@Transactional
 	public List<Offering> getAllBookmarkedOfferings() throws NotAuthorizedException {
-		return getBookmarkedOfferingsPage(0, Integer.MAX_VALUE);
+		return getBookmarkedOfferingsPage(0, Integer.MAX_VALUE, "id", false);
 	}
 
 	@Override
 	@Transactional
-	public List<Offering> getBookmarkedOfferingsPage(int offset, int max)
+	public List<Offering> getBookmarkedOfferingsPage(int offset, int max, String orderBy, boolean desc)
 			throws NotAuthorizedException {
 
 		// Check rights and raise exception if user is not allowed to perform this action
@@ -259,10 +259,8 @@ public class OfferingBoImpl implements OfferingBo {
 		}
 		
 		try {
-			List<Offering> offerings = userBo.getCurrentUser().getBookmarks();
-			int finalElement = offset + max;
-			int checkedMax = finalElement <= offerings.size() ? finalElement : offerings.size();
-			return offerings.subList(offset, checkedMax);
+			User user = userBo.getCurrentUser();
+			return offeringDao.getUserBookmarkedOfferings(user.getUserName(), offset, max, orderBy, desc);
 		} catch (UserNotFoundException e) {
 			throw new RuntimeException(e);
 		}

@@ -65,7 +65,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	@Override
 	public Store findByName(String name) throws StoreNotFoundException {	
 		List<?> list = getSession()
-				.createQuery("from Store where name=:name")
+				.createQuery("from Store where name = :name")
 				.setParameter("name", name)
 				.list();	
 		
@@ -80,7 +80,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
     @Override
     public boolean isNameAvailable(String name) {
 		List<?> list = getSession()
-				.createQuery("from Store where name=:name")
+				.createQuery("from Store where name = :name")
 				.setParameter("name", name)
 				.list();
 		
@@ -90,7 +90,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
     @Override
     public boolean isDisplayNameAvailable(String displayName) {
 		List<?> list = getSession()
-				.createQuery("from Store where displayName=:displayName")
+				.createQuery("from Store where displayName = :displayName")
 				.setParameter("displayName", displayName)
 				.list();
 		
@@ -100,7 +100,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	@Override
 	public boolean isURLAvailable(String url) {
 		List<?> list = getSession()
-				.createQuery("from Store where url=:url")
+				.createQuery("from Store where url = :url")
 				.setParameter("url", url)
 				.list();
 		

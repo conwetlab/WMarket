@@ -84,7 +84,7 @@ public class AllOfferingsService {
 				
 				// If bookmaked == True, we should only retrieved the bookmaked offerings...
 				if (bookmarked) {
-					offeringsPage = offeringBo.getBookmarkedOfferingsPage(offset, max);
+					offeringsPage = offeringBo.getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 				} else {
 					offeringsPage = offeringBo.getOfferingsPage(offset, max, orderBy, desc);
 				}

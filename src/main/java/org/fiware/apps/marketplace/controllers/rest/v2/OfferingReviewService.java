@@ -161,17 +161,24 @@ public class OfferingReviewService {
 		
 		try {
 			
-			List<Review> reviews = offeringBo.getReviewsPage(storeName, descriptionName, offeringName, 
-					offset, max, orderBy, desc);
+			if (offset < 0 || max <= 0) {
+				// Offset and Max should be checked
+				response = ERROR_UTILS.badRequestResponse("offset and/or max are not valid");
+			} else {
 			
-			// Replace reviews by detailed reviews when query param is set
-			if (detailed) {
-				for (int i = 0; i < reviews.size(); i++) {
-					reviews.set(i, new DetailedReview(reviews.get(i)));
+				List<Review> reviews = offeringBo.getReviewsPage(storeName, descriptionName, offeringName, 
+						offset, max, orderBy, desc);
+				
+				// Replace reviews by detailed reviews when query param is set
+				if (detailed) {
+					for (int i = 0; i < reviews.size(); i++) {
+						reviews.set(i, new DetailedReview(reviews.get(i)));
+					}
 				}
+				
+				response = Response.ok().entity(new Reviews(reviews)).build();
 			}
 			
-			response = Response.ok().entity(new Reviews(reviews)).build();
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
 		} catch (OfferingNotFoundException | StoreNotFoundException | DescriptionNotFoundException ex) {

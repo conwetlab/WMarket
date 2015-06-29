@@ -43,8 +43,8 @@ public interface CategoryBo {
 	
 	public boolean isNameAvailable(String name);
 	public Category findByName(String name) throws CategoryNotFoundException;
-	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, String orderBy, boolean desc) 
-			throws CategoryNotFoundException;
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, int offset, int max, 
+			String orderBy, boolean desc) throws CategoryNotFoundException;
 	
 	public List<Category> getCategoriesPage(int offset, int max);
 	public List<Category> getAllCategories();

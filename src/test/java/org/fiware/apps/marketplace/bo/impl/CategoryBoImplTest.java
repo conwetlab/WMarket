@@ -104,30 +104,36 @@ public class CategoryBoImplTest {
 	@Test
 	public void testGetCategoryOfferingsSortedByFound() throws Exception {
 		String categoryName = "category";
+		int offset = 8;
+		int max = 19;
 		String orderBy = "averageScore";
 		boolean desc = true;
 		
 		// Mocking
 		@SuppressWarnings("unchecked")
 		List<Offering> offerings = mock(List.class);
-		when(categoryDaoMock.getCategoryOfferingsSortedBy(categoryName, orderBy, desc)).thenReturn(offerings);
+		when(categoryDaoMock.getCategoryOfferingsSortedBy(categoryName, offset, max, orderBy, desc))
+				.thenReturn(offerings);
 		
 		// Call the function
-		assertThat(categoryBo.getCategoryOfferingsSortedBy(categoryName, orderBy, desc)).isEqualTo(offerings);
+		assertThat(categoryBo.getCategoryOfferingsSortedBy(categoryName, offset, max, orderBy, desc))
+				.isEqualTo(offerings);
 	}
 	
 	@Test(expected=CategoryNotFoundException.class)
 	public void testGetCategoryOfferingsSortedByNotFound() throws Exception {
 		String categoryName = "category";
+		int offset = 1;
+		int max = 7;
 		String orderBy = "averageScore";
 		boolean desc = true;
 		
 		// Mocking
 		doThrow(new CategoryNotFoundException("")).when(categoryDaoMock).getCategoryOfferingsSortedBy(
-				categoryName, orderBy, desc);
+				categoryName, offset, max, orderBy, desc);
 		
 		// Call the function
-		categoryBo.getCategoryOfferingsSortedBy(categoryName, orderBy, desc);
+		categoryBo.getCategoryOfferingsSortedBy(categoryName, offset, max, orderBy, desc);
 	}
 	
 	@Test
