@@ -627,7 +627,9 @@ public class SeleniumIT extends AbstractIT {
 		clickOnOperationPanelItem("Register a new store");
 		registerStore(displayName, url);
 
-		driver.findElement(By.xpath("//a[contains(@href, 'javascript:deleteStore()')]")).click();
+		driver.findElement(By.cssSelector(".delete-store")).click();
+		driver.findElement(By.cssSelector(".modal-delete")).findElement(By.cssSelector(".btn-delete[data-submit]")).click();
+
 		verifyAlertContent("The store '" + displayName + "' was deleted successfully.");
 	}
 
@@ -710,7 +712,9 @@ public class SeleniumIT extends AbstractIT {
 		driver.findElement(
 				By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/descriptions/test-description')]")).click();
 
-		driver.findElement(By.xpath("//a[contains(@href, 'javascript:deleteDescription()')]")).click();
+		driver.findElement(By.cssSelector(".delete-description")).click();
+		driver.findElement(By.cssSelector(".btn-delete[data-submit]")).click();
+
 		verifyAlertContent("The description '" + descriptionName + "' was deleted successfully.");
 	}
 
