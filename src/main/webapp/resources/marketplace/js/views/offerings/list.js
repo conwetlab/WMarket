@@ -26,7 +26,12 @@
                     kwargs: { category: category },
                     success: next,
                     failure: function () {
-                        ns.$scope.append(app.createAlert('warning', "No available offerings in <strong>" + ns.category.models[category].displayName + "</strong>."))
+                        if (ns.currentCategory != null) {
+                            ns.$scope.empty().parent()
+                                .append(app.createAlert('warning', "No available offerings in <strong>" + ns.currentCategory.displayName + "</strong>."))
+                        } else {
+                            ns.$scope.append(app.createAlert('warning', "No available offerings in <strong>" + ns.category.models[category].displayName + "</strong>."))
+                        }
                     }
                 });
             }
@@ -77,7 +82,7 @@
         app.requests.attach('stores:collection', function () {
             var $spinner = utils.createSpinner();
             ns.$scope.append($spinner);
-            ns.category.filter(ns.categoryName, function (offerings) {
+            ns.category.filter(ns.currentCategory.name, function (offerings) {
                 $spinner.remove();
                 offerings.forEach(function (data) {
                     ns.$scope.append(app.createOffering(data).get());

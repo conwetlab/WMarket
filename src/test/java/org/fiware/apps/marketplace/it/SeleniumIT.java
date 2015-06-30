@@ -1011,5 +1011,27 @@ public class SeleniumIT extends AbstractIT {
 		verifyEntityAverageScore(averageScore);	
 		
 	}
-	
+
+	/////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// CATEGORIES /////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////
+
+	@Test
+	public void when_DescriptionIsUploaded_Expect_CategoryViewIsAvailable() {
+		String displayName = "FIWARE Store";
+		String url         = "http://store.fiware.es";
+		String userName    = "User A";
+		String userMail    = "example@example.com";
+		String userPass    = "fiware1!";
+
+		createUserStoreAndDescription(userName, userMail, userPass, displayName, url, 
+			"New Description", defaultUSDLPath);
+
+		driver.get(endPoint + "/");
+		assertThat(driver.findElements(By.cssSelector(".category")).size()).isEqualTo(2);
+
+		driver.get(endPoint + "/category/dataset");
+		assertThat(driver.findElements(By.cssSelector(".offering-item")).size()).isEqualTo(1);
+	}
+
 }
