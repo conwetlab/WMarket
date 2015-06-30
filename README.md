@@ -50,10 +50,10 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Body**:
 ```
 {
-  "displayName": "Example Display Name",
-  "email": "example@example.com",
-  "password": "example_complex_password",
-  "company": "Example Company"
+ "displayName": "Example Display Name",
+ "email": "example@example.com",
+ "password": "example_complex_password",
+ "company": "Example Company"
 }
 ```
 
@@ -65,10 +65,10 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Body**:
 ```
 {
-  "displayName": "Example Display Name",
-  "email": "example@example.com",
-  "password": "example_complex_password",
-  "company": "Example Company"
+ "displayName": "Example Display Name",
+ "email": "example@example.com",
+ "password": "example_complex_password",
+ "company": "Example Company"
 }
 ```
 
@@ -85,10 +85,10 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Content**:
 ```
 {
-  "userName": "example-display-name",
-  "displayName": "Example Display Name",
-  "createdAt": 1,
-  "company": "Example Company"
+ "userName": "example-display-name",
+ "displayName": "Example Display Name",
+ "createdAt": 1,
+ "company": "Example Company"
 }
 ```
 
@@ -102,20 +102,22 @@ Here you have a basic reference of all the status codes that you can get when yo
  * **offset**: The first element to be retrieved
 * **Content**:
 ```
-[ 
+{
+ "users": [
   {
-    "userName": "example-display-name",
-    "displayName": "Example Display Name",
-    "createdAt": 1,
-    "company": "Example Company"
+   "userName": "example-display-name",
+   "displayName": "Example Display Name",
+   "createdAt": 1,
+   "company": "Example Company"
   },
   {
-    "userName": "example-display-name-2",
-    "displayName": "Example Display Name 2",
-    "createdAt": 2,
-    "company": "Example Company 2"
+   "userName": "example-display-name-2",
+   "displayName": "Example Display Name 2",
+   "createdAt": 2,
+   "company": "Example Company 2"
   },
   [...]
+ ]
 }
 ```
 
@@ -129,10 +131,10 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Body**:
 ```
 {
-  "displayName": "Example Store",
-  "url": "https://store.lab.fiware.org",
-  "comment": "Example comment",
-  "imageBase64": "PNG_IMAGE_IN_BASE64"
+ "displayName": "Example Store",
+ "url": "https://store.lab.fiware.org",
+ "comment": "Example comment",
+ "imageBase64": "PNG_IMAGE_IN_BASE64"
 }
 ```
 
@@ -144,10 +146,10 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Body**:
 ```
 {
-  "displayName": "Example Store",
-  "url": "https://store.lab.fiware.org",
-  "comment": "Example comment",
-  "imageBase64": "PNG_IMAGE_IN_BASE64"
+ "displayName": "Example Store",
+ "url": "https://store.lab.fiware.org",
+ "comment": "Example comment",
+ "imageBase64": "PNG_IMAGE_IN_BASE64"
 }
 ```
 
@@ -164,15 +166,15 @@ Here you have a basic reference of all the status codes that you can get when yo
 * **Content**:
 ```
 {
-  "name": "example-store",
-  "displayName": "Example Store",
-  "url": "https://store.lab.fiware.org",
-  "createdAt": 1,
-  "comment": "Example comment",
-  "creator": "user-1",
-  "lasteditor": "user-1",
-  "imagePath": "media/store/example-store.png",
-  "averageScore": 3.5
+ "name": "example-store",
+ "displayName": "Example Store",
+ "url": "https://store.lab.fiware.org",
+ "createdAt": 1,
+ "comment": "Example comment",
+ "creator": "user-1",
+ "lasteditor": "user-1",
+ "imagePath": "media/store/example-store.png",
+ "averageScore": 3.5
 }
 ```
 
@@ -188,30 +190,32 @@ Here you have a basic reference of all the status codes that you can get when yo
  * **desc**: Descending order (by default: `false`) 
 * **Content**:
 ```
-[
- {
-  "name": "example-store",
-  "displayName": "Example Store",
-  "url": "https://store.lab.fiware.org",
-  "createdAt": 1,
-  "comment": "Example comment",
-  "creator": "user-1",
-  "lasteditor": "user-1",
-  "imagePath": "media/store/example-store.png",
-  "averageScore": 3.5
- },
- {
-  "name": "example-store-2",
-  "displayName": "Example Store 2",
-  "url": "https://store2.lab.fiware.org",
-  "createdAt": 2,
-  "comment": "Example comment 2",
-  "creator": "user-2",
-  "lasteditor": "user-2",
-  "imagePath": "media/store/example-store.png"
-  "averageScore": 2.1
- },
- [...]
+{
+ "stores": [
+  {
+   "name": "example-store",
+   "displayName": "Example Store",
+   "url": "https://store.lab.fiware.org",
+   "createdAt": 1,
+   "comment": "Example comment",
+   "creator": "user-1",
+   "lasteditor": "user-1",
+   "imagePath": "media/store/example-store.png",
+   "averageScore": 3.5
+  },
+  {
+   "name": "example-store-2",
+   "displayName": "Example Store 2",
+   "url": "https://store2.lab.fiware.org",
+   "createdAt": 2,
+   "comment": "Example comment 2",
+   "creator": "user-2",
+   "lasteditor": "user-2",
+   "imagePath": "media/store/example-store.png"
+   "averageScore": 2.1
+  },
+  [...]
+ ]
 }
 ```
 
@@ -274,25 +278,27 @@ Here you have a basic reference of all the status codes that you can get when yo
  * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
 * **Content**:
 ```
-[
- {
-  "id": 1
-  "score": 5,
-  "user": "fran",
-  "comment": "Example Comment",
-  "createdAt": 1435248117000,
-  "updatedAt": 1435248117000
- },
+{
+ "reviews": [
   {
-  "id": 1
-  "score": 2,
-  "user": "aitor",
-  "comment": "Comment #2",
-  "createdAt": 1435248118000,
-  "updatedAt": 1435248119000
- },
- [...]
-]
+   "id": 1
+   "score": 5,
+   "user": "fran",
+   "comment": "Example Comment",
+   "createdAt": 1435248117000,
+   "updatedAt": 1435248117000
+  },
+  {
+   "id": 1
+   "score": 2,
+   "user": "aitor",
+   "comment": "Comment #2",
+   "createdAt": 1435248118000,
+   "updatedAt": 1435248119000
+  },
+  [...]
+ ]
+}
 ```
 
 
@@ -308,8 +314,8 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 * **Body**:
 ```
 {
-  "displayName": "Example Description",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+ "displayName": "Example Description",
+ "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
 }
 ```
 
@@ -321,8 +327,8 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 * **Body**:
 ```
 {
-  "displayName": "Example Description",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+ "displayName": "Example Description",
+ "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
 }
 ```
 
@@ -339,28 +345,14 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 * **Content**:
 ```
 {
-  "name": "example-description",
-  "displayName": "Example Description",
-  "store": "example-store",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-  "createdAt": 1,
-  "creator": "user-1",
-  "lasteditor": "user-1",
-  "offerings": [
-    {
-     "name": "example-offering"
-     "displayName": "Example Offering",
-     "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
-     "description": "Example offering description",
-     "version": "1.0",
-     "describedIn": {
-       "name": "example-description",
-       "store": "example-store"
-     },
-     "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png"
-    },
-    [...]
-  ]
+ "name": "example-description",
+ "displayName": "Example Description",
+ "store": "example-store",
+ "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+ "createdAt": 1,
+ "creator": "user-1",
+ "lasteditor": "user-1",
+ "offerings": [...]
 }
 ```
 
@@ -374,28 +366,30 @@ Descriptions is the way of creating offerings in a Store. A description is just 
  * **offset**: The first element to be retrieved
 * **Content**:
 ```
-[ 
- {
-  "name": "example-description",
-  "displayName": "Example Description",
-  "store": "example-store",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-  "createdAt": 1,
-  "creator": "user-1",
-  "lasteditor": "user-1",
-  "offerings": [...]
- },
- {
-  "name": "example-description-2",
-  "displayName": "Example Description 2",
-  "store": "example-store",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
-  "createdAt": 2,
-  "creator": "user-2",
-  "lasteditor": "user-2",
-  "offerings": [...]
- }
- [...]
+{
+ "descriptions": [
+  {
+   "name": "example-description",
+   "displayName": "Example Description",
+   "store": "example-store",
+   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+   "createdAt": 1,
+   "creator": "user-1",
+   "lasteditor": "user-1",
+   "offerings": [...]
+  },
+  {
+   "name": "example-description-2",
+   "displayName": "Example Description 2",
+   "store": "example-store",
+   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+   "createdAt": 2,
+   "creator": "user-2",
+   "lasteditor": "user-2",
+   "offerings": [...]
+  }
+  [...]
+ ]
 }
 ```
 
@@ -409,28 +403,30 @@ Descriptions is the way of creating offerings in a Store. A description is just 
  * **offset**: The first element to be retrieved
 * **Content**:
 ```
-[ 
- {
-  "name": "example-description",
-  "displayName": "Example Description",
-  "store": "example-store",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-  "createdAt": 1,
-  "creator": "user-1",
-  "lasteditor": "user-1",
-  "offerings": [...]
- },
- {
-  "name": "example-description-2",
-  "displayName": "Example Description 2",
-  "store": "example-store-1",
-  "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
-  "createdAt": 2,
-  "creator": "user-2",
-  "lasteditor": "user-2",
-  "offerings": [...]
- }
- [...]
+{
+ "descriptions": [
+  {
+   "name": "example-description",
+   "displayName": "Example Description",
+   "store": "example-store",
+   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
+   "createdAt": 1,
+   "creator": "user-1",
+   "lasteditor": "user-1",
+   "offerings": [...]
+  },
+  {
+   "name": "example-description-2",
+   "displayName": "Example Description 2",
+   "store": "example-store-1",
+   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
+   "createdAt": 2,
+   "creator": "user-2",
+   "lasteditor": "user-2",
+   "offerings": [...]
+  }
+  [...]
+ ]
 }
 ```
 
@@ -456,6 +452,7 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
    "store": "example-store"
  },
  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
+ "averageScore": 3.5,
  "pricePlans": [
   {
    "title": "PRICE_PLAN_NAME",
@@ -497,6 +494,13 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
 }
 ```
 
+#### Bookmark/Unbookmark an offering
+
+Changes the state of the bookmark: if the offering has already been bookmarked by the user, the offering will be unbookmarked. Otherwise, the offering will be bookmarked.
+
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/bookmark`
+* **Method**: POST
+
 #### List offerings in a description
 
 * **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering`
@@ -509,108 +513,12 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
  * **desc**: Descending order (by default: `false`) 
 * **Content**:
 ```
-[ 
- {
-  "name": "example-offering"
-  "displayName": "Example Offering",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
-  "description": "Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
- {
-  "name": "example-offering-2"
-  "displayName": "Example Offering 2",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
-  "description": "Another Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
- [...]
+{ 
+ "offerings": [
+  {OFFERING 1},
+  {OFFERING 2},
+  [...]
+ ]
 }
 ```
 
@@ -626,108 +534,12 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
  * **desc**: Descending order (by default: `false`) 
 * **Content**:
 ```
-[ 
- {
-  "name": "example-offering"
-  "displayName": "Example Offering",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
-  "description": "Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
- {
-  "name": "example-offering-2"
-  "displayName": "Example Offering 2",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
-  "description": "Another Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
- [...]
+{ 
+ "offerings": [
+  {OFFERING 1},
+  {OFFERING 2},
+  [...]
+ ]
 }
 ```
 
@@ -740,111 +552,16 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
  * **limit**: The amount of elements to be retrieved
  * **offset**: The first element to be retrieved
  * **orderBy**: Order used to retrieve the stores (by default: `id`) 
- * **desc**: Descending order (by default: `false`) 
+ * **desc**: Descending order (by default: `false`)
+ * **bookmarked**: Set to `true` to only retrieve the offerings bookmarked by the logged user.
 * **Content**:
 ```
-[ 
- {
-  "name": "example-offering"
-  "displayName": "Example Offering",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
-  "description": "Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
- {
-  "name": "example-offering-2"
-  "displayName": "Example Offering 2",
-  "uri": "https://store.lab.fiware.org/offerings/offering/offering2",
-  "description": "Another Example offering description",
-  "version": "1.0",
-  "describedIn": {
-    "name": "example-description",
-    "store": "example-store"
-  },
-  "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering2.png",
-  "pricePlans": [
-   {
-    "title": "PRICE_PLAN_NAME",
-    "comment": "PRICE_PLAN_DESCRIPTION",
-    "priceComponents": [
-     {
-      "title": "Single payment",
-      "comment": "This component defines a single payment",
-      "value": 1,
-      "currency": "EUR",
-      "unit": "single payment"
-     },
-     [...]
-    ],
-   },
-   [...]
-  ],
-  "services": [
-   {
-    "displayName": "SERVICE_NAME",
-    "comment": "SERVICE_DESCRIPTION",
-    "category": [
-     {
-      "name": "wirecloud-component",
-      "displayName": "WireCloud Component"
-     },
-     [...]
-    ]
-   },
-   [...]
-  ],
-  "categories": [
-   {
-    "name": "data-set",
-    "displayName": "Data set"
-   },
-   [...]
-  ]
- },
- [...]
+{ 
+ "offerings": [
+  {OFFERING 1},
+  {OFFERING 2},
+  [...]
+ ]
 }
 ```
 
@@ -900,30 +617,73 @@ Each descriptions contains one or more offerings, so you are provided APIs to re
 
 #### Get Offering Reviews
 
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/{REVIEW_ID}`
+* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/`
 * **Method**: GET
 * **Accept**: `application/json` or `application/xml`
 * **Params**:
  * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
 * **Content**:
 ```
-[
- {
-  "id": 1
-  "score": 5,
-  "user": "fran",
-  "comment": "Example Comment",
-  "createdAt": 1435248117000,
-  "updatedAt": 1435248117000
- },
+{
+ "reviews": [
   {
-  "id": 1
-  "score": 2,
-  "user": "aitor",
-  "comment": "Comment #2",
-  "createdAt": 1435248118000,
-  "updatedAt": 1435248119000
- },
- [...]
-]
+   "id": 1
+   "score": 5,
+   "user": "fran",
+   "comment": "Example Comment",
+   "createdAt": 1435248117000,
+   "updatedAt": 1435248117000
+  },
+  {
+   "id": 1
+   "score": 2,
+   "user": "aitor",
+   "comment": "Comment #2",
+   "createdAt": 1435248118000,
+   "updatedAt": 1435248119000
+  },
+  [...]
+ ]
+}
+```
+
+### Categories Management API
+
+Once that some offerings have been created, the system will provide an API to access the different categories of offerings.
+
+#### Get all the Categories
+* **Path**: `/api/v2/category`
+* **Method**: GET
+* **Accept**: `application/json` or `application/xml`
+* **Content**:
+```
+{
+ "categories": [
+  {
+   "name": "data-set",
+   "displayName": "Data set"
+  },
+  [...]
+ ]
+}
+```
+
+#### Get offerings contained in a category
+* **Path**: `/api/v2/category/{CATEGORY_NAME}/offering`
+* **Method**: GET
+* **Accept**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+ * **orderBy**: Order used to retrieve the stores (by default: `averageScore`) 
+ * **desc**: Descending order (by default: `true`) 
+* **Content**:
+```
+{ 
+ "offerings": [
+  {OFFERING 1},
+  {OFFERING 2},
+  [...]
+ ]
+}
 ```
