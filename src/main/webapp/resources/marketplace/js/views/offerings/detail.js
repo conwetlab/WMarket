@@ -41,13 +41,13 @@
                         .removeClass('tab-danger')
                         .find('.hidden-sm')
                         .text('Add bookmark');
-                    app.showAlert('success', "This offering has been removed from your bookmarks successfully.");
+                    app.showAlert('success', "The bookmark was removed successfully.");
                 } else {
                     ns.btnToggleBookmark
                         .addClass('tab-danger')
                         .find('.hidden-sm')
                         .text('Remove bookmark');
-                    app.showAlert('success', "This offering has been added to your bookmarks successfully.");
+                    app.showAlert('success', "The bookmark was added successfully.");
                 }
             }
         });

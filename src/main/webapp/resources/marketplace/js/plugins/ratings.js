@@ -108,14 +108,14 @@
 
                     ns.review[action](review, function () {
                         context.comment.empty().remove();
-                        app.showAlert('success', "Your review has been " + action + "d successfully.");
+                        app.showAlert('success', "Your review was " + action + "d successfully.");
                         next();
                     });
                 }
             } else {
                 ns.review.destroy(function () {
                     context.comment.empty().remove();
-                    app.showAlert('success', "Your review has been removed successfully.");
+                    app.showAlert('success', "Your review was removed successfully.");
                     next();
                 });
             }
