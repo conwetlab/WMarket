@@ -538,7 +538,8 @@ public class SeleniumIT extends AbstractIT {
 
 		clickOnSettingPanelItem("Settings");
 
-		driver.findElement(By.linkText("Delete account")).click();
+		driver.findElement(By.cssSelector(".delete-account")).click();
+		driver.findElement(By.cssSelector(".modal-delete")).findElement(By.cssSelector(".btn-delete[data-submit]")).click();
 		assertThat(driver.getTitle()).isEqualTo("Sign In - WMarket");
 		verifyAlertContent("Your account was deleted successfully.");
 
