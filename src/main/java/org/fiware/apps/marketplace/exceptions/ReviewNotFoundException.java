@@ -1,7 +1,4 @@
-package org.fiware.apps.marketplace.bo;
-
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
-import org.fiware.apps.marketplace.model.Category;
+package org.fiware.apps.marketplace.exceptions;
 
 /*
  * #%L
@@ -35,9 +32,13 @@ import org.fiware.apps.marketplace.model.Category;
  * #L%
  */
 
-public interface ClassificationBo {
+public class ReviewNotFoundException extends Exception {
 	
-	public boolean isNameAvailable(String name);
-	public Category findByName(String name) throws ClassificationNotFoundException;
+	private static final long serialVersionUID = 1L;
+	
+	public ReviewNotFoundException(String message) {
+		super(message);
+	}
+
 
 }

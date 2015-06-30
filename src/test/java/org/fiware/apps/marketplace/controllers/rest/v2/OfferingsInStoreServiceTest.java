@@ -33,13 +33,16 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
  */
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +55,8 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
 import org.fiware.apps.marketplace.model.User;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -74,7 +79,7 @@ public class OfferingsInStoreServiceTest {
 	
 	private void testListOfferingsInStoreInvalidParams(int offset, int max) {
 		// Call the method
-		Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max);
+		Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max, "name", true);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -106,16 +111,18 @@ public class OfferingsInStoreServiceTest {
 		}
 		
 		// Mocks
-		when(offeringBoMock.getStoreOfferingsPage(eq(STORE_NAME), anyInt(), anyInt())).
+		when(offeringBoMock.getStoreOfferingsPage(eq(STORE_NAME), anyInt(), anyInt(), anyString(), anyBoolean())).
 				thenReturn(oferrings);
 		
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max);
+		String orderBy = "name";
+		boolean desc = false;
+		Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max, orderBy, desc);
 		
 		// Verify
-		verify(offeringBoMock).getStoreOfferingsPage(STORE_NAME, offset, max);
+		verify(offeringBoMock).getStoreOfferingsPage(STORE_NAME, offset, max, orderBy, desc);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -123,21 +130,22 @@ public class OfferingsInStoreServiceTest {
 				getOfferings()).isEqualTo(oferrings);
 	}
 	
-	private void testListOfferingsInStoreException(Exception expectedException, int errorCode, 
+	private void testListOfferingsInStoreException(String orderBy, Exception expectedException, int errorCode, 
 			ErrorType errorType, String message) {
 		
 		try {
 			// Mocks
 			doThrow(expectedException).when(offeringBoMock)
-					.getStoreOfferingsPage(eq(STORE_NAME), anyInt(), anyInt());
+					.getStoreOfferingsPage(eq(STORE_NAME), anyInt(), anyInt(), anyString(), anyBoolean());
 	
 			// Call the method
 			int offset = 0;
 			int max = 100;
-			Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max);
+			boolean desc = true;
+			Response res = offeringsInStoreService.listOfferingsInStore(STORE_NAME, offset, max, orderBy, desc);
 			
 			// Verify
-			verify(offeringBoMock).getStoreOfferingsPage(STORE_NAME, offset, max);
+			verify(offeringBoMock).getStoreOfferingsPage(STORE_NAME, offset, max, orderBy, desc);
 			
 			// Check exception
 			GenericRestTestUtils.checkAPIError(res, errorCode, errorType, message);
@@ -149,14 +157,14 @@ public class OfferingsInStoreServiceTest {
 	@Test
 	public void testListOfferingsInStoreRunTimeException() {
 		String message = "exception";
-		testListOfferingsInStoreException(new RuntimeException("", new Exception(message)), 
+		testListOfferingsInStoreException("name", new RuntimeException("", new Exception(message)), 
 				500, ErrorType.INTERNAL_SERVER_ERROR, message);
 	}
 	
 	@Test
 	public void testListOfferingsInStoreStoreNotFoundException() {
 		String message = "exception";
-		testListOfferingsInStoreException(new StoreNotFoundException(message), 
+		testListOfferingsInStoreException("name", new StoreNotFoundException(message), 
 				404, ErrorType.NOT_FOUND, message);
 	}
 	
@@ -167,7 +175,22 @@ public class OfferingsInStoreServiceTest {
 		when(user.getUserName()).thenReturn(userName);
 		Exception e = new NotAuthorizedException("list offerings");
 	
-		testListOfferingsInStoreException(e, 403, ErrorType.FORBIDDEN, e.getMessage());
+		testListOfferingsInStoreException("name", e, 403, ErrorType.FORBIDDEN, e.getMessage());
+	}
+	
+	
+	@Test
+	public void testListAllOfferingsInStoreSQLGrammarException() throws NotAuthorizedException {
+		String orderBy = "name";
+		testListOfferingsInStoreException(orderBy, new SQLGrammarException("", new SQLException()), 400, 
+				ErrorType.BAD_REQUEST, "Offerings cannot be ordered by " + orderBy + ".");
+	}
+	
+	@Test
+	public void testListAllOfferingsInStoreQueryException() throws NotAuthorizedException {
+		String orderBy = "name";
+		testListOfferingsInStoreException(orderBy, new QueryException(""), 400, 
+				ErrorType.BAD_REQUEST, "Offerings cannot be ordered by " + orderBy + ".");
 	}
 	
 }

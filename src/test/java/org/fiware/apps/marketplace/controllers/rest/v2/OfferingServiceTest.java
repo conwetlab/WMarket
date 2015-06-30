@@ -33,6 +33,7 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
  */
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
@@ -42,6 +43,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +58,8 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
 import org.fiware.apps.marketplace.model.User;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -175,10 +179,12 @@ public class OfferingServiceTest {
 	private void testListAllOfferingsInDescriptionInvalidParams(int offset, int max) {
 		try {
 			// Call the method
-			Response res = offeringService.listOfferingsInDescription("store", "description", offset, max);
+			Response res = offeringService.listOfferingsInDescription("store", "description", offset, max, 
+					"averageScore", false);
 	
 			// Verify the 
-			verify(offeringBoMock, never()).getDescriptionOfferingsPage(anyString(), anyString(), anyInt(), anyInt());
+			verify(offeringBoMock, never()).getDescriptionOfferingsPage(anyString(), anyString(), 
+					anyInt(), anyInt(), anyString(), anyBoolean());
 			
 			// Assertions
 			GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -203,25 +209,27 @@ public class OfferingServiceTest {
 		testListAllOfferingsInDescriptionInvalidParams(-1, -1);
 	}
 	
-	private void testListAllOfferingsInDescriptionException(Exception e, int httpCode, 
+	private void testListAllOfferingsInDescriptionException(String orderBy, Exception e, int httpCode, 
 			ErrorType errorType, String message) {
 		
 		try {
 			doThrow(e).when(offeringBoMock).getDescriptionOfferingsPage(anyString(), 
-					anyString(), anyInt(), anyInt());
+					anyString(), anyInt(), anyInt(), anyString(), anyBoolean());
 			
 			// Call the method
 			String descriptionName = "description";
 			String storeName = "store";
 			int offset = 0;
 			int max = 100;
+			boolean desc = true;
 			
 			// Call the method
-			Response res = offeringService.listOfferingsInDescription(storeName, descriptionName, offset, max);
+			Response res = offeringService.listOfferingsInDescription(storeName, descriptionName, offset, 
+					max, orderBy, desc);
 			
 			// Verify that the BO has been called with the correct arguments
 			verify(offeringBoMock).getDescriptionOfferingsPage(storeName, 
-					descriptionName, offset, max);
+					descriptionName, offset, max, orderBy, desc);
 			
 			// Check the response
 			GenericRestTestUtils.checkAPIError(res, httpCode, errorType, 
@@ -233,7 +241,7 @@ public class OfferingServiceTest {
 	}
 	
 	private void testListAllOfferingsInDescription404(Exception e) {
-		testListAllOfferingsInDescriptionException(e, 404, ErrorType.NOT_FOUND, e.getMessage());
+		testListAllOfferingsInDescriptionException("name", e, 404, ErrorType.NOT_FOUND, e.getMessage());
 	}
 	
 	@Test
@@ -241,7 +249,21 @@ public class OfferingServiceTest {
 		User user = mock(User.class);
 		when(user.getUserName()).thenReturn("userName");
 		Exception e = new NotAuthorizedException("list offerings");
-		testListAllOfferingsInDescriptionException(e, 403, ErrorType.FORBIDDEN, e.getMessage());
+		testListAllOfferingsInDescriptionException("name", e, 403, ErrorType.FORBIDDEN, e.getMessage());
+	}
+	
+	@Test
+	public void testListAllOfferingsInDescriptionSQLGrammarException() throws NotAuthorizedException {
+		String orderBy = "name";
+		testListAllOfferingsInDescriptionException(orderBy, new SQLGrammarException("", new SQLException()), 400, 
+				ErrorType.BAD_REQUEST, "Offerings cannot be ordered by " + orderBy + ".");
+	}
+	
+	@Test
+	public void testListAllOfferingsInDescriptionQueryException() throws NotAuthorizedException {
+		String orderBy = "name";
+		testListAllOfferingsInDescriptionException(orderBy, new QueryException(""), 400, 
+				ErrorType.BAD_REQUEST, "Offerings cannot be ordered by " + orderBy + ".");
 	}
 	
 	@Test
@@ -263,6 +285,8 @@ public class OfferingServiceTest {
 		String descriptionName = "description";
 		int offset = 0;
 		int max = 100;
+		String orderBy = "averageScore";
+		boolean desc = false;
 		
 		List<Offering> oferrings = new ArrayList<Offering>();
 		for (int i = 0; i < 3; i++) {
@@ -272,14 +296,16 @@ public class OfferingServiceTest {
 		}
 		
 		// Mocks
-		when(offeringBoMock.getDescriptionOfferingsPage(eq(storeName), eq(descriptionName), anyInt(), anyInt())).
-				thenReturn(oferrings);
+		when(offeringBoMock.getDescriptionOfferingsPage(eq(storeName), eq(descriptionName), anyInt(), anyInt(),
+				anyString(), anyBoolean())).thenReturn(oferrings);
 		
 		// Call the method
-		Response res = offeringService.listOfferingsInDescription(storeName, descriptionName, offset, max);
+		Response res = offeringService.listOfferingsInDescription(storeName, descriptionName, offset, 
+				max, orderBy, desc);
 		
 		// Verify
-		verify(offeringBoMock).getDescriptionOfferingsPage(storeName, descriptionName, offset, max);
+		verify(offeringBoMock).getDescriptionOfferingsPage(storeName, descriptionName, offset, 
+				max, orderBy, desc);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);

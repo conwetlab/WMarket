@@ -43,16 +43,16 @@ import java.util.List;
 
 import javax.ws.rs.Path;
 
-import org.fiware.apps.marketplace.bo.RatingBo;
+import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.bo.impl.StoreBoImpl;
 import org.fiware.apps.marketplace.controllers.MediaContentController;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.StoreValidator;
@@ -74,7 +74,7 @@ public class StoreBoImplTest {
 	@Mock private StoreValidator storeValidatorMock;
 	@Mock private StoreDao storeDaoMock;
 	@Mock private UserBo userBoMock;
-	@Mock private RatingBo ratingBoMock;
+	@Mock private ReviewBo reviewBoMock;
 	@InjectMocks private StoreBoImpl storeBo;
 	
 	private static final String NAME = "wstore";
@@ -180,12 +180,16 @@ public class StoreBoImplTest {
 			// Verify that the name has been properly set.
 			verify(store).setName(NAME);
 			
+			// Verify that averageScore has been set to zero
+			verify(store).setAverageScore(0);
+			
 			// Verify that the image has been set
 			String imageName = getRelativeImagePath(store);
 			
 			int setImagePathTimes = includeImage ? 1 : 0;
 			verify(store, times(setImagePathTimes)).setImagePath(MEDIA_URL + "/" + imageName);
-			assertThat(Paths.get(mediaFolder.getRoot().getAbsolutePath(), imageName).toFile().exists()).isEqualTo(includeImage);
+			assertThat(Paths.get(mediaFolder.getRoot().getAbsolutePath(), imageName).toFile().exists())
+					.isEqualTo(includeImage);
 			
 		} catch (Exception e) {
 			fail("Exception not expected", e);
@@ -589,7 +593,7 @@ public class StoreBoImplTest {
 			when(storeAuthMock.canList()).thenReturn(false);
 			
 			// Call the function
-			storeBo.getStoresPage(0, 7);
+			storeBo.getStoresPage(0, 7, "name", true);
 			
 			// If the exception is not risen, the method is not properly working
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
@@ -623,15 +627,17 @@ public class StoreBoImplTest {
 		// Mocks
 		int offset = 8;
 		int max = 22;
+		String orderBy = "name";
+		boolean desc = true;
 		
-		when(storeDaoMock.getStoresPage(offset, max)).thenReturn(stores);
+		when(storeDaoMock.getStoresPage(offset, max, orderBy, desc)).thenReturn(stores);
 		when(storeAuthMock.canList()).thenReturn(true);
 		
 		// Call the function
-		assertThat(storeBo.getStoresPage(offset, max)).isEqualTo(stores);
+		assertThat(storeBo.getStoresPage(offset, max, orderBy, desc)).isEqualTo(stores);
 		
 		// Verify that the DAO is called
-		verify(storeDaoMock).getStoresPage(offset, max);
+		verify(storeDaoMock).getStoresPage(offset, max, orderBy, desc);
 		
 		// Verify that image path has been set for image1 and has not been set for image2
 		verify(store1).setImagePath(MEDIA_URL + "/" + image1Name);
@@ -640,11 +646,11 @@ public class StoreBoImplTest {
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////// CREATE RATING ////////////////////////////////////
+	//////////////////////////////////// CREATE REVIEW ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test(expected=StoreNotFoundException.class)
-	public void testCreateRatingStoreNotFoundException() throws Exception {
+	public void testCreateReviewStoreNotFoundException() throws Exception {
 		
 		String storeName = "store";
 
@@ -653,36 +659,36 @@ public class StoreBoImplTest {
 		doThrow(e).when(storeDaoMock).findByName(storeName);
 
 		// Call the function
-		Rating rating = new Rating();
-		storeBo.createRating(storeName, rating);
+		Review review = new Review();
+		storeBo.createReview(storeName, review);
 	}
 	
-	private void testCreateRatingException(Exception e) throws Exception {
+	private void testCreateReviewException(Exception e) throws Exception {
 		
 		String storeName = "store";
 
 		// Configure mock
 		Store store = mock(Store.class);
-		Rating rating = mock(Rating.class);
+		Review review = mock(Review.class);
 		doReturn(store).when(storeDaoMock).findByName(storeName);
-		doThrow(e).when(ratingBoMock).createRating(store, rating);
+		doThrow(e).when(reviewBoMock).createReview(store, review);
 
 		// Call the function
-		storeBo.createRating(storeName, rating);		
+		storeBo.createReview(storeName, review);		
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
-	public void testCreateRatingNotAuthorizedException() throws Exception {
-		testCreateRatingException(new NotAuthorizedException("create rating"));
+	public void testCreateReviewNotAuthorizedException() throws Exception {
+		testCreateReviewException(new NotAuthorizedException("create review"));
 	}
 	
 	@Test(expected=ValidationException.class)
-	public void testCreateRatingValidationException() throws Exception {
-		testCreateRatingException(new ValidationException("score", "create rating"));
+	public void testCreateReviewValidationException() throws Exception {
+		testCreateReviewException(new ValidationException("score", "create review"));
 	}
 	
 	@Test
-	public void testCreateRating() throws Exception {
+	public void testCreateReview() throws Exception {
 		
 		String storeName = "store";
 		Store store = mock(Store.class);
@@ -691,21 +697,21 @@ public class StoreBoImplTest {
 		doReturn(store).when(storeDaoMock).findByName(storeName);
 		
 		// Call the function
-		Rating rating = new Rating();
-		storeBo.createRating(storeName, rating);		
+		Review review = new Review();
+		storeBo.createReview(storeName, review);		
 		
-		// Verify that ratingBo has been called
-		verify(ratingBoMock).createRating(store, rating);
+		// Verify that reviewBo has been called
+		verify(reviewBoMock).createReview(store, review);
 		
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////// UPDATE RATING ////////////////////////////////////
+	//////////////////////////////////// UPDATE REVIEW ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test(expected=StoreNotFoundException.class)
-	public void testUpdateRatingNotFound() throws Exception {
+	public void testUpdateReviewNotFound() throws Exception {
 		
 		String storeName = "store";
 
@@ -714,37 +720,37 @@ public class StoreBoImplTest {
 		doThrow(e).when(storeDaoMock).findByName(storeName);
 
 		// Call the function
-		Rating rating = new Rating();
-		storeBo.updateRating(storeName, 9, rating);
+		Review review = new Review();
+		storeBo.updateReview(storeName, 9, review);
 	}
 	
-	private void testUpdateRatingException(Exception e) throws Exception {
+	private void testUpdateReviewException(Exception e) throws Exception {
 		
 		String storeName = "store";
-		int ratingId = 9;
+		int reviewId = 9;
 
 		// Configure mock
 		Store store = mock(Store.class);
-		Rating rating = mock(Rating.class);
+		Review review = mock(Review.class);
 		doReturn(store).when(storeDaoMock).findByName(storeName);
-		doThrow(e).when(ratingBoMock).updateRating(store, ratingId, rating);
+		doThrow(e).when(reviewBoMock).updateReview(store, reviewId, review);
 
 		// Call the function
-		storeBo.updateRating(storeName, ratingId, rating);		
+		storeBo.updateReview(storeName, reviewId, review);		
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
-	public void testUpdateRatingNotAuthorizedException() throws Exception {
-		testUpdateRatingException(new NotAuthorizedException("update rating"));
+	public void testUpdateReviewNotAuthorizedException() throws Exception {
+		testUpdateReviewException(new NotAuthorizedException("update review"));
 	}
 	
 	@Test(expected=ValidationException.class)
-	public void testUpdateRatingValidationException() throws Exception {
-		testUpdateRatingException(new ValidationException("score", "update rating"));
+	public void testUpdateReviewValidationException() throws Exception {
+		testUpdateReviewException(new ValidationException("score", "update review"));
 	}
 	
 	@Test
-	public void testUpdateRating() throws Exception {
+	public void testUpdateReview() throws Exception {
 		
 		String storeName = "store";
 		Store store = mock(Store.class);
@@ -753,22 +759,22 @@ public class StoreBoImplTest {
 		doReturn(store).when(storeDaoMock).findByName(storeName);
 		
 		// Call the function
-		int ratingId = 9;
-		Rating rating = new Rating();
-		storeBo.updateRating(storeName, ratingId, rating);
+		int reviewId = 9;
+		Review review = new Review();
+		storeBo.updateReview(storeName, reviewId, review);
 		
-		// Verify that ratingBo has been called
-		verify(ratingBoMock).updateRating(store, ratingId, rating);
+		// Verify that reviewBo has been called
+		verify(reviewBoMock).updateReview(store, reviewId, review);
 		
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////// GET RATINGS /////////////////////////////////////
+	///////////////////////////////////// GET REVIEWS /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test(expected=StoreNotFoundException.class)
-	public void testGetRatingsNotFound() throws Exception {
+	public void testGetReviewsNotFound() throws Exception {
 		
 		String storeName = "store";
 
@@ -777,25 +783,25 @@ public class StoreBoImplTest {
 		doThrow(e).when(storeDaoMock).findByName(storeName);
 
 		// Call the function
-		storeBo.getRatings(storeName);
+		storeBo.getReviews(storeName);
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
-	public void testGetRatingsNotAuthorized() throws Exception {
+	public void testGetReviewsNotAuthorized() throws Exception {
 		
 		String storeName = "store";
 		Store store = mock(Store.class);
 		
 		// Configure mocks
 		doReturn(store).when(storeDaoMock).findByName(storeName);
-		doThrow(new NotAuthorizedException("")).when(ratingBoMock).getRatings(store);
+		doThrow(new NotAuthorizedException("")).when(reviewBoMock).getReviews(store);
 		
 		// Actual call
-		storeBo.getRatings(storeName);
+		storeBo.getReviews(storeName);
 	}
 	
 	@Test
-	public void testGetRatings() throws Exception {
+	public void testGetReviews() throws Exception {
 		
 		String storeName = "store";
 		Store store = mock(Store.class);
@@ -804,24 +810,24 @@ public class StoreBoImplTest {
 		doReturn(store).when(storeDaoMock).findByName(storeName);
 		
 		@SuppressWarnings("unchecked")
-		List<Rating> ratings = mock(List.class);
-		doReturn(ratings).when(ratingBoMock).getRatings(store);
+		List<Review> reviews = mock(List.class);
+		doReturn(reviews).when(reviewBoMock).getReviews(store);
 		
 		// Actual call
-		assertThat(storeBo.getRatings(storeName)).isEqualTo(ratings);
+		assertThat(storeBo.getReviews(storeName)).isEqualTo(reviews);
 		
-		// Verify that ratingBoMock has been properly called
-		verify(ratingBoMock).getRatings(store);
+		// Verify that reviewBoMock has been properly called
+		verify(reviewBoMock).getReviews(store);
 
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////// GET RATING //////////////////////////////////////
+	/////////////////////////////////// GET REVIEWS PAGE //////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-	
+
 	@Test(expected=StoreNotFoundException.class)
-	public void testGetRatingNotFound() throws Exception {
+	public void testGetReviewsPageStoreNotFoundException() throws Exception {
 		
 		String storeName = "store";
 
@@ -829,61 +835,57 @@ public class StoreBoImplTest {
 		doThrow(new StoreNotFoundException("")).when(storeDaoMock).findByName(storeName);
 
 		// Call the function
-		storeBo.getRating(storeName, 9);
-	}
-	
-	private void testGetRatingException(Exception ex) throws Exception {
-		
-		String storeName = "store";
-		int ratingId = 9;
-		Store store = mock(Store.class);
-
-		// Configure mock
-		doReturn(store).when(storeDaoMock).findByName(storeName);
-
-		doThrow(ex).when(ratingBoMock).getRating(store, ratingId);
-		
-		// Actual call
-		storeBo.getRating(storeName, ratingId);
+		storeBo.getReviewsPage(storeName, 0, 100, "id", false);
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
-	public void testGetRatingNotAuthorized() throws Exception {
-		testGetRatingException(new NotAuthorizedException(""));
-	}
-	
-	@Test(expected=RatingNotFoundException.class)
-	public void testGetRatingRatingNotFound() throws Exception {
-		testGetRatingException(new RatingNotFoundException(""));
+	public void testGetReviewsPageNotAuthorized() throws Exception {
+		
+		String storeName = "store";
+		Store store = mock(Store.class);
+		
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = true;
+		
+		// Configure mocks
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		doThrow(new NotAuthorizedException("")).when(reviewBoMock).getReviewsPage(store, offset, max, orderBy, desc);
+		
+		// Actual call
+		storeBo.getReviewsPage(storeName, offset, max, orderBy, desc);
 	}
 	
 	@Test
-	public void testGetRating() throws Exception {
-				
+	public void testGetReviewsPage() throws Exception {
+		
 		String storeName = "store";
-		int ratingId = 9;
 		Store store = mock(Store.class);
+		
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = true;
 
 		// Configure mock
 		doReturn(store).when(storeDaoMock).findByName(storeName);
-
-		Rating rating = mock(Rating.class);
-		doReturn(rating).when(ratingBoMock).getRating(store, ratingId);
+		
+		@SuppressWarnings("unchecked")
+		List<Review> reviews = mock(List.class);
+		doReturn(reviews).when(reviewBoMock).getReviewsPage(store, offset, max, orderBy, desc);
 		
 		// Actual call
-		storeBo.getRating(storeName, ratingId);
-		
-		// Verify that ratingBoMock has been properly called
-		verify(ratingBoMock).getRating(store, ratingId);
+		assertThat(storeBo.getReviewsPage(storeName, offset, max, orderBy, desc)).isEqualTo(reviews);
+
 	}
 	
-	
 	///////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////// DELETE RATING ////////////////////////////////////
+	///////////////////////////////////// GET REVIEW //////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@Test(expected=StoreNotFoundException.class)
-	public void testDeleteRatingStoreNotFoundException() throws Exception {
+	public void testGetReviewNotFound() throws Exception {
 		
 		String storeName = "store";
 
@@ -891,48 +893,110 @@ public class StoreBoImplTest {
 		doThrow(new StoreNotFoundException("")).when(storeDaoMock).findByName(storeName);
 
 		// Call the function
-		storeBo.deleteRating(storeName, 9);
+		storeBo.getReview(storeName, 9);
 	}
 	
-	private void testDeleteRatingException(Exception ex) throws Exception {
+	private void testGetReviewException(Exception ex) throws Exception {
 		
 		String storeName = "store";
-		int ratingId = 9;
+		int reviewId = 9;
 		Store store = mock(Store.class);
 
 		// Configure mock
 		doReturn(store).when(storeDaoMock).findByName(storeName);
-		doThrow(ex).when(ratingBoMock).deleteRating(store, ratingId);
+
+		doThrow(ex).when(reviewBoMock).getReview(store, reviewId);
 		
 		// Actual call
-		storeBo.deleteRating(storeName, ratingId);
+		storeBo.getReview(storeName, reviewId);
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
-	public void testDeleteRatingNotAuthorized() throws Exception {
-		testDeleteRatingException(new NotAuthorizedException(""));
+	public void testGetReviewNotAuthorized() throws Exception {
+		testGetReviewException(new NotAuthorizedException(""));
 	}
 	
-	@Test(expected=RatingNotFoundException.class)
-	public void testDeleteRatingRatingNotFound() throws Exception {
-		testDeleteRatingException(new RatingNotFoundException(""));
+	@Test(expected=ReviewNotFoundException.class)
+	public void testGetReviewReviewNotFound() throws Exception {
+		testGetReviewException(new ReviewNotFoundException(""));
 	}
 	
 	@Test
-	public void testDeleteRating() throws Exception {
+	public void testGetReview() throws Exception {
 				
 		String storeName = "store";
-		int ratingId = 9;
+		int reviewId = 9;
+		Store store = mock(Store.class);
+
+		// Configure mock
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+
+		Review review = mock(Review.class);
+		doReturn(review).when(reviewBoMock).getReview(store, reviewId);
+		
+		// Actual call
+		storeBo.getReview(storeName, reviewId);
+		
+		// Verify that reviewBoMock has been properly called
+		verify(reviewBoMock).getReview(store, reviewId);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// DELETE REVIEW ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=StoreNotFoundException.class)
+	public void testDeleteReviewStoreNotFoundException() throws Exception {
+		
+		String storeName = "store";
+
+		// Configure mock
+		doThrow(new StoreNotFoundException("")).when(storeDaoMock).findByName(storeName);
+
+		// Call the function
+		storeBo.deleteReview(storeName, 9);
+	}
+	
+	private void testDeleteReviewException(Exception ex) throws Exception {
+		
+		String storeName = "store";
+		int reviewId = 9;
+		Store store = mock(Store.class);
+
+		// Configure mock
+		doReturn(store).when(storeDaoMock).findByName(storeName);
+		doThrow(ex).when(reviewBoMock).deleteReview(store, reviewId);
+		
+		// Actual call
+		storeBo.deleteReview(storeName, reviewId);
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testDeleteReviewNotAuthorized() throws Exception {
+		testDeleteReviewException(new NotAuthorizedException(""));
+	}
+	
+	@Test(expected=ReviewNotFoundException.class)
+	public void testDeleteReviewReviewNotFound() throws Exception {
+		testDeleteReviewException(new ReviewNotFoundException(""));
+	}
+	
+	@Test
+	public void testDeleteReview() throws Exception {
+				
+		String storeName = "store";
+		int reviewId = 9;
 		Store store = mock(Store.class);
 
 		// Configure mock
 		doReturn(store).when(storeDaoMock).findByName(storeName);
 		
 		// Actual call
-		storeBo.deleteRating(storeName, ratingId);
+		storeBo.deleteReview(storeName, reviewId);
 		
-		// Verify that ratingBo has been called
-		verify(ratingBoMock).deleteRating(store, ratingId);
+		// Verify that reviewBo has been called
+		verify(reviewBoMock).deleteReview(store, reviewId);
 
 	}
 	

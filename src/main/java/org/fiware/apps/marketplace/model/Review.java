@@ -54,18 +54,18 @@ import org.fiware.apps.marketplace.utils.xmladapters.UserXMLAdapter;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
-@Table(name = "ratings")
-@XmlRootElement(name = "rating")
+@Table(name = "reviews")
+@XmlRootElement(name = "review")
 @IgnoreMediaTypes("application/*+json")
-public class Rating {
+public class Review {
 		
 	private Integer id;
 	private User user;
-	private RateableEntity ratingEntity;
+	private ReviewableEntity reviewableEntity;
 	private int score;
 	private String comment;
-	private Date date;
-	private Date lastModificationDate;
+	private Date createdAt;
+	private Date updatedAt;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -93,12 +93,12 @@ public class Rating {
 	@XmlTransient
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "entity", nullable=false)
-	public RateableEntity getRatingEntity() {
-		return ratingEntity;
+	public ReviewableEntity getReviewableEntity() {
+		return reviewableEntity;
 	}
 
-	public void setRatingEntity(RateableEntity ratingEntity) {
-		this.ratingEntity = ratingEntity;
+	public void setReviewableEntity(ReviewableEntity reviewableEntity) {
+		this.reviewableEntity = reviewableEntity;
 	}
 
 	@XmlElement
@@ -112,7 +112,7 @@ public class Rating {
 	}
 
 	@XmlElement
-	@Column(name = "comment", unique = false, nullable = true)
+	@Column(name = "comment", unique = false, nullable = true, length=1000)
 	public String getComment() {
 		return comment;
 	}
@@ -122,23 +122,23 @@ public class Rating {
 	}
 	
 	@XmlElement
-	@Column(name = "date", nullable = false)
-	public Date getDate() {
-		return date;
+	@Column(name = "created_at", nullable = false)
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 	
-	public void setDate(Date date) {
-		this.date = date;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	@XmlElement
-	@Column(name = "last_modification_date", nullable = false)
-	public Date getLastModificationDate() {
-		return lastModificationDate;
+	@Column(name = "updatedAt", nullable = false)
+	public Date getUpdatedAt() {
+		return updatedAt;
 	}
 
-	public void setLastModificationDate(Date lastModificationDate) {
-		this.lastModificationDate = lastModificationDate;
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	@Override
@@ -155,8 +155,8 @@ public class Rating {
 			return true;
 		}
 		
-		if (obj instanceof Rating) {
-			Rating other = (Rating) obj;
+		if (obj instanceof Review) {
+			Review other = (Review) obj;
 			
 			if (this.id == other.id) {
 				return true;

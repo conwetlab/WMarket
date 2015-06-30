@@ -11,7 +11,8 @@ var app = {
     validators: {},
     fields:     {},
     forms:      {},
-    view:       {}
+    view:       {},
+    user:       {}
 };
 
 $('.alert-dismissible .alert').delay(2000).slideUp(500);

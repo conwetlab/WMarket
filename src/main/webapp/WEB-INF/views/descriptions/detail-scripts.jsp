@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <script src="${ pageContext.request.contextPath }/resources/marketplace/js/views/descriptions/detail.js"></script>
+<c:if test="${ viewName == 'detail' }">
 <c:choose>
   <c:when test="${ not empty form_data }">
   <script>
@@ -20,3 +21,4 @@
   </script>
   </c:otherwise>
 </c:choose>
+</c:if>

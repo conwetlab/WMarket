@@ -9,27 +9,42 @@
 
     ns.linkedUSDL = '<a target="_blank" href="http://linked-usdl.org/"><span class="fa fa-info-circle"></span></a>';
 
-    ns.descriptionUpdateForm = app.createForm('description_update_form', [
-        new app.fields.TextField('displayName', {
-            label: "Name",
-            minlength: 3,
-            maxlength: 20,
-            regexp: new RegExp("^[A-Z]+[\\w.-]*( [\\w.-]+)*$", "i"),
-            errorMessages: {
-                invalid: "This field must contain alphanumerics (and -,_,.)."
-            }
-        }),
-        new app.fields.URLField('url', {
-            label: "URL to Linked USDL file " + ns.linkedUSDL
-        }),
-        new app.fields.LongTextField('comment', {
-            label: "Comment",
-            required: false,
-            maxlength: 200,
-            controlAttrs: {
-                rows: 4
-            }
-        })
-    ]);
+    if ($('form[name="description_update_form"]').length) {
+        ns.descriptionUpdateForm = app.createForm('description_update_form', [
+              new app.fields.TextField('displayName', {
+                  label: "Name",
+                  minlength: 3,
+                  maxlength: 20,
+                  regexp: new RegExp("^[A-Z]+[\\w.-]*( [\\w.-]+)*$", "i"),
+                  errorMessages: {
+                      invalid: "This field must contain alphanumerics (and -,_,.)."
+                  }
+              }),
+              new app.fields.URLField('url', {
+                  label: "URL to Linked USDL file " + ns.linkedUSDL
+              }),
+              new app.fields.LongTextField('comment', {
+                  label: "Comment",
+                  required: false,
+                  maxlength: 200,
+                  controlAttrs: {
+                      rows: 4
+                  }
+              })
+          ]);
+    }
+
+    app.bindModal($('.delete-description'), '.modal-delete', {
+        context: {},
+        before: function (context, $source, $modal, next) {
+            next();
+        },
+        submit: function (context, $btn, next) {
+            document.forms.description_delete_form.submit();
+        },
+        after: function (context, next) {
+            next();
+        }
+    });
 
 })(app.view);

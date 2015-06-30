@@ -38,20 +38,20 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.bo.RatingBo;
+import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.bo.impl.OfferingBoImpl;
 import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Offering;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.validators.RatingValidator;
+import org.fiware.apps.marketplace.model.validators.ReviewValidator;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,14 +66,14 @@ public class OfferingBoImplTest {
 	@Mock private OfferingDao offeringDaoMock;
 	@Mock private OfferingAuth offeringAuthMock;
 	@Mock private UserBo userBoMock;
-	@Mock private RatingValidator ratingValidatorMock;
-	@Mock private RatingBo ratingBoMock;
+	@Mock private ReviewValidator reviewValidatorMock;
+	@Mock private ReviewBo reviewBoMock;
 	@InjectMocks private OfferingBoImpl offeringBo;
 	
 	private final static String STORE_NAME = "store";
 	private final static String DESCRIPTION_NAME = "description";
 	private final static String OFFERING_NAME = "offering";
-	private final static int RATING_ID = 9;
+	private final static int REVIEW_ID = 9;
 
 
 	@Before 
@@ -163,60 +163,60 @@ public class OfferingBoImplTest {
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////// CREATE RATING ////////////////////////////////////
+	//////////////////////////////////// CREATE REVIEW ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testCreateRatingNotFound(Exception e) throws Exception {
+	private void testCreateReviewNotFound(Exception e) throws Exception {
 
 		// Configure mock
 		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
 		// Call the function
-		Rating rating = new Rating();
-		offeringBo.createRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, rating);
+		Review review = new Review();
+		offeringBo.createReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, review);
 	}
 
 	@Test(expected=StoreNotFoundException.class)
-	public void testCreateRatingStoreNotFoundException() throws Exception {
-		testCreateRatingNotFound(new StoreNotFoundException(""));
+	public void testCreateReviewStoreNotFoundException() throws Exception {
+		testCreateReviewNotFound(new StoreNotFoundException(""));
 	}
 
 	@Test(expected=DescriptionNotFoundException.class)
-	public void testCreateRatingDescriptionNotFoundException() throws Exception {
-		testCreateRatingNotFound(new DescriptionNotFoundException(""));
+	public void testCreateReviewDescriptionNotFoundException() throws Exception {
+		testCreateReviewNotFound(new DescriptionNotFoundException(""));
 	}
 
 	@Test(expected=OfferingNotFoundException.class)
-	public void testCreateRatingOfferingNotFoundException() throws Exception {
-		testCreateRatingNotFound(new OfferingNotFoundException(""));
+	public void testCreateReviewOfferingNotFoundException() throws Exception {
+		testCreateReviewNotFound(new OfferingNotFoundException(""));
 	}
 	
-	private void testCreateRatingException(Exception e) throws Exception {
+	private void testCreateReviewException(Exception e) throws Exception {
 		
 		// Configure mock
 		Offering offering = mock(Offering.class);
-		Rating rating = mock(Rating.class);
+		Review review = mock(Review.class);
 		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
-		doThrow(e).when(ratingBoMock).createRating(offering, rating);
+		doThrow(e).when(reviewBoMock).createReview(offering, review);
 
 		// Call the function
-		offeringBo.createRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, rating);		
+		offeringBo.createReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, review);		
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
-	public void testCreateRatingNotAuthorizedException() throws Exception {
-		testCreateRatingException(new NotAuthorizedException("create rating"));
+	public void testCreateReviewNotAuthorizedException() throws Exception {
+		testCreateReviewException(new NotAuthorizedException("create review"));
 	}
 	
 	@Test(expected=ValidationException.class)
-	public void testCreateRatingValidationException() throws Exception {
-		testCreateRatingException(new ValidationException("score", "create rating"));
+	public void testCreateReviewValidationException() throws Exception {
+		testCreateReviewException(new ValidationException("score", "create review"));
 	}
 	
 	@Test
-	public void testCreateRating() throws Exception {
+	public void testCreateReview() throws Exception {
 		
 		Offering offering = mock(Offering.class);
 
@@ -225,70 +225,70 @@ public class OfferingBoImplTest {
 				DESCRIPTION_NAME, OFFERING_NAME);
 		
 		// Call the function
-		Rating rating = new Rating();
-		offeringBo.createRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, rating);
+		Review review = new Review();
+		offeringBo.createReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, review);
 		
-		// Verify that ratingBo has been called
-		verify(ratingBoMock).createRating(offering, rating);
+		// Verify that reviewBo has been called
+		verify(reviewBoMock).createReview(offering, review);
 		
 	}
 
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////// UPDATE RATING ////////////////////////////////////
+	//////////////////////////////////// UPDATE REVIEW ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testUpdateRatingNotFound(Exception e) throws Exception {
+	private void testUpdateReviewNotFound(Exception e) throws Exception {
 
 		// Configure mock
 		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
 		// Call the function
-		Rating rating = new Rating();
-		offeringBo.updateRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 9, rating);
+		Review review = new Review();
+		offeringBo.updateReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 9, review);
 	}
 
 	@Test(expected=StoreNotFoundException.class)
-	public void testUpdateRatingStoreNotFoundException() throws Exception {
-		testUpdateRatingNotFound(new StoreNotFoundException(""));
+	public void testUpdateReviewStoreNotFoundException() throws Exception {
+		testUpdateReviewNotFound(new StoreNotFoundException(""));
 	}
 
 	@Test(expected=DescriptionNotFoundException.class)
-	public void testUpdateRatingDescriptionNotFoundException() throws Exception {
-		testUpdateRatingNotFound(new DescriptionNotFoundException(""));
+	public void testUpdateReviewDescriptionNotFoundException() throws Exception {
+		testUpdateReviewNotFound(new DescriptionNotFoundException(""));
 	}
 
 	@Test(expected=OfferingNotFoundException.class)
-	public void testUpdateRatingOfferingNotFoundException() throws Exception {
-		testUpdateRatingNotFound(new OfferingNotFoundException(""));
+	public void testUpdateReviewOfferingNotFoundException() throws Exception {
+		testUpdateReviewNotFound(new OfferingNotFoundException(""));
 	}
 	
-	private void testUpdateRatingException(Exception e) throws Exception {
+	private void testUpdateReviewException(Exception e) throws Exception {
 		
 		// Configure mock
 		Offering offering = mock(Offering.class);
-		Rating rating = mock(Rating.class);
+		Review review = mock(Review.class);
 		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
-		doThrow(e).when(ratingBoMock).updateRating(offering, RATING_ID, rating);
+		doThrow(e).when(reviewBoMock).updateReview(offering, REVIEW_ID, review);
 
 		// Call the function
-		offeringBo.updateRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID, rating);		
+		offeringBo.updateReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, REVIEW_ID, review);		
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
-	public void testUpdateRatingNotAuthorizedException() throws Exception {
-		testUpdateRatingException(new NotAuthorizedException("update rating"));
+	public void testUpdateReviewNotAuthorizedException() throws Exception {
+		testUpdateReviewException(new NotAuthorizedException("update review"));
 	}
 	
 	@Test(expected=ValidationException.class)
-	public void testUpdateRatingValidationException() throws Exception {
-		testUpdateRatingException(new ValidationException("score", "update rating"));
+	public void testUpdateReviewValidationException() throws Exception {
+		testUpdateReviewException(new ValidationException("score", "update review"));
 	}
 	
 	@Test
-	public void testUpdateRating() throws Exception {
+	public void testUpdateReview() throws Exception {
 		
 		Offering offering = mock(Offering.class);
 
@@ -297,61 +297,61 @@ public class OfferingBoImplTest {
 				DESCRIPTION_NAME, OFFERING_NAME);
 		
 		// Call the function
-		int ratingId = 9;
-		Rating rating = new Rating();
-		offeringBo.updateRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, ratingId, rating);
+		int reviewId = 9;
+		Review review = new Review();
+		offeringBo.updateReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, reviewId, review);
 		
-		// Verify that ratingBo has been called
-		verify(ratingBoMock).updateRating(offering, ratingId, rating);
+		// Verify that reviewBo has been called
+		verify(reviewBoMock).updateReview(offering, reviewId, review);
 		
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////// GET RATINGS /////////////////////////////////////
+	///////////////////////////////////// GET REVIEWS /////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testGetRatingsNotFound(Exception e) throws Exception {
+	private void testGetReviewsNotFound(Exception e) throws Exception {
 
 		// Configure mock
 		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
 				OFFERING_NAME);
 
 		// Call the function
-		offeringBo.getRatings(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
+		offeringBo.getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
 	}
 
 	@Test(expected=StoreNotFoundException.class)
-	public void testGetRatingsStoreNotFoundException() throws Exception {
-		testGetRatingsNotFound(new StoreNotFoundException(""));
+	public void testGetReviewsStoreNotFoundException() throws Exception {
+		testGetReviewsNotFound(new StoreNotFoundException(""));
 	}
 
 	@Test(expected=DescriptionNotFoundException.class)
-	public void testGetRatingsDescriptionNotFound() throws Exception {
-		testGetRatingsNotFound(new DescriptionNotFoundException(""));
+	public void testGetReviewsDescriptionNotFound() throws Exception {
+		testGetReviewsNotFound(new DescriptionNotFoundException(""));
 	}
 
 	@Test(expected=OfferingNotFoundException.class)
-	public void testGetRatingsOfferingNotFoundException() throws Exception {
-		testGetRatingsNotFound(new OfferingNotFoundException(""));
+	public void testGetReviewsOfferingNotFoundException() throws Exception {
+		testGetReviewsNotFound(new OfferingNotFoundException(""));
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
-	public void testGetRatingsNotAuthorized() throws Exception {
+	public void testGetReviewsNotAuthorized() throws Exception {
 		
 		Offering offering = mock(Offering.class);
 		
 		// Configure mocks
 		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
-		doThrow(new NotAuthorizedException("")).when(ratingBoMock).getRatings(offering);
+		doThrow(new NotAuthorizedException("")).when(reviewBoMock).getReviews(offering);
 		
 		// Actual call
-		offeringBo.getRatings(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
+		offeringBo.getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME);
 	}
 	
 	@Test
-	public void testGetRatings() throws Exception {
+	public void testGetReviews() throws Exception {
 		
 		Offering offering = mock(Offering.class);
 
@@ -360,70 +360,118 @@ public class OfferingBoImplTest {
 				DESCRIPTION_NAME, OFFERING_NAME);
 		
 		@SuppressWarnings("unchecked")
-		List<Rating> ratings = mock(List.class);
-		doReturn(ratings).when(ratingBoMock).getRatings(offering);
+		List<Review> reviews = mock(List.class);
+		doReturn(reviews).when(reviewBoMock).getReviews(offering);
 		
 		// Actual call
-		assertThat(offeringBo.getRatings(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME)).isEqualTo(ratings);
+		assertThat(offeringBo.getReviews(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME)).isEqualTo(reviews);
 
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////// GET RATING //////////////////////////////////////
+	/////////////////////////////////// GET REVIEWS PAGE //////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testGetRatingNotFound(Exception e) throws Exception {
+	private void testGetReviewsPageNotFound(Exception e) throws Exception {
 
 		// Configure mock
 		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
 				OFFERING_NAME);
 
 		// Call the function
-		offeringBo.getRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 9);
+		offeringBo.getReviewsPage(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 0, 100, "id", false);
 	}
 
 	@Test(expected=StoreNotFoundException.class)
-	public void testGetRatingStoreNotFoundException() throws Exception {
-		testGetRatingNotFound(new StoreNotFoundException(""));
+	public void testGetReviewsPageStoreNotFoundException() throws Exception {
+		testGetReviewsPageNotFound(new StoreNotFoundException(""));
 	}
 
 	@Test(expected=DescriptionNotFoundException.class)
-	public void testGetRatingDescriptionNotFound() throws Exception {
-		testGetRatingNotFound(new DescriptionNotFoundException(""));
+	public void testGetReviewsPageDescriptionNotFound() throws Exception {
+		testGetReviewsPageNotFound(new DescriptionNotFoundException(""));
 	}
 
 	@Test(expected=OfferingNotFoundException.class)
-	public void testGetRatingOfferingNotFoundException() throws Exception {
-		testGetRatingNotFound(new OfferingNotFoundException(""));
-	}
-	
-	private void testGetRatingException(Exception ex) throws Exception {
-				
-		Offering offering = mock(Offering.class);
-
-		// Configure mock
-		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
-				DESCRIPTION_NAME, OFFERING_NAME);
-
-		doThrow(ex).when(ratingBoMock).getRating(offering, RATING_ID);
-		
-		// Actual call
-		offeringBo.getRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
+	public void testGetReviewsPageOfferingNotFoundException() throws Exception {
+		testGetReviewsPageNotFound(new OfferingNotFoundException(""));
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
-	public void testGetRatingNotAuthorized() throws Exception {
-		testGetRatingException(new NotAuthorizedException(""));
-	}
-	
-	@Test(expected=RatingNotFoundException.class)
-	public void testGetRatingRatingNotFound() throws Exception {
-		testGetRatingException(new RatingNotFoundException(""));
+	public void testGetReviewsPageNotAuthorized() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = true;
+		
+		// Configure mocks
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+		doThrow(new NotAuthorizedException("")).when(reviewBoMock).getReviewsPage(offering, offset, max, orderBy, desc);
+		
+		// Actual call
+		offeringBo.getReviewsPage(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, offset, max, orderBy, desc);
 	}
 	
 	@Test
-	public void testGetRating() throws Exception {
+	public void testGetReviewsPage() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		int offset = 0;
+		int max = 100;
+		String orderBy = "id";
+		boolean desc = true;
+
+		// Configure mock
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+		
+		@SuppressWarnings("unchecked")
+		List<Review> reviews = mock(List.class);
+		doReturn(reviews).when(reviewBoMock).getReviewsPage(offering, offset, max, orderBy, desc);
+		
+		// Actual call
+		assertThat(offeringBo.getReviewsPage(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 
+				offset, max, orderBy, desc)).isEqualTo(reviews);
+
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// GET REVIEW //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testGetReviewNotFound(Exception e) throws Exception {
+
+		// Configure mock
+		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, DESCRIPTION_NAME, 
+				OFFERING_NAME);
+
+		// Call the function
+		offeringBo.getReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 9);
+	}
+
+	@Test(expected=StoreNotFoundException.class)
+	public void testGetReviewStoreNotFoundException() throws Exception {
+		testGetReviewNotFound(new StoreNotFoundException(""));
+	}
+
+	@Test(expected=DescriptionNotFoundException.class)
+	public void testGetReviewDescriptionNotFound() throws Exception {
+		testGetReviewNotFound(new DescriptionNotFoundException(""));
+	}
+
+	@Test(expected=OfferingNotFoundException.class)
+	public void testGetReviewOfferingNotFoundException() throws Exception {
+		testGetReviewNotFound(new OfferingNotFoundException(""));
+	}
+	
+	private void testGetReviewException(Exception ex) throws Exception {
 				
 		Offering offering = mock(Offering.class);
 
@@ -431,46 +479,71 @@ public class OfferingBoImplTest {
 		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
-		Rating rating = mock(Rating.class);
-		doReturn(rating).when(ratingBoMock).getRating(offering, RATING_ID);
+		doThrow(ex).when(reviewBoMock).getReview(offering, REVIEW_ID);
 		
 		// Actual call
-		assertThat(offeringBo.getRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID))
-				.isEqualTo(rating);
+		offeringBo.getReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, REVIEW_ID);
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetReviewNotAuthorized() throws Exception {
+		testGetReviewException(new NotAuthorizedException(""));
+	}
+	
+	@Test(expected=ReviewNotFoundException.class)
+	public void testGetReviewReviewNotFound() throws Exception {
+		testGetReviewException(new ReviewNotFoundException(""));
+	}
+	
+	@Test
+	public void testGetReview() throws Exception {
+				
+		Offering offering = mock(Offering.class);
+
+		// Configure mock
+		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
+				DESCRIPTION_NAME, OFFERING_NAME);
+
+		Review review = mock(Review.class);
+		doReturn(review).when(reviewBoMock).getReview(offering, REVIEW_ID);
+		
+		// Actual call
+		assertThat(offeringBo.getReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, REVIEW_ID))
+				.isEqualTo(review);
 
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////// DELETE RATING ////////////////////////////////////
+	//////////////////////////////////// DELETE REVIEW ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testDeleteRatingNotFound(Exception e) throws Exception {
+	private void testDeleteReviewNotFound(Exception e) throws Exception {
 
 		// Configure mock
 		doThrow(e).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
 		// Call the function
-		offeringBo.deleteRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 9);
+		offeringBo.deleteReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, 9);
 	}
 
 	@Test(expected=StoreNotFoundException.class)
-	public void testDeleteRatingStoreNotFoundException() throws Exception {
-		testDeleteRatingNotFound(new StoreNotFoundException(""));
+	public void testDeleteReviewStoreNotFoundException() throws Exception {
+		testDeleteReviewNotFound(new StoreNotFoundException(""));
 	}
 
 	@Test(expected=DescriptionNotFoundException.class)
-	public void testDeleteRatingDescriptionNotFound() throws Exception {
-		testDeleteRatingNotFound(new DescriptionNotFoundException(""));
+	public void testDeleteReviewDescriptionNotFound() throws Exception {
+		testDeleteReviewNotFound(new DescriptionNotFoundException(""));
 	}
 
 	@Test(expected=OfferingNotFoundException.class)
-	public void testDeleteRatingOfferingNotFoundException() throws Exception {
-		testDeleteRatingNotFound(new OfferingNotFoundException(""));
+	public void testDeleteReviewOfferingNotFoundException() throws Exception {
+		testDeleteReviewNotFound(new OfferingNotFoundException(""));
 	}
 	
-	private void testDeleteRatingException(Exception ex) throws Exception {
+	private void testDeleteReviewException(Exception ex) throws Exception {
 				
 		Offering offering = mock(Offering.class);
 
@@ -478,24 +551,24 @@ public class OfferingBoImplTest {
 		doReturn(offering).when(offeringDaoMock).findByNameStoreAndDescription(STORE_NAME, 
 				DESCRIPTION_NAME, OFFERING_NAME);
 
-		doThrow(ex).when(ratingBoMock).deleteRating(offering, RATING_ID);
+		doThrow(ex).when(reviewBoMock).deleteReview(offering, REVIEW_ID);
 		
 		// Actual call
-		offeringBo.deleteRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
+		offeringBo.deleteReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, REVIEW_ID);
 	}
 	
 	@Test(expected=NotAuthorizedException.class)
-	public void testDeleteRatingNotAuthorized() throws Exception {
-		testDeleteRatingException(new NotAuthorizedException(""));
+	public void testDeleteReviewNotAuthorized() throws Exception {
+		testDeleteReviewException(new NotAuthorizedException(""));
 	}
 	
-	@Test(expected=RatingNotFoundException.class)
-	public void testDeleteRatingRatingNotFound() throws Exception {
-		testDeleteRatingException(new RatingNotFoundException(""));
+	@Test(expected=ReviewNotFoundException.class)
+	public void testDeleteReviewReviewNotFound() throws Exception {
+		testDeleteReviewException(new ReviewNotFoundException(""));
 	}
 	
 	@Test
-	public void testDeleteRating() throws Exception {
+	public void testDeleteReview() throws Exception {
 				
 		Offering offering = mock(Offering.class);
 
@@ -504,10 +577,10 @@ public class OfferingBoImplTest {
 				DESCRIPTION_NAME, OFFERING_NAME);
 		
 		// Actual call
-		offeringBo.deleteRating(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, RATING_ID);
+		offeringBo.deleteReview(STORE_NAME, DESCRIPTION_NAME, OFFERING_NAME, REVIEW_ID);
 		
-		// Verify that ratingBo has been called
-		verify(ratingBoMock).deleteRating(offering, RATING_ID);
+		// Verify that reviewBo has been called
+		verify(reviewBoMock).deleteReview(offering, REVIEW_ID);
 
 	}
 }

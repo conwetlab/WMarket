@@ -44,6 +44,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
@@ -64,38 +65,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class OfferingController extends AbstractController {
 
     @Autowired private OfferingBo offeringBo;
+    @Autowired private ReviewBo reviewBo;
 
     private static Logger logger = LoggerFactory.getLogger(OfferingController.class);
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    public Response listView(
-            @Context HttpServletRequest request) {
-
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
-        User user;
-
-        try {
-            user = getCurrentUser();
-
-            model.addAttribute("user", user);
-            model.addAttribute("title", "Catalogue - " + getContextName());
-
-            addFlashMessage(request, model);
-
-            view = new ModelAndView("offering.list", model);
-            builder = Response.ok();
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
-
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError();
-        }
-
-        return builder.entity(view).build();
-    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -123,6 +95,10 @@ public class OfferingController extends AbstractController {
             if (offeringBo.getAllBookmarkedOfferings().contains(offering)) {
                 model.addAttribute("bookmark", true);
             }
+
+            try {
+				model.addAttribute("review", reviewBo.getUserReview(offering));
+			} catch (Exception e) {}
 
             view = new ModelAndView("offering.detail", model);
             builder = Response.ok();
@@ -178,6 +154,10 @@ public class OfferingController extends AbstractController {
             model.addAttribute("offering", offering);
             model.addAttribute("title", offering.getDisplayName() + " - " + getContextName());
             model.addAttribute("currentView", "priceplans");
+
+            try {
+				model.addAttribute("review", reviewBo.getUserReview(offering));
+			} catch (Exception e) {}
 
             if (offeringBo.getAllBookmarkedOfferings().contains(offering)) {
                 model.addAttribute("bookmark", true);
@@ -236,6 +216,10 @@ public class OfferingController extends AbstractController {
             model.addAttribute("offering", offering);
             model.addAttribute("title", "Services - " + offering.getDisplayName() + " - " + getContextName());
             model.addAttribute("currentView", "services");
+
+            try {
+				model.addAttribute("review", reviewBo.getUserReview(offering));
+			} catch (Exception e) {}
 
             view = new ModelAndView("offering.service.list", model);
             builder = Response.ok();

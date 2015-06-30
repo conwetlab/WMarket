@@ -34,22 +34,27 @@ package org.fiware.apps.marketplace.it;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;	
 
+import org.fiware.apps.marketplace.model.Categories;
+import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Descriptions;
 import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
-import org.fiware.apps.marketplace.model.Rating;
-import org.fiware.apps.marketplace.model.Ratings;
+import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.Reviews;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.junit.After;
@@ -70,7 +75,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	private final static String MESSAGE_NAME_IN_USE = "This name is already in use in this Store.";
 	private final static String MESSAGE_URL_IN_USE = "This URL is already in use in this Store.";
 	private final static String MESSAGE_INVALID_RDF = "Your RDF could not be parsed.";
-	private final static String MESSAGE_DESCRIPTION_NOT_FOUND = "Description %s not found";
+	private final static String MESSAGE_DESCRIPTION_NOT_FOUND = "Description %s not found in Store %s";
 
 	@Before
 	public void setUp() {
@@ -100,9 +105,24 @@ public class DescriptionServiceIT extends AbstractIT {
 	 * This method retrieves an offering from the list of obtained offerings and check if its
 	 * price plans, services and categories are OK
 	 * @param offerings The list of offerings that the service has returned
+	 * @param storeName The name of the store where the offering is registered
+	 * @param descriptionName The of the the description that contains the offering
 	 * @param offering The offering to be checked
 	 */
-	private void checkOfferingInternalState(List<Offering> offerings, Offering offering) {
+	private void checkOfferingInternalState(List<Offering> offerings, String storeName, String descriptionName, 
+			Offering offering) {
+		
+		// Required for indexOf to work
+		Store store = new Store();
+		store.setName(storeName);
+		
+		Description description = new Description();
+		description.setName(descriptionName);
+		description.setStore(store);
+		
+		offering.setDescribedIn(description);
+				
+		// Get offering from the list
 		int index = offerings.indexOf(offering);
 		Offering receivedOffering = offerings.get(index);
 		assertThat(receivedOffering.getPricePlans()).isEqualTo(offering.getPricePlans());
@@ -132,6 +152,29 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 	}
 	
+	private void checkOfferingInList(String storeName, String descriptionName, 
+			Offering offering, List<Offering> offeringsList) {
+		
+		// We must set the description into the offering in order to make "isIn" work appropriately
+		// "isIn" is based on "equals" and it depends on the URL of the offering and its description
+
+		
+		// A description is managed by one store
+		Store store = new Store();
+		store.setName(storeName);
+		
+		// Description.equals depends on the name and its store
+		Description description = new Description();
+		description.setName(descriptionName);
+		description.setStore(store);
+		
+		offering.setDescribedIn(description);
+		
+		// Check that the offering is contained in the list of offerings returned by WMarket
+		assertThat(offering).isIn(offeringsList);
+		
+	}
+	
 	private void checkDescription(String userName, String password, String storeName, 
 			String descriptionName, String displayName, String url, String comment) {
 		
@@ -156,25 +199,10 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		for (Offering expectedOffering: expectedOfferings) {
 			
-			// We must set the description into the offering in order to make "isIn" work appropriately
-			// "isIn" is based on "equals" and it depends on the name of the offering and its description
-			
-			// A description is managed by one store
-			Store store = new Store();
-			store.setName(storeName);
-			
-			// Description.equals depends on the name and its store
-			Description description = new Description();
-			description.setName(descriptionName);
-			description.setStore(store);
-			
-			expectedOffering.setDescribedIn(description);
-			
-			// Check that the offering is contained in the list of offerings returned by WMarket
-			assertThat(expectedOffering).isIn(descriptionOfferings);
+			checkOfferingInList(storeName, descriptionName, expectedOffering, descriptionOfferings);
 			
 			// Check that the price plan is correct 
-			checkOfferingInternalState(descriptionOfferings, expectedOffering);
+			checkOfferingInternalState(descriptionOfferings, storeName, descriptionName, expectedOffering);
 		}
 	}
 	
@@ -517,8 +545,10 @@ public class DescriptionServiceIT extends AbstractIT {
 		String descriptionToBeUpdated = displayName + "a";  	//This ID is supposed not to exist
 		Response updateDescriptionResponse = updateDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
 				descriptionToBeUpdated, "new display", null, null);
+		
 		checkAPIError(updateDescriptionResponse, 404, null, 
-				String.format(MESSAGE_DESCRIPTION_NOT_FOUND, descriptionToBeUpdated), ErrorType.NOT_FOUND);	
+				String.format(MESSAGE_DESCRIPTION_NOT_FOUND, descriptionToBeUpdated, 
+						FIRST_STORE_NAME), ErrorType.NOT_FOUND);	
 	}
 	
 	@Test
@@ -585,9 +615,11 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Delete non-existing description
 		String descriptionToBeDeleted = name + "a";  	//This ID is supposed not to exist
-		Response deleteStoreResponse = deleteDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, descriptionToBeDeleted);
+		Response deleteStoreResponse = deleteDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionToBeDeleted);
 		checkAPIError(deleteStoreResponse, 404, null, 
-				String.format(MESSAGE_DESCRIPTION_NOT_FOUND, descriptionToBeDeleted), ErrorType.NOT_FOUND);	
+				String.format(MESSAGE_DESCRIPTION_NOT_FOUND, descriptionToBeDeleted, 
+						FIRST_STORE_NAME), ErrorType.NOT_FOUND);	
 	}
 	
 	@Test
@@ -695,6 +727,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	private void testListDescriptionsInStoreInvalidParams(int offset, int max) {
+		
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/" + FIRST_STORE_NAME + "/description")
 				.queryParam("offset", offset)
@@ -716,7 +749,6 @@ public class DescriptionServiceIT extends AbstractIT {
 	public void testListDescriptionsInStoreInvalidMax() {
 		testListDescriptionsInStoreInvalidParams(1, 0);
 	}
-	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////// ALL DESCRIPTIONS  //////////////////////////////////
@@ -767,7 +799,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Check that the right number of descriptions has been returned...
 		Descriptions retrievedDescriptions = response.readEntity(Descriptions.class);
-		int descriptionsCreated = stores.length * originalDescriptions.length;	// 2 descriptions
+		int descriptionsCreated = stores.length * originalDescriptions.length;	// 4 descriptions
 		int expectedElements = offset + max > descriptionsCreated ? descriptionsCreated - offset : max;
 		assertThat(retrievedDescriptions.getDescriptions().size()).isEqualTo(expectedElements);
 		
@@ -865,32 +897,16 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(createDesc1Res.getStatus()).isEqualTo(201);
 		assertThat(createDesc2Res.getStatus()).isEqualTo(201);
 		
-		// Create store and description instances. Needed for equals
-		Store store1 = new Store();
-		store1.setName(FIRST_STORE_NAME);
-		
-		Description description1 = new Description();
-		description1.setName(description1Name);
-		description1.setStore(store1);
-
-		Store store2 = new Store();
-		store2.setName(SECOND_STORE_NAME);
-		
-		Description description2 = new Description();
-		description2.setName(description2Name);
-		description2.setStore(store2);
-		
 		// Get Store1 offerings
 		Response store1OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, FIRST_STORE_NAME);
 		assertThat(store1OfferingResponse.getStatus()).isEqualTo(200);
 		
 		Offerings offerings = store1OfferingResponse.readEntity(Offerings.class);
-		assertThat(offerings.getOfferings().size()).isEqualTo(1);		
-		FIRST_OFFERING.setDescribedIn(description1);		// Otherwise equals will fail
-		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
+		assertThat(offerings.getOfferings().size()).isEqualTo(1);
+		checkOfferingInList(FIRST_STORE_NAME, description1Name, FIRST_OFFERING, offerings.getOfferings());
 
 		// Price plans are not checked in Offering.equals
-		checkOfferingInternalState(offerings.getOfferings(), FIRST_OFFERING);
+		checkOfferingInternalState(offerings.getOfferings(), FIRST_STORE_NAME, description1Name, FIRST_OFFERING);
 		
 		// Get Store2 offerings
 		Response store2OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, SECOND_STORE_NAME);
@@ -901,15 +917,12 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Needed to retrieve the offerings from the list in an appropriate way. equals is based
 		// on the name and the description...
-		FIRST_OFFERING.setDescribedIn(description2);
-		SECOND_OFFERING.setDescribedIn(description2);
-		
-		assertThat(FIRST_OFFERING).isIn(offerings.getOfferings());
-		assertThat(SECOND_OFFERING).isIn(offerings.getOfferings());
-		
+		checkOfferingInList(SECOND_STORE_NAME, description2Name, FIRST_OFFERING, offerings.getOfferings());
+		checkOfferingInList(SECOND_STORE_NAME, description2Name, SECOND_OFFERING, offerings.getOfferings());
+
 		// Price plans are not checked in Offering.equals
-		checkOfferingInternalState(offerings.getOfferings(), FIRST_OFFERING);
-		checkOfferingInternalState(offerings.getOfferings(), SECOND_OFFERING);
+		checkOfferingInternalState(offerings.getOfferings(), SECOND_STORE_NAME, description2Name, FIRST_OFFERING);
+		checkOfferingInternalState(offerings.getOfferings(), SECOND_STORE_NAME, description2Name, SECOND_OFFERING);
 		
 	}
 	
@@ -945,27 +958,34 @@ public class DescriptionServiceIT extends AbstractIT {
 		testGetSomeStoreOfferings(0, 2);
 	}
 	
-	private void testListOfferingsInStoreInvalidParams(int offset, int max) {
+	private void testListOfferingsInStoreInvalidParams(int offset, int max, String orderBy, String expectedMessage) {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/" + FIRST_STORE_NAME + "/offering")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
+				.queryParam("orderBy", orderBy)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
-		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+		checkAPIError(response, 400, null, expectedMessage, ErrorType.BAD_REQUEST);
 
 	}
 	
 	@Test
 	public void testListOfferingsInStoreInvalidOffset() {
-		testListOfferingsInStoreInvalidParams(-1, 2);
+		testListOfferingsInStoreInvalidParams(-1, 2, "id", MESSAGE_INVALID_OFFSET_MAX);
 	}
 	
 	@Test
 	public void testListOfferingsInStoreInvalidMax() {
-		testListOfferingsInStoreInvalidParams(1, 0);
+		testListOfferingsInStoreInvalidParams(1, 0, "id", MESSAGE_INVALID_OFFSET_MAX);
+	}
+	
+	@Test
+	public void testListOfferingsInStoreInvalidOrderBy() {
+		String orderBy = "namea";
+		testListOfferingsInStoreInvalidParams(1, 1, orderBy, "Offerings cannot be ordered by " + orderBy + ".");
 	}
 	
 	
@@ -1047,27 +1067,34 @@ public class DescriptionServiceIT extends AbstractIT {
 		testGetSomeOfferings(3, 9);
 	}
 	
-	private void testListOfferingsInvalidParams(int offset, int max) {
+	private void testListOfferingsInvalidParams(int offset, int max, String orderBy, String expectedMessage) {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/offerings")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
+				.queryParam("orderBy", orderBy)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
-		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+		checkAPIError(response, 400, null, expectedMessage, ErrorType.BAD_REQUEST);
 
 	}
 	
 	@Test
 	public void testListOfferingsInvalidOffset() {
-		testListOfferingsInvalidParams(-1, 2);
+		testListOfferingsInvalidParams(-1, 2, "id", MESSAGE_INVALID_OFFSET_MAX);
 	}
 	
 	@Test
 	public void testListOfferingsInvalidMax() {
-		testListOfferingsInvalidParams(1, 0);
+		testListOfferingsInvalidParams(1, 0, "id", MESSAGE_INVALID_OFFSET_MAX); 
+	}
+	
+	@Test
+	public void testListOfferingsInvalidOrderBy() {
+		String orderBy = "namea";
+		testListOfferingsInvalidParams(1, 1, orderBy, "Offerings cannot be ordered by " + orderBy + "."); 
 	}
 	
 	
@@ -1089,17 +1116,20 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	/**
 	 * This method bookmarks or unbookmarks an offering depending on its previous state
+	 * @param userName User that will bookmark the offering
+	 * @param password user's password
 	 * @param storeName The name of the store where the offering to be bookmarked is contained
 	 * @param descriptionName The name of the descritpion where the offering to be bookmarked is described 
 	 * @param offeringName The name of the offering to be bookmarked
 	 * @return The response from the server
 	 */
-	private Response bookmarkOrUnbookmarkOffering(String storeName, String descriptionName, String offeringName) {
+	private Response bookmarkOrUnbookmarkOffering(String userName, String password,String storeName, 
+			String descriptionName, String offeringName) {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + 
 					descriptionName + "/offering/" + offeringName + "/bookmark")
 				.request(MediaType.APPLICATION_JSON)
-				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.header("Authorization", getAuthorization(userName, password))
 				.post(null);
 
 		return response;
@@ -1114,8 +1144,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		Offering bookmarkedOffering = SECOND_OFFERING;
 		
 		// Bookmark one offering
-		Response bookmarkResponse = bookmarkOrUnbookmarkOffering(FIRST_STORE_NAME, secondDescriptionName, 
-				bookmarkedOffering.getName());
+		Response bookmarkResponse = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD,FIRST_STORE_NAME, 
+				secondDescriptionName, bookmarkedOffering.getName());
 		assertThat(bookmarkResponse.getStatus()).isEqualTo(204);
 		
 		// Set store and description for offering. Otherwise, test will fail since offering.equals is based
@@ -1140,8 +1170,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(bookmarkedOfferings.get(0).getDescribedIn().getStore().getName()).isEqualTo(FIRST_STORE_NAME);
 		
 		// Unbookmark the offering
-		Response unbookmarkResponse = bookmarkOrUnbookmarkOffering(FIRST_STORE_NAME, secondDescriptionName, 
-				bookmarkedOffering.getName());
+		Response unbookmarkResponse = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD,FIRST_STORE_NAME, 
+				secondDescriptionName, bookmarkedOffering.getName());
 		assertThat(unbookmarkResponse.getStatus()).isEqualTo(204);
 
 		// Check that bookmarked offerings is empty
@@ -1162,8 +1192,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		// Bookmark the offerings from different stores (same offering in different stores)
 		String[] stores = {FIRST_STORE_NAME, SECOND_STORE_NAME};
 		for (String storeName: stores) {
-			Response bookmarkResponse = bookmarkOrUnbookmarkOffering(storeName, secondDescriptionName, 
-					bookmarkedOffering.getName());
+			Response bookmarkResponse = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD, storeName, 
+					secondDescriptionName, bookmarkedOffering.getName());
 			assertThat(bookmarkResponse.getStatus()).isEqualTo(204);
 		}
 		
@@ -1190,9 +1220,66 @@ public class DescriptionServiceIT extends AbstractIT {
 		}
 	}
 	
+	/**
+	 * Test for a know bug (fixed): When an user tries to remove an offering that has been
+	 * bookmarked, the system throws an exception 
+	 */
+	@Test
+	public void testRemoveBookmarkedOffering() {
+		
+		String descriptionName = "description";
+		Response createDescRes = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, defaultUSDLPath, "");
+		assertThat(createDescRes.getStatus()).isEqualTo(201);
+		
+		// Bookmark the offering
+		Response bookmarkRes = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, FIRST_OFFERING.getName());
+		assertThat(bookmarkRes.getStatus()).isEqualTo(204);
+		
+		// Delete the offering
+		Response deleteRes = deleteDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, descriptionName);
+		assertThat(deleteRes.getStatus()).isEqualTo(204);
+	}
+	
+	/**
+	 * Test for a know bug (fixed): When a user bookmarks an offering, the system throws an
+	 * exception when this user tries to remove their own account.
+	 */
+	@Test
+	public void testRemoveUserWithBookmarkedOfferings() {
+		
+		// Create an offering
+		String descriptionName = "description";
+		Response createDescRes = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, defaultUSDLPath, "");
+		assertThat(createDescRes.getStatus()).isEqualTo(201);
+		
+		// Create another user
+		String userName = USER_NAME + "A";
+		String email = "example3@example.com";
+		Response createUserRes = createUser(userName, email, PASSWORD);
+		assertThat(createUserRes.getStatus()).isEqualTo(201);
+		
+		// Bookmark the offering with the new user
+		Response bookmarkRes = bookmarkOrUnbookmarkOffering(userName, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, FIRST_OFFERING.getName());
+		assertThat(bookmarkRes.getStatus()).isEqualTo(204);
+		
+		// Delete the user
+		Response deleteUserRes = deleteUser(userName, PASSWORD, userName);
+		assertThat(deleteUserRes.getStatus()).isEqualTo(204);
+		
+		// Check that the offering has not been deleted
+		Response getOffRes = getOffering(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, FIRST_OFFERING.getName());
+		assertThat(getOffRes.getStatus()).isEqualTo(200);
+		
+	}
+	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////// RATINGS ///////////////////////////////////////
+	/////////////////////////////////////// REVIEWS ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	private Response getOffering(String userName, String password, String storeName, String descriptionName, 
@@ -1205,33 +1292,33 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 
 
-	private int createOfferingAndRating(String storeName, String descriptionName, String usdlPath, 
+	private int createOfferingAndReview(String storeName, String descriptionName, String usdlPath, 
 			String offeringName, int score, String comment) {
 				
 		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, storeName, 
 				descriptionName, usdlPath, "");
 		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
 
-		Response res = createOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, 
+		Response res = createOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, 
 				offeringName, score, comment);
 		assertThat(res.getStatus()).isEqualTo(201);
 		
 		// Get offering and its average score
-		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+		Offering reviewdOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
 				.readEntity(Offering.class);
-		assertThat(ratedOffering.getAverageScore()).isEqualTo(score);
+		assertThat(reviewdOffering.getAverageScore()).isEqualTo(score);
 		
-		// Get rating ID
+		// Get review ID
 		String[] urlParts = res.getLocation().getPath().split("/");
-		int ratingId = Integer.parseInt(urlParts[urlParts.length - 1]); 
+		int reviewId = Integer.parseInt(urlParts[urlParts.length - 1]); 
 		assertThat(res.getLocation().getPath()).endsWith("/api/v2/store/" + storeName + "/description/" + 
-					descriptionName + "/offering/" + offeringName + "/rating/" + ratingId);
+					descriptionName + "/offering/" + offeringName + "/review/" + reviewId);
 		
-		return ratingId;
+		return reviewId;
 	}
 	
 	@Test
-	public void testRateOffering() {
+	public void testReviewOffering() {
 
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
@@ -1240,14 +1327,14 @@ public class DescriptionServiceIT extends AbstractIT {
 		int score = 5;
 		String comment = "Basic comment";
 		
-		int ratingId = createOfferingAndRating(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		int reviewId = createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
 				score, comment);
-		checkOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
-				ratingId, score, comment);
+		checkOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+				reviewId, score, comment);
 	}
 	
 	@Test
-	public void testUpdateRating() {
+	public void testUserCannotReviewOneStoreTwice() {
 		
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
@@ -1256,29 +1343,49 @@ public class DescriptionServiceIT extends AbstractIT {
 		int score = 5;
 		String comment = "Basic comment";
 		
-		int ratingId = createOfferingAndRating(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
+				score, comment);
+
+		// Create another review for the same offering with the same user
+		Response res = createOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, 
+				offeringName, score, comment);
+		checkAPIError(res, 403, null, "You are not authorized to review Offering. An entity can only be reviewed once", 
+				ErrorType.FORBIDDEN);
+	}
+	
+	@Test
+	public void testUpdateReview() {
+		
+		String storeName = FIRST_STORE_NAME;
+		String descriptionName = "default";
+		String offeringName = FIRST_OFFERING.getName();
+		
+		int score = 5;
+		String comment = "Basic comment";
+		
+		int reviewId = createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
 				score, comment);
 		
-		// Update rating
+		// Update review
 		int newScore = 3;
 		String newComment = "This is a new comment";
-		Response updateRes = updateOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName,
-				ratingId, newScore, newComment);
+		Response updateRes = updateOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, offeringName,
+				reviewId, newScore, newComment);
 		assertThat(updateRes.getStatus()).isEqualTo(200);
 		
-		// Check updated rating
-		checkOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
-				ratingId, newScore, newComment);
+		// Check updated review
+		checkOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+				reviewId, newScore, newComment);
 		
 		// Check that average score has been properly updated
-		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+		Offering reviewOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
 				.readEntity(Offering.class);
-		assertThat(ratedOffering.getAverageScore()).isEqualTo(newScore);
+		assertThat(reviewOffering.getAverageScore()).isEqualTo(newScore);
 
 	}
 	
 	@Test
-	public void testDeleteRating() {
+	public void testDeleteReview() {
 		
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
@@ -1287,21 +1394,21 @@ public class DescriptionServiceIT extends AbstractIT {
 		int score = 5;
 		String comment = "Basic comment";
 		
-		int ratingId = createOfferingAndRating(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		int reviewId = createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
 				score, comment);
-		Response deleteResponse = deleteOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, 
-				offeringName, ratingId);
+		Response deleteResponse = deleteOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, 
+				offeringName, reviewId);
 		assertThat(deleteResponse.getStatus()).isEqualTo(204);
 		
-		// Get rating should return 404
-		Response getResponse = getOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, 
-				offeringName, ratingId);
+		// Get review should return 404
+		Response getResponse = getOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, 
+				offeringName, reviewId);
 		assertThat(getResponse.getStatus()).isEqualTo(404);
 		
-		// Average score should be zero when the last rating is deleted
-		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+		// Average score should be zero when the last review is deleted
+		Offering reviewedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
 				.readEntity(Offering.class);
-		assertThat(ratedOffering.getAverageScore()).isEqualTo(0);
+		assertThat(reviewedOffering.getAverageScore()).isEqualTo(0);
 		
 	}
 	
@@ -1309,14 +1416,24 @@ public class DescriptionServiceIT extends AbstractIT {
 		return baseComment + " " + score;
 	}
 	
-	private double createNRatings(String storeName, String descriptionName, String offeringName, String baseComment, 
-			int nRatings, int initialScore) {
+	private double createNReviews(String storeName, String descriptionName, String offeringName, String baseComment, 
+			int nReviews, int initialScore) {
 		
 		double totalScore = 0;
+		String alphabet = "abcdefghijklmonpqrstuvwxyz";
 		
-		for (int score = initialScore; score < nRatings + initialScore; score++) {
+		for (int score = initialScore; score < nReviews + initialScore; score++) {
+			
+			// Create user for review
+			char userSuffix = alphabet.charAt(score % alphabet.length());
+			String userName = "userforrating" + userSuffix;
+			String email = "rating" + userSuffix + "@example.com";
+			Response createUserRes = createUser(userName, email, PASSWORD);
+			assertThat(createUserRes.getStatus()).isEqualTo(201);
+
+			// Review the offering with the new user (one user can only review one offering once)
 			String comment = getCommentFromBase(baseComment, score);
-			Response res = createOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+			Response res = createOfferingReview(userName, PASSWORD, storeName, descriptionName, offeringName, 
 					score, comment);
 			assertThat(res.getStatus()).isEqualTo(201);
 			
@@ -1327,7 +1444,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	@Test
-	public void testCreateNRatings() {
+	public void testCreateNReviews() {
 		
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
@@ -1339,37 +1456,55 @@ public class DescriptionServiceIT extends AbstractIT {
 				descriptionName, defaultUSDLPath, "");
 		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
 		
-		// Create ratings
-		int ratingsNumber = 4;
-		int start = 1;
-		double totalScore = createNRatings(storeName, descriptionName, offeringName, baseComment, 
-				ratingsNumber, start);
+		// Create reviews
+		int reviewsNumber = 4;
+		int initialScore = 1;
+		double totalScore = createNReviews(storeName, descriptionName, offeringName, baseComment, 
+				reviewsNumber, initialScore);
 		
 		// Get average score
-		double average = totalScore / ((double) ratingsNumber);
-		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+		double average = totalScore / ((double) reviewsNumber);
+		Offering reviewdOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
 				.readEntity(Offering.class);
-		assertThat(ratedOffering.getAverageScore()).isEqualTo(average);
+		assertThat(reviewdOffering.getAverageScore()).isEqualTo(average);
 		
-		// Get ratings list and check values
-		Ratings ratings = getOfferingRatings(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
-				.readEntity(Ratings.class);
-		List<Rating> ratingsList = ratings.getRatings();
-		assertThat(ratings.getRatings()).hasSize((int) ratingsNumber);
+		// Get reviews list and check values
+		Reviews reviews = getOfferingReviews(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+				0, 100, "id", false).readEntity(Reviews.class);
+		List<Review> reviewsList = reviews.getReviews();
+		assertThat(reviews.getReviews()).hasSize((int) reviewsNumber);
 		
-		for (int i = 0; i < ratingsList.size(); i++) {
-			Rating rating = ratingsList.get(i);
+		for (int i = 0; i < reviewsList.size(); i++) {
+			Review review = reviewsList.get(i);
 			
-			int score = i + start;
+			int score = i + initialScore;
 			// Comment is based on the score
-			assertThat(rating.getComment()).isEqualTo(getCommentFromBase(baseComment, score));
-			assertThat(rating.getScore()).isEqualTo(score);
+			assertThat(review.getComment()).isEqualTo(getCommentFromBase(baseComment, score));
+			assertThat(review.getScore()).isEqualTo(score);
 			
-		}		
+		}
+		
+		// Get two reviews: ordered by score DESC, offset is 1
+		int max = 2;
+		int secondBestScore = initialScore + reviewsNumber - 2;
+		reviews = getOfferingReviews(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
+				1, 2, "score", true).readEntity(Reviews.class);
+		reviewsList = reviews.getReviews();
+		assertThat(reviewsList).hasSize(max);
+		
+		for (int i = 0; i < reviewsList.size(); i++) {
+			Review review = reviewsList.get(i);
+			
+			int score = secondBestScore - i;
+			// Comment is based on the score
+			assertThat(review.getComment()).isEqualTo(getCommentFromBase(baseComment, score));
+			assertThat(review.getScore()).isEqualTo(score);
+			
+		}
 	}
 	
 	@Test
-	public void testUpdateRatingComplex() {
+	public void testUpdateReviewComplex() {
 		
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
@@ -1377,34 +1512,34 @@ public class DescriptionServiceIT extends AbstractIT {
 		int score = 5;
 		String baseComment = "Basic comment";
 		
-		int ratingId = createOfferingAndRating(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		int reviewId = createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
 				score, baseComment);
 		
-		// Create additional ratings
-		int ratingsNumber = 2;
-		double totalScore = createNRatings(storeName, descriptionName, offeringName, baseComment, ratingsNumber, 1);
+		// Create additional reviews
+		int reviewsNumber = 2;
+		double totalScore = createNReviews(storeName, descriptionName, offeringName, baseComment, reviewsNumber, 1);
 		
-		// Update initial rating
+		// Update initial review
 		int newScore = 3;
 		String newComment = "This is a new comment";
-		Response updateRes = updateOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName,
-				ratingId, newScore, newComment);
+		Response updateRes = updateOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, offeringName,
+				reviewId, newScore, newComment);
 		assertThat(updateRes.getStatus()).isEqualTo(200);
 		
-		// Check that the rating has been properly updated
-		checkOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, offeringName,
-				ratingId, newScore, newComment);
+		// Check that the review has been properly updated
+		checkOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, offeringName,
+				reviewId, newScore, newComment);
 		
 		// Get average score
-		double average = (totalScore + newScore) / ((double) (ratingsNumber + 1));
-		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+		double average = (totalScore + newScore) / ((double) (reviewsNumber + 1));
+		Offering reviewedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
 				.readEntity(Offering.class);
-		assertThat(ratedOffering.getAverageScore()).isEqualTo(average);
+		assertThat(reviewedOffering.getAverageScore()).isEqualTo(average);
 		
 	}
 	
 	@Test
-	public void testDeleteRatingComplex() {
+	public void testDeleteReviewComplex() {
 		
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
@@ -1412,23 +1547,132 @@ public class DescriptionServiceIT extends AbstractIT {
 		int score = 5;
 		String baseComment = "Basic comment";
 		
-		int ratingId = createOfferingAndRating(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		int reviewId = createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
 				score, baseComment);
 		
-		// Create additional ratings
-		int ratingsNumber = 2;
-		double totalScore = createNRatings(storeName, descriptionName, offeringName, baseComment, ratingsNumber, 1);
+		// Create additional reviews
+		int reviewsNumber = 2;
+		double totalScore = createNReviews(storeName, descriptionName, offeringName, baseComment, reviewsNumber, 1);
 		
-		// Delete initial rating
-		Response deleteRes = deleteOfferingRating(USER_NAME, PASSWORD, storeName, descriptionName, 
-				offeringName, ratingId);
+		// Delete initial review
+		Response deleteRes = deleteOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, 
+				offeringName, reviewId);
 		assertThat(deleteRes.getStatus()).isEqualTo(204);
 		
 		// Get average score
-		double average = totalScore / ratingsNumber;
-		Offering ratedOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
+		double average = totalScore / reviewsNumber;
+		Offering reviewdOffering = getOffering(USER_NAME, PASSWORD, storeName, descriptionName, offeringName)
 				.readEntity(Offering.class);
-		assertThat(ratedOffering.getAverageScore()).isEqualTo(average);
+		assertThat(reviewdOffering.getAverageScore()).isEqualTo(average);
 		
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////// CATEGORIES //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private Response getCategories(String userName, String password) {		
+		Client client = ClientBuilder.newClient();
+		return client.target(endPoint + "/api/v2/category/")
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password)).get();
+	}
+	
+	private Response getCategoryRecommendations(String userName, String password, String category, String orderBy) {		
+		
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(endPoint + "/api/v2/category/" + category + "/offering");
+		
+		// Include order when parameter is not null. BY default, offerings are ordered by score
+		if (orderBy != null) {
+			target = target.queryParam("orderBy", orderBy);
+		}
+		
+		return target.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(userName, password)).get();
+	}
+	
+	@Test
+	public void testGetCategories() {
+		
+		// Create one offering. This offering is contained in two categories
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				"description", defaultUSDLPath, "");
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+		
+		// Get categories
+		Response getCategoriesResponse = getCategories(USER_NAME, PASSWORD);
+		assertThat(getCategoriesResponse.getStatus()).isEqualTo(200);
+		
+		// Check that all the categories are included
+		Categories categories = getCategoriesResponse.readEntity(Categories.class);
+		List<Category> categoriesList = categories.getCategories();
+		assertThat(categoriesList).containsAll(FIRST_OFFERING.getCategories());		
+	}
+	
+	@Test
+	public void testGetCategoryRecommendations() {
+		
+		String descriptionName = "description";
+		
+		// Create two offerings
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, secondaryUSDLPath, "");
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+		
+		// Review both offerings. First one with 1 starts and second one with 5 starts
+		Response createFirstRatingResponse = createOfferingReview(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, FIRST_OFFERING.getName(), 1, "");
+		assertThat(createFirstRatingResponse.getStatus()).isEqualTo(201);
+		Response createSecondRatingResponse = createOfferingReview(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionName, SECOND_OFFERING.getName(), 5, "");
+		assertThat(createSecondRatingResponse.getStatus()).isEqualTo(201);
+		
+		// Get the category in common between the two offerings
+		Set<Category> commonCategories = new HashSet<>(FIRST_OFFERING.getCategories());
+		commonCategories.retainAll(SECOND_OFFERING.getCategories());
+		String categoryName = commonCategories.iterator().next().getName();
+		
+		// Get category recommendations (offerings should be ordered by score: second offering
+		// should be the first one in the list)
+		Response getRecommendationsResponse = getCategoryRecommendations(USER_NAME, PASSWORD, categoryName, null);
+		assertThat(getRecommendationsResponse.getStatus()).isEqualTo(200);
+		Offerings offerings = getRecommendationsResponse.readEntity(Offerings.class);
+		List<Offering> offeringsList = offerings.getOfferings();
+		
+		// Set offerings description since offering.equals depends on it
+		Store store = new Store();
+		store.setName(FIRST_STORE_NAME);
+		
+		Description description = new Description();
+		description.setName(descriptionName);
+		description.setStore(store);
+		
+		FIRST_OFFERING.setDescribedIn(description);
+		SECOND_OFFERING.setDescribedIn(description);
+
+		// Check that offerings has been returned in the correct order
+		assertThat(offeringsList.get(0)).isEqualTo(SECOND_OFFERING);
+		assertThat(offeringsList.get(1)).isEqualTo(FIRST_OFFERING);
+
+	}
+	
+	@Test
+	public void testGetCategoriesInvalidOrder() {
+		
+		// Create one offering.
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				"description", defaultUSDLPath, "");
+		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+		
+		// Get offerings for one category with invalid order
+		String categoryName = FIRST_OFFERING.getCategories().iterator().next().getName();
+		String orderBy = "namea";
+		Response getRecommendationsResponse = getCategoryRecommendations(USER_NAME, PASSWORD, categoryName, orderBy);
+		assertThat(getRecommendationsResponse.getStatus()).isEqualTo(400);
+		checkAPIError(getRecommendationsResponse, 400, null, 
+				"Offerings cannot be ordered by " + orderBy + ".", ErrorType.BAD_REQUEST);
+	}
+
 }

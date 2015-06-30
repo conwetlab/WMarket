@@ -55,5 +55,6 @@ public interface UserDao {
 
 	// Get all or a sublist
 	public List<User> getUsersPage(int offset, int max);
-	public List <User> getAllUsers();
+	public List<User> getAllUsers();
+	
 }

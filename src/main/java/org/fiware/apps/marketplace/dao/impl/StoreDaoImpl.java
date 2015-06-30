@@ -41,6 +41,7 @@ import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Repository;
 
 @Repository("storeDao")
@@ -64,7 +65,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	@Override
 	public Store findByName(String name) throws StoreNotFoundException {	
 		List<?> list = getSession()
-				.createQuery("from Store where name=:name")
+				.createQuery("from Store where name = :name")
 				.setParameter("name", name)
 				.list();	
 		
@@ -79,7 +80,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
     @Override
     public boolean isNameAvailable(String name) {
 		List<?> list = getSession()
-				.createQuery("from Store where name=:name")
+				.createQuery("from Store where name = :name")
 				.setParameter("name", name)
 				.list();
 		
@@ -89,7 +90,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
     @Override
     public boolean isDisplayNameAvailable(String displayName) {
 		List<?> list = getSession()
-				.createQuery("from Store where displayName=:displayName")
+				.createQuery("from Store where displayName = :displayName")
 				.setParameter("displayName", displayName)
 				.list();
 		
@@ -99,7 +100,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	@Override
 	public boolean isURLAvailable(String url) {
 		List<?> list = getSession()
-				.createQuery("from Store where url=:url")
+				.createQuery("from Store where url = :url")
 				.setParameter("url", url)
 				.list();
 		
@@ -109,11 +110,15 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Store> getStoresPage(int offset, int max) {
+	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc) {
+		
+		Order order = desc ? Order.desc(orderBy) : Order.asc(orderBy);
+		
 		return getSession()
 				.createCriteria(Store.class)
 				.setFirstResult(offset)
 				.setMaxResults(max)
+				.addOrder(order)
 				.setFetchMode("ratings", FetchMode.SELECT)
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)		// Avoid duplicates
 				.list();

@@ -32,9 +32,6 @@ package org.fiware.apps.marketplace.controllers.web;
  * #L%
  */
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -42,8 +39,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
@@ -53,9 +55,37 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("/")
 public class HomeController extends AbstractController {
 
+    private static Logger logger = LoggerFactory.getLogger(HomeController.class);
+
     @GET
-    public Response home() throws URISyntaxException {
-        return Response.status(Status.TEMPORARY_REDIRECT).location(new URI("offerings")).build();
+    @Produces(MediaType.TEXT_HTML)
+    public Response homeView(
+            @Context HttpServletRequest request) {
+
+        ModelAndView view;
+        ModelMap model = new ModelMap();
+        ResponseBuilder builder;
+        User user;
+
+        try {
+            user = getCurrentUser();
+
+            model.addAttribute("user", user);
+            model.addAttribute("title", "Catalogue - " + getContextName());
+            model.addAttribute("viewName", "GroupByCategory");
+
+            addFlashMessage(request, model);
+
+            view = new ModelAndView("offering.list", model);
+            builder = Response.ok();
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError();
+        }
+
+        return builder.entity(view).build();
     }
 
     @GET

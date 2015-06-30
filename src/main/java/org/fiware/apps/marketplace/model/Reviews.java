@@ -1,4 +1,13 @@
-package org.fiware.apps.marketplace.exceptions;
+package org.fiware.apps.marketplace.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 /*
  * #%L
@@ -32,13 +41,29 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
-public class RatingNotFoundException extends Exception {
+@XmlRootElement(name = "reviews")
+@IgnoreMediaTypes("application/*+json")
+public class Reviews {
 	
-	private static final long serialVersionUID = 1L;
-	
-	public RatingNotFoundException(String message) {
-		super(message);
-	}
+    private List<Review> reviews = null;
+    
+    public Reviews() {
+    	this.setReviews(new ArrayList<Review>());
+    }
+    
+    public Reviews(List<Review> reviews) {
+    	this.setReviews(reviews);
+    }
+ 
+    @XmlElement(name = "review")
+    @JsonProperty("reviews")
+    public List<Review> getReviews() {
+        return this.reviews;
+    }
+ 
+    public void setReviews(List<Review> reviews) {
+    	this.reviews = reviews;
+    }
 
 
 }

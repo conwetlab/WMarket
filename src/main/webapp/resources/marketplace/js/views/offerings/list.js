@@ -3,21 +3,92 @@
  * Code licensed under BSD 3-Clause (https://github.com/conwetlab/WMarket/blob/master/LICENSE)
  */
 
-(function (ns) {
 
-    "use strict";
+(function (ns, utils) {
 
-    ns.offeringList = $('.offering-group');
+    ns.model = 'offering';
 
-    app.requests.attach('stores:collection', 'read', {
-        namespace: "offerings:collection",
-        container: ns.offeringList,
-        alert: app.createAlert('warning', "No offering available.", 'col-sm-10'),
-        onSuccess: function (collection, container) {
-            collection.forEach(function (offeringInfo) {
-                container.append(app.createOffering(offeringInfo).element);
+    var $categoryList = $('[app-group="category"]'),
+        $offeringList = $('[app-filter="category"]');
+
+    if ($categoryList.length || $offeringList.length) {
+        ns.category = {
+
+            urls: {
+                collection: app.urls.get('category:collection'),
+                entry: app.urls.get('category:entry') + '/offering'
+            },
+
+            models: {},
+
+            filter: function filter(category, next) {
+                app.requests.list(ns.category.urls.entry, {
+                    kwargs: { category: category },
+                    success: next,
+                    failure: function () {
+                        if (ns.currentCategory != null) {
+                            ns.$scope.empty().parent()
+                                .append(app.createAlert('warning', "No available offerings in <strong>" + ns.currentCategory.displayName + "</strong>."))
+                        } else {
+                            ns.$scope.append(app.createAlert('warning', "No available offerings in <strong>" + ns.category.models[category].displayName + "</strong>."))
+                        }
+                    }
+                });
+            }
+
+        };
+    }
+
+    // ==================================================================================
+    // GROUP BY - CATEGORY
+    // ==================================================================================
+
+    if ($categoryList.length) {
+        ns.$scope = $categoryList;
+
+        ns.category.list = function list(next) {
+            app.requests.list(ns.category.urls.collection, {
+                success: next,
+                failure: function () {
+                    ns.$scope.empty().append(app.createAlert('warning', "No available offerings."));
+                }
             });
-        }
-    });
+        };
 
-})(app.view);
+        app.requests.attach('stores:collection', function () {
+            var $spinner = utils.createSpinner();
+            ns.$scope.append($spinner);
+            ns.category.list(function (categories) {
+                $spinner.remove();
+                categories.forEach(function (data) {
+                    ns.category.models[data.name] = data;
+                    ns.category.filter(data.name, function (offerings) {
+                        var category = new app.components.Category(data, offerings);
+                        ns.$scope.append(category.get());
+                        category.setUp();
+                    });
+                });
+            });
+        });
+    }
+
+    // ==================================================================================
+    // FILTER BY - CATEGORY
+    // ==================================================================================
+
+    if ($offeringList.length) {
+        ns.$scope = $offeringList;
+
+        app.requests.attach('stores:collection', function () {
+            var $spinner = utils.createSpinner();
+            ns.$scope.append($spinner);
+            ns.category.filter(ns.currentCategory.name, function (offerings) {
+                $spinner.remove();
+                offerings.forEach(function (data) {
+                    ns.$scope.append(app.createOffering(data).get());
+                });
+            });
+        });
+    }
+
+})(app.view, app.utils);

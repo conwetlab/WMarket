@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.security.auth;
+package org.fiware.apps.marketplace.model;
 
 /*
  * #%L
@@ -32,16 +32,37 @@ package org.fiware.apps.marketplace.security.auth;
  * #L%
  */
 
-import org.fiware.apps.marketplace.model.Rating;
-import org.fiware.apps.marketplace.model.User;
-import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
 
-@Service("ratingAuth")
-public class RatingAuth extends AbstractAuth<Rating>{
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-	@Override
-	protected User getEntityOwner(Rating rating) {
-		return rating.getUser();
-	}
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
+
+@XmlRootElement(name = "categories")
+@IgnoreMediaTypes("application/*+json")
+public class Categories {
 	
+    private List<Category> categories = null;
+    
+    public Categories() {
+    	this.setCategories(new ArrayList<Category>());
+    }
+    
+    public Categories(List<Category> categories) {
+    	this.setCategories(categories);
+    }
+ 
+    @XmlElement(name = "category")
+    @JsonProperty("categories")
+    public List<Category> getCategories() {
+        return this.categories;
+    }
+ 
+    public void setCategories(List<Category> categories) {
+    	this.categories = categories;
+    }
+
 }

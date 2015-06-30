@@ -41,9 +41,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.fiware.apps.marketplace.bo.ClassificationBo;
+import org.fiware.apps.marketplace.bo.CategoryBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
+import org.fiware.apps.marketplace.exceptions.CategoryNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
 import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Offering;
@@ -68,7 +68,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 public class OfferingResolver {
 	
 	@Autowired private RdfHelper rdfHelper;
-	@Autowired private ClassificationBo classificationBo;
+	@Autowired private CategoryBo classificationBo;
 	@Autowired private ServiceBo serviceBo;
 	
 	/**
@@ -313,7 +313,7 @@ public class OfferingResolver {
 							
 							try {
 								classification = classificationBo.findByName(classificationName);
-							} catch (ClassificationNotFoundException e1) {
+							} catch (CategoryNotFoundException e1) {
 								
 								// Look for another offering/service in this description that contains
 								// the same classification. Otherwise, a new classification is created.

@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.bo;
+package org.fiware.apps.marketplace.dao;
 
 /*
  * #%L
@@ -34,23 +34,11 @@ package org.fiware.apps.marketplace.bo;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
-import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.RateableEntity;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.ReviewableEntity;
 
-
-public interface RatingBo {
+public interface ReviewDao {
 	
-	public void createRating(RateableEntity entity, Rating newRating) 
-			throws NotAuthorizedException, ValidationException;
-	public void updateRating(RateableEntity entity, int ratingId, Rating updatedRating) 
-			throws RatingNotFoundException, NotAuthorizedException, ValidationException;
-	public List<Rating> getRatings(RateableEntity entity) throws NotAuthorizedException;
-	public Rating getRating(RateableEntity entity, int ratingId) 
-			throws NotAuthorizedException, RatingNotFoundException;
-	public void deleteRating(RateableEntity entity, int ratingId) throws RatingNotFoundException, 
-			NotAuthorizedException;
+	public List<Review> getReviewsPage(ReviewableEntity entity, int offset, int max, String orderBy, boolean desc);
 
 }

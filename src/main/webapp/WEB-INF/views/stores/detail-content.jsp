@@ -8,7 +8,7 @@
   <div class="col-sm-10 col-md-4 col-lg-3">
     <t:insertTemplate template="/WEB-INF/views/stores/header.jsp" />
   </div>
-  <div class="col-sm-10 col-md-6 col-lg-5 col-lg-offset-1">
+  <div class="col-sm-10 col-md-6 col-lg-6 col-lg-offset-1">
   <c:choose>
     <c:when test="${ isOwner }">
 
@@ -20,7 +20,7 @@
         <form class="col-md-8 col-md-offset-1" name="store_form" method="post" enctype="multipart/form-data" action="${ pageContext.request.contextPath }/stores/${ store.name }/about">
           <div class="form-field">
             <label class="field-label">Registration date</label>
-            <div class="field-control static"><fmt:formatDate pattern="yyyy-MM-dd" value="${ store.registrationDate }" /></div>
+            <div class="field-control static date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ store.createdAt }" /></div>
           </div>
           <div class="form-options">
             <button type="submit" class="btn btn-success">
@@ -53,7 +53,7 @@
           </dl>
           <dl>
             <dt>Website URL</dt>
-            <dd>${ store.url }</dd>
+            <dd><a href="${ store.url }" target="_blank">${ store.url }</a></dd>
           </dl>
           <dl>
             <dt>Owner name</dt>
@@ -61,7 +61,7 @@
           </dl>
           <dl>
             <dt>Registration date</dt>
-            <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ store.registrationDate }" /></dd>
+            <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ store.createdAt }" /></dd>
           </dl>
         </div>
       </div>
@@ -69,5 +69,11 @@
 
     </c:otherwise>
   </c:choose>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="panel-title">User reviews</span>
+      </div>
+      <div class="panel-body store-reviews"></div>
+    </div>
   </div>
 </div>

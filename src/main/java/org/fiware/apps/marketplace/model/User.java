@@ -70,7 +70,7 @@ public class User {
 	private String displayName;
 	private String password;
 	private String email;
-	private Date registrationDate;
+	private Date createdAt;
 	private String company;
 	private boolean oauth2 = false;		// False by default
 	// This lists are needed to allow cascade deletion
@@ -79,7 +79,7 @@ public class User {
 	private List<Description> descriptionsCreated;
 	private List<Description> descriptionsModified;
 	private List<Offering> bookmarks;
-	private List<Rating> ratings;
+	private List<Review> reviews;
 		
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -141,13 +141,13 @@ public class User {
 	}
 	
 	@XmlElement
-	@Column(name = "registration_date", nullable = false)
-	public Date getRegistrationDate() {
-		return registrationDate;
+	@Column(name = "created_at", nullable = false)
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 	
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 	@XmlElement
@@ -211,7 +211,7 @@ public class User {
 	}
 
 	@XmlTransient
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "bookmarks", 
 		      joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
 		      inverseJoinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")})
@@ -225,12 +225,12 @@ public class User {
 		
 	@XmlTransient
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	public List<Rating> getRatings() {
-		return ratings;
+	public List<Review> getReviews() {
+		return reviews;
 	}
 
-	public void setRatings(List<Rating> ratings) {
-		this.ratings = ratings;
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
 	}
 
 	@Override

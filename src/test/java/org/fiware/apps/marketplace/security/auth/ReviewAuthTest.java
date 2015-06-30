@@ -38,9 +38,13 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.ReviewableEntity;
 import org.fiware.apps.marketplace.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,12 +52,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class RatingAuthTest {
+
+public class ReviewAuthTest {
 	
 	@Mock private UserBo userBoMock;
-	@InjectMocks private static RatingAuth authHelper;
+	@InjectMocks private static ReviewAuth authHelper;
 	
-	@Before 
+	@Before
 	public void initMocks() {
 		MockitoAnnotations.initMocks(this);
 	}
@@ -67,19 +72,53 @@ public class RatingAuthTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// CREATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
-
-	@Test
-	public void canCreateRating() throws UserNotFoundException {
-		Rating rating = new Rating();
-		when(userBoMock.getCurrentUser()).thenReturn(new User());
-		assertThat(authHelper.canCreate(rating)).isTrue();
+	
+	@Test(expected=UnsupportedOperationException.class) 
+	public void canCreateReviewBasicMethodNotSupported() {
+		authHelper.canCreate(new Review());
 	}
 
 	@Test
-	public void canNotCreateRating() throws UserNotFoundException {
-		Rating rating = new Rating();
+	public void canCreateReview() throws UserNotFoundException {
+		Review review = new Review();
+		
+		// Mocking
+		ReviewableEntity entity = mock(ReviewableEntity.class);
+		List<Review> reviews = new ArrayList<>();
+		when(entity.getReviews()).thenReturn(reviews);
+		
+		when(userBoMock.getCurrentUser()).thenReturn(new User());
+		assertThat(authHelper.canCreate(entity, review)).isTrue();
+	}
+
+	@Test
+	public void canNotCreateReviewUserNotFound() throws UserNotFoundException {
+		ReviewableEntity entity = mock(ReviewableEntity.class);
+		Review review = new Review();
 		doThrow(new UserNotFoundException("")).when(userBoMock).getCurrentUser();
-		assertThat(authHelper.canCreate(rating)).isFalse();
+		assertThat(authHelper.canCreate(entity, review)).isFalse();
+	}
+	
+	@Test
+	public void canNotCreateReviewUserAlreadyReviewed() throws UserNotFoundException {
+		
+		Review review = new Review();
+		User user = new User();
+		user.setId(2);
+		
+		// The user has already reviewed the entity
+		List<Review> reviews = new ArrayList<>();
+		Review existingReview = new Review();
+		existingReview.setUser(user);
+		reviews.add(existingReview);
+		
+		// Set reviews
+		ReviewableEntity entity = mock(ReviewableEntity.class);
+		when(entity.getReviews()).thenReturn(reviews);
+		
+		when(userBoMock.getCurrentUser()).thenReturn(user);
+		assertThat(authHelper.canCreate(entity, review)).isFalse();
+		
 	}
 
 
@@ -87,43 +126,43 @@ public class RatingAuthTest {
 	//////////////////////////////////////// UPDATE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 
-	private void updateRating(User creator, User modifier, boolean canUpdate) {	
+	private void updateReview(User creator, User modifier, boolean canUpdate) {	
 		try {
 			when(userBoMock.getCurrentUser()).thenReturn(modifier);
 
-			Rating rating = new Rating();
-			rating.setUser(creator);
+			Review review = new Review();
+			review.setUser(creator);
 
-			assertThat(authHelper.canUpdate(rating)).isEqualTo(canUpdate);
+			assertThat(authHelper.canUpdate(review)).isEqualTo(canUpdate);
 		} catch (Exception e) {
 			fail("Exception not expected", e);
 		}
 	}
 	
 	@Test
-	public void testCanUpdateRatingSameUser() {
+	public void testCanUpdateReviewSameUser() {
 		User creator = createBasicUser(1);
-		updateRating(creator, creator, true);
+		updateReview(creator, creator, true);
 	}
 
 	@Test
-	public void testCanUpdateRating() {
+	public void testCanUpdateReview() {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
-		updateRating(creator, updater, true);
+		updateReview(creator, updater, true);
 	}
 	
 	@Test
-	public void testCanNotUpdateRatingNotSameUser() {
+	public void testCanNotUpdateReviewNotSameUser() {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
-		updateRating(creator, updater, false);
+		updateReview(creator, updater, false);
 	}
 	
 	@Test
-	public void testCanNotUpdateRatingNotLoggedIn() {
+	public void testCanNotUpdateReviewNotLoggedIn() {
 		User creator = createBasicUser(1);
-		updateRating(creator, null, false);
+		updateReview(creator, null, false);
 	}
 	
 	
@@ -133,8 +172,8 @@ public class RatingAuthTest {
 	
 	@Test
 	public void canGet() {
-		Rating rating = mock(Rating.class);
-		assertThat(authHelper.canGet(rating)).isTrue();
+		Review review = mock(Review.class);
+		assertThat(authHelper.canGet(review)).isTrue();
 	}
 	
 	
@@ -152,43 +191,43 @@ public class RatingAuthTest {
 	//////////////////////////////////////// DELETE ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 
-	private void deleteRating(User creator, User modifier, boolean canUpdate) {	
+	private void deleteReview(User creator, User modifier, boolean canUpdate) {	
 		try {
 			when(userBoMock.getCurrentUser()).thenReturn(modifier);
 
-			Rating rating = new Rating();
-			rating.setUser(creator);
+			Review review = new Review();
+			review.setUser(creator);
 
-			assertThat(authHelper.canDelete(rating)).isEqualTo(canUpdate);
+			assertThat(authHelper.canDelete(review)).isEqualTo(canUpdate);
 		} catch (Exception e) {
 			fail("Exception not expected", e);
 		}
 	}
 	
 	@Test
-	public void testCanDeleteRatingSameUser() {
+	public void testCanDeleteReviewSameUser() {
 		User creator = createBasicUser(1);
-		deleteRating(creator, creator, true);
+		deleteReview(creator, creator, true);
 	}
 
 	@Test
-	public void testCanDeleteRating() {
+	public void testCanDeleteReview() {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(1);
-		deleteRating(creator, updater, true);
+		deleteReview(creator, updater, true);
 	}
 	
 	@Test
-	public void testCanNotDeleteRatingNotSameUser() {
+	public void testCanNotDeleteReviewNotSameUser() {
 		User creator = createBasicUser(1);
 		User updater = createBasicUser(2);
-		deleteRating(creator, updater, false);
+		deleteReview(creator, updater, false);
 	}
 	
 	@Test
-	public void testCanNotDeleteRatingNotLoggedIn() {
+	public void testCanNotDeleteReviewNotLoggedIn() {
 		User creator = createBasicUser(1);
-		deleteRating(creator, null, false);
+		deleteReview(creator, null, false);
 	}
 
 }

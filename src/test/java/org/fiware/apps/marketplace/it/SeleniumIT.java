@@ -44,6 +44,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -63,11 +64,13 @@ public class SeleniumIT extends AbstractIT {
 	private static final String MIN_LENGTH = "This field must contain at least %d chars.";
 	private static final String MAX_LENGTH = "This field must not exceed %d chars.";
 	private static final String DESCRIPTION_REGISTERED = "This name is already in use in this Store.";
+	private static final String NO_REVIEWS = "This %s does not have reviews yet. You can be the first.";
 	private static final String ACCOUNT_UPDATE_FORM = "account_update_form";
 	private static final String REGISTRATION_FORM = "registration_form";
 	private static final String STORE_FORM = "store_form";
 	private static final String DESCRIPTION_CREATION_FORM = "description_create_form";
 	private static final String DESCRIPTION_UPDATE_FORM = "description_update_form";
+	private static final String REVIEW_FORM = "review_form";
 	
 	@BeforeClass
 	public static void initBrowser() {
@@ -85,6 +88,14 @@ public class SeleniumIT extends AbstractIT {
 
 	@Before
 	public void setUp() {
+		
+		try {
+			// Close alerts if present
+			driver.switchTo().alert().accept();
+		} catch (NoAlertPresentException ex) {
+			// Nothing to do...
+		}
+		
 		// Restart cookies and browser
 		driver.manage().deleteAllCookies();
 		driver.get("about:blank");
@@ -183,6 +194,11 @@ public class SeleniumIT extends AbstractIT {
 			return false;
 		}
 	}
+	
+	private void verifyEntityAverageScore(double expectedScore) {
+		assertThat(driver.findElement(By.cssSelector(".rating-overall")).getText())
+				.isEqualTo(new Double(expectedScore).toString());
+	}
 
 	// LIST OF OPERATIONS
 
@@ -204,16 +220,20 @@ public class SeleniumIT extends AbstractIT {
 		loginUser(username, password);
 		assertThat(driver.findElement(By.cssSelector(".alert-danger")).getText()).isEqualTo(errorMessage);
 	}
+	
+	private void loginUser(String displayName, String email, String password) {
+		createUser(displayName, email, password);
+
+		driver.get(endPoint);
+		loginUser(email, password);
+	}
 
 	private void loginDefaultUser() {
 		String displayName 	= "Default User";
 		String email 		= "defaultuser@domain.org";
 		String password 	= "fiware1!";
-
-		createUser(displayName, email, password);
-
-		driver.get(endPoint);
-		loginUser(email, password);
+		
+		loginUser(displayName, email, password);
 	}
 
 	private void registerUser(String displayName, String email, String password) {
@@ -260,7 +280,12 @@ public class SeleniumIT extends AbstractIT {
 		// Submit
 		submitForm(formElement);
 	}
-
+	
+	public void logOut() {
+		  driver.findElement(By.id("toggle-right-sidebar")).click();
+		  driver.findElement(By.cssSelector("a.list-group-item.link-logout > span.item-text")).click();
+	}
+	  
 	private void registerStore(String displayName, String url) {
 		// Find form
 		WebElement formElement = driver.findElement(By.name(STORE_FORM));
@@ -330,6 +355,35 @@ public class SeleniumIT extends AbstractIT {
 
 		// Verify the field values
 		verifyFieldValue(formElement, "displayName", displayName);
+	}
+	
+	private void createUpdateReview(int nStars, String commentText) {
+		driver.findElement(By.cssSelector("label[for='star" + nStars + "']")).click();
+		WebElement formElement = driver.findElement(By.name(REVIEW_FORM));
+		fillField(formElement, "comment", commentText);
+		// This is not a normal form. The user is not redirected to a new page.
+		// The request to create the review is made via AJAX
+	    driver.findElement(By.cssSelector(".btn-update[data-submit]")).click();
+	}
+	
+	private void deleteReview() {
+		driver.findElement(By.cssSelector("label[for='star1']")).click();
+	    driver.findElement(By.cssSelector(".btn-delete[data-submit]")).click();
+	}
+	
+	private void createUserStoreAndDescription(String userName, String userMail, String userPass,
+			String storeDisplayName, String storeUrl, String descriptionDisplayName, String descriptionUSDL) {
+		loginUser(userName, userMail, userPass);
+		driver.get(endPoint + "/stores/register");
+		registerStore(storeDisplayName, storeUrl);
+		driver.get(endPoint + "/descriptions/register");
+		registerDescription(descriptionDisplayName, descriptionUSDL);
+	}
+	
+	private void createUserStoreAndDescriptionDefaultCredentials(String storeDisplayName, String storeUrl, 
+			String descriptionDisplayName, String descriptionUSDL) {
+		createUserStoreAndDescription("Default User", "defaultuser@domain.com", "fiware1!", storeDisplayName, storeUrl, 
+				descriptionDisplayName, descriptionUSDL);
 	}
 
 	// LIST OF TESTS
@@ -484,7 +538,8 @@ public class SeleniumIT extends AbstractIT {
 
 		clickOnSettingPanelItem("Settings");
 
-		driver.findElement(By.linkText("Delete account")).click();
+		driver.findElement(By.cssSelector(".delete-account")).click();
+		driver.findElement(By.cssSelector(".modal-delete")).findElement(By.cssSelector(".btn-delete[data-submit]")).click();
 		assertThat(driver.getTitle()).isEqualTo("Sign In - WMarket");
 		verifyAlertContent("Your account was deleted successfully.");
 
@@ -573,7 +628,9 @@ public class SeleniumIT extends AbstractIT {
 		clickOnOperationPanelItem("Register a new store");
 		registerStore(displayName, url);
 
-		driver.findElement(By.xpath("//a[contains(@href, 'javascript:deleteStore()')]")).click();
+		driver.findElement(By.cssSelector(".delete-store")).click();
+		driver.findElement(By.cssSelector(".modal-delete")).findElement(By.cssSelector(".btn-delete[data-submit]")).click();
+
 		verifyAlertContent("The store '" + displayName + "' was deleted successfully.");
 	}
 
@@ -588,18 +645,15 @@ public class SeleniumIT extends AbstractIT {
 
 	@Test
 	public void should_RedirectStoreView_When_DescriptionCreateFormIsSubmitted() {
-		String displayName	= "FIWARE Store";
-		String url			= "http://store.fiware.es";
+		String displayName	   = "FIWARE Store";
+		String url			   = "http://store.fiware.es";
+		String descriptionName = "New description";
 
-		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
-		registerStore(displayName, url);
+		createUserStoreAndDescriptionDefaultCredentials(displayName, url, descriptionName, defaultUSDLPath);
 
-		driver.get(endPoint + "/descriptions/register");
-
-		registerDescription("New description", defaultUSDLPath);
+		
 		assertThat(driver.getTitle()).isEqualTo(displayName + " - Offerings - WMarket");
-		verifyAlertContent("The description 'New description' was uploaded successfully.");
+		verifyAlertContent("The description '" + descriptionName + "' was uploaded successfully.");
 	}
 
 	@Test
@@ -608,13 +662,8 @@ public class SeleniumIT extends AbstractIT {
 		String url = "http://store.fiware.es";
 		String descriptionDisplayName = "New description";
 
-		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
-
-		registerStore(displayName, url);
-		driver.get(endPoint + "/descriptions/register");
-
-		registerDescription(descriptionDisplayName, defaultUSDLPath);
+		createUserStoreAndDescriptionDefaultCredentials(displayName, url, descriptionDisplayName, defaultUSDLPath);
+		
 		driver.get(endPoint + "/descriptions/register");
 
 		// Find form
@@ -640,14 +689,9 @@ public class SeleniumIT extends AbstractIT {
 	public void should_DisplayNotificationAlert_When_DescriptionIsUpdated() {
 		String displayName	= "FIWARE Store";
 		String url			= "http://store.fiware.es";
+		
+		createUserStoreAndDescriptionDefaultCredentials(displayName, url, "Test description", defaultUSDLPath);
 
-		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
-		registerStore(displayName, url);
-
-		driver.get(endPoint + "/descriptions/register");
-
-		registerDescription("Test description", defaultUSDLPath);
 		clickOnOperationPanelItem("My descriptions");
 		driver.findElement(
 				By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/descriptions/test-description')]")).click();
@@ -659,22 +703,19 @@ public class SeleniumIT extends AbstractIT {
 
 	@Test
 	public void should_DisplayNotificationAlert_When_DescriptionIsDeleted() {
-		String displayName	= "FIWARE Store";
-		String url			= "http://store.fiware.es";
-
-		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
-		registerStore(displayName, url);
-
-		driver.get(endPoint + "/descriptions/register");
-
+		String displayName	   = "FIWARE Store";
+		String url			   = "http://store.fiware.es";
 		String descriptionName = "Test description";
-		registerDescription(descriptionName, defaultUSDLPath);
+
+		createUserStoreAndDescriptionDefaultCredentials(displayName, url, descriptionName, defaultUSDLPath);
+
 		clickOnOperationPanelItem("My descriptions");
 		driver.findElement(
 				By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/descriptions/test-description')]")).click();
 
-		driver.findElement(By.xpath("//a[contains(@href, 'javascript:deleteDescription()')]")).click();
+		driver.findElement(By.cssSelector(".delete-description")).click();
+		driver.findElement(By.cssSelector(".btn-delete[data-submit]")).click();
+
 		verifyAlertContent("The description '" + descriptionName + "' was deleted successfully.");
 	}
 
@@ -683,30 +724,24 @@ public class SeleniumIT extends AbstractIT {
 		String displayName	= "FIWARE Store";
 		String url			= "http://store.fiware.es";
 
-		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
-		registerStore(displayName, url);
-
-		driver.get(endPoint + "/descriptions/register");
-
-		registerDescription("New description", defaultUSDLPath);
+		createUserStoreAndDescriptionDefaultCredentials(displayName, url, "New description", defaultUSDLPath);
+		
 		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
 		assertThat(driver.getTitle()).isEqualTo("OrionStarterKit" + " - WMarket");
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////// BOOKMARKS //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
 	public void given_OfferingIsAvailable_When_BookmarkAdded_Expect_ShownInBookmarkListView() {
 		String displayName	= "FIWARE Store";
 		String url			= "http://store.fiware.es";
 
-		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
-		registerStore(displayName, url);
-
-		driver.get(endPoint + "/descriptions/register");
-
-		registerDescription("New description", defaultUSDLPath);
-
+		createUserStoreAndDescriptionDefaultCredentials(displayName, url, "New description", defaultUSDLPath);
+		
 		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
 		driver.findElement(By.linkText("Add bookmark")).click();
 		clickOnOperationPanelItem("My bookmarks");
@@ -719,13 +754,7 @@ public class SeleniumIT extends AbstractIT {
 		String displayName = "FIWARE Store";
 		String url = "http://store.fiware.es";
 
-		loginDefaultUser();
-		driver.get(endPoint + "/stores/register");
-		registerStore(displayName, url);
-
-		driver.get(endPoint + "/descriptions/register");
-
-		registerDescription("New description", defaultUSDLPath);
+		createUserStoreAndDescriptionDefaultCredentials(displayName, url, "New description", defaultUSDLPath);
 
 		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
 		driver.findElement(By.linkText("Add bookmark")).click();
@@ -736,6 +765,273 @@ public class SeleniumIT extends AbstractIT {
 
 		clickOnOperationPanelItem("My bookmarks");
 		assertThat(!isElementPresent(By.linkText("OrionStarterKit"))).isTrue();
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// REVIEWS ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void createReviewAncVerify(String userName) {
+		String commentText  = "Example Review!";
+		int nStars         = 4;
+		
+		// Review
+		createUpdateReview(nStars, commentText);
+	    
+		// Check review value
+		assertThat(driver.findElement(By.cssSelector("div.author-name")).getText()).isEqualTo(userName);
+		assertThat(driver.findElement(By.cssSelector("div.review-body")).getText()).isEqualTo(commentText);
+		verifyEntityAverageScore(nStars);
+		
+		// Open review dialog and check that comment contains user comment
+		driver.findElement(By.cssSelector("label[for='star1']")).click();
+		assertThat(driver.findElement(By.name("comment")).getAttribute("value")).isEqualTo(commentText);
+	}
+	
+	private void createAndUpdateReviewAndVerify(String userName) throws Exception {
+		
+		String initialReview = "Example Review!";
+		String finalReview   = "Updated Review!";
+		int initialStars     = 4;
+		int finalStars       = 2;
+		
+		// Review & Update
+		createUpdateReview(initialStars, initialReview);
+		Thread.sleep(1000);		// Wait 1 second so the review dialog can disappear
+		createUpdateReview(finalStars, finalReview);
+		Thread.sleep(1000);		// Wait 1 second so the reviews can be updated appropriately
+	    
+		// Check review value
+		assertThat(driver.findElement(By.cssSelector("div.author-name")).getText()).isEqualTo(userName);
+		assertThat(driver.findElement(By.cssSelector("div.review-body")).getText()).isEqualTo(finalReview);
+		verifyEntityAverageScore(finalStars);
+
+	}
+	
+	private void createAndDeleteReviewAndVerify(String entity) throws Exception {
+		
+		String commentText = "Example Review!";
+		int stars          = 4;
+		
+		createUpdateReview(stars, commentText);
+		Thread.sleep(1000);		// Wait 1 second so the review dialog can disappear
+		deleteReview();
+		Thread.sleep(1000);		// Wait 1 second so the reviews can be updated appropriately
+	    
+		// Check that there are no reviews available
+		assertThat(driver.findElement(By.cssSelector("div.alert.alert-warning")).getText())
+				.isEqualTo(String.format(NO_REVIEWS, entity));
+		verifyEntityAverageScore(0);
+		
+		// Open dialog again and check that text is empty
+		driver.findElement(By.cssSelector("label[for='star1']")).click();
+		assertThat(driver.findElement(By.name("comment")).getAttribute("value")).isEqualTo("");
+	}
+	
+	@Test
+	public void given_OfferingIsAvailable_When_CreateReview_Expect_ReviewsListIsUpdated() {
+		String displayName	= "FIWARE Store";
+		String url			= "http://store.fiware.es";
+		String userName     = "User A";
+		String userMail     = "example@example.com";
+		String userPass     = "fiware1!";
+
+		createUserStoreAndDescription(userName, userMail, userPass, displayName, url, 
+				"New Description", defaultUSDLPath);
+		
+		// Access the offering
+		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
+		
+		createReviewAncVerify(userName);
+	}
+	
+	@Test
+	public void given_StoreIsAvailable_When_CreateReview_Expect_ReviewsListIsUpdated() {
+		String displayName	= "FIWARE Store";
+		String url			= "http://store.fiware.es";
+		String userName     = "User A";
+		String userMail     = "example@example.com";
+		String userPass     = "fiware1!";
+
+		loginUser(userName, userMail, userPass);
+		driver.get(endPoint + "/stores/register");
+		registerStore(displayName, url);
+		
+		// Access store reviews
+	    driver.findElement(By.linkText("About & reviews")).click();
+	    
+		createReviewAncVerify(userName);
+	}
+	
+	@Test
+	public void given_OfferingIsAvailable_When_CreateReviewAndChangeRating_Expect_ReviewsListIsUpdated() {
+		String displayName	= "FIWARE Store";
+		String url			= "http://store.fiware.es";
+		String userName     = "User A";
+		String userMail     = "example@example.com";
+		String userPass     = "fiware1!";
+		String commentText  = "Example Review!";
+		int initialStars   = 4;
+		int finalStars     = 2;
+
+		createUserStoreAndDescription(userName, userMail, userPass, displayName, url, 
+				"New Description", defaultUSDLPath);
+		
+		// Access the offering
+		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
+		
+		// Review
+		driver.findElement(By.cssSelector("label[for='star" + initialStars + "']")).click();
+		driver.findElement(By.cssSelector("label[for='form_star" + finalStars + "']")).click();
+		WebElement formElement = driver.findElement(By.name(REVIEW_FORM));
+		fillField(formElement, "comment", commentText);
+		// This is not a normal form. The user is not redirected to a new page.
+		// The request to create the review is made via AJAX
+	    driver.findElement(By.xpath("(//button[@type='button'])[5]")).click();
+	    
+		// Check review value
+		assertThat(driver.findElement(By.cssSelector("div.author-name")).getText()).isEqualTo(userName);
+		assertThat(driver.findElement(By.cssSelector("div.review-body")).getText()).isEqualTo(commentText);
+		verifyEntityAverageScore(finalStars);	
+	}
+	
+	
+	@Test
+	public void given_OfferingIsRated_When_ReviewUpdated_Expect_ReviewListIsUpdated() throws Exception {
+		
+		String displayName	 = "FIWARE Store";
+		String url			 = "http://store.fiware.es";
+		String userName      = "User A";
+		String userMail      = "example@example.com";
+		String userPass      = "fiware1!";
+
+		createUserStoreAndDescription(userName, userMail, userPass, displayName, url, 
+				"New Description", defaultUSDLPath);
+		
+		// Access the offering
+		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
+		
+		createAndUpdateReviewAndVerify(userName);
+	}
+	
+	@Test
+	public void given_StoreIsRated_When_ReviewUpdated_Expect_ReviewListIsUpdated() throws Exception {
+		
+		String displayName	 = "FIWARE Store";
+		String url			 = "http://store.fiware.es";
+		String userName      = "User A";
+		String userMail      = "example@example.com";
+		String userPass      = "fiware1!";
+
+		loginUser(userName, userMail, userPass);
+		driver.get(endPoint + "/stores/register");
+		registerStore(displayName, url);
+		
+		// Access store reviews
+	    driver.findElement(By.linkText("About & reviews")).click();
+		
+		createAndUpdateReviewAndVerify(userName);
+	}
+	
+	@Test
+	public void given_OfferingIsRated_When_ReviewDeleted_Expect_ReviewListIsUpdated() throws Exception {
+		String displayName = "FIWARE Store";
+		String url		   = "http://store.fiware.es";
+		String userName    = "User A";
+		String userMail    = "example@example.com";
+		String userPass    = "fiware1!";
+
+		createUserStoreAndDescription(userName, userMail, userPass, displayName, url, 
+				"New Description", defaultUSDLPath);
+		
+		// Access the offering
+		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();
+		
+		createAndDeleteReviewAndVerify("offering");
+	}
+	
+	@Test
+	public void given_StoreIsRated_When_ReviewDeleted_Expect_ReviewListIsUpdated() throws Exception {
+		String displayName = "FIWARE Store";
+		String url		   = "http://store.fiware.es";
+		String userName    = "User A";
+		String userMail    = "example@example.com";
+		String userPass    = "fiware1!";
+
+		loginUser(userName, userMail, userPass);
+		driver.get(endPoint + "/stores/register");
+		registerStore(displayName, url);
+		
+		// Access store reviews
+	    driver.findElement(By.linkText("About & reviews")).click();
+		
+		createAndDeleteReviewAndVerify("store");
+	}
+	
+	@Test
+	public void given_OfferingIsAvailable_When_TwoUserReview_Expect_AverageScore() throws Exception {
+		
+		String displayName	      = "FIWARE Store";
+		String url			      = "http://store.fiware.es";
+		String firstUserName      = "User A";
+		String firstUserMail      = "example@example.com";
+		String firstUserPass      = "fiware1!";
+		String firstUserReview    = "Review number #1";
+		int firstUserStars        = 3;
+		String secondUserName     = "User B";
+		String secondUserMail     = "example1@example.com";
+		String secondUserPass     = "fiware1!";
+		String secondUserReview   = "Review number #2";
+		int sedondUserStars       = 2;
+		double averageScore      = (((double) firstUserStars) + ((double) sedondUserStars)) / 2D;
+
+		createUserStoreAndDescription(firstUserName, firstUserMail, firstUserPass, displayName, url, 
+				"New Description", defaultUSDLPath);
+		
+		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();	// Access offering
+		createUpdateReview(firstUserStars, firstUserReview);						// First user review
+		logOut();																	// Log out
+		loginUser(secondUserName, secondUserMail, secondUserPass);					// Login the second user
+		driver.findElement(By.cssSelector(".offering-item .panel-title")).click();	// Access offering
+		createUpdateReview(sedondUserStars, secondUserReview);						// Second user review
+		Thread.sleep(1000);															// Wait page updates
+	    
+		// Check review values. Review at the top should be last created
+		assertThat(driver.findElements(By.cssSelector("div.author-name")).get(0).getText())
+				.isEqualTo(secondUserName);
+		assertThat(driver.findElements(By.cssSelector("div.review-body")).get(0).getText())
+				.isEqualTo(secondUserReview);
+		
+		assertThat(driver.findElements(By.cssSelector("div.author-name")).get(1).getText())
+				.isEqualTo(firstUserName);
+		assertThat(driver.findElements(By.cssSelector("div.review-body")).get(1).getText())
+				.isEqualTo(firstUserReview);
+
+		verifyEntityAverageScore(averageScore);	
+		
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// CATEGORIES /////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////
+
+	@Test
+	public void when_DescriptionIsUploaded_Expect_CategoryViewIsAvailable() {
+		String displayName = "FIWARE Store";
+		String url         = "http://store.fiware.es";
+		String userName    = "User A";
+		String userMail    = "example@example.com";
+		String userPass    = "fiware1!";
+
+		createUserStoreAndDescription(userName, userMail, userPass, displayName, url, 
+			"New Description", defaultUSDLPath);
+
+		driver.get(endPoint + "/");
+		assertThat(driver.findElements(By.cssSelector(".category")).size()).isEqualTo(2);
+
+		driver.get(endPoint + "/category/dataset");
+		assertThat(driver.findElements(By.cssSelector(".offering-item")).size()).isEqualTo(1);
 	}
 
 }

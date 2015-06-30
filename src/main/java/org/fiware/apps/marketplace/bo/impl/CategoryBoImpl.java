@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.model;
+package org.fiware.apps.marketplace.bo.impl;
 
 /*
  * #%L
@@ -32,64 +32,52 @@ package org.fiware.apps.marketplace.model;
  * #L%
  */
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
+import org.fiware.apps.marketplace.bo.CategoryBo;
+import org.fiware.apps.marketplace.dao.CategoryDao;
+import org.fiware.apps.marketplace.exceptions.CategoryNotFoundException;
+import org.fiware.apps.marketplace.model.Category;
+import org.fiware.apps.marketplace.model.Offering;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Entity
-@Table(name = "rateable_entity")
-@Inheritance(strategy = InheritanceType.JOINED)
-public class RateableEntity {
+@Service("classificationBo")
+public class CategoryBoImpl implements CategoryBo {
 	
-	private Integer id;
-	
-	// Ratings
-	private List<Rating> ratings;
-	private double averageScore = 0.0;		// Default value
-	
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	@XmlTransient
-	public Integer getId() {
-		return id;
+	@Autowired private CategoryDao categoryDao;
+
+	@Override
+	public boolean isNameAvailable(String name) {
+		return categoryDao.isNameAvailable(name);
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	@XmlTransient
-	@OneToMany(mappedBy = "ratingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	public List<Rating> getRatings() {
-		return ratings;
+	@Override
+	@Transactional
+	public Category findByName(String name) throws CategoryNotFoundException {
+		// TODO: Check access rights?
+		return categoryDao.findByName(name);
 	}
 
-	public void setRatings(List<Rating> ratings) {
-		this.ratings = ratings;
+	@Override
+	@Transactional
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, int offset, int max, 
+			String orderBy, boolean desc) throws CategoryNotFoundException {
+		
+		// TODO: Check access rights?
+		return categoryDao.getCategoryOfferingsSortedBy(categoryName, offset, max, orderBy, desc);
 	}
 
-	@XmlElement
-	@Column(name = "averageScore")
-	public double getAverageScore() {
-		return averageScore;
+	@Override
+	public List<Category> getCategoriesPage(int offset, int max) {
+		// TODO: Check access rights?
+		return categoryDao.getCategoriesPage(offset, max);
 	}
 
-	public void setAverageScore(double averageScore) {
-		this.averageScore = averageScore;
+	@Override
+	public List<Category> getAllCategories() {
+		// TODO: Check access rights?
+		return categoryDao.getAllCategories();
 	}
-
 }

@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.bo.impl;
+package org.fiware.apps.marketplace.model;
 
 /*
  * #%L
@@ -32,29 +32,64 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
-import org.fiware.apps.marketplace.bo.ClassificationBo;
-import org.fiware.apps.marketplace.dao.ClassificationDao;
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
-import org.fiware.apps.marketplace.model.Category;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import static javax.persistence.GenerationType.IDENTITY;
 
-@Service("classificationBo")
-public class ClassificationBoImpl implements ClassificationBo {
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+@Entity
+@Table(name = "reviewable_entity")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class ReviewableEntity {
 	
-	@Autowired private ClassificationDao classificationDao;
-
-	@Override
-	public boolean isNameAvailable(String name) {
-		return classificationDao.isNameAvailable(name);
+	private Integer id;
+	
+	// Reviews
+	private List<Review> reviews;
+	private double averageScore = 0.0;		// Default value
+	
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	@XmlTransient
+	public Integer getId() {
+		return id;
 	}
 
-	@Override
-	public Category findByName(String name) throws ClassificationNotFoundException {
-		// TODO: Authorization?
-		return classificationDao.findByName(name);
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
-	
+	@XmlTransient
+	@OneToMany(mappedBy = "reviewableEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
+
+	@XmlElement
+	@Column(name = "averageScore")
+	public double getAverageScore() {
+		return averageScore;
+	}
+
+	public void setAverageScore(double averageScore) {
+		this.averageScore = averageScore;
+	}
 
 }

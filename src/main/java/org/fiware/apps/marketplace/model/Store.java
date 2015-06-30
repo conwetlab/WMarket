@@ -61,13 +61,13 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @Table(name = "stores")
 @XmlRootElement(name = "store")
 @IgnoreMediaTypes("application/*+json")
-public class Store extends RateableEntity {
+public class Store extends ReviewableEntity {
 	
 	private String url;
 	private String displayName;
 	private String name;
 	private String comment;
-	private Date registrationDate;
+	private Date createdAt;
 	private List<Description> descriptions;
 	private User lasteditor;	
 	private User creator;
@@ -143,13 +143,13 @@ public class Store extends RateableEntity {
 	}
 	
 	@XmlElement
-	@Column(name = "registration_date")
-	public Date getRegistrationDate() {
-		return registrationDate;
+	@Column(name = "created_at")
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 	
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 	@XmlElement

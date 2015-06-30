@@ -54,7 +54,7 @@ public interface StoreDao {
     public boolean isURLAvailable(String url);
 
 	// Get all or a sublist
-	public List<Store> getStoresPage(int offset, int max);
+	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc);
 	public List <Store> getAllStores();
 
 }

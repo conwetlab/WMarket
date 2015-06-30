@@ -90,6 +90,10 @@ form .row:last-child .form-field {
     margin-bottom: 0px;
 }
 
+form :last-child {
+    margin-bottom: 0px;
+}
+
 /***************************************************************************************
  *  DEFAULT THEME - COMPONENT FORM - FIELD LABEL
  ***************************************************************************************/

@@ -36,10 +36,10 @@ package org.fiware.apps.marketplace.bo;
 import java.util.List;
 
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
-import org.fiware.apps.marketplace.exceptions.RatingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Store;
 
 
@@ -58,18 +58,20 @@ public interface StoreBo {
 	
 	// Get all or a sublist
 	public List <Store> getAllStores() throws NotAuthorizedException;
-	public List<Store> getStoresPage(int offset, int max)
+	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc)
 			throws NotAuthorizedException;
 	
-	// Rating
-	public void createRating(String name, Rating rating) throws NotAuthorizedException, 
+	// Review
+	public void createReview(String name, Review review) throws NotAuthorizedException, 
 			StoreNotFoundException, ValidationException;
-	public void updateRating(String name, int ratingId, Rating rating) throws NotAuthorizedException, 
-			StoreNotFoundException, RatingNotFoundException, ValidationException;
-	public List<Rating> getRatings(String name) throws NotAuthorizedException, StoreNotFoundException;
-	public Rating getRating(String name, int ratingId) throws NotAuthorizedException, StoreNotFoundException,
-			RatingNotFoundException;
-	public void deleteRating(String name, int ratingId) throws NotAuthorizedException, StoreNotFoundException,
-			RatingNotFoundException;
+	public void updateReview(String name, int reviewId, Review review) throws NotAuthorizedException, 
+			StoreNotFoundException, ReviewNotFoundException, ValidationException;
+	public List<Review> getReviews(String name) throws NotAuthorizedException, StoreNotFoundException;
+	public List<Review> getReviewsPage(String name, int offset, int max, String orderBy, boolean desc) 
+			throws NotAuthorizedException, StoreNotFoundException;
+	public Review getReview(String name, int reviewId) throws NotAuthorizedException, StoreNotFoundException,
+			ReviewNotFoundException;
+	public void deleteReview(String name, int reviewId) throws NotAuthorizedException, StoreNotFoundException,
+			ReviewNotFoundException;
 	
 }

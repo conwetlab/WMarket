@@ -1,8 +1,4 @@
-package org.fiware.apps.marketplace.model.validators;
-
-import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.Rating;
-import org.springframework.stereotype.Service;
+package org.fiware.apps.marketplace.security.auth;
 
 /*
  * #%L
@@ -36,30 +32,51 @@ import org.springframework.stereotype.Service;
  * #L%
  */
 
-@Service("ratingValidator")
-public class RatingValidator {
+import java.util.HashSet;
+import java.util.Set;
+
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.ReviewableEntity;
+import org.fiware.apps.marketplace.model.User;
+import org.springframework.stereotype.Service;
+
+@Service("ratingAuth")
+public class ReviewAuth extends AbstractAuth<Review>{
 	
-	private static BasicValidator basicValidator = BasicValidator.getInstance();
-	
-	/**
-	 * Public method to validate an offering rating
-	 * @param rating The rating to be validated
-	 * @throws ValidationException If the rating is not valid (score is lower than zero or higher than 5 // comment
-	 * length is higher than 300)
-	 */
-	public void validateRating(Rating rating) throws ValidationException {
-		
-		int score = rating.getScore();
-		
-		if (score < 0 || score > 5) {
-			throw new ValidationException("score", "Score should be an integer between 0 and 5.");
-		}
-		
-		if (rating.getComment() != null) {
-			basicValidator.validateComment(rating.getComment());
-		}
-		
-		
+	@Override
+	protected User getEntityOwner(Review rating) {
+		return rating.getUser();
 	}
 
+	@Override
+	public boolean canCreate(Review entity) {
+		// This method cannot be used
+		throw new UnsupportedOperationException();
+	}
+	
+	public boolean canCreate(ReviewableEntity entity, Review review) {
+		
+		boolean canCreate = false;
+		
+		try {
+			
+			// Check if the user has created another review for the same entity
+			Set<User> users = new HashSet<>();
+			
+			for (Review previousReviews: entity.getReviews()) {
+				users.add(previousReviews.getUser());
+			}
+			
+			if (!users.contains(getUserBo().getCurrentUser())) {
+				canCreate = true;
+			}
+			
+		} catch (UserNotFoundException ex) {
+			// Nothing to do...
+		}
+		
+		return canCreate;
+	}
+	
 }

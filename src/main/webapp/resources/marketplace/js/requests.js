@@ -106,18 +106,140 @@
             requests[name] = [];
         }
 
-        requests[name].push({
-            type: type,
-            options: options
-        });
+        if (options != null) {
+            requests[name].push({
+                type: type,
+                options: options
+            });
+        } else {
+            requests[name].push(type);
+        }
     };
 
     ns.dispatch = function dispatch(name) {
         if (name in requests) {
             requests[name].forEach(function (request) {
-                ns[request.type](request.options);
+                if (utils.isPlainObject(request)) {
+                    ns[request.type](request.options);
+                } else {
+                    request();
+                }
             });
         }
+    };
+
+    var defaults = {
+        method: "",
+        kwargs: {},
+        queryString: {},
+        data: {}
+    };
+
+    function createRequestSpinner() {
+        return $('<div class="pending-state">')
+            .append($('<span class="fa fa-spinner fa-pulse">'));
+    }
+
+    function parseQS(queryString) {
+        var result = "",
+            keys = Object.keys(queryString);
+
+        if (keys.length) {
+            result += "?";
+
+            for (var i = 0; i < keys.length; i++) {
+                result += keys[i] + "=" + queryString[keys[i]];
+                if ((keys.length - 1) !== i) {
+                    result += "&";
+                }
+            }
+        }
+
+        return result;
+    }
+
+    function sendRequest(method, type, url, options) {
+        options = utils.update(defaults, options);
+
+        var settings = {
+                method: options.method ? options.method : method,
+                url: utils.format(url, options.kwargs) + parseQS(options.queryString),
+                contentType: 'application/json',
+                headers: {
+                	Accept: 'application/json'
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                	var errorInfo = JSON.parse(jqXHR.responseText);
+                	var message = errorInfo.error.field != null ? errorInfo.error.field + ': ' : '';
+                	message += errorInfo.error.message;
+                	
+                	alert(message);
+                }
+            },
+            $spinner;
+
+        switch (settings.method) {
+        case 'GET':
+            settings.dataType = 'json';
+            if (type == 'collection') {
+                $spinner = createRequestSpinner();
+                if (options.$target != null){
+                    options.$target.empty().append($spinner);
+                }
+ 
+                settings.success = function (data, textStatus, jqXHR) {
+                    var models = Object.keys(data);
+
+                    $spinner.remove();
+
+                    if (models.length && data[models[0]].length) {
+                        options.success(data[models[0]], jqXHR, options.$target);
+                    } else {
+                        if (options.$target != null){
+                            options.$target.append(options.$alert);
+                        }
+                        if (options.failure != null) {
+                            options.failure();
+                        }
+                    }
+                };
+            } else {
+                settings.success = function (data, textStatus, jqXHR) {
+                    options.success(data, jqXHR);
+                };
+            }
+            break;
+        case 'POST':
+        case 'PUT':
+            settings.data = JSON.stringify(options.data);
+        case 'DELETE':
+            settings.success = function (data, textStatus, jqXHR) {
+                options.success(jqXHR);
+            };
+            break;
+        }
+
+        $.ajax(settings);
+    }
+
+    ns.list = function list(url, options) {
+        sendRequest('GET', 'collection', url, options);
+    };
+
+    ns.create = function create(url, options) {
+        sendRequest('POST', 'collection', url, options);
+    };
+
+    ns.find = function find(url, options) {
+        sendRequest('GET', 'entry', url, options);
+    };
+
+    ns.update = function update(url, options) {
+        sendRequest('PUT', 'entry', url, options);
+    };
+
+    ns.destroy = function destroy(url, options) {
+        sendRequest('DELETE', 'entry', url, options);
     };
 
 })(app.requests, app.utils);

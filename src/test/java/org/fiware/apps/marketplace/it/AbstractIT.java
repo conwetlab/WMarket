@@ -54,7 +54,7 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.PriceComponent;
 import org.fiware.apps.marketplace.model.PricePlan;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
@@ -67,8 +67,16 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 public abstract class AbstractIT {
 	
-	private static Environment environment = Environment.getInstance();
+	protected String serverUrl;
+	protected String defaultUSDLPath;
+	protected String secondaryUSDLPath;
+	
+	// Mock server
+	@Rule public WireMockRule wireMock = new WireMockRule(0);
+
+	// Environment information
 	protected static String endPoint;
+	private static Environment environment = Environment.getInstance();
 	
 	protected final static String MESSAGE_INVALID_DISPLAY_NAME = 
 			"This field only accepts letters, numbers, white spaces, dots and hyphens.";
@@ -79,40 +87,21 @@ public abstract class AbstractIT {
 	protected final static String MESSAGE_INVALID_URL = "This field must be a valid URL.";
 	protected final static String MESSAGE_INVALID_OFFSET_MAX = "offset and/or max are not valid";
 	protected final static String MESSAGE_STORE_NOT_FOUND = "Store %s not found";
-	protected final static String MESSAGE_INVALID_SCORE = "Score should be an integer between 0 and 5.";
-
-	@BeforeClass
-	public static void startUp() throws Exception {
-		
-		int port = environment.start();
-		
-		// End Point depends on the Tomcat port
-		endPoint = String.format("http://localhost:%d/WMarket", port);
-	}
+	protected final static String MESSAGE_INVALID_SCORE = "Score should be an integer between 1 and 5.";
 	
-	@AfterClass
-	public static void tearDown() throws Exception {
-		environment.stop();
-	}
-	
-	@Before
-	public void initEvironment() throws Exception {
-		environment.cleanDB();
-	}
-
-	@Rule
-	public WireMockRule wireMock = new WireMockRule(0);
-
 	// **********************************************************************************
-	// PROTECTED HELPERS FOR API DESCRIPTIONS
+	// PROTECTED HELPERS FOR DESCRIPTIONS. INSTANCES ARE NOT SHARED BETWEEN TESTS
 	// **********************************************************************************
 
-	protected final static Offering FIRST_OFFERING = new Offering();
-	protected final static Offering SECOND_OFFERING = new Offering();
+	protected final Offering FIRST_OFFERING = new Offering();
+	protected final Offering SECOND_OFFERING = new Offering();
 
-	static {
+	private void initOfferings() {
 		// WARN: This properties depends on the RDF files stored in "src/test/resources/__files" so if these files
 		// changes, this properties must be changed. Otherwise, tests will fail.
+		
+		// defaultUSDLPath only contains the first offering
+		// secondaryUSDLPath contains both the first offering and the second one 
 		
 		PriceComponent priceComponentOff1 = new PriceComponent();
 		priceComponentOff1.setTitle("Single payment");
@@ -182,7 +171,6 @@ public abstract class AbstractIT {
 		
 		Set<Category> categoriesOff2 = new HashSet<Category>();
 		categoriesOff2.add(wirecloudCategory);
-
 		
 		FIRST_OFFERING.setUri("http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit"
 				+ "#Xo9ZQS2Qa3yX8fDfm");
@@ -213,10 +201,26 @@ public abstract class AbstractIT {
 		SECOND_OFFERING.setServices(servicesOff2);
 		SECOND_OFFERING.setCategories(categoriesOff2);
 	}
-
-	protected String serverUrl;
-	protected String defaultUSDLPath;
-	protected String secondaryUSDLPath;
+	
+	@BeforeClass
+	public static void startUp() throws Exception {
+		
+		int port = environment.start();
+		
+		// End Point depends on the Tomcat port
+		endPoint = String.format("http://localhost:%d/WMarket", port);
+	}
+	
+	@Before
+	public void initEvironment() throws Exception {
+		environment.cleanDB();
+		initOfferings();
+	}
+	
+	@AfterClass
+	public static void tearDown() throws Exception {
+		environment.stop();
+	}
 
 	protected void startMockServer() {
 		stubFor(get(urlMatching("/default[0-9]*.rdf"))
@@ -344,81 +348,91 @@ public abstract class AbstractIT {
 		return createOrUpdateStore(userName, password, name, displayName, url, comment, imageBase64);
 	}
 	
-	private Response createRating(String path, String userName, String password, int score, String comment) {
+	private Response createReview(String path, String userName, String password, int score, String comment) {
 		
-		Rating rating = new Rating();
-		rating.setScore(score);
-		rating.setComment(comment);
+		Review review = new Review();
+		review.setScore(score);
+		review.setComment(comment);
 		
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + path).request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password))
-				.post(Entity.entity(rating, MediaType.APPLICATION_JSON));
+				.post(Entity.entity(review, MediaType.APPLICATION_JSON));
 		
 		return response;
 
 	}
 	
-	protected Response createStoreRating(String userName, String password, String storeName,
+	protected Response createStoreReview(String userName, String password, String storeName,
 			int score, String comment) {
-		return createRating("/api/v2/store/" + storeName + "/rating", userName, password, score, comment);
+		return createReview("/api/v2/store/" + storeName + "/review", userName, password, score, comment);
 	}
 	
-	protected Response createOfferingRating(String userName, String password, String storeName,
+	protected Response createOfferingReview(String userName, String password, String storeName,
 			String descriptionName, String offeringName, int score, String comment) {
-		return createRating("/api/v2/store/" + storeName + "/description/" + descriptionName + "/offering/" + 
-			offeringName + "/rating", userName, password, score, comment);
+		return createReview("/api/v2/store/" + storeName + "/description/" + descriptionName + "/offering/" + 
+			offeringName + "/review", userName, password, score, comment);
 	}
 	
-	protected Response updateStoreRating(String userName, String password, String storeName,
-			int ratingId, int score, String comment) {
-		return createRating("/api/v2/store/" + storeName + "/rating/" + ratingId, userName, password, score, comment);
+	protected Response updateStoreReview(String userName, String password, String storeName,
+			int reviewId, int score, String comment) {
+		return createReview("/api/v2/store/" + storeName + "/review/" + reviewId, userName, password, score, comment);
 	}
 	
-	protected Response updateOfferingRating(String userName, String password, String storeName,
-			String descriptionName, String offeringName, int ratingId, int score, String comment) {
-		return createRating("/api/v2/store/" + storeName + "/description/" + descriptionName + "/offering/" + 
-			offeringName + "/rating/" + ratingId, userName, password, score, comment);
+	protected Response updateOfferingReview(String userName, String password, String storeName,
+			String descriptionName, String offeringName, int reviewId, int score, String comment) {
+		return createReview("/api/v2/store/" + storeName + "/description/" + descriptionName + "/offering/" + 
+			offeringName + "/review/" + reviewId, userName, password, score, comment);
 	}
 	
-	protected Response getStoreRating(String userName, String password, String name, int ratingId) {
+	protected Response getStoreReview(String userName, String password, String name, int reviewId) {
 		Client client = ClientBuilder.newClient();
-		return client.target(endPoint + "/api/v2/store/" + name + "/rating/" + ratingId)
+		return client.target(endPoint + "/api/v2/store/" + name + "/review/" + reviewId)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password))
 				.get();
 	}
 	
-	protected Response getOfferingRating(String userName, String password, String storeName, String descriptionName, 
-			String offeringName, int ratingId) {
+	protected Response getOfferingReview(String userName, String password, String storeName, String descriptionName, 
+			String offeringName, int reviewId) {
 		
 		Client client = ClientBuilder.newClient();
 		return client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + descriptionName + 
-				"/offering/" + offeringName + "/rating/" + ratingId)
+				"/offering/" + offeringName + "/review/" + reviewId)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password))
 				.get();
 	}
 	
-	protected Response getStoreRatings(String userName, String password, String name) {
+	protected Response getStoreReviews(String userName, String password, String name, int offset, int max,
+			String orderBy, boolean desc) {
 		Client client = ClientBuilder.newClient();
-		return client.target(endPoint + "/api/v2/store/" + name + "/rating/")
+		return client.target(endPoint + "/api/v2/store/" + name + "/review/")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.queryParam("orderBy", orderBy)
+				.queryParam("desc", desc)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password))
 				.get();
 	}
 	
-	protected Response getOfferingRatings(String userName, String password, String storeName, String descriptionName,
-			String offeringName) {
+	protected Response getOfferingReviews(String userName, String password, String storeName, String descriptionName,
+			String offeringName, int offset, int max, String orderBy, boolean desc) {
+		
 		Client client = ClientBuilder.newClient();
 		return client.target(endPoint + "/api/v2/store/" + storeName + "/description/" + descriptionName + 
-				"/offering/" + offeringName + "/rating/")
+				"/offering/" + offeringName + "/review/")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.queryParam("orderBy", orderBy)
+				.queryParam("desc", desc)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(userName, password))
 				.get();
 	}
 	
-	protected Response deleteRating(String path, String userName, String password) {
+	protected Response deleteReview(String path, String userName, String password) {
 		
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + path)
@@ -430,34 +444,33 @@ public abstract class AbstractIT {
 		
 	}
 	
-	protected Response deleteStoreRating(String userName, String password, String storeName, int ratingId) {
-		return deleteRating("/api/v2/store/" + storeName + "/rating/" + ratingId, userName, password);
+	protected Response deleteStoreReview(String userName, String password, String storeName, int reviewId) {
+		return deleteReview("/api/v2/store/" + storeName + "/review/" + reviewId, userName, password);
 	}
 	
-	protected Response deleteOfferingRating(String userName, String password, String storeName,
-			String descriptionName, String offeringName, int ratingId) {
+	protected Response deleteOfferingReview(String userName, String password, String storeName,
+			String descriptionName, String offeringName, int reviewId) {
 		
-		return deleteRating("/api/v2/store/" + storeName + "/description/" + descriptionName + "/offering/" + 
-			offeringName + "/rating/" + ratingId, userName, password);
+		return deleteReview("/api/v2/store/" + storeName + "/description/" + descriptionName + "/offering/" + 
+			offeringName + "/review/" + reviewId, userName, password);
 	}
 	
-	protected void checkStoreRating(String userName, String password, String storeName, int ratingId, 
+	protected void checkStoreReview(String userName, String password, String storeName, int reviewId, 
 			int expectedScore, String expectedComment) {
 		
-		Rating rating = getStoreRating(userName, password, storeName, ratingId).readEntity(Rating.class);
-		assertThat(rating.getScore()).isEqualTo(expectedScore);
-		assertThat(rating.getComment()).isEqualTo(expectedComment);
+		Review review = getStoreReview(userName, password, storeName, reviewId).readEntity(Review.class);
+		assertThat(review.getScore()).isEqualTo(expectedScore);
+		assertThat(review.getComment()).isEqualTo(expectedComment);
 	}
 	
 	
-	protected void checkOfferingRating(String userName, String password, String storeName, String descriptionName,
-			String offeringName, int ratingId, int expectedScore, String expectedComment) {
+	protected void checkOfferingReview(String userName, String password, String storeName, String descriptionName,
+			String offeringName, int reviewId, int expectedScore, String expectedComment) {
 		
-		Rating rating = getOfferingRating(userName, password, storeName, descriptionName, offeringName, ratingId)
-				.readEntity(Rating.class);
-		assertThat(rating.getScore()).isEqualTo(expectedScore);
-		assertThat(rating.getComment()).isEqualTo(expectedComment);
+		Review review = getOfferingReview(userName, password, storeName, descriptionName, offeringName, reviewId)
+				.readEntity(Review.class);
+		assertThat(review.getScore()).isEqualTo(expectedScore);
+		assertThat(review.getComment()).isEqualTo(expectedComment);
 	}
-
 
 }

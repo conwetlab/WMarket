@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.dao.impl;
+package org.fiware.apps.marketplace.dao;
 
 /*
  * #%L
@@ -34,45 +34,21 @@ package org.fiware.apps.marketplace.dao.impl;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.dao.ClassificationDao;
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
+import org.fiware.apps.marketplace.exceptions.CategoryNotFoundException;
 import org.fiware.apps.marketplace.model.Category;
-import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
-import org.springframework.stereotype.Repository;
+import org.fiware.apps.marketplace.model.Offering;
 
-@Repository("classificationDao")
-public class ClassificationDaoImpl extends MarketplaceHibernateDao implements ClassificationDao {
-	
-	private final static String TABLE_NAME = Category.class.getName();
-	
-	@Override
-	public boolean isNameAvailable(String name) {
-		
-		boolean exists = false;
-		
-		try {
-			findByName(name);
-		} catch (ClassificationNotFoundException e) {
-			exists = true;
-		}
-		
-		return exists;
-	}
-	
 
-	@Override
-	public Category findByName(String name) throws ClassificationNotFoundException {
-		
-		List<?> list = getSession()
-				.createQuery(String.format("from %s where name=:name", TABLE_NAME))
-				.setParameter("name", name)
-				.list();
-		
-		if (list.isEmpty()) {
-			throw new ClassificationNotFoundException("Classification " + name + " not found");
-		} else {
-			return (Category) list.get(0);
-		}
-	}
+public interface CategoryDao {
+	
+	public boolean isNameAvailable(String name);
+	public Category findByName(String categoryName) throws CategoryNotFoundException;
+	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, int offset, int max, 
+			String orderBy, boolean desc) throws CategoryNotFoundException;
+	
+	public List<Category> getCategoriesPage(int offset, int max);
+	public List<Category> getAllCategories();
+	
+	
 
 }

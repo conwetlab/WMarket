@@ -1,10 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="t" uri="http://tiles.apache.org/tags-tiles" %>
 
 <c:set var="isOwner" value="${ store.creator.userName == user.userName }"></c:set>
 
 <div class="panel panel-default">
   <div class="panel-heading text-center">
-    <span class="image-thumbnail">
+    <span class="image-thumbnail image-thumbnail-lg">
       <c:choose>
       <c:when test="${ not empty store.imagePath }">
 
@@ -19,15 +20,21 @@
 
       </c:otherwise>
       </c:choose>
+      <span class="rating-value rating-value-lg rating-overall">
+        <span class="fa fa-star">${ store.averageScore }</span>
+      </span>
     </span>
     <span class="panel-title store-displayname">${ store.displayName }</span>
+    <t:insertTemplate template="/WEB-INF/views/core/rating.jsp">
+      <t:putAttribute name="selector" value=".modal-rating" />
+    </t:insertTemplate>
   </div>
   <div class="panel-body">
     <div class="tab-group tab-group-vertical">
 
       <div
         <c:choose>
-          <c:when test="${ currentStoreView == 'offeringList' }">
+          <c:when test="${ viewName == 'offeringList' }">
             class="tab active"
           </c:when>
           <c:otherwise>
@@ -43,7 +50,7 @@
 
       <div
         <c:choose>
-          <c:when test="${ currentStoreView == 'descriptionList' }">
+          <c:when test="${ viewName == 'descriptionList' }">
             class="tab active"
           </c:when>
           <c:otherwise>
@@ -59,7 +66,7 @@
 
       <div
         <c:choose>
-          <c:when test="${ currentStoreView == 'detail' }">
+          <c:when test="${ viewName == 'detail' }">
             class="tab active"
           </c:when>
           <c:otherwise>
@@ -69,14 +76,14 @@
       >
         <a href="${ pageContext.request.contextPath }/stores/${ store.name }/about">
           <span class="fa fa-newspaper-o"></span>
-          <span class="hidden-sm">About</span>
+          <span class="hidden-sm">About & reviews</span>
         </a>
       </div><!-- /.tab -->
 
       <c:if test="${ isOwner }">
 
         <div class="tab tab-danger">
-          <a href="javascript:deleteStore()">
+          <a class="delete-store">
             <span class="fa fa-trash"></span>
             <span class="hidden-sm">Delete store</span>
           </a>
@@ -88,16 +95,30 @@
   </div>
 </div>
 
+<t:insertTemplate template="/WEB-INF/views/core/rating-modal.jsp">
+  <t:putAttribute name="title" value="Review for this store" />
+</t:insertTemplate>
+
 <c:if test="${ isOwner }">
 
-  <form name="store_delete_form" method="post" action="${ pageContext.request.contextPath }/stores/${ store.name }/delete">
-    <!-- <p class="text-justify">This operation cannot be undone. All the offerings and descriptions that are contained in this store will be deleted too. Please be certain.</p> -->
-  </form>
-
-  <script>
-    var deleteStore = function deleteStore() {
-      document.store_delete_form.submit();
-    };
-  </script>
+<div class="modal modal-delete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-heading">
+        <button type="button" class="btn-close" data-cancel>&times;</button>
+        <span class="modal-title">Delete store</span>
+      </div>
+      <div class="modal-body">
+        <form name="store_delete_form" method="post" action="${ pageContext.request.contextPath }/stores/${ store.name }/delete">
+          <p class="text-justify">This operation cannot be undone. All the offerings and descriptions that are contained in this store will be deleted too. Please be certain.</p>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-delete" data-submit>Delete</button>
+        <button type="button" class="btn btn-default" data-cancel>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </c:if>

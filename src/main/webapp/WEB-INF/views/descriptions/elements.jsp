@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <c:forEach var="description" items="${ descriptions }">
 <div class="panel panel-default">
@@ -30,12 +31,13 @@
       </dl>
       <dl>
         <dt>Upload date</dt>
-        <dd><fmt:formatDate pattern="yyyy-MM-dd" value="${ description.registrationDate }" /></dd>
+        <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ description.createdAt }" /></dd>
       </dl>
     </div>
     <p class="text-bold">Offerings</p>
     <div class="description-offerings">
-    <c:forEach var="offering" items="${ description.offerings }">
+      <div class="row-sliding" style="width: ${ fn:length(description.offerings) * 210 }px;">
+      <c:forEach var="offering" items="${ description.offerings }">
 
       <a class="offering-item" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">
         <span class="offering-heading">
@@ -49,7 +51,8 @@
         </span>
       </a>
 
-    </c:forEach>
+      </c:forEach>
+      </div>
     </div>
   </div>
 </div>

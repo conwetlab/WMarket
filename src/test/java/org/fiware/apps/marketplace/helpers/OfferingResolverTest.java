@@ -9,9 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.fiware.apps.marketplace.bo.ClassificationBo;
+import org.fiware.apps.marketplace.bo.CategoryBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
-import org.fiware.apps.marketplace.exceptions.ClassificationNotFoundException;
+import org.fiware.apps.marketplace.exceptions.CategoryNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
 import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Description;
@@ -34,7 +34,7 @@ public class OfferingResolverTest {
 
 	private Model model;
 
-	@Mock private ClassificationBo classificatioBoMock;
+	@Mock private CategoryBo classificatioBoMock;
 	@Mock private ServiceBo serviceBoMock;
 	@Mock private RdfHelper rdfHelperMock;
 	@InjectMocks private OfferingResolver offeringResolver;
@@ -229,7 +229,7 @@ public class OfferingResolverTest {
 					c.setName(classification);
 					when(classificatioBoMock.findByName(classification)).thenReturn(c);
 				} else {
-					doThrow(new ClassificationNotFoundException("not found")).when(classificatioBoMock)
+					doThrow(new CategoryNotFoundException("not found")).when(classificatioBoMock)
 							.findByName(classification);
 				}
 			}

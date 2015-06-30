@@ -49,6 +49,8 @@ import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -117,7 +119,9 @@ public class OfferingService {
 			@PathParam("storeName") String storeName, 
 			@PathParam("descriptionName") String descriptionName,
 			@DefaultValue("0") @QueryParam("offset") int offset,
-			@DefaultValue("100") @QueryParam("max") int max) {
+			@DefaultValue("100") @QueryParam("max") int max,
+			@DefaultValue("id") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("false") @QueryParam("desc") boolean desc) {
 		
 		Response response;
 		
@@ -128,12 +132,14 @@ public class OfferingService {
 		} else {
 			try {
 				Offerings offerings = new Offerings(offeringBo.getDescriptionOfferingsPage(
-						storeName, descriptionName, offset, max));
+						storeName, descriptionName, offset, max, orderBy, desc));
 				response = Response.status(Status.OK).entity(offerings).build();
 			} catch (NotAuthorizedException ex) {
 				response = ERROR_UTILS.notAuthorizedResponse(ex);
 			} catch (DescriptionNotFoundException | StoreNotFoundException ex) {
 				response = ERROR_UTILS.entityNotFoundResponse(ex);
+			} catch (QueryException | SQLGrammarException ex) {
+				response = ERROR_UTILS.badRequestResponse("Offerings cannot be ordered by " + orderBy + ".");
 			} catch (Exception ex) {
 				response = ERROR_UTILS.internalServerError(ex);
 			}

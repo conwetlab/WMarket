@@ -5,6 +5,9 @@
   <div class="panel-heading text-center">
     <span class="image-thumbnail image-thumbnail-lg">
       <img class="image image-rounded image-bordered" src="${ offering.imageUrl }">
+      <span class="rating-value rating-value-lg rating-overall">
+        <span class="fa fa-star">${ offering.averageScore }</span>
+      </span>
     </span>
     <div class="panel-title">${ offering.displayName }</div>
     <div class="panel-subtitle offering-categories">
@@ -12,6 +15,9 @@
       <span class="label label-success">${ category.displayName }</span>
     </c:forEach>
     </div>
+    <t:insertTemplate template="/WEB-INF/views/core/rating.jsp">
+      <t:putAttribute name="selector" value=".modal-rating" />
+    </t:insertTemplate>
   </div>
   <div class="panel-body">
     <div class="tab-group tab-group-vertical">
@@ -85,3 +91,7 @@
     </div>
   </div>
 </div>
+
+<t:insertTemplate template="/WEB-INF/views/core/rating-modal.jsp">
+  <t:putAttribute name="title" value="Review for this offering" />
+</t:insertTemplate>

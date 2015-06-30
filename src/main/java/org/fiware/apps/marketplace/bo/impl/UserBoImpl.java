@@ -97,7 +97,7 @@ public class UserBoImpl implements UserBo {
 		user.setPassword(encoder.encode(user.getPassword()));
 		
 		// Set the registration date
-		user.setRegistrationDate(new Date());
+		user.setCreatedAt(new Date());
 		
 		// Save the new user
 		userDao.save(user);

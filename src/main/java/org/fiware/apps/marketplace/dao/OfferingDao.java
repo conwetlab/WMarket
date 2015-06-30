@@ -37,6 +37,7 @@ import java.util.List;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
 
 public interface OfferingDao {
@@ -52,16 +53,20 @@ public interface OfferingDao {
 			OfferingNotFoundException;
 	
 	// Get offerings
-	public List<Offering> getAllOfferings();
-	public List<Offering> getOfferingsPage(int offset, int max);
-	public List<Offering> getAllStoreOfferings(String storeName) 
+	// public List<Offering> getAllOfferings();
+	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc);
+	// public List<Offering> getAllStoreOfferings(String storeName) 
+	//	 	throws StoreNotFoundException;
+	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max, String orderBy, boolean desc) 
 			throws StoreNotFoundException;
-	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max) 
-			throws StoreNotFoundException;
-	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName)
-			throws StoreNotFoundException, DescriptionNotFoundException;
+	// public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName)
+	// 		throws StoreNotFoundException, DescriptionNotFoundException;
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
-			int offset, int max) throws StoreNotFoundException, DescriptionNotFoundException;
+			int offset, int max, String orderBy, boolean desc) throws StoreNotFoundException, 
+			DescriptionNotFoundException;
+	
+	public List<Offering> getUserBookmarkedOfferings(String userName, int offset, int max, String orderBy, 
+			boolean desc) throws UserNotFoundException;
 	
 
 }

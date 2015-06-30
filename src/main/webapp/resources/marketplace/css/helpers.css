@@ -80,3 +80,7 @@
     }
 
 }
+
+.date {
+    text-transform: capitalize;
+}

@@ -26,7 +26,7 @@
         var thumbnailElement = $('<span class="image-thumbnail image-thumbnail-sm">');
 
         if (this.imagePath) {
-            thumbnailElement.append($('<img class="image image-circle">').attr('src', [
+            thumbnailElement.append($('<img class="image image-rounded">').attr('src', [
                 app.contextPath, this.imagePath
             ].join('/')));
         } else {
@@ -34,6 +34,11 @@
                 $('<span class="image image-circle image-default-darker">').append(
                         $('<span class="fa fa-building fa-inverse">')));
         }
+
+        var ratingValue = $('<span>')
+            .addClass('rating-value rating-value-sm rating-value-lighter')
+            .append($('<span>').addClass('fa fa-star'), " " + this.averageScore.toFixed(1));
+        thumbnailElement.append(ratingValue);
 
         var storeHeading = $('<div class="store-heading">').append(
             thumbnailElement);

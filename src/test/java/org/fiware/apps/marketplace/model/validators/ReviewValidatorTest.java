@@ -35,17 +35,17 @@ package org.fiware.apps.marketplace.model.validators;
 import static org.assertj.core.api.Assertions.*;
 
 import org.fiware.apps.marketplace.exceptions.ValidationException;
-import org.fiware.apps.marketplace.model.Rating;
+import org.fiware.apps.marketplace.model.Review;
 import org.junit.Test;
 
-public class RatingValidatorTest {
+public class ReviewValidatorTest {
 
-	private RatingValidator ratingValidator = new RatingValidator();
+	private ReviewValidator reviewValidator = new ReviewValidator();
 	
 	private void testScore(int score) throws ValidationException {
-		Rating rating = new Rating();
-		rating.setScore(score);		
-		ratingValidator.validateRating(rating);
+		Review review = new Review();
+		review.setScore(score);		
+		reviewValidator.validateReview(review);
 	}
 
 	private void testInvalidScore(int score) {
@@ -53,13 +53,13 @@ public class RatingValidatorTest {
 			testScore(score);
 		} catch (ValidationException ex) {
 			assertThat(ex.getFieldName()).isEqualTo("score");
-			assertThat(ex.getMessage()).isEqualTo("Score should be an integer between 0 and 5.");
+			assertThat(ex.getMessage()).isEqualTo("Score should be an integer between 1 and 5.");
 		}
 	}
 
 	@Test
 	public void testInvalidScore1() {
-		testInvalidScore(-1);
+		testInvalidScore(0);
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class RatingValidatorTest {
 
 	@Test
 	public void testValidScore1() throws ValidationException {
-		testScore(0);
+		testScore(1);
 	}
 
 	@Test
@@ -84,17 +84,25 @@ public class RatingValidatorTest {
 
 	@Test
 	public void testInvalidComment() throws ValidationException {
+		
+		int maxChars = 1000;
+		
 		try {
-			Rating rating = new Rating();
-			rating.setScore(0);
-			rating.setComment("12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
-					"12345678901234567890123456789012345678901234567890123456789012345678901234567890" + 
-					"12345678901234567890123456789012345678901234567890123456789012345678901234567890");
+			
+			String comment = "";
+			for (int i = 0; i < maxChars + 1; i++) {
+				comment += "a";
+			}
+			
+			Review review = new Review();
+			review.setScore(1);
+			review.setComment(comment);
 
-			ratingValidator.validateRating(rating);
+			reviewValidator.validateReview(review);
+			failBecauseExceptionWasNotThrown(ValidationException.class);
 		} catch (ValidationException ex) {
 			assertThat(ex.getFieldName()).isEqualTo("comment");
-			assertThat(ex.getMessage()).isEqualTo("This field must not exceed 200 chars.");
+			assertThat(ex.getMessage()).isEqualTo("This field must not exceed " + maxChars + " chars.");
 		}
 	}
 }

@@ -22,8 +22,11 @@
     </c:if>
 
     <t:insertAttribute name="panels" ignore="true" />
-    <t:insertAttribute name="content" />
-    <t:insertAttribute name="footer" />
+
+    <div class="row">
+      <t:insertAttribute name="content" />
+      <t:insertAttribute name="footer" />
+    </div>
 
     <t:insertAttribute name="scripts" />
     <t:insertAttribute name="scripts.extras" ignore="true" />

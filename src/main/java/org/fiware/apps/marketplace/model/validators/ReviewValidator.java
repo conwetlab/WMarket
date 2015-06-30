@@ -1,4 +1,8 @@
-package org.fiware.apps.marketplace.exceptions;
+package org.fiware.apps.marketplace.model.validators;
+
+import org.fiware.apps.marketplace.exceptions.ValidationException;
+import org.fiware.apps.marketplace.model.Review;
+import org.springframework.stereotype.Service;
 
 /*
  * #%L
@@ -32,12 +36,31 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
-public class ClassificationNotFoundException extends Exception {
+@Service("reviewValidator")
+public class ReviewValidator {
 	
-	private static final long serialVersionUID = 1L;
+	private static BasicValidator basicValidator = BasicValidator.getInstance();
 	
-	public ClassificationNotFoundException(String message) {
-		super(message);
+	private static final int MAX_COMMENT_LENGTH = 1000;
+	
+	/**
+	 * Public method to validate an offering review
+	 * @param review The review to be validated
+	 * @throws ValidationException If the review is not valid (score is lower than zero or higher than 5 // comment
+	 * length is higher than 1000)
+	 */
+	public void validateReview(Review review) throws ValidationException {
+		
+		int score = review.getScore();
+		
+		if (score < 1 || score > 5) {
+			throw new ValidationException("score", "Score should be an integer between 1 and 5.");
+		}
+		
+		if (review.getComment() != null) {
+			basicValidator.validateMaxLength("comment", review.getComment(), MAX_COMMENT_LENGTH);
+		}
+		
 	}
 
 }

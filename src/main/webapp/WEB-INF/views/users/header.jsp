@@ -45,7 +45,7 @@
         </a>
       </div>
       <div class="tab tab-danger">
-        <a href="javascript:deleteAccount()">
+        <a class="delete-account">
           <span class="fa fa-trash"></span>
           <span class="hidden-sm">Delete account</span>
         </a>
@@ -56,12 +56,26 @@
   </div>
 </div>
 
-<form name="account_delete_form" method="post" action="${ pageContext.request.contextPath }/account/delete">
-  <!-- <p class="text-justify">This operation cannot be undone. All your stores, descriptions and offerings will be deleted too. Please be certain.</p> -->
-</form>
+<c:if test="${ user.oauth2 eq false }">
 
-<script>
-  var deleteAccount = function deleteAccount() {
-    document.account_delete_form.submit();
-  };
-</script>
+<div class="modal modal-delete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-heading">
+        <button type="button" class="btn-close" data-cancel>&times;</button>
+        <span class="modal-title">Delete account</span>
+      </div>
+      <div class="modal-body">
+        <form name="account_delete_form" method="post" action="${ pageContext.request.contextPath }/account/delete">
+          <p class="text-justify">This operation cannot be undone. All your stores, descriptions and offerings will be deleted too. Please be certain.</p>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-delete" data-submit>Delete</button>
+        <button type="button" class="btn btn-default" data-cancel>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</c:if>

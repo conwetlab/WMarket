@@ -14,9 +14,13 @@
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/lists.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/navbars.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/panels.css">
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/modals.css">
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/ratings.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/stores.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/offerings.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/payment-plans.css">
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/services.css">
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/reviews.css">
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/components/sliders.css">
 <!-- Default App - Helpers CSS Links -->
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/marketplace/css/helpers.css">
