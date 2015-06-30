@@ -1,0 +1,118 @@
+@CHARSET "UTF-8";
+
+/**
+ * Copyright (c) 2015, CoNWeT Lab., Universidad Politécnica de Madrid
+ * Code licensed under BSD 3-Clause (https://github.com/conwetlab/WMarket/blob/master/LICENSE)
+ */
+
+/****************************************************************************************
+ * COMPONENT RATING
+ ****************************************************************************************/
+
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    text-align: center;
+    font-size: 20px;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating input + .star {
+    cursor: pointer;
+    display: inline-block;
+    margin-bottom: 0px;
+    font-family: FontAwesome;
+    font-weight: 400;
+    vertical-align: baseline;
+}
+
+.rating input + .star:before {
+    content: "\f006";
+    color: rgb(200, 200, 210);
+}
+
+.rating input:checked ~ .star:before {
+    content: "\f005";
+    color: rgb(245, 230, 170);
+}
+
+.rating:not(:checked) .star:hover:before,
+.rating:not(:checked) .star:hover ~ .star:before {
+    content: "\f005";
+    color: rgb(250, 205, 70);
+}
+
+.rating input:checked + .star:hover:before,
+.rating input:checked ~ .star:hover:before,
+.rating .star:hover ~ input:checked ~ .star:before,
+.rating input:checked ~ .star:hover ~ .star:before {
+    content: "\f005";
+    color: rgb(250, 205, 70);
+}
+
+/****************************************************************************************
+ * COMPONENT RATING VALUE
+ ****************************************************************************************/
+
+.rating-value {
+    position: absolute;
+    right: 0;
+    font-size: 18px;
+    line-height: 20px;
+    color: rgb(100, 100, 100);
+    text-shadow: 0px 1px 1px rgb(0, 0, 0);
+}
+
+.rating-value .fa-star:before {
+    color: rgb(250, 205, 70);
+    margin-right: 2px;
+}
+
+.rating-value-sm {
+    font-size: 10px;
+    line-height: 10px;
+}
+
+.rating-value-lg {
+    font-size: 24px;
+    line-height: 26px;
+}
+
+.rating-value-lighter {
+    color: rgb(255, 255, 255);
+    text-shadow: 0px 1px 3px rgb(0, 0, 0);
+}
+
+/****************************************************************************************
+ * COMPONENT RATING READ-ONLY
+ ****************************************************************************************/
+
+.rating-readonly {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+}
+
+.rating-readonly .star {
+    display: inline-block;
+    font-family: FontAwesome;
+    vertical-align: baseline;
+}
+
+.rating-readonly .star:before {
+    content: "\f005";
+    color: rgb(220, 220, 230);
+    margin-right: 2px;
+}
+
+.rating-readonly .star:first-child:before {
+    margin-right: 0;
+}
+
+.rating-readonly .star.active:before,
+.rating-readonly .star.active ~ .star:before {
+    color: rgb(250, 205, 70);
+}

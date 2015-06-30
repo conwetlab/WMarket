@@ -1,0 +1,50 @@
+@CHARSET "UTF-8";
+
+/**
+ * Copyright (c) 2015, CoNWeT Lab., Universidad Politécnica de Madrid
+ * Code licensed under BSD 3-Clause (https://github.com/conwetlab/WMarket/blob/master/LICENSE)
+ */
+
+
+.slider-showcase {
+    position: relative;
+    height: 252px;
+    margin: 0px 30px;
+    overflow: hidden;
+}
+
+.row-sliding {
+    position: relative;
+    display: block;
+    height: 100%;
+}
+
+.row-sliding:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.slider-control {
+    position: absolute;
+    top: 0;
+    width: 30px;
+    height: 100%;
+}
+
+.slider-control:first-child {
+    left: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.slider-control:last-child {
+    right: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.category-title {
+    font-size: 24px;
+    line-height: 26px;
+}

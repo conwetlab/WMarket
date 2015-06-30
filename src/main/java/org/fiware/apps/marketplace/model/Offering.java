@@ -33,14 +33,19 @@ package org.fiware.apps.marketplace.model;
  * #L%
  */
 
-import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -50,6 +55,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.fiware.apps.marketplace.utils.xmladapters.DescriptionXMLAdapter;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
@@ -57,9 +63,8 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @Table(name = "offerings", uniqueConstraints = { @UniqueConstraint(columnNames = { "described_in", "uri" }) })
 @XmlRootElement(name = "offering")
 @IgnoreMediaTypes("application/*+json")
-public class Offering {
+public class Offering extends ReviewableEntity {
 
-	private Integer id;
 	private String name;
 	private String displayName;
 	private String uri;
@@ -67,18 +72,15 @@ public class Offering {
 	private String version;
 	private Description describedIn;
 	private String imageUrl;
-
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	@XmlTransient
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
+		
+	// Price Plans & Services
+	private Set<PricePlan> pricePlans;
+	private Set<Service> services;
+	
+	// Offering categories depends on the attached services
+	private Set<Category> categories;
+	
+	private List<User> usersBookmarkedMe;
 
 	@XmlID
 	@XmlAttribute 
@@ -153,6 +155,58 @@ public class Offering {
 		this.imageUrl = imageUrl;
 	}
 
+	@XmlElement(name = "pricePlan")
+    @JsonProperty("pricePlans")
+	@OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	public Set<PricePlan> getPricePlans() {
+		return pricePlans;
+	}
+
+	public void setPricePlans(Set<PricePlan> pricePlans) {
+		this.pricePlans = pricePlans;
+	}
+	
+	@XmlElement(name = "service")
+	@JsonProperty("services")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)	// Not many services are supposed to be attached
+	@JoinTable(name = "offerings_services", 
+		      joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+		      inverseJoinColumns = {@JoinColumn(name = "service_id", referencedColumnName = "id")})
+	public Set<Service> getServices() {
+		return services;
+	}
+
+	public void setServices(Set<Service> services) {
+		this.services = services;
+	}
+	
+	@XmlElement(name = "category")
+	@JsonProperty("categories")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "offerings_categories",
+		      joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+		      inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
+	
+	@XmlTransient
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "bookmarks", 
+    		joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+    		inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
+	public List<User> getUsersBookmarkedMe() {
+		return usersBookmarkedMe;
+	}
+
+	public void setUsersBookmarkedMe(List<User> usersBookmarkedMe) {
+		this.usersBookmarkedMe = usersBookmarkedMe;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -173,14 +227,23 @@ public class Offering {
 		if (obj instanceof Offering) {
 			Offering other = (Offering) obj;
 			
-			if (id == other.id || (this.uri.equals(other.uri) && this.describedIn.equals(other.describedIn))) {
+			// Avoid null pointer exceptions...
+			if (this.uri == null || this.describedIn == null) {
+				return false;
+			}
+			
+			if (this.uri.equals(other.uri) && this.describedIn.equals(other.describedIn)) {
 				return true;
 			}
 		}
 						
 		return false;
 	}
-
-
+	
+	@Override
+	public String toString() {
+		return String.format("%s (Description: %s, Store: %s)", name, describedIn.getName(), 
+				describedIn.getStore().getName());
+	}
 
 }

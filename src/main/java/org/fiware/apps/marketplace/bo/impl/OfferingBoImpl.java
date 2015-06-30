@@ -36,15 +36,22 @@ import java.util.List;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.OfferingBo;
+import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
+import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Store;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,8 +62,10 @@ public class OfferingBoImpl implements OfferingBo {
 	
 	@Autowired private OfferingAuth offeringAuth;
 	@Autowired private OfferingDao offeringDao;
+	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
+	@Autowired private ReviewBo reviewBo;
 
 	@Override
 	@Transactional(readOnly = false)
@@ -102,7 +111,7 @@ public class OfferingBoImpl implements OfferingBo {
 			throws NotAuthorizedException, OfferingNotFoundException, 
 			StoreNotFoundException, DescriptionNotFoundException {
 		
-		Offering offering = offeringDao.findDescriptionByNameStoreAndDescription(storeName, 
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
 				descriptionName, offeringName);
 		
 		// Check rights and raise exception if user is not allowed to perform this action
@@ -113,7 +122,7 @@ public class OfferingBoImpl implements OfferingBo {
 		return offering;
 	}
 
-	@Override
+	/*@Override
 	@Transactional
 	public List<Offering> getAllOfferings() throws NotAuthorizedException {
 		// Check rights and raise exception if user is not allowed to perform this action
@@ -122,11 +131,11 @@ public class OfferingBoImpl implements OfferingBo {
 		}
 		
 		return offeringDao.getAllOfferings();
-	}
+	}*/
 
 	@Override
 	@Transactional
-	public List<Offering> getOfferingsPage(int offset, int max) 
+	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc) 
 			throws NotAuthorizedException {
 		
 		// Check rights and raise exception if user is not allowed to perform this action
@@ -134,10 +143,10 @@ public class OfferingBoImpl implements OfferingBo {
 			throw new NotAuthorizedException("list offerings");
 		}
 		
-		return offeringDao.getOfferingsPage(offset, max);
+		return offeringDao.getOfferingsPage(offset, max, orderBy, desc);
 	}
 
-	@Override
+	/*@Override
 	@Transactional
 	public List<Offering> getAllStoreOfferings(String storeName) 
 			throws StoreNotFoundException, NotAuthorizedException {
@@ -150,12 +159,12 @@ public class OfferingBoImpl implements OfferingBo {
 		}
 		
 		return offeringDao.getAllStoreOfferings(storeName);
-	}
+	}*/
 
 	@Override
 	@Transactional
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset,
-			int max) throws StoreNotFoundException, NotAuthorizedException {
+			int max, String orderBy, boolean desc) throws StoreNotFoundException, NotAuthorizedException {
 		
 		Store store = storeBo.findByName(storeName);
 		
@@ -164,10 +173,10 @@ public class OfferingBoImpl implements OfferingBo {
 			throw new NotAuthorizedException("list offerings in store " + store.getName());
 		}
 		
-		return offeringDao.getStoreOfferingsPage(storeName, offset, max);
+		return offeringDao.getStoreOfferingsPage(storeName, offset, max, orderBy, desc);
 	}
 
-	@Override
+	/*@Override
 	@Transactional
 	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
 			throws StoreNotFoundException, DescriptionNotFoundException, NotAuthorizedException {
@@ -180,13 +189,13 @@ public class OfferingBoImpl implements OfferingBo {
 		}
 		
 		return offeringDao.getAllDescriptionOfferings(storeName, descriptionName);
-	}
+	}*/
 
 	@Override
 	@Transactional
 	public List<Offering> getDescriptionOfferingsPage(String storeName, 
-			String descriptionName, int offset, int max) throws 
-			StoreNotFoundException, DescriptionNotFoundException, 
+			String descriptionName, int offset, int max, String orderBy, boolean desc)
+			throws StoreNotFoundException, DescriptionNotFoundException, 
 			NotAuthorizedException {
 		
 		Description description = descriptionBo.findByNameAndStore(storeName, descriptionName);
@@ -196,7 +205,147 @@ public class OfferingBoImpl implements OfferingBo {
 			throw new NotAuthorizedException("list offerings in description " + description.getName());
 		}
 		
-		return offeringDao.getDescriptionOfferingsPage(storeName, descriptionName, offset, max);
+		return offeringDao.getDescriptionOfferingsPage(storeName, descriptionName, offset, max, orderBy, desc);
+	}
+
+	@Override
+	@Transactional
+	public void bookmark(String storeName, String descriptionName, String offeringName) 
+			throws NotAuthorizedException,StoreNotFoundException, DescriptionNotFoundException, 
+			OfferingNotFoundException {
+		
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		
+		// Check if the user is allowed to bookmark the offering. An exception will be
+		// risen if the user is not allowed to do it.
+		if (!offeringAuth.canBookmark(offering)) {
+			throw new NotAuthorizedException("bookmark offering");
+		}
+		
+		try {
+			User user = userBo.getCurrentUser();
+			List<Offering> bookmarks = user.getBookmarks();
+			
+			// If the offering is already bookmarked, this operation will remove it
+			// from the bookmarked offerings.
+			if (bookmarks.contains(offering)) {
+				bookmarks.remove(offering);
+			} else {
+				bookmarks.add(offering);
+			}
+			
+			// The user is automatically updated since the method is marked as "Transactional"
+						
+		} catch (UserNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	@Transactional
+	public List<Offering> getAllBookmarkedOfferings() throws NotAuthorizedException {
+		return getBookmarkedOfferingsPage(0, Integer.MAX_VALUE, "id", false);
+	}
+
+	@Override
+	@Transactional
+	public List<Offering> getBookmarkedOfferingsPage(int offset, int max, String orderBy, boolean desc)
+			throws NotAuthorizedException {
+
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canListBookmarked()) {
+			throw new NotAuthorizedException("list bookmarked offerings");
+		}
+		
+		try {
+			User user = userBo.getCurrentUser();
+			return offeringDao.getUserBookmarkedOfferings(user.getUserName(), offset, max, orderBy, desc);
+		} catch (UserNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		
+	}
+
+	@Override
+	@Transactional
+	public void createReview(String storeName, String descriptionName,
+			String offeringName, Review review)
+			throws NotAuthorizedException, OfferingNotFoundException,
+			StoreNotFoundException, DescriptionNotFoundException, ValidationException {
+
+		// Exception is thrown if the offering, the store or the description is not found
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		reviewBo.createReview(offering, review);
+	}
+
+	@Override
+	@Transactional
+	public void updateReview(String storeName, String descriptionName,
+			String offeringName, int reviewId, Review review)
+			throws NotAuthorizedException, OfferingNotFoundException,
+			StoreNotFoundException, DescriptionNotFoundException,
+			ReviewNotFoundException, ValidationException {
+		
+		// Exception is thrown if the offering, the store or the description is not found
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		reviewBo.updateReview(offering, reviewId, review);
+	}
+
+	@Override
+	@Transactional
+	public List<Review> getReviews(String storeName, String descriptionName,
+			String offeringName) throws NotAuthorizedException,
+			OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException {
+		
+		// Exception is thrown if the offering, the store or the description is not found
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		return reviewBo.getReviews(offering);
+	}
+	
+	@Override
+	@Transactional
+	public List<Review> getReviewsPage(String storeName,
+			String descriptionName, String offeringName, int offset, int max,
+			String orderBy, boolean desc) throws NotAuthorizedException,
+			OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException {
+
+		// Exception is thrown if the offering, the store or the description is not found
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		return reviewBo.getReviewsPage(offering, offset, max, orderBy, desc);
+	}
+
+	@Override
+	@Transactional
+	public Review getReview(String storeName, String descriptionName,
+			String offeringName, int reviewId) throws NotAuthorizedException,
+			OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException, ReviewNotFoundException {
+
+		// Exception is thrown if the offering, the store or the description is not found
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		return reviewBo.getReview(offering, reviewId);
+	}
+
+	@Override
+	@Transactional
+	public void deleteReview(String storeName, String descriptionName,
+			String offeringName, int reviewId) throws NotAuthorizedException,
+			OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException, ReviewNotFoundException {
+		
+		// Exception is thrown if the offering, the store or the description is not found
+		Offering offering = offeringDao.findByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		reviewBo.deleteReview(offering, reviewId);
+		
 	}
 	
 }

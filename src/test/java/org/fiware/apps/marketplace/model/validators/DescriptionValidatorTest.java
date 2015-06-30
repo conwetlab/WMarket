@@ -71,10 +71,10 @@ public class DescriptionValidatorTest {
 		Description description = new Description();
 		// Name is supposed to be auto-generated based on display name...
 		description.setName("description-1");
-		description.setDisplayName("Description 1");
+		description.setDisplayName("Description 1.-");
 		description.setUrl("https://repo.lab.fi-ware.org/offerings/offering1.rdf");
 		description.setComment("This is an example comment");
-		description.setRegistrationDate(new Date());
+		description.setCreatedAt(new Date());
 		description.setStore(store);
 		description.setCreator(creator);
 		description.setLasteditor(creator);
@@ -194,9 +194,10 @@ public class DescriptionValidatorTest {
 	@Test
 	public void testDispalyNameTooLong() {
 		Description description = generateValidDescription();
-		description.setDisplayName("123456789012345678901");
+		description.setDisplayName("123456789012345678901234567890123456789012345678901234567890"
+				+ "12345678901234567890123456789012345678901");
 		
-		assertInvalidNewDescription(description, "displayName", String.format(TOO_LONG_PATTERN, 20));
+		assertInvalidNewDescription(description, "displayName", String.format(TOO_LONG_PATTERN, 100));
 	}
 	
 	@Test

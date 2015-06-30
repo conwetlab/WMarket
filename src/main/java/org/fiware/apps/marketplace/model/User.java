@@ -44,6 +44,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -67,7 +70,7 @@ public class User {
 	private String displayName;
 	private String password;
 	private String email;
-	private Date registrationDate;
+	private Date createdAt;
 	private String company;
 	private boolean oauth2 = false;		// False by default
 	// This lists are needed to allow cascade deletion
@@ -75,6 +78,8 @@ public class User {
 	private List<Store> storesModified;
 	private List<Description> descriptionsCreated;
 	private List<Description> descriptionsModified;
+	private List<Offering> bookmarks;
+	private List<Review> reviews;
 		
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -136,13 +141,13 @@ public class User {
 	}
 	
 	@XmlElement
-	@Column(name = "registration_date", nullable = false)
-	public Date getRegistrationDate() {
-		return registrationDate;
+	@Column(name = "created_at", nullable = false)
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 	
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 	@XmlElement
@@ -166,7 +171,7 @@ public class User {
 	}
 
 	@XmlTransient
-	@OneToMany(mappedBy="creator", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public List<Store> getStoresCreated() {
 		return storesCreated;
 	}
@@ -176,7 +181,7 @@ public class User {
 	}
 
 	@XmlTransient
-	@OneToMany(mappedBy="lasteditor", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "lasteditor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public List<Store> getStoresModified() {
 		return storesModified;
 	}
@@ -186,7 +191,7 @@ public class User {
 	}
 
 	@XmlTransient
-	@OneToMany(mappedBy="creator", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public List<Description> getDescriptionsCreated() {
 		return descriptionsCreated;
 	}
@@ -196,13 +201,36 @@ public class User {
 	}
 
 	@XmlTransient
-	@OneToMany(mappedBy="lasteditor", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "lasteditor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public List<Description> getDescriptionsModified() {
 		return descriptionsModified;
 	}
 
 	public void setDescriptionsModified(List<Description> descriptionsModified) {
 		this.descriptionsModified = descriptionsModified;
+	}
+
+	@XmlTransient
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "bookmarks", 
+		      joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+		      inverseJoinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")})
+	public List<Offering> getBookmarks() {
+		return bookmarks;
+	}
+
+	public void setBookmarks(List<Offering> bookmarks) {
+		this.bookmarks = bookmarks;
+	}
+		
+	@XmlTransient
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
 	}
 
 	@Override

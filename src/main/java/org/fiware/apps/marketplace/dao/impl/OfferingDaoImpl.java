@@ -37,10 +37,13 @@ import java.util.List;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.dao.StoreDao;
+import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +51,7 @@ import org.springframework.stereotype.Service;
 @Service("offeringDao")
 public class OfferingDaoImpl extends MarketplaceHibernateDao implements OfferingDao  {
 	
+	@Autowired private UserDao userDao;
 	@Autowired private StoreDao storeDao;
 	@Autowired private DescriptionDao descriptionDao;
 	
@@ -69,7 +73,7 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 	}
 
 	@Override
-	public Offering findDescriptionByNameStoreAndDescription(String storeName, 
+	public Offering findByNameStoreAndDescription(String storeName, 
 			String descriptionName, String offeringName) throws OfferingNotFoundException, 
 			StoreNotFoundException, DescriptionNotFoundException{
 		
@@ -79,14 +83,14 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 		
 		// Get the Offering
 		List<?> offerings = getSession().createQuery("from " + TABLE_NAME + " WHERE "
-				+ "describedIn.name = :descriptionName AND describedIn.store.name = :storeName "
-				+ "AND name = :offeringName")
+						+ "describedIn.name = :descriptionName AND describedIn.store.name = :storeName "
+						+ "AND name = :offeringName")
 				.setParameter("storeName", storeName)
 				.setParameter("descriptionName", descriptionName)
 				.setParameter("offeringName", offeringName)
 				.list();
 		
-		if (offerings.size() == 0) {
+		if (offerings.isEmpty()) {
 			throw new OfferingNotFoundException(String.format("Offering %s not found in "
 					+ "description %s (Store: %s)", offeringName, descriptionName, storeName));
 		} else {
@@ -94,53 +98,62 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 		}
 	}
 
-	@Override
+	/*@Override
 	public List<Offering> getAllOfferings() {
 		return getOfferingsPage(0, Integer.MAX_VALUE);
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Offering> getOfferingsPage(int offset, int max) {
-		return getSession()
-				.createCriteria(Offering.class)
+	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc) {
+		
+		String descText = desc ? "DESC" : "ASC";
+		
+		// Avoid Hibernate Null Pointer Exception
+		return getSession().createQuery("FROM " + TABLE_NAME + " ORDER BY " + orderBy + " " + descText)
 				.setFirstResult(offset)
 				.setMaxResults(max)
 				.list();
 	}
 
-	@Override
+	/*@Override
 	public List<Offering> getAllStoreOfferings(String storeName) 
 			throws StoreNotFoundException {
 		return getStoreOfferingsPage(storeName, 0, Integer.MAX_VALUE);
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset,	
-			int max) throws StoreNotFoundException {
+			int max, String orderBy, boolean desc) throws StoreNotFoundException {
+		
+		String descText = desc ? "DESC" : "ASC";
 		
 		// Throw exceptions if the Store or the Description does not exist
 		storeDao.findByName(storeName);
 		
 		// Get the offerings
-		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE describedIn.store.name = :storeName")
+		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE describedIn.store.name = :storeName" + " "
+						+ "ORDER BY " + orderBy + " " + descText)
 				.setParameter("storeName", storeName)
 				.setFirstResult(offset)
 				.setMaxResults(max)
 				.list();
 	}
 
-	@Override
+	/*@Override
 	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
 			throws StoreNotFoundException, DescriptionNotFoundException {
 		return getDescriptionOfferingsPage(storeName, descriptionName, 0, Integer.MAX_VALUE);
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName,
-			int offset, int max) throws StoreNotFoundException, DescriptionNotFoundException {
+			int offset, int max, String orderBy, boolean desc) throws StoreNotFoundException, 
+			DescriptionNotFoundException {
+		
+		String descText = desc ? "DESC" : "ASC";
 		
 		// Throw exceptions if the Store or the Description does not exist
 		storeDao.findByName(storeName);
@@ -148,12 +161,33 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 		
 		// Get the offerings
 		return getSession().createQuery("FROM " + TABLE_NAME + " "
-				+ "WHERE describedIn.name = :descriptionName AND describedIn.store.name = :storeName")
+						+ "WHERE describedIn.name = :descriptionName AND describedIn.store.name = :storeName " + " "
+						+ "ORDER BY " + orderBy + " " + descText)
 				.setParameter("descriptionName", descriptionName)
 				.setParameter("storeName", storeName)
 				.setFirstResult(offset)
 				.setMaxResults(max)
 				.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Offering> getUserBookmarkedOfferings(String userName,
+			int offset, int max, String orderBy, boolean desc)
+			throws UserNotFoundException {
+		
+		String descText = desc ? "DESC" : "ASC";
+		
+		// Throws exception if user does not exist
+		User user = userDao.findByName(userName);
+		
+		return getSession().createQuery("FROM " + TABLE_NAME + " WHERE :user IN elements(usersBookmarkedMe) "
+						+ "ORDER BY " + orderBy + " " + descText)
+				.setParameter("user", user)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
+		
 	}
 
 }

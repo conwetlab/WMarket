@@ -1,0 +1,73 @@
+@CHARSET "UTF-8";
+
+/**
+ * Copyright (c) 2015, CoNWeT Lab., Universidad Politécnica de Madrid
+ * Code licensed under BSD 3-Clause (https://github.com/conwetlab/WMarket/blob/master/LICENSE)
+ */
+
+
+.review {
+      position: relative;
+  padding: 10px;
+  border-top: 1px solid rgb(210, 220, 220);
+}
+
+.review .review-heading {
+    padding-bottom: 5px;
+}
+
+.review .review-body {
+    margin-left: 50px;
+  color: rgb(110, 110, 110);
+}
+
+.review-author {
+    display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+  padding-left: 10px;
+}
+
+.author-avatar {
+    display: table-cell;
+  vertical-align: middle;
+  width: 1%;
+}
+
+.review .author-name {
+    font-weight: 700;
+}
+
+.review .author-rating .fa-star:before {
+    color: rgb(250, 205, 70);
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.8);
+    margin-right: 2px;
+}
+
+.review .review-date {
+    margin-left: 10px;
+    text-transform: capitalize;
+}
+
+.review .recent-review {
+    color: rgba(118, 118, 118, 0.83);
+    text-transform: lowercase;
+    margin-left: 10px;
+}
+
+.pending-state {
+    position: relative;
+    display: block;
+    text-align: center;
+    padding: 10px 0px;
+    background-color: rgb(245, 245, 245);
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    box-sizing: border-box;
+    border: 1px solid rgb(220, 220, 220);
+}
+
+.pending-state .fa-spinner {
+    font-size: 24px;
+    line-height: 26px;
+}

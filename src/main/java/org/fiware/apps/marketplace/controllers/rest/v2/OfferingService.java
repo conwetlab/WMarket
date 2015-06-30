@@ -34,6 +34,7 @@ package org.fiware.apps.marketplace.controllers.rest.v2;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -48,6 +49,8 @@ import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,7 +68,7 @@ public class OfferingService {
 	
 	@GET
 	@Produces({"application/xml", "application/json"})
-	@Path("/{offeringName}")
+	@Path("{offeringName}")
 	public Response getOffering(
 			@PathParam("storeName") String storeName, 
 			@PathParam("descriptionName") String descriptionName,
@@ -79,8 +82,29 @@ public class OfferingService {
 			response = Response.status(Status.OK).entity(offering).build();
 		} catch (NotAuthorizedException ex) {
 			response = ERROR_UTILS.notAuthorizedResponse(ex);
-		} catch (OfferingNotFoundException | StoreNotFoundException | 
-				DescriptionNotFoundException ex) {
+		} catch (OfferingNotFoundException | StoreNotFoundException | DescriptionNotFoundException ex) {
+			response = ERROR_UTILS.entityNotFoundResponse(ex);
+		} catch (Exception ex) {
+			response = ERROR_UTILS.internalServerError(ex);
+		}
+		
+		return response;
+	}
+	
+	@POST
+	@Path("{offeringName}/bookmark")
+	public Response bookmark(@PathParam("storeName") String storeName, 
+			@PathParam("descriptionName") String descriptionName,
+			@PathParam("offeringName") String offeringName) {
+		
+		Response response;
+		
+		try {
+			offeringBo.bookmark(storeName, descriptionName, offeringName);
+			response = Response.status(Status.NO_CONTENT).build();
+		} catch (NotAuthorizedException ex) {
+			response = ERROR_UTILS.notAuthorizedResponse(ex);
+		} catch (OfferingNotFoundException | StoreNotFoundException | DescriptionNotFoundException ex) {
 			response = ERROR_UTILS.entityNotFoundResponse(ex);
 		} catch (Exception ex) {
 			response = ERROR_UTILS.internalServerError(ex);
@@ -91,28 +115,31 @@ public class OfferingService {
 	
 	@GET
 	@Produces({"application/xml", "application/json"})
-	@Path("/")
 	public Response listOfferingsInDescription(
 			@PathParam("storeName") String storeName, 
 			@PathParam("descriptionName") String descriptionName,
 			@DefaultValue("0") @QueryParam("offset") int offset,
-			@DefaultValue("100") @QueryParam("max") int max) {
+			@DefaultValue("100") @QueryParam("max") int max,
+			@DefaultValue("id") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("false") @QueryParam("desc") boolean desc) {
 		
 		Response response;
 		
-		if (offset < 0 || max <= 0) {
+		if (offset < 0 || max <= 0) {	
 			// Offset and Max should be checked
 			response = ERROR_UTILS.badRequestResponse(String.format(
 					"offset (%d) and/or max (%d) are not valid", offset, max));
 		} else {
-			try {			
+			try {
 				Offerings offerings = new Offerings(offeringBo.getDescriptionOfferingsPage(
-						storeName, descriptionName, offset, max));
+						storeName, descriptionName, offset, max, orderBy, desc));
 				response = Response.status(Status.OK).entity(offerings).build();
 			} catch (NotAuthorizedException ex) {
 				response = ERROR_UTILS.notAuthorizedResponse(ex);
 			} catch (DescriptionNotFoundException | StoreNotFoundException ex) {
 				response = ERROR_UTILS.entityNotFoundResponse(ex);
+			} catch (QueryException | SQLGrammarException ex) {
+				response = ERROR_UTILS.badRequestResponse("Offerings cannot be ordered by " + orderBy + ".");
 			} catch (Exception ex) {
 				response = ERROR_UTILS.internalServerError(ex);
 			}

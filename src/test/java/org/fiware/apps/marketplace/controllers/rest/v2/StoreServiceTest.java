@@ -53,6 +53,7 @@ import org.fiware.apps.marketplace.model.ErrorType;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
 import org.hibernate.HibernateException;
+import org.hibernate.QueryException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -459,22 +460,27 @@ public class StoreServiceTest {
 	public void testListStoresNotAllowed() throws NotAuthorizedException {
 		// Mocks
 		Exception e = new NotAuthorizedException("list stores");
-		doThrow(e).when(storeBoMock).getStoresPage(anyInt(), anyInt());
+		doThrow(e).when(storeBoMock).getStoresPage(anyInt(), anyInt(), anyString(), anyBoolean());
 
 		// Call the method
-		Response res = storeRegistrationService.listStores(0, 100);
+		int offset = 0;
+		int max = 100;
+		String orderBy = "averageScore";
+		boolean desc = true;
+		
+		Response res = storeRegistrationService.listStores(offset, max, orderBy, desc);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, e.getMessage());
 		
 		// Verify
-		verify(storeBoMock).getStoresPage(0, 100);
+		verify(storeBoMock).getStoresPage(offset, max, orderBy, desc);
 	}
 	
 	
 	private void testListStoresInvalidParams(int offset, int max) {
 		// Call the method
-		Response res = storeRegistrationService.listStores(offset, max);
+		Response res = storeRegistrationService.listStores(offset, max, "name", true);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, OFFSET_MAX_INVALID);
@@ -505,15 +511,18 @@ public class StoreServiceTest {
 		}
 		
 		// Mocks
-		when(storeBoMock.getStoresPage(anyInt(), anyInt())).thenReturn(stores);
+		when(storeBoMock.getStoresPage(anyInt(), anyInt(), anyString(), anyBoolean())).thenReturn(stores);
 		
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = storeRegistrationService.listStores(offset, max);
+		String orderBy = "name";
+		boolean desc = false;
+		
+		Response res = storeRegistrationService.listStores(offset, max, orderBy, desc);
 		
 		// Verify
-		verify(storeBoMock).getStoresPage(offset, max);
+		verify(storeBoMock).getStoresPage(offset, max, orderBy, desc);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -525,19 +534,45 @@ public class StoreServiceTest {
 		// Mocks
 		String exceptionMsg = "exception";
 		doThrow(new RuntimeException("", new Exception(exceptionMsg))).when(storeBoMock)
-				.getStoresPage(anyInt(), anyInt());
+				.getStoresPage(anyInt(), anyInt(), anyString(), anyBoolean());
 
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = storeRegistrationService.listStores(offset, max);
+		String orderBy = "averageScore";
+		boolean desc = true;
+		
+		Response res = storeRegistrationService.listStores(offset, max, orderBy, desc);
 		
 		// Verify
-		verify(storeBoMock).getStoresPage(offset, max);
+		verify(storeBoMock).getStoresPage(offset, max, orderBy, desc);
 		
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
 	}
 	
+	@Test
+	public void testListStoreQueryException() throws NotAuthorizedException {
+		
+		// Mocks
+		doThrow(new QueryException("it does not matter")).when(storeBoMock)
+				.getStoresPage(anyInt(), anyInt(), anyString(), anyBoolean());
+
+		// Call the method
+		int offset = 0;
+		int max = 100;
+		String orderBy = "averageScore";
+		boolean desc = true;
+		
+		Response res = storeRegistrationService.listStores(offset, max, orderBy, desc);
+		
+		// Verify
+		verify(storeBoMock).getStoresPage(offset, max, orderBy, desc);
+		
+		// Check exception
+		String expectedMessage = "Stores cannot be ordered by " + orderBy + ".";
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, expectedMessage);
+		
+	}
 
 }

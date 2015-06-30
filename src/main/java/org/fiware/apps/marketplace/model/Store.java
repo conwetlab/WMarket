@@ -33,7 +33,6 @@ package org.fiware.apps.marketplace.model;
  * #L%
  */
 
-import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
 import java.util.List;
@@ -42,8 +41,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -64,14 +61,13 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @Table(name = "stores")
 @XmlRootElement(name = "store")
 @IgnoreMediaTypes("application/*+json")
-public class Store {
+public class Store extends ReviewableEntity {
 	
-	private Integer id;
 	private String url;
 	private String displayName;
 	private String name;
 	private String comment;
-	private Date registrationDate;
+	private Date createdAt;
 	private List<Description> descriptions;
 	private User lasteditor;	
 	private User creator;
@@ -79,18 +75,6 @@ public class Store {
 	// Image
 	private String imagePath;
 	private String imageBase64;
-	
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	@XmlTransient
-	public Integer getId() {
-		return id;
-	}
-	
-	public void setId(Integer  id) {
-		this.id = id;
-	}
 	
 	@XmlID
 	@XmlAttribute 
@@ -159,13 +143,13 @@ public class Store {
 	}
 	
 	@XmlElement
-	@Column(name = "registration_date")
-	public Date getRegistrationDate() {
-		return registrationDate;
+	@Column(name = "created_at")
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 	
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 	@XmlElement
@@ -211,7 +195,7 @@ public class Store {
 
 	@Override
 	public int hashCode() {
-		return name.hashCode();
+		return this.name.hashCode();
 	}
 
 	@Override
@@ -223,7 +207,12 @@ public class Store {
 		if (obj instanceof Store) {
 			Store other = (Store) obj;
 			
-			if (id == other.id || name.equals(other.name)) {
+			// Avoid null pointer exceptions...
+			if (this.name == null) {
+				return false;
+			}
+			
+			if (this.name.equals(other.name)) {
 				return true;
 			}			
 		}
@@ -231,5 +220,9 @@ public class Store {
 		return false;
 	}
 	
+	@Override
+	public String toString() {
+		return this.name;
+	}
 	
 }

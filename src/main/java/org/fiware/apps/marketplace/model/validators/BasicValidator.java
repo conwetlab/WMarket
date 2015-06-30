@@ -38,7 +38,7 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 public class BasicValidator {
 
 	private static final int DISPLAY_NAME_MIN_LENGTH = 3;
-	private static final int DISPLAY_NAME_MAX_LENGTH = 20;
+	private static final int DISPLAY_NAME_MAX_LENGTH = 100;
 	private static final int COMMENT_MIN_LENGTH = 0;
 	private static final int COMMENT_MAX_LENGTH = 200;
 	private static final String DISPLAY_NAME_FIELD = "displayName";
@@ -86,8 +86,8 @@ public class BasicValidator {
 	}
 	
 	public void validateDisplayNamePattern(String displayName) throws ValidationException {
-		this.validatePattern(DISPLAY_NAME_FIELD, displayName, "^[a-zA-Z0-9 -]+$", 
-				"This field only accepts letters, numbers, white spaces and hyphens.");
+		this.validatePattern(DISPLAY_NAME_FIELD, displayName, "^[a-zA-Z0-9. -]+$", 
+				"This field only accepts letters, numbers, white spaces, dots and hyphens.");
 	}
 
 	public void validateURL(String fieldName, String fieldValue) throws ValidationException {
@@ -104,7 +104,7 @@ public class BasicValidator {
 	}
 
 	public void validateMaxLength(String fieldName, String fieldValue, int maxLength) throws ValidationException {
-		if (fieldValue == null || fieldValue.length() >= maxLength) {
+		if (fieldValue == null || fieldValue.length() > maxLength) {
 			throw new ValidationException(fieldName, 
 					String.format("This field must not exceed %d chars.", maxLength));
 		}
@@ -145,9 +145,9 @@ public class BasicValidator {
 		this.validateDisplayNameMaxLength(displayName);
 	}
 	
-	public void validateComment(String description) throws ValidationException {
-		this.validateCommentMinLength(description);
-		this.validateCommentMaxLength(description);
+	public void validateComment(String comment) throws ValidationException {
+		this.validateCommentMinLength(comment);
+		this.validateCommentMaxLength(comment);
 	}
 	
 }

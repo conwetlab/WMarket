@@ -74,7 +74,7 @@ public class Description {
 	private String name;
 	private String displayName;
 	private String comment;
-	private Date registrationDate;
+	private Date createdAt;
 	private Store store;
 	private User lasteditor;	
 	private User creator;
@@ -178,13 +178,13 @@ public class Description {
 	}
 
 	@XmlElement
-	@Column(name = "registration_date")
-	public Date getRegistrationDate() {
-		return registrationDate;
+	@Column(name = "created_at")
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setCreatedAt(Date registrationDate) {
+		this.createdAt = registrationDate;
 	}
 
     @XmlElement(name = "offering")
@@ -224,7 +224,12 @@ public class Description {
 		if (obj instanceof Description) {
 			Description other = (Description) obj;
 			
-			if (this.id == other.id || (this.name.equals(other.name) && store.equals(other.store))) {
+			// Avoid null pointer exceptions...
+			if (this.name == null || this.store == null) {
+				return false;
+			}
+			
+			if (this.name.equals(other.name) && this.store.equals(other.store)) {
 				return true;
 			}
 		}

@@ -1,0 +1,85 @@
+@CHARSET "UTF-8";
+
+/**
+ * Copyright (c) 2015, CoNWeT Lab., Universidad Politécnica de Madrid
+ * Code licensed under BSD 3-Clause (https://github.com/conwetlab/WMarket/blob/master/LICENSE)
+ */
+
+/****************************************************************************************
+ * COMPONENT SERVICE
+ ****************************************************************************************/
+
+.service-item {
+    display: block;
+    margin: 0px 0px 10px;
+}
+
+.service-name {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+@media (min-width: 768px /* Tablets */) {
+
+    .service-name {
+        display: table-cell;
+        min-width: 150px;
+        max-width: 150px;
+        padding: 10px;
+        text-align: right;
+        vertical-align: middle;
+    }
+
+    .service-name span {
+        display: block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+}
+
+@media (min-width: 992px /* Desktops */) {
+
+    .service-name {
+        min-width: 175px;
+        max-width: 175px;
+    }
+
+    .service-name span {
+        display: inline;
+        white-space: normal;
+    }
+
+}
+
+@media (min-width: 1200px /* Large Desktops */) {
+
+    .service-name {
+        min-width: 200px;
+        max-width: 200px;
+    }
+
+    .service-name span {
+        display: inline;
+        white-space: normal;
+    }
+
+}
+
+.service-content {
+    display: block;
+    margin: 0px 0px 0px 30px;
+    padding: 10px;
+    border-left: 1px solid rgb(230, 220, 230);
+}
+
+@media (min-width: 768px /* Tablets, Desktops and Large Desktops */) {
+
+    .service-content {
+        display: table-cell;
+        margin-left: 0px;
+        width: 100%;
+    }
+
+}

@@ -61,13 +61,13 @@ public class DescriptionValidator {
 
 		// Check basic fields when a description is created
 		if (checkRequiredFields) {
-			basicValidator.validateRequired("name", description.getName());
+			//basicValidator.validateRequired("name", description.getName());
 			basicValidator.validateRequired("displayName", description.getDisplayName());
 			basicValidator.validateRequired("url", description.getUrl());
 			
 			// Check that the name is not in use
 			if (!descriptionDao.isNameAvailableInStore(description.getStore().getName(), description.getName())) {
-				throw new ValidationException("name", "This name is already in use in this Store.");
+				throw new ValidationException("displayName", "This name is already in use in this Store.");
 			}
 		}
 

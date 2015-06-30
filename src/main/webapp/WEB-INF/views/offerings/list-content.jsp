@@ -1,5 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div id="catalogue-content" class="container-fluid">
-  <div id="search-results" class="container-flex"></div>
-</div><!-- /.container-fluid -->
+<div class="container" app-view="offering-list">
+<c:choose>
+<c:when test="${ viewName == 'GroupByCategory' }">
+  <div class="row" app-group="category"></div>
+</c:when>
+<c:when test="${ viewName == 'FilterByCategory' }">
+  <div class="container-flex" app-filter="category"></div>
+</c:when>
+</c:choose>
+</div>

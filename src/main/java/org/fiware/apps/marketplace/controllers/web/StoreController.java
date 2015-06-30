@@ -34,6 +34,8 @@ package org.fiware.apps.marketplace.controllers.web;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -50,6 +52,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.controllers.web.forms.StoreForm;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
@@ -60,6 +63,7 @@ import org.fiware.apps.marketplace.model.User;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
@@ -70,6 +74,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class StoreController extends AbstractController {
 
 	private static Logger logger = LoggerFactory.getLogger(StoreController.class);
+    @Autowired private ReviewBo reviewBo;
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
@@ -121,7 +126,7 @@ public class StoreController extends AbstractController {
 			store.setDisplayName(form.getDisplayName());
 			store.setUrl(form.getUrl());
 			store.setComment(form.getComment());
-            store.setImageBase64(form.getImageData());
+			store.setImageBase64(form.getImageBase64());
 
 			getStoreBo().save(store);
 
@@ -145,10 +150,13 @@ public class StoreController extends AbstractController {
 		} catch (ValidationException e) {
 			logger.info("A form field is not valid", e);
 
-			model.addAttribute("field_displayName", form.getDisplayName());
-			model.addAttribute("field_url", form.getUrl());
-			model.addAttribute("field_comment", form.getComment());
+			Map<String, String> formInfo = new HashMap<String, String>();
 
+			formInfo.put("displayName", form.getDisplayName());
+			formInfo.put("url", form.getUrl());
+			formInfo.put("comment", form.getComment());
+
+			model.addAttribute("form_data", formInfo);
 			model.addAttribute("form_error", e);
 			view = new ModelAndView("store.create", model);
 			builder = Response.status(Status.BAD_REQUEST).entity(view);
@@ -174,7 +182,11 @@ public class StoreController extends AbstractController {
 
 			model.addAttribute("title", store.getDisplayName() + " - " + getContextName());
 			model.addAttribute("store", store);
-            model.addAttribute("currentStoreView", "detail");
+            model.addAttribute("viewName", "detail");
+
+            try {
+				model.addAttribute("review", reviewBo.getUserReview(store));
+			} catch (Exception e) {}
 
             addFlashMessage(request, model);
 
@@ -222,12 +234,12 @@ public class StoreController extends AbstractController {
             model.addAttribute("title", currentStore.getDisplayName() + " - " + getContextName());
             model.addAttribute("user", currentUser);
             model.addAttribute("store", currentStore);
-            model.addAttribute("currentStoreView", "detail");
+            model.addAttribute("viewName", "detail");
 
             store.setDisplayName(form.getDisplayName());
             store.setUrl(form.getUrl());
             store.setComment(form.getComment());
-            store.setImageBase64(form.getImageData());
+            store.setImageBase64(form.getImageBase64());
 
             getStoreBo().update(storeName, store);
 
@@ -258,10 +270,13 @@ public class StoreController extends AbstractController {
         } catch (ValidationException e) {
             logger.info("A form field is not valid", e);
 
-            model.addAttribute("field_displayName", form.getDisplayName());
-            model.addAttribute("field_url", form.getUrl());
-            model.addAttribute("field_comment", form.getComment());
+			Map<String, String> formInfo = new HashMap<String, String>();
 
+			formInfo.put("displayName", form.getDisplayName());
+			formInfo.put("url", form.getUrl());
+			formInfo.put("comment", form.getComment());
+
+			model.addAttribute("form_data", formInfo);
             model.addAttribute("form_error", e);
             view = new ModelAndView("store.detail", model);
             builder = Response.status(Status.BAD_REQUEST).entity(view);
@@ -289,8 +304,7 @@ public class StoreController extends AbstractController {
 
             setFlashMessage(request, "The store '" + displayName + "' was deleted successfully.");
 
-            URI redirectURI = UriBuilder.fromUri(uri.getBaseUri())
-                    .path("offerings").build();
+            URI redirectURI = UriBuilder.fromUri(uri.getBaseUri()).build();
             builder = Response.seeOther(redirectURI);
         } catch (NotAuthorizedException e) {
             logger.info("User unauthorized", e);
@@ -324,7 +338,11 @@ public class StoreController extends AbstractController {
 
 			model.addAttribute("title", store.getDisplayName() + " - Offerings - " + getContextName());
 			model.addAttribute("store", store);
-            model.addAttribute("currentStoreView", "offeringList");
+            model.addAttribute("viewName", "offeringList");
+
+            try {
+				model.addAttribute("review", reviewBo.getUserReview(store));
+			} catch (Exception e) {}
 
 			addFlashMessage(request, model);
 
@@ -368,8 +386,12 @@ public class StoreController extends AbstractController {
 
             model.addAttribute("title", store.getDisplayName() + " - Descriptions - " + getContextName());
             model.addAttribute("store", store);
-            model.addAttribute("currentStoreView", "descriptionList");
+            model.addAttribute("viewName", "descriptionList");
             model.addAttribute("descriptions", getDescriptionBo().filterByUserNameAndStoreName(user.getUserName(), store.getName()));
+
+            try {
+				model.addAttribute("review", reviewBo.getUserReview(store));
+			} catch (Exception e) {}
 
             view = new ModelAndView("store.description.list", model);
             builder = Response.ok();

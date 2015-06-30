@@ -54,6 +54,7 @@ import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.util.FmtUtils;
 import com.hp.hpl.jena.util.FileManager;
 
 @Service("rdfHelper")
@@ -61,7 +62,7 @@ public class RdfHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(RdfHelper.class);
 
-	// TODO resolve prefixes reasonably...
+	// TODO resolve prefixes reasonably depending on the preferences...
 	/**
 	 * Preliminary List of prefixes for queries
 	 */
@@ -153,26 +154,46 @@ public class RdfHelper {
 		}
 		return solutions;
 	}
-
+	
 	/**
-	 * Returns the literal that is found via the given query,
-	 * @param model 
+	 * Returns the literals that are found via the given query
+	 * @param model
 	 * @param query
 	 * @param queriedVar
-	 * @return The literal or null
+	 * @return
 	 */
-	public String queryLiteral(Model model, String query, String queriedVar) {
+	public List<String> queryLiterals(Model model, String query, String queriedVar) {
+		List<String> literals = new ArrayList<>();
 		List<QuerySolution> solutions = this.query(model, query);
 
 		if (solutions.size() > 0) {
 			Literal literal = solutions.get(0).getLiteral(queriedVar);
 
 			if (literal != null) {
-				return literal.getLexicalForm();
+				literals.add(literal.getLexicalForm());
 			}
 		}
 
-		return null;
+		return literals;
+	}
+
+	/**
+	 * Returns the literal that is found via the given query
+	 * @param model 
+	 * @param query
+	 * @param queriedVar
+	 * @return The literal or null
+	 */
+	public String queryLiteral(Model model, String query, String queriedVar) {
+		
+		List<String> literals = queryLiterals(model, query, queriedVar);
+		
+		if (literals.isEmpty()) {
+			return null;
+		} else {
+			return literals.get(0);
+		}
+		
 	}
 
 	/**
@@ -186,11 +207,11 @@ public class RdfHelper {
 	public List<String> queryUris(Model model, String query, String queriedVar) {
 
 		List<String> uris = new ArrayList<String>();
+		
 		for (QuerySolution solution : this.query(model, query)) {
 			Resource res = solution.getResource(queriedVar);
-
 			if (res != null) {
-				uris.add(res.getURI());
+				uris.add(FmtUtils.stringForNode(res.asNode()));
 			}
 		}
 
@@ -206,16 +227,15 @@ public class RdfHelper {
 	 * @return Found URI or null
 	 */
 	public String queryUri(Model model, String query, String queriedVar) {
-		List<QuerySolution> solutions = this.query(model, query);
-		if (solutions.size() > 0) {
-
-			Resource resource = solutions.get(0).getResource(queriedVar);
-			if (resource != null) {
-				return resource.getURI();
-			}
+		
+		List<String> uris = queryUris(model, query, queriedVar);
+		String uri = null;
+		
+		if (uris.size() > 0) {
+			uri = uris.get(0);
 		}
-
-		return null;
+		
+		return uri;
 	}
 
 	/**
@@ -228,9 +248,8 @@ public class RdfHelper {
 	 * @return URI or null
 	 */
 	public String getObjectUri(Model model, String subject, String predicate) {
-		String query = QUERY_PREFIXES + "SELECT ?x WHERE { <" + subject + "> "
-				+ predicate + " ?x . } ";
-		logger.info(query);
+		String query = QUERY_PREFIXES + "SELECT ?x WHERE { " + subject + " " + predicate + " ?x . } ";
+		logger.info("Executing JENA query {}", query.replace(QUERY_PREFIXES, ""));
 		return queryUri(model, query, "x");
 	}
 
@@ -244,25 +263,37 @@ public class RdfHelper {
 	 * @return URI or null
 	 */
 	public List<String> getObjectUris(Model model, String subject, String predicate) {
-		String query = QUERY_PREFIXES + "SELECT ?x WHERE { <" + subject + "> "
-				+ predicate + " ?x . } ";
-		System.out.println(query.replace(QUERY_PREFIXES, ""));
+		String query = QUERY_PREFIXES + "SELECT ?x WHERE { " + subject + " " + predicate + " ?x . } ";
+		logger.info("Executing JENA query {}", query.replace(QUERY_PREFIXES, ""));
 		return queryUris(model, query, "x");
 	}
 
 	/**
 	 * Returns the literal of the object of the corresponding triple of null if the
 	 * literal cannot be found
-	 * 
 	 * @param model
 	 * @param subject
 	 * @param predicate
 	 * @return The literal or null
 	 */
 	public String getLiteral(Model model, String subject, String predicate) {
-		String query = QUERY_PREFIXES + "SELECT ?x WHERE { <" + subject + "> "
-				+ predicate + " ?x . } ";
+		String query = QUERY_PREFIXES + "SELECT ?x WHERE { " + subject + " " + predicate + " ?x . } ";
+		logger.info("Executing JENA query {}", query.replace(QUERY_PREFIXES, ""));
 		return queryLiteral(model, query, "x");
+	}
+	
+	/**
+	 * Returns the literals of the blank nodes attached to the corresponding triples
+	 * @param model USDL
+	 * @param subject Triple subject
+	 * @param predicate Triple predicate
+	 * @return The literals of the blank nodes attached to the corresponding triples
+	 */
+	public List<String> getBlankNodesLabels(Model model, String subject, String predicate) {
+		String query = QUERY_PREFIXES + "SELECT ?y WHERE { " + subject + " " + predicate + 
+				" ?x . ?x rdfs:label ?y . } ";
+		logger.info("Executing JENA query {}", query.replace(QUERY_PREFIXES, ""));
+		return queryLiterals(model, query, "y");
 	}
 
 }

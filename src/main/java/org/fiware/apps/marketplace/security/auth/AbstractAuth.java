@@ -39,8 +39,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractAuth<T> {
 	
-	@Autowired
-	private UserBo userBo;
+	@Autowired private UserBo userBo;
+	
+	protected UserBo getUserBo() {
+		return userBo;
+	}
 	
 	/**
 	 * Method to return the User who is owner of the entity

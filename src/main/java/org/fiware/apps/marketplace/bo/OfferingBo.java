@@ -38,8 +38,11 @@ import java.util.List;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.Review;
 
 public interface OfferingBo {
 	
@@ -56,15 +59,44 @@ public interface OfferingBo {
 			DescriptionNotFoundException;
 	
 	// Get all or a sublist based on some criteria
-	public List<Offering> getAllOfferings() throws NotAuthorizedException;
-	public List<Offering> getOfferingsPage(int offset, int max) throws NotAuthorizedException;
-	public List<Offering> getAllStoreOfferings(String storeName) 
+	// public List<Offering> getAllOfferings() throws NotAuthorizedException;
+	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc) 
+			throws NotAuthorizedException;
+	// public List<Offering> getAllStoreOfferings(String storeName) 
+	// 		throws StoreNotFoundException, NotAuthorizedException;
+	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max, String orderBy, boolean desc) 
 			throws StoreNotFoundException, NotAuthorizedException;
-	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max) 
-			throws StoreNotFoundException, NotAuthorizedException;
-	public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
-			throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException;
+	// public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
+	// 		throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException;
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
-			int offset, int max) throws NotAuthorizedException, StoreNotFoundException, 
+			int offset, int max, String orderBy, boolean desc) throws NotAuthorizedException, StoreNotFoundException, 
 			DescriptionNotFoundException;	
+	
+	// Bookmarking
+	public void bookmark(String storeName, String descriptionName, String offeringName) 
+			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException;
+	public List<Offering> getAllBookmarkedOfferings() throws NotAuthorizedException;
+	public List<Offering> getBookmarkedOfferingsPage(int offset, int max, String orderBy, boolean desc) 
+			throws NotAuthorizedException;
+	
+	// Review
+	public void createReview(String storeName, String descriptionName, String offeringName, Review review) 
+			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException, ValidationException;
+	public void updateReview(String storeName, String descriptionName, String offeringName, int reviewId, 
+			Review review) throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException, ReviewNotFoundException, ValidationException;	
+	public List<Review> getReviews(String storeName, String descriptionName, String offeringName) throws 
+			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException;
+	public List<Review> getReviewsPage(String storeName, String descriptionName, String offeringName, 
+			int offset, int max, String orderBy, boolean desc) throws NotAuthorizedException, 
+			OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException;
+	public Review getReview(String storeName, String descriptionName, String offeringName, int reviewId) throws 
+			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException,
+			ReviewNotFoundException;
+	public void deleteReview(String storeName, String descriptionName, String offeringName, int reviewId) 
+			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
+			DescriptionNotFoundException, ReviewNotFoundException;	
+
 }

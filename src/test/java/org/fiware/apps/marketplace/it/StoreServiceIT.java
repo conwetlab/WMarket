@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -43,8 +44,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fiware.apps.marketplace.model.ErrorType;
+import org.fiware.apps.marketplace.model.Review;
+import org.fiware.apps.marketplace.model.Reviews;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
+import org.junit.Before;
 import org.junit.Test;
 
 public class StoreServiceIT extends AbstractIT {
@@ -71,8 +75,8 @@ public class StoreServiceIT extends AbstractIT {
 			+ "nDrmZpjl0+A5/Rv8tccxtVnE6nRZ4bPnN6gbGy3Ne6Tgawr1Cs4HIO+CS5MQ4R+95Dz3kjXxC+xtTH6FhEtBrxMMKsKOjQw4ODm"
 			+ "w3m5ubghvXOIFlyzeAnpOcjtslZV7lAf6nkw9QAmpnXEI7D8yTj769aPhoAsvOyH/72/IH8JNvDJtE0dkAAAAASUVORK5CYII=";
 	
-	
-	public void specificSetUp() {
+	@Before
+	public void setUp() {
 		createUser(USER_NAME, EMAIL, PASSWORD);
 	}
 	
@@ -161,8 +165,9 @@ public class StoreServiceIT extends AbstractIT {
 	
 	@Test
 	public void testCreationDisplayNameTooLong() {
-		testCreationInvalidField("abcdefghijklmnopqrstuvwxyz", "https://store.lab.fiware.org", "", "displayName", 
-				String.format(MESSAGE_TOO_LONG, 20));
+		testCreationInvalidField("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+				+ "abcdefghijklmnopqrstuvw", "https://store.lab.fiware.org", "", "displayName", 
+				String.format(MESSAGE_TOO_LONG, 100));
 	}
 	
 	@Test
@@ -288,8 +293,9 @@ public class StoreServiceIT extends AbstractIT {
 	
 	@Test
 	public void testUpdateDisplayNameTooLong() {
-		testUpdateInvalidField("abcdefghijklmnopqrstuvwxyz", "https://store.lab.fiware.org", "", "displayName", 
-				String.format(MESSAGE_TOO_LONG, 20));
+		testUpdateInvalidField("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+				+ "abcdefghijklmnopqrstuvw", "https://store.lab.fiware.org", "", "displayName", 
+				String.format(MESSAGE_TOO_LONG, 100));
 	}
 	
 	@Test
@@ -482,7 +488,10 @@ public class StoreServiceIT extends AbstractIT {
 		
 		// Get all stores
 		Client client = ClientBuilder.newClient();
-		Response response = client.target(endPoint + "/api/v2/store/").request(MediaType.APPLICATION_JSON)
+		Response response = client.target(endPoint + "/api/v2/store/")
+				.queryParam("orderBy", "name")	// Order by name
+				.queryParam("desc", false)
+				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD)).get();
 		
 		// Check the response
@@ -514,6 +523,8 @@ public class StoreServiceIT extends AbstractIT {
 		Response response = client.target(endPoint + "/api/v2/store/")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
+				.queryParam("orderBy", "name")	// Order by name
+				.queryParam("desc", false)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
@@ -524,7 +535,7 @@ public class StoreServiceIT extends AbstractIT {
 		Stores stores = response.readEntity(Stores.class);
 		assertThat(stores.getStores().size()).isEqualTo(expectedElements);
 		
-		// Users are supposed to be returned in order
+		// Stores are supposed to be returned in order
 		for (int i = offset; i < offset + expectedElements; i++) {
 			assertThat(stores.getStores().get(i - offset).getDisplayName())
 					.isEqualTo(String.format(displayNamePattern, i));
@@ -541,26 +552,351 @@ public class StoreServiceIT extends AbstractIT {
 		testListSomeStores(5, 7);
 	}
 	
-	private void testListStoresInvalidParams(int offset, int max) {
+	private void testListStoresInvalidParams(int offset, int max, String orderBy, String expectedMessage) {
 		Client client = ClientBuilder.newClient();
 		Response response = client.target(endPoint + "/api/v2/store/")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
+				.queryParam("orderBy", orderBy)
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
 		
-		checkAPIError(response, 400, null, MESSAGE_INVALID_OFFSET_MAX, ErrorType.BAD_REQUEST);
+		checkAPIError(response, 400, null, expectedMessage, ErrorType.BAD_REQUEST);
 
 	}
 	
 	@Test
 	public void testListStoresInvalidOffset() {
-		testListStoresInvalidParams(-1, 2);
+		testListStoresInvalidParams(-1, 2, "id", MESSAGE_INVALID_OFFSET_MAX);
 	}
 	
 	@Test
 	public void testListStoresInvalidMax() {
-		testListStoresInvalidParams(1, 0);
+		testListStoresInvalidParams(1, 0, "id", MESSAGE_INVALID_OFFSET_MAX);
+	}
+	
+	@Test
+	public void testListStoresInvalidOrderBy() {
+		String orderBy = "namea";
+		testListStoresInvalidParams(1, 1, orderBy, "Stores cannot be ordered by " + orderBy + ".");
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// REVIEWS ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private int createStoreAndReview(String storeName, String storeUrl, int score, String comment) {
+		
+		// Create the store and review
+		createStore(USER_NAME, PASSWORD, storeName, storeUrl);
+		Response res = createStoreReview(USER_NAME, PASSWORD, storeName, score, comment);
+		assertThat(res.getStatus()).isEqualTo(201);
+		
+		// Get store and its average score
+		Store reviewdStore = getStore(USER_NAME, PASSWORD, storeName).readEntity(Store.class);
+		assertThat(reviewdStore.getAverageScore()).isEqualTo(score);
+		
+		String[] urlParts = res.getLocation().getPath().split("/");
+		int reviewId = Integer.parseInt(urlParts[urlParts.length - 1]); 
+		assertThat(res.getLocation().getPath()).endsWith("/api/v2/store/" + storeName + "/review/" + reviewId);
+		
+		return reviewId;
+	}
+	
+	@Test
+	public void testReviewStore() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String comment = "Basic comment";
+		
+		int reviewId = createStoreAndReview(storeName, storeUrl, score, comment);
+		checkStoreReview(USER_NAME, PASSWORD, storeName, reviewId, score, comment);
+	}
+	
+	@Test
+	public void testUserCannotReviewOneStoreTwice() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String comment = "Basic comment";
+		
+		createStoreAndReview(storeName, storeUrl, score, comment);
+
+		// Create another review for the same store with the same user
+		Response res = createStoreReview(USER_NAME, PASSWORD, storeName, score, comment);
+		checkAPIError(res, 403, null, "You are not authorized to review Store. An entity can only be reviewed once", 
+				ErrorType.FORBIDDEN);
+	}
+	
+	@Test
+	public void testReviewStoreInvalid() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 7;
+		String comment = "Basic comment";
+		
+		createStore(USER_NAME, PASSWORD, storeName, storeUrl);
+		Response res = createStoreReview(USER_NAME, PASSWORD, storeName, score, comment);
+		checkAPIError(res, 400, "score", MESSAGE_INVALID_SCORE, ErrorType.VALIDATION_ERROR);		
+		
+	}
+	
+	@Test
+	public void testUpdateReview() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String comment = "Basic comment";
+
+		int reviewId = createStoreAndReview(storeName, storeUrl, score, comment);
+		
+		// Update review
+		int newScore = 3;
+		String newComment = "This is a new comment";
+		Response updateRes = updateStoreReview(USER_NAME, PASSWORD, storeName, 
+				reviewId, newScore, newComment);
+		assertThat(updateRes.getStatus()).isEqualTo(200);
+		
+		// Check updated review
+		checkStoreReview(USER_NAME, PASSWORD, storeName, reviewId, newScore, newComment);
+	}
+	
+	@Test
+	public void testDeleteReview() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String comment = "Basic comment";
+		
+		int reviewId = createStoreAndReview(storeName, storeUrl, score, comment);
+		Response deleteResponse = deleteStoreReview(USER_NAME, PASSWORD, storeName, reviewId);
+		assertThat(deleteResponse.getStatus()).isEqualTo(204);
+		
+		// Get review should return 404
+		Response getResponse = getStoreReview(USER_NAME, PASSWORD, storeName, reviewId);
+		assertThat(getResponse.getStatus()).isEqualTo(404);
+		
+		// Average score should be zero when the last review is deleted
+		Store reviewStore = getStore(USER_NAME, PASSWORD, storeName).readEntity(Store.class);
+		assertThat(reviewStore.getAverageScore()).isEqualTo(0);
+		
+	}
+	
+	private String getCommentFromBase(String baseComment, int score) {
+		return baseComment + " " + score;
+	}
+	
+	private double createNReviews(String storeName, String baseComment, int nReviews, int initialScore) {
+		
+		double totalScore = 0;
+		String alphabet = "abcdefghijklmonpqrstuvwxyz";
+		
+		for (int score = initialScore; score < nReviews + initialScore; score++) {
+			
+			// Create user for review
+			char userSuffix = alphabet.charAt(score % alphabet.length());
+			String userName = "userforrating" + userSuffix;
+			String email = "rating" + userSuffix + "@example.com";
+			Response createUserRes = createUser(userName, email, PASSWORD);
+			assertThat(createUserRes.getStatus()).isEqualTo(201);
+			
+			// Review the offering with the new user (one user can only review one store once)
+			String comment = getCommentFromBase(baseComment, score);
+			Response res = createStoreReview(userName, PASSWORD, storeName, score, comment);
+			assertThat(res.getStatus()).isEqualTo(201);
+			
+			totalScore += score;
+		}
+
+		return totalScore;
+	}
+	
+	@Test
+	public void testCreateNReviews() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		String baseComment = "Basic comment";
+		
+		// Create store
+		createStore(USER_NAME, PASSWORD, storeName, storeUrl);
+		
+		// Create reviews
+		int reviewsNumber = 4;
+		int initialScore = 1;
+		double totalScore = createNReviews(storeName, baseComment, reviewsNumber, initialScore);
+		
+		// Get average score
+		double average = totalScore / ((double) reviewsNumber);
+		Store reviewedStore = getStore(USER_NAME, PASSWORD, storeName).readEntity(Store.class);
+		assertThat(reviewedStore.getAverageScore()).isEqualTo(average);
+		
+		// Get reviews list and check values
+		Reviews reviews = getStoreReviews(USER_NAME, PASSWORD, storeName, 0, 100, "id", false)
+				.readEntity(Reviews.class);
+		List<Review> reviewsList = reviews.getReviews();
+		assertThat(reviewsList).hasSize((int) reviewsNumber);
+		
+		for (int i = 0; i < reviewsList.size(); i++) {
+			Review review = reviewsList.get(i);
+			
+			int score = i + initialScore;
+			// Comment is based on the score
+			assertThat(review.getComment()).isEqualTo(getCommentFromBase(baseComment, score));
+			assertThat(review.getScore()).isEqualTo(score);
+			
+		}
+		
+		// Get two reviews: ordered by score DESC, offset is 1
+		int max = 2;
+		int secondBestScore = initialScore + reviewsNumber - 2;
+		reviews = getStoreReviews(USER_NAME, PASSWORD, storeName, 1, 2, "score", true)
+				.readEntity(Reviews.class);
+		reviewsList = reviews.getReviews();
+		assertThat(reviewsList).hasSize(max);
+		
+		for (int i = 0; i < reviewsList.size(); i++) {
+			Review review = reviewsList.get(i);
+			
+			int score = secondBestScore - i;
+			// Comment is based on the score
+			assertThat(review.getComment()).isEqualTo(getCommentFromBase(baseComment, score));
+			assertThat(review.getScore()).isEqualTo(score);
+			
+		}
+
+	}
+	
+	@Test
+	public void testUpdateReviewComplex() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String baseComment = "Basic comment";
+		
+		int reviewId = createStoreAndReview(storeName, storeUrl, score, baseComment);
+
+		// Create additional reviews
+		int reviewsNumber = 2;
+		double totalScore = createNReviews(storeName, baseComment, reviewsNumber, 1);
+		
+		// Update initial review
+		int newScore = 3;
+		String newComment = "This is a new comment";
+		Response updateRes = updateStoreReview(USER_NAME, PASSWORD, storeName, 
+				reviewId, newScore, newComment);
+		assertThat(updateRes.getStatus()).isEqualTo(200);
+		
+		// Check that the review has been properly updated
+		checkStoreReview(USER_NAME, PASSWORD, storeName, reviewId, newScore, newComment);
+		
+		// Get average score
+		double average = (totalScore + newScore) / ((double) (reviewsNumber + 1));
+		Store reviewdStore = getStore(USER_NAME, PASSWORD, storeName).readEntity(Store.class);
+		assertThat(reviewdStore.getAverageScore()).isEqualTo(average);
+		
+	}
+	
+	@Test
+	public void testDeleteReviewComplex() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int score = 5;
+		String baseComment = "Basic comment";
+		
+		int reviewId = createStoreAndReview(storeName, storeUrl, score, baseComment);
+
+		// Create additional reviews
+		int reviewsNumber = 2;
+		double totalScore = createNReviews(storeName, baseComment, reviewsNumber, 1);
+		
+		// Delete initial review
+		Response deleteRes = deleteStoreReview(USER_NAME, PASSWORD, storeName, reviewId);
+		assertThat(deleteRes.getStatus()).isEqualTo(204);
+		
+		// Get average score
+		double average = totalScore / reviewsNumber;
+		Store reviewdStore = getStore(USER_NAME, PASSWORD, storeName).readEntity(Store.class);
+		assertThat(reviewdStore.getAverageScore()).isEqualTo(average);
+		
+	}
+	
+	/**
+	 * There was a bug that makes /api/v2/store/ to return several times the same store in the 
+	 * same request when the store has been reviewed more than once. This test checks that this
+	 * bug is fixed.
+	 */
+	@Test
+	public void testGetAllStoresWhenOneStoresHasBeenReviewedSomeTimes() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		String baseComment = "Basic comment";
+		
+		// Create store
+		createStore(USER_NAME, PASSWORD, storeName, storeUrl);
+		
+		// Create reviews
+		int reviewsNumber = 4;
+		int start = 1;
+		createNReviews(storeName, baseComment, reviewsNumber, start);
+		
+		// Get all stores
+		Client client = ClientBuilder.newClient();
+		Response getAllStoresRes = client.target(endPoint + "/api/v2/store/")
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		assertThat(getAllStoresRes.getStatus()).isEqualTo(200);
+		
+		// Only one store should be returned
+		Stores stores = getAllStoresRes.readEntity(Stores.class);
+		assertThat(stores.getStores()).hasSize(1);
+	}
+	
+	@Test
+	public void testGetStoresOrderedByScore() {
+		
+		// storesNames.length must be 4 at the most
+		String[] storeNames = new String[]{"AStore", "BStore", "CStore", "DStore"};
+		int nStores = storeNames.length;
+		
+		for (int i = 0; i < storeNames.length; i++) {
+			String storeUrl = "http://store" + i + ".com";
+			
+			// Ensure that name order is opposite to score order
+			// AStore -> 1, BStore -> 2,...
+			createStoreAndReview(storeNames[i], storeUrl, i + 1, "");
+		}
+		
+		// Get some stores
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/store/")
+				.queryParam("orderBy", "averageScore")	// Order by average score
+				.queryParam("desc", true)				// Descending
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		// Check the response
+		assertThat(response.getStatus()).isEqualTo(200);
+		Stores stores = response.readEntity(Stores.class);
+		assertThat(stores.getStores().size()).isEqualTo(nStores);
+		
+		// Users are supposed to be returned in order
+		for (int i = 0; i < stores.getStores().size(); i++) {
+			Store store = stores.getStores().get(i);
+			assertThat(store.getDisplayName()).isEqualTo(storeNames[nStores - i - 1]);
+		}
 	}
 }

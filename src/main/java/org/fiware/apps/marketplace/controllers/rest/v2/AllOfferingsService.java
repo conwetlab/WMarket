@@ -46,6 +46,8 @@ import org.fiware.apps.marketplace.bo.OfferingBo;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Offerings;
+import org.hibernate.QueryException;
+import org.hibernate.exception.SQLGrammarException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -64,7 +66,11 @@ public class AllOfferingsService {
 	@Produces({"application/xml", "application/json"})
 	@Path("/")	
 	public Response listOfferings(@DefaultValue("0") @QueryParam("offset") int offset,
-			@DefaultValue("100") @QueryParam("max") int max) {
+			@DefaultValue("100") @QueryParam("max") int max,
+			@DefaultValue("false") @QueryParam("bookmarked") boolean bookmarked,
+			@DefaultValue("id") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("false") @QueryParam("desc") boolean desc) {
+		
 		Response response;
 
 		if (offset < 0 || max <= 0) {
@@ -73,12 +79,21 @@ public class AllOfferingsService {
 					//String.format("offset (%d) and/or max (%d) are not valid", offset, max));
 		} else {
 			try {
-				List<Offering> descriptionsPage = offeringBo.getOfferingsPage(offset, max);
-				Offerings returnedOfferings = new Offerings();
-				returnedOfferings.setOfferings(descriptionsPage);
-				response = Response.status(Status.OK).entity(returnedOfferings).build();
+				
+				List<Offering> offeringsPage;
+				
+				// If bookmaked == True, we should only retrieved the bookmaked offerings...
+				if (bookmarked) {
+					offeringsPage = offeringBo.getBookmarkedOfferingsPage(offset, max, orderBy, desc);
+				} else {
+					offeringsPage = offeringBo.getOfferingsPage(offset, max, orderBy, desc);
+				}
+				
+				response = Response.status(Status.OK).entity(new Offerings(offeringsPage)).build();
 			} catch (NotAuthorizedException ex) {
 				response = ERROR_UTILS.notAuthorizedResponse(ex);
+			} catch (QueryException | SQLGrammarException ex) {
+				response = ERROR_UTILS.badRequestResponse("Offerings cannot be ordered by " + orderBy + ".");
 			} catch (Exception ex) {
 				response = ERROR_UTILS.internalServerError(ex);
 			}
