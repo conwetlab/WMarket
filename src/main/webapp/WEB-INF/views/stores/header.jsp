@@ -48,21 +48,23 @@
         </a>
       </div><!-- /.tab -->
 
+      <c:if test="${ user.provider }">
       <div
-        <c:choose>
-          <c:when test="${ viewName == 'descriptionList' }">
-            class="tab active"
-          </c:when>
-          <c:otherwise>
-            class="tab"
-          </c:otherwise>
-        </c:choose>
-      >
-        <a href="${ pageContext.request.contextPath }/stores/${ store.name }/descriptions">
-          <span class="fa fa-archive"></span>
-          <span class="hidden-sm">My descriptions</span>
-        </a>
-      </div><!-- /.tab -->
+          <c:choose>
+            <c:when test="${ viewName == 'descriptionList' }">
+              class="tab active"
+            </c:when>
+            <c:otherwise>
+              class="tab"
+            </c:otherwise>
+          </c:choose>
+        >
+          <a href="${ pageContext.request.contextPath }/stores/${ store.name }/descriptions">
+            <span class="fa fa-archive"></span>
+            <span class="hidden-sm">My descriptions</span>
+          </a>
+        </div><!-- /.tab -->
+      </c:if>
 
       <div
         <c:choose>

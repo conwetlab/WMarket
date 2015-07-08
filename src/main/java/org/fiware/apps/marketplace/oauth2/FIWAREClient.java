@@ -33,6 +33,7 @@ package org.fiware.apps.marketplace.oauth2;
  */
 
 import java.util.Date;
+import java.util.Iterator;
 
 import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
@@ -49,6 +50,7 @@ import org.scribe.model.SignatureType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
@@ -108,7 +110,20 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 			// FIXME: By default, we are adding the default Role...
 			profile.addRole("ROLE_USER");
-
+			
+			// Is the user a provider?
+			ArrayNode roles = (ArrayNode) JsonHelper.get(json, "roles");
+			Iterator<JsonNode> iterator = roles.iterator();
+			boolean provider = false;
+			
+			while (iterator.hasNext() && !provider) {
+				JsonNode role = iterator.next();
+				
+				if (role.get("name").asText().toLowerCase().equals("provider")) {
+					provider = true;
+				}
+			}
+			
 			// User information should be stored in the local users table
 			User user;
 			String username = (String) profile.getUsername();
@@ -130,6 +145,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 			user.setPassword("");	// Password cannot be NULL
 			user.setDisplayName(displayName);
 			user.setOauth2(true);
+			user.setProvider(provider);
 
 			// Save the new user
 			userDao.save(user);
