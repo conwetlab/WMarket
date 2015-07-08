@@ -209,9 +209,22 @@ public class SeleniumIT extends AbstractIT {
 		// Fill the form fields
 		fillField(formElement, "username", username);
 		fillField(formElement, "password", password);
-
+		
 		// Submit
 		submitForm(formElement);
+		
+		String currentURL = driver.getCurrentUrl();
+		
+		// Set user as provider
+		clickOnSettingPanelItem("Settings");
+		try {
+			driver.findElement(By.cssSelector("form > button.btn.btn-success")).click();
+		} catch (Exception e) {
+			// Nothing to do... The user is already a provider...
+		}
+	    
+	    // Back to the previous URL
+	    driver.get(currentURL);
 	}
 
 	private void loginUserExpectError(String username, String password) {

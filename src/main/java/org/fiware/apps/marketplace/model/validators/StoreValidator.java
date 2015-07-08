@@ -129,10 +129,10 @@ public class StoreValidator {
 	 * @throws ValidationException It the updated store is not valid
 	 */
 	public void validateUpdatedStore(Store oldStore, Store updatedStore) throws ValidationException {
-		boolean checkExistingDisplayName = !oldStore.getDisplayName().toLowerCase()
-				.equals(updatedStore.getDisplayName().toLowerCase());
-		boolean checkExistingURL = !oldStore.getUrl().toLowerCase()
-				.equals(updatedStore.getUrl().toLowerCase());
+		boolean checkExistingDisplayName = updatedStore.getDisplayName() == null ? false :
+				!oldStore.getDisplayName().toLowerCase().equals(updatedStore.getDisplayName().toLowerCase());
+		boolean checkExistingURL = updatedStore.getUrl() == null ? false : 
+				!oldStore.getUrl().toLowerCase().equals(updatedStore.getUrl().toLowerCase());
 		
 		this.validateStore(updatedStore, false, checkExistingDisplayName, checkExistingURL);
 	}
