@@ -64,14 +64,16 @@ public class FIWAREClientTest {
 		assertThat(client.requiresStateParameter()).isFalse();
 	}
 
-	private void testExtractUserProfile(boolean userExist) {
+	private void testExtractUserProfile(boolean userExist, boolean provider) {
 		try {
 			// This JSON simulates a response from the IdM
 			String userName = "user";
 			String displayName = "User Name";
 			String email = "user@fiware.org";
+			String roles = provider ? "[{\"name\": \"provider\"}]" : "[]";
 			String json = "{\"id\":1,\"actorId\":2487,\"id\":\"" + userName + "\","
-					+ "\"displayName\":\"" + displayName + "\",\"email\":\"" + email + "\"}";
+					+ "\"displayName\":\"" + displayName + "\",\"email\":\"" + email + "\","
+					+ " \"roles\": " + roles + "}";
 
 			// Mock
 			if (userExist) {
@@ -108,13 +110,23 @@ public class FIWAREClientTest {
 	}
 
 	@Test
-	public void testExtractUserProfileUserExists() {
-		testExtractUserProfile(true);
+	public void testExtractUserProfileUserExistsProvider() {
+		testExtractUserProfile(true, true);
 	}
 	
 	@Test
-	public void testExtractUserProfileUserDoesNotExist() {
-		testExtractUserProfile(false);
+	public void testExtractUserProfileUserDoesNotExistProvider() {
+		testExtractUserProfile(false, true);
+	}
+	
+	@Test
+	public void testExtractUserProfileUserExistsConsumer() {
+		testExtractUserProfile(true, false);
+	}
+	
+	@Test
+	public void testExtractUserProfileUserDoesNotExistConsumer() {
+		testExtractUserProfile(false, false);
 	}
 	
 	@Test

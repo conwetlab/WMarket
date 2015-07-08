@@ -216,11 +216,13 @@ public class SeleniumIT extends AbstractIT {
 		String currentURL = driver.getCurrentUrl();
 		
 		// Set user as provider
-		clickOnSettingPanelItem("Settings");
 		try {
+			clickOnSettingPanelItem("Settings");
 			driver.findElement(By.cssSelector("form > button.btn.btn-success")).click();
 		} catch (Exception e) {
-			// Nothing to do... The user is already a provider...
+			// Nothing to do... This exceptions can happen in two different cases:
+			// 1) The user is already a provider
+			// 2) The credentials are not valid
 		}
 	    
 	    // Back to the previous URL
