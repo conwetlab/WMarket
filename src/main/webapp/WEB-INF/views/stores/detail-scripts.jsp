@@ -40,4 +40,4 @@
   </c:choose>
 </c:otherwise>
 </c:choose>
-<script src="${ pageContext.request.contextPath }/resources/marketplace/js/plugins/ratings.js"></script>
+<script src="${ pageContext.request.contextPath }/resources/marketplace/js/plugins/reviews.js"></script>

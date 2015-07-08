@@ -4,9 +4,7 @@
 <div class="panel panel-default-darker">
   <div class="panel-heading text-center">
     <span class="image-thumbnail">
-      <span class="image image-circle image-primary-ligther">
-        <span class="fa fa-user fa-inverse"></span>
-      </span>
+      <img class="image image-circle image-primary-ligther" src="${ user.imageUrl }" />
     </span>
     <span class="panel-title">${ user.displayName }</span>
   </div>

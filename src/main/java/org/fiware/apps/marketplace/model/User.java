@@ -35,6 +35,9 @@ package org.fiware.apps.marketplace.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +52,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
@@ -70,6 +74,7 @@ public class User {
 	private String displayName;
 	private String password;
 	private String email;
+	private String imageUrl;
 	private Date createdAt;
 	private String company;
 	private boolean oauth2 = false;		// False by default
@@ -123,8 +128,36 @@ public class User {
 		return email;
 	}
 	
+	
+	/**
+	 * Convert an array of bytes to a Hex String
+	 * @param buf the bytes to convert
+	 * @return the Hex String of the bytes
+	 */
+	private static String toHexString(byte[] buf) {
+		BigInteger bi = new BigInteger(1, buf);
+		return String.format("%0" + (buf.length << 1) + "X", bi);
+	}
+	
 	public void setEmail(String email) {
 		this.email = email;
+		
+		// Some methods set email to null in order not to return it. In these cases,
+		// we don't need to generate a new imageUrl
+		if (email != null) {
+			
+			// Based on: https://github.com/finnkuusisto/Gravatar/blob/master/src/Gravatar.java
+			
+			this.imageUrl = null;
+			byte[] buf = email.trim().toLowerCase().getBytes();
+			
+			try {
+				String hash = toHexString(MessageDigest.getInstance("MD5").digest(buf)).toLowerCase();
+				this.imageUrl = "https://secure.gravatar.com/avatar/" + hash + "?d=identicon";
+			} catch (NoSuchAlgorithmException e) {
+				//all java implementations must implement MD5
+			}
+		}
 	}
 	
 	@XmlElement
@@ -159,6 +192,12 @@ public class User {
 	
 	public void setCompany(String company) {
 		this.company = company;
+	}
+	
+	@XmlElement
+	@Transient
+	public String getImageUrl() {
+		return this.imageUrl;
 	}
 	
 	@XmlTransient
