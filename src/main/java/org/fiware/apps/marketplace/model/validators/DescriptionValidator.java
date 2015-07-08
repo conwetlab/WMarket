@@ -110,8 +110,10 @@ public class DescriptionValidator {
 	 * @throws ValidationException It the updated description is not valid
 	 */
 	public void validateUpdatedDescription(Description oldDescription, Description updatedDescription) throws ValidationException {
-		boolean checkExistingDisplayName = !oldDescription.getDisplayName().equals(updatedDescription.getDisplayName());
-		boolean checkExistingURL = !oldDescription.getUrl().equals(updatedDescription.getUrl());
+		boolean checkExistingDisplayName = !oldDescription.getDisplayName().toLowerCase()
+				.equals(updatedDescription.getDisplayName().toLowerCase());
+		boolean checkExistingURL = !oldDescription.getUrl().toLowerCase()
+				.equals(updatedDescription.getUrl().toLowerCase());
 				
 		this.validateDescription(updatedDescription, false, checkExistingDisplayName, checkExistingURL);
 	}
