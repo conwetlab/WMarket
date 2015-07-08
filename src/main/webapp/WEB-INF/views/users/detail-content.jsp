@@ -29,7 +29,7 @@
             </dl>
             <dl>
               <dt>OAuth2</dt>
-              <dd>Logged in through 'Identity Manager'</dd>
+              <dd>Logged in through <strong>Identity Manager</strong></dd>
             </dl>
           </div>
         </div>
