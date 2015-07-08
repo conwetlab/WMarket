@@ -78,7 +78,7 @@
       >
         <a href="${ pageContext.request.contextPath }/stores/${ store.name }/about">
           <span class="fa fa-newspaper-o"></span>
-          <span class="hidden-sm">About & reviews</span>
+          <span class="hidden-sm">About &amp; reviews</span>
         </a>
       </div><!-- /.tab -->
 

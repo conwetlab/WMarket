@@ -52,6 +52,45 @@
           </form>
         </div>
       </div>
+      
+      <c:if test="${ user.oauth2 eq false }">
+        <div class="panel panel-default">
+          <div class="panel-heading text-center">
+            <span class="panel-title">Provider</span>
+          </div>
+          <div class="panel-body">
+          	<div class="col-md-8 col-md-offset-1">
+              <p class="text-justify">When you are a provider, you can create Stores and upload your own Offerings. Otherwise, you can only view offerings published by others.</p>
+              <div class="form-options">
+              <form method="post" action="${ pageContext.request.contextPath }/account/provider">
+                <button type="submit" 
+                  <c:choose>
+                    <c:when test="${ user.provider }">
+                      class="btn btn-danger"
+                    </c:when>
+                    <c:otherwise>
+                      class="btn btn-success"
+                    </c:otherwise>
+                  </c:choose>
+                >
+                  <span class="btn-text btn-text-not-truncated">                  
+                  	<c:choose>
+                  	  <c:when test="${ user.provider }">
+                  		I don't want to be a provider anymore
+                  	  </c:when>
+                  	  <c:otherwise>
+                  	  	I want to to become a provider
+                  	  </c:otherwise>
+                  	</c:choose>
+                  </span>
+                </button>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </c:if>
+      
 
       </c:otherwise>
     </c:choose>

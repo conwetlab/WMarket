@@ -49,6 +49,8 @@ public interface UserBo {
 			ValidationException, UserNotFoundException;
 	public void delete(String userName) throws NotAuthorizedException,
 			UserNotFoundException;
+	public void changeProviderStatus(String userName) throws NotAuthorizedException, 
+			UserNotFoundException;
 	
 	// Find by name or mail
 	public User findByName(String userName) throws NotAuthorizedException, 

@@ -232,4 +232,20 @@ public class UserBoImpl implements UserBo {
 		User user = getCurrentUser();
 		return encoder.matches(password, user.getPassword());
 	}
+
+	@Override
+	@Transactional
+	public void changeProviderStatus(String userName) throws NotAuthorizedException,
+			UserNotFoundException {
+		
+		User userToBeUpdated = userDao.findByName(userName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canUpdate(userToBeUpdated)) {
+			throw new NotAuthorizedException("update user");
+		}
+		
+		// Method is transactional so the instance is automatically updated
+		userToBeUpdated.setProvider(!userToBeUpdated.isProvider());
+	}
 }

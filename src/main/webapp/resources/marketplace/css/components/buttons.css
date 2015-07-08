@@ -46,6 +46,10 @@ button {
     vertical-align: bottom;
 }
 
+.btn-text-not-truncated {
+	max-width: initial;
+}
+
 .btn-file > .btn-icon + .btn-text {
     margin-left: 5px;
 }

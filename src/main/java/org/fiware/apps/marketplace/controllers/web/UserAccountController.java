@@ -297,5 +297,43 @@ public class UserAccountController extends AbstractController {
 
         return builder.build();
     }
+    
+    @POST
+    @Path("provider")
+    public Response changeProviderStatus(
+            @Context UriInfo uri,
+            @Context HttpServletRequest request) {
+        
+    	ModelAndView view;
+        ResponseBuilder builder;
+        User currentUser;
+        URI redirectURI;
+
+        try {
+            currentUser = getCurrentUser();
+            boolean wasProvider = currentUser.isProvider();
+            getUserBo().changeProviderStatus(currentUser.getUserName());
+
+            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("account").build();
+            
+            String flashMessage = "You are " + (wasProvider ? "not" : "") + " a provider now.";            
+            setFlashMessage(request, flashMessage);
+
+            builder = Response.seeOther(redirectURI);
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError().entity(view);
+        } catch (NotAuthorizedException e) {
+            logger.info("User unauthorized", e);
+
+            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+            builder = Response.status(Status.UNAUTHORIZED).entity(view);
+        }
+
+        return builder.build();
+
+    }
 
 }
