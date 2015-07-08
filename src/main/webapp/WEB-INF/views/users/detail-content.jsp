@@ -60,7 +60,23 @@
           </div>
           <div class="panel-body">
           	<div class="col-md-8 col-md-offset-1">
-              <p class="text-justify">When you are a provider, you can create Stores and upload your own Offerings. Otherwise, you can only view offerings published by others.</p>
+              <p class="text-justify">
+              When you are registered as provider, the user interface will show you the options to create Stores and Descriptions.
+              These extra functions are only useful when you are an offering provider. Otherwise, we recommend you to keep your
+              consumer role.
+              </p>
+              <p class="text-justify">
+                <strong>Current Status: </strong> You are registered as <strong>
+                <c:choose>
+                  <c:when test="${ user.provider }">
+                  	provider
+                  </c:when>
+                  <c:otherwise>
+                  	consumer
+                  </c:otherwise>
+                </c:choose>
+                </strong>
+              </p>
               <div class="form-options">
               <form method="post" action="${ pageContext.request.contextPath }/account/provider">
                 <button type="submit" 

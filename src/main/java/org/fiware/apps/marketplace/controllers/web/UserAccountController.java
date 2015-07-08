@@ -316,7 +316,13 @@ public class UserAccountController extends AbstractController {
 
             redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("account").build();
             
-            String flashMessage = "You are " + (wasProvider ? "not" : "") + " a provider now.";            
+            String flashMessage;
+            if (wasProvider) {
+            	flashMessage = "You are <strong>not</strong> a provider anymore.";
+            } else {
+            	flashMessage = "You are a provider now.";
+            }
+            
             setFlashMessage(request, flashMessage);
 
             builder = Response.seeOther(redirectURI);
