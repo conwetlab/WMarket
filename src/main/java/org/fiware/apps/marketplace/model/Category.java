@@ -64,6 +64,7 @@ public class Category {
 	
 	// Very important! Users will want to retrieve the best offerings of a category
 	private Set<Offering> offerings;
+	private Set<Service> services;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -106,6 +107,16 @@ public class Category {
 
 	public void setOfferings(Set<Offering> offerings) {
 		this.offerings = offerings;
+	}
+	
+	@XmlTransient
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categories")
+	public Set<Service> getServices() {
+		return services;
+	}
+
+	public void setServices(Set<Service> services) {
+		this.services = services;
 	}
 
 	@Override

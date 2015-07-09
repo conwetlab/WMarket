@@ -41,6 +41,8 @@ import org.fiware.apps.marketplace.model.Offering;
 
 public interface CategoryDao {
 	
+	public void delete(Category category);
+	
 	public boolean isNameAvailable(String name);
 	public Category findByName(String categoryName) throws CategoryNotFoundException;
 	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, int offset, int max, 

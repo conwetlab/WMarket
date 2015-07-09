@@ -34,14 +34,19 @@ package org.fiware.apps.marketplace.bo.impl;
  */
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
+import org.fiware.apps.marketplace.dao.CategoryDao;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
 import org.fiware.apps.marketplace.dao.OfferingDao;
+import org.fiware.apps.marketplace.dao.ServiceDao;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
@@ -49,8 +54,11 @@ import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.helpers.OfferingResolver;
+import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Description;
+import org.fiware.apps.marketplace.model.PricePlan;
+import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
@@ -75,6 +83,8 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Autowired private StoreBo storeBo;
 	@Autowired private OfferingDao offeringDao;
 	@Autowired private StoreDao storeDao;
+	@Autowired private CategoryDao categoryDao;
+	@Autowired private ServiceDao serviceDao;
 	@Autowired private SessionFactory sessionFactory;
 	
 	private static final String JENA_ERROR = "Your RDF could not be parsed.";
@@ -149,6 +159,28 @@ public class DescriptionBoImpl implements DescriptionBo {
 			throw new RuntimeException(ex);
 		}
 	}
+	
+	private void removeUnusedServicesAndCategories(Set<Category> affectedCategories, Set<Service> affectedServices) {
+		
+		// So the categories and the services are updated
+		// Avoid Hibernate Exceptions
+		sessionFactory.getCurrentSession().flush();
+		
+		// Once that the description has been updated, remove unused offerings and services
+		for (Category category: affectedCategories) {				
+			if (category.getOfferings().size() == 0) {
+				category.getServices().clear();
+				categoryDao.delete(category);
+			}
+		}
+		
+		for (Service service: affectedServices) {
+			if (service.getOfferings().size() == 0) {
+				service.getCategories().clear();
+				serviceDao.delete(service);
+			}
+		}
+	}
 
 	@Override
 	@Transactional(readOnly=false, rollbackFor=Exception.class)
@@ -180,24 +212,74 @@ public class DescriptionBoImpl implements DescriptionBo {
 			}
 	
 			if (updatedDescription.getUrl() != null) {
-				// If the URL has changed, the new offerings have to be retrieved and loaded. Otherwise,
-				// this step is not required
 				
-				descriptionToBeUpdated.setUrl(updatedDescription.getUrl());
-				
-				// Remove previous offerings
+				// Current Offerings
 				List<Offering> descriptionOfferings = descriptionToBeUpdated.getOfferings();
-				descriptionOfferings.clear();
 				
-				// At this point, transaction need to be flushed in order to avoid constraints violations
-				// that occur when the embedded offerings has not been updated
-				sessionFactory.getCurrentSession().flush();
+				Set<Category> affectedCategories = new HashSet<>();
+				Set<Service> affectedServices = new HashSet<>();
+				
+				for (Offering offering: descriptionOfferings) {
+					affectedCategories.addAll(offering.getCategories());
+					affectedServices.addAll(offering.getServices());
+				}
+				
+				// Change URL
+				descriptionToBeUpdated.setUrl(updatedDescription.getUrl());
 				
 				// Get all the offerings described in the USDL
 				List<Offering> newOfferings = offeringResolver
 						.resolveOfferingsFromServiceDescription(descriptionToBeUpdated);
 				
-				descriptionOfferings.addAll(newOfferings);
+				// When a description is updated, some offerings can be deleted.
+				// If categories and services are not removed from these offerings,
+				// the system will try to remove them from the database but this will fail
+				// since categories and services can be attached to other offerings.
+				List<Offering> removedOfferings = new ArrayList<>(descriptionOfferings);
+				removedOfferings.removeAll(newOfferings);
+				
+				for (Offering offering: removedOfferings) {
+					offering.getCategories().clear();
+					offering.getServices().clear();
+				}
+								
+				// Remove offerings not contained in the new description
+				descriptionOfferings.retainAll(newOfferings);
+				
+				for (Offering updatedOffering: newOfferings) {
+					
+					int index = descriptionOfferings.indexOf(updatedOffering);
+					
+					if (index < 0) {
+						// A new offering that was not included before in the previous USDL
+						descriptionOfferings.add(updatedOffering);
+					} else {
+						// An old offering that is still present in the current USDL
+						// We have to replace some fields, but we cannot remove this offering and
+						// create a new one: reviews and bookmarks will be lost
+						Offering offering = descriptionOfferings.get(index);
+						
+						// We have to update the fields (not to use the generated one to avoid Hibernate exceptions)
+						offering.setDescription(updatedOffering.getDescription());
+						offering.setDisplayName(updatedOffering.getDisplayName());
+						offering.setImageUrl(updatedOffering.getImageUrl());
+						offering.setVersion(updatedOffering.getVersion());
+						offering.setDisplayName(updatedOffering.getDisplayName());
+						offering.setName(updatedOffering.getName());
+						offering.setCategories(updatedOffering.getCategories());
+						offering.setServices(updatedOffering.getServices());
+						
+						// Set price plans (offering field MUST be updated. Otherwise an exception will be risen)
+						offering.getPricePlans().clear();
+						for (PricePlan pricePlan: updatedOffering.getPricePlans()) {
+							pricePlan.setOffering(offering);
+							offering.getPricePlans().add(pricePlan);
+						}
+						
+					}
+				}
+
+				removeUnusedServicesAndCategories(affectedCategories, affectedServices);
 								
 				// When the description URL changes, the index must be updated. 
 				rdfIndexer.indexOrUpdateService(descriptionToBeUpdated);
@@ -205,6 +287,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	
 			descriptionToBeUpdated.setLasteditor(userBo.getCurrentUser());
 			descriptionDao.update(descriptionToBeUpdated);
+			
 		} catch (MalformedURLException | JenaException ex) {
 						
 			String errorMessage;
@@ -233,19 +316,27 @@ public class DescriptionBoImpl implements DescriptionBo {
 			throw new NotAuthorizedException("delete description");
 		}
 		
-		// If classifications and services are not removed from the attached offerings,
+		Set<Category> categories = new HashSet<>();
+		Set<Service> services = new HashSet<>();
+		
+		// If categories and services are not removed from the attached offerings,
 		// the system will try to remove them from the database but this will fail since
-		// classifications and services can be attached to another offerings.
+		// categories and services can be attached to other offerings.
 		for (Offering offering: description.getOfferings()) {
+			categories.addAll(offering.getCategories());
+			services.addAll(offering.getServices());
 			offering.getCategories().clear();
 			offering.getServices().clear();
 		}
 		
 		// Delete the description from the data base
-		// We must relay on StoreDao to remove descriptions. It's easier and safer
-		// And weird exceptions are avoided
+		// We must relay on StoreDao to remove descriptions. 
+		// It's easier and safer and weird exceptions are avoided
 		store.removeDescription(description);
 		storeDao.update(store);
+		
+		// Remove unused services and categories
+		removeUnusedServicesAndCategories(categories, services);
 		
 		// Delete indexes
 		rdfIndexer.deleteService(description);

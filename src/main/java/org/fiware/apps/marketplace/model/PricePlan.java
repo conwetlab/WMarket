@@ -69,6 +69,7 @@ public class PricePlan {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
 	@XmlTransient
 	public int getId() {
 		return id;

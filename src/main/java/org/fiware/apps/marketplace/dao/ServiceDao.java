@@ -37,6 +37,8 @@ import org.fiware.apps.marketplace.model.Service;
 
 public interface ServiceDao {
 	
+	public void delete(Service service);
+	
 	public Service findByURI(String uri) throws ServiceNotFoundException;
 
 }

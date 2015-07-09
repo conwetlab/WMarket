@@ -50,7 +50,6 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -165,15 +164,11 @@ public class RdfHelper {
 	public List<String> queryLiterals(Model model, String query, String queriedVar) {
 		List<String> literals = new ArrayList<>();
 		List<QuerySolution> solutions = this.query(model, query);
-
-		if (solutions.size() > 0) {
-			Literal literal = solutions.get(0).getLiteral(queriedVar);
-
-			if (literal != null) {
-				literals.add(literal.getLexicalForm());
-			}
+		
+		for (QuerySolution solution: solutions) {
+			literals.add(solution.getLiteral(queriedVar).getLexicalForm());
 		}
-
+		
 		return literals;
 	}
 

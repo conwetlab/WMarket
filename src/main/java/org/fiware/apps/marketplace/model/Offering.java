@@ -170,8 +170,8 @@ public class Offering extends ReviewableEntity {
 	@JsonProperty("services")
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)	// Not many services are supposed to be attached
 	@JoinTable(name = "offerings_services", 
-		      joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
-		      inverseJoinColumns = {@JoinColumn(name = "service_id", referencedColumnName = "id")})
+			joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+			inverseJoinColumns = {@JoinColumn(name = "service_id", referencedColumnName = "id")})
 	public Set<Service> getServices() {
 		return services;
 	}
@@ -184,8 +184,8 @@ public class Offering extends ReviewableEntity {
 	@JsonProperty("categories")
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "offerings_categories",
-		      joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
-		      inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
+			joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+			inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
 	public Set<Category> getCategories() {
 		return categories;
 	}

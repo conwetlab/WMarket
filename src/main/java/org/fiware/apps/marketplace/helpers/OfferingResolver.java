@@ -236,7 +236,7 @@ public class OfferingResolver {
 			offering.setDescription(getDescription(model, offeringUri));
 			offering.setImageUrl(getOfferingImageUrl(model, offeringUri));
 			
-			// PRICE PLANS (offerings have one or more price plans)
+			// PRICE PLANS (offerings contain one or more price plans)
 			List<String> pricePlansUris = getPricePlanUris(model, offeringUri);
 			Set<PricePlan> pricePlans = new HashSet<>();
 			
@@ -285,57 +285,59 @@ public class OfferingResolver {
 				// Remove '<' from the beginning and '>' from the end
 				String parserServiceUri = serviceUri.substring(1, serviceUri.length() - 1);
 				
+				// Try to get the service from the database
 				try {
 					service = serviceBo.findByURI(parserServiceUri);
 				} catch (ServiceNotFoundException e) {
-					
 					// Look for another offering in this description that contains the same service.
 					// Otherwise, a new service is created
 					service = createdServices.get(parserServiceUri);
-					
-					if (service == null) {
-						
-						service = new Service();
-						
-						// Service basic properties
-						service.setUri(parserServiceUri);
-						service.setDisplayName(getTitle(model, serviceUri));
-						service.setComment(getDescription(model, serviceUri));
-						
-						// Service classifications (a service can have more than one classification)
-						Set<Category> serviceClassifications = new HashSet<>();
-						List<String> classificationsDisplayNames = getServiceClassifications(model, serviceUri);
-						
-						for (String classificationDisplayName: classificationsDisplayNames) {
-							
-							Category classification;
-							String classificationName = NameGenerator.getURLName(classificationDisplayName);
-							
-							try {
-								classification = classificationBo.findByName(classificationName);
-							} catch (CategoryNotFoundException e1) {
-								
-								// Look for another offering/service in this description that contains
-								// the same classification. Otherwise, a new classification is created.
-								classification = createdClassifications.get(classificationName);
-								
-								if (classification == null) {
-									classification = new Category();
-									classification.setName(classificationName);
-									classification.setDisplayName(classificationDisplayName);
-									createdClassifications.put(classificationName, classification);
-								}							
-							}
-							
-							serviceClassifications.add(classification);
-						}
-						
-						service.setCategories(serviceClassifications);
-						
-						createdServices.put(parserServiceUri, service);
-					}					
 				}
 				
+				// If service is still null, create a new one
+				if (service == null) {
+					service = new Service();
+				}
+				
+				// Service basic properties
+				service.setUri(parserServiceUri);
+				service.setDisplayName(getTitle(model, serviceUri));
+				service.setComment(getDescription(model, serviceUri));
+				
+				// Service classifications (a service can have more than one classification)
+				Set<Category> serviceClassifications = new HashSet<>();
+				List<String> classificationsDisplayNames = getServiceClassifications(model, serviceUri);
+				
+				for (String classificationDisplayName: classificationsDisplayNames) {
+					
+					Category classification;
+					String classificationName = NameGenerator.getURLName(classificationDisplayName);
+					
+					// Try to get the service from the database
+					try {
+						classification = classificationBo.findByName(classificationName);
+					} catch (CategoryNotFoundException e1) {
+						// Look for another offering/service in this description that contains
+						// the same classification. Otherwise, a new classification is created.
+						classification = createdClassifications.get(classificationName);
+					}
+											
+					// If classification is still null, create a new one
+					if (classification == null) {
+						classification = new Category();
+					}
+					
+					classification.setName(classificationName);
+					classification.setDisplayName(classificationDisplayName);
+					createdClassifications.put(classificationName, classification);
+					
+					serviceClassifications.add(classification);
+				}
+				
+				service.setCategories(serviceClassifications);
+				
+				createdServices.put(parserServiceUri, service);
+
 				offeringClassification.addAll(service.getCategories());
 				offeringServices.add(service);
 			}
