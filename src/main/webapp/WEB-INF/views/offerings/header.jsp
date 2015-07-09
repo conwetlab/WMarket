@@ -48,7 +48,7 @@
       >
         <a href="${ pageContext.request.contextPath }/offerings/${ offering.describedIn.store.name }/${ offering.describedIn.name }/${ offering.name }/priceplans">
           <span class="fa fa-credit-card"></span>
-          <span class="hidden-sm">Payment plans</span>
+          <span class="hidden-sm">Price plans</span>
         </a>
       </div>
       <div
