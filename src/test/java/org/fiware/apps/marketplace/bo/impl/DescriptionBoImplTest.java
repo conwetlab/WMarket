@@ -38,6 +38,7 @@ import static org.mockito.Mockito.*;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.UserBo;
@@ -49,8 +50,11 @@ import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.helpers.OfferingResolver;
+import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.PricePlan;
+import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
@@ -117,6 +121,9 @@ public class DescriptionBoImplTest {
 		offering.setDescription(description);
 		offering.setImageUrl(imageUrl);
 		offering.setVersion(version);
+		offering.setCategories(new HashSet<Category>());
+		offering.setServices(new HashSet<Service>());
+		offering.setPricePlans(new HashSet<PricePlan>());
 
 		return offering;
 	}

@@ -213,15 +213,13 @@ public class DescriptionBoImpl implements DescriptionBo {
 	
 			if (updatedDescription.getUrl() != null) {
 				
-				// Current Offerings
 				List<Offering> descriptionOfferings = descriptionToBeUpdated.getOfferings();
-				
-				Set<Category> affectedCategories = new HashSet<>();
-				Set<Service> affectedServices = new HashSet<>();
+				Set<Category> currentCategories = new HashSet<>();
+				Set<Service> currentServices = new HashSet<>();
 				
 				for (Offering offering: descriptionOfferings) {
-					affectedCategories.addAll(offering.getCategories());
-					affectedServices.addAll(offering.getServices());
+					currentCategories.addAll(offering.getCategories());
+					currentServices.addAll(offering.getServices());
 				}
 				
 				// Change URL
@@ -259,7 +257,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 						// create a new one: reviews and bookmarks will be lost
 						Offering offering = descriptionOfferings.get(index);
 						
-						// We have to update the fields (not to use the generated one to avoid Hibernate exceptions)
+						// We have to update the fields. equals only depends on the URI
 						offering.setDescription(updatedOffering.getDescription());
 						offering.setDisplayName(updatedOffering.getDisplayName());
 						offering.setImageUrl(updatedOffering.getImageUrl());
@@ -279,7 +277,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 					}
 				}
 
-				removeUnusedServicesAndCategories(affectedCategories, affectedServices);
+				removeUnusedServicesAndCategories(currentCategories, currentServices);
 								
 				// When the description URL changes, the index must be updated. 
 				rdfIndexer.indexOrUpdateService(descriptionToBeUpdated);
@@ -288,16 +286,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 			descriptionToBeUpdated.setLasteditor(userBo.getCurrentUser());
 			descriptionDao.update(descriptionToBeUpdated);
 			
-		} catch (MalformedURLException | JenaException ex) {
-						
-			String errorMessage;
-			if (ex instanceof JenaException) {
-				errorMessage = JENA_ERROR;
-			} else {
-				errorMessage = ex.getMessage();
-			}
-			
-			throw new ValidationException("url", errorMessage);			
+		} catch (MalformedURLException ex) {
+			throw new ValidationException("url", ex.getMessage());
+		} catch (JenaException ex) {
+			throw new ValidationException("url", JENA_ERROR);			
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
