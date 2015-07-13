@@ -59,9 +59,10 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 	private String scopeValue = "";
 	private String serverURL;
+	private String offeringProviderRole;
 
 	/**
-	 * Method to get the FIWARE IdM that is being in used
+	 * Method to get the FIWARE IdM proxy that is being in used
 	 * @return The FIWARE IdM that is being used to authenticate the users
 	 */
 	public String getServerURL() {
@@ -74,6 +75,22 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 	 */
 	public void setServerURL(String serverURL) {
 		this.serverURL = serverURL;
+	}
+	
+	/**
+	 * Method to get the role used to identify offerings providers
+	 * @return The role attached to offerings providers
+	 */
+	public String getOfferingProviderRole() {
+		return offeringProviderRole;
+	}
+
+	/**
+	 * Method to set the role that will be used to identify offerings providers
+	 * @param offeringProviderRole The role attached to offerings providers
+	 */
+	public void setOfferingProviderRole(String offeringProviderRole) {
+		this.offeringProviderRole = offeringProviderRole;
 	}
 
 	@Override
@@ -119,7 +136,7 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 			while (iterator.hasNext() && !provider) {
 				JsonNode role = iterator.next();
 				
-				if (role.get("name").asText().toLowerCase().equals("provider")) {
+				if (role.get("name").asText().toLowerCase().equals(offeringProviderRole)) {
 					provider = true;
 				}
 			}

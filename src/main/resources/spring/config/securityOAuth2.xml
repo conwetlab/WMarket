@@ -49,6 +49,7 @@
 		<property name="serverURL" value="${oauth2.server}" />
 		<property name="key" value="${oauth2.key}" />
 		<property name="secret" value="${oauth2.secret}" />
+		<property name="offeringProviderRole" value="${oauth2.providerRole}" />
 	</bean>
 
 	<bean id="clients" class="org.pac4j.core.client.Clients">
