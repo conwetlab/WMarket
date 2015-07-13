@@ -38,7 +38,11 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.client.Client;
@@ -95,6 +99,9 @@ public abstract class AbstractIT {
 
 	protected final Offering FIRST_OFFERING = new Offering();
 	protected final Offering SECOND_OFFERING = new Offering();
+	
+	// Description URL - List of attached offerings
+	protected final Map<String, List<Offering>> DESCRIPTIONS_OFFERINGS = new HashMap<>();
 
 	private void initOfferings() {
 		// WARN: This properties depends on the RDF files stored in "src/test/resources/__files" so if these files
@@ -222,6 +229,12 @@ public abstract class AbstractIT {
 		environment.stop();
 	}
 
+	/**
+	 * Mock server is not started by default. Every test should call this method
+	 * to start the mock server. When the mock server is started, some attributes
+	 * will be initialized: <code>serverUrl</code>, <code>defaultUSDLPath</code>, 
+	 * <code>secondaryUSDLPath</code> and <code>DESCRIPTIONS_OFFERINGS</code>
+	 */
 	protected void startMockServer() {
 		stubFor(get(urlMatching("/default[0-9]*.rdf"))
 				.willReturn(aResponse()
@@ -240,6 +253,15 @@ public abstract class AbstractIT {
 		serverUrl = "http://127.0.0.1:" + wireMock.port();
 		defaultUSDLPath = serverUrl + "/default.rdf";
 		secondaryUSDLPath = serverUrl + "/secondary.rdf";
+		
+		List<Offering> defaultUSDLPathOfferings = new ArrayList<>();
+		defaultUSDLPathOfferings.add(FIRST_OFFERING);
+		List<Offering> secondaryUSDLPathOfferings = new ArrayList<>();
+		secondaryUSDLPathOfferings.add(FIRST_OFFERING);
+		secondaryUSDLPathOfferings.add(SECOND_OFFERING);
+		
+		DESCRIPTIONS_OFFERINGS.put(defaultUSDLPath, defaultUSDLPathOfferings);
+		DESCRIPTIONS_OFFERINGS.put(secondaryUSDLPath, secondaryUSDLPathOfferings);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////

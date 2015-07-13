@@ -34,9 +34,12 @@ package org.fiware.apps.marketplace.it;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.ws.rs.client.Client;
@@ -107,7 +110,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	 * @param offerings The list of offerings that the service has returned
 	 * @param storeName The name of the store where the offering is registered
 	 * @param descriptionName The of the the description that contains the offering
-	 * @param offering The offering to be checked
+	 * @param offering The offering to be checked. This instance contains the expected values.
 	 */
 	private void checkOfferingInternalState(List<Offering> offerings, String storeName, String descriptionName, 
 			Offering offering) {
@@ -187,21 +190,15 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(retrievedDescription.getComment()).isEqualTo(comment);
 		
 		// Check offerings
-		Offering[] expectedOfferings;
-		if (url == secondaryUSDLPath) {
-			expectedOfferings = new Offering[] {FIRST_OFFERING, SECOND_OFFERING};
-		} else {	// defaultUSDLPath
-			expectedOfferings = new Offering[] {FIRST_OFFERING};
-		}
-		
+		List<Offering> expectedOfferings = DESCRIPTIONS_OFFERINGS.get(url);
 		List<Offering> descriptionOfferings = retrievedDescription.getOfferings();
-		assertThat(descriptionOfferings.size()).isEqualTo(expectedOfferings.length);
+		assertThat(descriptionOfferings.size()).isEqualTo(expectedOfferings.size());
 		
 		for (Offering expectedOffering: expectedOfferings) {
 			
 			checkOfferingInList(storeName, descriptionName, expectedOffering, descriptionOfferings);
 			
-			// Check that the price plan is correct 
+			// Check internal state (services, categories, price plans,...) 
 			checkOfferingInternalState(descriptionOfferings, storeName, descriptionName, expectedOffering);
 		}
 	}
@@ -495,7 +492,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	 * @param expectedMessage Expected error message
 	 */
 	private void testUpdateFieldAlreayExists(
-			String nameDescription1,String urlDescription1, 
+			String nameDescription1, String urlDescription1, 
 			String nameDescription2, String urlDescription2,
 			String updatedDisplayName, String updatedURL,
 			String field, String expectedMessage) {
@@ -703,7 +700,7 @@ public class DescriptionServiceIT extends AbstractIT {
 				.get();
 		
 		// Check the response
-		int expectedElements = offset + max > DESCRIPTIONS_CREATED ? DESCRIPTIONS_CREATED - offset : max;
+		int expectedElements = (offset + max) > DESCRIPTIONS_CREATED ? DESCRIPTIONS_CREATED - offset : max;
 		assertThat(response.getStatus()).isEqualTo(200);
 		Descriptions descriptions = response.readEntity(Descriptions.class);
 		assertThat(descriptions.getDescriptions().size()).isEqualTo(expectedElements);
@@ -881,49 +878,57 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testStoreOfferings() {
 		
+		final String NAME = "store";
+		final String USDL = "usdl";
 		String description1Name = "displayname";
 		String description2Name = "secondary";
+		
+		Map<String, Map<String, String>> storeDescriptions = new HashMap<>();
+		
+		Map<String, String> firstStoreDescription = new HashMap<>();
+		firstStoreDescription.put(NAME, description1Name);
+		firstStoreDescription.put(USDL, defaultUSDLPath);
+		storeDescriptions.put(FIRST_STORE_NAME, firstStoreDescription);
+		
+		Map<String, String> secondStoreDescription = new HashMap<>();
+		secondStoreDescription.put(NAME, description2Name);
+		secondStoreDescription.put(USDL, secondaryUSDLPath);
+		storeDescriptions.put(SECOND_STORE_NAME, secondStoreDescription);
 		
 		// Create an additional Store
 		Response createStoreResponse = createStore(USER_NAME, PASSWORD, SECOND_STORE_NAME, SECOND_STORE_URL);
 		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
 
 		// Push each description in a different store
-		Response createDesc1Res = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, description1Name, 
-				defaultUSDLPath, "");
-		Response createDesc2Res = createDescription(USER_NAME, PASSWORD, SECOND_STORE_NAME, description2Name, 
-				secondaryUSDLPath, "");
+		for (String storeName: storeDescriptions.keySet()) {
+			
+			String descriptionName = storeDescriptions.get(storeName).get(NAME);
+			String usdl = storeDescriptions.get(storeName).get(USDL);
+			
+			Response createDescRes = createDescription(USER_NAME, PASSWORD, storeName, descriptionName, usdl, "");
+			assertThat(createDescRes.getStatus()).isEqualTo(201);
+		}
 		
-		assertThat(createDesc1Res.getStatus()).isEqualTo(201);
-		assertThat(createDesc2Res.getStatus()).isEqualTo(201);
-		
-		// Get Store1 offerings
-		Response store1OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, FIRST_STORE_NAME);
-		assertThat(store1OfferingResponse.getStatus()).isEqualTo(200);
-		
-		Offerings offerings = store1OfferingResponse.readEntity(Offerings.class);
-		assertThat(offerings.getOfferings().size()).isEqualTo(1);
-		checkOfferingInList(FIRST_STORE_NAME, description1Name, FIRST_OFFERING, offerings.getOfferings());
+		// Get stores offerings
+		for (String storeName: storeDescriptions.keySet()) {
+			Response storeOfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, storeName);
+			assertThat(storeOfferingResponse.getStatus()).isEqualTo(200);
 
-		// Price plans are not checked in Offering.equals
-		checkOfferingInternalState(offerings.getOfferings(), FIRST_STORE_NAME, description1Name, FIRST_OFFERING);
-		
-		// Get Store2 offerings
-		Response store2OfferingResponse = getStoreOfferings(USER_NAME, PASSWORD, SECOND_STORE_NAME);
-		assertThat(store2OfferingResponse.getStatus()).isEqualTo(200);
-		
-		offerings = store2OfferingResponse.readEntity(Offerings.class);
-		assertThat(offerings.getOfferings().size()).isEqualTo(2);
-		
-		// Needed to retrieve the offerings from the list in an appropriate way. equals is based
-		// on the name and the description...
-		checkOfferingInList(SECOND_STORE_NAME, description2Name, FIRST_OFFERING, offerings.getOfferings());
-		checkOfferingInList(SECOND_STORE_NAME, description2Name, SECOND_OFFERING, offerings.getOfferings());
+			Offerings offerings = storeOfferingResponse.readEntity(Offerings.class);
+			String descriptionName = storeDescriptions.get(storeName).get(NAME);
+			String descriptionUSDLPath = storeDescriptions.get(storeName).get(USDL);
+			List<Offering> expectedStoreOfferings = DESCRIPTIONS_OFFERINGS.get(descriptionUSDLPath);
+			List<Offering> actualStoreOfferings = offerings.getOfferings();
+			assertThat(actualStoreOfferings.size()).isEqualTo(expectedStoreOfferings.size());
+			
+			// Check that all the expected offerings are in the list of offerings contained in the store
+			for (Offering offering: expectedStoreOfferings) {
+				checkOfferingInList(storeName, descriptionName, offering, offerings.getOfferings());
+				checkOfferingInternalState(offerings.getOfferings(), storeName, descriptionName, offering);				
+			}
 
-		// Price plans are not checked in Offering.equals
-		checkOfferingInternalState(offerings.getOfferings(), SECOND_STORE_NAME, description2Name, FIRST_OFFERING);
-		checkOfferingInternalState(offerings.getOfferings(), SECOND_STORE_NAME, description2Name, SECOND_OFFERING);
-		
+			
+		}
 	}
 	
 	private void testGetSomeStoreOfferings(int offset, int max) {
@@ -993,7 +998,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	//////////////////////////////////// ALL OFFERINGS ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void intializeStoresWithOfferings(String firstDescriptionName, String secondDescriptionName) {
+	private void intializeStoresWithOfferings(Map<String, String> descriptions) {
 		// Create an additional Store
 		Response createStoreResponse = createStore(USER_NAME, PASSWORD, SECOND_STORE_NAME, SECOND_STORE_URL);
 		assertThat(createStoreResponse.getStatus()).isEqualTo(201);
@@ -1003,14 +1008,11 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		for (String store: stores) {
 			
-			Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, store, 
-					firstDescriptionName, defaultUSDLPath, "");
-			assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
-			
-			createDescriptionResponse = createDescription(USER_NAME, PASSWORD, store, 
-					secondDescriptionName, secondaryUSDLPath, "");
-			assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
-			
+			for (Entry<String, String> description: descriptions.entrySet()) {
+				Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, store, 
+						description.getKey(), description.getValue(), "");
+				assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
+			}			
 		}
 
 	}
@@ -1020,7 +1022,10 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		final int TOTAL_OFFERINGS = 6;			// 6 offerings: 3 in each store.
 		
-		intializeStoresWithOfferings("default", "secondary");
+		Map<String, String> descriptions = new HashMap<>();
+		descriptions.put("default", defaultUSDLPath);
+		descriptions.put("secondary", secondaryUSDLPath);
+		intializeStoresWithOfferings(descriptions);
 		
 		// Get all the offerings
 		Client client = ClientBuilder.newClient();
@@ -1039,7 +1044,10 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		final int TOTAL_OFFERINGS = 6;
 		
-		intializeStoresWithOfferings("default", "secondary");
+		Map<String, String> descriptions = new HashMap<>();
+		descriptions.put("default", defaultUSDLPath);
+		descriptions.put("secondary", secondaryUSDLPath);
+		intializeStoresWithOfferings(descriptions);
 		
 		// Get all the offerings
 		Client client = ClientBuilder.newClient();
@@ -1140,12 +1148,19 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		String firstDescriptionName = "default";
 		String secondDescriptionName = "secondary";
-		intializeStoresWithOfferings(firstDescriptionName, secondDescriptionName);
-		Offering bookmarkedOffering = SECOND_OFFERING;
+		Map<String, String> descriptions = new HashMap<>();
+		descriptions.put(firstDescriptionName, defaultUSDLPath);
+		descriptions.put(secondDescriptionName, secondaryUSDLPath);
+		intializeStoresWithOfferings(descriptions);
+		
+		// Select one offering
+		String descriptionWithOfferingToBookmark = firstDescriptionName;
+		Offering bookmarkedOffering = DESCRIPTIONS_OFFERINGS.get(
+				descriptions.get(descriptionWithOfferingToBookmark)).get(0);
 		
 		// Bookmark one offering
-		Response bookmarkResponse = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD,FIRST_STORE_NAME, 
-				secondDescriptionName, bookmarkedOffering.getName());
+		Response bookmarkResponse = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
+				descriptionWithOfferingToBookmark, bookmarkedOffering.getName());
 		assertThat(bookmarkResponse.getStatus()).isEqualTo(204);
 		
 		// Set store and description for offering. Otherwise, test will fail since offering.equals is based
@@ -1154,7 +1169,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		store.setName(FIRST_STORE_NAME);
 		
 		Description description = new Description();
-		description.setName(secondDescriptionName);
+		description.setName(descriptionWithOfferingToBookmark);
 		description.setStore(store);
 		
 		bookmarkedOffering.setDescribedIn(description);
@@ -1166,12 +1181,12 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(bookmarkedOfferings.size()).isEqualTo(1);
 		// bookmarkedOffering parameters MUST be properly initialized 
 		assertThat(bookmarkedOfferings.get(0)).isEqualTo(bookmarkedOffering);
-		assertThat(bookmarkedOfferings.get(0).getDescribedIn().getName()).isEqualTo(secondDescriptionName);
+		assertThat(bookmarkedOfferings.get(0).getDescribedIn().getName()).isEqualTo(descriptionWithOfferingToBookmark);
 		assertThat(bookmarkedOfferings.get(0).getDescribedIn().getStore().getName()).isEqualTo(FIRST_STORE_NAME);
 		
 		// Unbookmark the offering
 		Response unbookmarkResponse = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD,FIRST_STORE_NAME, 
-				secondDescriptionName, bookmarkedOffering.getName());
+				descriptionWithOfferingToBookmark, bookmarkedOffering.getName());
 		assertThat(unbookmarkResponse.getStatus()).isEqualTo(204);
 
 		// Check that bookmarked offerings is empty
@@ -1186,14 +1201,20 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		String firstDescriptionName = "default";
 		String secondDescriptionName = "secondary";
-		Offering bookmarkedOffering = SECOND_OFFERING;
-		intializeStoresWithOfferings(firstDescriptionName, secondDescriptionName);
-
+		Map<String, String> descriptions = new HashMap<>();
+		descriptions.put(firstDescriptionName, defaultUSDLPath);
+		descriptions.put(secondDescriptionName, secondaryUSDLPath);
+		intializeStoresWithOfferings(descriptions);
+		
+		// Select one offering
+		String descriptionWithOfferingToBookmark = firstDescriptionName;
+		Offering bookmarkedOffering = DESCRIPTIONS_OFFERINGS.get(descriptions.get(firstDescriptionName)).get(0);
+		
 		// Bookmark the offerings from different stores (same offering in different stores)
 		String[] stores = {FIRST_STORE_NAME, SECOND_STORE_NAME};
 		for (String storeName: stores) {
 			Response bookmarkResponse = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD, storeName, 
-					secondDescriptionName, bookmarkedOffering.getName());
+					descriptionWithOfferingToBookmark, bookmarkedOffering.getName());
 			assertThat(bookmarkResponse.getStatus()).isEqualTo(204);
 		}
 		
@@ -1211,7 +1232,7 @@ public class DescriptionServiceIT extends AbstractIT {
 			store.setName(stores[i]);
 			
 			Description description = new Description();
-			description.setName(secondDescriptionName);
+			description.setName(descriptionWithOfferingToBookmark);
 			description.setStore(store);
 			
 			bookmarkedOffering.setDescribedIn(description);
@@ -1227,14 +1248,16 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testRemoveBookmarkedOffering() {
 		
+		String usdlPath = defaultUSDLPath;
+		
 		String descriptionName = "description";
 		Response createDescRes = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
-				descriptionName, defaultUSDLPath, "");
+				descriptionName, usdlPath, "");
 		assertThat(createDescRes.getStatus()).isEqualTo(201);
 		
 		// Bookmark the offering
 		Response bookmarkRes = bookmarkOrUnbookmarkOffering(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
-				descriptionName, FIRST_OFFERING.getName());
+				descriptionName, DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0).getName());
 		assertThat(bookmarkRes.getStatus()).isEqualTo(204);
 		
 		// Delete the offering
@@ -1249,10 +1272,12 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testRemoveUserWithBookmarkedOfferings() {
 		
+		String usdlPath = defaultUSDLPath;
+		
 		// Create an offering
 		String descriptionName = "description";
 		Response createDescRes = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
-				descriptionName, defaultUSDLPath, "");
+				descriptionName, usdlPath, "");
 		assertThat(createDescRes.getStatus()).isEqualTo(201);
 		
 		// Create another user
@@ -1263,7 +1288,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Bookmark the offering with the new user
 		Response bookmarkRes = bookmarkOrUnbookmarkOffering(userName, PASSWORD, FIRST_STORE_NAME, 
-				descriptionName, FIRST_OFFERING.getName());
+				descriptionName, DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0).getName());
 		assertThat(bookmarkRes.getStatus()).isEqualTo(204);
 		
 		// Delete the user
@@ -1272,7 +1297,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Check that the offering has not been deleted
 		Response getOffRes = getOffering(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
-				descriptionName, FIRST_OFFERING.getName());
+				descriptionName, DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0).getName());
 		assertThat(getOffRes.getStatus()).isEqualTo(200);
 		
 	}
@@ -1320,14 +1345,15 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testReviewOffering() {
 
+		String usdlPath = defaultUSDLPath;
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
-		String offeringName = FIRST_OFFERING.getName();
+		String offeringName = DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0).getName();
 		
 		int score = 5;
 		String comment = "Basic comment";
 		
-		int reviewId = createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		int reviewId = createOfferingAndReview(storeName, descriptionName, usdlPath, offeringName, 
 				score, comment);
 		checkOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, offeringName, 
 				reviewId, score, comment);
@@ -1336,14 +1362,15 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testUserCannotReviewOneStoreTwice() {
 		
+		String usdlPath = defaultUSDLPath;
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
-		String offeringName = FIRST_OFFERING.getName();
+		String offeringName = DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0).getName();
 		
 		int score = 5;
 		String comment = "Basic comment";
 		
-		createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		createOfferingAndReview(storeName, descriptionName, usdlPath, offeringName, 
 				score, comment);
 
 		// Create another review for the same offering with the same user
@@ -1356,14 +1383,15 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testUpdateReview() {
 		
+		String usdlPath = defaultUSDLPath;
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
-		String offeringName = FIRST_OFFERING.getName();
+		String offeringName = DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0).getName();
 		
 		int score = 5;
 		String comment = "Basic comment";
 		
-		int reviewId = createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		int reviewId = createOfferingAndReview(storeName, descriptionName, usdlPath, offeringName, 
 				score, comment);
 		
 		// Update review
@@ -1387,14 +1415,15 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testDeleteReview() {
 		
+		String usdlPath = defaultUSDLPath;
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
-		String offeringName = FIRST_OFFERING.getName();
+		String offeringName = DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0).getName();
 		
 		int score = 5;
 		String comment = "Basic comment";
 		
-		int reviewId = createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		int reviewId = createOfferingAndReview(storeName, descriptionName, usdlPath, offeringName, 
 				score, comment);
 		Response deleteResponse = deleteOfferingReview(USER_NAME, PASSWORD, storeName, descriptionName, 
 				offeringName, reviewId);
@@ -1446,14 +1475,15 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testCreateNReviews() {
 		
+		String usdlPath = defaultUSDLPath;
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
-		String offeringName = FIRST_OFFERING.getName();
+		String offeringName = DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0).getName();
 		String baseComment = "Basic comment";
 		
 		// Create offering
 		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, storeName, 
-				descriptionName, defaultUSDLPath, "");
+				descriptionName, usdlPath, "");
 		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
 		
 		// Create reviews
@@ -1506,13 +1536,14 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testUpdateReviewComplex() {
 		
+		String usdlPath = defaultUSDLPath;
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
-		String offeringName = FIRST_OFFERING.getName();
+		String offeringName = DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0).getName();
 		int score = 5;
 		String baseComment = "Basic comment";
 		
-		int reviewId = createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		int reviewId = createOfferingAndReview(storeName, descriptionName, usdlPath, offeringName, 
 				score, baseComment);
 		
 		// Create additional reviews
@@ -1541,13 +1572,14 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testDeleteReviewComplex() {
 		
+		String usdlPath = defaultUSDLPath;
 		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "default";
-		String offeringName = FIRST_OFFERING.getName();
+		String offeringName = DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0).getName();
 		int score = 5;
 		String baseComment = "Basic comment";
 		
-		int reviewId = createOfferingAndReview(storeName, descriptionName, defaultUSDLPath, offeringName, 
+		int reviewId = createOfferingAndReview(storeName, descriptionName, usdlPath, offeringName, 
 				score, baseComment);
 		
 		// Create additional reviews
@@ -1596,9 +1628,12 @@ public class DescriptionServiceIT extends AbstractIT {
 	@Test
 	public void testGetCategories() {
 		
+		String usdlPath = defaultUSDLPath;
+		Offering offering = DESCRIPTIONS_OFFERINGS.get(usdlPath).get(0);
+		
 		// Create one offering. This offering is contained in two categories
 		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
-				"description", defaultUSDLPath, "");
+				"description", usdlPath, "");
 		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
 		
 		// Get categories
@@ -1608,66 +1643,77 @@ public class DescriptionServiceIT extends AbstractIT {
 		// Check that all the categories are included
 		Categories categories = getCategoriesResponse.readEntity(Categories.class);
 		List<Category> categoriesList = categories.getCategories();
-		assertThat(categoriesList).containsAll(FIRST_OFFERING.getCategories());		
+		assertThat(categoriesList).containsAll(offering.getCategories());		
 	}
 	
 	@Test
 	public void testGetCategoryRecommendations() {
 		
+		String storeName = FIRST_STORE_NAME;
 		String descriptionName = "description";
+		String usdlPath = secondaryUSDLPath;
 		
 		// Create two offerings
-		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
-				descriptionName, secondaryUSDLPath, "");
+		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, storeName, 
+				descriptionName, usdlPath, "");
 		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
 		
 		// Review both offerings. First one with 1 starts and second one with 5 starts
-		Response createFirstRatingResponse = createOfferingReview(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
-				descriptionName, FIRST_OFFERING.getName(), 1, "");
-		assertThat(createFirstRatingResponse.getStatus()).isEqualTo(201);
-		Response createSecondRatingResponse = createOfferingReview(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
-				descriptionName, SECOND_OFFERING.getName(), 5, "");
-		assertThat(createSecondRatingResponse.getStatus()).isEqualTo(201);
+		List<Offering> descriptionOfferings = DESCRIPTIONS_OFFERINGS.get(usdlPath);
+		assertThat(descriptionOfferings.size()).isEqualTo(2);	// Two offerings expected in this Description
+		Offering highScoredOffering = descriptionOfferings.get(1);
+		Offering lowScoredOffering = descriptionOfferings.get(0);
+		
+		Response createRating1Response = createOfferingReview(USER_NAME, PASSWORD, storeName, 
+				descriptionName, lowScoredOffering.getName(), 1, "");
+		assertThat(createRating1Response.getStatus()).isEqualTo(201);
+		
+		Response createRating2Response = createOfferingReview(USER_NAME, PASSWORD, storeName, 
+				descriptionName, highScoredOffering.getName(), 5, "");
+		assertThat(createRating2Response.getStatus()).isEqualTo(201);
 		
 		// Get the category in common between the two offerings
-		Set<Category> commonCategories = new HashSet<>(FIRST_OFFERING.getCategories());
-		commonCategories.retainAll(SECOND_OFFERING.getCategories());
+		Set<Category> commonCategories = new HashSet<>(descriptionOfferings.get(0).getCategories());
+		commonCategories.retainAll(descriptionOfferings.get(1).getCategories());
 		String categoryName = commonCategories.iterator().next().getName();
 		
 		// Get category recommendations (offerings should be ordered by score: second offering
 		// should be the first one in the list)
 		Response getRecommendationsResponse = getCategoryRecommendations(USER_NAME, PASSWORD, categoryName, null);
 		assertThat(getRecommendationsResponse.getStatus()).isEqualTo(200);
-		Offerings offerings = getRecommendationsResponse.readEntity(Offerings.class);
-		List<Offering> offeringsList = offerings.getOfferings();
+		Offerings recommendations = getRecommendationsResponse.readEntity(Offerings.class);
+		List<Offering> offeringsList = recommendations.getOfferings();
 		
 		// Set offerings description since offering.equals depends on it
 		Store store = new Store();
-		store.setName(FIRST_STORE_NAME);
+		store.setName(storeName);
 		
 		Description description = new Description();
 		description.setName(descriptionName);
 		description.setStore(store);
 		
-		FIRST_OFFERING.setDescribedIn(description);
-		SECOND_OFFERING.setDescribedIn(description);
+		descriptionOfferings.get(0).setDescribedIn(description);
+		descriptionOfferings.get(1).setDescribedIn(description);
 
 		// Check that offerings has been returned in the correct order
-		assertThat(offeringsList.get(0)).isEqualTo(SECOND_OFFERING);
-		assertThat(offeringsList.get(1)).isEqualTo(FIRST_OFFERING);
+		assertThat(offeringsList.get(0)).isEqualTo(highScoredOffering);
+		assertThat(offeringsList.get(1)).isEqualTo(lowScoredOffering);
 
 	}
 	
 	@Test
 	public void testGetCategoriesInvalidOrder() {
 		
+		String usdlPath = defaultUSDLPath;
+		Offering offering = DESCRIPTIONS_OFFERINGS.get(defaultUSDLPath).get(0);
+		
 		// Create one offering.
 		Response createDescriptionResponse = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, 
-				"description", defaultUSDLPath, "");
+				"description", usdlPath, "");
 		assertThat(createDescriptionResponse.getStatus()).isEqualTo(201);
 		
 		// Get offerings for one category with invalid order
-		String categoryName = FIRST_OFFERING.getCategories().iterator().next().getName();
+		String categoryName = offering.getCategories().iterator().next().getName();
 		String orderBy = "namea";
 		Response getRecommendationsResponse = getCategoryRecommendations(USER_NAME, PASSWORD, categoryName, orderBy);
 		assertThat(getRecommendationsResponse.getStatus()).isEqualTo(400);
