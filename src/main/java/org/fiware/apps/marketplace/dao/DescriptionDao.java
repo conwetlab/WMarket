@@ -57,7 +57,7 @@ public interface DescriptionDao {
 	public boolean isDisplayNameAvailableInStore(String storeName, String displayName);
 	public boolean isURLAvailableInStore(String storeName, String url);
 	
-	// Get all offerings descriptions
+	// Get descriptions
 	public List<Description> getUserDescriptions(String userName) 
 			throws UserNotFoundException;
 	public List<Description> getAllDescriptions();
@@ -68,7 +68,7 @@ public interface DescriptionDao {
 			int offset, int max) throws StoreNotFoundException;
 
     /**
-     * Filter the current list of descriptions by the userName and storeName given.
+     * Get the current list of descriptions created by a user in one specific store.
      *
      * @param userName
      * @param storeName
@@ -76,9 +76,9 @@ public interface DescriptionDao {
      * @throws UserNotFoundException If there is not a User with the userName given.
      * @throws StoreNotFoundException If there is not a Store with the storeName given.
      *
-     * @return The list filtered.
+     * @return The list of descriptions.
      */
-    public List<Description> filterByUserNameAndStoreName(String userName, String storeName)
+    public List<Description> getUserDescriptionsInStore(String userName, String storeName)
             throws UserNotFoundException, StoreNotFoundException;
 
 }

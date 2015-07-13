@@ -66,6 +66,8 @@ import org.fiware.apps.marketplace.rdf.RdfIndexer;
 import org.fiware.apps.marketplace.security.auth.DescriptionAuth;
 import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,6 +75,8 @@ import com.hp.hpl.jena.shared.JenaException;
 
 @org.springframework.stereotype.Service("descriptionBo")
 public class DescriptionBoImpl implements DescriptionBo {
+	
+	private static Logger logger = LoggerFactory.getLogger(DescriptionBo.class);
 	
 	@Autowired private DescriptionAuth descriptionAuth;
 	@Autowired private DescriptionValidator descriptionValidator;
@@ -109,7 +113,9 @@ public class DescriptionBoImpl implements DescriptionBo {
 			}
 			
 			// Set basic fields
-			description.setCreatedAt(new Date());
+			Date now = new Date();
+			description.setCreatedAt(now);
+			description.setUpdatedAt(now);
 			description.setStore(store);
 			description.setCreator(user);
 			description.setLasteditor(user);
@@ -182,17 +188,15 @@ public class DescriptionBoImpl implements DescriptionBo {
 		}
 	}
 
-	@Override
-	@Transactional(readOnly=false, rollbackFor=Exception.class)
-	public void update(String storeName, String descriptionName, Description updatedDescription) 
+	private void update(String storeName, String descriptionName, Description updatedDescription, boolean checkRights) 
 			throws NotAuthorizedException, 
 			ValidationException, StoreNotFoundException, DescriptionNotFoundException {
-				
+		
 		try {
 			Description descriptionToBeUpdated = descriptionDao.findByNameAndStore(storeName, descriptionName);
 			
 			// Check rights and raise exception if user is not allowed to perform this action
-			if (!descriptionAuth.canUpdate(descriptionToBeUpdated)) {
+			if (checkRights && !descriptionAuth.canUpdate(descriptionToBeUpdated)) {
 				throw new NotAuthorizedException("update description");
 			}
 			
@@ -202,15 +206,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			// Exception is risen if the description is not valid
 			descriptionValidator.validateUpdatedDescription(descriptionToBeUpdated, updatedDescription);
 			
-			// Update fields
-			if (updatedDescription.getDisplayName() != null) {
-				descriptionToBeUpdated.setDisplayName(updatedDescription.getDisplayName());
-			}
-			
-			if (updatedDescription.getComment() != null) {
-				descriptionToBeUpdated.setComment(updatedDescription.getComment());
-			}
-	
+			// Update URL (and the included offerings)
 			if (updatedDescription.getUrl() != null) {
 				
 				List<Offering> descriptionOfferings = descriptionToBeUpdated.getOfferings();
@@ -282,8 +278,25 @@ public class DescriptionBoImpl implements DescriptionBo {
 				// When the description URL changes, the index must be updated. 
 				rdfIndexer.indexOrUpdateService(descriptionToBeUpdated);
 			}
-	
-			descriptionToBeUpdated.setLasteditor(userBo.getCurrentUser());
+			
+			// Update the rest of fields
+			if (updatedDescription.getDisplayName() != null) {
+				descriptionToBeUpdated.setDisplayName(updatedDescription.getDisplayName());
+			}
+			
+			if (updatedDescription.getComment() != null) {
+				descriptionToBeUpdated.setComment(updatedDescription.getComment());
+			}
+			
+			// If the action is automatically performed by the system, last editor field
+			// should not be updated
+			if (checkRights) {
+				descriptionToBeUpdated.setLasteditor(userBo.getCurrentUser());
+			}
+			
+			descriptionToBeUpdated.setUpdatedAt(new Date());
+			
+			// Update the description
 			descriptionDao.update(descriptionToBeUpdated);
 			
 		} catch (MalformedURLException ex) {
@@ -293,6 +306,15 @@ public class DescriptionBoImpl implements DescriptionBo {
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
+	}
+	
+	@Override
+	@Transactional(readOnly=false, rollbackFor=Exception.class)
+	public void update(String storeName, String descriptionName, Description updatedDescription) 
+			throws NotAuthorizedException, 
+			ValidationException, StoreNotFoundException, DescriptionNotFoundException {
+		
+		this.update(storeName, descriptionName, updatedDescription, true);
 	}
 
 	@Override
@@ -437,10 +459,37 @@ public class DescriptionBoImpl implements DescriptionBo {
 
     @Override
     @Transactional
-    public List<Description> filterByUserNameAndStoreName(String userName, String storeName)
+    public List<Description> getUserDescriptionsInStore(String userName, String storeName)
             throws UserNotFoundException, StoreNotFoundException {
 
-        return descriptionDao.filterByUserNameAndStoreName(userName, storeName);
+        return descriptionDao.getUserDescriptionsInStore(userName, storeName);
     }
+
+	@Override
+	@Transactional
+	public void updateAllDescriptions() {
+		
+		logger.info("Trying to update all the descriptions...");
+		
+		List<Description> descriptions = descriptionDao.getAllDescriptions();
+		for (Description description: descriptions) {
+			Description updatedDescription = new Description();
+			updatedDescription.setUrl(description.getUrl());
+			String descriptionName = description.getName();
+			String storeName = description.getStore().getName();
+			
+			try {
+				this.update(storeName, descriptionName, updatedDescription, false);
+				logger.info(String.format("Description %s (store: %s) updated", descriptionName, storeName));
+			} catch (ValidationException e) {
+				logger.warn(String.format("Description %s (store: %s) could not be updated", 
+						descriptionName, storeName), e);
+			} catch (NotAuthorizedException e) {
+				// Not expected. Rights are not checked				
+			} catch (StoreNotFoundException | DescriptionNotFoundException e) {
+				// Not expected. Store and description are supposed to exist
+			}
+		}
+	}
 
 }

@@ -172,9 +172,7 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Description> getAllDescriptions() {
-		return getSession()
-				.createCriteria(Description.class)
-				.list();
+		return getSession().createQuery(String.format("from %s", TABLE_NAME)).list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -215,7 +213,7 @@ public class DescriptionDaoImpl extends MarketplaceHibernateDao implements Descr
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Description> filterByUserNameAndStoreName(String userName, String storeName)
+	public List<Description> getUserDescriptionsInStore(String userName, String storeName)
 			throws UserNotFoundException, StoreNotFoundException {
 
 		userDao.findByName(userName);

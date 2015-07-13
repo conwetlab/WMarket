@@ -71,7 +71,7 @@ public interface DescriptionBo {
 			int offset, int max) throws StoreNotFoundException, NotAuthorizedException;
 
     /**
-     * Filter the current list of descriptions by the userName and storeName given.
+     * Get the current list of descriptions created by a user in one specific store.
      *
      * @param userName
      * @param storeName
@@ -79,9 +79,12 @@ public interface DescriptionBo {
      * @throws UserNotFoundException If there is not a User with the userName given.
      * @throws StoreNotFoundException If there is not a Store with the storeName given.
      *
-     * @return The list filtered.
+     * @return The list of descriptions.
      */
-    public List<Description> filterByUserNameAndStoreName(String userName, String storeName)
+    public List<Description> getUserDescriptionsInStore(String userName, String storeName)
             throws UserNotFoundException, StoreNotFoundException;
+    
+    // Internal
+    public void updateAllDescriptions();
 
 }

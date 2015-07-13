@@ -27,8 +27,12 @@
             <dd>${ offering.describedIn.creator.displayName }</dd>
           </dl>
           <dl>
-            <dt>Upload date</dt>
-            <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ offering.describedIn.createdAt }" /></dd>
+            <dt>Registered At</dt>
+            <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy HH:mm:ss" value="${ offering.describedIn.createdAt }" /></dd>
+          </dl>
+          <dl>
+            <dt>Updated At</dt>
+            <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy HH:mm:ss" value="${ offering.describedIn.updatedAt }" /></dd>
           </dl>
         </div>
       </div>
@@ -48,7 +52,7 @@
             <dd>${ offering.describedIn.store.creator.displayName }</dd>
           </dl>
           <dl>
-            <dt>Registration date</dt>
+            <dt>Registered At</dt>
             <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ offering.describedIn.store.createdAt }" /></dd>
           </dl>
         </div>

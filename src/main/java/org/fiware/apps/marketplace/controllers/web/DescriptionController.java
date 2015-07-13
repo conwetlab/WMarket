@@ -149,6 +149,8 @@ public class DescriptionController extends AbstractController {
             model.addAttribute("title", oldDescription.getDisplayName() + " - " + getContextName());
             model.addAttribute("store", store);
             model.addAttribute("description", oldDescription);
+            model.addAttribute("viewName", "detail");
+            model.addAttribute("currentDescriptionView", "detail");
 
             newDescription.setDisplayName(displayName);
             newDescription.setUrl(url);
@@ -188,7 +190,6 @@ public class DescriptionController extends AbstractController {
 
 			Map<String, String> formInfo = new HashMap<String, String>();
 
-			formInfo.put("storeName", storeName);
 			formInfo.put("displayName", displayName);
 			formInfo.put("url", url);
 			formInfo.put("comment", comment);

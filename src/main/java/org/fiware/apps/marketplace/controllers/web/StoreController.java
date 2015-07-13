@@ -387,7 +387,7 @@ public class StoreController extends AbstractController {
             model.addAttribute("title", store.getDisplayName() + " - Descriptions - " + getContextName());
             model.addAttribute("store", store);
             model.addAttribute("viewName", "descriptionList");
-            model.addAttribute("descriptions", getDescriptionBo().filterByUserNameAndStoreName(user.getUserName(), store.getName()));
+            model.addAttribute("descriptions", getDescriptionBo().getUserDescriptionsInStore(user.getUserName(), store.getName()));
 
             try {
 				model.addAttribute("review", reviewBo.getUserReview(store));
