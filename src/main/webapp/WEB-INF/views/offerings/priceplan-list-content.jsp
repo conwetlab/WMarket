@@ -8,6 +8,9 @@
     <t:insertTemplate template="/WEB-INF/views/offerings/header.jsp" />
   </div>
   <div class="col-sm-10 col-md-6 col-lg-7">
+    <c:choose>
+    <c:when test="${ not empty offering.pricePlans }">
+
     <div class="payment-plan-group">
       <c:forEach var="pricePlan" items="${ offering.pricePlans }">
 
@@ -65,5 +68,15 @@
 
       </c:forEach>
     </div>
+
+    </c:when>
+    <c:otherwise>
+
+    <div class="alert alert-warning">
+      <span class="fa fa-exclamation-circle"></span> Sorry, no available priceplan in this offering.
+    </div>
+
+    </c:otherwise>
+    </c:choose>
   </div>
 </div>
