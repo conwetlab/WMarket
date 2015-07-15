@@ -33,6 +33,7 @@
 .offering-item .image-thumbnail {
     width: 100%;
     height: 100px;
+    padding: 5px;
 }
 
 .offering-store {
