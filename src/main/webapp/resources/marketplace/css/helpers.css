@@ -84,3 +84,29 @@
 .date {
     text-transform: capitalize;
 }
+
+.tooltip:hover:before {
+    position: absolute;
+    content: attr(title);
+    padding: 5px;
+    width: 180px;
+    left: 50%;
+    margin-left: -90px;
+    bottom: 70px;
+    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
+    color: rgb(255, 255, 255);
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 4px;
+    z-index: 100;
+}
+
+.tooltip:hover:after {
+    position: absolute;
+    content: " ";
+    top: -10px;
+    left: 50%;
+    margin-left: -10px;
+    border-left: solid rgba(0, 0, 0, 0) 10px;
+    border-right: solid rgba(0, 0, 0, 0) 10px;
+    border-top: solid rgba(0, 0, 0, 0.8) 10px;
+}
