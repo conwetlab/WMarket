@@ -184,6 +184,7 @@ public class Environment {
 	 * @throws ManagedProcessException If an error arises when the database was being cleaned
 	 */
 	public void cleanDB() throws ManagedProcessException {
+		embeddedDB.run("DELETE FROM last_viewed", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM offerings_categories", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM offerings_services", "root", null, DATABASE);
 		embeddedDB.run("DELETE FROM services_categories", "root", null, DATABASE);

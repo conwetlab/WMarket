@@ -787,7 +787,7 @@ public class DescriptionServiceIT extends AbstractIT {
 				
 		// Get all descriptions
 		Client client = ClientBuilder.newClient();
-		Response response = client.target(endPoint + "/api/v2/descriptions")
+		Response response = client.target(endPoint + "/api/v2/description")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
 				.request(MediaType.APPLICATION_JSON)
@@ -833,7 +833,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	private void testListDescriptionsInvalidParams(int offset, int max) {
 		Client client = ClientBuilder.newClient();
-		Response response = client.target(endPoint + "/api/v2/descriptions")
+		Response response = client.target(endPoint + "/api/v2/description")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
 				.request(MediaType.APPLICATION_JSON)
@@ -1029,7 +1029,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Get all the offerings
 		Client client = ClientBuilder.newClient();
-		Response allOfferingsResponse = client.target(endPoint + "/api/v2/offerings")
+		Response allOfferingsResponse = client.target(endPoint + "/api/v2/offering")
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
@@ -1051,7 +1051,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		// Get all the offerings
 		Client client = ClientBuilder.newClient();
-		Response allOfferingsResponse = client.target(endPoint + "/api/v2/offerings")
+		Response allOfferingsResponse = client.target(endPoint + "/api/v2/offering")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
 				.request(MediaType.APPLICATION_JSON)
@@ -1077,7 +1077,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	private void testListOfferingsInvalidParams(int offset, int max, String orderBy, String expectedMessage) {
 		Client client = ClientBuilder.newClient();
-		Response response = client.target(endPoint + "/api/v2/offerings")
+		Response response = client.target(endPoint + "/api/v2/offering")
 				.queryParam("offset", offset)
 				.queryParam("max", max)
 				.queryParam("orderBy", orderBy)
@@ -1113,8 +1113,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	private Response getBookmarkedOfferings() {
 		// Get all the offerings
 		Client client = ClientBuilder.newClient();
-		Response allOfferingsResponse = client.target(endPoint + "/api/v2/offerings")
-				.queryParam("bookmarked", true)
+		Response allOfferingsResponse = client.target(endPoint + "/api/v2/offering/bookmark")
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
 				.get();
