@@ -84,7 +84,7 @@ public class AllOfferingsServiceTest {
 		doThrow(e).when(offeringBoMock).getOfferingsPage(anyInt(), anyInt(), anyString(), anyBoolean());
 
 		// Call the method
-		Response res = allOfferingsService.listOfferings(0, 100, false, "name", false);
+		Response res = allOfferingsService.listOfferings(0, 100, "name", false);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, 
@@ -93,7 +93,7 @@ public class AllOfferingsServiceTest {
 	
 	private void testListAllOfferingsInvalidParams(int offset, int max, String orderBy, boolean desc) {
 		// Call the method
-		Response res = allOfferingsService.listOfferings(offset, max, false, orderBy, desc);
+		Response res = allOfferingsService.listOfferings(offset, max, orderBy, desc);
 
 		// Assertions
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -129,7 +129,7 @@ public class AllOfferingsServiceTest {
 		int max = 100;
 		String orderBy = "name";
 		boolean desc = true;
-		Response res = allOfferingsService.listOfferings(offset, max, false, orderBy, desc);
+		Response res = allOfferingsService.listOfferings(offset, max, orderBy, desc);
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
@@ -155,7 +155,7 @@ public class AllOfferingsServiceTest {
 		int max = 100;
 		String orderBy = "averageScore";
 		boolean desc = false;
-		Response res = allOfferingsService.listOfferings(offset, max, true, orderBy, desc);
+		Response res = allOfferingsService.listBookmarked(offset, max, orderBy, desc);
 		
 		// Verify
 		verify(offeringBoMock, never()).getOfferingsPage(offset, max, orderBy, desc);
@@ -179,7 +179,7 @@ public class AllOfferingsServiceTest {
 		int max = 100;
 		String orderBy = "describedIn.registrationDate";
 		boolean desc = false;
-		Response res = allOfferingsService.listOfferings(offset, max, false, orderBy, desc);
+		Response res = allOfferingsService.listOfferings(offset, max, orderBy, desc);
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
@@ -201,7 +201,7 @@ public class AllOfferingsServiceTest {
 		int max = 100;
 		String orderBy = "name";
 		boolean desc = true;
-		Response res = allOfferingsService.listOfferings(offset, max, true, orderBy, desc);
+		Response res = allOfferingsService.listBookmarked(offset, max, orderBy, desc);
 		
 		// Verify
 		verify(offeringBoMock, never()).getOfferingsPage(offset, max, orderBy, desc);
@@ -221,7 +221,7 @@ public class AllOfferingsServiceTest {
 		int max = 100;
 		String orderBy = "name";
 		boolean desc = true;
-		Response res = allOfferingsService.listOfferings(offset, max, false, orderBy, desc);
+		Response res = allOfferingsService.listOfferings(offset, max, orderBy, desc);
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
