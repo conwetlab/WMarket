@@ -13,8 +13,8 @@
       <div class="panel-heading text-center">
         <a class="image-thumbnail thumbnail-bordered" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">
           <img class="image offering-image" src="${ offering.imageUrl }" />
-        </span>
-        <a class="panel-title" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">${ offering.displayName }</a>
+        </a>
+        <a class="panel-title text-truncate" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">${ offering.displayName }</a>
       </div>
       <div class="panel-body">
         <a class="offering-store" href="${ pageContext.request.contextPath }/stores/${ description.store.name }/offerings">Web Store</a>

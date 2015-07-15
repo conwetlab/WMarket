@@ -35,11 +35,6 @@
                         $('<span class="fa fa-building fa-inverse">')));
         }
 
-        var ratingValue = $('<span>')
-            .addClass('rating-value rating-value-sm rating-value-lighter')
-            .append($('<span>').addClass('fa fa-star'), " " + this.averageScore.toFixed(1));
-        thumbnailElement.append(ratingValue);
-
         var storeHeading = $('<div class="store-heading">').append(
             thumbnailElement);
 

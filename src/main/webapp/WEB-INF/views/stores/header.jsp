@@ -20,7 +20,7 @@
 
       </c:otherwise>
       </c:choose>
-      <span class="rating-value rating-value-lg rating-overall">
+      <span class="rating-value rating-value-lighter rating-overall">
         <span class="fa fa-star">${ store.averageScore }</span>
       </span>
     </span>

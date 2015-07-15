@@ -35,7 +35,7 @@
 
         var offeringHeading = $('<div class="panel-heading text-center">').append(
             thumbnailElement,
-            $('<a class="panel-title">').text(this.displayName).attr('href', [
+            $('<a class="panel-title text-truncate">').text(this.displayName).attr('href', [
                 app.contextPath,
                 'offerings',
                 this.describedIn.store,

@@ -53,6 +53,10 @@
     color: rgb(250, 205, 70);
 }
 
+.rating:last-child {
+    margin-top: 5px;
+}
+
 /****************************************************************************************
  * COMPONENT RATING VALUE
  ****************************************************************************************/
@@ -60,10 +64,14 @@
 .rating-value {
     position: absolute;
     right: 0;
+    top: 0;
     font-size: 18px;
     line-height: 20px;
     color: rgb(100, 100, 100);
     text-shadow: 0px 1px 1px rgb(0, 0, 0);
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 0 0 0 4px;
 }
 
 .rating-value .fa-star:before {
@@ -76,14 +84,8 @@
     line-height: 10px;
 }
 
-.rating-value-lg {
-    font-size: 24px;
-    line-height: 26px;
-}
-
 .rating-value-lighter {
     color: rgb(255, 255, 255);
-    text-shadow: 0px 1px 3px rgb(0, 0, 0);
 }
 
 /****************************************************************************************
