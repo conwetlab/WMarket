@@ -81,6 +81,7 @@ public class Offering extends ReviewableEntity {
 	private Set<Category> categories;
 	
 	private List<User> usersBookmarkedMe;
+	private List<ViewedOffering> usersViewedMe;
 
 	@XmlID
 	@XmlAttribute 
@@ -194,6 +195,7 @@ public class Offering extends ReviewableEntity {
 		this.categories = categories;
 	}
 	
+	// So cascade will work
 	@XmlTransient
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "bookmarks", 
@@ -205,6 +207,16 @@ public class Offering extends ReviewableEntity {
 
 	public void setUsersBookmarkedMe(List<User> usersBookmarkedMe) {
 		this.usersBookmarkedMe = usersBookmarkedMe;
+	}
+	
+	@XmlTransient
+	@OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	public List<ViewedOffering> getUsersViewedMe() {
+		return usersViewedMe;
+	}
+
+	public void setUsersViewedMe(List<ViewedOffering> usersViewedMe) {
+		this.usersViewedMe = usersViewedMe;
 	}
 
 	@Override

@@ -1,11 +1,10 @@
-package org.fiware.apps.marketplace.dao;
+package org.fiware.apps.marketplace.model;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
- * Copyright (C) 2014-2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,28 +32,66 @@ package org.fiware.apps.marketplace.dao;
  * #L%
  */
 
-import java.util.List;
+import static javax.persistence.GenerationType.IDENTITY;
 
-import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
-import org.fiware.apps.marketplace.model.Store;
+import java.util.Date;
 
-public interface StoreDao {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "last_viewed")
+public class ViewedOffering {
 	
-	// Save, update & delete
-	public void save(Store store);
-	public void update(Store store);
-	public void delete(Store store);
+	private int id;
+	private User user;
+	private Offering offering;
+	private Date date;
 	
-	// Find by name
-	public Store findByName(String name) throws StoreNotFoundException;
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public int getId() {
+		return id;
+	}
 
-    // Validation
-    public boolean isNameAvailable(String name);
-    public boolean isDisplayNameAvailable(String displayName);
-    public boolean isURLAvailable(String url);
+	public void setId(int id) {
+		this.id = id;
+	}
 
-	// Get all or a sublist
-	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc);
-	public List<Store> getAllStores();
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "user_id", nullable = false)
+	public User getUser() {
+		return user;
+	}
+	
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "offering_id", nullable = false)
+	public Offering getOffering() {
+		return offering;
+	}
+	
+	public void setOffering(Offering offering) {
+		this.offering = offering;
+	}
+	
+	@Column(name = "date")
+	public Date getDate() {
+		return date;
+	}
+	
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
 
 }

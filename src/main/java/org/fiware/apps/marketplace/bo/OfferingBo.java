@@ -80,6 +80,9 @@ public interface OfferingBo {
 	public List<Offering> getBookmarkedOfferingsPage(int offset, int max, String orderBy, boolean desc) 
 			throws NotAuthorizedException;
 	
+	// Get visited offerings
+	public List<Offering> getLastVisitedOfferingsPage(int offset, int max) throws NotAuthorizedException;
+	
 	// Review
 	public void createReview(String storeName, String descriptionName, String offeringName, Review review) 
 			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,

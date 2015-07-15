@@ -34,38 +34,17 @@ package org.fiware.apps.marketplace.dao;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
-import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
-import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.ViewedOffering;
 
-public interface OfferingDao {
+public interface ViewedOfferingDao {
 	
-	// Save, update & delete
-	public void save(Offering offering);
-	public void update(Offering offering);
-	public void delete(Offering offering);
+	public void save(ViewedOffering viewedOffering);
+	public void update(ViewedOffering viewedOffering);
+	public void delete(ViewedOffering viewedOffering);
 	
-	// Find
-	public Offering findByNameStoreAndDescription(String storeName, String descriptionName, 
-			String offeringName) throws StoreNotFoundException, DescriptionNotFoundException, 
-			OfferingNotFoundException;
-	
-	// Get offerings
-	// public List<Offering> getAllOfferings();
-	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc);
-	// public List<Offering> getAllStoreOfferings(String storeName) 
-	//	 	throws StoreNotFoundException;
-	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max, String orderBy, boolean desc) 
-			throws StoreNotFoundException;
-	// public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName)
-	// 		throws StoreNotFoundException, DescriptionNotFoundException;
-	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
-			int offset, int max, String orderBy, boolean desc) throws StoreNotFoundException, 
-			DescriptionNotFoundException;
-	
-	public List<Offering> getBookmarkedOfferingsPage(String userName, int offset, int max, String orderBy, 
-			boolean desc) throws UserNotFoundException;
+	public List<ViewedOffering> getUserViewedOfferings(String userName) throws UserNotFoundException;
+	public List<ViewedOffering> getUserViewedOfferingsPage(String userName, int offset, int max) 
+			throws UserNotFoundException;
 
 }

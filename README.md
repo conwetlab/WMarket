@@ -395,7 +395,7 @@ Descriptions is the way of creating offerings in a Store. A description is just 
 
 #### List all descriptions
 
-* **Path**: `/api/v2/descriptions`
+* **Path**: `/api/v2/description`
 * **Method**: GET
 * **Accept**: `application/json` or `application/xml`
 * **Params**:
@@ -545,7 +545,7 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
 
 #### List all offerings
 
-* **Path**: `/api/v2/offerings`
+* **Path**: `/api/v2/offering`
 * **Method**: GET
 * **Accept**: `application/json` or `application/xml`
 * **Params**:
@@ -553,7 +553,48 @@ Changes the state of the bookmark: if the offering has already been bookmarked b
  * **offset**: The first element to be retrieved
  * **orderBy**: Order used to retrieve the stores (by default: `id`) 
  * **desc**: Descending order (by default: `false`)
- * **bookmarked**: Set to `true` to only retrieve the offerings bookmarked by the logged user.
+* **Content**:
+```
+{ 
+ "offerings": [
+  {OFFERING 1},
+  {OFFERING 2},
+  [...]
+ ]
+}
+```
+
+#### List bookmarked offerings
+
+* **Path**: `/api/v2/offering/bookmark`
+* **Method**: GET
+* **Accept**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+ * **orderBy**: Order used to retrieve the stores (by default: `id`) 
+ * **desc**: Descending order (by default: `false`)
+* **Content**:
+```
+{ 
+ "offerings": [
+  {OFFERING 1},
+  {OFFERING 2},
+  [...]
+ ]
+}
+```
+
+#### List viewed offerings
+
+* **Path**: `/api/v2/offering/lastViewed`
+* **Method**: GET
+* **Accept**: `application/json` or `application/xml`
+* **Params**:
+ * **limit**: The amount of elements to be retrieved
+ * **offset**: The first element to be retrieved
+ * **orderBy**: Order used to retrieve the stores (by default: `id`) 
+ * **desc**: Descending order (by default: `false`)
 * **Content**:
 ```
 { 

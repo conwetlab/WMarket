@@ -86,6 +86,7 @@ public class User {
 	private List<Description> descriptionsModified;
 	private List<Offering> bookmarks;
 	private List<Review> reviews;
+	private List<ViewedOffering> lastViewedOfferings;
 		
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -281,6 +282,16 @@ public class User {
 
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
+	}
+	
+	@XmlTransient
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	public List<ViewedOffering> getLastViewedOfferings() {
+		return lastViewedOfferings;
+	}
+
+	public void setLastViewedOfferings(List<ViewedOffering> lastViewedOfferings) {
+		this.lastViewedOfferings = lastViewedOfferings;
 	}
 
 	@Override

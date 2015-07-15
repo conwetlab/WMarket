@@ -172,7 +172,7 @@ public class OfferingDaoImpl extends MarketplaceHibernateDao implements Offering
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Offering> getUserBookmarkedOfferings(String userName,
+	public List<Offering> getBookmarkedOfferingsPage(String userName,
 			int offset, int max, String orderBy, boolean desc)
 			throws UserNotFoundException {
 		

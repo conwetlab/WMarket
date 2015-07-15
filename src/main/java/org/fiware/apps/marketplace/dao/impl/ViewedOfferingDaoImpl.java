@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.dao;
+package org.fiware.apps.marketplace.dao.impl;
 
 /*
  * #%L
@@ -34,38 +34,56 @@ package org.fiware.apps.marketplace.dao;
 
 import java.util.List;
 
-import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
-import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
-import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
+import org.fiware.apps.marketplace.dao.UserDao;
+import org.fiware.apps.marketplace.dao.ViewedOfferingDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
-import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.ViewedOffering;
+import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-public interface OfferingDao {
+@Repository("viewedOfferingDao")
+public class ViewedOfferingDaoImpl extends MarketplaceHibernateDao implements ViewedOfferingDao {
 	
-	// Save, update & delete
-	public void save(Offering offering);
-	public void update(Offering offering);
-	public void delete(Offering offering);
+	private static final String TABLE_NAME = ViewedOffering.class.getName();
 	
-	// Find
-	public Offering findByNameStoreAndDescription(String storeName, String descriptionName, 
-			String offeringName) throws StoreNotFoundException, DescriptionNotFoundException, 
-			OfferingNotFoundException;
-	
-	// Get offerings
-	// public List<Offering> getAllOfferings();
-	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc);
-	// public List<Offering> getAllStoreOfferings(String storeName) 
-	//	 	throws StoreNotFoundException;
-	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max, String orderBy, boolean desc) 
-			throws StoreNotFoundException;
-	// public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName)
-	// 		throws StoreNotFoundException, DescriptionNotFoundException;
-	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
-			int offset, int max, String orderBy, boolean desc) throws StoreNotFoundException, 
-			DescriptionNotFoundException;
-	
-	public List<Offering> getBookmarkedOfferingsPage(String userName, int offset, int max, String orderBy, 
-			boolean desc) throws UserNotFoundException;
+	@Autowired private UserDao userDao;
+
+	@Override
+	public void save(ViewedOffering viewedOffering) {
+		getSession().saveOrUpdate(viewedOffering);	
+	}
+
+	@Override
+	public void update(ViewedOffering viewedOffering) {
+		getSession().merge(viewedOffering);		
+	}
+
+	@Override
+	public void delete(ViewedOffering viewedOffering) {
+		getSession().delete(viewedOffering);		
+	}
+
+	@Override
+	public List<ViewedOffering> getUserViewedOfferings(String userName)
+			throws UserNotFoundException {
+		
+		return getUserViewedOfferingsPage(userName, 0, Integer.MAX_VALUE);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ViewedOffering> getUserViewedOfferingsPage(String userName,
+			int offset, int max) throws UserNotFoundException {
+		// Throw exception if user does not exist
+		User user = userDao.findByName(userName);
+		
+		return getSession().createQuery(String.format("from %s where user = :user order by date desc", TABLE_NAME))
+				.setParameter("user", user)
+				.setFirstResult(offset)
+				.setMaxResults(max)
+				.list();
+	}
 
 }
