@@ -73,7 +73,7 @@
     <c:otherwise>
 
     <div class="alert alert-warning">
-      <span class="fa fa-exclamation-circle"></span> Sorry, no available priceplan in this offering.
+      <span class="fa fa-exclamation-circle"></span> Sorry, there are not price plans available for this offering.
     </div>
 
     </c:otherwise>
