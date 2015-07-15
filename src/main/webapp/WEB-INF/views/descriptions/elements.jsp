@@ -10,15 +10,10 @@
         <span class="fa fa-archive fa-inverse"></span>
       </span>
     </span>
+    <a class="panel-title" href="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }">${ description.displayName }</a>
   </div>
   <div class="panel-body">
     <div class="dl-group">
-      <dl>
-        <dt>Name</dt>
-        <dd>
-          <a href="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }">${ description.displayName }</a>
-        </dd>
-      </dl>
       <dl>
         <dt>Store</dt>
         <dd>
@@ -26,30 +21,26 @@
         </dd>
       </dl>
       <dl>
-        <dt>URL to Linked USDL file</dt>
-        <dd>${ description.url }</dd>
-      </dl>
-      <dl>
-        <dt>Upload date</dt>
-        <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ description.createdAt }" /></dd>
+        <dt>Registered at</dt>
+        <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy HH:mm:ss" value="${ description.createdAt }" /></dd>
       </dl>
     </div>
-    <p class="text-bold">Offerings</p>
+    <p class="text-bold">Included offerings</p>
     <div class="description-offerings">
       <div class="row-sliding" style="width: ${ fn:length(description.offerings) * 210 }px;">
       <c:forEach var="offering" items="${ description.offerings }">
 
-      <a class="offering-item" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">
-        <span class="offering-heading">
-          <span class="image-thumbnail image-thumbnail-sm">
-            <img class="image image-rounded" src="${ offering.imageUrl }" />
-          </span>
-        </span>
-        <span class="offering-body">
-          <span class="offering-name">${ offering.displayName }</span>
-          <span class="offering-version">${ offering.version }</span>
-        </span>
-      </a>
+        <div class="panel panel-default-lighter offering-item">
+          <div class="panel-heading text-center">
+            <a href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }" class="image-thumbnail thumbnail-bordered">
+              <img class="image offering-image" src="${ offering.imageUrl }" />
+            </a>
+            <a href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }" class="panel-title text-truncate">${ offering.displayName }</a>
+          </div>
+          <div class="panel-body">
+            <div class="offering-description">${ offering.description }</div>
+          </div>
+        </div>
 
       </c:forEach>
       </div>

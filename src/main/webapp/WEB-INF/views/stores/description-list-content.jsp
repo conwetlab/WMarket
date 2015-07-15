@@ -6,18 +6,22 @@
   <div class="col-sm-10 col-md-4 col-lg-3">
     <t:insertTemplate template="/WEB-INF/views/stores/header.jsp" />
   </div>
-  <div class="col-sm-10 col-md-6 col-lg-5 col-lg-offset-1">
     <c:choose>
     <c:when test="${ not empty descriptions }">
-        <t:insertTemplate template="/WEB-INF/views/descriptions/elements.jsp" />
+
+    <div class="col-sm-10 col-md-6 col-lg-5 col-lg-offset-2">
+      <t:insertTemplate template="/WEB-INF/views/descriptions/elements.jsp" />
+    </div>
+
     </c:when>
     <c:otherwise>
 
-    <div class="alert alert-warning">
-      <span class="fa fa-exclamation-circle"></span> No description available.
+    <div class="col-sm-10 col-md-6 col-lg-7">
+      <div class="alert alert-warning">
+        <span class="fa fa-exclamation-circle"></span> Sorry, no available description in this store.
+      </div>
     </div>
 
-     </c:otherwise>
+    </c:otherwise>
     </c:choose>
-  </div>
 </div>

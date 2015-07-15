@@ -78,44 +78,5 @@
 }
 
 .description-offerings .offering-item {
-    position: relative;
-    display: inline-block;
-    padding: 10px;
-    margin: 0px 10px 0px 0px;
-    width: 200px;
-    vertical-align: middle;
-    color: rgb(90, 90, 90);
-    background-color: rgb(255,255,255);
-    border: solid 1px rgb(210, 220, 230);
-    border-radius: 4px;
-}
-
-.description-offerings .offering-heading,
-.description-offerings .offering-body {
-    position: relative;
-    display: table-cell;
-    vertical-align: middle;
-}
-
-.description-offerings .offering-heading {
-    width: 1%;
-}
-
-.description-offerings .offering-body {
-    width: 100%;
-    padding-left: 10px;
-}
-
-.description-offerings .offering-version {
-    position: relative;
-    display: block;
-    color: rgb(100, 100, 100);
-}
-
-.description-offerings .offering-item:hover {
-    background-color: rgb(240, 240, 240);
-}
-
-.description-offerings .offering-item:hover .offering-name {
-    color: rgb(20, 170, 215);
+    margin-bottom: 0;
 }
