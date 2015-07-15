@@ -38,7 +38,6 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -133,7 +132,6 @@ public class AllOfferingsServiceTest {
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
-		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
@@ -158,7 +156,6 @@ public class AllOfferingsServiceTest {
 		Response res = allOfferingsService.listBookmarked(offset, max, orderBy, desc);
 		
 		// Verify
-		verify(offeringBoMock, never()).getOfferingsPage(offset, max, orderBy, desc);
 		verify(offeringBoMock).getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 		
 		// Assertions
@@ -183,7 +180,6 @@ public class AllOfferingsServiceTest {
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
-		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 		
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 500, ErrorType.INTERNAL_SERVER_ERROR, exceptionMsg);
@@ -204,7 +200,6 @@ public class AllOfferingsServiceTest {
 		Response res = allOfferingsService.listBookmarked(offset, max, orderBy, desc);
 		
 		// Verify
-		verify(offeringBoMock, never()).getOfferingsPage(offset, max, orderBy, desc);
 		verify(offeringBoMock).getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 		
 		// Check exception
@@ -225,7 +220,6 @@ public class AllOfferingsServiceTest {
 		
 		// Verify
 		verify(offeringBoMock).getOfferingsPage(offset, max, orderBy, desc);
-		verify(offeringBoMock, never()).getBookmarkedOfferingsPage(offset, max, orderBy, desc);
 		
 		// Check exception
 		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
@@ -242,4 +236,70 @@ public class AllOfferingsServiceTest {
 		testListSQLException(new QueryException(""));
 	}
 	
+	private void testListLastViewedOfferingsInvalidParams(int offset, int max) {
+		// Call the method
+		Response res = allOfferingsService.lastVisited(offset, max);
+
+		// Assertions
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, 
+				String.format(OFFSET_MAX_INVALID, offset, max));
+	}
+	
+	@Test
+	public void testListLastViewedOfferingsInvalidOffset() {
+		testListLastViewedOfferingsInvalidParams(-1, 100);
+	}
+	
+	@Test
+	public void testListLastViewedOfferingsInvalidMax() {
+		testListLastViewedOfferingsInvalidParams(0, -1);
+	}
+	
+	@Test
+	public void testListLastViewedOfferingsInvalidOffsetMax() {
+		testListLastViewedOfferingsInvalidParams(-1, -1);
+	}
+	
+	@Test
+	public void testListLastViewedNotAllowed() throws NotAuthorizedException {
+		String userName = "example-user";
+		
+		// Mocks
+		User user = mock(User.class);
+		when(user.getUserName()).thenReturn(userName);
+		Exception e = new NotAuthorizedException("list offerings");
+		doThrow(e).when(offeringBoMock).getLastVisitedOfferingsPage(anyInt(), anyInt());
+
+		// Call the method
+		Response res = allOfferingsService.lastVisited(0, 100);
+
+		// Assertions
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, 
+				e.getMessage());
+
+	}
+	
+	@Test
+	public void testListLastViewedGetNoErrors() throws NotAuthorizedException {
+		@SuppressWarnings("unchecked")
+		List<Offering> oferrings = mock(List.class);
+		
+		// Mocks
+		when(offeringBoMock.getLastVisitedOfferingsPage(anyInt(), anyInt())).
+				thenReturn(oferrings);
+		
+		// Call the method
+		int offset = 0;
+		int max = 100;
+		Response res = allOfferingsService.lastVisited(0, 100);
+		
+		// Verify
+		verify(offeringBoMock).getLastVisitedOfferingsPage(offset, max);
+		
+		// Assertions
+		assertThat(res.getStatus()).isEqualTo(200);
+		assertThat(((Offerings) res.getEntity()).
+				getOfferings()).isEqualTo(oferrings);
+	}
+
 }

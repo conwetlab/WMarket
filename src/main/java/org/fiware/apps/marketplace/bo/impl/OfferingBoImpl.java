@@ -153,12 +153,14 @@ public class OfferingBoImpl implements OfferingBo {
 				viewedOffering.setDate(new Date());
 				
 				viewedOfferingDao.save(viewedOffering);
-			}
 			
-			// Only the last 10 viewed offerings are stored, so when there are
-			// more than 10 offerings stored, they should be removed
-			for (int i = N_LAST_VIEWED; i < lastViewedOfferings.size(); i++) {
-				viewedOfferingDao.delete(lastViewedOfferings.get(i));
+				// Only the last 10 viewed offerings are stored, so when there are
+				// more than 10 offerings stored, they should be removed.
+				// We have added one element to the list by calling "save", for 
+				// this reason we subtract 1 in this loop
+				for (int i = N_LAST_VIEWED - 1; i < lastViewedOfferings.size(); i++) {
+					viewedOfferingDao.delete(lastViewedOfferings.get(i));
+				}
 			}
 			
 		} catch (UserNotFoundException e) {
