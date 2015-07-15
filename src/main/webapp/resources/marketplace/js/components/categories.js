@@ -5,7 +5,7 @@
 
 (function (ns, utils) {
 
-    ns.Category = function Category(data, offerings) {
+    ns.Category = function Category(data) {
         this.$back = $('<button class="btn btn-default slider-control">')
             .append($('<i class="fa fa-chevron-left">'));
         this.$next = $('<button class="btn btn-default slider-control">')
@@ -27,15 +27,16 @@
 
         this.$element = $('<div class="row category">')
             .append(this.$title, this.$offeringList);
-
-        offerings.forEach(function (offering) {
-            this.add(new app.components.Offering(offering));
-        }, this);
     };
 
     ns.Category.prototype = {
 
-        setUp: function setUp() {
+        setUp: function setUp(offerings) {
+
+            offerings.forEach(function (offering) {
+                this.add(new app.components.Offering(offering));
+            }, this);
+
             this.$itemWidth = 210;
             this.$listWidth = this.$list.children().length * this.$itemWidth;
 

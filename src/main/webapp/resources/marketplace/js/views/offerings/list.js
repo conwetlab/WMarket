@@ -61,11 +61,13 @@
             ns.category.list(function (categories) {
                 $spinner.remove();
                 categories.forEach(function (data) {
+                    var offeringShowcase = new app.components.Category(data);
+
+                    ns.$scope.append(offeringShowcase.get());
+
                     ns.category.models[data.name] = data;
                     ns.category.filter(data.name, function (offerings) {
-                        var category = new app.components.Category(data, offerings);
-                        ns.$scope.append(category.get());
-                        category.setUp();
+                        offeringShowcase.setUp(offerings);
                     });
                 });
             });
