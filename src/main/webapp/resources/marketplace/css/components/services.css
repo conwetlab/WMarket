@@ -27,7 +27,7 @@
         max-width: 150px;
         padding: 10px;
         text-align: right;
-        vertical-align: middle;
+        vertical-align: top;
     }
 
     .service-name span {
@@ -71,7 +71,7 @@
     display: block;
     margin: 0px 0px 0px 30px;
     padding: 10px;
-    border-left: 1px solid rgb(230, 220, 230);
+    border-left: 1px solid rgb(190, 200, 210);
 }
 
 @media (min-width: 768px /* Tablets, Desktops and Large Desktops */) {
