@@ -40,7 +40,7 @@
 
 	<!-- entry points -->
 	<bean id="fiwareEntryPoint"
-		class="org.pac4j.springframework.security.web.ClientAuthenticationEntryPoint">
+		class="org.fiware.apps.marketplace.security.entryPoints.RESTAwareClientAuthenticationEntryPoint">
 		<property name="client" ref="fiwareClient" />
 	</bean>
 

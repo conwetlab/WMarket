@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.security;
+package org.fiware.apps.marketplace.security.entryPoints;
 
 /*
  * #%L

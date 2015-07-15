@@ -33,7 +33,7 @@
 
 	<beans:bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 	
-	<beans:bean id="restAwareLoginUrlAuthenticationEntryPoint" class="org.fiware.apps.marketplace.security.RESTAwareLoginUrlAuthenticationEntryPoint">
+	<beans:bean id="restAwareLoginUrlAuthenticationEntryPoint" class="org.fiware.apps.marketplace.security.entryPoints.RESTAwareLoginUrlAuthenticationEntryPoint">
 		<beans:constructor-arg value="/login" />
 	</beans:bean>
 
