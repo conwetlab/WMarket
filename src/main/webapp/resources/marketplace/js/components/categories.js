@@ -40,7 +40,7 @@
             this.$itemWidth = 210;
             this.$listWidth = this.$list.children().length * this.$itemWidth;
 
-            this.$list.css('width', this.$listWidth);
+            this.$list.css({width: this.$listWidth, left: 0});
             this.offsetWidth = 0;
 
             this.$back.on('click', this.back.bind(this));
@@ -95,10 +95,10 @@
     };
 
     function slide() {
-        this.$list.animate({ left: this.offsetWidth }, 200, function () {
-            toggleControlBack.call(this);
-            toggleControlNext.call(this);
-        }.bind(this));
+        this.$list.css('left', this.offsetWidth);
+
+        toggleControlBack.call(this);
+        toggleControlNext.call(this);
 
         return this;
     }
