@@ -15,14 +15,21 @@
         this.element = $('<div class="panel panel-default-lighter offering-item">');
         this.store   = app.getStore(this.describedIn.store);
 
-        var thumbnailElement = $('<span class="image-thumbnail">');
+        var thumbnailElement = $('<a class="image-thumbnail thumbnail-bordered">')
+            .attr('href', [
+                app.contextPath,
+                'offerings',
+                this.describedIn.store,
+                this.describedIn.name,
+                this.name
+            ].join('/'));
 
         var ratingValue = $('<span>')
             .addClass('rating-value rating-value-lighter')
             .append($('<span>').addClass('fa fa-star'), " " + this.averageScore.toFixed(1));
 
         thumbnailElement.append(
-            $('<img class="image image-rounded image-bordered">')
+            $('<img class="image">')
                 .addClass('offering-image').attr('src', this.imageUrl),
             ratingValue);
 

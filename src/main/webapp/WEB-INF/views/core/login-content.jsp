@@ -26,8 +26,8 @@
   <div class="col-sm-10 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-3">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span class="image-thumbnail">
-          <span class="image image-circle image-default-darker">
+        <span class="image-thumbnail thumbnail-circle">
+          <span class="image image-avatar image-default-darker">
             <span class="fa fa-user fa-inverse"></span>
           </span>
         </span>

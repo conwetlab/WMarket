@@ -11,8 +11,8 @@
 
     <div class="panel panel-default-lighter offering-item">
       <div class="panel-heading text-center">
-        <span class="image-thumbnail">
-          <img class="image image-rounded image-bordered offering-image" src="${ offering.imageUrl }" />
+        <a class="image-thumbnail thumbnail-bordered" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">
+          <img class="image offering-image" src="${ offering.imageUrl }" />
         </span>
         <a class="panel-title" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">${ offering.displayName }</a>
       </div>

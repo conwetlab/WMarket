@@ -2,8 +2,8 @@
 
 <div id="right-sidebar" class="panel panel-default-darker panel-sliding panel-sliding-right">
   <div class="panel-heading text-center">
-    <span class="image-thumbnail">
-      <img class="image image-circle image-primary-ligther" src="${ user.imageUrl }" />
+    <span class="image-thumbnail thumbnail-circle">
+      <img class="image" src="${ user.imageUrl }" />
     </span>
     <span class="panel-title">${ user.displayName }</span>
     <span class="panel-subtitle">${ user.email }</span>

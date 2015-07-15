@@ -5,18 +5,18 @@
 
 <div class="panel panel-default">
   <div class="panel-heading text-center">
-    <span class="image-thumbnail image-thumbnail-lg">
+    <span class="image-thumbnail thumbnail-bordered thumbnail-lg">
       <c:choose>
       <c:when test="${ not empty store.imagePath }">
 
-        <img class="image image-circle" src="${ pageContext.request.contextPath }/${ store.imagePath }">
+      <img class="image" src="${ pageContext.request.contextPath }/${ store.imagePath }">
 
       </c:when>
       <c:otherwise>
 
-        <span class="image image-circle image-default-darker">
-          <span class="fa fa-building fa-inverse"></span>
-        </span>
+      <span class="image image-avatar image-default-darker">
+        <span class="fa fa-building fa-inverse"></span>
+      </span>
 
       </c:otherwise>
       </c:choose>

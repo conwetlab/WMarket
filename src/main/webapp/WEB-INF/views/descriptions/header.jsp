@@ -5,8 +5,8 @@
 
 <div class="panel panel-default">
   <div class="panel-heading text-center">
-    <span class="image-thumbnail">
-      <span class="image image-circle image-default-darker">
+    <span class="image-thumbnail thumbnail-circle">
+      <span class="image image-avatar image-default-darker">
         <span class="fa fa-archive fa-inverse"></span>
       </span>
     </span>

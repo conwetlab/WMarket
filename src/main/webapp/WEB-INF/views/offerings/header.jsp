@@ -3,12 +3,12 @@
 
 <div class="panel panel-default">
   <div class="panel-heading text-center">
-    <span class="image-thumbnail image-thumbnail-lg">
-      <img class="image image-rounded image-bordered" src="${ offering.imageUrl }">
-      <span class="rating-value rating-value-lg rating-overall">
+    <div class="image-thumbnail thumbnail-bordered thumbnail-lg">
+      <img class="image" src="${ offering.imageUrl }">
+      <span class="rating-value rating-value-lighter rating-overall">
         <span class="fa fa-star">${ offering.averageScore }</span>
       </span>
-    </span>
+    </div>
     <div class="panel-title">${ offering.displayName }</div>
     <div class="panel-subtitle offering-categories">
     <c:forEach var="category" items="${ offering.categories }">
