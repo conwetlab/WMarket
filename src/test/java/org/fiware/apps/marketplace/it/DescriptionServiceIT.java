@@ -1223,20 +1223,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		List<Offering> bookmarkedOfferings = bookmarkedOfferingsResponse.readEntity(Offerings.class).getOfferings();
 		assertThat(bookmarkedOfferings.size()).isEqualTo(stores.length);
 		
-		for (int i = 0; i < bookmarkedOfferings.size(); i++) {
-			
-			// Set store and description for offering. Otherwise, test will fail since offering.equals is based
-			// on these fields
-			Store store = new Store();
-			store.setName(stores[i]);
-			
-			Description description = new Description();
-			description.setName(descriptionWithOfferingToBookmark);
-			description.setStore(store);
-			
-			bookmarkedOffering.setDescribedIn(description);
-			
-			assertThat(bookmarkedOfferings.get(i)).isEqualTo(bookmarkedOffering);
+		for (int i = 0; i < bookmarkedOfferings.size(); i++) {			
+			checkOfferingInList(stores[i], descriptionWithOfferingToBookmark, bookmarkedOffering, bookmarkedOfferings);
 		}
 	}
 	
@@ -1719,5 +1707,78 @@ public class DescriptionServiceIT extends AbstractIT {
 		checkAPIError(getRecommendationsResponse, 400, null, 
 				"Offerings cannot be ordered by " + orderBy + ".", ErrorType.BAD_REQUEST);
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////// LAST VIEWED OFFERINGS ////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private Response getLastViewedOfferings() {
+		// Get all the offerings
+		Client client = ClientBuilder.newClient();
+		Response allOfferingsResponse = client.target(endPoint + "/api/v2/offering/lastViewed")
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		return allOfferingsResponse;
+	}
 
+	private void testListViewedOfferingsInvalidParams(int offset, int max, String expectedMessage) {
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/offering/lastViewed")
+				.queryParam("offset", offset)
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		checkAPIError(response, 400, null, expectedMessage, ErrorType.BAD_REQUEST);
+
+	}
+	
+	@Test
+	public void testListViewedOfferingsInvalidOffset() {
+		testListViewedOfferingsInvalidParams(-1, 2, MESSAGE_INVALID_OFFSET_MAX);
+	}
+	
+	@Test
+	public void testListViewedOfferingsInvalidMax() {
+		testListViewedOfferingsInvalidParams(1, 0, MESSAGE_INVALID_OFFSET_MAX); 
+	}
+	
+	@Test
+	public void testListViewedOfferings() {
+		
+		// Initialization
+		String firstDescriptionName = "default";
+		String secondDescriptionName = "secondary";
+		Map<String, String> descriptions = new HashMap<>();
+		descriptions.put(firstDescriptionName, defaultUSDLPath);
+		descriptions.put(secondDescriptionName, secondaryUSDLPath);
+		intializeStoresWithOfferings(descriptions);
+		
+		// Select one offering
+		String descriptionWithOfferingToView = firstDescriptionName;
+		Offering viewedOffering = DESCRIPTIONS_OFFERINGS.get(descriptions.get(firstDescriptionName)).get(0);
+		
+		// View the offerings in different stores (same offering in different stores)
+		String[] stores = {FIRST_STORE_NAME, SECOND_STORE_NAME};
+		for (String storeName: stores) {
+			Response viewResponse = getOffering(USER_NAME, PASSWORD, storeName, 
+					descriptionWithOfferingToView, viewedOffering.getName());
+			assertThat(viewResponse.getStatus()).isEqualTo(200);
+		}
+		
+		// Check that viewed offerings contains both offerings
+		Response viewedOfferingsResponse = getLastViewedOfferings();
+		assertThat(viewedOfferingsResponse.getStatus()).isEqualTo(200);
+		List<Offering> viewedOfferings = viewedOfferingsResponse.readEntity(Offerings.class).getOfferings();
+		assertThat(viewedOfferings.size()).isEqualTo(stores.length);
+		
+		for (int i = 0; i < viewedOfferings.size(); i++) {
+			checkOfferingInList(stores[i], descriptionWithOfferingToView, viewedOffering, viewedOfferings);
+		}
+
+	}
 }

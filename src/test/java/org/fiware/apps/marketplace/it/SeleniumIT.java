@@ -64,7 +64,7 @@ public class SeleniumIT extends AbstractIT {
 	private static final String MIN_LENGTH = "This field must contain at least %d chars.";
 	private static final String MAX_LENGTH = "This field must not exceed %d chars.";
 	private static final String DESCRIPTION_REGISTERED = "This name is already in use in this Store.";
-	private static final String NO_REVIEWS = "This %s does not have reviews yet. You can be the first.";
+	private static final String NO_REVIEWS = "This %s has not been reviewed yet. You can be the first.";
 	private static final String ACCOUNT_UPDATE_FORM = "account_update_form";
 	private static final String REGISTRATION_FORM = "registration_form";
 	private static final String STORE_FORM = "store_form";
