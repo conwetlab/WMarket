@@ -57,8 +57,6 @@ import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.Users;
-import org.fiware.apps.marketplace.model.validators.UserValidator;
-import org.fiware.apps.marketplace.security.auth.UserAuth;
 import org.hibernate.HibernateException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,8 +69,6 @@ public class UserService {
 
 	// OBJECT ATTRIBUTES //
 	@Autowired private UserBo userBo;
-	@Autowired private UserAuth userAuth;
-	@Autowired private UserValidator userValidator;
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(

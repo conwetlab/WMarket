@@ -53,10 +53,8 @@ import javax.ws.rs.core.Response.Status;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.User;
-import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
@@ -66,7 +64,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("register")
 public class UserRegistrationController extends AbstractController {
 
-    @Autowired private UserValidator userValidator;
     private static Logger logger = LoggerFactory.getLogger(UserRegistrationController.class);
 
     @GET

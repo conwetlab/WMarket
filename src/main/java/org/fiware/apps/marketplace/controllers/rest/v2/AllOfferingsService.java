@@ -138,7 +138,7 @@ public class AllOfferingsService {
 					//String.format("offset (%d) and/or max (%d) are not valid", offset, max));
 		} else {
 			try {
-				List<Offering> offeringsPage = offeringBo.getLastVisitedOfferingsPage(offset, max);
+				List<Offering> offeringsPage = offeringBo.getLastViewedOfferingsPage(offset, max);
 				response = Response.status(Status.OK).entity(new Offerings(offeringsPage)).build();
 			} catch (NotAuthorizedException ex) {
 				response = ERROR_UTILS.notAuthorizedResponse(ex);

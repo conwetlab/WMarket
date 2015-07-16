@@ -41,11 +41,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
-import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.CategoryDao;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
-import org.fiware.apps.marketplace.dao.OfferingDao;
 import org.fiware.apps.marketplace.dao.ServiceDao;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
@@ -84,8 +82,6 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Autowired private RdfIndexer rdfIndexer;
 	@Autowired private OfferingResolver offeringResolver;
 	@Autowired private UserBo userBo;
-	@Autowired private StoreBo storeBo;
-	@Autowired private OfferingDao offeringDao;
 	@Autowired private StoreDao storeDao;
 	@Autowired private CategoryDao categoryDao;
 	@Autowired private ServiceDao serviceDao;

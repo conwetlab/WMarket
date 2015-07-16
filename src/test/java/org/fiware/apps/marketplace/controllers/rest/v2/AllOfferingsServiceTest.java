@@ -268,7 +268,7 @@ public class AllOfferingsServiceTest {
 		User user = mock(User.class);
 		when(user.getUserName()).thenReturn(userName);
 		Exception e = new NotAuthorizedException("list offerings");
-		doThrow(e).when(offeringBoMock).getLastVisitedOfferingsPage(anyInt(), anyInt());
+		doThrow(e).when(offeringBoMock).getLastViewedOfferingsPage(anyInt(), anyInt());
 
 		// Call the method
 		Response res = allOfferingsService.lastVisited(0, 100);
@@ -285,7 +285,7 @@ public class AllOfferingsServiceTest {
 		List<Offering> oferrings = mock(List.class);
 		
 		// Mocks
-		when(offeringBoMock.getLastVisitedOfferingsPage(anyInt(), anyInt())).
+		when(offeringBoMock.getLastViewedOfferingsPage(anyInt(), anyInt())).
 				thenReturn(oferrings);
 		
 		// Call the method
@@ -294,7 +294,7 @@ public class AllOfferingsServiceTest {
 		Response res = allOfferingsService.lastVisited(0, 100);
 		
 		// Verify
-		verify(offeringBoMock).getLastVisitedOfferingsPage(offset, max);
+		verify(offeringBoMock).getLastViewedOfferingsPage(offset, max);
 		
 		// Assertions
 		assertThat(res.getStatus()).isEqualTo(200);
