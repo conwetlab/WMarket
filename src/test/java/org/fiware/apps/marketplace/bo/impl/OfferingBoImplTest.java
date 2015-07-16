@@ -36,12 +36,15 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.bo.impl.OfferingBoImpl;
 import org.fiware.apps.marketplace.dao.OfferingDao;
+import org.fiware.apps.marketplace.dao.ViewedOfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
@@ -51,10 +54,12 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.ViewedOffering;
 import org.fiware.apps.marketplace.model.validators.ReviewValidator;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -68,6 +73,7 @@ public class OfferingBoImplTest {
 	@Mock private UserBo userBoMock;
 	@Mock private ReviewValidator reviewValidatorMock;
 	@Mock private ReviewBo reviewBoMock;
+	@Mock private ViewedOfferingDao viewedOfferingDaoMock;
 	@InjectMocks private OfferingBoImpl offeringBo;
 	
 	private final static String STORE_NAME = "store";
@@ -81,7 +87,122 @@ public class OfferingBoImplTest {
 		MockitoAnnotations.initMocks(this);
 		this.offeringBo = spy(this.offeringBo);
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// FIND OFFERING ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+
+	@Test(expected=OfferingNotFoundException.class)
+	public void findOfferingByNameStoreAndDescriptionNotFound() throws Exception {
 		
+		String storeName = "store";
+		String descriptionName = "description";
+		String offeringName = "offering";
+		doThrow(new OfferingNotFoundException("")).when(offeringDaoMock)
+				.findByNameStoreAndDescription(storeName, descriptionName, offeringName);
+		
+		offeringBo.findOfferingByNameStoreAndDescription(storeName, descriptionName, offeringName);
+	}
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void findOfferingByNameStoreAndDescriptionNotAuthorized() throws Exception {
+		
+		String storeName = "store";
+		String descriptionName = "description";
+		String offeringName = "offering";
+		Offering offering = mock(Offering.class);
+		
+		doReturn(offering).when(offeringDaoMock)
+				.findByNameStoreAndDescription(storeName, descriptionName, offeringName);
+		doReturn(false).when(offeringAuthMock).canGet(offering);
+		
+		// Call the function
+		offeringBo.findOfferingByNameStoreAndDescription(storeName, descriptionName, offeringName);		
+	}
+	
+	public void findOfferingByNameStoreAndDescription(boolean viewed, boolean removeOldViewed) throws Exception {
+		
+		String storeName = "store";
+		String descriptionName = "description";
+		String offeringName = "offering";
+		String userName = "user";
+		User user = mock(User.class);
+		Offering offering = mock(Offering.class);
+		List<ViewedOffering> viewedOfferings = new ArrayList<>();
+		ViewedOffering viewedOffering = null;
+		
+		if (viewed) {
+			viewedOffering = new ViewedOffering();
+			viewedOffering.setUser(user);
+			viewedOffering.setOffering(offering);
+			
+			viewedOfferings.add(viewedOffering);
+		}
+		
+		if (removeOldViewed) {
+			for (int i = 0; i < 10; i++) {
+				ViewedOffering otherViewedOffering = new ViewedOffering();
+				otherViewedOffering.setOffering(mock(Offering.class));
+				viewedOfferings.add(otherViewedOffering);
+			}
+		}
+
+		// Mocking
+		doReturn(offering).when(offeringDaoMock)
+				.findByNameStoreAndDescription(storeName, descriptionName, offeringName);
+		doReturn(true).when(offeringAuthMock).canGet(offering);
+		doReturn(userName).when(user).getUserName();
+		doReturn(user).when(userBoMock).getCurrentUser();
+		doReturn(viewedOfferings).when(viewedOfferingDaoMock).getUserViewedOfferings(userName);
+		
+		// Call the function and check the returned value
+		Offering returnedOffering = offeringBo.findOfferingByNameStoreAndDescription(storeName, 
+				descriptionName, offeringName);
+		assertThat(returnedOffering).isSameAs(offering);
+		
+		// Assert that a new viewed offering has been created
+		if (!viewed) {
+			ArgumentCaptor<ViewedOffering> captor = ArgumentCaptor.forClass(ViewedOffering.class);
+			verify(viewedOfferingDaoMock).save(captor.capture());
+			viewedOffering = captor.getValue();
+		} else {
+			verify(viewedOfferingDaoMock, never()).save(any(ViewedOffering.class));
+		}
+		
+		// Check viewed offering values
+		assertThat(viewedOffering.getOffering()).isEqualTo(offering);
+		assertThat(viewedOffering.getUser()).isEqualTo(user);
+		assertThat(viewedOffering.getDate()).isCloseTo(new Date(), 1000);
+
+		// Check that old viewed offerings have been remove (just in case)
+		if (!removeOldViewed) {
+			// Verify that no viewed offering has been removed
+			verify(viewedOfferingDaoMock, never()).delete(any(ViewedOffering.class));
+		} else {
+			// Verify that old viewed offerings have been removed
+			for (int i = 9; i < viewedOfferings.size(); i++) {
+				verify(viewedOfferingDaoMock).delete(viewedOfferings.get(i));
+			}
+		}
+	}
+	
+	@Test
+	public void findOfferingByNameStoreAndDescriptionOfferingNotViewedNotRemove() throws Exception {
+		findOfferingByNameStoreAndDescription(false, false);
+	}
+	
+	@Test
+	public void findOfferingByNameStoreAndDescriptionOfferingViewedNotRemove() throws Exception {
+		findOfferingByNameStoreAndDescription(true, false);
+	}
+	
+	@Test
+	public void findOfferingByNameStoreAndDescriptionOfferingNotViewedRemove() throws Exception {
+		findOfferingByNameStoreAndDescription(false, true);
+	}
+	
+	
 	///////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////// BOOKMARK ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -161,6 +282,7 @@ public class OfferingBoImplTest {
 	public void testUnbookmark() throws Exception {
 		testChangeBookmarkState(true);
 	}
+	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// CREATE REVIEW ////////////////////////////////////
@@ -583,4 +705,53 @@ public class OfferingBoImplTest {
 		verify(reviewBoMock).deleteReview(offering, REVIEW_ID);
 
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////// LAST VIEWED OFFERINGS ////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetLastViewedOfferingsPageNotAuthorized() throws Exception {
+		
+		// Mock
+		doReturn(false).when(offeringAuthMock).canListLastViewed();
+		
+		// Call the function
+		offeringBo.getLastViewedOfferingsPage(0, 100);
+	}
+	
+	@Test
+	public void testGetLastViewedOfferingsPage() throws Exception {
+		
+		String userName = "user";
+		User user = mock(User.class);
+		
+		// List of viewed offerings
+		List<ViewedOffering> viewedOfferings = new ArrayList<>();
+		for (int i = 0; i < 3; i++) {
+			ViewedOffering vo = new ViewedOffering();
+			vo.setOffering(mock(Offering.class));
+		}
+		
+		// Mock
+		doReturn(userName).when(user).getUserName();
+		doReturn(user).when(userBoMock).getCurrentUser();
+		doReturn(true).when(offeringAuthMock).canListLastViewed();
+		doReturn(viewedOfferings).when(viewedOfferingDaoMock).getUserViewedOfferingsPage(
+				anyString(), anyInt(), anyInt());
+		
+		// Call the function
+		List<Offering> returnedOfferings = offeringBo.getLastViewedOfferingsPage(0, 100);
+		
+		// Check returned offerings
+		for (int i = 0; i < viewedOfferings.size(); i++) {
+			assertThat(returnedOfferings.get(i)).isSameAs(viewedOfferings.get(i).getOffering());
+		}
+	}
+	
+	
+	
+	
+
 }

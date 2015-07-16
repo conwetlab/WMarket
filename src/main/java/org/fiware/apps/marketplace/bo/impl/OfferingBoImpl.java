@@ -43,7 +43,6 @@ import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.OfferingDao;
-import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.dao.ViewedOfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
@@ -70,7 +69,6 @@ public class OfferingBoImpl implements OfferingBo {
 	
 	@Autowired private OfferingAuth offeringAuth;
 	@Autowired private OfferingDao offeringDao;
-	@Autowired private UserDao userDao;
 	@Autowired private ViewedOfferingDao viewedOfferingDao;
 	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
@@ -316,7 +314,7 @@ public class OfferingBoImpl implements OfferingBo {
 	
 	@Override
 	@Transactional
-	public List<Offering> getLastVisitedOfferingsPage(int offset, int max) throws NotAuthorizedException {
+	public List<Offering> getLastViewedOfferingsPage(int offset, int max) throws NotAuthorizedException {
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!offeringAuth.canListLastViewed()) {
