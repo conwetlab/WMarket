@@ -12,7 +12,7 @@
             $target: $target,
             queryString: { detailed: true, orderBy: 'updatedAt', desc: true },
             success: next,
-            $alert: app.createAlert('warning', utils.format('This %(model)s does not have reviews yet. You can be the first.', {
+            $alert: app.createAlert('warning', utils.format('This %(model)s has not been reviewed yet. You can be the first.', {
                 model: ns.model
             }))
         });
