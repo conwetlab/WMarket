@@ -156,11 +156,12 @@ public class DescriptionServiceIT extends AbstractIT {
 	}
 	
 	private void checkOfferingInList(String storeName, String descriptionName, 
-			Offering offering, List<Offering> offeringsList) {
+			String offeringUri, List<Offering> offeringsList) {
 		
 		// We must set the description into the offering in order to make "isIn" work appropriately
 		// "isIn" is based on "equals" and it depends on the URL of the offering and its description
-
+		Offering offering = new Offering();
+		offering.setUri(offeringUri);
 		
 		// A description is managed by one store
 		Store store = new Store();
@@ -196,7 +197,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		
 		for (Offering expectedOffering: expectedOfferings) {
 			
-			checkOfferingInList(storeName, descriptionName, expectedOffering, descriptionOfferings);
+			checkOfferingInList(storeName, descriptionName, expectedOffering.getUri(), descriptionOfferings);
 			
 			// Check internal state (services, categories, price plans,...) 
 			checkOfferingInternalState(descriptionOfferings, storeName, descriptionName, expectedOffering);
@@ -923,7 +924,7 @@ public class DescriptionServiceIT extends AbstractIT {
 			
 			// Check that all the expected offerings are in the list of offerings contained in the store
 			for (Offering offering: expectedStoreOfferings) {
-				checkOfferingInList(storeName, descriptionName, offering, offerings.getOfferings());
+				checkOfferingInList(storeName, descriptionName, offering.getUri(), offerings.getOfferings());
 				checkOfferingInternalState(offerings.getOfferings(), storeName, descriptionName, offering);				
 			}
 
@@ -1224,7 +1225,8 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(bookmarkedOfferings.size()).isEqualTo(stores.length);
 		
 		for (int i = 0; i < bookmarkedOfferings.size(); i++) {			
-			checkOfferingInList(stores[i], descriptionWithOfferingToBookmark, bookmarkedOffering, bookmarkedOfferings);
+			checkOfferingInList(stores[i], descriptionWithOfferingToBookmark, bookmarkedOffering.getUri(), 
+					bookmarkedOfferings);
 		}
 	}
 	
@@ -1777,7 +1779,7 @@ public class DescriptionServiceIT extends AbstractIT {
 		assertThat(viewedOfferings.size()).isEqualTo(stores.length);
 		
 		for (int i = 0; i < viewedOfferings.size(); i++) {
-			checkOfferingInList(stores[i], descriptionWithOfferingToView, viewedOffering, viewedOfferings);
+			checkOfferingInList(stores[i], descriptionWithOfferingToView, viewedOffering.getUri(), viewedOfferings);
 		}
 
 	}
