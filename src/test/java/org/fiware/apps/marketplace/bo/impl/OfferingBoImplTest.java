@@ -223,12 +223,18 @@ public class OfferingBoImplTest {
 		offeringBo.findOfferingByNameStoreAndDescription(storeName, descriptionName, offeringName);		
 	}
 	
-	public void findOfferingByNameStoreAndDescription(boolean viewed, boolean removeOldViewed) throws Exception {
+	public void findOfferingByNameStoreAndDescription(boolean viewed, Date lastVisit, boolean increaseViews, 
+			boolean removeOldViewed) throws Exception {
+		
+		if (!viewed && !increaseViews) {
+			throw new IllegalArgumentException("increaseViews cannot be false when viewd is false");
+		}
 		
 		String storeName = "store";
 		String descriptionName = "description";
 		String offeringName = "offering";
 		String userName = "user";
+		int nViews = 10;
 		User user = mock(User.class);
 		Offering offering = mock(Offering.class);
 		List<ViewedOffering> viewedOfferings = new ArrayList<>();
@@ -238,6 +244,7 @@ public class OfferingBoImplTest {
 			viewedOffering = new ViewedOffering();
 			viewedOffering.setUser(user);
 			viewedOffering.setOffering(offering);
+			viewedOffering.setDate(lastVisit);
 			
 			viewedOfferings.add(viewedOffering);
 		}
@@ -255,6 +262,7 @@ public class OfferingBoImplTest {
 				.findByNameStoreAndDescription(storeName, descriptionName, offeringName);
 		doReturn(true).when(offeringAuthMock).canGet(offering);
 		doReturn(userName).when(user).getUserName();
+		doReturn(nViews).when(offering).getViews();
 		doReturn(user).when(userBoMock).getCurrentUser();
 		doReturn(viewedOfferings).when(viewedOfferingDaoMock).getUserViewedOfferings(userName);
 		
@@ -264,12 +272,19 @@ public class OfferingBoImplTest {
 		assertThat(returnedOffering).isSameAs(offering);
 		
 		// Assert that a new viewed offering has been created
-		if (!viewed) {
+		if (viewed) {
+			verify(viewedOfferingDaoMock, never()).save(any(ViewedOffering.class));			
+		} else {
 			ArgumentCaptor<ViewedOffering> captor = ArgumentCaptor.forClass(ViewedOffering.class);
 			verify(viewedOfferingDaoMock).save(captor.capture());
 			viewedOffering = captor.getValue();
+		}
+		
+		// Check that the number of views has been increased
+		if (increaseViews) {
+			verify(offering).setViews(nViews + 1);
 		} else {
-			verify(viewedOfferingDaoMock, never()).save(any(ViewedOffering.class));
+			verify(offering, never()).setViews(anyInt());
 		}
 		
 		// Check viewed offering values
@@ -291,17 +306,24 @@ public class OfferingBoImplTest {
 	
 	@Test
 	public void findOfferingByNameStoreAndDescriptionOfferingNotViewedNotRemove() throws Exception {
-		findOfferingByNameStoreAndDescription(false, false);
+		findOfferingByNameStoreAndDescription(false, new Date(), true, false);
 	}
 	
 	@Test
 	public void findOfferingByNameStoreAndDescriptionOfferingViewedNotRemove() throws Exception {
-		findOfferingByNameStoreAndDescription(true, false);
+		Date twelveHoursAgo = new Date(new Date().getTime() - (12 * 3600 * 1000) - 1);
+		findOfferingByNameStoreAndDescription(true, twelveHoursAgo, false, false);
+	}
+	
+	@Test
+	public void findOfferingByNameStoreAndDescriptionOfferingViewedNotRemoveIncreaseViews() throws Exception {
+		Date yesterday = new Date(new Date().getTime() - (24 * 3600 * 1000) - 1);
+		findOfferingByNameStoreAndDescription(true, yesterday, true, false);
 	}
 	
 	@Test
 	public void findOfferingByNameStoreAndDescriptionOfferingNotViewedRemove() throws Exception {
-		findOfferingByNameStoreAndDescription(false, true);
+		findOfferingByNameStoreAndDescription(false, new Date(), true, true);
 	}
 	
 	

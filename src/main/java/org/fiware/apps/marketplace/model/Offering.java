@@ -72,6 +72,7 @@ public class Offering extends ReviewableEntity {
 	private String version;
 	private Description describedIn;
 	private String imageUrl;
+	private int views;
 		
 	// Price Plans & Services
 	private Set<PricePlan> pricePlans;
@@ -154,6 +155,16 @@ public class Offering extends ReviewableEntity {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	
+	@XmlElement
+	@Column(name = "views", columnDefinition = "int default 0")
+	public int getViews() {
+		return views;
+	}
+
+	public void setViews(int views) {
+		this.views = views;
 	}
 
 	@XmlElement(name = "pricePlan")

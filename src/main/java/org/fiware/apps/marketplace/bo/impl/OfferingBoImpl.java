@@ -66,6 +66,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OfferingBoImpl implements OfferingBo {
 	
 	private static final int N_LAST_VIEWED = 10;
+	private static final int HOURS_BETWEEN_VIEWS = 24;
 	
 	@Autowired private OfferingAuth offeringAuth;
 	@Autowired private OfferingDao offeringDao;
@@ -139,6 +140,19 @@ public class OfferingBoImpl implements OfferingBo {
 				ViewedOffering viewedOffering = lastViewedOfferingsIt.next();
 				
 				if (viewedOffering.getOffering().equals(offering)) {
+					
+					Date now = new Date();
+					Date lastViewDate = viewedOffering.getDate();
+					
+					long difference = now.getTime() - lastViewDate.getTime();
+					long millisecondsBetweenViews = HOURS_BETWEEN_VIEWS * 3600 * 1000;
+					
+					// Increase offerings views number only if the user has viewed this
+					// offering more than one day ago
+					if (difference > millisecondsBetweenViews) {
+						offering.setViews(offering.getViews() + 1);
+					}
+					
 					viewedOffering.setDate(new Date());
 					found = true;
 				}
@@ -159,6 +173,9 @@ public class OfferingBoImpl implements OfferingBo {
 				for (int i = N_LAST_VIEWED - 1; i < lastViewedOfferings.size(); i++) {
 					viewedOfferingDao.delete(lastViewedOfferings.get(i));
 				}
+				
+				// Increase offerings views number
+				offering.setViews(offering.getViews() + 1);
 			}
 			
 		} catch (UserNotFoundException e) {

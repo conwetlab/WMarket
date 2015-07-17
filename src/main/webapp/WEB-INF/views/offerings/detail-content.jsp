@@ -34,6 +34,10 @@
             <dt>Updated At</dt>
             <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy HH:mm:ss" value="${ offering.describedIn.updatedAt }" /></dd>
           </dl>
+          <dl>
+            <dt>Views</dt>
+            <dd>${ offering.views }</dd>
+          </dl>
         </div>
       </div>
     </div>
