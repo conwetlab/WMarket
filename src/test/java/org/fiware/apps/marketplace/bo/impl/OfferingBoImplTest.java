@@ -66,8 +66,6 @@ import org.mockito.MockitoAnnotations;
 
 public class OfferingBoImplTest {
 
-	// TODO: Add tests for other methods
-
 	@Mock private OfferingDao offeringDaoMock;
 	@Mock private OfferingAuth offeringAuthMock;
 	@Mock private UserBo userBoMock;
@@ -88,6 +86,110 @@ public class OfferingBoImplTest {
 		this.offeringBo = spy(this.offeringBo);
 	}
 	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// CREATE ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testCreateNotAuthorized() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		// Mock
+		doReturn(false).when(offeringAuthMock).canCreate(offering);
+		
+		// Call the function
+		offeringBo.save(offering);
+		
+		// Verify that DAO has NOT been called
+		verify(offeringDaoMock, never()).save(offering);
+	}
+	
+	@Test
+	public void testCreate() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		// Mock
+		doReturn(true).when(offeringAuthMock).canCreate(offering);
+		
+		// Call the function
+		offeringBo.save(offering);
+		
+		// Verify that DAO has been called
+		verify(offeringDaoMock).save(offering);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// UPDATE ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testUpdateNotAuthorized() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		// Mock
+		doReturn(false).when(offeringAuthMock).canUpdate(offering);
+		
+		// Call the function
+		offeringBo.update(offering);
+		
+		// Verify that DAO has NOT been called
+		verify(offeringDaoMock, never()).update(offering);
+	}
+	
+	@Test
+	public void testUpdate() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		// Mock
+		doReturn(true).when(offeringAuthMock).canUpdate(offering);
+		
+		// Call the function
+		offeringBo.update(offering);
+		
+		// Verify that DAO has been called
+		verify(offeringDaoMock).update(offering);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// DELETE ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@Test(expected=NotAuthorizedException.class)
+	public void testDeleteNotAuthorized() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		// Mock
+		doReturn(false).when(offeringAuthMock).canDelete(offering);
+		
+		// Call the function
+		offeringBo.delete(offering);
+		
+		// Verify that DAO has NOT been called
+		verify(offeringDaoMock, never()).delete(offering);
+	}
+	
+	@Test
+	public void testDelete() throws Exception {
+		
+		Offering offering = mock(Offering.class);
+		
+		// Mock
+		doReturn(true).when(offeringAuthMock).canDelete(offering);
+		
+		// Call the function
+		offeringBo.delete(offering);
+		
+		// Verify that DAO has been called
+		verify(offeringDaoMock).delete(offering);
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////// FIND OFFERING ////////////////////////////////////
