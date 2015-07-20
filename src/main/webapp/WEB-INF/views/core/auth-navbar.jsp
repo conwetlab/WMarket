@@ -1,7 +1,7 @@
 <div class="navbar navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
-      <a class="navbar-brand" href="${ pageContext.request.contextPath }">WMarket</a>
+      <a class="navbar-brand" href="${ pageContext.request.contextPath }/">WMarket</a>
     </div>
     <div class="navbar-element pull-left">
       <button id="toggle-left-sidebar" class="btn btn-default" type="button">
