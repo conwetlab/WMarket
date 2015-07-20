@@ -57,6 +57,8 @@
 
             orderBy: function orderBy(next) {
                 app.requests.list(this.urls.collection, {
+                    $target: this.$scope,
+                    $alert: app.createAlert('warning', "No available offerings."),
                     success: next
                 });
             }
@@ -64,13 +66,9 @@
         };
 
         app.requests.attach('stores:collection', function () {
-            var $spinner = utils.createSpinner();
-
-            ns.lastViewedController.$scope.append($spinner);
             ns.lastViewedController.orderBy(function (offerings) {
                 var offeringShowcase = new app.components.OfferingShowcase();
 
-                $spinner.remove();
                 ns.lastViewedController.$scope.append(offeringShowcase.get());
                 offeringShowcase.setUp(offerings);
             });
