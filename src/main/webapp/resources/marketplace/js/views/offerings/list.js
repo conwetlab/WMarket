@@ -29,9 +29,9 @@
                     failure: function () {
                         if (ns.currentCategory != null) {
                             ns.$scope.empty().parent()
-                                .append(app.createAlert('warning', "No available offerings in <strong>" + ns.currentCategory.displayName + "</strong>."))
+                                .append(app.createAlert('warning', "No offerings available in <strong>" + ns.currentCategory.displayName + "</strong>."))
                         } else {
-                            ns.$scope.append(app.createAlert('warning', "No available offerings in <strong>" + ns.category.models[category].displayName + "</strong>."))
+                            ns.$scope.append(app.createAlert('warning', "No offerings available in <strong>" + ns.category.models[category].displayName + "</strong>."))
                         }
                     }
                 });
@@ -58,7 +58,7 @@
             orderBy: function orderBy(next) {
                 app.requests.list(this.urls.collection, {
                     $target: this.$scope,
-                    $alert: app.createAlert('warning', "No available offerings."),
+                    $alert: app.createAlert('warning', "No offerings available."),
                     success: next
                 });
             }
@@ -86,7 +86,7 @@
             app.requests.list(ns.category.urls.collection, {
                 success: next,
                 failure: function () {
-                    ns.$scope.empty().append(app.createAlert('warning', "No available offerings."));
+                    ns.$scope.empty().append(app.createAlert('warning', "No offerings available."));
                 }
             });
         };
