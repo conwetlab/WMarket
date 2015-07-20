@@ -395,8 +395,8 @@ public class StoreServiceIT extends AbstractIT {
 		//Update store with the new user
 		Response updateStoreResponse = updateStore(newUserName, PASSWORD, storeName, "new display", null, 
 				null, null);
-		checkAPIError(updateStoreResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "update store"), 
-				ErrorType.FORBIDDEN);	
+		checkAPIError(updateStoreResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "update store " 
+				+ storeName), ErrorType.FORBIDDEN);	
 
 	}
 	
@@ -462,8 +462,8 @@ public class StoreServiceIT extends AbstractIT {
 		
 		//Delete user
 		Response deleteStoreResponse = deleteStore(newUserName, PASSWORD, storeName);
-		checkAPIError(deleteStoreResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "delete store"), 
-				ErrorType.FORBIDDEN);	
+		checkAPIError(deleteStoreResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "delete store " 
+				+ storeName), ErrorType.FORBIDDEN);	
 
 	}
 	
