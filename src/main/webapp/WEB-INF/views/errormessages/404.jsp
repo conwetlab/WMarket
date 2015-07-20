@@ -25,7 +25,7 @@
         <span class="fa fa-university"></span>
         <span class="error-code">404</span>
       </div>
-      <div class="error-body">The page you are trying to reach does not exist.</div>
+      <div class="error-body">The page you are trying to access does not exist.</div>
     </div>
     <div class="container">
       <div class="vertical-divider"></div>

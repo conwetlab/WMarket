@@ -25,7 +25,7 @@
         <span class="fa fa-university"></span>
         <span class="error-code">403</span>
       </div>
-      <div class="error-body">You do not have permission to view the page you are trying to reach.</div>
+      <div class="error-body">You do not have permission to view the page you are trying to access.</div>
     </div>
     <div class="container">
       <div class="vertical-divider"></div>
