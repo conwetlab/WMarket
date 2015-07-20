@@ -1,0 +1,45 @@
+@CHARSET "UTF-8";
+
+.error-heading {
+    position: relative;
+    margin: 0 0 10px;
+}
+
+.fa-university:before {
+    display: inline-block;
+    width: 323px;
+    font-size: 300px;
+    color: #D23C3C;
+    text-shadow: 0 6px 1px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3), 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.error-code {
+    position: absolute;
+    top: 31px;
+    right: 0;
+    left: 0;
+    font-size: 60px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    line-height: 50px;
+    text-shadow: 0px 0px 6px rgba(255, 255, 255, 0.7);
+}
+
+.error-body {
+    position: relative;
+    display: block;
+    font-size: 36px;
+    line-height: 42px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0 1px 0 #ccc,
+                 0 2px 0 #c9c9c9,
+                 0 3px 0 #bbb,
+                 0 0 5px rgba(0,0,0,.1),
+                 0 1px 3px rgba(0,0,0,.3),
+                 0 3px 5px rgba(0,0,0,.2),
+                 0 5px 10px rgba(0,0,0,.25);
+}
+
+@media(max-width: 768px) {
+
+}
