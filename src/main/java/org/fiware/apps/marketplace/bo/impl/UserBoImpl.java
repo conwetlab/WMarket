@@ -116,7 +116,7 @@ public class UserBoImpl implements UserBo {
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!userAuth.canUpdate(userToBeUpdated)) {
-			throw new NotAuthorizedException("update user");
+			throw new NotAuthorizedException("update user " + userName);
 		}
 		
 		// Exception is risen if the user is not valid
@@ -157,7 +157,7 @@ public class UserBoImpl implements UserBo {
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!userAuth.canDelete(user)) {
-			throw new NotAuthorizedException("delete user");
+			throw new NotAuthorizedException("delete user " + userName);
 		}
 		
 		// Delete reviews manually so average score is recalculated

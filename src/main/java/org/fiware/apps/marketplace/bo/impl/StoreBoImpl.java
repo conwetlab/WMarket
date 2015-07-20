@@ -207,7 +207,7 @@ public class StoreBoImpl implements StoreBo{
 			
 			// Check rights and raise exception if user is not allowed to perform this action
 			if (!storeAuth.canUpdate(storeToBeUpdate)) {
-				throw new NotAuthorizedException("update store");
+				throw new NotAuthorizedException("update store " + storeName);
 			}
 			
 			// Exception is risen if the store is not valid
@@ -251,7 +251,7 @@ public class StoreBoImpl implements StoreBo{
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!storeAuth.canDelete(store)) {
-			throw new NotAuthorizedException("delete store");
+			throw new NotAuthorizedException("delete store " + storeName);
 		}
 		
 		// When the store is deleted, its image must be deleted
