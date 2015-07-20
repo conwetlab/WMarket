@@ -241,7 +241,7 @@ public class UserBoImplTest {
 			// If the exception is not risen, the method is not properly working
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
 		} catch (NotAuthorizedException ex) {
-			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "update user"));
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "update user " + USER_NAME));
 		}
 	}
 	
@@ -401,16 +401,15 @@ public class UserBoImplTest {
 	public void testDeleteNotAuthorizedException() throws Exception {
 		try {
 			User user = mock(User.class);
-			String userName = "user";
-			doReturn(user).when(userBo).findByName(userName);
+			doReturn(user).when(userBo).findByName(USER_NAME);
 			when(userAuthMock.canDelete(user)).thenReturn(false);
 			
-			testDeleteException(userName);
+			testDeleteException(USER_NAME);
 			
 			// If the exception is not risen, the method is not properly working
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
 		} catch (NotAuthorizedException ex) {
-			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "delete user"));
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "delete user " + USER_NAME));
 		}
 
 		

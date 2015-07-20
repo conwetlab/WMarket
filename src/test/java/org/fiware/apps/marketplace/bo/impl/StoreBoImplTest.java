@@ -267,7 +267,7 @@ public class StoreBoImplTest {
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
 
 		} catch (NotAuthorizedException ex) {
-			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "update store"));
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "update store " + NAME));
 		}
 	}
 	
@@ -398,7 +398,7 @@ public class StoreBoImplTest {
 			// If the exception is not risen, the method is not properly working
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
 		} catch (NotAuthorizedException ex) {
-			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "delete store"));
+			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "delete store " + NAME));
 		}
 
 		
