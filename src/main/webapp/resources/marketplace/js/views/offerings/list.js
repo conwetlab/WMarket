@@ -9,7 +9,8 @@
     ns.model = 'offering';
 
     var $categoryList = $('[app-group="category"]'),
-        $offeringList = $('[app-filter="category"]');
+        $offeringList = $('[app-filter="category"]'),
+        $lastViewedList = $('[app-order="lastviewed"]');
 
     if ($categoryList.length || $offeringList.length) {
         ns.category = {
@@ -37,6 +38,43 @@
             }
 
         };
+
+    }
+
+    // ==================================================================================
+    // ORDER BY - LAST VIEWED
+    // ==================================================================================
+
+    if ($lastViewedList.length) {
+
+        ns.lastViewedController = {
+
+            $scope: $lastViewedList,
+
+            urls: {
+                collection: app.urls.get('offering:collection:lastviewed:collection')
+            },
+
+            orderBy: function orderBy(next) {
+                app.requests.list(this.urls.collection, {
+                    success: next
+                });
+            }
+
+        };
+
+        app.requests.attach('stores:collection', function () {
+            var $spinner = utils.createSpinner();
+
+            ns.lastViewedController.$scope.append($spinner);
+            ns.lastViewedController.orderBy(function (offerings) {
+                var offeringShowcase = new app.components.OfferingShowcase();
+
+                $spinner.remove();
+                ns.lastViewedController.$scope.append(offeringShowcase.get());
+                offeringShowcase.setUp(offerings);
+            });
+        });
     }
 
     // ==================================================================================
@@ -61,7 +99,7 @@
             ns.category.list(function (categories) {
                 $spinner.remove();
                 categories.forEach(function (data) {
-                    var offeringShowcase = new app.components.Category(data);
+                    var offeringShowcase = new app.components.CategoryShowcase(data);
 
                     ns.$scope.append(offeringShowcase.get());
 

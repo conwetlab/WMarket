@@ -31,6 +31,10 @@
             entry: "/bookmark"
         },
 
+        lastviewed: {
+            collection: "/lastViewed"
+        },
+
         review: {
             collection: "/review",
             entry: "/review/%(review)s"
