@@ -35,7 +35,7 @@
     
     <c:if test="${ user.provider }">
       <div class="list-group">
-        <div class="list-group-heading">DESCRIPTIONS</div>
+        <h4 class="list-group-heading">DESCRIPTIONS</h4>
         <div class="list-group-body">
           <a class="list-group-item link-list-descriptions" href="${ pageContext.request.contextPath }/descriptions">
             <span class="item-icon fa fa-archive"></span>
@@ -50,7 +50,7 @@
     </c:if>
     
     <div class="list-group">
-      <div class="list-group-heading">STORES</div>
+      <h4 class="list-group-heading">STORES</h4>
       <div class="list-group-body store-group"></div>
       <div class="list-group-body">
         <c:if test="${ user.provider }">
