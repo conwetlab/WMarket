@@ -13,6 +13,7 @@
       <div class="panel-heading text-center">
         <a class="image-thumbnail thumbnail-bordered" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">
           <img class="image offering-image" src="${ offering.imageUrl }" />
+          <span class="rating-value rating-value-lighter"><span class="fa fa-star"></span> ${ offering.averageScore }</span>
         </a>
         <a class="panel-title text-truncate" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">${ offering.displayName }</a>
       </div>

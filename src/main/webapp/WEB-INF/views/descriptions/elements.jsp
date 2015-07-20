@@ -34,6 +34,7 @@
           <div class="panel-heading text-center">
             <a href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }" class="image-thumbnail thumbnail-bordered">
               <img class="image offering-image" src="${ offering.imageUrl }" />
+              <span class="rating-value rating-value-lighter"><span class="fa fa-star"></span> ${ offering.averageScore }</span>
             </a>
             <a href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }" class="panel-title text-truncate">${ offering.displayName }</a>
           </div>
