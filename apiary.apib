@@ -1373,8 +1373,8 @@ that belong to each existing category. Based on this, users can retrieve a list 
         {
             "categories": [
                 {
-                    "name": "data-set",
-                    "displayName": "Data set"
+                    "name": "dataset",
+                    "displayName": "Dataset"
                 }
             ]
         }
@@ -1383,11 +1383,11 @@ that belong to each existing category. Based on this, users can retrieve a list 
 ## Listing all the Offerings that belong to a Category [/api/v2/category/{category_name}/offering{?offset}{?max}{?orderBy}{?desc}]
 
 + Parameters
-    + category_name: data-set (required, string) - The category whose offerings want to be retrieved
+    + category_name: dataset (required, string) - The category whose offerings want to be retrieved
     + offset: 0 (optional, int) - The first element to be retrieved
     + max: 100 (optional, int) - The number of elements to be retrieved
-    + orderBy: id (optional, string) - Order used to retrieve the offerings
-    + desc: false (optional, boolean) - Use descending order
+    + orderBy: averageScore (optional, string) - Order used to retrieve the offerings
+    + desc: true (optional, boolean) - Use descending order
 
 ### List all the Offerings that belong to a Category [GET]
     
@@ -1418,8 +1418,8 @@ that belong to each existing category. Based on this, users can retrieve a list 
                     "services": [],
                     "categories": [
                         {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
+                            "name": "dataset",
+                            "displayName": "Dataset"
                         }
                     ]
                 }
@@ -1430,7 +1430,7 @@ that belong to each existing category. Based on this, users can retrieve a list 
 
         {
             "error": {
-                "message": "Category data-set not found",
+                "message": "Category dataset not found",
                 "type": "NOT_FOUND"
             }
         }
