@@ -34,7 +34,14 @@ package org.fiware.apps.marketplace.model;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.annotate.JsonTypeName;
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
+
 @XmlRootElement(name = "error")
+@IgnoreMediaTypes("application/*+json")
+@JsonTypeInfo(include=JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
+@JsonTypeName("error")
 public class APIError {
 	
 	private ErrorType errorType;
