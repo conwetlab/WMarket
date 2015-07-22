@@ -315,10 +315,14 @@
             $panel.text(offering.info.description);
             break;
         case 2:
-            $panel.addClass("label-group-stacked");
             offering.info.categories.forEach(function (category) {
                 $panel.append($('<div class="label label-success text-center">').text(category.displayName));
             });
+
+            if (!offering.info.categories.length) {
+                $panel.append(app.createAlert('warning', "No category available"))
+            }
+            $panel.addClass("label-group-stacked");
             break;
         case 3:
             offering.info.pricePlans.forEach(function (priceplan) {
@@ -343,8 +347,8 @@
                 var $item = $('<div class="service-item">').append(
                         $('<div class="service-name">').append($('<span>').text(service.displayName)),
                         $('<div class="service-content">').append(
-                            $('<div class="service-categories">').append($('<span class="label label-success">').text(service.categories[0].displayName),
-                            $('<div class="service-comment">').text(service.comment)))
+                            buildCategoryList(service.categories),
+                            $('<div class="service-comment">').text(service.comment))
                     );
                 $panel.append($item);
             });
@@ -356,6 +360,16 @@
         }
         list.$list.prepend($panel);
         list.$items.unshift($panel);
+    }
+
+    function buildCategoryList(categories) {
+        var $list = $('<div class="service-categories">');
+
+        categories.forEach(function (category) {
+            $list.append($('<span class="label label-success">').text(category.displayName));
+        });
+
+        return $list;
     }
 
     function buildPriceComponent(priceComponent) {
