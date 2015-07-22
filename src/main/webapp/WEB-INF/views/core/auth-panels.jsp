@@ -30,6 +30,10 @@
           <span class="item-icon fa fa-bookmark"></span>
           <span class="item-text">My bookmarks</span>
         </a>
+        <a class="list-group-item" href="${ pageContext.request.contextPath }/offerings/comparison">
+          <span class="item-icon fa fa-bar-chart"></span>
+          <span class="item-text">Compare offerings</span>
+        </a>
       </div>
     </div>
     

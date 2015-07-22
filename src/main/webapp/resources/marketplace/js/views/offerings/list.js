@@ -67,9 +67,8 @@
 
         app.requests.attach('stores:collection', function () {
             ns.lastViewedController.orderBy(function (offerings) {
-                var offeringShowcase = new app.components.OfferingShowcase();
+                var offeringShowcase = new app.components.OfferingShowcase(ns.lastViewedController.$scope);
 
-                ns.lastViewedController.$scope.append(offeringShowcase.get());
                 offeringShowcase.setUp(offerings);
             });
         });
@@ -97,9 +96,7 @@
             ns.category.list(function (categories) {
                 $spinner.remove();
                 categories.forEach(function (data) {
-                    var offeringShowcase = new app.components.CategoryShowcase(data);
-
-                    ns.$scope.append(offeringShowcase.get());
+                    var offeringShowcase = new app.components.CategoryShowcase(data, ns.$scope);
 
                     ns.category.models[data.name] = data;
                     ns.category.filter(data.name, function (offerings) {

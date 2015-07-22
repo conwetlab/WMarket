@@ -12,6 +12,8 @@
             this[name] = data[name];
         }
 
+        this.info = data;
+
         this.element = $('<div class="panel panel-default-lighter offering-item">');
         this.store   = app.getStore(this.describedIn.store);
 

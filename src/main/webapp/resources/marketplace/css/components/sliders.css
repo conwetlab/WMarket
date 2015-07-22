@@ -47,3 +47,46 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
+.rotating-control {
+    min-width: 80px;
+}
+
+.rotating-control:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.rotating-control:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px;
+}
+
+.rotating-showcase > h4 {
+    position: absolute;
+    width: 120px;
+    left: 0;
+    top: 0;
+}
+
+.rotating-showcase > .row-rotating {
+    margin-left: 120px;
+}
+
+.row-rotating {
+    position: relative;
+    overflow-x: hidden;
+}
+
+.rotating-item {
+    position: relative;
+    width: 200px;
+    float: left;
+    margin: 0px 5px;
+    overflow-x: auto;
+}
+
+.rotating-item > :last-child {
+    margin-bottom: 0;
+}

@@ -284,4 +284,33 @@ public class OfferingController extends AbstractController {
         return builder.entity(view).build();
     }
 
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("comparison")
+    public Response comparisonView(
+            @Context HttpServletRequest request) {
+
+        ModelAndView view;
+        ResponseBuilder builder;
+
+        try {
+            ModelMap model = new ModelMap();
+
+            model.addAttribute("user", getCurrentUser());
+            model.addAttribute("title", "Compare offerings - " + getContextName());
+
+            addFlashMessage(request, model);
+
+            view = new ModelAndView("offering.comparison", model);
+            builder = Response.ok();
+        } catch (UserNotFoundException e) {
+            logger.warn("User not found", e);
+
+            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            builder = Response.serverError();
+        }
+
+        return builder.entity(view).build();
+    }
+
 }

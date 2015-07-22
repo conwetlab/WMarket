@@ -1,0 +1,1 @@
+<script src="${ pageContext.request.contextPath }/resources/marketplace/js/views/offerings/comparison.js"></script>

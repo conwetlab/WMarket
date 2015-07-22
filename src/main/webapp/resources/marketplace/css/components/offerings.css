@@ -80,3 +80,72 @@
 .description-offerings .offering-item {
     margin-bottom: 0;
 }
+
+.offering-item.selectable > .panel-heading:hover:before,
+.offering-item.selectable.active > .panel-heading:before {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    content: "";
+    background-color: rgba(0, 0, 0, 0.4);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}
+
+.offering-item.selectable > .panel-heading:hover:after,
+.offering-item.selectable.active > .panel-heading:after {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    content: attr(data-layer-title);
+    color: rgb(255, 255, 255);
+    font: normal 700 30px/20px Helvetica, Arial, sans-serif;
+    height: 20px;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}
+
+.offering-item.selectable.active > .panel-heading:after,
+.offering-item.selectable.active > .panel-heading:before {
+    cursor: default;
+}
+
+.offering-item.selectable.active > .panel-heading:after {
+    font-size: 18px;
+}
+
+.offering-removable > .panel-heading:hover:before {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    content: "";
+    background-color: rgba(0, 0, 0, 0.4);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}
+
+.offering-removable > .panel-heading:hover:after {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    content: "Remove";
+    color: rgb(255, 255, 255);
+    font: normal 700 18px/20px Helvetica, Arial, sans-serif;
+    height: 20px;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}

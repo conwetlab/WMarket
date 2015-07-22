@@ -88,6 +88,12 @@
         <put-attribute name="scripts.view" value="/WEB-INF/views/offerings/bookmark-list-scripts.jsp" />
     </definition>
 
+    <!-- Comparison View -->
+    <definition name="offering.comparison" extends="app.auth">
+        <put-attribute name="content" value="/WEB-INF/views/offerings/comparison-content.jsp" />
+        <put-attribute name="scripts.view" value="/WEB-INF/views/offerings/comparison-scripts.jsp" />
+    </definition>
+
     <!-- STORE VIEWS -->
 
     <!-- Create View -->
