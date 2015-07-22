@@ -13,6 +13,17 @@ may offer value because of its "knowledge" about the market in terms of market
 intelligence services, pricing support, advertising, information subscription and 
 more.
 
+## HTTP Codes
+
+| HTTP Code | Type | Description |
+|-----------|------|------------ |
+| 200 | OK   | Your request has been completed properly |
+| 201 | Created | Your resource has been created. The `Location` header will contain the final URL that users can use to access this resource |
+| 204 | No content | Your request has been processed, but a response is not available. Generally used when deleting entities or bookmarking offerigns |
+| 400 | Bad Request | The content of your request is not correct (e.g. there is already a resource with the specified name) |
+| 400 | Validation Error | One or more fields of your content is not valid. The field `field` indicates the first field with a validation error |
+| 403 | Forbidden | You have no rights to perform the query |
+| 500 | Internal server error | There was an internal error in the system so your request cannot be completed |
 
 
 ## Group Users
