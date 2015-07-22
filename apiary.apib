@@ -13,22 +13,33 @@ may offer value because of its "knowledge" about the market in terms of market
 intelligence services, pricing support, advertising, information subscription and 
 more.
 
+## HTTP Codes
+
+| HTTP Code | Type | Description |
+|-----------|------|------------ |
+| 200 | OK   | Your request has been completed properly |
+| 201 | Created | Your resource has been created. The `Location` header will contain the final URL that users can use to access this resource |
+| 204 | No content | Your request has been processed, but a response is not available. Generally used when deleting entities or bookmarking offerigns |
+| 400 | Bad Request | The content of your request is not correct (e.g. there is already a resource with the specified name) |
+| 400 | Validation Error | One or more fields of your content is not valid. The field `field` indicates the first field with a validation error |
+| 403 | Forbidden | You have no rights to perform the query |
+| 500 | Internal server error | There was an internal error in the system so your request cannot be completed |
 
 
 ## Group Users
 
-API to retrieve, create, edit and delete user accounts.
+API to create, retrieve, edit and delete user accounts.
 
 When you are creating or updating an user, you can set the following fields:
 
-+ displayName - the display of the user. This field will be used to automatically generate the userName
-+ email - The email account of the user. This field is hidden and it will not be returned in GET requests
++ displayName - the display name of the user (the one used in the UI). This field will be used to automatically generate the userName
++ email - The user's email account. This field is hidden and it will not be returned in GET requests. Used for logging purposes
 + password - The user's password.  This field is hidden and it will not be returned in GET requests
 + company - (optional) The user's company
 
 However, some additional fields will be automatically generated for you:
 
-+ userName - unique user identifier based on user's display name
++ userName - unique user identifier based on user's display name. Users can also use this field to identify themselves
 + imageUrl - link to Gravatar based on user's mail
 + createdAt - Date of creation
 
@@ -41,7 +52,6 @@ However, some additional fields will be automatically generated for you:
     + Headers
             
             Accept: application/json
-            Authorization: Bearer YOUR_OAUTH2_TOKEN
 
     + Body
 
@@ -204,11 +214,11 @@ However, some additional fields will be automatically generated for you:
 
 ## Group Stores
 
-API to retrieve, create, edit and delete Stores.
+API to create, retrieve, edit and delete Stores.
 
 When you are creating or updating a store, you can set the following fields:
 
-+ displayName - the display of the Store. This field will be used to automatically generate the store identifier (name)
++ displayName - the display name of the Store (the one used in the User Interface). This field will be used to automatically generate the store identifier (name)
 + url - The URL where the store is located
 + comment - (optional) Additional information of the Store
 + imageBase64 - (optional) You can add an image to your store by coding it in Base64
@@ -401,9 +411,9 @@ However, some additional fields will be automatically generated for you:
         }
 
 
-## Creating and/or Listing Store Reviews [/api/v2/store/{store_name}/review{?offset}{?max}]
+## Creating and/or Listing Store Reviews [/api/v2/store/{store_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]
 
-Stores, as offerings, can be reviewed. One user can only review one store once. To review a store,
+Stores can be reviewed so other users can easily know which stores can be trusted. One user can only review one store once. To review a store,
 the user should send the following fields:
 
 + score: 3 (required, int) - a number between 1 or 5 where 1 means "I really hate this Store" and 5 means "I really like this Store"
@@ -469,6 +479,9 @@ the user should send the following fields:
 + Parameters
     + offset: 0 (optional, int) - The first element to be retrieved
     + max: 100 (optional, int) - The number of elements to be retrieved
+    + orderBy: id (optional, string) - Order used to retrieve the reviews
+    + desc: false (optional, boolean) - Use descending order
+    + detailed: false (optional, boolean) - If true, the user fileds won't contain the user name but all the user's information (email, displayName...)
     
 + Request
     + Headers
@@ -481,7 +494,7 @@ the user should send the following fields:
         {
             "reviews": [
                 {
-                    "id": 1
+                    "id": 1,
                     "score": 5,
                     "user": "USER_NAME",
                     "comment": "Example Comment",
@@ -501,13 +514,16 @@ the user should send the following fields:
         }
 
 
-## Managing an existing Store Review [/api/v2/store/{store_name}/review/{review_id}]
+## Managing an existing Store Review [/api/v2/store/{store_name}/review/{review_id}{?detailed}]
 
 + Parameters
     + store_name: wstore (required, string) - The ID of the store to which the review belongs
     + review_id: 0 (required, int) - The ID of the review to be managed
     
 ### Get Review Details [GET]
+
++ Parameters
+    + detailed: false (optional, boolean) - If true, the user filed won't contain the user name but all the user's information (email, displayName...)
 
 + Request
     + Headers
@@ -518,7 +534,7 @@ the user should send the following fields:
 + Response 200 (application/json)
 
         {
-            "id": 1
+            "id": 1,
             "score": 5,
             "user": "USER_NAME",
             "comment": "Example Comment",
@@ -607,11 +623,11 @@ the user should send the following fields:
 
 # Group Descriptions
 
-API to retrieve, create, edit and delete Descriptions.
+API to create, retrieve, edit and delete Descriptions.
 
 When you are creating or updating a description, you can set the following fields:
 
-+ displayName - the display of the Description. This field will be used to automatically generate the description identifier (name)
++ displayName - the display name of the Description (the one used in the User Interface). This field will be used to automatically generate the description identifier (name)
 + url - The URL where the description is located. This URL must be accesible by the server and should point to a RDF file
 + comment - (optional) Additional information of the Description
 
@@ -855,8 +871,8 @@ taking into account the store used to register these descriptions.
 
 # Group Offerings
 
-Once that you create a description and the RDF is parsed, the offerings contained in this RDF file will be accesible through the REST API. 
-Users will be able to interact with these offerings to obtain their details. 
+When descriptions are correctly created and the contained RDF is parsed, the offerings contained in this RDF file will be accessible through
+a REST API. At this point, users will be able to interact with these offerings to obtain their details and much more (bookmarking, reviewing...). 
 
 
 ## Listing all the offerings contained in a Description [/api/v2/store/{store_name}/description/{description_name}/offering]
@@ -1041,7 +1057,7 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.
         }
 
 
-## Creating and/or Listing Offering Reviews [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review{?offset}{?max}]
+## Creating and/or Listing Offering Reviews [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]
 
 Offerings, as stores, can be reviewed. One user can only review an offering once. To review an offering,
 the user should send the following fields:
@@ -1111,6 +1127,9 @@ the user should send the following fields:
 + Parameters
     + offset: 0 (optional, int) - The first element to be retrieved
     + max: 100 (optional, int) - The number of elements to be retrieved
+    + orderBy: id (optional, string) - Order used to retrieve the reviews
+    + desc: false (optional, boolean) - Use descending order
+    + detailed: false (optional, boolean) - If true, the user fileds won't contain the user name but all the user's information (email, displayName...)
     
 + Request
     + Headers
@@ -1123,7 +1142,7 @@ the user should send the following fields:
         {
             "reviews": [
                 {
-                    "id": 1
+                    "id": 1,
                     "score": 5,
                     "user": "USER_NAME",
                     "comment": "Example Comment",
@@ -1143,7 +1162,7 @@ the user should send the following fields:
         }
 
 
-## Managing an existing Offering Review [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review/{review_id}]
+## Managing an existing Offering Review [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review/{review_id}{?detailed}]
 
 + Parameters
     + store_name: wstore (required, string) - The ID of the Store to which the offering belongs
@@ -1152,6 +1171,10 @@ the user should send the following fields:
     + review_id: 0 (required, int) - The ID of the review to be managed
     
 ### Get Review Details [GET]
+
++ Parameters
+    + detailed: false (optional, boolean) - If true, the user filed won't contain the user name but all the user's information (email, displayName...)
+
 
 + Request
     + Headers
@@ -1162,7 +1185,7 @@ the user should send the following fields:
 + Response 200 (application/json)
 
         {
-            "id": 1
+            "id": 1,
             "score": 5,
             "user": "USER_NAME",
             "comment": "Example Comment",
@@ -1350,8 +1373,8 @@ The system register the last 10 offerings viewed by each user and these offering
 
 # Group Categories
 
-Offerings have some categories attached. The service will allow users to retrieve all the categories that have been created and all the offerings
-that belong to each existing category. Based on this, users can retrieve a list of suggestions for each category based on the reviews made by other users. 
+Offerings have some attached categories. The service will allow users to retrieve all the categories that have been created and all the offerings
+that belong to each existing category. Based on this, users can retrieve a list of suggestions for each category according to the reviews made by other users. 
 
 
 ## Listing all the Categories [/api/v2/category{?offset}{?max}]
