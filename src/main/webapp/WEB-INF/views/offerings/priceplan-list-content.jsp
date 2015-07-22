@@ -27,7 +27,7 @@
             <div class="list-group">
               <c:forEach items="${ pricePlan.priceComponents }" var="priceComponent">
 
-              <div title="${ priceComponent.comment }"
+              <div data-title="${ priceComponent.comment }"
                 <c:choose>
                 <c:when test="${ f:toLowerCase(priceComponent.unit) == 'single payment' }">
                   class="list-group-item list-group-item-info text-center tooltip"

@@ -87,7 +87,7 @@
 
 .tooltip:hover:before {
     position: absolute;
-    content: attr(title);
+    content: attr(data-title);
     padding: 5px;
     width: 180px;
     left: 50%;
