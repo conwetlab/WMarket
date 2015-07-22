@@ -348,7 +348,7 @@
                         $('<div class="service-name">').append($('<span>').text(service.displayName)),
                         $('<div class="service-content">').append(
                             buildCategoryList(service.categories),
-                            $('<div class="service-comment">').text(service.comment))
+                            $('<div class="service-comment">').append(replaceEOL(service.comment)))
                     );
                 $panel.append($item);
             });
@@ -363,10 +363,10 @@
     }
 
     function buildCategoryList(categories) {
-        var $list = $('<div class="service-categories">');
+        var $list = $('<div class="service-categories label-group-stacked text-center">');
 
         categories.forEach(function (category) {
-            $list.append($('<span class="label label-success">').text(category.displayName));
+            $list.append($('<span class="label label-success text-truncate">').text(category.displayName));
         });
 
         return $list;
@@ -395,7 +395,7 @@
         var units = "";
         var $currency = $('<span class="currency">');
 
-        if (['eur'].indexOf(priceComponent.currency.toLowerCase()) != -1) {
+        if (['gbp', 'eur', 'usd'].indexOf(priceComponent.currency.toLowerCase()) != -1) {
             $currency.addClass('fa fa-' + priceComponent.currency.toLowerCase());
         } else {
             $currency.text(priceComponent.currency);
@@ -418,6 +418,12 @@
         $item.append($p0, $p1);
 
         return $item;
+    }
+
+    function replaceEOL(text) {
+        return text.replace(/\n/g, function () {
+            return '<br>'
+        });
     }
 
     function buildPriceComponents($target, priceComponents) {
