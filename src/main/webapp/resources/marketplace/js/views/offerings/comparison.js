@@ -22,7 +22,7 @@
             list: function (next) {
                 app.requests.list(this.urls.collection, {
                     $target: this.$scope,
-                    $alert: app.createAlert('warning', "Sorry, no available offering."),
+                    $alert: app.createAlert('warning', "Sorry, no offering available."),
                     success: next
                 });
             },

@@ -334,7 +334,7 @@
             });
 
             if (!offering.info.pricePlans.length) {
-                $panel.append(app.createAlert('warning', "No available price plan"))
+                $panel.append(app.createAlert('warning', "No price plan available"))
             }
             $panel.addClass("priceplan-group-stacked");
             break;
@@ -350,7 +350,7 @@
             });
 
             if (!offering.info.services.length) {
-                $panel.append(app.createAlert('warning', "No available service"))
+                $panel.append(app.createAlert('warning', "No service available"))
             }
             $panel.addClass("service-group-stacked");
         }

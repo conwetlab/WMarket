@@ -18,7 +18,7 @@
 
     <div class="col-sm-10 col-md-6 col-lg-7">
       <div class="alert alert-warning">
-        <span class="fa fa-exclamation-circle"></span> Sorry, no available description in this store.
+        <span class="fa fa-exclamation-circle"></span> Sorry, no description available for this store.
       </div>
     </div>
 

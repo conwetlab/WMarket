@@ -28,7 +28,7 @@
       <c:otherwise>
 
         <div class="alert alert-warning">
-          <span class="fa fa-exclamation-circle"></span> Sorry, no service is available in this offering.
+          <span class="fa fa-exclamation-circle"></span> Sorry, no service available for this offering.
         </div>
 
       </c:otherwise>
