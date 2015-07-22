@@ -33,6 +33,9 @@
 		<security:intercept-url pattern="/api/v2/user/**" method="PUT" access="denyAll" />
 		<security:intercept-url pattern="/api/v2/user/**" method="DELETE" access="denyAll" />
 		<security:intercept-url pattern="/api/v2/user/**" method="GET" access="hasRole('ROLE_USER')" />
+		
+		<!-- Resources can be accessed by all the users -->
+		<security:intercept-url pattern="/resources/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
 
 		<!-- Security rule for the rest of URLs -->
 		<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
