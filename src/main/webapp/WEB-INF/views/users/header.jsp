@@ -6,7 +6,7 @@
     <span class="image-thumbnail thumbnail-circle">
       <img class="image" src="${ user.imageUrl }" />
     </span>
-    <span class="panel-title">${ user.displayName }</span>
+    <h4 class="panel-title">${ user.displayName }</h4>
   </div>
   <div class="panel-body">
     <div class="tab-group tab-group-vertical">

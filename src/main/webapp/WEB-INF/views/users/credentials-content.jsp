@@ -8,7 +8,7 @@
   <div class="col-sm-10 col-md-6 col-lg-5 col-lg-offset-1">
     <div class="panel panel-default">
       <div class="panel-heading text-center">
-        <span class="panel-title">Change Password</span>
+        <h4 class="panel-title">Change Password</h4>
       </div>
       <div class="panel-body">
         <form class="col-md-8 col-md-offset-1" name="account_password_update_form" method="post" action="${ pageContext.request.contextPath }/account/password">

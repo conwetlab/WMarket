@@ -14,7 +14,7 @@
 
     <div class="panel panel-default">
       <div class="panel-heading text-center">
-        <span class="panel-title">General information</span>
+        <h4 class="panel-title">General information</h4>
       </div>
       <div class="panel-body">
         <form class="col-md-8 col-md-offset-1" name="store_form" method="post" enctype="multipart/form-data" action="${ pageContext.request.contextPath }/stores/${ store.name }/about">
@@ -36,7 +36,7 @@
 
     <div class="panel panel-default">
       <div class="panel-heading text-center">
-        <span class="panel-title">General information</span>
+        <h4 class="panel-title">General information</h4>
       </div>
       <div class="panel-body">
         <div class="dl-group">
@@ -70,8 +70,8 @@
     </c:otherwise>
   </c:choose>
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <span class="panel-title">User reviews</span>
+      <div class="panel-heading text-center">
+        <h4 class="panel-title">User reviews</h4>
       </div>
       <div class="panel-body store-reviews"></div>
     </div>

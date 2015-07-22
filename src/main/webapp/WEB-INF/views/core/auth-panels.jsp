@@ -5,7 +5,7 @@
     <span class="image-thumbnail thumbnail-circle">
       <img class="image" src="${ user.imageUrl }" />
     </span>
-    <span class="panel-title">${ user.displayName }</span>
+    <h4 class="panel-title">${ user.displayName }</h4>
     <span class="panel-subtitle">${ user.email }</span>
   </div>
   <div class="panel-body">

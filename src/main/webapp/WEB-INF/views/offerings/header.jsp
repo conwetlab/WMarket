@@ -9,7 +9,7 @@
         <span class="fa fa-star">${ offering.averageScore }</span>
       </span>
     </div>
-    <div class="panel-title">${ offering.displayName }</div>
+    <h4 class="panel-title">${ offering.displayName }</h4>
     <div class="panel-subtitle offering-categories">
     <c:forEach var="category" items="${ offering.categories }">
       <span class="label label-success">${ category.displayName }</span>

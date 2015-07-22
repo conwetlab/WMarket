@@ -10,7 +10,7 @@
         <span class="fa fa-archive fa-inverse"></span>
       </span>
     </span>
-    <a class="panel-title" href="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }">${ description.displayName }</a>
+    <h4><a class="panel-title" href="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }">${ description.displayName }</a></h4>
   </div>
   <div class="panel-body">
     <div class="dl-group">
@@ -36,7 +36,7 @@
               <img class="image offering-image" src="${ offering.imageUrl }" />
               <span class="rating-value rating-value-lighter"><span class="fa fa-star"></span> ${ offering.averageScore }</span>
             </a>
-            <a href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }" class="panel-title text-truncate">${ offering.displayName }</a>
+            <h4><a href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }" class="panel-title text-truncate">${ offering.displayName }</a></h4>
           </div>
           <div class="panel-body">
             <div class="offering-description">${ offering.description }</div>

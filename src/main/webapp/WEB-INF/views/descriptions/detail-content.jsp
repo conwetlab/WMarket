@@ -11,7 +11,7 @@
   <div class="col-sm-10 col-md-6 col-lg-5 col-lg-offset-1">
     <div class="panel panel-default">
       <div class="panel-heading text-center">
-        <span class="panel-title">General information</span>
+        <h4 class="panel-title">General information</h4>
       </div>
       <div class="panel-body">
       <c:choose>
@@ -72,7 +72,7 @@
     </div>
     <div class="panel panel-default">
       <div class="panel-heading text-center">
-        <span class="panel-title">Store information</span>
+        <h4 class="panel-title">Store information</h4>
       </div>
       <div class="panel-body">
         <div class="dl-group">

@@ -10,7 +10,7 @@
   <div class="col-sm-10 col-md-6 col-lg-6 col-lg-offset-1">
     <div class="panel panel-default">
       <div class="panel-heading text-center">
-        <div class="panel-title">General information</div>
+        <h4 class="panel-title">General information</h4>
       </div>
       <div class="panel-body">
         <div class="dl-group">
@@ -43,7 +43,7 @@
     </div>
     <div class="panel panel-default">
       <div class="panel-heading text-center">
-        <span class="panel-title">Store information</span>
+        <h4 class="panel-title">Store information</h4>
       </div>
       <div class="panel-body">
         <div class="dl-group">
@@ -63,8 +63,8 @@
       </div>
     </div>
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <span class="panel-title">User reviews</span>
+      <div class="panel-heading text-center">
+        <h4 class="panel-title">User reviews</h4>
       </div>
       <div class="panel-body offering-reviews"></div>
     </div>

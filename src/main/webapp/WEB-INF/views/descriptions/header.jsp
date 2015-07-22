@@ -10,7 +10,7 @@
         <span class="fa fa-archive fa-inverse"></span>
       </span>
     </span>
-    <span class="panel-title">${ description.displayName }</span>
+    <h4 class="panel-title">${ description.displayName }</h4>
   </div>
   <div class="panel-body">
     <div class="tab-group tab-group-vertical">

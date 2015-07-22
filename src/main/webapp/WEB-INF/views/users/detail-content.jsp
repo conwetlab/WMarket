@@ -11,7 +11,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading text-center">
-          <span class="panel-title">Personal Information</span>
+          <h4 class="panel-title">Personal Information</h4>
         </div>
         <div class="panel-body">
           <div class="dl-group">
@@ -40,7 +40,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading text-center">
-          <span class="panel-title">Personal Information</span>
+          <h4 class="panel-title">Personal Information</h4>
         </div>
         <div class="panel-body">
           <form class="col-md-8 col-md-offset-1" name="account_update_form" method="post" action="${ pageContext.request.contextPath }/account">
@@ -56,7 +56,7 @@
       <c:if test="${ user.oauth2 eq false }">
         <div class="panel panel-default">
           <div class="panel-heading text-center">
-            <span class="panel-title">Provider</span>
+            <h4 class="panel-title">Provider</h4>
           </div>
           <div class="panel-body">
           	<div class="col-md-8 col-md-offset-1">

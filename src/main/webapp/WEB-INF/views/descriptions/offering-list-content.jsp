@@ -15,7 +15,7 @@
           <img class="image offering-image" src="${ offering.imageUrl }" />
           <span class="rating-value rating-value-lighter"><span class="fa fa-star"></span> ${ offering.averageScore }</span>
         </a>
-        <a class="panel-title text-truncate" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">${ offering.displayName }</a>
+        <h4><a class="panel-title text-truncate" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">${ offering.displayName }</a></h4>
       </div>
       <div class="panel-body">
         <a class="offering-store" href="${ pageContext.request.contextPath }/stores/${ description.store.name }/offerings">Web Store</a>

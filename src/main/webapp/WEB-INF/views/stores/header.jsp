@@ -24,7 +24,7 @@
         <span class="fa fa-star">${ store.averageScore }</span>
       </span>
     </span>
-    <span class="panel-title store-displayname">${ store.displayName }</span>
+    <h4 class="panel-title store-displayname">${ store.displayName }</h4>
     <t:insertTemplate template="/WEB-INF/views/core/rating.jsp">
       <t:putAttribute name="selector" value=".modal-rating" />
     </t:insertTemplate>

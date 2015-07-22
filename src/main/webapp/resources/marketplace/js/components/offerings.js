@@ -33,15 +33,15 @@
                 .addClass('offering-image').attr('src', this.imageUrl),
             ratingValue);
 
-        var offeringHeading = $('<div class="panel-heading text-center">').append(
+        this.$heading = $('<div class="panel-heading text-center">').append(
             thumbnailElement,
-            $('<a class="panel-title text-truncate">').text(this.displayName).attr('href', [
+            $('<h4>').append($('<a class="panel-title text-truncate">').text(this.displayName).attr('href', [
                 app.contextPath,
                 'offerings',
                 this.describedIn.store,
                 this.describedIn.name,
                 this.name
-            ].join('/')));
+            ].join('/'))));
 
         var offeringBody = $('<div class="panel-body">').append(
             $('<a class="offering-store">').text(this.store ? this.store.displayName : this.describedIn.store).attr('href', [
@@ -49,7 +49,7 @@
             ].join('/')),
             $('<div class="offering-description">').text(this.description));
 
-        this.element.append(offeringHeading, offeringBody);
+        this.element.append(this.$heading, offeringBody);
     };
 
     ns.Offering.prototype.addClass = function addClass(classList) {
