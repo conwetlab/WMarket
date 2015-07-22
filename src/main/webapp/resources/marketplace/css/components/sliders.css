@@ -8,9 +8,8 @@
 
 .slider-showcase {
     position: relative;
-    height: 252px;
     margin: 0px 30px;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .row-sliding {
@@ -24,6 +23,10 @@
     content: "";
     display: table;
     clear: both;
+}
+
+.row-sliding > .slider-item {
+    margin-bottom: 0px;
 }
 
 .slider-control {

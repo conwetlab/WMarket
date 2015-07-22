@@ -21,7 +21,7 @@
 
 @media (min-width: 768px /* Tablets */) {
 
-    .service-name {
+    .service-group .service-name {
         display: table-cell;
         min-width: 150px;
         max-width: 150px;
@@ -30,7 +30,7 @@
         vertical-align: top;
     }
 
-    .service-name span {
+    .service-group .service-name span {
         display: block;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -41,12 +41,12 @@
 
 @media (min-width: 992px /* Desktops */) {
 
-    .service-name {
+    .service-group .service-name {
         min-width: 175px;
         max-width: 175px;
     }
 
-    .service-name span {
+    .service-group .service-name span {
         display: inline;
         white-space: normal;
     }
@@ -55,19 +55,19 @@
 
 @media (min-width: 1200px /* Large Desktops */) {
 
-    .service-name {
+    .service-group .service-name {
         min-width: 200px;
         max-width: 200px;
     }
 
-    .service-name span {
+    .service-group .service-name span {
         display: inline;
         white-space: normal;
     }
 
 }
 
-.service-content {
+.service-group .service-content {
     display: block;
     margin: 0px 0px 0px 30px;
     padding: 10px;
@@ -76,10 +76,14 @@
 
 @media (min-width: 768px /* Tablets, Desktops and Large Desktops */) {
 
-    .service-content {
+    .service-group .service-content {
         display: table-cell;
         margin-left: 0px;
         width: 100%;
     }
 
+}
+
+.service-group-stacked .service-name {
+    margin: 0 0 5px;
 }

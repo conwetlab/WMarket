@@ -25,3 +25,8 @@
 .label-success {
     background-color: rgb(90, 180, 90);
 }
+
+.label-group-stacked > .label {
+    display: block;
+    margin: 0 0 5px;
+}

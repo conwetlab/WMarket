@@ -18,7 +18,7 @@ body {
     margin: 0px;
     padding: 57px 0px 0px;
     font: normal 400 14px/20px Helvetica, Arial, sans-serif;
-    color: rgb(70, 70, 70);
+    color: rgb(80, 80, 80);
     background-color: rgb(245, 245, 250);
 }
 
@@ -33,7 +33,6 @@ h1, h2, h3, h4 {
     display: block;
     margin: 0 0 10px;
     font-weight: 400;
-    color: rgb(70, 70, 70);
 }
 
 h1 {
@@ -67,7 +66,6 @@ a {
     font-weight: inherit;
     line-height: inherit;
     text-decoration: none;
-    background-color: transparent;
 }
 
 a:hover {

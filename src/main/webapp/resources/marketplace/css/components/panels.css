@@ -22,12 +22,6 @@
     border-radius: 3px 3px 0px 0px;
 }
 
-.panel .panel-heading:after {
-    content: "";
-    display: block;
-    clear: both;
-}
-
 /***************************************************************************************
  *  DEFAULT THEME - COMPONENT PANEL - PANEL TITLE
  ***************************************************************************************/
@@ -35,7 +29,6 @@
 .panel-heading .panel-title {
     position: relative;
     display: block;
-    font-size: 16px;
     font-weight: 700;
 }
 
@@ -53,6 +46,10 @@
     position: relative;
     display: inline-block;
     float: right;
+}
+
+.panel-heading > :last-child {
+    margin-bottom: 0;
 }
 
 .panel .panel-options .opt {
@@ -92,7 +89,7 @@
 }
 
 .panel-default > .panel-heading {
-    color: rgb(100, 100, 100);
+    color: rgb(80, 80, 80);
 }
 
 /***************************************************************************************

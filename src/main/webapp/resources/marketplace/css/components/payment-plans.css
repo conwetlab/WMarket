@@ -34,7 +34,7 @@
 
 @media (min-width: 768px /* Tablets */) {
 
-    .payment-plan {
+    .payment-plan-group > .payment-plan {
         width: 48%;
     }
 
@@ -42,7 +42,7 @@
 
 @media (min-width: 992px /* Desktops */) {
 
-    .payment-plan {
+    .payment-plan-group > .payment-plan {
         width: 30%;
     }
 
@@ -52,15 +52,19 @@
  * COMPONENT PAYMENT-PLAN OFFERS
  ****************************************************************************************/
 
-.payment-plan .list-group {
+.payment-plan-group > .payment-plan .list-group {
     display: flex;
     flex-flow: row wrap;
 }
 
-.payment-plan .list-group-item {
+.payment-plan-group > .payment-plan .list-group-item {
     cursor: default;
     width: 49%;
     margin: 0px auto;
+ }
+
+.payment-plan .list-group-item {
+    cursor: default;
     padding: 10px 5px;
  }
 
