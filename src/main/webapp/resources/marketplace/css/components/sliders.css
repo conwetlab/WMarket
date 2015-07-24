@@ -84,9 +84,12 @@
     width: 200px;
     float: left;
     margin: 0px 5px;
-    overflow-x: auto;
 }
 
 .rotating-item > :last-child {
     margin-bottom: 0;
+}
+
+.auto-scroll-x {
+    overflow-x: auto;
 }

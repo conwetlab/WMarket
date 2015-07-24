@@ -150,6 +150,150 @@
 
     utils.inherit(ns.CategoryShowcase, ns.OfferingShowcase);
 
+    ns.OfferingServiceComparison = function OfferingServiceComparison($target) {
+        this.$target = $target;
+        this.titles  = {};
+
+        this.rows = [];
+        this.cols = [];
+    };
+
+    utils.members(ns.OfferingServiceComparison, {
+
+        _addOfferingService: function _addOfferingService($row, service) {
+            var $item = $('<div class="rotating-item service-item">');
+
+            $item.append(
+                $('<h4 class="text-bold service-name">').text(service.displayName),
+                $('<div class="service-content">').append(
+                    this._createCategoryList(service.categories),
+                    $('<div class="service-comment auto-scroll-x">').append(this._replaceEOL(service.comment)))
+            );
+            $item.on('click', function (event) {
+                $row.find('.service-item').toggleClass('expanded', !$item.hasClass('expanded'));
+            });
+
+            $row.append($item);
+
+            return this;
+        },
+
+        _addHyphen: function _addHyphen($row) {
+            var $item = $('<div class="rotating-item empty text-center">').text("_");
+
+            $row.append($item);
+
+            return this;
+        },
+
+        _createCategoryList: function _createCategoryList(categories) {
+            var $list = $('<div class="service-categories label-group-stacked text-center">');
+
+            categories.sort(this._orderByAlphabeticOrNumeric).forEach(function (category) {
+                $list.append($('<span class="label label-success text-truncate">').text(category.displayName));
+            });
+
+            return $list;
+        },
+
+        _createRow: function _createRow() {
+            var $row = $('<div class="subrow-sliding">');
+
+            this.rows.push($row);
+            this.$target.append($row);
+
+            return $row;
+        },
+
+        _orderByAlphabeticOrNumeric: function _orderByAlphabeticOrNumeric(a, b) {
+            var textA = (typeof a === 'string' ? a : a.displayName).toLowerCase();
+            var textB = (typeof b === 'string' ? b : b.displayName).toLowerCase();
+
+            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        },
+
+        _replaceEOL: function _replaceEOL(text) {
+            return text.replace(/\n/g, function () {
+                return '<br>';
+            });
+        },
+
+        removeCol: function removeCol(index) {
+            var services = this.cols[index];
+
+            services.forEach(function (service) {
+                this.titles[service.displayName]--;
+
+                if (!this.titles[service.displayName]) {
+                    delete this.titles[service.displayName];
+                }
+            }, this);
+
+            this.cols.splice(index, 1);
+            this.refresh();
+
+            return this;
+        },
+
+        prependCol: function prependCol(services) {
+
+            if (services.length) {
+                services.forEach(function (service) {
+                    if (service.displayName in this.titles) {
+                        this.titles[service.displayName]++;
+                    } else {
+                        this.titles[service.displayName] = 1;
+                    }
+                }, this);
+
+                services = services.sort(this._orderByAlphabeticOrNumeric);
+            }
+
+            this.cols.unshift(services);
+            this.refresh();
+
+            return this;
+        },
+
+        refresh: function refresh() {
+            var $row, titles = Object.keys(this.titles).sort(this._orderByAlphabeticOrNumeric);
+
+            this.$target.empty();
+            this.rows.length = 0;
+
+            if (!titles.length) {
+                $row = this._createRow();
+
+                this.cols.forEach(function () {
+                    $row.append(app.createAlert('warning', "No service available"));
+                }, this);
+            } else {
+                titles.forEach(function (title) {
+                    $row = this._createRow();
+
+                    this.cols.forEach(function (services) {
+                        var hasOfferingService = services.some(function (service) {
+
+                                if (service.displayName == title) {
+                                    this._addOfferingService($row, service);
+                                    return true;
+                                }
+
+                                return false;
+                            }, this);
+
+                        if (!hasOfferingService) {
+                            this._addHyphen($row);
+                        }
+                    }, this);
+                }, this);
+            }
+
+            return this;
+        }
+
+    });
+
     // ==================================================================================
     // CLASS DEFINITION - ROTATING SHOWCASE
     // ==================================================================================
@@ -193,6 +337,8 @@
 
         this._handleRefresh = this.refresh.bind(this);
 
+        this.categoryList = {};
+        this.offeringList = [];
         $(window).on('resize', this._handleRefresh);
     };
 
@@ -202,9 +348,18 @@
 
             this.lists.forEach(function (list, index) {
                 buildDetailView.call(this, list, index, offering);
-                this.$listWidth = list.$items.length * this.$itemWidth;
+                if (index == 0) {
+                    this.$listWidth = list.$items.length * this.$itemWidth;
+                }
                 list.$list.css({width: this.$listWidth, left: 0});
+                if (index == 4) {
+                    list.$items.forEach(function ($subList) {
+                        $subList.css({width: this.$listWidth});
+                    }, this);
+                }
             }, this);
+
+            this.offeringList.unshift(offering);
 
             this.offsetWidth = 0;
             this.refresh();
@@ -255,23 +410,44 @@
             this.$showcase.append($('<hr>'));
         }
 
-        this.$showcase.append($('<div class="row rotating-showcase">').append($('<h4>').text(title), $showcase.append($list)));
+
+        this.$showcase.append($('<div class="row rotating-showcase">').append($('<h4>').append($('<strong>').text(title)), $showcase.append($list)));
         this.lists.push({
             $showcase: $showcase,
             $items: [],
             $list: $list
         });
+
+        if (index == 4) {
+            this.serviceRow = new ns.OfferingServiceComparison($list);
+        }
+
     }
 
     function removeOffering($item, index) {
         var currentPosition = this.lists[index].$items.indexOf($item);
 
-        this.lists.forEach(function (list) {
-            list.$items[currentPosition].remove();
-            list.$items.splice(currentPosition, 1);
-            this.$listWidth = list.$items.length * this.$itemWidth;
+        this.lists.forEach(function (list, index) {
+
+            if (index == 4) {
+                this.serviceRow.removeCol(currentPosition);
+            } else {
+                list.$items[currentPosition].remove();
+                list.$items.splice(currentPosition, 1);
+            }
+
+            if (index == 2) { // CATEGORIES
+                updateCategoryList.call(this, this.offeringList[currentPosition].info.categories, list);
+            }
+
+            if (index == 0) {
+                this.$listWidth = list.$items.length * this.$itemWidth;
+            }
+
             list.$list.css({width: this.$listWidth, left: 0});
         }, this);
+
+        this.offeringList.splice(currentPosition, 1);
 
         this.offsetWidth = 0;
         this.refresh();
@@ -284,6 +460,17 @@
                 this.$element.remove();
             }
         }
+    }
+
+    function updateCategoryList(categories, list) {
+        categories.forEach(function (category) {
+            this.categoryList[category.displayName]--;
+            if (this.categoryList[category.displayName] == 0) {
+                delete this.categoryList[category.displayName];
+            }
+        }, this);
+
+        refreshCategories.call(this, list);
     }
 
     function makeAvailableOffering(offering) {
@@ -307,25 +494,45 @@
                     $('<img class="image">').attr('src', offering.info.imageUrl),
                     $('<span class="rating-value rating-value-lighter">').append(
                         $('<span class="fa fa-star">').text(" " + offering.info.averageScore.toFixed(1))));
-            var $title = $('<div class="panel-title text-truncate">').text(offering.info.displayName);
+            var $title = $('<h4 class="panel-title text-truncate">').text(offering.info.displayName);
             $panelHeading.append($thumbnail, $title);
             $panel.append($panelHeading);
             break;
         case 1:
+            $panel.addClass("auto-scroll-x");
             $panel.text(offering.info.description);
             break;
-        case 2:
-            offering.info.categories.forEach(function (category) {
-                $panel.append($('<div class="label label-success text-center">').text(category.displayName));
-            });
-
+        case 2: // CATEGORIES
             if (!offering.info.categories.length) {
                 $panel.append(app.createAlert('warning', "No category available"))
+                break;
             }
+
+            offering.info.categories
+            .sort(function (a, b) {
+                return orderByAlphabeticOrNumeric('displayName', a, b);
+            })
+            .forEach(function (category) {
+                if (category.displayName in this.categoryList) {
+                    this.categoryList[category.displayName]++;
+                } else {
+                    this.categoryList[category.displayName] = 1;
+                }
+                $panel.append($('<div class="label label-success text-center">').text(category.displayName));
+            }, this);
+
             $panel.addClass("label-group-stacked");
-            break;
+
+            list.$list.prepend($panel);
+            list.$items.unshift($panel);
+            refreshCategories.call(this, list);
+            return;
         case 3:
-            offering.info.pricePlans.forEach(function (priceplan) {
+            offering.info.pricePlans
+            .sort(function (a, b) {
+                return orderByAlphabeticOrNumeric('title', a, b);
+            })
+            .forEach(function (priceplan) {
                 var $panel0 = $('<div>').addClass("panel panel-default payment-plan");
                 var $panelHeading = $('<div class="panel-heading text-center">');
                 var $title = $('<div class="panel-title">').text(priceplan.title);
@@ -342,30 +549,109 @@
             }
             $panel.addClass("priceplan-group-stacked");
             break;
-        default:
-            offering.info.services.forEach(function (service) {
-                var $item = $('<div class="service-item">').append(
-                        $('<div class="service-name">').append($('<span>').text(service.displayName)),
-                        $('<div class="service-content">').append(
-                            buildCategoryList(service.categories),
-                            $('<div class="service-comment">').append(replaceEOL(service.comment)))
-                    );
-                $panel.append($item);
-            });
-
-            if (!offering.info.services.length) {
-                $panel.append(app.createAlert('warning', "No service available"))
-            }
-            $panel.addClass("service-group-stacked");
+        default: // SERVICES
+            return this.serviceRow.prependCol(offering.info.services);
         }
+
         list.$list.prepend($panel);
         list.$items.unshift($panel);
+    }
+
+    function addEmptyItems(currentLength, list) {
+        var maxLength  = list.$list.children().length,
+            diffLength = maxLength - currentLength;
+
+        if (diffLength > 0) {
+            var i = 0;
+
+            for (i = 0; i < diffLength; i++) {
+                addEmptyItem(list.$items[currentLength + i]);
+            }
+        }
+
+        list.$items.forEach(function ($sublist) {
+            var i = 0, diffLength = maxLength - $sublist.children().length;
+
+            if (diffLength > 0) {
+                for (i = 0; i < diffLength; i++) {
+                    $sublist.append($('<div class="rotating-item empty">'));
+                }
+            }
+        });
+
+    }
+
+    function refreshCategories(list) {
+        var categories = Object.keys(this.categoryList).sort(function (a, b) {
+            var textA = a.toLowerCase();
+            var textB = b.toLowerCase();
+
+            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        });
+
+        list.$items.forEach(function ($panel) {
+            var _old, collection = $panel.find('.label').remove();
+
+            if (collection.length) {
+                _old = collection.filter('.label-success').map(function () {
+                    return this.textContent;
+                }).get();
+                refreshCategoryList(categories, _old, $panel);
+            }
+        });
+    }
+
+    function refreshCategoryList(categories, offeringCategories, $target) {
+        var i, j = 0;
+
+        for (i = 0; i < categories.length && j < offeringCategories.length; i++) {
+            if (categories[i] == offeringCategories[j]) {
+                $target.append($('<div class="label label-success text-center">').text(categories[i]));
+                j++;
+            } else {
+                $target.append($('<div class="label text-center">').text("-"));
+            }
+        }
+    }
+
+    function addEmptyItem($subList) {
+        var $panel = $('<div class="rotating-item empty">');
+
+        $subList.prepend($panel);
+    }
+
+    function addSubList(list) {
+        var $row = $('<div class="rotating-sublist service-group-stacked">');
+        list.$list.append($row);
+        list.$items.push($row);
+    }
+
+    function buildService(list, service, index) {
+
+        if (list.$items[index] == null) {
+            addSubList(list);
+        }
+
+        var $panel = $('<div class="rotating-item">');
+
+        var $item = $('<div class="service-item">').append(
+                $('<div class="service-name">').append($('<span>').text(service.displayName)),
+                $('<div class="service-content">').append(
+                    buildCategoryList(service.categories),
+                    $('<div class="service-comment">').append(replaceEOL(service.comment)))
+            );
+
+        list.$items[index].prepend($panel.append($item));
     }
 
     function buildCategoryList(categories) {
         var $list = $('<div class="service-categories label-group-stacked text-center">');
 
-        categories.forEach(function (category) {
+        categories
+        .sort(function (a, b) {
+            return orderByAlphabeticOrNumeric('displayName', a, b);
+        })
+        .forEach(function (category) {
             $list.append($('<span class="label label-success text-truncate">').text(category.displayName));
         });
 
@@ -424,6 +710,13 @@
         return text.replace(/\n/g, function () {
             return '<br>'
         });
+    }
+
+    function orderByAlphabeticOrNumeric(property, a, b) {
+        var textA = a[property].toLowerCase();
+        var textB = b[property].toLowerCase();
+
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
     }
 
     function buildPriceComponents($target, priceComponents) {

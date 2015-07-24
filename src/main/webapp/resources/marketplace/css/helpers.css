@@ -90,13 +90,16 @@
     content: attr(data-title);
     padding: 5px;
     width: 180px;
-    left: 50%;
-    margin-left: -90px;
     bottom: 70px;
     font: normal 400 14px/20px Helvetica, Arial, sans-serif;
     color: rgb(255, 255, 255);
     background: rgba(0, 0, 0, 0.8);
     border-radius: 4px;
+    -webkit-transform: translateX(-50%);
+       -moz-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+         -o-transform: translateX(-50%);
+            transform: translateX(-50%);
     z-index: 100;
 }
 

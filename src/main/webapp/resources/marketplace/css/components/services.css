@@ -14,7 +14,7 @@
     margin: 0px 0px 10px;
 }
 
-.service-name {
+.service-group .service-name {
     font-size: 16px;
     font-weight: 700;
 }
@@ -84,6 +84,26 @@
 
 }
 
-.service-group-stacked .service-name {
+.rotating-item.service-item {
+    cursor: pointer;
+    padding: 10px;
+    background-color: rgb(250, 250, 250);
+    border: solid 1px rgb(230, 220, 230);
+    border-radius: 4px;
+}
+
+.rotating-item.service-item .service-name {
+    margin: 0 0 10px;
+}
+
+.rotating-item.service-item .service-categories {
     margin: 0 0 5px;
+}
+
+.rotating-item.service-item .service-comment {
+    display: none;
+}
+
+.rotating-item.service-item.expanded .service-comment {
+    display: block;
 }
