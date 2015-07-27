@@ -85,7 +85,6 @@
 }
 
 .rotating-item.service-item {
-    cursor: pointer;
     padding: 10px;
     background-color: rgb(250, 250, 250);
     border: solid 1px rgb(230, 220, 230);
@@ -94,6 +93,13 @@
 
 .rotating-item.service-item .service-name {
     margin: 0 0 10px;
+    padding-right: 20px;
+}
+
+.rotating-item.service-item .service-name .btn-collapse {
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 .rotating-item.service-item .service-categories {

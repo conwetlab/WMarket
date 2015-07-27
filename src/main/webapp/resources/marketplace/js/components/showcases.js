@@ -161,16 +161,28 @@
     utils.members(ns.OfferingServiceComparison, {
 
         _addOfferingService: function _addOfferingService($row, service) {
-            var $item = $('<div class="rotating-item service-item">');
+            var $item = $('<div class="rotating-item service-item">'),
+                $icon = $('<i class="fa fa-toggle-down">');
 
             $item.append(
-                $('<h4 class="text-bold service-name">').text(service.displayName),
+                $('<h4 class="text-bold service-name">').append(
+                    service.displayName,
+                    $('<div class="btn-link btn-collapse">').append($icon)),
                 $('<div class="service-content">').append(
                     this._createCategoryList(service.categories),
                     $('<div class="service-comment auto-scroll-x">').append(this._replaceEOL(service.comment)))
             );
-            $item.on('click', function (event) {
-                $row.find('.service-item').toggleClass('expanded', !$item.hasClass('expanded'));
+
+            $icon.on('click', function (event) {
+                var addOrRemove = $item.hasClass('expanded');
+
+                if (addOrRemove) {
+                    $row.find('.service-item .btn-collapse > .fa').addClass('fa-toggle-down').removeClass('fa-toggle-up');
+                } else {
+                    $row.find('.service-item .btn-collapse > .fa').addClass('fa-toggle-up').removeClass('fa-toggle-down');
+                }
+
+                $row.find('.service-item').toggleClass('expanded', !addOrRemove);
             });
 
             $row.append($item);
