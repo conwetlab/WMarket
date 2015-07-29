@@ -10,7 +10,8 @@
 
     var $categoryList = $('[app-group="category"]'),
         $offeringList = $('[app-filter="category"]'),
-        $lastViewedList = $('[app-order="lastviewed"]');
+        $lastViewedList = $('[app-order="lastviewed"]')
+        $viewedByOthersList = $('[app-order="viewedByOthers"]');
 
     if ($categoryList.length || $offeringList.length) {
         ns.category = {
@@ -68,6 +69,39 @@
         app.requests.attach('stores:collection', function () {
             ns.lastViewedController.orderBy(function (offerings) {
                 var offeringShowcase = new app.components.OfferingShowcase(ns.lastViewedController.$scope);
+
+                offeringShowcase.setUp(offerings);
+            });
+        });
+    }
+    
+    // ==================================================================================
+    // ORDER BY - VIEWED BY OTHERS
+    // ==================================================================================
+
+    if ($viewedByOthersList.length) {
+
+        ns.viewedByOthersController = {
+
+            $scope: $viewedByOthersList,
+
+            urls: {
+                collection: app.urls.get('offering:collection:viewedbyothers:collection')
+            },
+
+            orderBy: function orderBy(next) {
+                app.requests.list(this.urls.collection, {
+                    $target: this.$scope,
+                    $alert: app.createAlert('warning', "No offerings available."),
+                    success: next
+                });
+            }
+
+        };
+
+        app.requests.attach('stores:collection', function () {
+            ns.viewedByOthersController.orderBy(function (offerings) {
+                var offeringShowcase = new app.components.OfferingShowcase(ns.viewedByOthersController.$scope);
 
                 offeringShowcase.setUp(offerings);
             });

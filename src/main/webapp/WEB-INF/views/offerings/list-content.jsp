@@ -3,6 +3,8 @@
 <div class="container" app-view="offering-list">
 <c:choose>
 <c:when test="${ viewName == 'GroupByCategory' }">
+  <h2>Other users are looking at</h2>
+  <div class="row" app-order="viewedByOthers"></div>
   <h2>Last viewed</h2>
   <div class="row" app-order="lastviewed"></div>
   <h2>Categories</h2>

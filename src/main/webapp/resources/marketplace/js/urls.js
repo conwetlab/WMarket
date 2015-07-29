@@ -34,6 +34,10 @@
         lastviewed: {
             collection: "/lastViewed"
         },
+        
+        viewedbyothers: {
+        	collection: "/viewedByOthers"
+        },
 
         review: {
             collection: "/review",
