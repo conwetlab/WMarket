@@ -67,6 +67,7 @@ public class OfferingBoImpl implements OfferingBo {
 	
 	private static final int N_LAST_VIEWED = 10;
 	private static final int HOURS_BETWEEN_VIEWS = 24;
+	private static final int MAX_OFFERINGS_VIEWED_BY_OTHER_USERS = 20;
 	
 	@Autowired private OfferingAuth offeringAuth;
 	@Autowired private OfferingDao offeringDao;
@@ -343,6 +344,37 @@ public class OfferingBoImpl implements OfferingBo {
 			List<Offering> lastViewed = new ArrayList<>();
 			List<ViewedOffering> orderedViewedOfferings = viewedOfferingDao
 					.getUserViewedOfferingsPage(userBo.getCurrentUser().getUserName(), offset, max);
+			
+			for (ViewedOffering viewedOffering: orderedViewedOfferings) {
+				lastViewed.add(viewedOffering.getOffering());
+			}
+			
+			return lastViewed;
+			
+		} catch (UserNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	@Transactional
+	public List<Offering> getOfferingsViewedByOtherUsers(int max) throws NotAuthorizedException {
+		
+		if (max > MAX_OFFERINGS_VIEWED_BY_OTHER_USERS) {
+			throw new IllegalArgumentException("max cannot be higher than " + 
+					MAX_OFFERINGS_VIEWED_BY_OTHER_USERS + ".");
+		}
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canListLastViewed()) {
+			throw new NotAuthorizedException("list offerings viewed by other users");
+		}
+		
+		try {
+			
+			List<Offering> lastViewed = new ArrayList<>();
+			List<ViewedOffering> orderedViewedOfferings = viewedOfferingDao
+					.getOfferingsViewedByOtherUsers(userBo.getCurrentUser().getUserName(), max);
 			
 			for (ViewedOffering viewedOffering: orderedViewedOfferings) {
 				lastViewed.add(viewedOffering.getOffering());

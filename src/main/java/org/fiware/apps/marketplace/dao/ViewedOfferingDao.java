@@ -46,5 +46,6 @@ public interface ViewedOfferingDao {
 	public List<ViewedOffering> getUserViewedOfferings(String userName) throws UserNotFoundException;
 	public List<ViewedOffering> getUserViewedOfferingsPage(String userName, int offset, int max) 
 			throws UserNotFoundException;
+	public List<ViewedOffering> getOfferingsViewedByOtherUsers(String userName, int max) throws UserNotFoundException;
 
 }

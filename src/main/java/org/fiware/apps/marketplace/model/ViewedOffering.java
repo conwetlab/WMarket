@@ -93,5 +93,25 @@ public class ViewedOffering {
 		this.date = date;
 	}
 	
+	@Override
+	public int hashCode() {
+		return id;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj) {
+			return true;
+		} else {
+			if (obj instanceof ViewedOffering) {
+				ViewedOffering other = (ViewedOffering) obj;
+				return other.id == this.id;
+			} else {
+				return false;
+			}
+		}
+	}
+	
 
 }

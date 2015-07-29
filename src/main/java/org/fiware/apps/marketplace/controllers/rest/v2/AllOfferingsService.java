@@ -151,4 +151,30 @@ public class AllOfferingsService {
 		return response;
 	}
 	
+	@GET
+	@Produces({"application/xml", "application/json"})
+	@Path("/viewedByOthers")	
+	public Response viewedByOthers(	@DefaultValue("20") @QueryParam("max") int max) {
+		
+		Response response;
+
+		if (max <= 0) {
+			// Max should be checked
+			response = ERROR_UTILS.badRequestResponse("max is not valid");
+		} else {
+			try {
+				List<Offering> offeringsPage = offeringBo.getOfferingsViewedByOtherUsers(max);
+				response = Response.status(Status.OK).entity(new Offerings(offeringsPage)).build();
+			} catch (NotAuthorizedException ex) {
+				response = ERROR_UTILS.notAuthorizedResponse(ex);
+			} catch (IllegalArgumentException ex) {
+				response = ERROR_UTILS.badRequestResponse(ex.getMessage());
+			} catch (Exception ex) {
+				response = ERROR_UTILS.internalServerError(ex);
+			}
+
+		}
+		
+		return response;
+	}	
 }

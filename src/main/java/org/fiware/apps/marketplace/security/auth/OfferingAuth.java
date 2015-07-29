@@ -88,5 +88,13 @@ public class OfferingAuth extends AbstractAuth<Offering> {
 	public boolean canListLastViewed() {
 		return true;
 	}
+	
+	/**
+	 * Check if an user can list the offerings viewed by others
+	 * @return true if the user is allowed to list the last offerings viewed by others
+	 */
+	public boolean canListLastViewedByOthers() {
+		return true;
+	}
 
 }

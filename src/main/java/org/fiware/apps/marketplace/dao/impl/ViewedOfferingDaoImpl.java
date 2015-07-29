@@ -1,5 +1,7 @@
 package org.fiware.apps.marketplace.dao.impl;
 
+import java.util.ArrayList;
+
 /*
  * #%L
  * FiwareMarketplace
@@ -37,6 +39,7 @@ import java.util.List;
 import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.dao.ViewedOfferingDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
+import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.ViewedOffering;
 import org.fiware.apps.marketplace.utils.MarketplaceHibernateDao;
@@ -84,6 +87,36 @@ public class ViewedOfferingDaoImpl extends MarketplaceHibernateDao implements Vi
 				.setFirstResult(offset)
 				.setMaxResults(max)
 				.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ViewedOffering> getOfferingsViewedByOtherUsers(String userName, int max) 
+			throws UserNotFoundException {
+		
+		// Throw exception if user does not exist
+		User user = userDao.findByName(userName);
+		
+		// This list can include repeated offerings
+		List<ViewedOffering> viewedOfferings = getSession().createQuery(
+				String.format("FROM %s where user != :user order by date desc", TABLE_NAME))
+				.setParameter("user", user)
+				.list();
+		
+		// Filter the list
+		List<ViewedOffering> filteredViewedOfferings = new ArrayList<>();
+		List<Offering> offeringsAuxList = new ArrayList<>();
+		for (int i = 0; i < viewedOfferings.size() && filteredViewedOfferings.size() < max; i++) {
+			
+			ViewedOffering viewedOffering = viewedOfferings.get(i);
+			
+			if (!offeringsAuxList.contains(viewedOffering.getOffering())) {
+				filteredViewedOfferings.add(viewedOffering);
+				offeringsAuxList.add(viewedOffering.getOffering());
+			}
+		}
+		
+		return filteredViewedOfferings;	
 	}
 
 }

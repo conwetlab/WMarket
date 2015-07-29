@@ -82,6 +82,7 @@ public interface OfferingBo {
 	
 	// Get viewed offerings
 	public List<Offering> getLastViewedOfferingsPage(int offset, int max) throws NotAuthorizedException;
+	public List<Offering> getOfferingsViewedByOtherUsers(int max) throws NotAuthorizedException;
 	
 	// Review
 	public void createReview(String storeName, String descriptionName, String offeringName, Review review) 
