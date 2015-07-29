@@ -65,6 +65,10 @@ public class SeleniumIT extends AbstractIT {
 	private static final String MAX_LENGTH = "This field must not exceed %d chars.";
 	private static final String DESCRIPTION_REGISTERED = "This name is already in use in this Store.";
 	private static final String NO_REVIEWS = "This %s has not been reviewed yet. You can be the first.";
+	private static final String STORE_NAME_ALREADY_IN_USE = "This name is already in use.";
+	private static final String DESCRIPTION_NAME_ALREADY_IN_USE =  "This name is already in use in this Store.";
+	private static final String STORE_URL_ALREADY_IN_USE = "This URL is already in use.";
+	private static final String DESCRIPTION_URL_ALREADY_IN_USE = "This URL is already in use in this Store.";
 	private static final String ACCOUNT_UPDATE_FORM = "account_update_form";
 	private static final String REGISTRATION_FORM = "registration_form";
 	private static final String STORE_FORM = "store_form";
@@ -584,6 +588,25 @@ public class SeleniumIT extends AbstractIT {
 
 		formElement = submitFormExpectError(formElement, "displayName", REQUIRED_FIELD);
 	}
+	
+	@Test
+	public void should_DisplayErrorMessage_When_StoreCreateFormIsSubmitted_And_DisplayNameIsInUse() {
+
+		loginDefaultUser();
+		
+		String repeatedDisplayName = "WStore";
+		
+		// Register the first Store
+		driver.get(endPoint + "/stores/register");
+		registerStore(repeatedDisplayName, "http://store.lab.fiware.org");
+
+		// Registered the second Store
+		driver.get(endPoint + "/stores/register");
+		registerStore(repeatedDisplayName, "http://store2.lab.fiware.org");
+		
+		WebElement formElement = driver.findElement(By.name(STORE_FORM));
+		verifyFieldError(formElement, "displayName", STORE_NAME_ALREADY_IN_USE);
+	}
 
 	@Test
 	public void should_DisplayErrorMessage_When_StoreCreateFormIsSubmitted_And_URLIsInvalid() {
@@ -599,6 +622,25 @@ public class SeleniumIT extends AbstractIT {
 
 		fillField(formElement, "url", "invalid_url");
 		formElement = submitFormExpectError(formElement, "url", INVALID_URL);
+	}
+	
+	@Test
+	public void should_DisplayErrorMessage_When_StoreCreateFormIsSubmitted_And_URLIsInUse() {
+
+		loginDefaultUser();
+		
+		String repeatedURL = "http://store.lab.fiware.org";
+		
+		// Register the first Store
+		driver.get(endPoint + "/stores/register");
+		registerStore("wstore", repeatedURL);
+
+		// Registered the second Store
+		driver.get(endPoint + "/stores/register");
+		registerStore("wstore2", repeatedURL);
+		
+		WebElement formElement = driver.findElement(By.name(STORE_FORM));
+		verifyFieldError(formElement, "url", STORE_URL_ALREADY_IN_USE);
 	}
 
 	@Test
@@ -631,6 +673,55 @@ public class SeleniumIT extends AbstractIT {
 		displayName = "FIWARE New Store";
 		updateStoreDisplayName(displayName);
 		verifyAlertContent("The store '" + displayName + "' was updated successfully.");
+	}
+	
+	private void given_UserIsOwner_When_StoreFieldIsUpdatedWithOneInUse_Then_ErrorIsShown(String displayNameStore1, 
+			String urlStore1, String displayNameStore2, String urlStore2, String field, String fieldNewValue,
+			String expectedErrorMessage) {
+		
+		
+		loginDefaultUser();
+
+		clickOnOperationPanelItem("Register a new store");
+		registerStore(displayNameStore1, urlStore1);
+		
+		clickOnOperationPanelItem("Register a new store");
+		registerStore(displayNameStore2, urlStore2);
+
+		driver.findElement(By.xpath("//a[contains(@href, '/WMarket/stores/" + displayNameStore2 + "/about')]")).click();
+		
+		// Fill the form field & submit
+		WebElement formElement = driver.findElement(By.name(STORE_FORM));
+		fillField(formElement, field, fieldNewValue);
+		submitForm(formElement);
+		
+		// Check that the error message has been shown
+		// The page is updated, so the form is different
+		formElement = driver.findElement(By.name(STORE_FORM));
+		verifyFieldError(formElement, field, expectedErrorMessage);
+
+	}
+	
+	@Test
+	public void given_UserIsOwner_When_StoreDisplayNameIsUpdatedWithOneInUse_Then_ErrorIsShown() {
+		String displayNameStore1 	= "FIWARE Store";
+		String urlStore1	        = "http://store.fiware.es";
+		String displayNameStore2 	= "fiware-store-1";
+		String urlStore2	        = "http://store2.fiware.es";
+		
+		given_UserIsOwner_When_StoreFieldIsUpdatedWithOneInUse_Then_ErrorIsShown(displayNameStore1, urlStore1, 
+				displayNameStore2, urlStore2, "displayName", displayNameStore1, STORE_NAME_ALREADY_IN_USE);
+	}
+	
+	@Test
+	public void given_UserIsOwner_When_StoreURLIsUpdatedWithOneInUse_Then_ErrorIsShown() {
+		String displayNameStore1 	= "FIWARE Store";
+		String urlStore1	        = "http://store.fiware.es";
+		String displayNameStore2 	= "fiware-store-1";
+		String urlStore2	        = "http://store2.fiware.es";
+
+		given_UserIsOwner_When_StoreFieldIsUpdatedWithOneInUse_Then_ErrorIsShown(displayNameStore1, urlStore1, 
+				displayNameStore2, urlStore2, "url", urlStore1, STORE_URL_ALREADY_IN_USE);
 	}
 
 	@Test
@@ -666,7 +757,6 @@ public class SeleniumIT extends AbstractIT {
 
 		createUserStoreAndDescriptionDefaultCredentials(displayName, url, descriptionName, defaultUSDLPath);
 
-		
 		assertThat(driver.getTitle()).isEqualTo(displayName + " - Offerings - WMarket");
 		verifyAlertContent("The description '" + descriptionName + "' was uploaded successfully.");
 	}
@@ -699,6 +789,42 @@ public class SeleniumIT extends AbstractIT {
 		fillField(formElement, "url", defaultUSDLPath);
 		formElement = submitFormExpectError(formElement, "displayName", DESCRIPTION_REGISTERED);
 	}
+	
+	@Test
+	public void should_DisplayErrorMessage_When_DescriptionCreateFormIsSubmitted_And_DisplayNameIsInUse() {
+		String displayName	   = "FIWARE Store";
+		String url			   = "http://store.fiware.es";
+		String descriptionName = "New description";
+
+		createUserStoreAndDescriptionDefaultCredentials(displayName, url, descriptionName, defaultUSDLPath);
+
+		assertThat(driver.getTitle()).isEqualTo(displayName + " - Offerings - WMarket");
+		verifyAlertContent("The description '" + descriptionName + "' was uploaded successfully.");
+
+		driver.get(endPoint + "/descriptions/register");
+		registerDescription(descriptionName, defaultUSDLPath);
+		
+		WebElement formElement = driver.findElement(By.name(DESCRIPTION_CREATION_FORM));
+		verifyFieldError(formElement, "displayName", DESCRIPTION_NAME_ALREADY_IN_USE);
+	}
+	
+	@Test
+	public void should_DisplayErrorMessage_When_DescriptionCreateFormIsSubmitted_And_URLNameIsInUse() {
+		String displayName	   = "FIWARE Store";
+		String url			   = "http://store.fiware.es";
+		String descriptionName = "New description";
+
+		createUserStoreAndDescriptionDefaultCredentials(displayName, url, descriptionName, defaultUSDLPath);
+
+		assertThat(driver.getTitle()).isEqualTo(displayName + " - Offerings - WMarket");
+		verifyAlertContent("The description '" + descriptionName + "' was uploaded successfully.");
+
+		driver.get(endPoint + "/descriptions/register");
+		registerDescription(descriptionName + "a", defaultUSDLPath);
+		
+		WebElement formElement = driver.findElement(By.name(DESCRIPTION_CREATION_FORM));
+		verifyFieldError(formElement, "url", DESCRIPTION_URL_ALREADY_IN_USE);
+	}
 
 	@Test
 	public void should_DisplayNotificationAlert_When_DescriptionIsUpdated() {
@@ -715,7 +841,64 @@ public class SeleniumIT extends AbstractIT {
 		updateDescription(newDipslayName);
 		verifyAlertContent("The description '" + newDipslayName + "' was updated successfully.");
 	}
+	
+	private void given_UserIsOwner_When_DescriptionFieldIsUpdatedWithOneInUse_Then_ErrorIsShown(
+			String descriptionName1, String urlDescription1, String descriptionName2, String urlDescription2, 
+			String field, String fieldNewValue,String expectedErrorMessage) {
+		
+		String storeDisplayName	= "FIWARE Store";
+		String urlStore         = "http://store.fiware.es";
+				
+		// Register the first description
+		createUserStoreAndDescriptionDefaultCredentials(storeDisplayName, urlStore, descriptionName1, 
+				urlDescription1);
+		
+		// Register the second description
+		driver.get(endPoint + "/descriptions/register");
+		registerDescription(descriptionName2, urlDescription2);
 
+		clickOnOperationPanelItem("My descriptions");
+		driver.findElement(
+				By.xpath("//a[contains(@href, '/WMarket/stores/fiware-store/descriptions/" + descriptionName2 + "')]"))
+				.click();
+		
+		// Fill the form field & submit
+		WebElement formElement = driver.findElement(By.name(DESCRIPTION_UPDATE_FORM));
+		fillField(formElement, field, fieldNewValue);
+		submitForm(formElement);
+		
+		// Check that the error message has been shown
+		// The page is updated, so the form is different
+		formElement = driver.findElement(By.name(DESCRIPTION_UPDATE_FORM));
+		verifyFieldError(formElement, field, expectedErrorMessage);
+	}
+	
+	@Test
+	public void given_UserIsOwner_When_DescriptionDisplayNameIsUpdatedWithOneInUse_Then_ErrorIsShown() {
+		
+		String descriptionName1 = "description-1";
+		String urlDescription1 = defaultUSDLPath;
+		String descriptionName2 = "description-2";
+		String urlDescription2 = secondaryUSDLPath;
+
+		given_UserIsOwner_When_DescriptionFieldIsUpdatedWithOneInUse_Then_ErrorIsShown(descriptionName1, 
+				urlDescription1, descriptionName2, urlDescription2, "displayName", descriptionName1, 
+				DESCRIPTION_NAME_ALREADY_IN_USE); 
+	}
+	
+	@Test
+	public void given_UserIsOwner_When_DescriptionURLIsUpdatedWithOneInUse_Then_ErrorIsShown() {
+		
+		String descriptionName1 = "description-1";
+		String urlDescription1 = defaultUSDLPath;
+		String descriptionName2 = "description-2";
+		String urlDescription2 = secondaryUSDLPath;
+
+		given_UserIsOwner_When_DescriptionFieldIsUpdatedWithOneInUse_Then_ErrorIsShown(descriptionName1, 
+				urlDescription1, descriptionName2, urlDescription2, "url", urlDescription1, 
+				DESCRIPTION_URL_ALREADY_IN_USE); 
+	}
+	
 	@Test
 	public void should_DisplayNotificationAlert_When_DescriptionIsDeleted() {
 		String displayName	   = "FIWARE Store";
