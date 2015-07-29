@@ -70,7 +70,7 @@ public class StoreValidator {
 			
 			// Name does not changes, so it should only be checked on creation
 			if (!storeDao.isNameAvailable(store.getName())) {
-	            throw new ValidationException("name", "This name is already in use.");
+	            throw new ValidationException("displayName", "This name is already in use.");
 			}
 		}
 

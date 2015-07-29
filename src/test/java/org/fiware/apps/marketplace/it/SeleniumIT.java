@@ -1043,7 +1043,7 @@ public class SeleniumIT extends AbstractIT {
 			"New Description", defaultUSDLPath);
 
 		driver.get(endPoint + "/");
-		assertThat(driver.findElements(By.cssSelector(".category")).size()).isEqualTo(2);
+		assertThat(driver.findElements(By.cssSelector(".category-title")).size()).isEqualTo(2);
 
 		driver.get(endPoint + "/category/dataset");
 		assertThat(driver.findElements(By.cssSelector(".offering-item")).size()).isEqualTo(1);
