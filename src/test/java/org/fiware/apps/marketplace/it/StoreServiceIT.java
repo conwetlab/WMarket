@@ -200,7 +200,7 @@ public class StoreServiceIT extends AbstractIT {
 		
 		// name is based on display name and name is checked before display name...
 		testCreationFieldAlreayExists(displayName, displayName, "https://store.com", "http://market.com", 
-				"name", MESSAGE_NAME_IN_USE);
+				"displayName", MESSAGE_NAME_IN_USE);
 	}
 	
 	@Test
