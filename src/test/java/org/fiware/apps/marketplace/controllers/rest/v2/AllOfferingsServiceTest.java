@@ -291,7 +291,7 @@ public class AllOfferingsServiceTest {
 		// Call the method
 		int offset = 0;
 		int max = 100;
-		Response res = allOfferingsService.lastVisited(0, 100);
+		Response res = allOfferingsService.lastVisited(offset, max);
 		
 		// Verify
 		verify(offeringBoMock).getLastViewedOfferingsPage(offset, max);
@@ -301,5 +301,55 @@ public class AllOfferingsServiceTest {
 		assertThat(((Offerings) res.getEntity()).
 				getOfferings()).isEqualTo(oferrings);
 	}
+		
+	@Test
+	public void testViewedByOthersInvalidMax() {
+		// Call the method
+		Response res = allOfferingsService.viewedByOthers(0);
+
+		// Assertions
+		GenericRestTestUtils.checkAPIError(res, 400, ErrorType.BAD_REQUEST, "max is not valid");
+	}
+		
+	@Test
+	public void testViewedByOthersdNotAllowed() throws NotAuthorizedException {
+		String userName = "example-user";
+		
+		// Mocks
+		User user = mock(User.class);
+		when(user.getUserName()).thenReturn(userName);
+		Exception e = new NotAuthorizedException("list offerings");
+		doThrow(e).when(offeringBoMock).getOfferingsViewedByOtherUsers(anyInt());
+
+		// Call the method
+		Response res = allOfferingsService.viewedByOthers(20);
+
+		// Assertions
+		GenericRestTestUtils.checkAPIError(res, 403, ErrorType.FORBIDDEN, 
+				e.getMessage());
+
+	}
+	
+	@Test
+	public void testViewedByOthersGetNoErrors() throws NotAuthorizedException {
+		@SuppressWarnings("unchecked")
+		List<Offering> oferrings = mock(List.class);
+		
+		// Mocks
+		when(offeringBoMock.getOfferingsViewedByOtherUsers(anyInt())).
+				thenReturn(oferrings);
+		
+		// Call the method
+		int max = 20;
+		Response res = allOfferingsService.viewedByOthers(max);
+		
+		// Verify
+		verify(offeringBoMock).getOfferingsViewedByOtherUsers(max);
+		
+		// Assertions
+		assertThat(res.getStatus()).isEqualTo(200);
+		assertThat(((Offerings) res.getEntity()).getOfferings()).isEqualTo(oferrings);
+	}
+
 
 }

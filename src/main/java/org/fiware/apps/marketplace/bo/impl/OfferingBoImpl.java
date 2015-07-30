@@ -366,7 +366,7 @@ public class OfferingBoImpl implements OfferingBo {
 		}
 		
 		// Check rights and raise exception if user is not allowed to perform this action
-		if (!offeringAuth.canListLastViewed()) {
+		if (!offeringAuth.canListLastViewedByOthers()) {
 			throw new NotAuthorizedException("list offerings viewed by other users");
 		}
 		

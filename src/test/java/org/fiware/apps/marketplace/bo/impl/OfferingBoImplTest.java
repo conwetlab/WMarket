@@ -875,7 +875,51 @@ public class OfferingBoImplTest {
 	}
 	
 	
+	///////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////// OFFERINGS VIEWED BY OTHERS//////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
 	
+	@Test(expected=NotAuthorizedException.class)
+	public void testGetOfferingsViewedByOtherUsersNotAuthorized() throws Exception {
+		
+		// Mock
+		doReturn(false).when(offeringAuthMock).canListLastViewedByOthers();
+		
+		// Call the function
+		offeringBo.getOfferingsViewedByOtherUsers(7);
+	}
 	
-
+	@Test(expected=IllegalArgumentException.class)
+	public void testGetOfferingsViewedByOtherUsersInvalidMax() throws Exception {
+		offeringBo.getOfferingsViewedByOtherUsers(21);
+	}
+	
+	@Test
+	public void testGetOfferingsViewedByOtherUsers() throws Exception {
+		
+		String userName = "user";
+		User user = mock(User.class);
+		
+		// List of viewed offerings
+		List<ViewedOffering> viewedOfferings = new ArrayList<>();
+		for (int i = 0; i < 3; i++) {
+			ViewedOffering vo = new ViewedOffering();
+			vo.setOffering(mock(Offering.class));
+		}
+		
+		// Mock
+		doReturn(userName).when(user).getUserName();
+		doReturn(user).when(userBoMock).getCurrentUser();
+		doReturn(true).when(offeringAuthMock).canListLastViewedByOthers();
+		doReturn(viewedOfferings).when(viewedOfferingDaoMock).getOfferingsViewedByOtherUsers(anyString(), anyInt());
+		
+		// Call the function
+		List<Offering> returnedOfferings = offeringBo.getOfferingsViewedByOtherUsers(7);
+		
+		// Check returned offerings
+		for (int i = 0; i < viewedOfferings.size(); i++) {
+			assertThat(returnedOfferings.get(i)).isSameAs(viewedOfferings.get(i).getOffering());
+		}
+	}
+	
 }
