@@ -74,6 +74,7 @@ public abstract class AbstractIT {
 	protected String serverUrl;
 	protected String defaultUSDLPath;
 	protected String secondaryUSDLPath;
+	protected String complexDescriptionUSDLPath;
 	
 	// Mock server
 	@Rule public WireMockRule wireMock = new WireMockRule(0);
@@ -253,6 +254,7 @@ public abstract class AbstractIT {
 		serverUrl = "http://127.0.0.1:" + wireMock.port();
 		defaultUSDLPath = serverUrl + "/default.rdf";
 		secondaryUSDLPath = serverUrl + "/secondary.rdf";
+		complexDescriptionUSDLPath = serverUrl + "/extra_complex.rdf";
 		
 		List<Offering> defaultUSDLPathOfferings = new ArrayList<>();
 		defaultUSDLPathOfferings.add(FIRST_OFFERING);

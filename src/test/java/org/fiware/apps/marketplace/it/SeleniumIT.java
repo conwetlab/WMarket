@@ -35,6 +35,10 @@ package org.fiware.apps.marketplace.it;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
@@ -44,6 +48,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -206,7 +211,7 @@ public class SeleniumIT extends AbstractIT {
 
 	// LIST OF OPERATIONS
 
-	private void loginUser(String username, String password) {
+	private void loginUser(String username, String password, boolean isProvider) {
 		// Find form
 		WebElement formElement = driver.findElement(By.name("login_form"));
 
@@ -219,24 +224,26 @@ public class SeleniumIT extends AbstractIT {
 		
 		String currentURL = driver.getCurrentUrl();
 		
-		// Set user as provider
-		try {
-			clickOnSettingPanelItem("Settings");
-			driver.findElement(By.cssSelector("form > button.btn.btn-success")).click();
-		} catch (Exception e) {
-			// Nothing to do... This exceptions can happen in two different cases:
-			// 1) The user is already a provider
-			// 2) The credentials are not valid
+		if (isProvider) {
+			// Set user as provider
+			try {
+				clickOnSettingPanelItem("Settings");
+				driver.findElement(By.cssSelector("form > button.btn.btn-success")).click();
+			} catch (Exception e) {
+				// Nothing to do... This exceptions can happen in two different cases:
+				// 1) The user is already a provider
+				// 2) The credentials are not valid
+			}
+		    
+		    // Back to the previous URL
+		    driver.get(currentURL);
 		}
-	    
-	    // Back to the previous URL
-	    driver.get(currentURL);
 	}
 
 	private void loginUserExpectError(String username, String password) {
 		String errorMessage = "The username and password do not match.";
 
-		loginUser(username, password);
+		loginUser(username, password, true);
 		assertThat(driver.findElement(By.cssSelector(".alert-danger")).getText()).isEqualTo(errorMessage);
 	}
 	
@@ -244,7 +251,7 @@ public class SeleniumIT extends AbstractIT {
 		createUser(displayName, email, password);
 
 		driver.get(endPoint);
-		loginUser(email, password);
+		loginUser(email, password, true);
 	}
 
 	private void loginDefaultUser() {
@@ -424,7 +431,7 @@ public class SeleniumIT extends AbstractIT {
 		registerUser(displayName, email, password);
 		verifyAlertContent("You was registered successfully. You can log in right now.");
 
-		loginUser(email, password);
+		loginUser(email, password, true);
 		assertThat(driver.findElement(By.id("toggle-right-sidebar")).getText()).isEqualTo(displayName);
 	}
 
@@ -544,7 +551,7 @@ public class SeleniumIT extends AbstractIT {
 		assertThat(driver.getTitle()).isEqualTo("Sign In - WMarket");
 		verifyAlertContent("Your password was changed. Please sign in again.");
 
-		loginUser(email, newPassword);
+		loginUser(email, newPassword, true);
 		assertThat(driver.findElement(By.id("toggle-right-sidebar")).getText()).isEqualTo(displayName);
 	}
 
@@ -1231,5 +1238,141 @@ public class SeleniumIT extends AbstractIT {
 		driver.get(endPoint + "/category/dataset");
 		assertThat(driver.findElements(By.cssSelector(".offering-item")).size()).isEqualTo(1);
 	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////// LAST VIEWED OFFERINGS ////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void scrollToElement(WebElement element){
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+	}
+	
+	private void viewOfferings(String[] offeringsToView) {
+		for (String offeringName: offeringsToView) {
+			driver.get(endPoint + "/");
+		    driver.findElement(By.linkText(offeringName)).click();
+		    
+		    try {
+		    	Thread.sleep(250);
+		    } catch (InterruptedException ex) {
+		    	// Not expected
+		    }
+		}
+	}
+	
+	private void checkDivOfferings(String cssSelector, List<String> expectedOfferings) {
+		
+		// Go to the main page
+		driver.get(endPoint + "/");
+		
+		List<String> viewedOfferings = new ArrayList<>();
+		List<WebElement> elements = driver.findElements((By.cssSelector(cssSelector)));
+		for (WebElement element: elements) {
+			// Non-visible elements don't return their text
+			scrollToElement(element);
+			viewedOfferings.add(element.getText());
+		}
+		
+		// Check that last Viewed Offerings are in the correct order
+		assertThat(viewedOfferings).isEqualTo(expectedOfferings);
+	}
+	
+	private List<String> inverseOrderNotRepeated(String[]... originals) {
+		
+		List<String> originalsReversed = new ArrayList<>();
+		
+		for (int i = originals.length - 1; i >= 0; i--) {
+			String[] original = originals[i];
+			
+			// If a copy is not created, the original is also reversed
+			String[] copy = new String[original.length];
+			System.arraycopy(original, 0, copy, 0, original.length);
+			
+			List<String> reversed = Arrays.asList(copy);
+			Collections.reverse(reversed);
 
+			for (String offering: reversed) {
+				if (!originalsReversed.contains(offering)) {
+					originalsReversed.add(offering);
+				}
+			}
+
+		}
+		
+		return originalsReversed;
+	}
+
+	@Test
+	public void when_OfferingsViewed_Expect_CorrectOrderInLastViewedSection() throws InterruptedException {
+		String displayName       = "FIWARE Store";
+		String url               = "http://store.fiware.es";
+		String userName          = "User A";
+		String userMail          = "example@example.com";
+		String lastViewedCss     = "[app-order=\"lastviewed\"] .offering-item .panel-title";
+		String userPass          = "fiware1!";
+		String[] offeringsToView = {"Interface Designed", "OrionStarterKit", "Led Panel", "KurentoStarterKit",
+				"Evolution of Madrid Transport Pass Visualization", "Cosmos", "WStore", "Orion Context Broker", 
+				"Madrid Public Transport Pass Price Evolution - FIWARE Developers Week", "ChartStarterKit", 
+				"MultimediaPack", "ChartStarterKit"};
+
+		createUserStoreAndDescription(userName, userMail, userPass, displayName, url, 
+			"Example Offerings", complexDescriptionUSDLPath);
+
+		viewOfferings(offeringsToView);
+		
+		List<String> expectedOfferings = inverseOrderNotRepeated(offeringsToView).subList(0, 10);				
+		checkDivOfferings(lastViewedCss, expectedOfferings);
+	}
+	
+	@Test
+	public void when_OfferingsViewedByOtherUsers_Expect_CorrectOrderViewedByOthers() {
+		String displayName         = "FIWARE Store";
+		String url                 = "http://store.fiware.es";
+		String viewedByOthersCss   = "[app-order=\"viewedByOthers\"] .offering-item .panel-title";
+		String usersPass           = "fiware1!";
+		String user1Name           = "User A";
+		String user1Mail           = "example@example.com";
+		String user2Name           = "User B";
+		String user2Mail           = "example1@example.com";
+		String user3Name           = "User C";
+		String user3Mail           = "example2@example.com";
+		String[] offeringsToViewU2 = {"Interface Designed", "OrionStarterKit", "Led Panel", "KurentoStarterKit",
+				"Evolution of Madrid Transport Pass Visualization"};
+		String[] offeringsToViewU3 = { "Cosmos", "WStore", "Orion Context Broker", "MultimediaPack",
+				"Madrid Public Transport Pass Price Evolution - FIWARE Developers Week", "ChartStarterKit",
+				"Led Panel"};
+		
+		// Create a set of offerings
+		createUserStoreAndDescription(user1Name, user1Mail, usersPass, displayName, url, 
+				"Example Offerings", complexDescriptionUSDLPath);
+		
+		// Log out the user
+		logOut();
+		
+		// Register two new users
+		createUser(user2Name, user2Mail, usersPass);
+		createUser(user3Name, user3Mail, usersPass);
+		
+		// View offerings with the second user
+		loginUser(user2Mail, usersPass, false);
+		viewOfferings(offeringsToViewU2);
+		logOut();
+		
+		// View Offerings with the third user
+		// Offerings viewed by other users are also checked
+		loginUser(user3Mail, usersPass, false);
+		viewOfferings(offeringsToViewU3);
+		
+		List<String> viewedByOthersForUser3 = inverseOrderNotRepeated(offeringsToViewU2);
+		checkDivOfferings(viewedByOthersCss, viewedByOthersForUser3);
+		
+		logOut();
+			    
+	    // Check offerings viewed by others with user 1
+	    loginUser(user1Mail, usersPass, false);
+	    List<String> viewedByOthersForUser1 = inverseOrderNotRepeated(offeringsToViewU2, 
+	    		offeringsToViewU3);
+	    
+	    checkDivOfferings(viewedByOthersCss, viewedByOthersForUser1);
+	}
 }
