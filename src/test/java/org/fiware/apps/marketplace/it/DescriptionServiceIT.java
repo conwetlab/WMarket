@@ -1781,6 +1781,36 @@ public class DescriptionServiceIT extends AbstractIT {
 		for (int i = 0; i < viewedOfferings.size(); i++) {
 			checkOfferingInList(stores[i], descriptionWithOfferingToView, viewedOffering.getUri(), viewedOfferings);
 		}
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////// OFFERINGS VIEWED BY OTHERS //////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	private void testOfferingsViewedByOthersInvalidParams(int max, String expectedMessage) {
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(endPoint + "/api/v2/offering/viewedByOthers")
+				.queryParam("max", max)
+				.request(MediaType.APPLICATION_JSON)
+				.header("Authorization", getAuthorization(USER_NAME, PASSWORD))
+				.get();
+		
+		checkAPIError(response, 400, null, expectedMessage, ErrorType.BAD_REQUEST);
 
 	}
+	
+	@Test
+	public void testOfferingsViewedByOthersZeroIsNotAValidMax() {
+		testOfferingsViewedByOthersInvalidParams(0, "max is not valid");
+	}
+	
+	@Test
+	public void testOfferingsViewedByOthersMaxIsToHigh() {
+		testOfferingsViewedByOthersInvalidParams(21, "max cannot be higher than 20.");
+	}
+	
+	// Core functionality is check in SeleniumIT...
+	// TODO: Add extra test to check that max works as expected
+
 }
