@@ -1367,7 +1367,53 @@ The system register the last 10 offerings viewed by each user and these offering
                 }
             ]
         }
+        
 
+## Listing What Other Users Are Looking At Right Now [/api/v2/offering/viewedByOthers{?max}]
+
+Based on the offerings viewed by other users, the system can return a list of offerings that are trending now
+because these users are viweing them. This data is anonymized, so other users cannot retrieve the list of
+offerings viewed by a specific user.
+
++ Parameters
+    + max: 20 (optional, int) - The number of elements to be retrieved
+
+### List Last Offerings Viewed by Others [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "offerings": [
+                {
+                    "averageScore": 0,
+                    "name": "offering1",
+                    "displayName": "Offering1",
+                    "uri": "http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/offering1#off",
+                    "description": "Example Description",
+                    "version": "1.0",
+                    "describedIn": {
+                        "name": "offerings1",
+                        "store": "wstore"
+                    },
+                    "imageUrl": "IMAGE_URL",
+                    "views": 1,
+                    "pricePlans": [],
+                    "services": [],
+                    "categories": [
+                        {
+                            "name": "wirecloud-component",
+                            "displayName": "WireCloud Component"
+                        }
+                    ]
+                }
+            ]
+        }
 
 
 
