@@ -38,7 +38,7 @@ the source code. To do it, execute the following command:
 Configuring WMarket
 ===================
 
-Before compiling the code you can be interested in editing some preferences to
+Before compiling the code, you can be interested in editing some preferences to
 customize your WMarket instance. In this way, you will be able to:
 
 * Modify the database used to store the information
@@ -46,7 +46,7 @@ customize your WMarket instance. In this way, you will be able to:
 * Select the authorization system (local or external (i.e. IdM))
 
 You can find a full explanation of all these configurations at 
-:doc:`installation-guide`
+:ref:`WMarket Configuration <wmarket_configuration>`
 
 
 Compiling the Source Code
