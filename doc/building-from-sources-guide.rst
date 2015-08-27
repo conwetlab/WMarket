@@ -46,7 +46,7 @@ customize your WMarket instance. In this way, you will be able to:
 * Select the authorization system (local or external (i.e. IdM))
 
 You can find a full explanation of all these configurations at 
-:ref:`WMarket Configuration <installation-guide.html#wmarket_configuration>`
+:ref:`WMarket Configuration <installation-guide.rst#wmarket_configuration>`
 
 
 Compiling the Source Code
