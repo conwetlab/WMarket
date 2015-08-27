@@ -43,7 +43,9 @@ import org.fiware.apps.marketplace.bo.SearchBo;
 import org.fiware.apps.marketplace.model.SearchResult;
 import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
+@Component
 @Path("/search")
 public class SearchService {
 
