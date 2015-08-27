@@ -1,3 +1,4 @@
+=====================================
 Installation and Administration Guide
 =====================================
 
@@ -61,10 +62,17 @@ Software Installation
 Installing WMarket using scripts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In order to ease the WMarket installation, the script ``install.sh`` is
-provided. This script installs all the needed dependencies, configures
-the WMarket instance (database and preferences) and deploys it in the
-Tomcat Server. To use this script execute the command:
+### Installing WMarket using scripts
+
+In order to ease the WMarket installation, the script ``install.sh`` can be 
+used. This script downloads the latest stable version of WMarket (from GitHub)
+if the file `WMarket.war` does not exist, install all the needed dependencies,
+configures the instance (database and preferences) and deploys it in the Tomcat 
+Server. You can find this script 
+`here <https://raw.githubusercontent.com/conwetlab/WMarket/master/utils/install.sh>`_. 
+
+Once that you have downloaded the script, you can easily run it by executing 
+the following command:
 
 ::
 

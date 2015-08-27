@@ -22,6 +22,11 @@ Index
 :doc:`installation-guide`
   Guide for WMarket maintainers that explains how to install it.
 
+:doc:`building-from-sources-guide`
+  Guide for developers that explains how to create your own WAR
+  based on the source code. This section also explains how to
+  you can execute the existing tests. 
+
 
 API Reference
 -------------
