@@ -32,14 +32,18 @@ running WMarket:
 Operating System Support
 ------------------------
 
-WMarket has been tested against the following Operating Systems: \*
-Ubuntu 14.04 LTS \* CentOS 7
+WMarket has been tested against the following Operating Systems: 
+
+- Ubuntu 14.04 LTS 
+- CentOS 7
 
 However, you can install WMarket in any machine where you can install an
 Application Server (such as Tomcat) and a MySQL server.
 
-**NOTE**: This Installation Guide describes the isntalltion process on a
-Linux based System.
+.. note::
+
+  This Installation Guide describes the isntalltion process on a
+  Linux based System.
 
 Software Requirements
 ---------------------
@@ -66,9 +70,10 @@ Tomcat Server. To use this script execute the command:
 
     $ sudo ./install.sh
 
-**NOTE**: If you use this script you can skip the configuration section;
-however, it is highly recommended to read it in order to understand the
-different configuration parameters.
+.. note::
+  If you use this script you can skip the configuration section;
+  however, it is highly recommended to read it in order to understand the
+  different configuration parameters.
 
 During the execution of the script you will be prompted several times in
 order to retrieve some information. Specifically:
@@ -320,9 +325,10 @@ WMarket Deployment
 
 WMarket can now be installed by copying the WAR file into the
 ``webapps`` folder of Apache Tomcat. If you have installed Tomcat using
-the package manager, the ``webapps`` folder should be located at: \* In
-Ubuntu/Debian: ``/var/lib/tomcat7/webapps`` \* In CentOS/Redhat:
-``/usr/share/tomcat/webapps``
+the package manager, the ``webapps`` folder should be located at: 
+
+* In Ubuntu/Debian: ``/var/lib/tomcat7/webapps`` 
+* In CentOS/Redhat: ``/usr/share/tomcat/webapps``
 
 To install WMarket on other Java Application Servers (e.g. JBoss),
 please refer to their specific application server guidelines.
@@ -364,8 +370,9 @@ WMarket.
 
 **Step 1: Registering a new user**
 
-**NOTE**: If you have chosen an external authentication system (i.e.
-FIWARE IdM), you can avoid this step.
+.. note::
+  If you have chosen an external authentication system (i.e.
+  FIWARE IdM), you can avoid this step.
 
 Go to ``http://[WMARKET_HOST]:[WMARKET_PORT]/WMarket/register`` and
 complete all the fields appropriately. After clicking "Create", a
