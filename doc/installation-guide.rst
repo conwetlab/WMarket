@@ -42,7 +42,7 @@ Application Server (such as Tomcat) and a MySQL server.
 
 .. note::
 
-  This Installation Guide describes the isntalltion process on a
+  This Installation Guide describes the installation process on a
   Linux based System.
 
 Software Requirements
@@ -53,7 +53,7 @@ In order to have WMarket running, the following software is needed:
 -  MySQL Server 5.5
 -  Java 1.7.x
 -  Application Server, Apache Tomcat 7.x
--  WMarket Software
+-  WMarket itself
 
 Software Installation
 ---------------------
@@ -193,7 +193,7 @@ Manually installing WMarket
 Ubuntu/Debian
 ^^^^^^^^^^^^^
 
-All the mandatory dependencies can be easily installed on a debian based
+All the mandatory dependencies can be easily installed on a Debian based
 Linux distribution using ``apt-get``:
 
 ::
@@ -276,7 +276,7 @@ complete the fields as follows:
 Index
 ^^^^^
 
-WMarket uses a index files to provide better search results. These files
+WMarket uses index files to provide better search results. These files
 must me stored in some folder of your file system. You can specify this
 folder by editing the property ``lucene.IndexPath`` included in the file
 ``WMarket.war/WEB-INF/classes/properties/marketplace.properties``.
@@ -299,7 +299,7 @@ all the required fields:
    ``http://[WMARKET_HOST]:[WMARKET_PORT]/WMarket/callback?client_name=FIWAREClient``
 -  **Roles**: In order to allow some users to create stores and
    descriptions with the user interface, you must create a new role. You
-   can choose any name.
+   can choose any name for this role.
 
 Once that you have created the application in the FIWARE IdM, you must
 edit the following configuration files:
