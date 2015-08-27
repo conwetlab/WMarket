@@ -260,7 +260,7 @@ CentOS/RedHat:
     sudo systemctl start mysqld
     mysqladmin -u root -p[MYSQL_ROOT_PWD] create marketplace
 
-..  wmarket_configuration:
+.. _wmarket_configuration:
 
 WMarket Configuration
 ~~~~~~~~~~~~~~~~~~~~~
