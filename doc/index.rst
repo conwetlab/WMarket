@@ -28,7 +28,7 @@ Index
   based on the source code. This section also explains how to
   you can execute the existing tests. 
 
-:doc:' administration-guide'
+:doc:'administration-guide'
   Guide for adminstrators where that explains how a user can become
   an offering provider.
 
