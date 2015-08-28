@@ -1,6 +1,6 @@
-=======
-WMarket
-=======
+========
+Overview
+========
 
 WMarket is the reference implementation of the FIWARE Marketplace
 Generic Enabler. The Marketplace provides functionality necessary for
@@ -41,10 +41,13 @@ You can check the API Reference on
 `Apiary <http://docs.fiwaremarketplace.apiary.io>`__
 
 
-.. _installation-guide:
+.. toctree::
+   index 
+
 
 .. toctree::
    :maxdepth: 2
+   :caption: Documentation
 
    installation-guide
    administration-guide
