@@ -10,8 +10,9 @@ The proccess to become a provider is very easy and depends on the
 selected authentication system. 
 
 
+----------------------------------
 External Authentication (i.e. IdM)
-==================================
+----------------------------------
 
 If your WMarket instance is using an IdM (i.e. FIWARE) to authenticate users,
 you have to create a role and assign this role to those users who are 
@@ -67,8 +68,9 @@ Then click **Save**.
   These changes will only take effect when the user logins in again. 
 
 
+--------------------
 Local Authentication
-====================
+--------------------
 
 If the WMarket instance you are administering is based on a local 
 authentication system, you do not have to worry about upgrading users to

@@ -9,13 +9,14 @@ WMarket.
 WMarket itself is a Java Web Application, packaged in a WAR file and
 relys on a SQL database.
 
+-------------------
 System Requirements
-===================
+-------------------
 
 This section covers the requirements needed to install and use WMarket.
 
 Hardware Requirements
----------------------
+=====================
 
 The following table contains the minimum resource requirements for
 running WMarket:
@@ -31,7 +32,7 @@ running WMarket:
 +----------------+--------------------------------------------------------------------------------------------+
 
 Operating System Support
-------------------------
+========================
 
 WMarket has been tested against the following Operating Systems: 
 
@@ -47,7 +48,7 @@ Application Server (such as Tomcat) and a MySQL server.
   Linux based System.
 
 Software Requirements
----------------------
+=====================
 
 In order to have WMarket running, the following software is needed:
 
@@ -56,11 +57,12 @@ In order to have WMarket running, the following software is needed:
 -  Application Server, Apache Tomcat 7.x
 -  WMarket itself
 
+---------------------
 Software Installation
-=====================
+---------------------
 
 Installing WMarket using scripts
---------------------------------
+================================
 
 In order to ease the WMarket installation, the script ``install.sh`` can be 
 used. This script downloads the latest stable version of WMarket (from GitHub)
@@ -194,7 +196,7 @@ preferences). Concretely:
 -  The Marketplace is deployed in Tomcat as ``WMarket``.
 
 Manually installing WMarket
----------------------------
+===========================
 
 All the mandatory dependencies can be easily installed on a Debian based
 Linux distribution using ``apt-get``:
@@ -225,7 +227,7 @@ installed using ``yum``:
     sudo yum -y install tomcat tomcat-webapps tomcat-admin-webapps
 
 Configuration
-~~~~~~~~~~~~~
+-------------
 
 This section explains how to create WMarket database and how to
 configure the different preferences. Note that if you have used the
@@ -233,7 +235,7 @@ provided script you can just skip this section. However, it is highly
 recommended to read it in order to understand the different settings.
 
 Database Configuration
-^^^^^^^^^^^^^^^^^^^^^^
+``````````````````````
 
 WMarket uses an internal database named ``marketplace`` that need to be
 created in MySQL. To create it you need to have administrator
@@ -257,13 +259,13 @@ root user with the password you chose during the installation process.
 .. _wmarket_configuration:
 
 WMarket Configuration
-^^^^^^^^^^^^^^^^^^^^^
+`````````````````````
 
 Before deploying the provider JAR into your Application Server, you must
 configure some parameters.
 
 Database
-++++++++
+''''''''
 
 Before you deploy WMarket, you have to set up the database. To do so,
 you have to edit the file
@@ -278,7 +280,7 @@ complete the fields as follows:
     jdbc.password=[YOUR_DB_PASSWORD]
 
 Index
-+++++
+'''''
 
 WMarket uses index files to provide better search results. These files
 must me stored in some folder of your file system. You can specify this
@@ -286,7 +288,7 @@ folder by editing the property ``lucene.IndexPath`` included in the file
 ``WMarket.war/WEB-INF/classes/properties/marketplace.properties``.
 
 OAuth2
-++++++
+''''''
 
 WMarket uses a local authentication system by default. However, the
 software is ready to work with the FIWARE Identity Manager.
@@ -325,7 +327,7 @@ edit the following configuration files:
     oauth2.providerRole=[OFFERING_PROVIDER_ROLE]
 
 WMarket Deployment
-~~~~~~~~~~~~~~~~~~
+``````````````````
 
 WMarket can now be installed by copying the WAR file into the
 ``webapps`` folder of Apache Tomcat. If you have installed Tomcat using
@@ -352,8 +354,10 @@ can start Tomcat. The way to do it depends on your operating system.
 
     sudo systemctl start tomcat
 
+
+-----------------------
 Sanity check procedures
-=======================
+-----------------------
 
 The Sanity Check Procedures are those activities that a System
 Administrator has to perform to verify that an installation is ready to
@@ -362,7 +366,7 @@ obvious or basic malfunctioning is fixed before proceeding to unit
 tests, integration tests and user validation.
 
 End to End testing
-------------------
+==================
 
 Although one End to End testing must be associated to the Integration
 Test, we can show here a quick testing to check that everything is up
@@ -391,7 +395,7 @@ the previous step. If you don't obtain any error, the WMarket is
 correctly deployed. Congratulations!!
 
 List of Running Processes
--------------------------
+=========================
 
 You can execute the command ``ps -ax | grep 'tomcat\|mysql'`` to check
 that the Tomcat web server and the MySQL database are running. It should
@@ -403,7 +407,7 @@ show a message text similar to the following:
       911 ?        Ssl   17:24 /usr/sbin/mysqld
 
 Network interfaces Up & Open
-----------------------------
+============================
 
 To check whether the ports in use are listening, execute the command
 ``netstat -ntpl``. The expected results must be somehow similar to the
@@ -418,7 +422,7 @@ following:
     tcp6       0      0 :::80                   :::*                    LISTEN      846/java        
 
 Databases
----------
+=========
 
 The last step in the sanity check (once that we have identified the
 processes and ports) is to check the database that has to be up and
@@ -454,8 +458,10 @@ It should show a message text similar to the following:
     +-----------------------+
     15 rows in set (0.00 sec)
 
+
+--------------------
 Diagnosis Procedures
-====================
+--------------------
 
 The Diagnosis Procedures are the first steps that a System Administrator
 has to take to locate the source of an error in a GE. Once the nature of
@@ -464,7 +470,7 @@ more concrete and specific testing to pinpoint the exact point of error
 and a possible solution.
 
 Resource availability
----------------------
+=====================
 
 The resource load of the WMarket strongly depends on the number of
 concurrent requests received as well as on the free main memory and disk
@@ -474,7 +480,7 @@ space:
 -  Mimimum available hard disk space: 2 GB
 
 Resource consumption
---------------------
+====================
 
 Resource consumption strongly depends on the load, especially on the
 number of concurrent requests.
@@ -484,7 +490,7 @@ number of concurrent requests.
    you use a different application server.
 
 I/O flows
----------
+=========
 
 The only expected I/O flow is of type HTTP or HTTPS, on ports defined in
 Apache Tomcat configuration files, inbound and outbound. Requests

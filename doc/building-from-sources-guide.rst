@@ -12,8 +12,9 @@ Tomcat,...)
   their own Web Applications
 
 
+-------------------
 System Requirements
-===================
+-------------------
 
 To compile WMarket you are required to install the following software:
 
@@ -24,8 +25,9 @@ You can easily install these programs by using the package manager software
 offered by your operating system.
 
 
-Obaining the Source Code
-========================
+-------------------------
+Obtaining the Source Code
+-------------------------
 
 Once that you have installed the minimun requirements, you are able to obtain
 the source code. To do it, execute the following command:
@@ -35,8 +37,9 @@ the source code. To do it, execute the following command:
     $ git clone git@github.com:conwetlab/WMarket.git
 
 
+-------------------
 Configuring WMarket
-===================
+-------------------
 
 Before compiling the code, you can be interested in editing some preferences to
 customize your WMarket instance. In this way, you will be able to:
@@ -49,8 +52,9 @@ You can find a full explanation of all these configurations at
 :ref:`WMarket Configuration <wmarket_configuration>`
 
 
+-------------------------
 Compiling the Source Code
-=========================
+-------------------------
 
 To compile the code, you can execute the following command:
 
@@ -62,8 +66,10 @@ This will generate a new folder called ``target`` that will contain the WAR
 that you can deploy on your Application Server. This WAR is called 
 ``WMarket.war``
 
+
+-------------------
 Executing the tests
-===================
+-------------------
 
 WMarket is provided with unit tests and integration tests. You can run the unit
 tests by executing this command:
