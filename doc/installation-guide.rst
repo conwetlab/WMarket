@@ -327,7 +327,7 @@ edit the following configuration files:
     oauth2.providerRole=[OFFERING_PROVIDER_ROLE]
 
 WMarket Deployment
-``````````````````
+------------------
 
 WMarket can now be installed by copying the WAR file into the
 ``webapps`` folder of Apache Tomcat. If you have installed Tomcat using

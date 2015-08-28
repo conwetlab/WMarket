@@ -41,9 +41,14 @@ You can check the API Reference on
 `Apiary <http://docs.fiwaremarketplace.apiary.io>`__
 
 
+.. _index:
+
 .. toctree::
+   :maxdepth: 0
+
    index 
 
+.. _documentation:
 
 .. toctree::
    :maxdepth: 2
