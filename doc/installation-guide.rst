@@ -1,6 +1,6 @@
-=====================================
-Installation and Administration Guide
-=====================================
+==================
+Installation Guide
+==================
 
 The purpose of this document is to describe how to install and
 administrate the necessary software on a server so that it can run

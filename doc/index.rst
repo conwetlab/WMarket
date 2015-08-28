@@ -1,3 +1,4 @@
+=======
 WMarket
 =======
 
@@ -17,7 +18,7 @@ in the
 `Catalogue <http://catalogue.fiware.org/enablers/marketplace-wmarket>`__!
 
 Index
------
+=====
 
 :doc:`installation-guide`
   Guide for WMarket maintainers that explains how to install it.
@@ -27,9 +28,13 @@ Index
   based on the source code. This section also explains how to
   you can execute the existing tests. 
 
+:doc:' administration-guide'
+  Guide for adminstrators where that explains how a user can become
+  an offering provider.
+
 
 API Reference
--------------
+=============
 
 You can check the API Reference on
 `Apiary <http://docs.fiwaremarketplace.apiary.io>`__
