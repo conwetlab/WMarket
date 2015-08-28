@@ -57,12 +57,10 @@ In order to have WMarket running, the following software is needed:
 -  WMarket itself
 
 Software Installation
----------------------
+=====================
 
 Installing WMarket using scripts
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-### Installing WMarket using scripts
+--------------------------------
 
 In order to ease the WMarket installation, the script ``install.sh`` can be 
 used. This script downloads the latest stable version of WMarket (from GitHub)
@@ -196,13 +194,12 @@ preferences). Concretely:
 -  The Marketplace is deployed in Tomcat as ``WMarket``.
 
 Manually installing WMarket
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Ubuntu/Debian
-^^^^^^^^^^^^^
+---------------------------
 
 All the mandatory dependencies can be easily installed on a Debian based
 Linux distribution using ``apt-get``:
+
+**Ubuntu/Debian:**
 
 ::
 
@@ -210,8 +207,7 @@ Linux distribution using ``apt-get``:
     sudo apt-get install openjdk-7-jdk
     sudo apt-get install tomcat7 tomcat7-docs tomcat7-admin
 
-CentOS/RedHat
-^^^^^^^^^^^^^
+**CentOS/RedHat:**
 
 In a CentOS/RedHat system, all the required dependencies can be
 installed using ``yum``:
@@ -229,7 +225,7 @@ installed using ``yum``:
     sudo yum -y install tomcat tomcat-webapps tomcat-admin-webapps
 
 Configuration
--------------
+~~~~~~~~~~~~~
 
 This section explains how to create WMarket database and how to
 configure the different preferences. Note that if you have used the
@@ -237,23 +233,21 @@ provided script you can just skip this section. However, it is highly
 recommended to read it in order to understand the different settings.
 
 Database Configuration
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^
 
 WMarket uses an internal database named ``marketplace`` that need to be
 created in MySQL. To create it you need to have administrator
 permissions in MySQL. This usually means that you have to use the MySQL
 root user with the password you chose during the installation process.
 
-Ubuntu/Debian:
-^^^^^^^^^^^^^^
+**Ubuntu/Debian**
 
 ::
 
     sudo service mysql start
     mysqladmin -u root -p[MYSQL_ROOT_PWD] create marketplace
 
-CentOS/RedHat:
-^^^^^^^^^^^^^^
+**CentOS/RedHat:**
 
 ::
 
@@ -263,13 +257,13 @@ CentOS/RedHat:
 .. _wmarket_configuration:
 
 WMarket Configuration
-~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^
 
 Before deploying the provider JAR into your Application Server, you must
 configure some parameters.
 
 Database
-^^^^^^^^
+++++++++
 
 Before you deploy WMarket, you have to set up the database. To do so,
 you have to edit the file
@@ -284,7 +278,7 @@ complete the fields as follows:
     jdbc.password=[YOUR_DB_PASSWORD]
 
 Index
-^^^^^
++++++
 
 WMarket uses index files to provide better search results. These files
 must me stored in some folder of your file system. You can specify this
@@ -292,7 +286,7 @@ folder by editing the property ``lucene.IndexPath`` included in the file
 ``WMarket.war/WEB-INF/classes/properties/marketplace.properties``.
 
 OAuth2
-^^^^^^
+++++++
 
 WMarket uses a local authentication system by default. However, the
 software is ready to work with the FIWARE Identity Manager.
@@ -346,15 +340,13 @@ please refer to their specific application server guidelines.
 Once that you have copied the WAR file into the ``webapps`` folder, you
 can start Tomcat. The way to do it depends on your operating system.
 
-Ubuntu/Debian:
-^^^^^^^^^^^^^^
+**Ubuntu/Debian:**
 
 ::
 
     sudo service tomcat7 start
 
-CentOS/Redhat:
-^^^^^^^^^^^^^^
+**CentOS/Redhat:**
 
 ::
 
