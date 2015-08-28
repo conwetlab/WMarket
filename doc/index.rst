@@ -45,7 +45,8 @@ You can check the API Reference on
 
 .. toctree::
    :maxdepth: 2
-   :caption: Installation Guide
 
    installation-guide
+   administration-guide
+   building-from-sources-guide
    
