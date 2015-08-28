@@ -14,7 +14,7 @@ External Authentication (i.e. IdM)
 ==================================
 
 If your WMarket instance is using an IdM (i.e. FIWARE) to authenticate users,
-you have to create a role and assign this role to those users that are 
+you have to create a role and assign this role to those users who are 
 interested in publishing descriptions/offerings. To do so, the first thing that
 you have to do is to access the IdM. Then, identify the WMarket application
 among all the available applications. You will be redirected to the application
