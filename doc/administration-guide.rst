@@ -27,12 +27,12 @@ Once that you are in the page to manage roles, you have to create a new one. To
 do so, click the **+** button as shown in the following image.
 
 .. image:: /images/administration-guide/create_new_role_button.png
-   :aling: center
+   :align: center
 
 Then, type the name of the new role. You can choose any name.
 
 .. image:: /images/administration-guide/create_new_role_dialog.png
-   :aling: center
+   :align: center
 
 When the new role is created, you have to modify the WMarket preferences so it
 can understand which users are providers. To do so, you have to edit the file
@@ -46,20 +46,20 @@ application. Then, click the **Authorize** button as shown in the following
 image. 
 
 .. image:: /images/administration-guide/authorize-button.png
-   :aling: center
+   :align: center
 
 A new dialog will be opened. Just write the name of the user to which you want
 to assing the provider role. Then, click the **+** button.
 
 .. image:: /images/administration-guide/look_for_user.png
-   :aling: center
+   :align: center
 
 The user will be moved to the **Authorized users** section. Finally, click on
 the **No Roles** button and assign the provider role as displayed in this
 image.
 
 .. image:: /images/administration-guide/assing_provider_role.png
-   :aling: center
+   :align: center
 
 Then click **Save**.
 
