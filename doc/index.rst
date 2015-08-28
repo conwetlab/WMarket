@@ -17,20 +17,21 @@ This project is part of `FIWARE <http://www.fiware.org>`__. Check it out
 in the
 `Catalogue <http://catalogue.fiware.org/enablers/marketplace-wmarket>`__!
 
+
 Index
 =====
 
 :doc:`installation-guide`
   Guide for WMarket maintainers that explains how to install it.
 
+:doc:`administration-guide`
+  Guide for adminstrators where that explains how a user can become
+  an offering provider.
+
 :doc:`building-from-sources-guide`
   Guide for developers that explains how to create your own WAR
   based on the source code. This section also explains how to
   you can execute the existing tests. 
-
-:doc:`administration-guide`
-  Guide for adminstrators where that explains how a user can become
-  an offering provider.
 
 
 API Reference
