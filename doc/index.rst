@@ -39,3 +39,14 @@ API Reference
 
 You can check the API Reference on
 `Apiary <http://docs.fiwaremarketplace.apiary.io>`__
+
+
+.. _user-docs:
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Installation Guide
+
+   system-requirements
+   wmarket_configuration
+   
