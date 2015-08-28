@@ -60,7 +60,13 @@ To compile the code, you can execute the following command:
 
 :: 
 
-    $ mvn install [-DskipTests]
+    $ mvn install
+
+.. note::
+  
+  You can execute the command with the argument ``-DskipTests`` so the tests
+  will not be executed and the WAR will be generated faster.
+
 
 This will generate a new folder called ``target`` that will contain the WAR
 that you can deploy on your Application Server. This WAR is called 
