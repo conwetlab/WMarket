@@ -204,7 +204,7 @@ Once that you have reviewed an offering, you can edit or delete your review.
 To do so, just click one of the stars contained in the black box. A new dialog
 will be opened with your review. 
 
-.. image:: /images/user-guide/new_review.png
+.. image:: /images/user-guide/update_review.png
    :align: center
 
 To update your previous review, just modify the number of stars and type a new
