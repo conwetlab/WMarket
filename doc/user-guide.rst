@@ -21,6 +21,7 @@ The users guide is divided into two parts: one related to consumers (users
 interested in acquiring offerings) and another one related to providers (users
 interested in acquiring and publishing offerings).
 
+
 Consumers
 =========
 
@@ -201,7 +202,7 @@ extended review as can be seen in the following picture.
    :align: center
 
 In this dialog you can change the number of stars and add a brief comment to 
-explain your decision. Once that you have completed the review, just click the
+explain your decision. When you have completed the review, just click the
 **Submit** button. 
 
 Once that you have reviewed an offering, you can edit or delete your review. 
@@ -275,7 +276,7 @@ The comparison will show you:
 Browsing Stores
 ---------------
 
-Appart from retrieving all the offerings registered, you can also get the 
+Appart from retrieving all the registered offerings, you can also get the 
 offerings that are included in a certain Store. To do so, click the menu button
 that is next to the **WMarket** text on the left upper corner (as can be seen
 in the following image) and click on one of the registered stores.
@@ -290,17 +291,19 @@ following one:
    :align: center
 
 The area rounded by the green rectangle contains all the offering registered in
-this Store. To retrieve the details about the Store and its review, just click
-the **About & reviews** button (the one indicated by the blue arrow). You will
-be redirected to the next page.
+this Store. 
+
+To retrieve the details about the Store and its review, just click the **About 
+& reviews** button (the one indicated by the blue arrow). You will be 
+redirected to the following page.
 
 .. image:: /images/user-guide/store_details.png
    :align: center
 
 The **General Information** box (the one rounded with the red rectangle) 
-contains general information about the Store (comments, web site, creator...)
-while the **Users review** box (the one rounded with the blue rectangle) 
-contains all the reviews made by users. 
+contains general information about the Store (comment, web site, creator and
+registration date) while the **Users review** box (the one rounded with the 
+blue rectangle) contains all the reviews made by users. 
 
 Reviewing Stores
 ````````````````
@@ -317,7 +320,7 @@ extended review as can be seen in the following picture.
    :align: center
 
 In this dialog you can change the number of stars and add a brief comment to 
-explain your decision. Once that you have completed the review, just click the
+explain your decision. When you have completed the review, just click the
 **Submit** button. 
 
 Once that you have reviewed the store, you can edit or delete your review. 
@@ -331,3 +334,159 @@ To update your previous review, just modify the number of stars and type a new
 comment. Then, click the **Save** button (the one indicated by the blue arrow).
 On the other hand, if you want to delete your review, just click the **Delete**
 button (the one indicated by the red arrow).
+
+
+Providers
+=========
+
+As explained before, providers are those users who want to create stores and
+upload offerings to WMarket. To become a provider, you can refer to the 
+:doc:`administration-guide`.
+
+Registering and Managing Stores
+-------------------------------
+
+To register a new store, click in the menu button that is next to the 
+**WMarket** text on the left upper corner (as can be seen in the following 
+image) and click on the **Register a new store** button (the one indicated by
+the blue arrow). 
+
+.. image:: /images/user-guide/contextual_menu_provider.png
+   :align: center
+
+The following screen will be opened:
+
+.. image:: /images/user-guide/register_store.png
+   :align: center
+
+Introduce the following content:
+
+* **Name:** The name of the Store.
+* **Website URL:** The URL where the store is hosted.
+* **Image:** An image that will ease the process of identifying your store. 
+  You can upload it from your computer.
+* **Comment:** A brief description of your store.
+
+If your have introduced these fields correctly, you will be redirected to the
+main page of the Store, where you will be able to manage it. 
+
+.. image:: /image/user-guide/store_main_provider.png
+   :align: center
+
+To view all the descriptions that you have uploaded to the Store, click the 
+**My descriptions** button (the one indicated by a green arrow). A screen 
+similar to the following one will be displayed:
+
+.. image:: /image/user-guide/store_my_descriptions.png
+   :align: center
+
+You can click on the name of the description to manage it as will be explained
+later.
+
+To edit the details of your store, just click the **About & reviews** button
+(the one indicated by a blue arrow). Only store creators can upload its 
+details. When you click this button, the following screen will be shown:
+
+.. image:: /image/user-guide/store_details_provider.png
+   :align: center
+
+The area rounded by the red rectangle is the one that you should use to modify
+your store details. Introduce new details as desired and click the **Save 
+changes** button when finished. The area rounder by the blue rectangle contains
+all the reviews that your store have received.
+
+To delete your store, click the **Delete Store** button (the one indicated by
+the red arrow). Only the store creator can delete it. Before deleting the 
+store, you have to confirm the operation in the following dialog:
+
+.. image:: /image/user-guide/delete_store_dialog.png
+   :align: center
+
+.. note::
+  When you delete an store, all its descriptions, offerings and reviews will be
+  deleted. 
+
+Registering and Managing Descriptions
+-------------------------------------
+
+Descriptions are the definitions of your offerings. These descriptions are 
+written in `Linked USDL <http://linked-usdl.org/>`__.
+
+To register a new store, click in the menu button that is next to the 
+**WMarket** text on the left upper corner (as can be seen in the following 
+image) and click on the **Upload a new description** button (the one indicated
+by the green arrow). 
+
+.. image:: /images/user-guide/contextual_menu_provider.png
+   :align: center
+
+Once that you hace clicked the button, you will be redirected to the following
+page:
+
+.. image:: /images/user-guide/register_description.png
+   :align: center
+
+To create the description, set the following details:
+
+* **Store:** The store where you want to upload the description.
+* **Name:** The name to give to your description.
+* **URL to Linked USDL file:** the HTTP URL where your description is hosted.
+  This URL must exist and contain a valid Linked USDL file. Otherwise, the 
+  descriotion creation will fail.
+* **Comment:** A brief comment about the description you are uploading.
+
+Once that you hace completed the form, the description will be created and all
+the contained offerings will be loaded into the corresponding store and you 
+will be redirected to the page that contains all the offerings of this store.
+
+.. image:: /image/user-guide/store_main_provider.png
+   :align: center
+
+To manage all the descriptions that you have upload to this store, you can 
+click the **My Descriptions** button (the one indicated by a green label). A
+screen similar to the following one will be shown:
+
+.. image:: /image/user-guide/store_my_descriptions.png
+   :align: center
+
+For each description a box similar to the blue one will appear. As you can see,
+the red box contains all the offerings attached to this description. To manage
+the description click on its name (the button indicated by the green arrow).
+
+.. note::
+  If you have uploaded a description but you do not remember the Store that
+  you have used to publish the offerings, you can view all the uploaded 
+  descriptions by opening the menu button and clicking the **My Descriptions** 
+  button.
+
+When you click on the name, you will see a page similar to the following one:
+
+.. image:: /image/user-guide/description_main.png
+   :align: center
+
+If you want to edit the description details, you can use the form contained in
+the blue rectangle. Once that you have finished editing the description, click
+the **Save changes** button.
+
+To view all the offerings contained in the offering, click the **Offerings** 
+button (the one indicated by a green arrow). You will be displayed a screen
+similar to the following one:
+
+.. image:: /image/user-guide/description_offerings.png
+   :align: center
+
+Finally, if you want to delete a description, just click the **Delete 
+description** button. Before deleting the description, you will be required to
+confirm the action with a dialog similar to the following one:
+
+.. image:: /image/user-guide/delete_description_dialog.png
+   :align: center
+
+.. note::
+  By deleting a description, you will delete all the attached offerings (and
+  its reviews or statistics)
+
+.. note::
+
+  Descriptions are periodically updated to check whether new offerings have
+  been included. 
