@@ -38,12 +38,6 @@ Index
   interface, explains how to use the web interface and its features. 
 
 
-API Reference
-=============
-
-You can check the API Reference on
-`Apiary <http://docs.fiwaremarketplace.apiary.io>`__
-
 .. _documentation:
 
 .. toctree::

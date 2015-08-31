@@ -489,3 +489,11 @@ confirm the action with a dialog similar to the following one:
 
   Descriptions are periodically updated to check whether new offerings have
   been included. 
+
+
+-----------------
+Programmers Guide
+-----------------
+
+You can check the API Reference on
+`Apiary <http://docs.fiwaremarketplace.apiary.io>`__
