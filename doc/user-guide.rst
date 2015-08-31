@@ -53,7 +53,7 @@ To create a new account, you will be required to introduce some details: your
 full name, your email account and a password (that must be reconfirmed). Once
 that you have introduced these details, just click **Create**.
 
-.. image:: /images/user-guide/register-user.png
+.. image:: /images/user-guide/register_user.png
    :align: center
 
 .. note::
@@ -229,7 +229,7 @@ following image.
 Then click the **My Bookmarks** button (the one indicated by the blue arrow).
 A screen similar to the following one will be displayed.
 
-.. image:: /images/user-guide/bookmark.png
+.. image:: /images/user-guide/bookmarks.png
    :align: center
 
 You can click any offering to obtain extended details about the offering.
@@ -242,7 +242,7 @@ the menu button that is next to the **WMarket** text on the left upper corner
 (as can be seen in the following image) and click the **Compare offerings** 
 button (the one indicated by the green arrow).
 
-.. image:: /images/user-guide/contextual-menu.png
+.. image:: /images/user-guide/contextual_menu.png
    :align: center
 
 You will be redirected to a new page that will allow you to create comparisons.
