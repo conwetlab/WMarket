@@ -22,16 +22,20 @@ Index
 =====
 
 :doc:`installation-guide`
-  Guide for WMarket maintainers that explains how to install it.
+  The guide for WMarket maintainers that explains how to install it.
 
 :doc:`administration-guide`
-  Guide for adminstrators where that explains how a user can become
+  The guide for adminstrators where that explains how a user can become
   an offering provider.
 
 :doc:`building-from-sources-guide`
-  Guide for developers that explains how to create your own WAR
+  The guide for developers that explains how to create your own WAR
   based on the source code. This section also explains how to
   you can execute the existing tests. 
+
+:doc:`user-guide`
+  The guide for people who will be using a WMarket site through its web 
+  interface, explains how to use the web interface and its features. 
 
 
 API Reference
@@ -49,4 +53,5 @@ You can check the API Reference on
    installation-guide
    administration-guide
    building-from-sources-guide
+   user-guide
    
