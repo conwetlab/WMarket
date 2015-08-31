@@ -384,15 +384,15 @@ You can click on the name of the description to manage it as will be explained
 later.
 
 To edit the details of your store, just click the **About & reviews** button
-(the one indicated by a blue arrow). Only store creators can upload its 
-details. When you click this button, the following screen will be shown:
+(the one indicated by a blue arrow). Only store creators can edit its details. 
+When you click this button, the following screen will be shown:
 
 .. image:: /images/user-guide/store_details_provider.png
    :align: center
 
 The area rounded by the red rectangle is the one that you should use to modify
 your store details. Introduce new details as desired and click the **Save 
-changes** button when finished. The area rounder by the blue rectangle contains
+changes** button when finished. The area rounded by the blue rectangle contains
 all the reviews that your store have received.
 
 To delete your store, click the **Delete Store** button (the one indicated by
@@ -432,10 +432,10 @@ To create the description, set the following details:
 * **Name:** The name to give to your description.
 * **URL to Linked USDL file:** the HTTP URL where your description is hosted.
   This URL must exist and contain a valid Linked USDL file. Otherwise, the 
-  descriotion creation will fail.
+  description creation will fail.
 * **Comment:** A brief comment about the description you are uploading.
 
-Once that you hace completed the form, the description will be created and all
+Once that you have completed the form, the description will be created and all
 the contained offerings will be loaded into the corresponding store and you 
 will be redirected to the page that contains all the offerings of this store.
 
@@ -456,8 +456,7 @@ the description click on its name (the button indicated by the green arrow).
 .. note::
   If you have uploaded a description but you do not remember the Store that
   you have used to publish the offerings, you can view all the uploaded 
-  descriptions by opening the menu button and clicking the **My Descriptions** 
-  button.
+  descriptions by opening the menu and clicking the **My Descriptions** button.
 
 When you click on the name, you will see a page similar to the following one:
 
@@ -484,7 +483,7 @@ confirm the action with a dialog similar to the following one:
 
 .. note::
   By deleting a description, you will delete all the attached offerings (and
-  its reviews or statistics)
+  its reviews or statistics).
 
 .. note::
 
