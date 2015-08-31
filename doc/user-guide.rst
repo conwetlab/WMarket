@@ -50,7 +50,7 @@ arrow). Otherwise, introduce your credentials (your email and your password)
 and click the **Sign in** button (the one indicated by the blue arrow). 
 
 To create a new account, you will be required to introduce some details: your
-full name, your email account and a password (that must be reconfirmed). Once
+full name, your email account and a password (which must be reconfirmed). Once
 that you have introduced these details, just click **Create**.
 
 .. image:: /images/user-guide/register_user.png
@@ -59,8 +59,8 @@ that you have introduced these details, just click **Create**.
 .. note::
   
   When using the local authentication system, you can log in using your email
-  or your user name. This user name is based on your full name and can you can
-  get it in the profile management page as will be explained below. 
+  or your user name. This user name is based on your full name and you can get
+  it in the profile management page as will be explained below. 
 
 Managing User Profile
 ---------------------
@@ -104,7 +104,7 @@ and click the **Save Changes** button.
 You will also be able to become a provider in order to enable new options to 
 create stores and publish offerings. To do so, just click the **I want to 
 become a provider** button located within the green box. If you are already a 
-provider and you just want to be a simple consumer, just click the **I do not
+provider and you just want to be a simple consumer, just click the **I don't
 want to be a provider anymore** button.
 
 .. image:: /images/user-guide/become_a_consumer.png
@@ -125,8 +125,8 @@ password fits the password requirements, your password will be changed.
   be required to log in again.
 
 Finally, you can also deleted your account. To do so, just click the **Delete
-account** button. You will be required to confirm the operation as can be seen
-in the following image.
+account** button (the one indicated by the red button). You will be required to
+confirm the operation as can be seen in the following image.
 
 .. image:: /images/user-guide/delete_user_dialog.png
    :align: center
@@ -185,12 +185,12 @@ button.
 Reviewing Offerings
 ```````````````````
 
-If you want to review an offering, you can easily do it by clicking in one of 
+If you want to review an offering, you can easily do it by clicking one of the
 stars contained in the black box. The first star means that you do not like the
 offering while the last one means that you really like the offering. You should
 click on the appropriate star according to your thoughts. 
 
-Once that you have clicked one star, a new dialog will be opened asking for an
+Once that you have clicked a star, a new dialog will be opened asking for an
 extended review as can be seen in the following picture.
 
 .. image:: /images/user-guide/new_review.png
@@ -237,10 +237,10 @@ You can click any offering to obtain extended details about the offering.
 Comparing Offerings
 -------------------
 
-WMarket offers users the option to compare different offerings. To do so, click
-the menu button that is next to the **WMarket** text on the left upper corner 
-(as can be seen in the following image) and click the **Compare offerings** 
-button (the one indicated by the green arrow).
+WMarket allows users to compare different offerings. To do so, click the menu
+button that is next to the **WMarket** text on the left upper corner (as can be
+seen in the following image) and click the **Compare offerings** button (the
+one indicated by the green arrow).
 
 .. image:: /images/user-guide/contextual_menu.png
    :align: center
