@@ -13,6 +13,10 @@ This guide is related to the version 4.4.3 of WMarket, released in September
 Users Guide
 -----------
 
+WMarket is a software that eases the users the process of looking for the best
+offering in different Stores since it aggregates them and all their offerings 
+so users can find what they need more easily.
+
 The users guide is divided into two parts: one related to consumers (users 
 interested in acquiring offerings) and another one related to providers (users
 interested in acquiring and publishing offerings).
@@ -267,3 +271,63 @@ The comparison will show you:
 * The price plans of each offering.
 * The services of each offering. Services will be ordered and aligned in order
   to highlight the difference of services between the different offerings.
+
+Browsing Stores
+---------------
+
+Appart from retrieving all the offerings registered, you can also get the 
+offerings that are included in a certain Store. To do so, click the menu button
+that is next to the **WMarket** text on the left upper corner (as can be seen
+in the following image) and click on one of the registered stores.
+
+.. image:: /images/user-guide/contextual_menu.png
+   :align: center
+
+Once that you click on one store, you will see a screen similar to the 
+following one:
+
+.. image:: /images/user-guide/store_main_consumer.png
+   :align: center
+
+The area rounded by the green rectangle contains all the offering registered in
+this Store. To retrieve the details about the Store and its review, just click
+the **About & reviews** button (the one indicated by the blue arrow). You will
+be redirected to the next page.
+
+.. image:: /images/user-guide/store_details.png
+   :align: center
+
+The **General Information** box (the one rounded with the red rectangle) 
+contains general information about the Store (comments, web site, creator...)
+while the **Users review** box (the one rounded with the blue rectangle) 
+contains all the reviews made by users. 
+
+Reviewing Stores
+````````````````
+
+If you want to review a store, you can easily do it by clicking one of the
+stars contained in the blue box. The first star means that you do not like the
+store while the last one means that you really like the store. You should
+click on the appropriate star according to your thoughts. 
+
+Once that you have clicked a star, a new dialog will be opened asking for an
+extended review as can be seen in the following picture.
+
+.. image:: /images/user-guide/new_review.png
+   :align: center
+
+In this dialog you can change the number of stars and add a brief comment to 
+explain your decision. Once that you have completed the review, just click the
+**Submit** button. 
+
+Once that you have reviewed the store, you can edit or delete your review. 
+To do so, just click one of the stars contained in the blue box. A new dialog
+will be opened with your review. 
+
+.. image:: /images/user-guide/update_review.png
+   :align: center
+
+To update your previous review, just modify the number of stars and type a new
+comment. Then, click the **Save** button (the one indicated by the blue arrow).
+On the other hand, if you want to delete your review, just click the **Delete**
+button (the one indicated by the red arrow).
