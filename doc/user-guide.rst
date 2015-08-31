@@ -41,7 +41,7 @@ indicated the by the green arrow).
 On the other hand, if you are using the local authentication system, when you
 access the instance and you are logged in, a log in dialog will be displayed. 
 
-.. image:: /images/user-guide/login-idm.png
+.. image:: /images/user-guide/login.png
    :align: center
 
 If it is your first time in this instance, you have to create a new account.
