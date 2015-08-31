@@ -370,14 +370,14 @@ Introduce the following content:
 If your have introduced these fields correctly, you will be redirected to the
 main page of the Store, where you will be able to manage it. 
 
-.. image:: /image/user-guide/store_main_provider.png
+.. image:: /images/user-guide/store_main_provider.png
    :align: center
 
 To view all the descriptions that you have uploaded to the Store, click the 
 **My descriptions** button (the one indicated by a green arrow). A screen 
 similar to the following one will be displayed:
 
-.. image:: /image/user-guide/store_my_descriptions.png
+.. image:: /images/user-guide/store_my_descriptions.png
    :align: center
 
 You can click on the name of the description to manage it as will be explained
@@ -387,7 +387,7 @@ To edit the details of your store, just click the **About & reviews** button
 (the one indicated by a blue arrow). Only store creators can upload its 
 details. When you click this button, the following screen will be shown:
 
-.. image:: /image/user-guide/store_details_provider.png
+.. image:: /images/user-guide/store_details_provider.png
    :align: center
 
 The area rounded by the red rectangle is the one that you should use to modify
@@ -399,7 +399,7 @@ To delete your store, click the **Delete Store** button (the one indicated by
 the red arrow). Only the store creator can delete it. Before deleting the 
 store, you have to confirm the operation in the following dialog:
 
-.. image:: /image/user-guide/delete_store_dialog.png
+.. image:: /images/user-guide/delete_store_dialog.png
    :align: center
 
 .. note::
@@ -439,14 +439,14 @@ Once that you hace completed the form, the description will be created and all
 the contained offerings will be loaded into the corresponding store and you 
 will be redirected to the page that contains all the offerings of this store.
 
-.. image:: /image/user-guide/store_main_provider.png
+.. image:: /images/user-guide/store_main_provider.png
    :align: center
 
 To manage all the descriptions that you have upload to this store, you can 
 click the **My Descriptions** button (the one indicated by a green label). A
 screen similar to the following one will be shown:
 
-.. image:: /image/user-guide/store_my_descriptions.png
+.. image:: /images/user-guide/store_my_descriptions.png
    :align: center
 
 For each description a box similar to the blue one will appear. As you can see,
@@ -461,7 +461,7 @@ the description click on its name (the button indicated by the green arrow).
 
 When you click on the name, you will see a page similar to the following one:
 
-.. image:: /image/user-guide/description_main.png
+.. image:: /images/user-guide/description_main.png
    :align: center
 
 If you want to edit the description details, you can use the form contained in
@@ -472,14 +472,14 @@ To view all the offerings contained in the offering, click the **Offerings**
 button (the one indicated by a green arrow). You will be displayed a screen
 similar to the following one:
 
-.. image:: /image/user-guide/description_offerings.png
+.. image:: /images/user-guide/description_offerings.png
    :align: center
 
 Finally, if you want to delete a description, just click the **Delete 
 description** button. Before deleting the description, you will be required to
 confirm the action with a dialog similar to the following one:
 
-.. image:: /image/user-guide/delete_description_dialog.png
+.. image:: /images/user-guide/delete_description_dialog.png
    :align: center
 
 .. note::
