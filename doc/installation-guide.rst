@@ -294,7 +294,7 @@ Media Files
 
 Under certain circumstances, users are allowed to upload media files (images)
 in order to ease the process of identifying assets. You can edit the file
-``WMarket.war/WEB-INF/classes/properties/database.properties`` to set where 
+``WMarket.war/WEB-INF/classes/properties/marketplace.properties`` to set where 
 these files are stored and their maximum size:
 
 ::
