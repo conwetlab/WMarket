@@ -47,6 +47,8 @@ customize your WMarket instance. In this way, you will be able to:
 * Modify the database used to store the information
 * Modify the folder where the indexes are stored
 * Select the authorization system (local or external (i.e. IdM))
+* Modify the folder used for media files and their maximum size
+* Modfify the period used to update descriptions
 
 You can find a full explanation of all these configurations at 
 :ref:`WMarket Configuration <wmarket_configuration>`

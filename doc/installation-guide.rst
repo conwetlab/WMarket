@@ -211,12 +211,15 @@ order to retrieve some information. Specifically:
     >> WMarket External IP: [MACHINE_IP]
 
 This script will directly configure some preferences with default values
-(see the *Configuration* section for more info of the described
-preferences). Concretely:
+(see the :ref:`Configuration <wmarket_configuration>` section for more info of
+the described preferences). Concretely:
 
 -  A database called ``marketplace`` is created.
 -  Database connection is configured with the administrative credentials
    you have provided.
+-  Two new folders are created: one for index files and another for media 
+   files. The permissions of these folders are changed so Tomcat can access
+   them.
 -  Authentication system is configured according to your preferences.
 -  The Marketplace is deployed in Tomcat as ``WMarket``.
 
