@@ -179,8 +179,8 @@ order to retrieve some information. Specifically:
 
 -  **Media files**: WMarket users will be able to attach images to stores in
    order to improve the navigation. These images have to be saved in a folder
-   of the file system of the WMarket instance. For this reason, the script will 
-   ask you for a path to store these images and their maximum size:
+   of the file system used by the WMarket instance. For this reason, the script
+   will ask you for a path to store these images and their maximum size:
 
 ::
 
@@ -280,6 +280,11 @@ root user with the password you chose during the installation process.
 
     sudo systemctl start mysqld
     mysqladmin -u root -p[MYSQL_ROOT_PWD] create marketplace
+
+.. note::
+  In CentOS, MySQL is installed without requiring any password for the root
+  user. The default password is empty. If you want to set up a password for the
+  root user, you can run the ``/usr/bin/mysql_secure_installation`` script.
 
 .. _wmarket_configuration:
 
