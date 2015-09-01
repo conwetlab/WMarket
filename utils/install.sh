@@ -1,5 +1,9 @@
 #!/bin/bash
 
+function new_line {
+    echo -e "\n"
+}
+
 set -e
 
 # Donwload the last version
@@ -7,8 +11,6 @@ set -e
 if [ ! -f "WMarket.war" ]; then
     wget https://github.com/conwetlab/WMarket/releases/download/v4.3.3/WMarket.war
 fi
-
-exit 1
 
 # Check the system distribution
 DIST=""
@@ -26,7 +28,7 @@ elif [ -f "/etc/issue" ]; then
     fi
 fi
 
-if [ $DIST == "deb" ]; then    
+if [ $DIST == "deb" ]; then
     # Install 
     apt-get update
     apt-get -y install unzip
@@ -79,7 +81,8 @@ else
 fi
 
 # Ask MySQL credentials
-echo -e "\n\n------------------------------------------------------------------------"
+new_line
+new_line
 echo "> About to create 'marketplace' database. Please, provide MySQL credentials with administrative rights (i.e. root user)"
 read -p ">> User: " MYSQLUSR
 read -s -p ">> Password: " MYSQLPASS
@@ -91,11 +94,35 @@ mysqladmin -u $MYSQLUSR -p$MYSQLPASS create marketplace
 unzip -q WMarket.war -d WMarket
 
 # Configure Marketplace
-sed -i "s|jdbc.username=.*$|jdbc.username=$MYSQLUSR|g" WMarket/WEB-INF/classes/properties/database.properties
-sed -i "s|jdbc.password=.*$|jdbc.password=$MYSQLPASS|g" WMarket/WEB-INF/classes/properties/database.properties
+sed -i "s|^jdbc.username.*$|jdbc.username=$MYSQLUSR|g" WMarket/WEB-INF/classes/properties/database.properties
+sed -i "s|^jdbc.password.*$|jdbc.password=$MYSQLPASS|g" WMarket/WEB-INF/classes/properties/database.properties
+
+# Index
+new_line
+read -p "> Path to store indexes: " PATH_INDEX
+
+sed -i "s|lucene.IndexPath=.*$|lucene.IndexPath=$PATH_INDEX|g" WMarket/WEB-INF/classes/properties/marketplace.properties
+
+mkdir $PATH_INDEX
+chmod a+rw $PATH_INDEX
+
+# Media Files
+read -p "> Path to store media files: " PATH_MEDIA
+read -p "> Max size for media files (in bytes): " MAX_SIZE_MEDIA_FILES
+
+sed -i "s|^media.folder.*$|media.folder=$PATH_MEDIA|g" WMarket/WEB-INF/classes/properties/marketplace.properties
+sed -i "s|^media.maxSize.*$|media.maxSize=$MAX_SIZE_MEDIA_FILES|g" WMarket/WEB-INF/classes/properties/marketplace.properties
+
+mkdir $PATH_MEDIA
+chmod a+rw $PATH_MEDIA
+
+# Descriptions Autoupdate
+read -p "> Period to update descriptions (in seconds): " PERIOD_UPDATE_DESCRIPTIONS
+
+sed -i "s|^descriptions.updatePeriod.*$|descriptions.updatePeriod=$PERIOD_UPDATE_DESCRIPTIONS|g" WMarket/WEB-INF/classes/properties/marketplace.properties
 
 # OAuth2?
-read -e -p "> Do you want to use OAuth2 to authenticate users? (Y/n): " -n 1 OAUTH2
+read -e -n 1 -p "> Do you want to use OAuth2 to authenticate users? (Y/n): " OAUTH2
 
 if [ "$OAUTH2" == "Y" ] || [ "$OAUTH2" == "y" ]; then
 
@@ -107,11 +134,11 @@ if [ "$OAUTH2" == "Y" ] || [ "$OAUTH2" == "y" ]; then
     read -p ">> WMarket External IP: " EXTERNAL_IP
 
     # Replace configuration
-    sed -i "s|oauth2.server=.*$|oauth2.server=$OAUTH2_SERVER|g" WMarket/WEB-INF/classes/properties/marketplace.properties
-    sed -i "s|oauth2.key=.*$|oauth2.key=$OAUTH2_KEY|g" WMarket/WEB-INF/classes/properties/marketplace.properties
-    sed -i "s|oauth2.secret=.*$|oauth2.secret=$OAUTH2_SECRET|g" WMarket/WEB-INF/classes/properties/marketplace.properties
-    sed -i "s|oauth2.providerRole=.*$|oauth2.providerRole=$OAUTH2_PROVIDER_ROLE|g" WMarket/WEB-INF/classes/properties/marketplace.properties
-    sed -i "s|oauth2.callbackURL=.*$|oauth2.callbackURL=http://$EXTERNAL_IP:8080/WMarket/callback|g" WMarket/WEB-INF/classes/properties/marketplace.properties
+    sed -i "s|^oauth2.server.*$|oauth2.server=$OAUTH2_SERVER|g" WMarket/WEB-INF/classes/properties/marketplace.properties
+    sed -i "s|^oauth2.key.*$|oauth2.key=$OAUTH2_KEY|g" WMarket/WEB-INF/classes/properties/marketplace.properties
+    sed -i "s|^oauth2.secret.*$|oauth2.secret=$OAUTH2_SECRET|g" WMarket/WEB-INF/classes/properties/marketplace.properties
+    sed -i "s|^oauth2.providerRole.*$|oauth2.providerRole=$OAUTH2_PROVIDER_ROLE|g" WMarket/WEB-INF/classes/properties/marketplace.properties
+    sed -i "s|^oauth2.callbackURL.*$|oauth2.callbackURL=http://$EXTERNAL_IP:8080/WMarket/callback|g" WMarket/WEB-INF/classes/properties/marketplace.properties
 
     # Enable OAuth2
     sed -i "s|<import resource=\"security.xml\" />|<import resource=\"securityOAuth2.xml\" />|g" WMarket/WEB-INF/classes/spring/config/BeanLocations.xml
@@ -127,4 +154,6 @@ chmod a+r WMarket.war
 cp -p WMarket.war $WEBAPPS_PATH/WMarket.war
 
 # Confirmation message
-echo -e "\n\n>WMarket has been correctly depolyed!!"
+new_line
+new_line
+echo -e "> WMarket has been correctly depolyed!!"
