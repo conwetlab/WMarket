@@ -25,8 +25,11 @@ interested in acquiring and publishing offerings).
 Consumers
 =========
 
+Users Management
+----------------
+
 Registering and Logging In
---------------------------
+``````````````````````````
 
 The first step to access WMarket is to create a new user account. This proccess
 may vary depending on the authentication system selected by the WMarket admin. 
@@ -44,7 +47,8 @@ indicated the by the green arrow).
    :align: center
 
 On the other hand, if you are using the local authentication system, when you
-access the instance and you are logged in, a log in dialog will be displayed. 
+access the instance and you are not logged in, a log in dialog will be 
+displayed. 
 
 .. image:: /images/user-guide/login.png
    :align: center
@@ -54,9 +58,17 @@ To do so, just click the **Sign up** button (the once indicated by the green
 arrow). Otherwise, introduce your credentials (your email and your password)
 and click the **Sign in** button (the one indicated by the blue arrow). 
 
-To create a new account, you will be required to introduce some details: your
-full name, your email account and a password (which must be reconfirmed). Once
-that you have introduced these details, just click **Create**.
+To create a new account, you will be required to introduce some details: 
+
+* **Full Name:** your complete full name. It must contain between 3 an 30 
+  characteres. Only letters and spaces are accepted.
+* **Email:** your email address. It must be a valid email address according
+  to the email pattern. Two users cannot use the same email address.
+* **Password:** password to access your account. It must contain between 8 and
+  30 characteres. It must contain one number, one letter and one special 
+  character (!#$%&?).
+
+Once that you have introduced these details, just click **Create**.
 
 .. image:: /images/user-guide/register_user.png
    :align: center
@@ -68,7 +80,7 @@ that you have introduced these details, just click **Create**.
   it in the profile management page as will be explained below. 
 
 Managing User Profile
----------------------
+`````````````````````
 
 Once that you are logged in, you will be redirected to the WMarket main page 
 where you will be able to find all the provided offerings. To manage your 
@@ -81,7 +93,7 @@ indicated by the green arrow).
 
 .. note::
   As can be seen, you can log out by clicking **Log out** button (the one 
-  indicated by the black arrow)
+  indicated by the black arrow).
 
 When you click on **Settings**, you are redirected to the profile management 
 page.
@@ -224,6 +236,9 @@ To add an offering to your bookmarks, just click the **Add bookmark** button
 (contained in the green box). The button will change to **Remove bookmark** so
 you will be able remove this offering from your bookmarks.
 
+.. image:: /images/user-guide/remove_bookmark.png
+   :align: center
+
 To view the list of bookmarked offerings, you can click the menu button that is
 next to the **WMarket** text on the left upper corner as can be seen in the 
 following image.
@@ -343,8 +358,11 @@ As explained before, providers are those users who want to create stores and
 upload offerings to WMarket. To become a provider, you can refer to the 
 :doc:`administration-guide`.
 
-Registering and Managing Stores
--------------------------------
+Stores Management
+-----------------
+
+Creating Stores
+```````````````
 
 To register a new store, click in the menu button that is next to the 
 **WMarket** text on the left upper corner (as can be seen in the following 
@@ -361,17 +379,24 @@ The following screen will be opened:
 
 Introduce the following content:
 
-* **Name:** The name of the Store.
-* **Website URL:** The URL where the store is hosted.
+* **Name:** The name of the Store. It must contain between 3 and 100 
+  characters. Only letters, numbers, white spaces, dots and hyphens are
+  accepted.
+* **Website URL:** The URL where the store is hosted. The URL must be a valid.
 * **Image:** An image that will ease the process of identifying your store. 
-  You can upload it from your computer.
-* **Comment:** A brief description of your store.
+  You can upload it from your computer. The maximum size accepted (by default) 
+  is 3 MB.
+* **Comment:** A brief description of your store. You can type until 200
+  characters.
 
 If your have introduced these fields correctly, you will be redirected to the
 main page of the Store, where you will be able to manage it. 
 
 .. image:: /images/user-guide/store_main_provider.png
    :align: center
+
+Managing Existing Stores
+````````````````````````
 
 To view all the descriptions that you have uploaded to the Store, click the 
 **My descriptions** button (the one indicated by a green arrow). A screen 
@@ -406,13 +431,15 @@ store, you have to confirm the operation in the following dialog:
   When you delete an store, all its descriptions, offerings and reviews will be
   deleted. 
 
-Registering and Managing Descriptions
--------------------------------------
+Descriptions Management
+-----------------------
 
 Descriptions are the definitions of your offerings. These descriptions are 
 written in `Linked USDL <http://linked-usdl.org/>`__.
 
-To register a new store, click in the menu button that is next to the 
+Creating Descriptions
+`````````````````````
+To register a new description, click in the menu button that is next to the 
 **WMarket** text on the left upper corner (as can be seen in the following 
 image) and click on the **Upload a new description** button (the one indicated
 by the green arrow). 
@@ -429,11 +456,14 @@ page:
 To create the description, set the following details:
 
 * **Store:** The store where you want to upload the description.
-* **Name:** The name to give to your description.
+* **Name:** The name to give to your description. It must contain between 3 and 
+  100 characters. Only letters, numbers, white spaces, dots and hyphens are
+  accepted.
 * **URL to Linked USDL file:** the HTTP URL where your description is hosted.
   This URL must exist and contain a valid Linked USDL file. Otherwise, the 
   description creation will fail.
-* **Comment:** A brief comment about the description you are uploading.
+* **Comment:** A brief comment about the description you are uploading. You can 
+  type until 200 characters.
 
 Once that you have completed the form, the description will be created and all
 the contained offerings will be loaded into the corresponding store and you 
@@ -441,6 +471,9 @@ will be redirected to the page that contains all the offerings of this store.
 
 .. image:: /images/user-guide/store_main_provider.png
    :align: center
+
+Managing Existing Descriptions
+``````````````````````````````
 
 To manage all the descriptions that you have upload to this store, you can 
 click the **My Descriptions** button (the one indicated by a green label). A
