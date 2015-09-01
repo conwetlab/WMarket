@@ -74,7 +74,6 @@ Once that you have introduced these details, just click **Create**.
    :align: center
 
 .. note::
-  
   When using the local authentication system, you can log in using your email
   or your user name. This user name is based on your full name and you can get
   it in the profile management page as will be explained below. 
@@ -114,13 +113,12 @@ into the **Personal Information** box (the one rounded with a blue rectangle)
 and click the **Save Changes** button.
 
 .. note::
-
   As can be seen, the **Personal Information** box contains your user name. 
   As stated before, you can also use this user name to log in.
 
 You will also be able to become a provider in order to enable new options to 
 create stores and publish offerings. To do so, just click the **I want to 
-become a provider** button located within the green box. If you are already a 
+become a provider** button located within the green box. If you are already a
 provider and you just want to be a simple consumer, just click the **I don't
 want to be a provider anymore** button.
 
@@ -137,7 +135,6 @@ password fits the password requirements, your password will be changed.
    :align: center
 
 .. note::
-
   When you change your password, the system will close your session so you will
   be required to log in again.
 
@@ -149,7 +146,6 @@ confirm the operation as can be seen in the following image.
    :align: center
 
 .. note::
-
   When you delete your account, all your content (reviews, stores, offerings, 
   descriptions...) will be deleted.
 
@@ -382,7 +378,7 @@ Introduce the following content:
 * **Name:** The name of the Store. It must contain between 3 and 100 
   characters. Only letters, numbers, white spaces, dots and hyphens are
   accepted.
-* **Website URL:** The URL where the store is hosted. The URL must be a valid.
+* **Website URL:** The URL where the store is hosted. The URL must be valid.
 * **Image:** An image that will ease the process of identifying your store. 
   You can upload it from your computer. The maximum size accepted (by default) 
   is 3 MB.
@@ -519,7 +515,6 @@ confirm the action with a dialog similar to the following one:
   its reviews or statistics).
 
 .. note::
-
   Descriptions are periodically updated to check whether new offerings have
   been included. 
 

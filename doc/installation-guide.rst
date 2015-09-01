@@ -43,7 +43,6 @@ However, you can install WMarket in any machine where you can install an
 Application Server (such as Tomcat) and a MySQL server.
 
 .. note::
-
   This Installation Guide describes the installation process on a
   Linux based System.
 
@@ -286,6 +285,39 @@ WMarket uses index files to provide better search results. These files
 must me stored in some folder of your file system. You can specify this
 folder by editing the property ``lucene.IndexPath`` included in the file
 ``WMarket.war/WEB-INF/classes/properties/marketplace.properties``.
+
+.. note::
+  Ensure that tomcat user can write new files in this directory.
+
+Media Files
+'''''''''''
+
+Under certain circumstances, users are allowed to upload media files (images)
+in order to ease the process of identifying assets. You can edit the file
+``WMarket.war/WEB-INF/classes/properties/database.properties`` to set where 
+these files are stored and their maximum size:
+
+::
+
+    # Static files
+    media.folder=[FOLDER_TO_STORE_MEDIA_FILES]
+    media.maxSize=[MAX_FILE_SIZE_IN_BYTES]
+
+.. note::
+  Ensure that tomcat user can write new files in this directory.
+
+Descriptions Autoupdate
+'''''''''''''''''''''''
+
+Descriptions are the files used to define the offerings that will be available
+in WMarket. These files are parsed when they are uploaded to WMarket but 
+when they are updated, there is no way to automatically reflect these 
+changes. For this reason, you can set an interval to update all the 
+descriptions and the offerings that they contain. To do it, set the preference 
+``descriptions.updatePeriod`` (included in the file 
+``WMarket.war/WEB-INF/classes/properties/marketplace.properties``) with the 
+period that should be used to update the descriptions. The value must be 
+written in seconds.
 
 OAuth2
 ''''''
