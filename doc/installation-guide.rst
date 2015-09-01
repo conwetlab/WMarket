@@ -193,7 +193,7 @@ order to retrieve some information. Specifically:
 
 ::
 
-      > Period to update descriptions (in seconds): 47000
+      > Period to update descriptions (in seconds): [PERIOD_TO_UPDATE_DESCRIPTIONS]
 
 -  **Authentication Configuration**: WMarket can work with local
    authentication or using an external IdM. The script will ask you what
