@@ -169,6 +169,32 @@ order to retrieve some information. Specifically:
     >> User: root
     >> Password: *******
 
+-  **Index path**: WMarket uses Lucene indexes to provide better search 
+   results. These indexes have to be stored in files so the script will ask 
+   you for a folder to store them.
+
+::
+
+      > Path to store indexes: [FOLDER_TO_STORE_INDEXES]
+
+-  **Media files**: WMarket users will be able to attach images to the Stores
+   so they will be easier to identify. These images have to be stored in one
+   folder of your file system so the script will ask for a path and their 
+   maximum size.
+
+::
+
+      > Path to store media files: [FOLDER_TO_STORE_MEDIA]
+      > Max size for media files (in bytes): [MAX_FILE_SIZE]
+
+-  **Description Autoupdate**: uploaded descriptions are checked regularly to 
+   obtain new offerings. The script will ask you the period that have to be 
+   used to check them.
+
+::
+
+      > Period to update descriptions (in seconds): 47000
+
 -  **Authentication Configuration**: WMarket can work with local
    authentication or using an external IdM. The script will ask you what
    authentication system do you prefer. If you opt for an external IdM,
@@ -287,7 +313,7 @@ folder by editing the property ``lucene.IndexPath`` included in the file
 ``WMarket.war/WEB-INF/classes/properties/marketplace.properties``.
 
 .. note::
-  Ensure that tomcat user can write new files in this directory.
+  Ensure that tomcat user can read and write new files in this directory.
 
 Media Files
 '''''''''''
@@ -304,7 +330,7 @@ these files are stored and their maximum size:
     media.maxSize=[MAX_FILE_SIZE_IN_BYTES]
 
 .. note::
-  Ensure that tomcat user can write new files in this directory.
+  Ensure that tomcat user can read and write new files in this directory.
 
 Descriptions Autoupdate
 '''''''''''''''''''''''
