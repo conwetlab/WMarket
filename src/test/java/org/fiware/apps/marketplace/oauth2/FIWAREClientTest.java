@@ -49,6 +49,8 @@ import org.pac4j.core.context.WebContext;
 public class FIWAREClientTest {
 
 	private final static String SERVER_URL = "https://account.lab.fiware.org";
+	private final static String PROVIDER_ROLE = "provider";
+	
 	@Mock private UserDao userDaoMock;
 	@InjectMocks private FIWAREClient client = new FIWAREClient();
 
@@ -64,16 +66,20 @@ public class FIWAREClientTest {
 		assertThat(client.requiresStateParameter()).isFalse();
 	}
 
-	private void testExtractUserProfile(boolean userExist, boolean provider) {
+	private void testExtractUserProfile(boolean userExist, boolean provider, 
+			boolean sameApp, boolean expectedProvider) {
+		
 		try {
+			
 			// This JSON simulates a response from the IdM
 			String userName = "user";
 			String displayName = "User Name";
 			String email = "user@fiware.org";
-			String roles = provider ? "[{\"name\": \"provider\"}]" : "[]";
+			String appId = "1234";
+			String roles = provider ? "[{\"name\": \"" + PROVIDER_ROLE + "\"}]" : "[]";
 			String json = "{\"id\":1,\"actorId\":2487,\"id\":\"" + userName + "\","
 					+ "\"displayName\":\"" + displayName + "\",\"email\":\"" + email + "\","
-					+ " \"roles\": " + roles + "}";
+					+ " \"roles\": " + roles + ", \"app_id\":\"" + appId + "\"}";
 
 			// Mock
 			if (userExist) {
@@ -87,6 +93,11 @@ public class FIWAREClientTest {
 				doThrow(new UserNotFoundException("user not found")).when(userDaoMock).findByName(userName);
 			}
 
+			// Configure client
+			String requestAppId = sameApp ? appId : appId + "5";
+			client.setOfferingProviderRole(PROVIDER_ROLE);
+			client.setKey(requestAppId);
+			
 			// Call the function
 			FIWAREProfile profile = client.extractUserProfile(json);
 
@@ -94,7 +105,7 @@ public class FIWAREClientTest {
 			assertThat(profile.getId()).isEqualTo(userName);
 			assertThat(profile.getDisplayName()).isEqualTo(displayName);
 			assertThat(profile.getEmail()).isEqualTo(email);
-
+			
 			// Capture the user saved in the database
 			ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
 			verify(userDaoMock).save(captor.capture());
@@ -104,6 +115,7 @@ public class FIWAREClientTest {
 			assertThat(storedUser.getEmail()).isEqualTo(email);
 			assertThat(storedUser.getPassword()).isEqualTo("");
 			assertThat(storedUser.getEmail()).isEqualTo(email);
+			assertThat(storedUser.isProvider()).isEqualTo(expectedProvider);
 		} catch (Exception ex) {
 			fail("Exception " + ex + " not expected");
 		}
@@ -111,22 +123,32 @@ public class FIWAREClientTest {
 
 	@Test
 	public void testExtractUserProfileUserExistsProvider() {
-		testExtractUserProfile(true, true);
+		testExtractUserProfile(true, true, true, true);
 	}
 	
 	@Test
 	public void testExtractUserProfileUserDoesNotExistProvider() {
-		testExtractUserProfile(false, true);
+		testExtractUserProfile(false, true, true, true);
+	}
+	
+	@Test
+	public void testExtractUserProfileUserExistsNoProviderAppIdDiffers() {
+		testExtractUserProfile(true, true, false, false);
+	}
+	
+	@Test
+	public void testExtractUserProfileUserDoesNotExistNoProviderAppIdDiffers() {
+		testExtractUserProfile(false, true, false, false);
 	}
 	
 	@Test
 	public void testExtractUserProfileUserExistsConsumer() {
-		testExtractUserProfile(true, false);
+		testExtractUserProfile(true, false, true, false);
 	}
 	
 	@Test
 	public void testExtractUserProfileUserDoesNotExistConsumer() {
-		testExtractUserProfile(false, false);
+		testExtractUserProfile(false, false, true, false);
 	}
 	
 	@Test

@@ -133,11 +133,14 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 			Iterator<JsonNode> iterator = roles.iterator();
 			boolean provider = false;
 			
-			while (iterator.hasNext() && !provider) {
-				JsonNode role = iterator.next();
-				
-				if (role.get("name").asText().toLowerCase().equals(offeringProviderRole)) {
-					provider = true;
+			String requestAppId = (String) JsonHelper.get(json, "app_id");
+			if (requestAppId.equals(key)) {
+				while (iterator.hasNext() && !provider) {
+					JsonNode role = iterator.next();
+					
+					if (role.get("name").asText().toLowerCase().equals(offeringProviderRole)) {
+						provider = true;
+					}
 				}
 			}
 			
