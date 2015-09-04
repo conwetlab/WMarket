@@ -1,5 +1,7 @@
 package org.fiware.apps.marketplace.bo.impl;
 
+import java.io.IOException;
+
 /*
  * #%L
  * FiwareMarketplace
@@ -33,7 +35,6 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -143,7 +144,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			
 			// Index
 			rdfIndexer.indexOrUpdateService(description);
-		} catch (MalformedURLException | JenaException ex) {
+		} catch (IOException | JenaException ex) {
 			
 			// These two exceptions are only thrown if the description cannot be parsed by the RdfIndexer
 			// When the indexer cannot index the service, the description cannot be attached to the Store
@@ -295,7 +296,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			// Update the description
 			descriptionDao.update(descriptionToBeUpdated);
 			
-		} catch (MalformedURLException ex) {
+		} catch (IOException ex) {
 			throw new ValidationException("url", ex.getMessage());
 		} catch (JenaException ex) {
 			throw new ValidationException("url", JENA_ERROR);			

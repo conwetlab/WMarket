@@ -123,7 +123,7 @@ public class Description {
 	}
 
 	@XmlElement
-	@Column(name = "url", nullable = false)
+	@Column(name = "url", nullable = false, length = 2048)
 	public String getUrl() {
 		return url;
 	}
