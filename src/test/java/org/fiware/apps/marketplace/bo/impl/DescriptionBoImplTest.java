@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -259,7 +260,7 @@ public class DescriptionBoImplTest {
 				// RdfIndexer has been called
 				try {
 					verify(rdfIndexerMock).indexOrUpdateService(description);
-				} catch (MalformedURLException ex) {
+				} catch (IOException ex) {
 					// It should not happen
 				}
 				
@@ -659,7 +660,7 @@ public class DescriptionBoImplTest {
 						
 			try {
 				verify(rdfIndexerMock).indexOrUpdateService(storedDescription);
-			} catch (MalformedURLException e) {
+			} catch (IOException e) {
 				// Not expected
 			}
 			

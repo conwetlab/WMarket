@@ -49,6 +49,7 @@ import org.fiware.apps.marketplace.dao.ServiceDao;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.ParseException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -88,7 +89,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Autowired private ServiceDao serviceDao;
 	@Autowired private SessionFactory sessionFactory;
 	
-	private static final String JENA_ERROR = "Your RDF could not be parsed.";
+	private static final String PARSE_ERROR = "Your RDF could not be parsed.";
 		
 	@Override
 	@Transactional(readOnly=false, rollbackFor=Exception.class)
@@ -144,20 +145,14 @@ public class DescriptionBoImpl implements DescriptionBo {
 			
 			// Index
 			rdfIndexer.indexOrUpdateService(description);
-		} catch (IOException | JenaException ex) {
+		} catch (IOException | ParseException | JenaException ex) {			
 			
-			// These two exceptions are only thrown if the description cannot be parsed by the RdfIndexer
-			// When the indexer cannot index the service, the description cannot be attached to the Store
+			// These three exceptions are only thrown if the description cannot be parsed by the RdfIndexer.
+			// When the indexer cannot index the service, the description cannot be attached to the Store.
 			// Because of this, the we have set the rollbackFor parameter
-			
-			String errorMessage;
-			if (ex instanceof JenaException) {
-				errorMessage = JENA_ERROR;
-			} else {
-				errorMessage = ex.getMessage();
-			}
-			
+			String errorMessage = ex instanceof IOException ? ex.getMessage() : PARSE_ERROR;
 			throw new ValidationException("url", errorMessage);
+			
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -296,10 +291,10 @@ public class DescriptionBoImpl implements DescriptionBo {
 			// Update the description
 			descriptionDao.update(descriptionToBeUpdated);
 			
-		} catch (IOException ex) {
-			throw new ValidationException("url", ex.getMessage());
-		} catch (JenaException ex) {
-			throw new ValidationException("url", JENA_ERROR);			
+		} catch (IOException | ParseException | JenaException ex) {			
+			String errorMessage = ex instanceof IOException ? ex.getMessage() : PARSE_ERROR;
+			throw new ValidationException("url", errorMessage);
+			
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}

@@ -36,6 +36,7 @@ import java.io.IOException;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -43,8 +44,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.fiware.apps.marketplace.bo.CategoryBo;
+import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.exceptions.CategoryNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ParseException;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Category;
@@ -56,6 +59,8 @@ import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.rdf.RdfHelper;
 import org.fiware.apps.marketplace.utils.NameGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -67,6 +72,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @org.springframework.stereotype.Service("offeringResolver")
 public class OfferingResolver {
+	
+	private static Logger logger = LoggerFactory.getLogger(DescriptionBo.class);
 
 	@Autowired private CategoryBo classificationBo;
 	@Autowired private ServiceBo serviceBo;
@@ -157,8 +164,10 @@ public class OfferingResolver {
 	 * Gets all offerings contained in the service descriptions in the given list of stores
 	 * @param stores The list of stores whose offerings want to be extracted
 	 * @return The list of offerings contained in the given list of stores
+	 * @throws IOException If one of the models cannot be read
+	 * @throws ParseException If one of the models contains errors
 	 */
-	public List<Offering> resolveOfferingsFromStores(List<Store> stores) throws IOException, ValidationException {
+	public List<Offering> resolveOfferingsFromStores(List<Store> stores) throws IOException, ParseException {
 		
 		List<Offering> offerings = new ArrayList<Offering>();
 		for (Store store : stores) {
@@ -173,9 +182,9 @@ public class OfferingResolver {
 	 * @param store The store whose offerings want to be extracted
 	 * @return All the offerings contained in the given store
 	 * @throws IOException If one of the models cannot be read
-	 * @throws ValidationException If one of the models contains errors
+	 * @throws ParseException If one of the models contains errors
 	 */
-	public List<Offering> resolveOfferingsFromStore(Store store) throws IOException, ValidationException {
+	public List<Offering> resolveOfferingsFromStore(Store store) throws IOException, ParseException {
 		return resolveOfferingsFromServiceDescriptions(store.getDescriptions());
 	}
 
@@ -184,10 +193,10 @@ public class OfferingResolver {
 	 * @param offeringDescriptions The descriptions to be parsed
 	 * @return The list of offerings contained in the given descriptions 
 	 * @throws ValidationException  If one of the models contains errors
-	 * @throws IOException  If one of the models cannot be read
+	 * @throws ParseException  If one of the models cannot be read
 	 */
 	public List<Offering> resolveOfferingsFromServiceDescriptions(List<Description> offeringDescriptions) 
-			throws IOException, ValidationException {
+			throws IOException, ParseException {
 		
 		List<Offering> offerings = new ArrayList<Offering>();
 		for (Description service : offeringDescriptions) {
@@ -204,7 +213,7 @@ public class OfferingResolver {
 	 * @throws IOException If the model cannot be read
 	 */
 	public List<Offering> resolveOfferingsFromServiceDescription(Description description) throws IOException,
-			ValidationException {
+			ParseException {
 
 		try {
 
@@ -247,8 +256,12 @@ public class OfferingResolver {
 
 					List<Object> rawPriceComponents = rawPricePlan.get("hasPriceComponent");
 					Set<PriceComponent> priceComponents = new HashSet<>();
-
 					
+					// There are price plans without price components
+					if (rawPriceComponents == null) {
+						rawPriceComponents = Collections.emptyList();
+					}
+
 					for (Object objectPriceComponent: rawPriceComponents) {
 
 						@SuppressWarnings("unchecked")
@@ -360,8 +373,13 @@ public class OfferingResolver {
 			}
 
 			return offerings;
+			
 		} catch (Exception ex) {
-			throw new ValidationException("url", "There was an unexpected error parsing your RDF file.");
+			
+			// When an exception arises is because the USDL cannot be parsed. In these cases, we throw
+			// a new exception that indicates that the USDL is not valid. 
+			logger.warn("Unexpected exception parsing USDL", ex);
+			throw new ParseException("There was an unexpected error parsing your USDL file.");
 		}
 	}
 }
