@@ -66,8 +66,7 @@ public class FIWAREClientTest {
 		assertThat(client.requiresStateParameter()).isFalse();
 	}
 
-	private void testExtractUserProfile(boolean userExist, boolean provider, 
-			boolean sameApp, boolean expectedProvider) {
+	private void testExtractUserProfile(boolean userExist, boolean provider, boolean sameApp) {
 		
 		try {
 			
@@ -110,6 +109,7 @@ public class FIWAREClientTest {
 			ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
 			verify(userDaoMock).save(captor.capture());
 
+			boolean expectedProvider = provider && sameApp;
 			User storedUser = captor.getValue();
 			assertThat(storedUser.getUserName()).isEqualTo(userName);
 			assertThat(storedUser.getEmail()).isEqualTo(email);
@@ -123,32 +123,32 @@ public class FIWAREClientTest {
 
 	@Test
 	public void testExtractUserProfileUserExistsProvider() {
-		testExtractUserProfile(true, true, true, true);
+		testExtractUserProfile(true, true, true);
 	}
 	
 	@Test
 	public void testExtractUserProfileUserDoesNotExistProvider() {
-		testExtractUserProfile(false, true, true, true);
+		testExtractUserProfile(false, true, true);
 	}
 	
 	@Test
 	public void testExtractUserProfileUserExistsNoProviderAppIdDiffers() {
-		testExtractUserProfile(true, true, false, false);
+		testExtractUserProfile(true, true, false);
 	}
 	
 	@Test
 	public void testExtractUserProfileUserDoesNotExistNoProviderAppIdDiffers() {
-		testExtractUserProfile(false, true, false, false);
+		testExtractUserProfile(false, true, false);
 	}
 	
 	@Test
 	public void testExtractUserProfileUserExistsConsumer() {
-		testExtractUserProfile(true, false, true, false);
+		testExtractUserProfile(true, false, true);
 	}
 	
 	@Test
 	public void testExtractUserProfileUserDoesNotExistConsumer() {
-		testExtractUserProfile(false, false, true, false);
+		testExtractUserProfile(false, false, true);
 	}
 	
 	@Test
