@@ -60,6 +60,15 @@ In order to have WMarket running, the following software is needed:
 Software Installation
 ---------------------
 
+Before you can use WMarket on your own machine(s), you need to install it. 
+There are three ways to install WMarket:
+
+#. :ref:`With the Installation Script <_install_wmarket_script>`
+#. :ref:`With a Docker Image <_install_wmarket_docker>`
+#. :ref:`Manual <_install_wmarket_manual>`
+
+.. _install_wmarket_script:
+
 Installing WMarket using scripts
 ================================
 
@@ -222,6 +231,8 @@ the described preferences). Concretely:
 -  Authentication system is configured according to your preferences.
 -  The Marketplace is deployed in Tomcat as ``WMarket``.
 
+.. _install_wmarket_docker:
+
 Installing WMarket using Docker
 ===============================
 
@@ -231,8 +242,10 @@ reason, you must create an additional container to run the database. You can do
 it automatically with `docker-compose` or manually by following the given 
 steps.
 
-Automatically
--------------
+The WMarket image is available on `Docker Hub <https://hub.docker.com/r/conwetlab/wmarket/>`_
+
+Using docker-componse
+---------------------
 
 You can install WMarket automatically if you have `docker-compose` installed in
 your machine. To do so, you must create a folder to place a new file file 
@@ -268,8 +281,8 @@ Once that you have created the file, run the following command:
 Then, WMarket should be up and running in ``http://YOUR_HOST:80/WMarket`` 
 replacing ``YOUR_HOST`` by the host of your machine.
 
-Manually
---------
+Without docker-compose
+----------------------
 
 1) Creating a Container to host the Database
 ````````````````````````````````````````````
@@ -300,6 +313,8 @@ will be used to access the service*):
 Once that you have run these commands, WMarket should be up and running in 
 ``http://YOUR_HOST:PORT/WMarket`` replacing ``YOUR_HOST`` by the host of your 
 machine and ``PORT`` by the port selected in the previous step. 
+
+.. _install_wmarket_manual:
 
 Manually installing WMarket
 ===========================
