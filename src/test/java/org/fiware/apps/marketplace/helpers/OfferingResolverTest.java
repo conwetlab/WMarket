@@ -1,12 +1,47 @@
 package org.fiware.apps.marketplace.helpers;
 
+/*
+ * #%L
+ * FiwareMarketplace
+ * %%
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of copyright holders nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software 
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * #L%
+ */
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.fiware.apps.marketplace.bo.CategoryBo;
@@ -26,13 +61,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.hp.hpl.jena.rdf.model.Model;
-
 public class OfferingResolverTest {
 
 	private final static String DESCRIPTION_URI = "http://127.0.0.1:7777/usdl.rdf";
-
-	private Model model;
 
 	@Mock private CategoryBo classificatioBoMock;
 	@Mock private ServiceBo serviceBoMock;
@@ -42,10 +73,13 @@ public class OfferingResolverTest {
 	@Before 
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-
-		this.model = mock(Model.class);
-		when(rdfHelperMock.getModelFromUri(DESCRIPTION_URI)).thenReturn(model);
-
+		this.offeringResolver = spy(offeringResolver);
+		
+		try {
+			doReturn(rdfHelperMock).when(offeringResolver).getRdfHelper(any(Description.class));
+		} catch (IOException e) {
+			// Exception not expected
+		}
 	}
 
 	private void checkOfferingBasic(Offering offering, String offeringName, String title,
@@ -113,71 +147,96 @@ public class OfferingResolverTest {
 	private void initOffering(String uri, String title, String description, String version, String image) {
 
 		String contextUri = "<" + uri + ">";
-		List<String> offeringsUris = rdfHelperMock.queryUris(model, RdfHelper.getQueryPrefixes() + 
-				"SELECT ?x WHERE { ?x a usdl:ServiceOffering . } ", "x");
+		List<String> offeringsUris = rdfHelperMock.queryUris("SELECT ?x WHERE { ?x a usdl:ServiceOffering . } ", "x");
 
 		// Initialize offeringsUris (in case they are not) and add the new URI...
 		offeringsUris = offeringsUris == null ? new ArrayList<String>() : offeringsUris;
 		offeringsUris.add(contextUri);
 
 		// Update mock
-		when(rdfHelperMock.queryUris(model, RdfHelper.getQueryPrefixes() + 
-				"SELECT ?x WHERE { ?x a usdl:ServiceOffering . } ", "x")).thenReturn(offeringsUris);
+		when(rdfHelperMock.queryUris("SELECT ?x WHERE { ?x a usdl:ServiceOffering . } ", "x"))
+				.thenReturn(offeringsUris);
 
 		// Mock values for this offering
-		when(rdfHelperMock.getLiteral(model, contextUri, "dcterms:title")).thenReturn(title);
-		when(rdfHelperMock.getLiteral(model, contextUri, "dcterms:description")).thenReturn(description);
-		when(rdfHelperMock.getLiteral(model, contextUri, "usdl:versionInfo")).thenReturn(version);
-		when(rdfHelperMock.getObjectUri(model, contextUri, "foaf:thumbnail")).thenReturn("<" + image + ">");
+		when(rdfHelperMock.getLiteral(contextUri, "dcterms:title")).thenReturn(title);
+		when(rdfHelperMock.getLiteral(contextUri, "dcterms:description")).thenReturn(description);
+		when(rdfHelperMock.getLiteral(contextUri, "pav:version")).thenReturn(version);
+		when(rdfHelperMock.getObjectUri(contextUri, "foaf:depiction")).thenReturn("<" + image + ">");
 
 	}
 
-	private void initPricePlan(String offeringUri, String pricePlanUri, String title, String description) {
+	private void initPricePlan(String offeringUri, String title, String description, 
+			List<PriceComponent> priceComponents) {
 
+		String priceComponentPredicate = "hasPriceComponent";
 		String contextOfferingUri = "<" + offeringUri + ">";
-		String contextPricePlanUri = "<" + pricePlanUri + ">";
-		List<String> offeringPricePlansUris = rdfHelperMock.getObjectUris(model, contextOfferingUri, 
-				"usdl:hasPricePlan");
+		List<Map<String, List<Object>>> offeringPricePlans = rdfHelperMock.getBlankNodesProperties(
+				contextOfferingUri, "usdl:hasPricePlan");
 
+		
 		// Initialize pricePlansUris (in case they are not) and add the new URI...
-		offeringPricePlansUris = offeringPricePlansUris == null ? new ArrayList<String>() : offeringPricePlansUris;
-		offeringPricePlansUris.add(contextPricePlanUri);		
-
+		offeringPricePlans = offeringPricePlans == null ? 
+				new ArrayList<Map<String, List<Object>>>() : offeringPricePlans;
+		
+		// Include price plan
+		List<Object> titles = new ArrayList<>();
+		titles.add(title);
+		List<Object> descriptions = new ArrayList<>();
+		descriptions.add(description);
+		
+		Map<String, List<Object>> pricePlan = new HashMap<>();
+		pricePlan.put("title", titles);
+		pricePlan.put("description", descriptions);
+		
+		// Initial list of price components (empty)
+		List<Object> priceComponentsList = new ArrayList<>();
+		pricePlan.put(priceComponentPredicate, priceComponentsList);
+		
+		for (PriceComponent priceComponent: priceComponents) {
+			Map<String, List<Object>> priceComponentMap = new HashMap<>();
+			
+			// Title & Description
+			List<Object> pcTitles = new ArrayList<>();
+			pcTitles.add(priceComponent.getTitle());
+			priceComponentMap.put("label", pcTitles);
+			
+			List<Object> pcDescriptions = new ArrayList<>();
+			pcTitles.add(priceComponent.getComment());
+			priceComponentMap.put("description", pcDescriptions);
+			
+			// Price
+			Map<String, List<Object>> price = new HashMap<>();
+			
+			List<Object> currencies = new ArrayList<>();
+			currencies.add(priceComponent.getCurrency());
+			price.put("hasCurrency", currencies);
+			
+			List<Object> unitOfMeasurements = new ArrayList<>();
+			unitOfMeasurements.add(priceComponent.getUnit());
+			price.put("hasUnitOfMeasurement", unitOfMeasurements);
+			
+			List<Object> currenciesValues = new ArrayList<>();
+			currenciesValues.add(new Float(priceComponent.getValue()).toString());
+			price.put("hasCurrencyValue", currenciesValues);
+			
+			List<Object> prices = new ArrayList<>();
+			prices.add(price);
+			
+			priceComponentMap.put("hasPrice", prices);	
+			
+			// Add the price Component to the 
+			pricePlan.get(priceComponentPredicate).add(priceComponentMap);
+		}
+		
+		offeringPricePlans.add(pricePlan);
+		
 		// Update mock
-		when(rdfHelperMock.getObjectUris(model, contextOfferingUri, "usdl:hasPricePlan"))
-				.thenReturn(offeringPricePlansUris);
-
-		// Mock values for this price plan 
-		when(rdfHelperMock.getLiteral(model, contextPricePlanUri, "dcterms:title")).thenReturn(title);
-		when(rdfHelperMock.getLiteral(model, contextPricePlanUri, "dcterms:description")).thenReturn(description);
+		when(rdfHelperMock.getBlankNodesProperties(contextOfferingUri, "usdl:hasPricePlan"))
+				.thenReturn(offeringPricePlans);
 	}
-
-	private void initPriceComponent(String pricePlanUri, String priceComponentUri, String title,
-			String currency, String unit, float value) {
-
-		String contextPricePlanUri = "<" + pricePlanUri + ">";
-		String contextPriceComponentUri = "<" + priceComponentUri + ">";
-		List<String> pricePlanComponentsUris = rdfHelperMock.getObjectUris(model, contextPricePlanUri, 
-				"usdl:hasPricePlan");
-
-		// Initialize priceComponentsUris (in case they are not) and add the new URI...
-		pricePlanComponentsUris = pricePlanComponentsUris == null ? new ArrayList<String>() : pricePlanComponentsUris;
-		pricePlanComponentsUris.add(contextPriceComponentUri);
-
-		// Update mock
-		when(rdfHelperMock.getObjectUris(model, contextPricePlanUri, "price:hasPriceComponent"))
-				.thenReturn(pricePlanComponentsUris);
-
-		// Mock values for this price component
-		when(rdfHelperMock.getLiteral(model, contextPriceComponentUri, "dcterms:title"))
-				.thenReturn(title);
-		when(rdfHelperMock.getLiteral(model, contextPriceComponentUri, "gr:hasCurrency"))
-				.thenReturn(currency);
-		when(rdfHelperMock.getLiteral(model, contextPriceComponentUri, "gr:hasUnitOfMeasurement"))
-				.thenReturn(unit);
-		when(rdfHelperMock.getLiteral(model, contextPriceComponentUri, "gr:hasCurrencyValue"))
-				.thenReturn(new Float(value).toString());
-
+	
+	private void initPricePlan(String offeringUri, String title, String description) {
+		initPricePlan(offeringUri, title, description, new ArrayList<PriceComponent>());
 	}
 
 	private void initService(String offeringUri, String serviceUri, String title, String description, 
@@ -185,7 +244,7 @@ public class OfferingResolverTest {
 
 		String contexServiceUri = "<" + serviceUri + ">";
 		String contextOfferingUri = "<" + offeringUri + ">";
-		List<String> servicesUris = rdfHelperMock.getObjectUris(model, contextOfferingUri, "usdl:includes");
+		List<String> servicesUris = rdfHelperMock.getObjectUris(contextOfferingUri, "usdl:includes");
 
 		// Initialize pricePlansUris (in case they are not) and add the new URI...
 		servicesUris = servicesUris == null ? new ArrayList<String>() : servicesUris;
@@ -209,12 +268,12 @@ public class OfferingResolverTest {
 		}
 
 		// Update mock
-		when(rdfHelperMock.getObjectUris(model, contextOfferingUri, "usdl:includes"))
+		when(rdfHelperMock.getObjectUris(contextOfferingUri, "usdl:includes"))
 				.thenReturn(servicesUris);
 
 		// Mock values for this price plan 
-		when(rdfHelperMock.getLiteral(model, contexServiceUri, "dcterms:title")).thenReturn(title);
-		when(rdfHelperMock.getLiteral(model, contexServiceUri, "dcterms:description")).thenReturn(description);
+		when(rdfHelperMock.getLiteral(contexServiceUri, "dcterms:title")).thenReturn(title);
+		when(rdfHelperMock.getLiteral(contexServiceUri, "dcterms:description")).thenReturn(description);
 
 	}
 
@@ -238,7 +297,7 @@ public class OfferingResolverTest {
 		}
 
 
-		when(rdfHelperMock.getBlankNodesLabels(model, "<" + serviceUri + ">", "usdl:hasClassification"))
+		when(rdfHelperMock.getBlankNodesLabels("<" + serviceUri + ">", "usdl:hasClassification"))
 				.thenReturn(classifications);
 	}
 
@@ -255,14 +314,21 @@ public class OfferingResolverTest {
 		String serviceTitle = "Service 1";
 		String serviceDescription = "Service 1 description";
 		String serviceClassification = "wirecloud";
-		String pricePlanUri = "https://store.lab.fiware.org/offerings/offering1#priceplan1";
 		String pricePlanTitle = "price plan";
 		String pricePlanDesc = "a description for the price plan";
-		String priceComponentUri = "https://store.lab.fiware.org/offerings/offering1#pricecomponent1";
 		String priceComponentTitle = "price component";
 		String priceComponentCurrency = "EUR (€)";
 		String priceComponentUnit = "bytes/month";
 		float priceComponentValue = 1.23F;
+
+		PriceComponent pricePlanComponent1 = new PriceComponent();
+		pricePlanComponent1.setTitle(priceComponentTitle);
+		pricePlanComponent1.setCurrency(priceComponentCurrency);
+		pricePlanComponent1.setUnit(priceComponentUnit);
+		pricePlanComponent1.setValue(priceComponentValue);
+		
+		List<PriceComponent> pricePlanComponents = new ArrayList<>();
+		pricePlanComponents.add(pricePlanComponent1);
 
 		// Used for comparisons
 		Category c = new Category();
@@ -271,9 +337,7 @@ public class OfferingResolverTest {
 		// Mocking		
 		initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
 		initService(offeringUri, serviceUri, serviceTitle, serviceDescription, false);
-		initPricePlan(offeringUri, pricePlanUri, pricePlanTitle, pricePlanDesc);
-		initPriceComponent(pricePlanUri, priceComponentUri, priceComponentTitle, priceComponentCurrency, 
-				priceComponentUnit, priceComponentValue);
+		initPricePlan(offeringUri, pricePlanTitle, pricePlanDesc, pricePlanComponents);
 		List<String> classifications = new ArrayList<>();
 		classifications.add(serviceClassification);
 		initClassification(serviceUri, classifications, false);
@@ -318,97 +382,108 @@ public class OfferingResolverTest {
 	@Test
 	public void testDescriptionWithTwoOfferings() {
 
-		String[] offeringsUris = {"https://store.lab.fiware.org/offerings/offering1",
-		"https://store.lab.fiware.org/offerings/offering2"};
-		String[] offeringsTitles = {"cool offering", "bad offering"};
-		String[] offeringsDescs = {"a very long long description for the best offering", 
-		"another long description" };
-		String[] offeringsVersions = {"1.2", "2.4"};
-		String[] offeringsImgs = {"https://store.lab.fiware.org/static/img1.png",
-		"https://store.lab.fiware.org/static/img2.png"};
-
-		// Mocking		
-		for (int i = 0; i < offeringsUris.length; i++) {
-			initOffering(offeringsUris[i], offeringsTitles[i], offeringsDescs[i], 
-					offeringsVersions[i], offeringsImgs[i]);
-		}
-
-		// Call the function
-		Description description = mock(Description.class);
-		when(description.getUrl()).thenReturn(DESCRIPTION_URI);
-		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
-
-		// Check the results
-		assertThat(offerings.size()).isEqualTo(2);
-
-		for (int i = 0; i < offerings.size(); i++) {
-			checkOfferingBasic(offerings.get(i), offeringsTitles[i].replace(" ", "-"), offeringsTitles[i], 
-					offeringsDescs[i], offeringsVersions[i], offeringsImgs[i], offeringsUris[i], description);
+		try {
+			String[] offeringsUris = {"https://store.lab.fiware.org/offerings/offering1",
+			"https://store.lab.fiware.org/offerings/offering2"};
+			String[] offeringsTitles = {"cool offering", "bad offering"};
+			String[] offeringsDescs = {"a very long long description for the best offering", 
+			"another long description" };
+			String[] offeringsVersions = {"1.2", "2.4"};
+			String[] offeringsImgs = {"https://store.lab.fiware.org/static/img1.png",
+			"https://store.lab.fiware.org/static/img2.png"};
+	
+			// Mocking		
+			for (int i = 0; i < offeringsUris.length; i++) {
+				initOffering(offeringsUris[i], offeringsTitles[i], offeringsDescs[i], 
+						offeringsVersions[i], offeringsImgs[i]);
+			}
+	
+			// Call the function
+			Description description = mock(Description.class);
+			when(description.getUrl()).thenReturn(DESCRIPTION_URI);
+			List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
+	
+			// Check the results
+			assertThat(offerings.size()).isEqualTo(2);
+	
+			for (int i = 0; i < offerings.size(); i++) {
+				checkOfferingBasic(offerings.get(i), offeringsTitles[i].replace(" ", "-"), offeringsTitles[i], 
+						offeringsDescs[i], offeringsVersions[i], offeringsImgs[i], offeringsUris[i], description);
+			}
+		} catch (Exception e) {
+			fail("Exception not expected", e);
 		}
 	}
 
 	@Test
 	public void testOfferingWithTwoPricePlans() {
-		String offeringTitle = "cool offering";
-		String offeringUri = "https://store.lab.fiware.org/offerings/offering1";
-		String offeringDesc = "a very long long description for the best offering";
-		String offeringVersion = "1.2";
-		String offeringImg = "https://store.lab.fiware.org/static/img1.png";
-
-		String[] pricePlansUris = {"https://store.lab.fiware.org/offerings/offering1#priceplan1", 
-		"https://store.lab.fiware.org/offerings/offering1#priceplan2"};
-		String[] pricePlansTitles = {"price plan 1", "price plan 2"};
-		String[] pricePlansDescs = {"a description for price plan 1", "a brief desc for price plan 2" };
-
-		// Init offerings and price plans
-		initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
-		for (int i = 0; i < pricePlansUris.length; i++) {
-			initPricePlan(offeringUri, pricePlansUris[i], pricePlansTitles[i], pricePlansDescs[i]);
-		}
-
-		// Call the function
-		Description description = mock(Description.class);
-		when(description.getUrl()).thenReturn(DESCRIPTION_URI);
-		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
-
-		// Check offering and its price plans
-		assertThat(offerings.size()).isEqualTo(1);
-		assertThat(offerings.get(0).getPricePlans()).hasSize(2);
-
-		for (int i = 0; i < pricePlansTitles.length; i++) {
-			checkPricePlanInSet(offerings.get(0).getPricePlans(), pricePlansTitles[i], pricePlansDescs[i]);
+		
+		try {
+			String offeringTitle = "cool offering";
+			String offeringUri = "https://store.lab.fiware.org/offerings/offering1";
+			String offeringDesc = "a very long long description for the best offering";
+			String offeringVersion = "1.2";
+			String offeringImg = "https://store.lab.fiware.org/static/img1.png";
+	
+			String[] pricePlansTitles = {"price plan 1", "price plan 2"};
+			String[] pricePlansDescs = {"a description for price plan 1", "a brief desc for price plan 2" };
+	
+			// Init offerings and price plans
+			initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
+			for (int i = 0; i < pricePlansTitles.length; i++) {
+				initPricePlan(offeringUri, pricePlansTitles[i], pricePlansDescs[i]);
+			}
+	
+			// Call the function
+			Description description = mock(Description.class);
+			when(description.getUrl()).thenReturn(DESCRIPTION_URI);
+			List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
+	
+			// Check offering and its price plans
+			assertThat(offerings.size()).isEqualTo(1);
+			assertThat(offerings.get(0).getPricePlans()).hasSize(2);
+	
+			for (int i = 0; i < pricePlansTitles.length; i++) {
+				checkPricePlanInSet(offerings.get(0).getPricePlans(), pricePlansTitles[i], pricePlansDescs[i]);
+			}
+		} catch (Exception ex) {
+			fail("Exception not expected", ex);
 		}
 	}
 
 	private void testOfferingWithTwoServices(boolean existingService) {
-		String offeringTitle = "cool offering";
-		String offeringUri = "https://store.lab.fiware.org/offerings/offering1";
-		String offeringDesc = "a very long long description for the best offering";
-		String offeringVersion = "1.2";
-		String offeringImg = "https://store.lab.fiware.org/static/img1.png";
-
-		String[] servicesUris = {"https://store.lab.fiware.org/offerings/offering1#service1", 
-		"https://store.lab.fiware.org/offerings/offering1#service2"};
-		String[] srevicesTitles = {"service 1", "service 2"};
-		String[] servicesDescs = {"a description for service 1", "a brief desc for service 2" };
-
-		// Init offerings and price plans
-		initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
-		for (int i = 0; i < servicesUris.length; i++) {
-			initService(offeringUri, servicesUris[i], srevicesTitles[i], servicesDescs[i], existingService);
-		}
-
-		// Call the function
-		Description description = mock(Description.class);
-		when(description.getUrl()).thenReturn(DESCRIPTION_URI);
-		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
-
-		// Check offering and its services
-		assertThat(offerings.size()).isEqualTo(1);
-		assertThat(offerings.get(0).getServices()).hasSize(2);
-
-		for (int i = 0; i < srevicesTitles.length; i++) {
-			checkServiceInSet(offerings.get(0).getServices(), srevicesTitles[i], servicesDescs[i]);
+		try {
+			String offeringTitle = "cool offering";
+			String offeringUri = "https://store.lab.fiware.org/offerings/offering1";
+			String offeringDesc = "a very long long description for the best offering";
+			String offeringVersion = "1.2";
+			String offeringImg = "https://store.lab.fiware.org/static/img1.png";
+	
+			String[] servicesUris = {"https://store.lab.fiware.org/offerings/offering1#service1", 
+			"https://store.lab.fiware.org/offerings/offering1#service2"};
+			String[] srevicesTitles = {"service 1", "service 2"};
+			String[] servicesDescs = {"a description for service 1", "a brief desc for service 2" };
+	
+			// Init offerings and price plans
+			initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
+			for (int i = 0; i < servicesUris.length; i++) {
+				initService(offeringUri, servicesUris[i], srevicesTitles[i], servicesDescs[i], existingService);
+			}
+	
+			// Call the function
+			Description description = mock(Description.class);
+			when(description.getUrl()).thenReturn(DESCRIPTION_URI);
+			List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
+	
+			// Check offering and its services
+			assertThat(offerings.size()).isEqualTo(1);
+			assertThat(offerings.get(0).getServices()).hasSize(2);
+	
+			for (int i = 0; i < srevicesTitles.length; i++) {
+				checkServiceInSet(offerings.get(0).getServices(), srevicesTitles[i], servicesDescs[i]);
+			}
+		} catch (Exception ex) {
+			fail("Exception not expected", ex);
 		}
 	}
 	
@@ -424,40 +499,45 @@ public class OfferingResolverTest {
 
 	private void testOfferingWithTwoClassifications(List<String> classifications, 
 			boolean existingClassification) {
-		String offeringTitle = "cool offering";
-		String offeringUri = "https://store.lab.fiware.org/offerings/offering1";
-		String offeringDesc = "a very long long description for the best offering";
-		String offeringVersion = "1.2";
-		String offeringImg = "https://store.lab.fiware.org/static/img1.png";
-
-		String serviceUri = "https://store.lab.fiware.org/offerings/offering1#service1";
-		String serviceTitle = "service 1";
-		String serviceDesc = "a description for service 1";
-
-		initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
-		initService(offeringUri, serviceUri, serviceTitle, serviceDesc, false);
-		initClassification(serviceUri, classifications, existingClassification);
-
-		// Call the function
-		Description description = mock(Description.class);
-		when(description.getUrl()).thenReturn(DESCRIPTION_URI);
-		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
-
-		// Check offering and its services
-		assertThat(offerings.size()).isEqualTo(1);
-		assertThat(offerings.get(0).getServices()).hasSize(1);
-
-		Offering offering = offerings.get(0);
-		Service service = (Service) offering.getServices().toArray()[0];
-		checkService(service, serviceTitle, serviceDesc);
-
-		// Check classifications
-		for (String classification: classifications) {
-			Category c = new Category();
-			c.setName(classification);
-
-			assertThat(c).isIn(service.getCategories());
-			assertThat(c).isIn(offering.getCategories());	
+		
+		try {
+			String offeringTitle = "cool offering";
+			String offeringUri = "https://store.lab.fiware.org/offerings/offering1";
+			String offeringDesc = "a very long long description for the best offering";
+			String offeringVersion = "1.2";
+			String offeringImg = "https://store.lab.fiware.org/static/img1.png";
+	
+			String serviceUri = "https://store.lab.fiware.org/offerings/offering1#service1";
+			String serviceTitle = "service 1";
+			String serviceDesc = "a description for service 1";
+	
+			initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
+			initService(offeringUri, serviceUri, serviceTitle, serviceDesc, false);
+			initClassification(serviceUri, classifications, existingClassification);
+	
+			// Call the function
+			Description description = mock(Description.class);
+			when(description.getUrl()).thenReturn(DESCRIPTION_URI);
+			List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
+	
+			// Check offering and its services
+			assertThat(offerings.size()).isEqualTo(1);
+			assertThat(offerings.get(0).getServices()).hasSize(1);
+	
+			Offering offering = offerings.get(0);
+			Service service = (Service) offering.getServices().toArray()[0];
+			checkService(service, serviceTitle, serviceDesc);
+	
+			// Check classifications
+			for (String classification: classifications) {
+				Category c = new Category();
+				c.setName(classification);
+	
+				assertThat(c).isIn(service.getCategories());
+				assertThat(c).isIn(offering.getCategories());	
+			}
+		} catch (Exception ex) {
+			fail("Exception not expected", ex);
 		}
 	}
 

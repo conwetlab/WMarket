@@ -79,17 +79,17 @@ public class OfferingResolver {
 	@Autowired private ServiceBo serviceBo;
 
 	/**
-	 * Gets all the offerings from a USDL
+	 * Returns all the offerings from a USDL
 	 * @param model The USDL
 	 * @return The offerings list contained in the USDL
 	 */
 	private List<String> getOfferingUris(RdfHelper rdfHelper) {
-		String query = RdfHelper.getQueryPrefixes() + "SELECT ?x WHERE { ?x a usdl:ServiceOffering . } ";
+		String query = "SELECT ?x WHERE { ?x a usdl:ServiceOffering . } ";
 		return rdfHelper.queryUris(query, "x");
 	}
 
 	/**
-	 * Gets all the services associated with the offering
+	 * Returns all the services associated with the offering
 	 * @param offeringUri The offering whose services want to be retrieved
 	 * @param model The UDSL
 	 * @return The list of services associated with the offering
@@ -99,7 +99,7 @@ public class OfferingResolver {
 	}
 
 	/**
-	 * Gets all the price plans URIs associated with the offering
+	 * Returns all the price plans URIs associated with the offering
 	 * @param model UDSL
 	 * @param offeringUri The offering whose price plans want to be retrieved
 	 * @return The list of price plans URIs associated with the offering
@@ -109,7 +109,7 @@ public class OfferingResolver {
 	}
 
 	/**
-	 * Get all the classifications associated to a service
+	 * Returns all the classifications associated to a service
 	 * @param model USDL
 	 * @param serviceURI The service whose classifications want to be retrieved
 	 * @return The list of classifications associated to the service
@@ -119,7 +119,7 @@ public class OfferingResolver {
 	}
 
 	/**
-	 * Gets the title of an entity
+	 * Returns the title of an entity
 	 * @param model USDL
 	 * @param entityURI The entity URI whose title wants to be retrieved
 	 * @return The title of the entity
@@ -129,7 +129,7 @@ public class OfferingResolver {
 	}
 
 	/**
-	 * Gets the description of an entity
+	 * Returns the description of an entity
 	 * @param model USDL
 	 * @param entityURI The entity URI whose description wants to be retrieved
 	 * @return The description of the entity
@@ -139,7 +139,7 @@ public class OfferingResolver {
 	}
 
 	/**
-	 * Get the version of an offering 
+	 * Returns the version of an offering 
 	 * @param model USDL
 	 * @param offeringUri The offering URI whose version wants to be retrieved
 	 * @return The version of the offering
@@ -149,7 +149,7 @@ public class OfferingResolver {
 	}
 
 	/**
-	 * Gets the image of an offering
+	 * Returns the image of an offering
 	 * @param model USDL
 	 * @param offeringUri The offering URI whose image URL wants to be retrieved
 	 * @return The image URL of the offering
@@ -161,7 +161,7 @@ public class OfferingResolver {
 	}
 
 	/**
-	 * Gets all offerings contained in the service descriptions in the given list of stores
+	 * Returns all offerings contained in the service descriptions in the given list of stores
 	 * @param stores The list of stores whose offerings want to be extracted
 	 * @return The list of offerings contained in the given list of stores
 	 * @throws IOException If one of the models cannot be read
@@ -178,7 +178,7 @@ public class OfferingResolver {
 	}
 
 	/**
-	 * Gets all offerings contained in the service descriptions in the given store.
+	 * Returns all offerings contained in the service descriptions in the given store.
 	 * @param store The store whose offerings want to be extracted
 	 * @return All the offerings contained in the given store
 	 * @throws IOException If one of the models cannot be read
@@ -189,7 +189,7 @@ public class OfferingResolver {
 	}
 
 	/**
-	 * Gets all offerings contained in the given descriptions.
+	 * Returns all offerings contained in the given descriptions.
 	 * @param offeringDescriptions The descriptions to be parsed
 	 * @return The list of offerings contained in the given descriptions 
 	 * @throws ValidationException  If one of the models contains errors
@@ -204,9 +204,19 @@ public class OfferingResolver {
 		}
 		return offerings;
 	}
+	
+	/**
+	 * Returns the RdfHelper for the given description
+	 * @param description The description whose RdfHelper want to be obtained
+	 * @return The RdfHelper for the given description
+	 * @throws IOException when the USDL cannot be read
+	 */
+	RdfHelper getRdfHelper(Description description) throws IOException {
+		return new RdfHelper(description.getUrl());
+	}
 
 	/**
-	 * Gets all offerings contained in the description given
+	 * Returns all offerings contained in the description given
 	 * @param description The description that contains the offerings
 	 * @return All the offerings contained in the description
 	 * @throws ValidationException If there was an error parsing the contained URL
@@ -217,7 +227,7 @@ public class OfferingResolver {
 
 		try {
 
-			RdfHelper rdfHelper = new RdfHelper(description.getUrl());
+			RdfHelper rdfHelper = getRdfHelper(description);
 
 			List<Offering> offerings = new ArrayList<Offering>();
 			List<String> offeringUris = getOfferingUris(rdfHelper);
@@ -251,7 +261,9 @@ public class OfferingResolver {
 
 					PricePlan pricePlan = new PricePlan();
 					pricePlan.setTitle((String) rawPricePlan.get("title").get(0));
-					pricePlan.setComment((String) rawPricePlan.get("description").get(0));
+					List<Object> ppDescriptions = rawPricePlan.get("description");
+					String ppDescription = ppDescriptions.size() == 1 ? (String) ppDescriptions.get(0) : "";
+					pricePlan.setComment(ppDescription);
 					pricePlan.setOffering(offering);
 
 					List<Object> rawPriceComponents = rawPricePlan.get("hasPriceComponent");
@@ -270,11 +282,13 @@ public class OfferingResolver {
 						PriceComponent priceComponent = new PriceComponent();
 						priceComponent.setPricePlan(pricePlan);
 						priceComponent.setTitle((String) rawPriceComponent.get("label").get(0));
-						priceComponent.setComment((String) rawPriceComponent.get("description").get(0));
+						List<Object> pcDescriptions = rawPriceComponent.get("description");
+						String pcDescription = pcDescriptions.size() == 1 ? (String) pcDescriptions.get(0) : "";
+						priceComponent.setComment(pcDescription);
 
 						@SuppressWarnings("unchecked")
 						Map<String, List<Object>> rawPriceSpecification = (Map<String, List<Object>>) 
-						rawPriceComponent.get("hasPrice").get(0);
+								rawPriceComponent.get("hasPrice").get(0);
 
 						priceComponent.setCurrency((String) rawPriceSpecification.get("hasCurrency").get(0));
 						priceComponent.setUnit((String) rawPriceSpecification.get("hasUnitOfMeasurement").get(0));
