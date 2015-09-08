@@ -63,9 +63,9 @@ Software Installation
 Before you can use WMarket on your own machine(s), you need to install it. 
 There are three ways to install WMarket:
 
-#. :ref:`With the Installation Script <_install_wmarket_script>`
-#. :ref:`With a Docker Image <_install_wmarket_docker>`
-#. :ref:`Manual <_install_wmarket_manual>`
+#. :ref:`With the Installation Script <install_wmarket_script>`
+#. :ref:`With a Docker Image <install_wmarket_docker>`
+#. :ref:`Manual <install_wmarket_manual>`
 
 .. _install_wmarket_script:
 
@@ -242,7 +242,7 @@ reason, you must create an additional container to run the database. You can do
 it automatically with `docker-compose` or manually by following the given 
 steps.
 
-The WMarket image is available on `Docker Hub <https://hub.docker.com/r/conwetlab/wmarket/>`_
+The WMarket image is available on `Docker Hub <https://hub.docker.com/r/conwetlab/wmarket/>`_.
 
 Using docker-componse
 ---------------------
