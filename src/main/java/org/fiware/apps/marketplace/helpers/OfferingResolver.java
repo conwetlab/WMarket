@@ -80,7 +80,7 @@ public class OfferingResolver {
 
 	/**
 	 * Returns all the offerings from a USDL
-	 * @param model The USDL
+	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @return The offerings list contained in the USDL
 	 */
 	private List<String> getOfferingUris(RdfHelper rdfHelper) {
@@ -90,8 +90,8 @@ public class OfferingResolver {
 
 	/**
 	 * Returns all the services associated with the offering
+	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @param offeringUri The offering whose services want to be retrieved
-	 * @param model The UDSL
 	 * @return The list of services associated with the offering
 	 */
 	private List<String> getServiceUris(RdfHelper rdfHelper, String offeringUri) {
@@ -100,7 +100,7 @@ public class OfferingResolver {
 
 	/**
 	 * Returns all the price plans URIs associated with the offering
-	 * @param model UDSL
+	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @param offeringUri The offering whose price plans want to be retrieved
 	 * @return The list of price plans URIs associated with the offering
 	 */
@@ -110,7 +110,7 @@ public class OfferingResolver {
 
 	/**
 	 * Returns all the classifications associated to a service
-	 * @param model USDL
+	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @param serviceURI The service whose classifications want to be retrieved
 	 * @return The list of classifications associated to the service
 	 */
@@ -120,7 +120,7 @@ public class OfferingResolver {
 
 	/**
 	 * Returns the title of an entity
-	 * @param model USDL
+	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @param entityURI The entity URI whose title wants to be retrieved
 	 * @return The title of the entity
 	 */
@@ -130,7 +130,7 @@ public class OfferingResolver {
 
 	/**
 	 * Returns the description of an entity
-	 * @param model USDL
+	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @param entityURI The entity URI whose description wants to be retrieved
 	 * @return The description of the entity
 	 */
@@ -140,24 +140,42 @@ public class OfferingResolver {
 
 	/**
 	 * Returns the version of an offering 
-	 * @param model USDL
+	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @param offeringUri The offering URI whose version wants to be retrieved
 	 * @return The version of the offering
 	 */
 	private String getOfferingVersion(RdfHelper rdfHelper, String offeringUri) {
 		return rdfHelper.getLiteral(offeringUri, "pav:version");
 	}
+	
+	/**
+	 * Given an URL from the RDF, returns the one without the angle brackets
+	 * @param url The URL to be cleaned
+	 * @return The cleaned URL
+	 */
+	private String cleanRdfUrl(String url) {
+		// Remove '<' from the beginning and '>' from the end
+		return url.substring(1, url.length() - 1);
+	}
 
 	/**
 	 * Returns the image of an offering
-	 * @param model USDL
+	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @param offeringUri The offering URI whose image URL wants to be retrieved
 	 * @return The image URL of the offering
 	 */
 	private String getOfferingImageUrl(RdfHelper rdfHelper, String offeringUri) {
-		String url = rdfHelper.getObjectUri(offeringUri, "foaf:depiction");
-		// Remove '<' from the beginning and '>' from the end
-		return url.substring(1, url.length() - 1);
+		return cleanRdfUrl(rdfHelper.getObjectUri(offeringUri, "foaf:depiction"));
+	}
+	
+	/**
+	 * Returns the acquisition URL of an offering
+	 * @param rdfHelper The helper to parse the description that includes the given offering
+	 * @param offeringUri The offering whose acquisition URL wants to be retrieved
+	 * @return Returns the acquisition URL of the given offering
+	 */
+	private String getOfferingAcquisitionUrl(RdfHelper rdfHelper, String offeringUri) {
+		return cleanRdfUrl(rdfHelper.getObjectUri(offeringUri, "gr:availableDeliveryMethods"));
 	}
 
 	/**
@@ -242,17 +260,17 @@ public class OfferingResolver {
 
 			for (String offeringUri : offeringUris) {
 
+				// Offering basic fields
 				Offering offering = new Offering();
 				offering.setDisplayName(getTitle(rdfHelper, offeringUri));
 				// Maybe the name should depends on the creator and the version...
 				offering.setName(NameGenerator.getURLName(offering.getDisplayName()));
-				// Remove '<' from the beginning and '>' from the end
-				offering.setUri(offeringUri.substring(1, offeringUri.length() - 1));
+				offering.setUri(cleanRdfUrl(offeringUri));
 				offering.setDescribedIn(description);
 				offering.setVersion(getOfferingVersion(rdfHelper, offeringUri));
 				offering.setDescription(getDescription(rdfHelper, offeringUri));
 				offering.setImageUrl(getOfferingImageUrl(rdfHelper, offeringUri));
-				// offering.setAcquisitionUrl(description.getStore().getUrl());
+				offering.setAcquisitionUrl(getOfferingAcquisitionUrl(rdfHelper, offeringUri));
 
 				// PRICE PLANS (offerings contain one or more price plans)
 				List<Map<String, List<Object>>> rawPricePlans = getPricePlan(rdfHelper, offeringUri);
@@ -393,7 +411,7 @@ public class OfferingResolver {
 			
 			// When an exception arises is because the USDL cannot be parsed. In these cases, we throw
 			// a new exception that indicates that the USDL is not valid. 
-			logger.warn("Unexpected exception parsing USDL", ex);
+			logger.warn("Unexpected exception parsing USDL " + description.getUrl(), ex);
 			throw new ParseException("There was an unexpected error parsing your USDL file.");
 		}
 	}
