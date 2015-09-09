@@ -11,7 +11,7 @@
         new app.fields.TextField('displayName', {
             label: "Name",
             minlength: 3,
-            maxlength: 20,
+            maxlength: 100,
             regexp: new RegExp("^[A-Z]+[\\w.-]*( [\\w.-]+)*$", "i"),
             errorMessages: {
                 invalid: "This field must contain alphanumerics (and -,_,.)."
