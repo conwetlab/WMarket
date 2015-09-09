@@ -151,11 +151,11 @@ public class OfferingResolver {
 	/**
 	 * Given an URL from the RDF, returns the one without the angle brackets
 	 * @param url The URL to be cleaned
-	 * @return The cleaned URL
+	 * @return The cleaned URL or an empty string if the URL is null
 	 */
 	private String cleanRdfUrl(String url) {
 		// Remove '<' from the beginning and '>' from the end
-		return url.substring(1, url.length() - 1);
+		return url != null ? url.substring(1, url.length() - 1) : "";
 	}
 
 	/**
