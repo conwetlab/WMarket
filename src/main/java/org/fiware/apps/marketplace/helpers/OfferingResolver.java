@@ -252,7 +252,7 @@ public class OfferingResolver {
 				offering.setVersion(getOfferingVersion(rdfHelper, offeringUri));
 				offering.setDescription(getDescription(rdfHelper, offeringUri));
 				offering.setImageUrl(getOfferingImageUrl(rdfHelper, offeringUri));
-				offering.setAcquisitionUrl(description.getStore().getUrl());
+				// offering.setAcquisitionUrl(description.getStore().getUrl());
 
 				// PRICE PLANS (offerings contain one or more price plans)
 				List<Map<String, List<Object>>> rawPricePlans = getPricePlan(rdfHelper, offeringUri);
