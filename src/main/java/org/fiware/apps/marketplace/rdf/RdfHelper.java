@@ -167,15 +167,8 @@ public class RdfHelper {
 	 * @return The literal or null
 	 */
 	public String queryLiteral(String query, String queriedVar) {
-		
 		List<String> literals = queryLiterals(query, queriedVar);
-		
-		if (literals.isEmpty()) {
-			return null;
-		} else {
-			return literals.get(0);
-		}
-		
+		return literals.isEmpty() ? null : literals.get(0);
 	}
 
 	/**
@@ -205,15 +198,8 @@ public class RdfHelper {
 	 * @return Found URI or null
 	 */
 	public String queryUri(String query, String queriedVar) {
-		
-		List<String> uris = queryUris(query, queriedVar);
-		String uri = null;
-		
-		if (uris.size() > 0) {
-			uri = uris.get(0);
-		}
-		
-		return uri;
+		List<String> uris = queryUris(query, queriedVar);		
+		return uris.isEmpty() ? null : uris.get(0);
 	}
 
 	/**
