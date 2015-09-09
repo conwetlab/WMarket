@@ -83,14 +83,15 @@ public class OfferingResolverTest {
 	}
 
 	private void checkOfferingBasic(Offering offering, String offeringName, String title,
-			String description, String version, String image, String uri,
+			String description, String version, String imageUrl, String acquisitionUrl, String uri,
 			Description describedIn) {
 
 		assertThat(offering.getName()).isEqualTo(offeringName);
 		assertThat(offering.getDisplayName()).isEqualTo(title);
 		assertThat(offering.getDescription()).isEqualTo(description);
-		assertThat(offering.getImageUrl()).isEqualTo(image);
+		assertThat(offering.getImageUrl()).isEqualTo(imageUrl);
 		assertThat(offering.getVersion()).isEqualTo(version);
+		assertThat(offering.getAcquisitionUrl()).isEqualTo(acquisitionUrl);
 		assertThat(offering.getUri()).isEqualTo(uri);
 		assertThat(offering.getDescribedIn()).isEqualTo(describedIn);
 	}
@@ -144,7 +145,8 @@ public class OfferingResolverTest {
 		assertThat(priceComponent.getValue()).isEqualTo(value);
 	}
 
-	private void initOffering(String uri, String title, String description, String version, String image) {
+	private void initOffering(String uri, String title, String description, String version, String imageUrl,
+			String acquisitionUrl) {
 
 		String contextUri = "<" + uri + ">";
 		List<String> offeringsUris = rdfHelperMock.queryUris("SELECT ?x WHERE { ?x a usdl:ServiceOffering . } ", "x");
@@ -161,7 +163,9 @@ public class OfferingResolverTest {
 		when(rdfHelperMock.getLiteral(contextUri, "dcterms:title")).thenReturn(title);
 		when(rdfHelperMock.getLiteral(contextUri, "dcterms:description")).thenReturn(description);
 		when(rdfHelperMock.getLiteral(contextUri, "pav:version")).thenReturn(version);
-		when(rdfHelperMock.getObjectUri(contextUri, "foaf:depiction")).thenReturn("<" + image + ">");
+		when(rdfHelperMock.getObjectUri(contextUri, "foaf:depiction")).thenReturn("<" + imageUrl + ">");
+		when(rdfHelperMock.getObjectUri(contextUri, "gr:availableDeliveryMethods")).thenReturn(
+				"<" + acquisitionUrl + ">");
 
 	}
 
@@ -310,6 +314,7 @@ public class OfferingResolverTest {
 		String offeringDesc = "a very long long description for the best offering";
 		String offeringVersion = "1.2";
 		String offeringImg = "https://store.lab.fiware.org/static/img1.png";
+		String acquisitionUrl = "http://store.lab.fiware.org/offering/user/offering/1.0";
 		String serviceUri = "https://store.lab.fiware.org/offering/offering1#service1";
 		String serviceTitle = "Service 1";
 		String serviceDescription = "Service 1 description";
@@ -335,7 +340,7 @@ public class OfferingResolverTest {
 		c.setName(serviceClassification);
 
 		// Mocking		
-		initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
+		initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg, acquisitionUrl);
 		initService(offeringUri, serviceUri, serviceTitle, serviceDescription, false);
 		initPricePlan(offeringUri, pricePlanTitle, pricePlanDesc, pricePlanComponents);
 		List<String> classifications = new ArrayList<>();
@@ -351,7 +356,7 @@ public class OfferingResolverTest {
 		assertThat(offerings.size()).isEqualTo(1);
 		Offering offering = offerings.get(0);
 		checkOfferingBasic(offering, offeringName, offeringTitle, offeringDesc, offeringVersion, offeringImg, 
-				offeringUri, description);
+				acquisitionUrl, offeringUri, description);
 
 		// Check services
 		Set<Service> services = offering.getServices();
@@ -390,12 +395,14 @@ public class OfferingResolverTest {
 			"another long description" };
 			String[] offeringsVersions = {"1.2", "2.4"};
 			String[] offeringsImgs = {"https://store.lab.fiware.org/static/img1.png",
-			"https://store.lab.fiware.org/static/img2.png"};
+					"https://store.lab.fiware.org/static/img2.png"};
+			String[] acquisitionUrls = {"https://store.lab.fiware.org/offeing/user/offering1/1.0",
+					"https://store.lab.fiware.org/offering/user/offering2/2.0"};
 	
 			// Mocking		
 			for (int i = 0; i < offeringsUris.length; i++) {
 				initOffering(offeringsUris[i], offeringsTitles[i], offeringsDescs[i], 
-						offeringsVersions[i], offeringsImgs[i]);
+						offeringsVersions[i], offeringsImgs[i], acquisitionUrls[i]);
 			}
 	
 			// Call the function
@@ -408,7 +415,8 @@ public class OfferingResolverTest {
 	
 			for (int i = 0; i < offerings.size(); i++) {
 				checkOfferingBasic(offerings.get(i), offeringsTitles[i].replace(" ", "-"), offeringsTitles[i], 
-						offeringsDescs[i], offeringsVersions[i], offeringsImgs[i], offeringsUris[i], description);
+						offeringsDescs[i], offeringsVersions[i], offeringsImgs[i], acquisitionUrls[i], 
+						offeringsUris[i], description);
 			}
 		} catch (Exception e) {
 			fail("Exception not expected", e);
@@ -424,12 +432,13 @@ public class OfferingResolverTest {
 			String offeringDesc = "a very long long description for the best offering";
 			String offeringVersion = "1.2";
 			String offeringImg = "https://store.lab.fiware.org/static/img1.png";
-	
+			String acquisitionUrl = "http://store.lab.fiware.org/offering/user/offering/1.0";
+
 			String[] pricePlansTitles = {"price plan 1", "price plan 2"};
 			String[] pricePlansDescs = {"a description for price plan 1", "a brief desc for price plan 2" };
 	
 			// Init offerings and price plans
-			initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
+			initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg, acquisitionUrl);
 			for (int i = 0; i < pricePlansTitles.length; i++) {
 				initPricePlan(offeringUri, pricePlansTitles[i], pricePlansDescs[i]);
 			}
@@ -458,14 +467,15 @@ public class OfferingResolverTest {
 			String offeringDesc = "a very long long description for the best offering";
 			String offeringVersion = "1.2";
 			String offeringImg = "https://store.lab.fiware.org/static/img1.png";
-	
+			String acquisitionUrl = "http://store.lab.fiware.org/offering/user/offering/1.0";
+
 			String[] servicesUris = {"https://store.lab.fiware.org/offerings/offering1#service1", 
 			"https://store.lab.fiware.org/offerings/offering1#service2"};
 			String[] srevicesTitles = {"service 1", "service 2"};
 			String[] servicesDescs = {"a description for service 1", "a brief desc for service 2" };
 	
 			// Init offerings and price plans
-			initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
+			initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg, acquisitionUrl);
 			for (int i = 0; i < servicesUris.length; i++) {
 				initService(offeringUri, servicesUris[i], srevicesTitles[i], servicesDescs[i], existingService);
 			}
@@ -506,12 +516,13 @@ public class OfferingResolverTest {
 			String offeringDesc = "a very long long description for the best offering";
 			String offeringVersion = "1.2";
 			String offeringImg = "https://store.lab.fiware.org/static/img1.png";
-	
+			String acquisitionUrl = "http://store.lab.fiware.org/offering/user/offering/1.0";
+
 			String serviceUri = "https://store.lab.fiware.org/offerings/offering1#service1";
 			String serviceTitle = "service 1";
 			String serviceDesc = "a description for service 1";
 	
-			initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg);
+			initOffering(offeringUri, offeringTitle, offeringDesc, offeringVersion, offeringImg, acquisitionUrl);
 			initService(offeringUri, serviceUri, serviceTitle, serviceDesc, false);
 			initClassification(serviceUri, classifications, existingClassification);
 	
