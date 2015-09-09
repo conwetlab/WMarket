@@ -128,6 +128,10 @@ public class DescriptionServiceIT extends AbstractIT {
 		// Get offering from the list
 		int index = offerings.indexOf(offering);
 		Offering receivedOffering = offerings.get(index);
+		assertThat(receivedOffering.getDisplayName()).isEqualTo(offering.getDisplayName());
+		assertThat(receivedOffering.getDescription()).isEqualTo(offering.getDescription());
+		assertThat(receivedOffering.getImageUrl()).isEqualTo(offering.getImageUrl());
+		assertThat(receivedOffering.getAcquisitionUrl()).isEqualTo(offering.getAcquisitionUrl());
 		assertThat(receivedOffering.getPricePlans()).isEqualTo(offering.getPricePlans());
 		assertThat(offerings.get(index).getCategories()).isEqualTo(offering.getCategories());
 

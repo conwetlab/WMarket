@@ -186,6 +186,7 @@ public abstract class AbstractIT {
 		FIRST_OFFERING.setDisplayName("OrionStarterKit");
 		FIRST_OFFERING.setImageUrl(
 				"https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png");
+		FIRST_OFFERING.setAcquisitionUrl("http://store.lab.fiware.org/offering/user/orionstarterkit/1.0");
 		FIRST_OFFERING.setDescription("Offering composed of three mashable application components: "
 				+ "ngsi-source, ngsientity2poi and ngsi-updater. Those components are provided as the base "
 				+ "tools/examples for making application mashups using WireCloud and the Orion Context Broker. "
@@ -199,6 +200,7 @@ public abstract class AbstractIT {
 				+ "#GHbnf7dsubc19ebx4fmfgH");
 		SECOND_OFFERING.setDisplayName("CKAN starter Kit");
 		SECOND_OFFERING.setName("ckan-starter-kit");
+		SECOND_OFFERING.setAcquisitionUrl("http://store.lab.fiware.org/offering/user/ckanstarterkit/1.0");
 		SECOND_OFFERING.setImageUrl(
 				"https://store.lab.fiware.org/media/CoNWeT__CKANStarterKit__1.2/logo-ckan_170x80.png");
 		SECOND_OFFERING.setDescription("Offering composed of several mashable application components that compose "

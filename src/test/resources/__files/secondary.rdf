@@ -59,6 +59,7 @@
         <usdl:hasServiceLevelProfile rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#KmhtiqmYXHT7L0vlu"/>
         <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png" />
         <usdl:versionInfo>1.0</usdl:versionInfo>
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/orionstarterkit/1.0"/>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/CkanStarterKit#GHbnf7dsubc19ebx4fmfgH">
@@ -74,6 +75,7 @@
         <usdl:hasServiceLevelProfile rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#KmhtiqmYXHT7L0vlu"/>
         <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__CKANStarterKit__1.2/logo-ckan_170x80.png" />
         <pav:version>1.0</pav:version>
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/ckanstarterkit/1.0"/>
     </usdl:ServiceOffering>
 
     
