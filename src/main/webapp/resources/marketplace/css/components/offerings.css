@@ -165,3 +165,8 @@
 .rotating-item.empty {
     padding: 1px;
 }
+
+.offering-url {
+    position: relative;
+    margin: 10px 0 0;
+}
