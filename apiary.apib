@@ -937,7 +937,7 @@ taking into account the store used to register these descriptions.
 
 # Group Offerings
 
-When descriptions are correctly created and the contained RDF is parsed, the offerings contained in this RDF file will be accessible through
+When descriptions are correctly created and the contained USDL is parsed, the offerings contained in this USDL file will be accessible through
 a REST API. At this point, users will be able to interact with these offerings to obtain their details and much more (bookmarking, reviewing...). 
 
 
@@ -975,12 +975,7 @@ a REST API. At this point, users will be able to interact with these offerings t
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
@@ -1028,12 +1023,37 @@ Users can also retrieve details of a specific offering.
             "imageUrl": "IMAGE_URL",
             "acquisitionUrl": "ACQUISITION_URL",
             "views": 1,
-            "pricePlans": [],
-            "services": [],
+            "pricePlans": [
+                {
+                    "title": "Price Plan Title",
+                    "comment": "Price Plan Comment",
+                    "priceComponents": [
+                        {
+                            "title": "Price Component Title",
+                            "comment": "Price Component Comment",
+                            "value": 8,
+                            "currency": "Price Component Currency",
+                            "unit": "Price Component Unit"
+                        }
+                    ]
+                }
+            ],
+            "services": [
+                {
+                    "displayName": "Service Name",
+                    "comment": "Service Description",
+                    "categories": [
+                        {
+                            "name": "category-name",
+                            "displayName": "Category Name"
+                        }
+                    ]
+                }
+            ],
             "categories": [
                 {
-                    "name": "wirecloud-component",
-                    "displayName": "WireCloud Component"
+                    "name": "category-name",
+                    "displayName": "Category Name"
                 }
             ]
         }
@@ -1050,7 +1070,7 @@ Users can also retrieve details of a specific offering.
 
 ## Bookmarking Offerings [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/bookmark]
 
-Users can bookmark offerings so they can access their favourite offerings in a very easy way. This endpoint can be used to both
+Users can bookmark offerings so they can access their favourite ones in a very easy way. This endpoint can be used to both
 bookmark and unbookmark a specific offering depending on its previous state: if the offering is already bookmarked, it will be 
 unbookmarked; if the offerings is not bookmarked, it will be bookmarked.
 
@@ -1115,12 +1135,7 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
@@ -1379,12 +1394,7 @@ taking into account the store and/or the description used to register these offe
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
@@ -1429,12 +1439,7 @@ The system register the last 10 offerings viewed by each user and these offering
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
@@ -1477,12 +1482,7 @@ offerings viewed by a specific user.
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
@@ -1558,12 +1558,7 @@ that belong to each existing category. Based on this, users can retrieve a list 
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "dataset",
-                            "displayName": "Dataset"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
