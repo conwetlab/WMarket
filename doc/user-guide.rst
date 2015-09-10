@@ -68,6 +68,11 @@ To create a new account, you will be required to introduce some details:
   30 characteres. It must contain one number, one letter and one special 
   character (!#$%&?).
 
+.. note::
+  If the user cannot be created because one or more fields are invalid, these
+  fields will be highlighted in red color and a message will be attached to 
+  every invalid field so the user can understand why these fields are invalid.
+
 Once that you have introduced these details, just click **Create**.
 
 .. image:: /images/user-guide/register_user.png
@@ -390,6 +395,11 @@ Introduce the following content:
 * **Comment:** A brief description of your store. You can type until 200
   characters.
 
+.. note::
+  If the store cannot be created because one or more fields are invalid, these
+  fields will be highlighted in red color and a message will be attached to 
+  every invalid field so the user can understand why these fields are invalid.
+
 If your have introduced these fields correctly, you will be redirected to the
 main page of the Store, where you will be able to manage it. 
 
@@ -465,6 +475,12 @@ To create the description, set the following details:
   description creation will fail.
 * **Comment:** A brief comment about the description you are uploading. You can 
   type until 200 characters.
+
+.. note::
+  If the description cannot be created because one or more fields are invalid,
+  these fields will be highlighted in red color and a message will be attached 
+  to every invalid field so the user can understand why these fields are 
+  invalid.
 
 Once that you have completed the form, the description will be created and all
 the contained offerings will be loaded into the corresponding store and you 
