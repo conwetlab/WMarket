@@ -66,7 +66,7 @@ To create a new account, you will be required to introduce some details:
   to the email pattern. Two users cannot use the same email address.
 * **Password:** password to access your account. It must contain between 8 and
   30 characteres. It must contain one number, one letter and one special 
-  character (!#$%&?).
+  character (``!``, ``#``, ``$``, ``%``, ``&`` and ``?``).
 
 .. note::
   If the user cannot be created because one or more fields are invalid, these
