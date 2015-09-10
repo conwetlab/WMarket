@@ -181,7 +181,10 @@ This page is divided in different zones:
 * The **blue box** contains the reviews mage by users.
 * The **green box** contains all the actions that you can do with the offering:
   view its price plans, view its services or add it you to your bookmarks. 
-* The **black box** can be used to review the offering. 
+* The stars indicated by the **black arrow** can be used to review the 
+  offering.
+* The button indicated by the **purple arrow** will open in a new window (or 
+  tab) the Store page where the offering can be acquired.
 
 To view all the price plans included in an offering, just click the **Price 
 Plans** button. 
@@ -276,11 +279,13 @@ one contained in the red rectangle).
 
 The comparison will show you:
 
+* The name and the image of each offering.
+* A link to acquire each offering.
 * The description of each offering.
 * The categories of each offering. Categories will be ordered and aligned in 
   order to highlight the difference of categories between the compared 
   offerings.
-* The price plans of each offering.
+* The price plans of each offering (ordered alphabetically).
 * The services of each offering. Services will be ordered and aligned in order
   to highlight the difference of services between the different offerings.
 
