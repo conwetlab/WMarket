@@ -286,12 +286,12 @@ When you are creating or updating a store, you can set the following fields:
 
 + displayName - the display name of the Store (the one used in the User Interface). This field will be used to automatically generate the store identifier (name)
 + url - The URL where the store is located
-+ comment - (optional) Additional information of the Store
++ comment - (optional) Additional information about the Store
 + imageBase64 - (optional) You can add an image to your store by coding it in Base64
 
 However, some additional fields will be automatically generated for you:
 
-+ name - unique user identifier based on the display name of the Store
++ name - unique store identifier based on the display name of the Store
 + imagePath - the relative path that can be used to retrieve the image of the Store
 + createdAt - Date of creation
 + creator - The user that created the Store
@@ -695,11 +695,11 @@ When you are creating or updating a description, you can set the following field
 
 + displayName - the display name of the Description (the one used in the User Interface). This field will be used to automatically generate the description identifier (name)
 + url - The URL where the description is located. This URL must be accesible by the server and should point to a RDF file
-+ comment - (optional) Additional information of the Description
++ comment - (optional) Additional information about the Description
 
 However, some additional fields will be automatically generated for you:
 
-+ name - unique user identifier based on the display name of the Description
++ name - description identifier based on the display name of the Description
 + createdAt - Date of creation
 + updatedAt - Date of the last update
 + creator - The user that created the Description
@@ -939,6 +939,22 @@ taking into account the store used to register these descriptions.
 
 When descriptions are correctly created and the contained USDL is parsed, the offerings contained in this USDL file will be accessible through
 a REST API. At this point, users will be able to interact with these offerings to obtain their details and much more (bookmarking, reviewing...). 
+
+The information contained in an offering is:
+
++ displayName - The display name of the Offering (the one used in the User Interface).
++ name - Offering identifier based on the display name of the Offering
++ description - Additional information about the Offering
++ uri - The URI to identify the offering within the USDL
++ describedIn - The description where the offering is contained
++ imageUrl - URL which points to an image that will help to identify the offering more easily
++ acqusitionUrl - URL which points to the Store page where the offering can be acquired
++ views - Number of times which the offering has been viewed
++ averageScore - Based on the reviews made by users
++ describedIn - The description where the offering is described
++ pricePlans - The price plans that can be used to acquire the offerings
++ services - All the services included in the offering
++ categories - Based on the categories of the services included in the offering
 
 
 ## Listing all the offerings contained in a Description [/api/v2/store/{store_name}/description/{description_name}/offering]
