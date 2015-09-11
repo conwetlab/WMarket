@@ -84,7 +84,7 @@ XML Example
 |-----------|------|------------ |
 | 200 | OK   | Your request has been completed properly |
 | 201 | Created | Your resource has been created. The `Location` header will contain the final URL that users can use to access this resource |
-| 204 | No content | Your request has been processed, but a response is not available. Generally used when deleting entities or bookmarking offerigns |
+| 204 | No content | Your request has been processed, but a response is not available. Generally used when deleting entities or bookmarking offerings |
 | 400 | Bad Request | The content of your request is not correct (e.g. there is already a resource with the specified name) |
 | 400 | Validation Error | One or more fields of your content is not valid. The field `field` indicates the first field with a validation error |
 | 403 | Forbidden | You have no rights to perform the query |
@@ -96,9 +96,9 @@ XML Example
 
 API to create, retrieve, edit and delete user accounts.
 
-When you are creating or updating an user, you can set the following fields:
+When you are creating or updating a user, you can set the following fields:
 
-+ displayName - the display name of the user (the one used in the UI). This field will be used to automatically generate the userName
++ displayName - The display name of the user (the one used in the UI). This field will be used to automatically generate the userName
 + email - The user's email account. This field is hidden and it will not be returned in GET requests. Used for logging purposes
 + password - The user's password.  This field is hidden and it will not be returned in GET requests
 + company - (optional) The user's company
@@ -284,15 +284,15 @@ API to create, retrieve, edit and delete Stores.
 
 When you are creating or updating a store, you can set the following fields:
 
-+ displayName - the display name of the Store (the one used in the User Interface). This field will be used to automatically generate the store identifier (name)
++ displayName - The display name of the Store (the one used in the User Interface). This field will be used to automatically generate the store identifier (name)
 + url - The URL where the store is located
-+ comment - (optional) Additional information of the Store
++ comment - (optional) Additional information about the Store
 + imageBase64 - (optional) You can add an image to your store by coding it in Base64
 
 However, some additional fields will be automatically generated for you:
 
-+ name - unique user identifier based on the display name of the Store
-+ imagePath - the relative path that can be used to retrieve the image of the Store
++ name - Unique store identifier based on the display name of the Store
++ imagePath - The relative path that can be used to retrieve the image of the Store
 + createdAt - Date of creation
 + creator - The user that created the Store
 + lastEditor - The last user that updated the Store
@@ -547,7 +547,7 @@ the user should send the following fields:
     + max: 100 (optional, int) - The number of elements to be retrieved
     + orderBy: id (optional, string) - Order used to retrieve the reviews
     + desc: false (optional, boolean) - Use descending order
-    + detailed: false (optional, boolean) - If true, the user fileds won't contain the user name but all the user's information (email, displayName...)
+    + detailed: false (optional, boolean) - If true, the user fields won't contain the user name but all the user's information (email, displayName...)
     
 + Request
     + Headers
@@ -694,12 +694,12 @@ API to create, retrieve, edit and delete Descriptions.
 When you are creating or updating a description, you can set the following fields:
 
 + displayName - the display name of the Description (the one used in the User Interface). This field will be used to automatically generate the description identifier (name)
-+ url - The URL where the description is located. This URL must be accesible by the server and should point to a RDF file
-+ comment - (optional) Additional information of the Description
++ url - The URL where the description is located. This URL must be accessible by the server and should point to a RDF file
++ comment - (optional) Additional information about the Description
 
 However, some additional fields will be automatically generated for you:
 
-+ name - unique user identifier based on the display name of the Description
++ name - Description identifier based on the display name of the Description. One store **cannot** host two descriptions with the same name, but two different stores **can** host two descriptions with the same name
 + createdAt - Date of creation
 + updatedAt - Date of the last update
 + creator - The user that created the Description
@@ -937,8 +937,24 @@ taking into account the store used to register these descriptions.
 
 # Group Offerings
 
-When descriptions are correctly created and the contained RDF is parsed, the offerings contained in this RDF file will be accessible through
+When descriptions are correctly created and the contained USDL is parsed, the offerings contained in this USDL file will be accessible through
 a REST API. At this point, users will be able to interact with these offerings to obtain their details and much more (bookmarking, reviewing...). 
+
+Here is the list with all the information that is gathered from an offering:
+
++ displayName - The display name of the Offering (the one used in the User Interface).
++ name - Offering identifier based on the display name of the Offering. One description **cannot** contain two offerings with the same name, but two descriptions **can** contain two offerings with same name
++ description - Additional information about the Offering
++ uri - The URI to identify the offering within the USDL
++ describedIn - The description where the offering is contained
++ imageUrl - URL which points to an image that will help to identify the offering more easily
++ acqusitionUrl - URL which points to the Store page where the offering can be acquired
++ views - Number of times which the offering has been viewed
++ averageScore - Based on the reviews made by users
++ describedIn - The description where the offering is described
++ pricePlans - The price plans that can be used to acquire the offerings. Each price plan can contain zero or more price components
++ services - All the services included in the offering
++ categories - Based on the categories of the services included in the offering
 
 
 ## Listing all the offerings contained in a Description [/api/v2/store/{store_name}/description/{description_name}/offering]
@@ -975,12 +991,7 @@ a REST API. At this point, users will be able to interact with these offerings t
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
@@ -1002,7 +1013,7 @@ Users can also retrieve details of a specific offering.
 + Parameters
     + store_name: wstore (required, string) - The ID of the Store to which the offering belongs
     + description_name: offerings1 (required, string) - The ID of the description to which the offering belongs
-    + offering_name: offering1 (required, string) - The specifig offering to be retrieved
+    + offering_name: offering1 (required, string) - The specific offering to be retrieved
 
 ### Get Offering Details [GET]
 
@@ -1028,12 +1039,37 @@ Users can also retrieve details of a specific offering.
             "imageUrl": "IMAGE_URL",
             "acquisitionUrl": "ACQUISITION_URL",
             "views": 1,
-            "pricePlans": [],
-            "services": [],
+            "pricePlans": [
+                {
+                    "title": "Price Plan Title",
+                    "comment": "Price Plan Comment",
+                    "priceComponents": [
+                        {
+                            "title": "Price Component Title",
+                            "comment": "Price Component Comment",
+                            "value": 8,
+                            "currency": "Price Component Currency",
+                            "unit": "Price Component Unit"
+                        }
+                    ]
+                }
+            ],
+            "services": [
+                {
+                    "displayName": "Service Name",
+                    "comment": "Service Description",
+                    "categories": [
+                        {
+                            "name": "category-name",
+                            "displayName": "Category Name"
+                        }
+                    ]
+                }
+            ],
             "categories": [
                 {
-                    "name": "wirecloud-component",
-                    "displayName": "WireCloud Component"
+                    "name": "category-name",
+                    "displayName": "Category Name"
                 }
             ]
         }
@@ -1050,14 +1086,14 @@ Users can also retrieve details of a specific offering.
 
 ## Bookmarking Offerings [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/bookmark]
 
-Users can bookmark offerings so they can access their favourite offerings in a very easy way. This endpoint can be used to both
+Users can bookmark offerings so they can access their favourite ones in a very easy way. This endpoint can be used to both
 bookmark and unbookmark a specific offering depending on its previous state: if the offering is already bookmarked, it will be 
 unbookmarked; if the offerings is not bookmarked, it will be bookmarked.
 
 + Parameters
     + store_name: wstore (required, string) - The ID of the Store to which the offering belongs
     + description_name: offerings1 (required, string) - The ID of the description to which the offering belongs
-    + offering_name: offering1 (required, string) - The specifig offering to be (un)bookmarked
+    + offering_name: offering1 (required, string) - The specific offering to be (un)bookmarked
     
 # Bookmark and Unbookmark an Offering [POST]
 
@@ -1115,12 +1151,7 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
@@ -1137,7 +1168,7 @@ the user should send the following fields:
 + Parameters
     + store_name: wstore (required, string) - The ID of the Store to which the offering belongs
     + description_name: offerings1 (required, string) - The ID of the description to which the offering belongs
-    + offering_name: offering1 (required, string) - The specifig offering to be reviewed
+    + offering_name: offering1 (required, string) - The specific offering to be reviewed
 
 ### Review an Offering [POST]
 
@@ -1198,7 +1229,7 @@ the user should send the following fields:
     + max: 100 (optional, int) - The number of elements to be retrieved
     + orderBy: id (optional, string) - Order used to retrieve the reviews
     + desc: false (optional, boolean) - Use descending order
-    + detailed: false (optional, boolean) - If true, the user fileds won't contain the user name but all the user's information (email, displayName...)
+    + detailed: false (optional, boolean) - If true, the user fields won't contain the user name but all the user's information (email, displayName...)
     
 + Request
     + Headers
@@ -1236,7 +1267,7 @@ the user should send the following fields:
 + Parameters
     + store_name: wstore (required, string) - The ID of the Store to which the offering belongs
     + description_name: offerings1 (required, string) - The ID of the description to which the offering belongs
-    + offering_name: offering1 (required, string) - The specifig offering whose review has to be managed
+    + offering_name: offering1 (required, string) - The specific offering whose review has to be managed
     + review_id: 0 (required, int) - The ID of the review to be managed
     
 ### Get Review Details [GET]
@@ -1379,12 +1410,7 @@ taking into account the store and/or the description used to register these offe
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
@@ -1429,12 +1455,7 @@ The system register the last 10 offerings viewed by each user and these offering
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
@@ -1477,12 +1498,7 @@ offerings viewed by a specific user.
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "wirecloud-component",
-                            "displayName": "WireCloud Component"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
@@ -1492,7 +1508,11 @@ offerings viewed by a specific user.
 # Group Categories
 
 Offerings have some attached categories. The service will allow users to retrieve all the categories that have been created and all the offerings
-that belong to each existing category. Based on this, users can retrieve a list of suggestions for each category according to the reviews made by other users. 
+that belong to each existing category. Based on this, users can retrieve a list of suggestions for each category according to the reviews made by other users.
+
+Each category contains the following information:
++ displayName: The display name of the category (the one that will be used in the GUI)
++ name: Unique identifier for the category. It is based on the display name
 
 
 ## Listing all the Categories [/api/v2/category{?offset}{?max}]
@@ -1558,12 +1578,7 @@ that belong to each existing category. Based on this, users can retrieve a list 
                     "views": 1,
                     "pricePlans": [],
                     "services": [],
-                    "categories": [
-                        {
-                            "name": "dataset",
-                            "displayName": "Dataset"
-                        }
-                    ]
+                    "categories": []
                 }
             ]
         }
