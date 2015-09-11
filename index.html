@@ -50,7 +50,7 @@
                               
                                 
                                     <li>
-                                        <a href="#resource_creating-andor-listing-users" title = "Resource Creating and/or Listing Users">Resource Creating and/or Listing Users</a>
+                                        <a href="#resource_creating-and/or-listing-users" title = "Resource Creating and/or Listing Users">Resource Creating and/or Listing Users</a>
                                         <ul class="toc  ">
                                         
                                             
@@ -103,7 +103,7 @@
                               
                                 
                                     <li>
-                                        <a href="#resource_creating-andor-listing-stores" title = "Resource Creating and/or Listing Stores">Resource Creating and/or Listing Stores</a>
+                                        <a href="#resource_creating-and/or-listing-stores" title = "Resource Creating and/or Listing Stores">Resource Creating and/or Listing Stores</a>
                                         <ul class="toc  ">
                                         
                                             
@@ -146,7 +146,7 @@
                               
                                 
                                     <li>
-                                        <a href="#resource_creating-andor-listing-store-reviews" title = "Resource Creating and/or Listing Store Reviews">Resource Creating and/or Listing Store Reviews</a>
+                                        <a href="#resource_creating-and/or-listing-store-reviews" title = "Resource Creating and/or Listing Store Reviews">Resource Creating and/or Listing Store Reviews</a>
                                         <ul class="toc  ">
                                         
                                             
@@ -199,7 +199,7 @@
                               
                                 
                                     <li>
-                                        <a href="#resource_creating-andor-listing-descriptions-in-a-store" title = "Resource Creating and/or Listing Descriptions in a Store">Resource Creating and/or Listing Descriptions in a Store</a>
+                                        <a href="#resource_creating-and/or-listing-descriptions-in-a-store" title = "Resource Creating and/or Listing Descriptions in a Store">Resource Creating and/or Listing Descriptions in a Store</a>
                                         <ul class="toc  ">
                                         
                                             
@@ -298,7 +298,7 @@
                                         <ul class="toc  ">
                                         
                                             
-                                                <li><a href="#action_bookmarkunbookmark-an-offering" title ="POST - Bookmark/Unbookmark an Offering">POST - Bookmark/Unbookmark an Offering</a></li>
+                                                <li><a href="#action_bookmark-and-unbookmark-an-offering" title ="POST - Bookmark and Unbookmark an Offering">POST - Bookmark and Unbookmark an Offering</a></li>
                                             
 
                                         
@@ -322,7 +322,7 @@
                               
                                 
                                     <li>
-                                        <a href="#resource_creating-andor-listing-offering-reviews" title = "Resource Creating and/or Listing Offering Reviews">Resource Creating and/or Listing Offering Reviews</a>
+                                        <a href="#resource_creating-and/or-listing-offering-reviews" title = "Resource Creating and/or Listing Offering Reviews">Resource Creating and/or Listing Offering Reviews</a>
                                         <ul class="toc  ">
                                         
                                             
@@ -577,7 +577,6 @@
 
 
 
-
 	
 		<h2 id="editors">Editors</h2>
 		<ul>
@@ -615,7 +614,7 @@
 
 
 	<h2 id="abstract">Abstract</h2>
-	WMarket is the reference implementation of the FIWARE Marketplace Generic Enabler. 
+	<p>WMarket is the reference implementation of the FIWARE Marketplace Generic Enabler. 
 The Marketplace provides functionality necessary for bringing together offering and 
 demand for making business. These functions include basic services for registering 
 business entities, publishing and retrieving offerings and demands, search and discover 
@@ -623,9 +622,7 @@ offerings according to specific consumer requirements as well as lateral functio
 like review, rating and recommendation. Besides the core functions, the Marketplace 
 may offer value because of its "knowledge" about the market in terms of market 
 intelligence services, pricing support, advertising, information subscription and 
-more.
-
-
+more.</p>
 
 
 
@@ -654,7 +651,6 @@ Please send your comments to wmarket@conwet.com.</p>
 
 
 
-	
 		
 	
 	
@@ -672,8 +668,7 @@ Please send your comments to wmarket@conwet.com.</p>
 
 
 
-	
-	
+
 	
 		
 	
@@ -745,7 +740,7 @@ in base to the <code>Accept</code> header of the request.</p>
 <tr>
 <td>204</td>
 <td>No content</td>
-<td>Your request has been processed, but a response is not available. Generally used when deleting entities or bookmarking offerigns</td>
+<td>Your request has been processed, but a response is not available. Generally used when deleting entities or bookmarking offerings</td>
 </tr>
 <tr>
 <td>400</td>
@@ -798,10 +793,10 @@ in base to the <code>Accept</code> header of the request.</p>
             <h2 id="h-resource_group_users">Users</h2>
         
 	<p>API to create, retrieve, edit and delete user accounts.</p>
-<p>When you are creating or updating an user, you can set the following fields:</p>
+<p>When you are creating or updating a user, you can set the following fields:</p>
 <ul>
 <li>
-<p>displayName - the display name of the user (the one used in the UI). This field will be used to automatically generate the userName</p>
+<p>displayName - The display name of the user (the one used in the UI). This field will be used to automatically generate the userName</p>
 </li>
 <li>
 <p>email - The user's email account. This field is hidden and it will not be returned in GET requests. Used for logging purposes</p>
@@ -826,8 +821,8 @@ in base to the <code>Accept</code> header of the request.</p>
 </li>
 </ul>
         
-            <section id="resource_creating-andor-listing-users" class="resource">
-                <h3 id="h-resource_creating-andor-listing-users">Creating and/or Listing Users [/api/v2/user/{?offset}{?max}]</h3>
+            <section id="resource_creating-and/or-listing-users" class="resource">
+                 <div class= "header" ><h3 id="h-resource_creating-and/or-listing-users">Creating and/or Listing Users [/api/v2/user/{?offset}{?max}]</h3> </div>
                 
                 
                 
@@ -927,11 +922,13 @@ in base to the <code>Accept</code> header of the request.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_create-a-new-user_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -946,13 +943,15 @@ in base to the <code>Accept</code> header of the request.</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/users/creating-andor-listing-users/create-a-new-user">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/users/creating-and/or-listing-users/create-a-new-user">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -980,7 +979,8 @@ in base to the <code>Accept</code> header of the request.</p>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -988,7 +988,8 @@ in base to the <code>Accept</code> header of the request.</p>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -1039,11 +1040,13 @@ in base to the <code>Accept</code> header of the request.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-existing-users_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -1058,20 +1061,22 @@ in base to the <code>Accept</code> header of the request.</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/users/creating-andor-listing-users/list-existing-users">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/users/creating-and/or-listing-users/list-existing-users">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_managing-an-existing-user" class="resource">
-                <h3 id="h-resource_managing-an-existing-user">Managing an existing User [/api/v2/user/{user_id}]</h3>
+                 <div class= "header" ><h3 id="h-resource_managing-an-existing-user">Managing an existing User [/api/v2/user/{user_id}]</h3> </div>
                 
                 
                 
@@ -1094,7 +1099,8 @@ in base to the <code>Accept</code> header of the request.</p>
 	<dl>
 		
 			<dt>
-				user_id (Required, string)
+				user_id (Required, string
+				)
 			</dt>
 			<dd>
 				ID of the User
@@ -1184,11 +1190,13 @@ in base to the <code>Accept</code> header of the request.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_get-user-details_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -1203,13 +1211,15 @@ in base to the <code>Accept</code> header of the request.</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/users/managing-an-existing-user/get-user-details">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -1326,11 +1336,13 @@ in base to the <code>Accept</code> header of the request.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_update-an-existing-user_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -1345,13 +1357,15 @@ in base to the <code>Accept</code> header of the request.</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/users/managing-an-existing-user/update-an-existing-user">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -1447,11 +1461,13 @@ in base to the <code>Accept</code> header of the request.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_delete-an-existing-user_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -1466,13 +1482,15 @@ in base to the <code>Accept</code> header of the request.</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/users/managing-an-existing-user/delete-an-existing-user">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -1488,13 +1506,13 @@ in base to the <code>Accept</code> header of the request.</p>
 <p>When you are creating or updating a store, you can set the following fields:</p>
 <ul>
 <li>
-<p>displayName - the display name of the Store (the one used in the User Interface). This field will be used to automatically generate the store identifier (name)</p>
+<p>displayName - The display name of the Store (the one used in the User Interface). This field will be used to automatically generate the store identifier (name)</p>
 </li>
 <li>
 <p>url - The URL where the store is located</p>
 </li>
 <li>
-<p>comment - (optional) Additional information of the Store</p>
+<p>comment - (optional) Additional information about the Store</p>
 </li>
 <li>
 <p>imageBase64 - (optional) You can add an image to your store by coding it in Base64</p>
@@ -1503,10 +1521,10 @@ in base to the <code>Accept</code> header of the request.</p>
 <p>However, some additional fields will be automatically generated for you:</p>
 <ul>
 <li>
-<p>name - unique user identifier based on the display name of the Store</p>
+<p>name - Unique store identifier based on the display name of the Store</p>
 </li>
 <li>
-<p>imagePath - the relative path that can be used to retrieve the image of the Store</p>
+<p>imagePath - The relative path that can be used to retrieve the image of the Store</p>
 </li>
 <li>
 <p>createdAt - Date of creation</p>
@@ -1522,8 +1540,8 @@ in base to the <code>Accept</code> header of the request.</p>
 </li>
 </ul>
         
-            <section id="resource_creating-andor-listing-stores" class="resource">
-                <h3 id="h-resource_creating-andor-listing-stores">Creating and/or Listing Stores [/api/v2/store/{?offset}{?max}]</h3>
+            <section id="resource_creating-and/or-listing-stores" class="resource">
+                 <div class= "header" ><h3 id="h-resource_creating-and/or-listing-stores">Creating and/or Listing Stores [/api/v2/store/{?offset}{?max}]</h3> </div>
                 
                 
                 
@@ -1625,11 +1643,13 @@ in base to the <code>Accept</code> header of the request.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_create-a-new-store_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -1644,13 +1664,15 @@ in base to the <code>Accept</code> header of the request.</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/creating-andor-listing-stores/create-a-new-store">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/creating-and/or-listing-stores/create-a-new-store">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -1678,7 +1700,8 @@ in base to the <code>Accept</code> header of the request.</p>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -1686,7 +1709,8 @@ in base to the <code>Accept</code> header of the request.</p>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -1737,11 +1761,13 @@ in base to the <code>Accept</code> header of the request.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-existing-stores_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -1756,20 +1782,22 @@ in base to the <code>Accept</code> header of the request.</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/creating-andor-listing-stores/list-existing-stores">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/creating-and/or-listing-stores/list-existing-stores">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_managing-an-existing-store" class="resource">
-                <h3 id="h-resource_managing-an-existing-store">Managing an existing Store [/api/v2/store/{store_name}]</h3>
+                 <div class= "header" ><h3 id="h-resource_managing-an-existing-store">Managing an existing Store [/api/v2/store/{store_name}]</h3> </div>
                 
                 
                 
@@ -1792,7 +1820,8 @@ in base to the <code>Accept</code> header of the request.</p>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				ID of the Store
@@ -1882,11 +1911,13 @@ in base to the <code>Accept</code> header of the request.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_get-store-details_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -1901,13 +1932,15 @@ in base to the <code>Accept</code> header of the request.</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/managing-an-existing-store/get-store-details">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -2024,11 +2057,13 @@ in base to the <code>Accept</code> header of the request.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_update-an-existing-store_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -2043,13 +2078,15 @@ in base to the <code>Accept</code> header of the request.</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/managing-an-existing-store/update-an-existing-store">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -2145,11 +2182,13 @@ in base to the <code>Accept</code> header of the request.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_delete-an-existing-store_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -2164,20 +2203,22 @@ in base to the <code>Accept</code> header of the request.</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/managing-an-existing-store/delete-an-existing-store">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
-            <section id="resource_creating-andor-listing-store-reviews" class="resource">
-                <h3 id="h-resource_creating-andor-listing-store-reviews">Creating and/or Listing Store Reviews [/api/v2/store/{store_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]</h3>
+            <section id="resource_creating-and/or-listing-store-reviews" class="resource">
+                 <div class= "header" ><h3 id="h-resource_creating-and/or-listing-store-reviews">Creating and/or Listing Store Reviews [/api/v2/store/{store_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]</h3> </div>
                 <p>Stores can be reviewed so other users can easily know which stores can be trusted. One user can only review one store once. To review a store,
 the user should send the following fields:</p>
 <ul>
@@ -2209,7 +2250,8 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the store to be reviewed
@@ -2335,11 +2377,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_review-a-store_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -2354,13 +2398,15 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/creating-andor-listing-store-reviews/review-a-store">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/creating-and/or-listing-store-reviews/review-a-store">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -2388,7 +2434,8 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -2396,7 +2443,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -2404,7 +2452,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the reviews
@@ -2412,7 +2461,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -2420,10 +2470,11 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				detailed (Optional, boolean)
+				detailed (Optional, boolean
+				)
 			</dt>
 			<dd>
-				If true, the user fileds won't contain the user name but all the user's information (email, displayName...)
+				If true, the user fields won't contain the user name but all the user's information &#40;email, displayName...&#41;
 				
 			</dd>
 		
@@ -2488,11 +2539,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-existing-store-reviews_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -2507,20 +2560,22 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/creating-andor-listing-store-reviews/list-existing-store-reviews">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/creating-and/or-listing-store-reviews/list-existing-store-reviews">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_managing-an-existing-store-review" class="resource">
-                <h3 id="h-resource_managing-an-existing-store-review">Managing an existing Store Review [/api/v2/store/{store_name}/review/{review_id}{?detailed}]</h3>
+                 <div class= "header" ><h3 id="h-resource_managing-an-existing-store-review">Managing an existing Store Review [/api/v2/store/{store_name}/review/{review_id}{?detailed}]</h3> </div>
                 
                 
                 
@@ -2543,7 +2598,8 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the store to which the review belongs
@@ -2551,7 +2607,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				review_id (Required, int)
+				review_id (Required, int
+				)
 			</dt>
 			<dd>
 				The ID of the review to be managed
@@ -2586,10 +2643,11 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				detailed (Optional, boolean)
+				detailed (Optional, boolean
+				)
 			</dt>
 			<dd>
-				If true, the user filed won't contain the user name but all the user's information (email, displayName...)
+				If true, the user filed won't contain the user name but all the user's information &#40;email, displayName...&#41;
 				
 			</dd>
 		
@@ -2654,11 +2712,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_get-review-details_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -2673,13 +2733,15 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/managing-an-existing-store-review/get-review-details">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -2796,11 +2858,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_update-an-existing-store-review_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -2815,13 +2879,15 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/managing-an-existing-store-review/update-an-existing-store-review">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -2904,11 +2970,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_delete-an-existing-store-review_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -2923,13 +2991,15 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/stores/managing-an-existing-store-review/delete-an-existing-store-review">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -2948,16 +3018,16 @@ the user should send the following fields:</p>
 <p>displayName - the display name of the Description (the one used in the User Interface). This field will be used to automatically generate the description identifier (name)</p>
 </li>
 <li>
-<p>url - The URL where the description is located. This URL must be accesible by the server and should point to a RDF file</p>
+<p>url - The URL where the description is located. This URL must be accessible by the server and should point to a RDF file</p>
 </li>
 <li>
-<p>comment - (optional) Additional information of the Description</p>
+<p>comment - (optional) Additional information about the Description</p>
 </li>
 </ul>
 <p>However, some additional fields will be automatically generated for you:</p>
 <ul>
 <li>
-<p>name - unique user identifier based on the display name of the Description</p>
+<p>name - Description identifier based on the display name of the Description. One store <strong>cannot</strong> host two descriptions with the same name, but two different stores <strong>can</strong> host two descriptions with the same name</p>
 </li>
 <li>
 <p>createdAt - Date of creation</p>
@@ -2973,8 +3043,8 @@ the user should send the following fields:</p>
 </li>
 </ul>
         
-            <section id="resource_creating-andor-listing-descriptions-in-a-store" class="resource">
-                <h3 id="h-resource_creating-andor-listing-descriptions-in-a-store">Creating and/or Listing Descriptions in a Store [/api/v2/store/{store_name}/description/{?offset}{?max}]</h3>
+            <section id="resource_creating-and/or-listing-descriptions-in-a-store" class="resource">
+                 <div class= "header" ><h3 id="h-resource_creating-and/or-listing-descriptions-in-a-store">Creating and/or Listing Descriptions in a Store [/api/v2/store/{store_name}/description/{?offset}{?max}]</h3> </div>
                 
                 
                 
@@ -2997,7 +3067,8 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store where the description will be created
@@ -3106,11 +3177,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_create-a-new-description_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -3125,13 +3198,15 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/descriptions/creating-andor-listing-descriptions-in-a-store/create-a-new-description">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/descriptions/creating-and/or-listing-descriptions-in-a-store/create-a-new-description">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -3159,7 +3234,8 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -3167,7 +3243,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -3218,11 +3295,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-existing-descriptions-in-a-store_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -3237,20 +3316,22 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/descriptions/creating-andor-listing-descriptions-in-a-store/list-existing-descriptions-in-a-store">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/descriptions/creating-and/or-listing-descriptions-in-a-store/list-existing-descriptions-in-a-store">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_managing-an-existing-description" class="resource">
-                <h3 id="h-resource_managing-an-existing-description">Managing an existing Description [/api/v2/store/{store_name}/description/{description_name}]</h3>
+                 <div class= "header" ><h3 id="h-resource_managing-an-existing-description">Managing an existing Description [/api/v2/store/{store_name}/description/{description_name}]</h3> </div>
                 
                 
                 
@@ -3273,7 +3354,8 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the description belongs
@@ -3281,7 +3363,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description to be managed
@@ -3371,11 +3454,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_get-description-details_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -3390,13 +3475,15 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/descriptions/managing-an-existing-description/get-description-details">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -3513,11 +3600,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_update-an-existing-description_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -3532,13 +3621,15 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/descriptions/managing-an-existing-description/update-an-existing-description">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -3634,11 +3725,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_delete-an-existing-description_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -3653,20 +3746,22 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/descriptions/managing-an-existing-description/delete-an-existing-description">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_listing-all-the-descriptions" class="resource">
-                <h3 id="h-resource_listing-all-the-descriptions">Listing all the Descriptions [/api/v2/description{?offset}{?max}]</h3>
+                 <div class= "header" ><h3 id="h-resource_listing-all-the-descriptions">Listing all the Descriptions [/api/v2/description{?offset}{?max}]</h3> </div>
                 <p>In some cases, users can be interested in retrieving all the descriptions which have been registered into the MaketPlace without
 taking into account the store used to register these descriptions. </p>
                 
@@ -3690,7 +3785,8 @@ taking into account the store used to register these descriptions. </p>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -3698,7 +3794,8 @@ taking into account the store used to register these descriptions. </p>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -3771,11 +3868,13 @@ taking into account the store used to register these descriptions. </p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-all-the-descriptions_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -3790,13 +3889,15 @@ taking into account the store used to register these descriptions. </p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/descriptions/listing-all-the-descriptions/list-all-the-descriptions">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -3808,11 +3909,53 @@ taking into account the store used to register these descriptions. </p>
             <section id="resource_group_offerings" class="resourceGroup">
             <h2 id="h-resource_group_offerings">Offerings</h2>
         
-	<p>When descriptions are correctly created and the contained RDF is parsed, the offerings contained in this RDF file will be accessible through
+	<p>When descriptions are correctly created and the contained USDL is parsed, the offerings contained in this USDL file will be accessible through
 a REST API. At this point, users will be able to interact with these offerings to obtain their details and much more (bookmarking, reviewing...). </p>
+<p>Here is the list with all the information that is gathered from an offering:</p>
+<ul>
+<li>
+<p>displayName - The display name of the Offering (the one used in the User Interface).</p>
+</li>
+<li>
+<p>name - Offering identifier based on the display name of the Offering. One description <strong>cannot</strong> contain two offerings with the same name, but two descriptions <strong>can</strong> contain two offerings with same name</p>
+</li>
+<li>
+<p>description - Additional information about the Offering</p>
+</li>
+<li>
+<p>uri - The URI to identify the offering within the USDL</p>
+</li>
+<li>
+<p>describedIn - The description where the offering is contained</p>
+</li>
+<li>
+<p>imageUrl - URL which points to an image that will help to identify the offering more easily</p>
+</li>
+<li>
+<p>acqusitionUrl - URL which points to the Store page where the offering can be acquired</p>
+</li>
+<li>
+<p>views - Number of times which the offering has been viewed</p>
+</li>
+<li>
+<p>averageScore - Based on the reviews made by users</p>
+</li>
+<li>
+<p>describedIn - The description where the offering is described</p>
+</li>
+<li>
+<p>pricePlans - The price plans that can be used to acquire the offerings. Each price plan can contain zero or more price components</p>
+</li>
+<li>
+<p>services - All the services included in the offering</p>
+</li>
+<li>
+<p>categories - Based on the categories of the services included in the offering</p>
+</li>
+</ul>
         
             <section id="resource_listing-all-the-offerings-contained-in-a-description" class="resource">
-                <h3 id="h-resource_listing-all-the-offerings-contained-in-a-description">Listing all the offerings contained in a Description [/api/v2/store/{store_name}/description/{description_name}/offering]</h3>
+                 <div class= "header" ><h3 id="h-resource_listing-all-the-offerings-contained-in-a-description">Listing all the offerings contained in a Description [/api/v2/store/{store_name}/description/{description_name}/offering]</h3> </div>
                 
                 
                 
@@ -3835,7 +3978,8 @@ a REST API. At this point, users will be able to interact with these offerings t
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the description belongs
@@ -3843,7 +3987,8 @@ a REST API. At this point, users will be able to interact with these offerings t
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description whose offerings want to be retrieved
@@ -3933,11 +4078,13 @@ a REST API. At this point, users will be able to interact with these offerings t
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-all-the-offerings-contained-in-a-description_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -3952,20 +4099,22 @@ a REST API. At this point, users will be able to interact with these offerings t
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/listing-all-the-offerings-contained-in-a-description/list-all-the-offerings-contained-in-a-description">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_getting-offering-details" class="resource">
-                <h3 id="h-resource_getting-offering-details">Getting Offering Details [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}]</h3>
+                 <div class= "header" ><h3 id="h-resource_getting-offering-details">Getting Offering Details [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}]</h3> </div>
                 <p>Users can also retrieve details of a specific offering.</p>
                 
                 
@@ -3988,7 +4137,8 @@ a REST API. At this point, users will be able to interact with these offerings t
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the offering belongs
@@ -3996,7 +4146,8 @@ a REST API. At this point, users will be able to interact with these offerings t
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description to which the offering belongs
@@ -4004,10 +4155,11 @@ a REST API. At this point, users will be able to interact with these offerings t
 			</dd>
 		
 			<dt>
-				offering_name (Required, string)
+				offering_name (Required, string
+				)
 			</dt>
 			<dd>
-				The specifig offering to be retrieved
+				The specific offering to be retrieved
 				
 			</dd>
 		
@@ -4094,11 +4246,13 @@ a REST API. At this point, users will be able to interact with these offerings t
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_get-offering-details_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -4113,21 +4267,23 @@ a REST API. At this point, users will be able to interact with these offerings t
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/getting-offering-details/get-offering-details">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_bookmarking-offerings" class="resource">
-                <h3 id="h-resource_bookmarking-offerings">Bookmarking Offerings [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/bookmark]</h3>
-                <p>Users can bookmark offerings so they can access their favourite offerings in a very easy way. This endpoint can be used to both
+                 <div class= "header" ><h3 id="h-resource_bookmarking-offerings">Bookmarking Offerings [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/bookmark]</h3> </div>
+                <p>Users can bookmark offerings so they can access their favourite ones in a very easy way. This endpoint can be used to both
 bookmark and unbookmark a specific offering depending on its previous state: if the offering is already bookmarked, it will be 
 unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
                 
@@ -4151,7 +4307,8 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the offering belongs
@@ -4159,7 +4316,8 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description to which the offering belongs
@@ -4167,10 +4325,11 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
 			</dd>
 		
 			<dt>
-				offering_name (Required, string)
+				offering_name (Required, string
+				)
 			</dt>
 			<dd>
-				The specifig offering to be (un)bookmarked
+				The specific offering to be &#40;un&#41;bookmarked
 				
 			</dd>
 		
@@ -4179,12 +4338,12 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
 
                     
                         
-                            <div id="action_bookmarkunbookmark-an-offering" class="action POST">
+                            <div id="action_bookmark-and-unbookmark-an-offering" class="action POST">
                         
 
                         
-    <h4 id="h-action_bookmarkunbookmark-an-offering">
-        Bookmark/Unbookmark an Offering -
+    <h4 id="h-action_bookmark-and-unbookmark-an-offering">
+        Bookmark and Unbookmark an Offering -
         POST
         
             /api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/bookmark
@@ -4192,7 +4351,7 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
     </h4>
 
         
-                            <div id="bookmarkunbookmark-an-offering_body" class="">
+                            <div id="bookmark-and-unbookmark-an-offering_body" class="">
                                 
                                 
                                 
@@ -4253,11 +4412,13 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
-                                        <a href="#action_bookmarkunbookmark-an-offering_examples">Go to example</a>
+                                        <a href="#action_bookmark-and-unbookmark-an-offering_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -4272,20 +4433,22 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/bookmarking-offerings/bookmarkunbookmark-an-offering">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/bookmarking-offerings/bookmark-and-unbookmark-an-offering">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_getting-bookmarked-offerings" class="resource">
-                <h3 id="h-resource_getting-bookmarked-offerings">Getting Bookmarked Offerings [/api/v2/offering/bookmark{?offset}{?max}{?orderBy}{?desc}]</h3>
+                 <div class= "header" ><h3 id="h-resource_getting-bookmarked-offerings">Getting Bookmarked Offerings [/api/v2/offering/bookmark{?offset}{?max}{?orderBy}{?desc}]</h3> </div>
                 
                 
                 
@@ -4308,7 +4471,8 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -4316,7 +4480,8 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -4324,7 +4489,8 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the offerings
@@ -4332,7 +4498,8 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -4405,11 +4572,13 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_get-bookmarked-offerings_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -4424,20 +4593,22 @@ unbookmarked; if the offerings is not bookmarked, it will be bookmarked.</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/getting-bookmarked-offerings/get-bookmarked-offerings">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
-            <section id="resource_creating-andor-listing-offering-reviews" class="resource">
-                <h3 id="h-resource_creating-andor-listing-offering-reviews">Creating and/or Listing Offering Reviews [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]</h3>
+            <section id="resource_creating-and/or-listing-offering-reviews" class="resource">
+                 <div class= "header" ><h3 id="h-resource_creating-and/or-listing-offering-reviews">Creating and/or Listing Offering Reviews [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]</h3> </div>
                 <p>Offerings, as stores, can be reviewed. One user can only review an offering once. To review an offering,
 the user should send the following fields:</p>
 <ul>
@@ -4469,7 +4640,8 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the offering belongs
@@ -4477,7 +4649,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description to which the offering belongs
@@ -4485,10 +4658,11 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				offering_name (Required, string)
+				offering_name (Required, string
+				)
 			</dt>
 			<dd>
-				The specifig offering to be reviewed
+				The specific offering to be reviewed
 				
 			</dd>
 		
@@ -4615,11 +4789,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_review-an-offering_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -4634,13 +4810,15 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/creating-andor-listing-offering-reviews/review-an-offering">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/creating-and/or-listing-offering-reviews/review-an-offering">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -4668,7 +4846,8 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -4676,7 +4855,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -4684,7 +4864,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the reviews
@@ -4692,7 +4873,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -4700,10 +4882,11 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				detailed (Optional, boolean)
+				detailed (Optional, boolean
+				)
 			</dt>
 			<dd>
-				If true, the user fileds won't contain the user name but all the user's information (email, displayName...)
+				If true, the user fields won't contain the user name but all the user's information &#40;email, displayName...&#41;
 				
 			</dd>
 		
@@ -4768,11 +4951,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-existing-offering-reviews_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -4787,20 +4972,22 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
-                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/creating-andor-listing-offering-reviews/list-existing-offering-reviews">View in Apiary</a>
-            </div>
+            
+                <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/creating-and/or-listing-offering-reviews/list-existing-offering-reviews">View in Apiary</a>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_managing-an-existing-offering-review" class="resource">
-                <h3 id="h-resource_managing-an-existing-offering-review">Managing an existing Offering Review [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review/{review_id}{?detailed}]</h3>
+                 <div class= "header" ><h3 id="h-resource_managing-an-existing-offering-review">Managing an existing Offering Review [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review/{review_id}{?detailed}]</h3> </div>
                 
                 
                 
@@ -4823,7 +5010,8 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the offering belongs
@@ -4831,7 +5019,8 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description to which the offering belongs
@@ -4839,15 +5028,17 @@ the user should send the following fields:</p>
 			</dd>
 		
 			<dt>
-				offering_name (Required, string)
+				offering_name (Required, string
+				)
 			</dt>
 			<dd>
-				The specifig offering whose review has to be managed
+				The specific offering whose review has to be managed
 				
 			</dd>
 		
 			<dt>
-				review_id (Required, int)
+				review_id (Required, int
+				)
 			</dt>
 			<dd>
 				The ID of the review to be managed
@@ -4882,10 +5073,11 @@ the user should send the following fields:</p>
 	<dl>
 		
 			<dt>
-				detailed (Optional, boolean)
+				detailed (Optional, boolean
+				)
 			</dt>
 			<dd>
-				If true, the user filed won't contain the user name but all the user's information (email, displayName...)
+				If true, the user filed won't contain the user name but all the user's information &#40;email, displayName...&#41;
 				
 			</dd>
 		
@@ -4950,11 +5142,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_get-review-details_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -4969,13 +5163,15 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/managing-an-existing-offering-review/get-review-details">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -5092,11 +5288,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_update-an-existing-offering-review_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -5111,13 +5309,15 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/managing-an-existing-offering-review/update-an-existing-offering-review">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -5196,11 +5396,13 @@ the user should send the following fields:</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_delete-an-existing-offering-review_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -5215,20 +5417,22 @@ the user should send the following fields:</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/managing-an-existing-offering-review/delete-an-existing-offering-review">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_listing-all-the-offerings" class="resource">
-                <h3 id="h-resource_listing-all-the-offerings">Listing all the Offerings [/api/v2/offering{?offset}{?max}{?orderBy}{?desc}]</h3>
+                 <div class= "header" ><h3 id="h-resource_listing-all-the-offerings">Listing all the Offerings [/api/v2/offering{?offset}{?max}{?orderBy}{?desc}]</h3> </div>
                 <p>In some cases, users can be interested in retrieving all the offerings which have been registered into the MaketPlace without
 taking into account the store and/or the description used to register these offerings. </p>
                 
@@ -5252,7 +5456,8 @@ taking into account the store and/or the description used to register these offe
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -5260,7 +5465,8 @@ taking into account the store and/or the description used to register these offe
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -5268,7 +5474,8 @@ taking into account the store and/or the description used to register these offe
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the offerings
@@ -5276,7 +5483,8 @@ taking into account the store and/or the description used to register these offe
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -5349,11 +5557,13 @@ taking into account the store and/or the description used to register these offe
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-all-the-offerings_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -5368,20 +5578,22 @@ taking into account the store and/or the description used to register these offe
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/listing-all-the-offerings/list-all-the-offerings">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_listing-viewed-offerings" class="resource">
-                <h3 id="h-resource_listing-viewed-offerings">Listing Viewed Offerings [/api/v2/offering/lastViewed{?offset}{?max}{?orderBy}{?desc}]</h3>
+                 <div class= "header" ><h3 id="h-resource_listing-viewed-offerings">Listing Viewed Offerings [/api/v2/offering/lastViewed{?offset}{?max}{?orderBy}{?desc}]</h3> </div>
                 <p>The system register the last 10 offerings viewed by each user and these offerings can be retrieved using an API.</p>
                 
                 
@@ -5404,7 +5616,8 @@ taking into account the store and/or the description used to register these offe
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -5412,7 +5625,8 @@ taking into account the store and/or the description used to register these offe
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -5420,7 +5634,8 @@ taking into account the store and/or the description used to register these offe
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the offerings
@@ -5428,7 +5643,8 @@ taking into account the store and/or the description used to register these offe
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -5501,11 +5717,13 @@ taking into account the store and/or the description used to register these offe
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-last-viewed-offerings_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -5520,20 +5738,22 @@ taking into account the store and/or the description used to register these offe
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/listing-viewed-offerings/list-last-viewed-offerings">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_listing-what-other-users-are-looking-at-right-now" class="resource">
-                <h3 id="h-resource_listing-what-other-users-are-looking-at-right-now">Listing What Other Users Are Looking At Right Now [/api/v2/offering/viewedByOthers{?max}]</h3>
+                 <div class= "header" ><h3 id="h-resource_listing-what-other-users-are-looking-at-right-now">Listing What Other Users Are Looking At Right Now [/api/v2/offering/viewedByOthers{?max}]</h3> </div>
                 <p>Based on the offerings viewed by other users, the system can return the list of offerings that are trending now
 because there are users are interested in them. This data is anonymized, so other users cannot retrieve the list of
 offerings viewed by a specific user.</p>
@@ -5558,7 +5778,8 @@ offerings viewed by a specific user.</p>
 	<dl>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -5631,11 +5852,13 @@ offerings viewed by a specific user.</p>
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-last-offerings-viewed-by-others_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -5650,13 +5873,15 @@ offerings viewed by a specific user.</p>
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/offerings/listing-what-other-users-are-looking-at-right-now/list-last-offerings-viewed-by-others">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -5669,10 +5894,19 @@ offerings viewed by a specific user.</p>
             <h2 id="h-resource_group_categories">Categories</h2>
         
 	<p>Offerings have some attached categories. The service will allow users to retrieve all the categories that have been created and all the offerings
-that belong to each existing category. Based on this, users can retrieve a list of suggestions for each category according to the reviews made by other users. </p>
+that belong to each existing category. Based on this, users can retrieve a list of suggestions for each category according to the reviews made by other users.</p>
+<p>Each category contains the following information:</p>
+<ul>
+<li>
+<p>displayName: The display name of the category (the one that will be used in the GUI)</p>
+</li>
+<li>
+<p>name: Unique identifier for the category. It is based on the display name</p>
+</li>
+</ul>
         
             <section id="resource_listing-all-the-categories" class="resource">
-                <h3 id="h-resource_listing-all-the-categories">Listing all the Categories [/api/v2/category{?offset}{?max}]</h3>
+                 <div class= "header" ><h3 id="h-resource_listing-all-the-categories">Listing all the Categories [/api/v2/category{?offset}{?max}]</h3> </div>
                 
                 
                 
@@ -5695,7 +5929,8 @@ that belong to each existing category. Based on this, users can retrieve a list 
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -5703,7 +5938,8 @@ that belong to each existing category. Based on this, users can retrieve a list 
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -5776,11 +6012,13 @@ that belong to each existing category. Based on this, users can retrieve a list 
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-all-the-existing-categories_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -5795,20 +6033,22 @@ that belong to each existing category. Based on this, users can retrieve a list 
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/categories/listing-all-the-categories/list-all-the-existing-categories">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
             </section>
         
             <section id="resource_listing-all-the-offerings-that-belong-to-a-category" class="resource">
-                <h3 id="h-resource_listing-all-the-offerings-that-belong-to-a-category">Listing all the Offerings that belong to a Category [/api/v2/category/{category_name}/offering{?offset}{?max}{?orderBy}{?desc}]</h3>
+                 <div class= "header" ><h3 id="h-resource_listing-all-the-offerings-that-belong-to-a-category">Listing all the Offerings that belong to a Category [/api/v2/category/{category_name}/offering{?offset}{?max}{?orderBy}{?desc}]</h3> </div>
                 
                 
                 
@@ -5831,7 +6071,8 @@ that belong to each existing category. Based on this, users can retrieve a list 
 	<dl>
 		
 			<dt>
-				category_name (Required, string)
+				category_name (Required, string
+				)
 			</dt>
 			<dd>
 				The category whose offerings want to be retrieved
@@ -5839,7 +6080,8 @@ that belong to each existing category. Based on this, users can retrieve a list 
 			</dd>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -5847,7 +6089,8 @@ that belong to each existing category. Based on this, users can retrieve a list 
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -5855,7 +6098,8 @@ that belong to each existing category. Based on this, users can retrieve a list 
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the offerings
@@ -5863,7 +6107,8 @@ that belong to each existing category. Based on this, users can retrieve a list 
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -5953,11 +6198,13 @@ that belong to each existing category. Based on this, users can retrieve a list 
 </div>
         	                            
                                     
+                                    
                                     <div class="goExample">
                                         <a href="#action_list-all-the-offerings-that-belong-to-a-category_examples">Go to example</a>
                                     </div>
                                     
                                         
+    <div class="goApiary">
     
         
     
@@ -5972,13 +6219,15 @@ that belong to each existing category. Based on this, users can retrieve a list 
         
     
         
-            <div class="goApiary">
+            
                 <a target="_blank" href="http://docs.fiwaremarketplace.apiary.io/#reference/categories/listing-all-the-offerings-that-belong-to-a-category/list-all-the-offerings-that-belong-to-a-category">View in Apiary</a>
-            </div>
+            
         
     
+    </div>
 
                                     
+                                
                             </div>
                         </div>
                     
@@ -5987,16 +6236,16 @@ that belong to each existing category. Based on this, users can retrieve a list 
     </section>
 
 <section id="examples">
-    <h2>Examples</h2>
+    <div class= "header" ><h2>Examples</h2> </div>
     
         
             <section id="resource_group_users_example" class="resourceGroupExample">
-                <h3 id="h-resource_group_users_example">Users</h3>
+                <div class= "header" ><h3 id="h-resource_group_users_example">Users</h3> </div>
         
 
                 
-                    <section id="resource_creating-andor-listing-users_example" class="resourceExample">
-                        <h4 id="h-resource_creating-andor-listing-users_example">Creating and/or Listing Users [/api/v2/user/{?offset}{?max}]</h4>
+                    <section id="resource_creating-and/or-listing-users_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_creating-and/or-listing-users_example">Creating and/or Listing Users [/api/v2/user/{?offset}{?max}]</h4></div>
                             
                             
                             
@@ -6057,7 +6306,7 @@ that belong to each existing category. Based on this, users can retrieve a list 
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6070,7 +6319,7 @@ Accept: application/json</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "displayName": "Example Display Name",
     "email": "example@example.com",
@@ -6111,7 +6360,7 @@ Accept: application/json</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6153,7 +6402,7 @@ Accept: application/json</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6163,7 +6412,7 @@ Accept: application/json</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "This field must be a valid email.",
@@ -6210,7 +6459,8 @@ Accept: application/json</code></pre>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -6218,7 +6468,8 @@ Accept: application/json</code></pre>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -6255,7 +6506,7 @@ Accept: application/json</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6302,7 +6553,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6312,7 +6563,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "users": [
         {
@@ -6343,7 +6594,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_managing-an-existing-user_example" class="resourceExample">
-                        <h4 id="h-resource_managing-an-existing-user_example">Managing an existing User [/api/v2/user/{user_id}]</h4>
+                         <div class= "header" ><h4 id="h-resource_managing-an-existing-user_example">Managing an existing User [/api/v2/user/{user_id}]</h4></div>
                             
                             
                             
@@ -6358,7 +6609,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				user_id (Required, string)
+				user_id (Required, string
+				)
 			</dt>
 			<dd>
 				ID of the User
@@ -6415,7 +6667,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6462,7 +6714,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6472,7 +6724,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "userName": "aitor",
     "displayName": "Aitor",
@@ -6513,7 +6765,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6523,7 +6775,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "User aitor not found",
@@ -6597,7 +6849,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6613,7 +6865,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "displayName": "Example Display Name",
     "email": "example@example.com",
@@ -6686,7 +6938,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6696,7 +6948,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "This field must be a valid email.",
@@ -6738,7 +6990,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6748,7 +7000,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "You are not authorized to update user aitor",
@@ -6789,7 +7041,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6799,7 +7051,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "User aitor not found",
@@ -6869,7 +7121,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6946,7 +7198,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -6956,7 +7208,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "You are not authorized to delete user aitor",
@@ -6997,7 +7249,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7007,7 +7259,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "User aitor not found",
@@ -7037,12 +7289,12 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
     
         
             <section id="resource_group_stores_example" class="resourceGroupExample">
-                <h3 id="h-resource_group_stores_example">Stores</h3>
+                <div class= "header" ><h3 id="h-resource_group_stores_example">Stores</h3> </div>
         
 
                 
-                    <section id="resource_creating-andor-listing-stores_example" class="resourceExample">
-                        <h4 id="h-resource_creating-andor-listing-stores_example">Creating and/or Listing Stores [/api/v2/store/{?offset}{?max}]</h4>
+                    <section id="resource_creating-and/or-listing-stores_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_creating-and/or-listing-stores_example">Creating and/or Listing Stores [/api/v2/store/{?offset}{?max}]</h4></div>
                             
                             
                             
@@ -7105,7 +7357,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7121,7 +7373,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "displayName": "WStore",
     "url": "http://example.com",
@@ -7162,7 +7414,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7204,7 +7456,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7214,7 +7466,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "field": "name",
@@ -7261,7 +7513,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -7269,7 +7522,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -7306,7 +7560,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7353,7 +7607,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7363,7 +7617,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "stores": [
         {
@@ -7399,7 +7653,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_managing-an-existing-store_example" class="resourceExample">
-                        <h4 id="h-resource_managing-an-existing-store_example">Managing an existing Store [/api/v2/store/{store_name}]</h4>
+                         <div class= "header" ><h4 id="h-resource_managing-an-existing-store_example">Managing an existing Store [/api/v2/store/{store_name}]</h4></div>
                             
                             
                             
@@ -7414,7 +7668,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				ID of the Store
@@ -7471,7 +7726,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7518,7 +7773,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7528,7 +7783,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "averageScore": 3.7,
     "url": "http://example.com",
@@ -7574,7 +7829,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7584,7 +7839,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Store wstore not found",
@@ -7658,7 +7913,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7674,7 +7929,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "displayName": "WStore",
     "url": "http://example.com",
@@ -7747,7 +8002,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7757,7 +8012,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "field": "name",
@@ -7799,7 +8054,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7809,7 +8064,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "You are not authorized to update store wstore",
@@ -7850,7 +8105,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -7860,7 +8115,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Store wstore not found",
@@ -7930,7 +8185,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8007,7 +8262,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8017,7 +8272,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "You are not authorized to delete store wstore",
@@ -8058,7 +8313,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8068,7 +8323,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Store wstore not found",
@@ -8094,8 +8349,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                             
                     </section>
             
-                    <section id="resource_creating-andor-listing-store-reviews_example" class="resourceExample">
-                        <h4 id="h-resource_creating-andor-listing-store-reviews_example">Creating and/or Listing Store Reviews [/api/v2/store/{store_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]</h4>
+                    <section id="resource_creating-and/or-listing-store-reviews_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_creating-and/or-listing-store-reviews_example">Creating and/or Listing Store Reviews [/api/v2/store/{store_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]</h4></div>
                             
                             
                             
@@ -8110,7 +8365,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the store to be reviewed
@@ -8171,7 +8427,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8187,7 +8443,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "score": 5,
     "comment": "Example Comment"
@@ -8226,7 +8482,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8268,7 +8524,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8278,7 +8534,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "field": "score",
@@ -8320,7 +8576,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8330,7 +8586,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "type": "FORBIDDEN",
@@ -8371,7 +8627,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8381,7 +8637,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "type": "NOT_FOUND",
@@ -8427,7 +8683,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -8435,7 +8692,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -8443,7 +8701,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the reviews
@@ -8451,7 +8710,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -8459,10 +8719,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				detailed (Optional, boolean)
+				detailed (Optional, boolean
+				)
 			</dt>
 			<dd>
-				If true, the user fileds won't contain the user name but all the user's information (email, displayName...)
+				If true, the user fields won't contain the user name but all the user's information &#40;email, displayName...&#41;
 				
 			</dd>
 		
@@ -8496,7 +8757,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8543,7 +8804,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8553,7 +8814,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "reviews": [
         {
@@ -8600,7 +8861,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8610,7 +8871,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "type": "NOT_FOUND",
@@ -8637,7 +8898,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_managing-an-existing-store-review_example" class="resourceExample">
-                        <h4 id="h-resource_managing-an-existing-store-review_example">Managing an existing Store Review [/api/v2/store/{store_name}/review/{review_id}{?detailed}]</h4>
+                         <div class= "header" ><h4 id="h-resource_managing-an-existing-store-review_example">Managing an existing Store Review [/api/v2/store/{store_name}/review/{review_id}{?detailed}]</h4></div>
                             
                             
                             
@@ -8652,7 +8913,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the store to which the review belongs
@@ -8660,7 +8922,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				review_id (Required, int)
+				review_id (Required, int
+				)
 			</dt>
 			<dd>
 				The ID of the review to be managed
@@ -8693,10 +8956,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				detailed (Optional, boolean)
+				detailed (Optional, boolean
+				)
 			</dt>
 			<dd>
-				If true, the user filed won't contain the user name but all the user's information (email, displayName...)
+				If true, the user filed won't contain the user name but all the user's information &#40;email, displayName...&#41;
 				
 			</dd>
 		
@@ -8730,7 +8994,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8777,7 +9041,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8787,7 +9051,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "id": 1,
     "score": 5,
@@ -8830,7 +9094,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8840,7 +9104,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Review 0 not found in Store wstore",
@@ -8914,7 +9178,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -8930,7 +9194,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "score": 5,
     "comment": "Example Comment"
@@ -9001,7 +9265,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9011,7 +9275,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "field": "score",
@@ -9053,7 +9317,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9063,7 +9327,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "You are not authorized to update review 0 in Store wstore",
@@ -9104,7 +9368,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9114,7 +9378,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Review 0 not found in Store wstore",
@@ -9184,7 +9448,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9231,7 +9495,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9273,7 +9537,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9283,7 +9547,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Review 0 not found in Store wstore",
@@ -9313,12 +9577,12 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
     
         
             <section id="resource_group_descriptions_example" class="resourceGroupExample">
-                <h3 id="h-resource_group_descriptions_example">Descriptions</h3>
+                <div class= "header" ><h3 id="h-resource_group_descriptions_example">Descriptions</h3> </div>
         
 
                 
-                    <section id="resource_creating-andor-listing-descriptions-in-a-store_example" class="resourceExample">
-                        <h4 id="h-resource_creating-andor-listing-descriptions-in-a-store_example">Creating and/or Listing Descriptions in a Store [/api/v2/store/{store_name}/description/{?offset}{?max}]</h4>
+                    <section id="resource_creating-and/or-listing-descriptions-in-a-store_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_creating-and/or-listing-descriptions-in-a-store_example">Creating and/or Listing Descriptions in a Store [/api/v2/store/{store_name}/description/{?offset}{?max}]</h4></div>
                             
                             
                             
@@ -9333,7 +9597,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store where the description will be created
@@ -9394,7 +9659,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9410,7 +9675,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "displayName": "Offerings1",
     "url": "http://example.com/some.rdf",
@@ -9450,7 +9715,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9492,7 +9757,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9502,7 +9767,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "field": "url",
@@ -9544,7 +9809,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9554,7 +9819,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "type": "NOT_FOUND",
@@ -9600,7 +9865,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -9608,7 +9874,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -9645,7 +9912,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9692,7 +9959,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9702,7 +9969,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "descriptions": [
         {
@@ -9739,7 +10006,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_managing-an-existing-description_example" class="resourceExample">
-                        <h4 id="h-resource_managing-an-existing-description_example">Managing an existing Description [/api/v2/store/{store_name}/description/{description_name}]</h4>
+                         <div class= "header" ><h4 id="h-resource_managing-an-existing-description_example">Managing an existing Description [/api/v2/store/{store_name}/description/{description_name}]</h4></div>
                             
                             
                             
@@ -9754,7 +10021,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the description belongs
@@ -9762,7 +10030,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description to be managed
@@ -9819,7 +10088,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9866,7 +10135,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9876,7 +10145,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "id": 5,
     "url": "http://example.com/some.rdf",
@@ -9923,7 +10192,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -9933,7 +10202,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Description offerings1 not found",
@@ -10007,7 +10276,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10023,7 +10292,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "displayName": "Offerings1",
     "url": "http://example.com/some.rdf",
@@ -10095,7 +10364,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10105,7 +10374,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "field": "url",
@@ -10147,7 +10416,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10157,7 +10426,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "You are not authorized to update description offerings1",
@@ -10198,7 +10467,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10208,7 +10477,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Description offerings1 not found in Store wstore",
@@ -10278,7 +10547,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10355,7 +10624,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10365,7 +10634,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "You are not authorized to delete description offerings1",
@@ -10406,7 +10675,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10416,7 +10685,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Description offerings1 not found in Store wstore",
@@ -10443,7 +10712,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_listing-all-the-descriptions_example" class="resourceExample">
-                        <h4 id="h-resource_listing-all-the-descriptions_example">Listing all the Descriptions [/api/v2/description{?offset}{?max}]</h4>
+                         <div class= "header" ><h4 id="h-resource_listing-all-the-descriptions_example">Listing all the Descriptions [/api/v2/description{?offset}{?max}]</h4></div>
                             
                             
                             
@@ -10458,7 +10727,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -10466,7 +10736,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -10523,7 +10794,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10570,7 +10841,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10580,7 +10851,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "descriptions": [
         {
@@ -10620,12 +10891,12 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
     
         
             <section id="resource_group_offerings_example" class="resourceGroupExample">
-                <h3 id="h-resource_group_offerings_example">Offerings</h3>
+                <div class= "header" ><h3 id="h-resource_group_offerings_example">Offerings</h3> </div>
         
 
                 
                     <section id="resource_listing-all-the-offerings-contained-in-a-description_example" class="resourceExample">
-                        <h4 id="h-resource_listing-all-the-offerings-contained-in-a-description_example">Listing all the offerings contained in a Description [/api/v2/store/{store_name}/description/{description_name}/offering]</h4>
+                         <div class= "header" ><h4 id="h-resource_listing-all-the-offerings-contained-in-a-description_example">Listing all the offerings contained in a Description [/api/v2/store/{store_name}/description/{description_name}/offering]</h4></div>
                             
                             
                             
@@ -10640,7 +10911,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the description belongs
@@ -10648,7 +10920,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description whose offerings want to be retrieved
@@ -10705,7 +10978,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10752,7 +11025,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10762,7 +11035,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "offerings": [
         {
@@ -10777,15 +11050,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 "store": "wstore"
             },
             "imageUrl": "IMAGE_URL",
+            "acquisitionUrl": "ACQUISITION_URL",
             "views": 1,
             "pricePlans": [],
             "services": [],
-            "categories": [
-                {
-                    "name": "wirecloud-component",
-                    "displayName": "WireCloud Component"
-                }
-            ]
+            "categories": []
         }
     ]
 }
@@ -10823,7 +11092,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10833,7 +11102,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Description offerings1 not found in Store wstore",
@@ -10860,7 +11129,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_getting-offering-details_example" class="resourceExample">
-                        <h4 id="h-resource_getting-offering-details_example">Getting Offering Details [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}]</h4>
+                         <div class= "header" ><h4 id="h-resource_getting-offering-details_example">Getting Offering Details [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}]</h4></div>
                             
                             
                             
@@ -10875,7 +11144,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the offering belongs
@@ -10883,7 +11153,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description to which the offering belongs
@@ -10891,10 +11162,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				offering_name (Required, string)
+				offering_name (Required, string
+				)
 			</dt>
 			<dd>
-				The specifig offering to be retrieved
+				The specific offering to be retrieved
 				
 			</dd>
 		
@@ -10948,7 +11220,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -10995,7 +11267,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11005,7 +11277,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "averageScore": 0,
     "name": "offering1",
@@ -11018,13 +11290,39 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
         "store": "wstore"
     },
     "imageUrl": "IMAGE_URL",
+    "acquisitionUrl": "ACQUISITION_URL",
     "views": 1,
-    "pricePlans": [],
-    "services": [],
+    "pricePlans": [
+        {
+            "title": "Price Plan Title",
+            "comment": "Price Plan Comment",
+            "priceComponents": [
+                {
+                    "title": "Price Component Title",
+                    "comment": "Price Component Comment",
+                    "value": 8,
+                    "currency": "Price Component Currency",
+                    "unit": "Price Component Unit"
+                }
+            ]
+        }
+    ],
+    "services": [
+        {
+            "displayName": "Service Name",
+            "comment": "Service Description",
+            "categories": [
+                {
+                    "name": "category-name",
+                    "displayName": "Category Name"
+                }
+            ]
+        }
+    ],
     "categories": [
         {
-            "name": "wirecloud-component",
-            "displayName": "WireCloud Component"
+            "name": "category-name",
+            "displayName": "Category Name"
         }
     ]
 }
@@ -11062,7 +11360,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11072,7 +11370,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Offering offering1 not found in description offerings1 (Store: wstore)",
@@ -11099,7 +11397,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_bookmarking-offerings_example" class="resourceExample">
-                        <h4 id="h-resource_bookmarking-offerings_example">Bookmarking Offerings [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/bookmark]</h4>
+                         <div class= "header" ><h4 id="h-resource_bookmarking-offerings_example">Bookmarking Offerings [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/bookmark]</h4></div>
                             
                             
                             
@@ -11114,7 +11412,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the offering belongs
@@ -11122,7 +11421,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description to which the offering belongs
@@ -11130,10 +11430,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				offering_name (Required, string)
+				offering_name (Required, string
+				)
 			</dt>
 			<dd>
-				The specifig offering to be (un)bookmarked
+				The specific offering to be &#40;un&#41;bookmarked
 				
 			</dd>
 		
@@ -11141,11 +11442,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 
                             
-                                <div id="action_bookmarkunbookmark-an-offering_examples" class="actionExample POST">
+                                <div id="action_bookmark-and-unbookmark-an-offering_examples" class="actionExample POST">
 
                                     
-    <h4 id="h-action_bookmarkunbookmark-an-offering_examples">
-        Bookmark/Unbookmark an Offering -
+    <h4 id="h-action_bookmark-and-unbookmark-an-offering_examples">
+        Bookmark and Unbookmark an Offering -
         POST
         
             /api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/bookmark
@@ -11153,7 +11454,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
     </h4>
 
                 
-                                    <div id="action_bookmarkunbookmark-an-offering_body" class=""> 
+                                    <div id="action_bookmark-and-unbookmark-an-offering_body" class=""> 
                                         
                                         
                                         
@@ -11183,11 +11484,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 
  
-            <div id="action_bookmarkunbookmark-an-offering_Request_1_body" class=" action-div-body">
+            <div id="action_bookmark-and-unbookmark-an-offering_Request_1_body" class=" action-div-body">
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11226,7 +11527,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 
  
-            <div id="action_bookmarkunbookmark-an-offering_Response_1_body" class=" action-div-body">
+            <div id="action_bookmark-and-unbookmark-an-offering_Response_1_body" class=" action-div-body">
                 <p></p>
 
                 
@@ -11260,11 +11561,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 
 
  
-            <div id="action_bookmarkunbookmark-an-offering_Response_2_body" class=" action-div-body">
+            <div id="action_bookmark-and-unbookmark-an-offering_Response_2_body" class=" action-div-body">
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11274,7 +11575,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Offering offering1 not found in description offerings1 (Store: wstore)",
@@ -11293,7 +11594,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                                                 
                                             
                                             <div class="goActions">
-                                                <a href="#action_bookmarkunbookmark-an-offering">Go to specification</a>
+                                                <a href="#action_bookmark-and-unbookmark-an-offering">Go to specification</a>
                                             </div>
                                     </div>
                                 </div>
@@ -11301,7 +11602,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_getting-bookmarked-offerings_example" class="resourceExample">
-                        <h4 id="h-resource_getting-bookmarked-offerings_example">Getting Bookmarked Offerings [/api/v2/offering/bookmark{?offset}{?max}{?orderBy}{?desc}]</h4>
+                         <div class= "header" ><h4 id="h-resource_getting-bookmarked-offerings_example">Getting Bookmarked Offerings [/api/v2/offering/bookmark{?offset}{?max}{?orderBy}{?desc}]</h4></div>
                             
                             
                             
@@ -11316,7 +11617,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -11324,7 +11626,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -11332,7 +11635,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the offerings
@@ -11340,7 +11644,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -11397,7 +11702,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11444,7 +11749,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11454,7 +11759,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "offerings": [
         {
@@ -11469,15 +11774,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 "store": "wstore"
             },
             "imageUrl": "IMAGE_URL",
+            "acquisitionUrl": "ACQUISITION_URL",
             "views": 1,
             "pricePlans": [],
             "services": [],
-            "categories": [
-                {
-                    "name": "wirecloud-component",
-                    "displayName": "WireCloud Component"
-                }
-            ]
+            "categories": []
         }
     ]
 }
@@ -11500,8 +11801,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                             
                     </section>
             
-                    <section id="resource_creating-andor-listing-offering-reviews_example" class="resourceExample">
-                        <h4 id="h-resource_creating-andor-listing-offering-reviews_example">Creating and/or Listing Offering Reviews [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]</h4>
+                    <section id="resource_creating-and/or-listing-offering-reviews_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_creating-and/or-listing-offering-reviews_example">Creating and/or Listing Offering Reviews [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]</h4></div>
                             
                             
                             
@@ -11516,7 +11817,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the offering belongs
@@ -11524,7 +11826,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description to which the offering belongs
@@ -11532,10 +11835,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				offering_name (Required, string)
+				offering_name (Required, string
+				)
 			</dt>
 			<dd>
-				The specifig offering to be reviewed
+				The specific offering to be reviewed
 				
 			</dd>
 		
@@ -11593,7 +11897,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11609,7 +11913,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "score": 5,
     "comment": "Example Comment"
@@ -11652,7 +11956,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11697,7 +12001,7 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11707,7 +12011,7 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "field": "score",
@@ -11749,7 +12053,7 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11759,7 +12063,7 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "type": "FORBIDDEN",
@@ -11800,7 +12104,7 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11810,7 +12114,7 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "type": "NOT_FOUND",
@@ -11856,7 +12160,8 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -11864,7 +12169,8 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -11872,7 +12178,8 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the reviews
@@ -11880,7 +12187,8 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -11888,10 +12196,11 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
 			</dd>
 		
 			<dt>
-				detailed (Optional, boolean)
+				detailed (Optional, boolean
+				)
 			</dt>
 			<dd>
-				If true, the user fileds won't contain the user name but all the user's information (email, displayName...)
+				If true, the user fields won't contain the user name but all the user's information &#40;email, displayName...&#41;
 				
 			</dd>
 		
@@ -11925,7 +12234,7 @@ Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/descriptio
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11972,7 +12281,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -11982,7 +12291,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "reviews": [
         {
@@ -12029,7 +12338,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12039,7 +12348,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "type": "NOT_FOUND",
@@ -12066,7 +12375,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_managing-an-existing-offering-review_example" class="resourceExample">
-                        <h4 id="h-resource_managing-an-existing-offering-review_example">Managing an existing Offering Review [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review/{review_id}{?detailed}]</h4>
+                         <div class= "header" ><h4 id="h-resource_managing-an-existing-offering-review_example">Managing an existing Offering Review [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review/{review_id}{?detailed}]</h4></div>
                             
                             
                             
@@ -12081,7 +12390,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				store_name (Required, string)
+				store_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the Store to which the offering belongs
@@ -12089,7 +12399,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				description_name (Required, string)
+				description_name (Required, string
+				)
 			</dt>
 			<dd>
 				The ID of the description to which the offering belongs
@@ -12097,15 +12408,17 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				offering_name (Required, string)
+				offering_name (Required, string
+				)
 			</dt>
 			<dd>
-				The specifig offering whose review has to be managed
+				The specific offering whose review has to be managed
 				
 			</dd>
 		
 			<dt>
-				review_id (Required, int)
+				review_id (Required, int
+				)
 			</dt>
 			<dd>
 				The ID of the review to be managed
@@ -12138,10 +12451,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				detailed (Optional, boolean)
+				detailed (Optional, boolean
+				)
 			</dt>
 			<dd>
-				If true, the user filed won't contain the user name but all the user's information (email, displayName...)
+				If true, the user filed won't contain the user name but all the user's information &#40;email, displayName...&#41;
 				
 			</dd>
 		
@@ -12175,7 +12489,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12222,7 +12536,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12232,7 +12546,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "id": 1,
     "score": 5,
@@ -12275,7 +12589,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12285,7 +12599,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Review 0 not found in Offering offering1 (Description: offerings1, Store: wstore)",
@@ -12359,7 +12673,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12375,7 +12689,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "score": 5,
     "comment": "Example Comment"
@@ -12446,7 +12760,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12456,7 +12770,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "field": "score",
@@ -12498,7 +12812,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12508,7 +12822,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "You are not authorized to update review 0 in Offering offering1 (Description: offerings1, Store: wstore)",
@@ -12549,7 +12863,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12559,7 +12873,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Review 0 not found in Offering offering1 (Description: offerings1, Store: wstore)",
@@ -12629,7 +12943,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12706,7 +13020,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12716,7 +13030,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Review 0 not found in Offering offering1 (Description: offerings1, Store: wstore)",
@@ -12743,7 +13057,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_listing-all-the-offerings_example" class="resourceExample">
-                        <h4 id="h-resource_listing-all-the-offerings_example">Listing all the Offerings [/api/v2/offering{?offset}{?max}{?orderBy}{?desc}]</h4>
+                         <div class= "header" ><h4 id="h-resource_listing-all-the-offerings_example">Listing all the Offerings [/api/v2/offering{?offset}{?max}{?orderBy}{?desc}]</h4></div>
                             
                             
                             
@@ -12758,7 +13072,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -12766,7 +13081,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -12774,7 +13090,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the offerings
@@ -12782,7 +13099,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -12839,7 +13157,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12886,7 +13204,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -12896,7 +13214,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "offerings": [
         {
@@ -12911,15 +13229,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 "store": "wstore"
             },
             "imageUrl": "IMAGE_URL",
+            "acquisitionUrl": "ACQUISITION_URL",
             "views": 1,
             "pricePlans": [],
             "services": [],
-            "categories": [
-                {
-                    "name": "wirecloud-component",
-                    "displayName": "WireCloud Component"
-                }
-            ]
+            "categories": []
         }
     ]
 }
@@ -12943,7 +13257,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_listing-viewed-offerings_example" class="resourceExample">
-                        <h4 id="h-resource_listing-viewed-offerings_example">Listing Viewed Offerings [/api/v2/offering/lastViewed{?offset}{?max}{?orderBy}{?desc}]</h4>
+                         <div class= "header" ><h4 id="h-resource_listing-viewed-offerings_example">Listing Viewed Offerings [/api/v2/offering/lastViewed{?offset}{?max}{?orderBy}{?desc}]</h4></div>
                             
                             
                             
@@ -12958,7 +13272,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -12966,7 +13281,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -12974,7 +13290,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the offerings
@@ -12982,7 +13299,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -13039,7 +13357,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -13086,7 +13404,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -13096,7 +13414,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "offerings": [
         {
@@ -13111,15 +13429,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 "store": "wstore"
             },
             "imageUrl": "IMAGE_URL",
+            "acquisitionUrl": "ACQUISITION_URL",
             "views": 1,
             "pricePlans": [],
             "services": [],
-            "categories": [
-                {
-                    "name": "wirecloud-component",
-                    "displayName": "WireCloud Component"
-                }
-            ]
+            "categories": []
         }
     ]
 }
@@ -13143,7 +13457,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_listing-what-other-users-are-looking-at-right-now_example" class="resourceExample">
-                        <h4 id="h-resource_listing-what-other-users-are-looking-at-right-now_example">Listing What Other Users Are Looking At Right Now [/api/v2/offering/viewedByOthers{?max}]</h4>
+                         <div class= "header" ><h4 id="h-resource_listing-what-other-users-are-looking-at-right-now_example">Listing What Other Users Are Looking At Right Now [/api/v2/offering/viewedByOthers{?max}]</h4></div>
                             
                             
                             
@@ -13158,7 +13472,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -13215,7 +13530,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -13262,7 +13577,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -13272,7 +13587,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "offerings": [
         {
@@ -13287,15 +13602,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 "store": "wstore"
             },
             "imageUrl": "IMAGE_URL",
+            "acquisitionUrl": "ACQUISITION_URL",
             "views": 1,
             "pricePlans": [],
             "services": [],
-            "categories": [
-                {
-                    "name": "wirecloud-component",
-                    "displayName": "WireCloud Component"
-                }
-            ]
+            "categories": []
         }
     ]
 }
@@ -13322,12 +13633,12 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
     
         
             <section id="resource_group_categories_example" class="resourceGroupExample">
-                <h3 id="h-resource_group_categories_example">Categories</h3>
+                <div class= "header" ><h3 id="h-resource_group_categories_example">Categories</h3> </div>
         
 
                 
                     <section id="resource_listing-all-the-categories_example" class="resourceExample">
-                        <h4 id="h-resource_listing-all-the-categories_example">Listing all the Categories [/api/v2/category{?offset}{?max}]</h4>
+                         <div class= "header" ><h4 id="h-resource_listing-all-the-categories_example">Listing all the Categories [/api/v2/category{?offset}{?max}]</h4></div>
                             
                             
                             
@@ -13342,7 +13653,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -13350,7 +13662,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -13407,7 +13720,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -13454,7 +13767,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -13464,7 +13777,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "categories": [
         {
@@ -13493,7 +13806,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                     </section>
             
                     <section id="resource_listing-all-the-offerings-that-belong-to-a-category_example" class="resourceExample">
-                        <h4 id="h-resource_listing-all-the-offerings-that-belong-to-a-category_example">Listing all the Offerings that belong to a Category [/api/v2/category/{category_name}/offering{?offset}{?max}{?orderBy}{?desc}]</h4>
+                         <div class= "header" ><h4 id="h-resource_listing-all-the-offerings-that-belong-to-a-category_example">Listing all the Offerings that belong to a Category [/api/v2/category/{category_name}/offering{?offset}{?max}{?orderBy}{?desc}]</h4></div>
                             
                             
                             
@@ -13508,7 +13821,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 	<dl>
 		
 			<dt>
-				category_name (Required, string)
+				category_name (Required, string
+				)
 			</dt>
 			<dd>
 				The category whose offerings want to be retrieved
@@ -13516,7 +13830,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				offset (Optional, int)
+				offset (Optional, int
+				)
 			</dt>
 			<dd>
 				The first element to be retrieved
@@ -13524,7 +13839,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				max (Optional, int)
+				max (Optional, int
+				)
 			</dt>
 			<dd>
 				The number of elements to be retrieved
@@ -13532,7 +13848,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				orderBy (Optional, string)
+				orderBy (Optional, string
+				)
 			</dt>
 			<dd>
 				Order used to retrieve the offerings
@@ -13540,7 +13857,8 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
 			</dd>
 		
 			<dt>
-				desc (Optional, boolean)
+				desc (Optional, boolean
+				)
 			</dt>
 			<dd>
 				Use descending order
@@ -13597,7 +13915,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -13644,7 +13962,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -13654,7 +13972,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "offerings": [
         {
@@ -13669,15 +13987,11 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 "store": "wstore"
             },
             "imageUrl": "IMAGE_URL",
+            "acquisitionUrl": "ACQUISITION_URL",
             "views": 1,
             "pricePlans": [],
             "services": [],
-            "categories": [
-                {
-                    "name": "dataset",
-                    "displayName": "Dataset"
-                }
-            ]
+            "categories": []
         }
     ]
 }
@@ -13715,7 +14029,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 <p></p>
 
                 
-        	        <p>Headers</p>
+        	         <div class= "header"><p>Headers</p></div>
                     
                     
                         
@@ -13725,7 +14039,7 @@ Authorization: Bearer YOUR_OAUTH2_TOKEN</code></pre>
                 
 
                 
-                    <p>Body</p>
+                    <div class= "header"><p>Body</p></div>
                     <pre><code>{
     "error": {
         "message": "Category dataset not found",
