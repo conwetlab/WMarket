@@ -77,7 +77,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	private final static String MESSAGE_NAME_IN_USE = "This name is already in use in this Store.";
 	private final static String MESSAGE_URL_IN_USE = "This URL is already in use in this Store.";
-	private final static String MESSAGE_INVALID_RDF = "Your RDF could not be parsed.";
+	private final static String MESSAGE_INVALID_RDF = "Your RDF could not be parsed";
 	private final static String MESSAGE_DESCRIPTION_NOT_FOUND = "Description %s not found in Store %s";
 
 	@Before

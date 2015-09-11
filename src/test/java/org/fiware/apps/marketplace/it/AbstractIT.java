@@ -294,7 +294,7 @@ public abstract class AbstractIT {
 				
 		APIError error = response.readEntity(APIError.class);
 		assertThat(error.getField()).isEqualTo(field);
-		assertThat(error.getErrorMessage()).isEqualTo(message);
+		assertThat(error.getErrorMessage()).contains(message);
 		assertThat(error.getErrorType()).isEqualTo(errorType);
 
 	}
