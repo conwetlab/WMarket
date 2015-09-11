@@ -85,14 +85,16 @@ public class PricePlan {
 	 */
 	public PricePlan(Map<String, List<Object>> rawPricePlan, Offering offering) throws ParseException {
 		
-		if (rawPricePlan.get("title").isEmpty()) {
+		List<Object> titles = rawPricePlan.get("title");
+		String title = (titles == null || titles.isEmpty()) ? "" : (String) titles.get(0);
+		if (title.isEmpty()) {
 			throw new ParseException("Offering " + offering.getDisplayName() + 
 					" contains a price plan without title");
 		}
 		
-		this.title = (String) rawPricePlan.get("title").get(0);
+		this.title = title;
 		List<Object> ppDescriptions = rawPricePlan.get("description");
-		this.comment = ppDescriptions.size() == 1 ? (String) ppDescriptions.get(0) : "";
+		this.comment = (ppDescriptions != null && ppDescriptions.size() == 1) ? (String) ppDescriptions.get(0) : "";
 		this.offering = offering;
 		this.priceComponents = new HashSet<>();
 	}

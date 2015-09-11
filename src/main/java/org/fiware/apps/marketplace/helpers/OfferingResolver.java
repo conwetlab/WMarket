@@ -144,7 +144,7 @@ public class OfferingResolver {
 	 * @param offeringUri The offering whose price plans want to be retrieved
 	 * @return The list of price plans URIs associated with the offering
 	 */
-	private List<Map<String, List<Object>>> getPricePlan(RdfHelper rdfHelper, String offeringUri) {
+	private List<Map<String, List<Object>>> getPricePlans(RdfHelper rdfHelper, String offeringUri) {
 		return rdfHelper.getBlankNodesProperties(offeringUri, "usdl:hasPricePlan");
 	}
 
@@ -169,7 +169,7 @@ public class OfferingResolver {
 		String name = rdfHelper.getLiteral(entityUri, "dcterms:title");
 		
 		if (name == null || name.isEmpty()) {
-			throw new ParseException("Name for entity " + entityUri + " cannot be retrieved.");
+			throw new ParseException("Name for entity " + cleanRdfUrl(entityUri) + " cannot be retrieved");
 		} else {
 			return name;
 		}
@@ -230,7 +230,7 @@ public class OfferingResolver {
 		String acquisitionUrl =  cleanRdfUrl(rdfHelper.getObjectUri(offeringUri, "gr:availableDeliveryMethods"));
 		
 		if (acquisitionUrl == null || acquisitionUrl.isEmpty()) {
-			throw new ParseException(generateExceptionMessage(rdfHelper, offeringUri, "Acquisiton URL"));
+			throw new ParseException(generateExceptionMessage(rdfHelper, offeringUri, "Acquisition URL"));
 		} else {
 			return acquisitionUrl;
 		}
@@ -368,11 +368,9 @@ public class OfferingResolver {
 	 * Returns all offerings contained in the description given
 	 * @param description The description that contains the offerings
 	 * @return All the offerings contained in the description
-	 * @throws ValidationException If there was an error parsing the contained URL
-	 * @throws IOException If the model cannot be read
+	 * @throws ParseException When the model cannot be parsed for any reason
 	 */
-	public List<Offering> resolveOfferingsFromServiceDescription(Description description) throws IOException,
-			ParseException {
+	public List<Offering> resolveOfferingsFromServiceDescription(Description description) throws ParseException {
 
 		try {
 
@@ -411,7 +409,7 @@ public class OfferingResolver {
 				//////////////////////////////////////////////////////////////
 				// PRICE PLANS (offerings contain zero or more price plans) //
 				//////////////////////////////////////////////////////////////
-				List<Map<String, List<Object>>> rawPricePlans = getPricePlan(rdfHelper, offeringUri);
+				List<Map<String, List<Object>>> rawPricePlans = getPricePlans(rdfHelper, offeringUri);
 				Set<PricePlan> pricePlans = new HashSet<>();
 
 				for (Map<String, List<Object>> rawPricePlan: rawPricePlans) {

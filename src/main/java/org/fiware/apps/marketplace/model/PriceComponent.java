@@ -83,46 +83,66 @@ public class PriceComponent {
 	public PriceComponent(Map<String, List<Object>> rawPriceComponent, PricePlan pricePlan) throws ParseException {
 		
 		// Check Price Component properties
-		List<Object> priceComponentLabels = rawPriceComponent.get("label");
-		if (priceComponentLabels == null || priceComponentLabels.isEmpty()) {
+		String label = getFirstStringFromObjectList(rawPriceComponent.get("label"));
+		if (label.isEmpty()) {
 			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + 
-					" contains a Price Component without title");
+					" contains a price component without title");
 		}
 		
 		List<Object> rawPriceSpecifications = rawPriceComponent.get("hasPrice");
 		if (rawPriceSpecifications == null || rawPriceSpecifications.isEmpty()) {
 			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + 
-					" contains a Price Component without price specification");
+					" contains a price component without price specification");
 		}
 		
 		@SuppressWarnings("unchecked")
 		Map<String, List<Object>> rawPriceSpecification = (Map<String, List<Object>>) rawPriceSpecifications.get(0);
 
 		// Check price specification
-		if (rawPriceSpecification.get("hasCurrency").isEmpty()) {
+		String currency = getFirstStringFromObjectList(rawPriceSpecification.get("hasCurrency"));
+		if (currency.isEmpty()) {
 			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + 
-					" contains a Price Component without currency");
+					" contains a price component without currency");
 		}
 		
-		if (rawPriceSpecification.get("hasUnitOfMeasurement").isEmpty()) {
+		String unit = getFirstStringFromObjectList(rawPriceSpecification.get("hasUnitOfMeasurement"));
+		if (unit.isEmpty()) {
 			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + 
-					" contains a Price Component without unit of measurement");
+					" contains a price component without unit of measurement");
 		}
 		
-		if (rawPriceSpecification.get("hasCurrencyValue").isEmpty()) {
+		String value = getFirstStringFromObjectList(rawPriceSpecification.get("hasCurrencyValue"));
+		if (value.isEmpty()) {
 			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + 
-					" contains a Price Component without value");
+					" contains a price component without value");
 		}
 		
 		this.pricePlan = pricePlan;
-		this.title = (String) rawPriceComponent.get("label").get(0);
+		this.title = label;
 		List<Object> pcDescriptions = rawPriceComponent.get("description");
-		this.comment = pcDescriptions.size() == 1 ? (String) pcDescriptions.get(0) : "";
+		this.comment = (pcDescriptions != null && pcDescriptions.size() == 1) ? (String) pcDescriptions.get(0) : "";
 		
 		// Complete price component
-		this.currency = (String) rawPriceSpecification.get("hasCurrency").get(0);
-		this.unit = (String) rawPriceSpecification.get("hasUnitOfMeasurement").get(0);
-		this.value = Float.parseFloat((String) rawPriceSpecification.get("hasCurrencyValue").get(0));
+		this.currency = currency;
+		this.unit = unit;
+		
+		// Get value in float
+		try {
+			this.value = Float.parseFloat(value);
+		} catch(NumberFormatException ex) {
+			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + " contains a price "
+					+ "component with an invalid currency value");
+		}
+		
+	}
+	
+	/**
+	 * Returns the first element of a list of objects as string. 
+	 * @param list The list of objects
+	 * @return The first element as String. If the list is empty or null, an empty string is returned
+	 */
+	private static String getFirstStringFromObjectList(List<Object> list) {
+		return (list == null || list.isEmpty()) ? "" : (String) list.get(0);
 	}
 	
 	@Id

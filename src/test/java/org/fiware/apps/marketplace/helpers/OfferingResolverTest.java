@@ -35,7 +35,9 @@ package org.fiware.apps.marketplace.helpers;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,6 +49,7 @@ import java.util.Set;
 import org.fiware.apps.marketplace.bo.CategoryBo;
 import org.fiware.apps.marketplace.bo.ServiceBo;
 import org.fiware.apps.marketplace.exceptions.CategoryNotFoundException;
+import org.fiware.apps.marketplace.exceptions.ParseException;
 import org.fiware.apps.marketplace.exceptions.ServiceNotFoundException;
 import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Description;
@@ -60,6 +63,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import com.hp.hpl.jena.shared.JenaException;
 
 public class OfferingResolverTest {
 
@@ -168,19 +173,30 @@ public class OfferingResolverTest {
 				"<" + acquisitionUrl + ">");
 
 	}
+	
+	private void addPricePlanToMap(String offeringUri, Map<String, List<Object>> pricePlan) {
+		
+		String contextOfferingUri = "<" + offeringUri + ">";
+		List<Map<String, List<Object>>> offeringPricePlans = rdfHelperMock.getBlankNodesProperties(
+				contextOfferingUri, "usdl:hasPricePlan");
+		
+		// Initialize pricePlansUris (in case they are not) and add the new URI...
+		offeringPricePlans = offeringPricePlans == null ? 
+				new ArrayList<Map<String, List<Object>>>() : offeringPricePlans;
+
+		// Include the price plan
+		offeringPricePlans.add(pricePlan);
+		
+		when(rdfHelperMock.getBlankNodesProperties(contextOfferingUri, "usdl:hasPricePlan"))
+			.thenReturn(offeringPricePlans);
+
+		
+	}
 
 	private void initPricePlan(String offeringUri, String title, String description, 
 			List<PriceComponent> priceComponents) {
 
 		String priceComponentPredicate = "hasPriceComponent";
-		String contextOfferingUri = "<" + offeringUri + ">";
-		List<Map<String, List<Object>>> offeringPricePlans = rdfHelperMock.getBlankNodesProperties(
-				contextOfferingUri, "usdl:hasPricePlan");
-
-		
-		// Initialize pricePlansUris (in case they are not) and add the new URI...
-		offeringPricePlans = offeringPricePlans == null ? 
-				new ArrayList<Map<String, List<Object>>>() : offeringPricePlans;
 		
 		// Include price plan
 		List<Object> titles = new ArrayList<>();
@@ -232,11 +248,7 @@ public class OfferingResolverTest {
 			pricePlan.get(priceComponentPredicate).add(priceComponentMap);
 		}
 		
-		offeringPricePlans.add(pricePlan);
-		
-		// Update mock
-		when(rdfHelperMock.getBlankNodesProperties(contextOfferingUri, "usdl:hasPricePlan"))
-				.thenReturn(offeringPricePlans);
+		addPricePlanToMap(offeringUri, pricePlan);
 	}
 	
 	private void initPricePlan(String offeringUri, String title, String description) {
@@ -601,6 +613,324 @@ public class OfferingResolverTest {
 
 		testOfferingWithTwoClassifications(classifications, true);
 	}
+	
+	private void testException(Exception exception, String expectedMessage) {
+		// Configure mock
+		try {
+			doThrow(exception).when(offeringResolver).getRdfHelper(any(Description.class));
+		} catch (Exception ex) {
+			// Nothing to do...
+		}
+		
+		// Call the function
+		try {
+			Description description = mock(Description.class);
+			offeringResolver.resolveOfferingsFromServiceDescription(description);
+		} catch (ParseException ex) {
+			assertThat(ex.getMessage()).isEqualTo(expectedMessage);
+		}	
 
+	}
+	
+	@Test
+	public void testUSDLNotFound() {
+		testException(new FileNotFoundException(), "The file does not exist"); 
+	}
+	
+	@Test
+	public void testHostUnreachable() {
+		testException(new ConnectException(), "The host cannot be reached"); 
+	}
+	
+	@Test
+	public void testInvalidRDF() {
+		testException(new JenaException(), "The file does not contains a valid USDL file"); 
+	}
+	
+	private void testOfferingInvalid(String url, String title, String version, String imageUrl,
+			String acquisitionUrl, String expectedMessage) {
+		
+		// Mocking
+		initOffering(url, title, "", version, imageUrl, acquisitionUrl);
+		
+		// Call the function
+		Description description = mock(Description.class);
+		when(description.getUrl()).thenReturn(DESCRIPTION_URI);
+		
+		try {
+			offeringResolver.resolveOfferingsFromServiceDescription(description);
+		} catch (ParseException ex) {
+			assertThat(ex.getMessage()).isEqualTo(expectedMessage);
+		}
 
+	}
+	
+	@Test
+	public void testOfferingNameNotFound() {
+		String url = "http://fiware.org";		
+		testOfferingInvalid(url, "", "", "", "", "Name for entity " + url + " cannot be retrieved");
+	}
+	
+	@Test
+	public void testOfferingVersionNotFound() {
+		String url = "http://fiware.org";
+		String offeringName = "Offering Name";
+		testOfferingInvalid(url, offeringName, "", "", "", "Version for offering " + offeringName
+				+ " cannot be retrieved");
+	}
+	
+	@Test
+	public void testOfferingImageURLNotFound() {
+		String url = "http://fiware.org";
+		String offeringName = "Offering Name";
+		testOfferingInvalid(url, offeringName, "1.0", "", "", "Image URL for offering " + offeringName
+				+ " cannot be retrieved");
+	}
+	
+	@Test
+	public void testOfferingAcquisitionURLNotFound() {
+		String url = "http://fiware.org";
+		String offeringName = "Offering Name";
+		testOfferingInvalid(url, offeringName, "1.0", url, "", "Acquisition URL for offering " + offeringName
+				+ " cannot be retrieved");
+	}
+	
+	private void testOfferingPricePlanInvalid(Map<String, List<Object>> pricePlan, String expectedMessage) {
+		
+		// Mocking
+		String url = "http://fiware.org";
+		String offeringName = "Offering Name";
+		
+		initOffering(url, offeringName, "", "1.0", url, url);
+		addPricePlanToMap(url, pricePlan);
+		
+		// Call the function
+		Description description = mock(Description.class);
+		when(description.getUrl()).thenReturn(DESCRIPTION_URI);
+		
+		try {
+			offeringResolver.resolveOfferingsFromServiceDescription(description);
+			failBecauseExceptionWasNotThrown(ParseException.class);
+		} catch (ParseException ex) {
+			assertThat(ex.getMessage()).isEqualTo(String.format(expectedMessage, offeringName));
+		} 
+	}
+	
+	@Test
+	public void testOfferingPricePlanNameNotIncluded() {
+		testOfferingPricePlanInvalid(new HashMap<String, List<Object>>(), "Offering %s contains a price plan "
+				+ "without title");
+	}
+	
+	@Test
+	public void testOfferingPricePlanNameEmpty() {
+		// Configure price plan
+		Map<String, List<Object>> pricePlan = new HashMap<String, List<Object>>();
+		List<Object> titles = new ArrayList<>();
+		pricePlan.put("title", titles);
+		
+		// test
+		testOfferingPricePlanInvalid(pricePlan, "Offering %s contains a price plan without title");
+	}
+	
+	@Test
+	public void testOfferingPricePlanNameBlank() {
+		// Configure price plan
+		Map<String, List<Object>> pricePlan = new HashMap<String, List<Object>>();
+		List<Object> titles = new ArrayList<>();
+		titles.add("");
+		pricePlan.put("title", titles);
+		
+		// test
+		testOfferingPricePlanInvalid(pricePlan, "Offering %s contains a price plan without title");
+	}
+	
+	private void testOfferingPriceComponentInvalid(Map<String, List<Object>> priceComponent, String message) {
+		// Configure price plan
+		Map<String, List<Object>> pricePlan = new HashMap<String, List<Object>>();
+		
+		List<Object> titles = new ArrayList<>();
+		titles.add("a");
+		pricePlan.put("title", titles);
+		
+		List<Object> priceComponents = new ArrayList<>();
+		priceComponents.add(priceComponent);
+		pricePlan.put("hasPriceComponent", priceComponents);
+		
+		// test
+		testOfferingPricePlanInvalid(pricePlan, message);
+	}
+	
+	@Test
+	public void testOfferingPriceComponentLabelMissing() {		
+		testOfferingPriceComponentInvalid(new HashMap<String, List<Object>>(), "Offering %s contains a price "
+				+ "component without title");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentLabelEmpty() {
+		// Configure price component
+		Map<String, List<Object>> priceComponent = new HashMap<>();
+		List<Object> labels = new ArrayList<>();
+		priceComponent.put("label", labels);
+		
+		// test
+		testOfferingPriceComponentInvalid(priceComponent, "Offering %s contains a price component without title");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentLabelBkank() {
+		Map<String, List<Object>> priceComponent = new HashMap<>();
+		List<Object> labels = new ArrayList<>();
+		labels.add("");
+		priceComponent.put("label", labels);
+				
+		// test
+		testOfferingPriceComponentInvalid(priceComponent, "Offering %s contains a price component without title");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentSpecificationMissing() {
+		Map<String, List<Object>> priceComponent = new HashMap<>();
+		List<Object> labels = new ArrayList<>();
+		labels.add("a");
+		priceComponent.put("label", labels);
+				
+		// test
+		testOfferingPriceComponentInvalid(priceComponent, "Offering %s contains a price component without "
+				+ "price specification");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentSpecificationEmpty() {
+		Map<String, List<Object>> priceComponent = new HashMap<>();
+		List<Object> labels = new ArrayList<>();
+		labels.add("a");
+		priceComponent.put("label", labels);
+		priceComponent.put("hasPrice", new ArrayList<Object>());
+				
+		// test
+		testOfferingPriceComponentInvalid(priceComponent, "Offering %s contains a price component without "
+				+ "price specification");
+	}
+	
+	private void testOfferingPriceComponentInvalidSpecification(List<Object> currencies, List<Object> units, List<Object> values, 
+			String message) {
+		
+		Map<String, List<Object>> priceComponent = new HashMap<>();
+		List<Object> labels = new ArrayList<>();
+		labels.add("a");
+		priceComponent.put("label", labels);
+		
+		List<Object> prices = new ArrayList<Object>();
+		Map<String, List<Object>> price = new HashMap<>();
+		price.put("hasCurrency", currencies);
+		price.put("hasUnitOfMeasurement", units);
+		price.put("hasCurrencyValue", values);
+		
+		prices.add(price);
+		priceComponent.put("hasPrice", prices);
+		
+		// test
+		testOfferingPriceComponentInvalid(priceComponent, message);
+	}
+	
+	@Test
+	public void testOfferingPriceComponentCurrencyMissing() {		
+		testOfferingPriceComponentInvalidSpecification(null, null, null, 
+				"Offering %s contains a price component without currency");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentEmptyCurrency() {		
+		testOfferingPriceComponentInvalidSpecification(new ArrayList<>(), null, null, 
+				"Offering %s contains a price component without currency");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentBlankCurrency() {
+		List<Object> currencies = new ArrayList<>();
+		currencies.add("");
+		
+		testOfferingPriceComponentInvalidSpecification(currencies, null, null,
+				"Offering %s contains a price component without currency");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentMissingUnit() {
+		List<Object> currencies = new ArrayList<>();
+		currencies.add("EUR");
+		
+		testOfferingPriceComponentInvalidSpecification(currencies, null, null,
+				"Offering %s contains a price component without unit of measurement");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentEmptyUnit() {
+		List<Object> currencies = new ArrayList<>();
+		currencies.add("EUR");
+		
+		testOfferingPriceComponentInvalidSpecification(currencies, new ArrayList<>(), null,
+				"Offering %s contains a price component without unit of measurement");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentBlankUnit() {
+		List<Object> currencies = new ArrayList<>();
+		currencies.add("EUR");
+		List<Object> units = new ArrayList<>();
+		units.add("");
+		
+		testOfferingPriceComponentInvalidSpecification(currencies, units, null, 
+				"Offering %s contains a price component without unit of measurement");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentValueMissing() {
+		List<Object> currencies = new ArrayList<>();
+		currencies.add("EUR");
+		List<Object> units = new ArrayList<>();
+		units.add("month");
+		
+		testOfferingPriceComponentInvalidSpecification(currencies, units, null,
+				"Offering %s contains a price component without value");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentValueEmpty() {
+		List<Object> currencies = new ArrayList<>();
+		currencies.add("EUR");
+		List<Object> units = new ArrayList<>();
+		units.add("month");
+		
+		testOfferingPriceComponentInvalidSpecification(currencies, units, new ArrayList<>(), 
+				"Offering %s contains a price component without value");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentValueBlank() {
+		List<Object> currencies = new ArrayList<>();
+		currencies.add("EUR");
+		List<Object> units = new ArrayList<>();
+		units.add("month");
+		List<Object> values = new ArrayList<>();
+		values.add("");
+		
+		testOfferingPriceComponentInvalidSpecification(currencies, units, values, 
+				"Offering %s contains a price component without value");
+	}
+	
+	@Test
+	public void testOfferingPriceComponentInvalidValue() {
+		List<Object> currencies = new ArrayList<>();
+		currencies.add("EUR");
+		List<Object> units = new ArrayList<>();
+		units.add("month");
+		List<Object> values = new ArrayList<>();
+		values.add("4a");
+		
+		testOfferingPriceComponentInvalidSpecification(currencies, units, values, 
+				"Offering %s contains a price component with an invalid currency value");
+	}
+	
 }
