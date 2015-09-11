@@ -34,6 +34,9 @@ package org.fiware.apps.marketplace.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -45,6 +48,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.fiware.apps.marketplace.exceptions.ParseException;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
@@ -60,8 +64,66 @@ public class PriceComponent {
 	private String title;
 	private String comment;
 	private float value;		// 7.7, 8.9,...
-	private String currency;	// EUR, DOL,...
+	private String currency;	// EUR, USD,...
 	private String unit;		// single payment, months, MB,...
+	
+	/**
+	 * Empty constructor for Hibernate
+	 */
+	public PriceComponent() {
+		
+	}
+	
+	/**
+	 * Creates a Price Component from a raw price component extracted from RDF
+	 * @param rawPriceComponent The raw price component
+	 * @param pricePlan The price plan that contains the price component
+	 * @throw ParseException When the raw price component is not valid
+	 */
+	public PriceComponent(Map<String, List<Object>> rawPriceComponent, PricePlan pricePlan) throws ParseException {
+		
+		// Check Price Component properties
+		List<Object> priceComponentLabels = rawPriceComponent.get("label");
+		if (priceComponentLabels == null || priceComponentLabels.isEmpty()) {
+			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + 
+					" contains a Price Component without title");
+		}
+		
+		List<Object> rawPriceSpecifications = rawPriceComponent.get("hasPrice");
+		if (rawPriceSpecifications == null || rawPriceSpecifications.isEmpty()) {
+			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + 
+					" contains a Price Component without price specification");
+		}
+		
+		@SuppressWarnings("unchecked")
+		Map<String, List<Object>> rawPriceSpecification = (Map<String, List<Object>>) rawPriceSpecifications.get(0);
+
+		// Check price specification
+		if (rawPriceSpecification.get("hasCurrency").isEmpty()) {
+			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + 
+					" contains a Price Component without currency");
+		}
+		
+		if (rawPriceSpecification.get("hasUnitOfMeasurement").isEmpty()) {
+			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + 
+					" contains a Price Component without unit of measurement");
+		}
+		
+		if (rawPriceSpecification.get("hasCurrencyValue").isEmpty()) {
+			throw new ParseException("Offering " + pricePlan.getOffering().getDisplayName() + 
+					" contains a Price Component without value");
+		}
+		
+		this.pricePlan = pricePlan;
+		this.title = (String) rawPriceComponent.get("label").get(0);
+		List<Object> pcDescriptions = rawPriceComponent.get("description");
+		this.comment = pcDescriptions.size() == 1 ? (String) pcDescriptions.get(0) : "";
+		
+		// Complete price component
+		this.currency = (String) rawPriceSpecification.get("hasCurrency").get(0);
+		this.unit = (String) rawPriceSpecification.get("hasUnitOfMeasurement").get(0);
+		this.value = Float.parseFloat((String) rawPriceSpecification.get("hasCurrencyValue").get(0));
+	}
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

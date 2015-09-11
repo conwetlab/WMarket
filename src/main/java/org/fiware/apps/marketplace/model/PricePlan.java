@@ -34,6 +34,9 @@ package org.fiware.apps.marketplace.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -51,6 +54,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.fiware.apps.marketplace.exceptions.ParseException;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
 @Entity
@@ -66,6 +70,32 @@ public class PricePlan {
 	private String title;
 	private String comment;
 	private Set<PriceComponent> priceComponents;
+	
+	/**
+	 * Empty constructor for Hibernate
+	 */
+	public PricePlan() {
+	}
+	
+	/**
+	 * Creates a Price Plan from a raw price plan extracted from RDF
+	 * @param rawPricePlan The raw price plan
+	 * @param offering The offering that contains the price plan
+	 * @throw ParseException When the raw price plan does is not valid
+	 */
+	public PricePlan(Map<String, List<Object>> rawPricePlan, Offering offering) throws ParseException {
+		
+		if (rawPricePlan.get("title").isEmpty()) {
+			throw new ParseException("Offering " + offering.getDisplayName() + 
+					" contains a price plan without title");
+		}
+		
+		this.title = (String) rawPricePlan.get("title").get(0);
+		List<Object> ppDescriptions = rawPricePlan.get("description");
+		this.comment = ppDescriptions.size() == 1 ? (String) ppDescriptions.get(0) : "";
+		this.offering = offering;
+		this.priceComponents = new HashSet<>();
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

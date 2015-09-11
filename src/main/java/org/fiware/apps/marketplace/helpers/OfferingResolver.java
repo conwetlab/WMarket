@@ -1,6 +1,8 @@
 package org.fiware.apps.marketplace.helpers;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.ConnectException;
 
 /*
  * #%L
@@ -63,6 +65,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hp.hpl.jena.shared.JenaException;
+
 /**
  * Class to resolve offerings from store or service instances.
  * 
@@ -75,8 +79,44 @@ public class OfferingResolver {
 	
 	private static Logger logger = LoggerFactory.getLogger(DescriptionBo.class);
 
-	@Autowired private CategoryBo classificationBo;
+	@Autowired private CategoryBo categoryBo;
 	@Autowired private ServiceBo serviceBo;
+	
+	// AUXILIAR
+	
+	/**
+	 * Generates the readable string message 
+	 * @param rdfHelper
+	 * @param offeringUri
+	 * @param field
+	 * @return
+	 */
+	private String generateExceptionMessage(RdfHelper rdfHelper, String offeringUri, String field) {
+		
+		String offeringTitle = cleanRdfUrl(offeringUri);
+		try {
+			// Try to get title so message will be more readable
+			offeringTitle = getTitle(rdfHelper, offeringUri);
+		} catch (ParseException ex) {
+			// Nothing to do...
+		}
+		
+		return field + " for offering " + offeringTitle + " cannot be retrieved";
+		
+	}
+	
+	/**
+	 * Given an URL from the RDF, returns the one without the angle brackets
+	 * @param url The URL to be cleaned
+	 * @return The cleaned URL or an empty string if the URL is null
+	 */
+	private String cleanRdfUrl(String url) {
+		// Remove '<' from the beginning and '>' from the end
+		return url != null ? url.substring(1, url.length() - 1) : "";
+	}
+	
+	
+	// METHODS TO RETRIEVE ENTITY VALUES
 
 	/**
 	 * Returns all the offerings from a USDL
@@ -121,11 +161,18 @@ public class OfferingResolver {
 	/**
 	 * Returns the title of an entity
 	 * @param rdfHelper The helper to parse the description that includes the given offering
-	 * @param entityURI The entity URI whose title wants to be retrieved
+	 * @param entityUri The entity URI whose title wants to be retrieved
 	 * @return The title of the entity
+	 * @throws ParseException when the name of the offering cannot be retrieved
 	 */
-	private String getTitle(RdfHelper rdfHelper, String entityURI) {
-		return rdfHelper.getLiteral(entityURI, "dcterms:title");
+	private String getTitle(RdfHelper rdfHelper, String entityUri) throws ParseException {
+		String name = rdfHelper.getLiteral(entityUri, "dcterms:title");
+		
+		if (name == null || name.isEmpty()) {
+			throw new ParseException("Name for entity " + entityUri + " cannot be retrieved.");
+		} else {
+			return name;
+		}
 	}
 
 	/**
@@ -143,19 +190,16 @@ public class OfferingResolver {
 	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @param offeringUri The offering URI whose version wants to be retrieved
 	 * @return The version of the offering
+	 * @throws ParseException When the version cannot be retrieved
 	 */
-	private String getOfferingVersion(RdfHelper rdfHelper, String offeringUri) {
-		return rdfHelper.getLiteral(offeringUri, "pav:version");
-	}
-	
-	/**
-	 * Given an URL from the RDF, returns the one without the angle brackets
-	 * @param url The URL to be cleaned
-	 * @return The cleaned URL or an empty string if the URL is null
-	 */
-	private String cleanRdfUrl(String url) {
-		// Remove '<' from the beginning and '>' from the end
-		return url != null ? url.substring(1, url.length() - 1) : "";
+	private String getOfferingVersion(RdfHelper rdfHelper, String offeringUri) throws ParseException {
+		String version = rdfHelper.getLiteral(offeringUri, "pav:version");
+		
+		if (version == null || version.isEmpty()) {
+			throw new ParseException(generateExceptionMessage(rdfHelper, offeringUri, "Version"));
+		} else {
+			return version;
+		}
 	}
 
 	/**
@@ -163,9 +207,16 @@ public class OfferingResolver {
 	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @param offeringUri The offering URI whose image URL wants to be retrieved
 	 * @return The image URL of the offering
+	 * @throws ParseException when the image url cannot be retrieved
 	 */
-	private String getOfferingImageUrl(RdfHelper rdfHelper, String offeringUri) {
-		return cleanRdfUrl(rdfHelper.getObjectUri(offeringUri, "foaf:depiction"));
+	private String getOfferingImageUrl(RdfHelper rdfHelper, String offeringUri) throws ParseException {
+		String imageUrl = cleanRdfUrl(rdfHelper.getObjectUri(offeringUri, "foaf:depiction"));
+		
+		if (imageUrl == null || imageUrl.isEmpty()) {
+			throw new ParseException(generateExceptionMessage(rdfHelper, offeringUri, "Image URL"));
+		} else {
+			return imageUrl;
+		}
 	}
 	
 	/**
@@ -173,9 +224,16 @@ public class OfferingResolver {
 	 * @param rdfHelper The helper to parse the description that includes the given offering
 	 * @param offeringUri The offering whose acquisition URL wants to be retrieved
 	 * @return Returns the acquisition URL of the given offering
+	 * @throws ParseException when the acquisition URL cannot be retrieved
 	 */
-	private String getOfferingAcquisitionUrl(RdfHelper rdfHelper, String offeringUri) {
-		return cleanRdfUrl(rdfHelper.getObjectUri(offeringUri, "gr:availableDeliveryMethods"));
+	private String getOfferingAcquisitionUrl(RdfHelper rdfHelper, String offeringUri) throws ParseException {
+		String acquisitionUrl =  cleanRdfUrl(rdfHelper.getObjectUri(offeringUri, "gr:availableDeliveryMethods"));
+		
+		if (acquisitionUrl == null || acquisitionUrl.isEmpty()) {
+			throw new ParseException(generateExceptionMessage(rdfHelper, offeringUri, "Acquisiton URL"));
+		} else {
+			return acquisitionUrl;
+		}
 	}
 
 	/**
@@ -232,7 +290,80 @@ public class OfferingResolver {
 	RdfHelper getRdfHelper(Description description) throws IOException {
 		return new RdfHelper(description.getUrl());
 	}
+	
+	/**
+	 * Checks if another service with the same URI exists (in the database or in the ones created when the
+	 * description is being analyzed). If so, the existing instance is returned. Otherwise, a new service is created
+	 * @param previousServices Map that contains all the services that have been obtained from the same description
+	 * @param rdfHelper The rdfHelper that contains the model with the service
+	 * @param serviceUri The URI of the service to obtain
+	 * @return The service contained in the serviceUri given
+	 * @throws ParseException When the service is not valid
+	 */
+	private Service getService(Map<String, Service> previousServices, RdfHelper rdfHelper, String serviceUri) 
+			throws ParseException {
 
+		String parserServiceUri = cleanRdfUrl(serviceUri);
+		
+		// Obtain the service from the previous ones created for this description
+		Service service = previousServices.get(parserServiceUri);
+		
+		// If it's the first this service is found in this description, the service is obtained from the database.
+		// If the service does not exist in the database, a new one is created.
+		if (service == null) {
+			try {
+				service = serviceBo.findByURI(parserServiceUri);
+			} catch (ServiceNotFoundException e) {
+				service = new Service();
+				service.setCategories(new HashSet<Category>());
+			}
+		}
+
+		// Service URI, display name and comment
+		service.setUri(parserServiceUri);
+		service.setDisplayName(getTitle(rdfHelper, serviceUri));
+		service.setComment(getDescription(rdfHelper, serviceUri));
+		
+		previousServices.put(parserServiceUri, service);
+		
+		return service;
+	}
+	
+	/**
+	 * Checks if another category with the same name exists (in the database or in the ones created when the
+	 * description is being analyzed). If so, the existing instance is returned. Otherwise, a new category is created
+	 * and is added to the map of created categories.
+	 * @param previousCategories Map that contains all the categories that have been obtained from the same description
+	 * @param rdfHelper The rdfHelper that contains the model with the category
+	 * @param categoryDisplayName The display name of the category
+	 * @return The category contained in the serviceUri given
+	 */
+	private Category getCategory(Map<String, Category> previousCategories, RdfHelper rdfHelper, 
+			String categoryDisplayName) {
+		
+		String categoryName = NameGenerator.getURLName(categoryDisplayName);
+		
+		// Obtain the category from the previous ones created for this description
+		Category category = previousCategories.get(categoryName);
+
+		// If it's the first this category is found in this description, the category is obtained from the database.
+		// If the category does not exist is the database, a new one is created.
+		if (category == null) {			
+			try {
+				category = categoryBo.findByName(categoryName);
+			} catch (CategoryNotFoundException e1) {
+				category = new Category();
+			}
+		}
+		
+		// Set (display) name
+		category.setName(categoryName);
+		category.setDisplayName(categoryDisplayName);
+		previousCategories.put(categoryName, category);
+
+		return category;
+	}
+	
 	/**
 	 * Returns all offerings contained in the description given
 	 * @param description The description that contains the offerings
@@ -246,9 +377,13 @@ public class OfferingResolver {
 		try {
 
 			RdfHelper rdfHelper = getRdfHelper(description);
-
-			List<Offering> offerings = new ArrayList<Offering>();
+			
 			List<String> offeringUris = getOfferingUris(rdfHelper);
+			List<Offering> offerings = new ArrayList<Offering>();
+			
+			if (offeringUris == null) {
+				throw new ParseException("Offerings URLs cannot be retrieved");
+			}
 
 			// Classifications cache: To avoid SQL Constraint errors when the description contains 
 			// two or more offerings with the same classification
@@ -263,7 +398,6 @@ public class OfferingResolver {
 				// Offering basic fields
 				Offering offering = new Offering();
 				offering.setDisplayName(getTitle(rdfHelper, offeringUri));
-				// Maybe the name should depends on the creator and the version...
 				offering.setName(NameGenerator.getURLName(offering.getDisplayName()));
 				offering.setUri(cleanRdfUrl(offeringUri));
 				offering.setDescribedIn(description);
@@ -271,22 +405,20 @@ public class OfferingResolver {
 				offering.setDescription(getDescription(rdfHelper, offeringUri));
 				offering.setImageUrl(getOfferingImageUrl(rdfHelper, offeringUri));
 				offering.setAcquisitionUrl(getOfferingAcquisitionUrl(rdfHelper, offeringUri));
+				offering.setServices(new HashSet<Service>());
+				offering.setCategories(new HashSet<Category>());
 
-				// PRICE PLANS (offerings contain one or more price plans)
+				//////////////////////////////////////////////////////////////
+				// PRICE PLANS (offerings contain zero or more price plans) //
+				//////////////////////////////////////////////////////////////
 				List<Map<String, List<Object>>> rawPricePlans = getPricePlan(rdfHelper, offeringUri);
 				Set<PricePlan> pricePlans = new HashSet<>();
 
 				for (Map<String, List<Object>> rawPricePlan: rawPricePlans) {
 
-					PricePlan pricePlan = new PricePlan();
-					pricePlan.setTitle((String) rawPricePlan.get("title").get(0));
-					List<Object> ppDescriptions = rawPricePlan.get("description");
-					String ppDescription = ppDescriptions.size() == 1 ? (String) ppDescriptions.get(0) : "";
-					pricePlan.setComment(ppDescription);
-					pricePlan.setOffering(offering);
+					PricePlan pricePlan = new PricePlan(rawPricePlan, offering);
 
 					List<Object> rawPriceComponents = rawPricePlan.get("hasPriceComponent");
-					Set<PriceComponent> priceComponents = new HashSet<>();
 					
 					// There are price plans without price components
 					if (rawPriceComponents == null) {
@@ -294,111 +426,36 @@ public class OfferingResolver {
 					}
 
 					for (Object objectPriceComponent: rawPriceComponents) {
-
 						@SuppressWarnings("unchecked")
 						Map<String, List<Object>> rawPriceComponent = (Map<String, List<Object>>) objectPriceComponent;
-
-						PriceComponent priceComponent = new PriceComponent();
-						priceComponent.setPricePlan(pricePlan);
-						priceComponent.setTitle((String) rawPriceComponent.get("label").get(0));
-						List<Object> pcDescriptions = rawPriceComponent.get("description");
-						String pcDescription = pcDescriptions.size() == 1 ? (String) pcDescriptions.get(0) : "";
-						priceComponent.setComment(pcDescription);
-
-						@SuppressWarnings("unchecked")
-						Map<String, List<Object>> rawPriceSpecification = (Map<String, List<Object>>) 
-								rawPriceComponent.get("hasPrice").get(0);
-
-						priceComponent.setCurrency((String) rawPriceSpecification.get("hasCurrency").get(0));
-						priceComponent.setUnit((String) rawPriceSpecification.get("hasUnitOfMeasurement").get(0));
-						priceComponent.setValue(Float.parseFloat(
-								(String) rawPriceSpecification.get("hasCurrencyValue").get(0)));
-
-						priceComponents.add(priceComponent);
-
+						pricePlan.getPriceComponents().add(new PriceComponent(rawPriceComponent, pricePlan));
 					}
-
-					// Update price components with the retrieved price components
-					pricePlan.setPriceComponents(priceComponents);
 
 					pricePlans.add(pricePlan);
 				}
 
 				// Update the price plans set with the retrieved price plans
 				offering.setPricePlans(pricePlans);
-
-				// SERVICES
+				
+				/////////////////////////////////////////////////////////
+				// SERVICES (offerings contains zero or more services) //
+				/////////////////////////////////////////////////////////
 				List<String> servicesUris = getServiceUris(rdfHelper, offeringUri);
-				Set<Service> offeringServices = new HashSet<>();
-				Set<Category> offeringClassification = new HashSet<>();
-
 				for (String serviceUri: servicesUris) {
 
-					Service service;
-
-					// Remove '<' from the beginning and '>' from the end
-					String parserServiceUri = serviceUri.substring(1, serviceUri.length() - 1);
-
-					// Try to get the service from the database
-					try {
-						service = serviceBo.findByURI(parserServiceUri);
-					} catch (ServiceNotFoundException e) {
-						// Look for another offering in this description that contains the same service.
-						// Otherwise, a new service is created
-						service = createdServices.get(parserServiceUri);
-					}
-
-					// If service is still null, create a new one
-					if (service == null) {
-						service = new Service();
-					}
-
-					// Service basic properties
-					service.setUri(parserServiceUri);
-					service.setDisplayName(getTitle(rdfHelper, serviceUri));
-					service.setComment(getDescription(rdfHelper, serviceUri));
+					Service service = getService(createdServices, rdfHelper, serviceUri);
 
 					// Service classifications (a service can have more than one classification)
-					Set<Category> serviceClassifications = new HashSet<>();
-					List<String> classificationsDisplayNames = getServiceClassifications(rdfHelper, serviceUri);
+					List<String> categoriesDisplayNames = getServiceClassifications(rdfHelper, serviceUri);
 
-					for (String classificationDisplayName: classificationsDisplayNames) {
-
-						Category classification;
-						String classificationName = NameGenerator.getURLName(classificationDisplayName);
-
-						// Try to get the service from the database
-						try {
-							classification = classificationBo.findByName(classificationName);
-						} catch (CategoryNotFoundException e1) {
-							// Look for another offering/service in this description that contains
-							// the same classification. Otherwise, a new classification is created.
-							classification = createdClassifications.get(classificationName);
-						}
-
-						// If classification is still null, create a new one
-						if (classification == null) {
-							classification = new Category();
-						}
-
-						classification.setName(classificationName);
-						classification.setDisplayName(classificationDisplayName);
-						createdClassifications.put(classificationName, classification);
-
-						serviceClassifications.add(classification);
+					for (String categoryDisplayName: categoriesDisplayNames) {
+						service.getCategories().add(getCategory(createdClassifications, rdfHelper, categoryDisplayName));
 					}
 
-					service.setCategories(serviceClassifications);
-
-					createdServices.put(parserServiceUri, service);
-
-					offeringClassification.addAll(service.getCategories());
-					offeringServices.add(service);
+					// Attach the service and its categories to the offering
+					offering.getServices().add(service);
+					offering.getCategories().addAll(service.getCategories());
 				}
-
-				// Attach the services to the offering
-				offering.setServices(offeringServices);
-				offering.setCategories(offeringClassification);
 
 				// Update the list of offerings
 				offerings.add(offering);
@@ -407,12 +464,20 @@ public class OfferingResolver {
 
 			return offerings;
 			
+		} catch (ConnectException ex) {
+			throw new ParseException("The host cannot be reached");
+		} catch (JenaException ex) {
+			throw new ParseException("The file does not contains a valid USDL file");
+		} catch(FileNotFoundException ex) {
+			throw new ParseException("The file does not exist");
+		} catch (ParseException ex) {
+			throw ex;
 		} catch (Exception ex) {
 			
 			// When an exception arises is because the USDL cannot be parsed. In these cases, we throw
 			// a new exception that indicates that the USDL is not valid. 
 			logger.warn("Unexpected exception parsing USDL " + description.getUrl(), ex);
-			throw new ParseException("There was an unexpected error parsing your USDL file.");
+			throw new ParseException("Unknown error parsing your USDL");
 		}
 	}
 }

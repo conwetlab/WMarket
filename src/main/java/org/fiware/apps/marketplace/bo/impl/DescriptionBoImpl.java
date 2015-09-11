@@ -89,7 +89,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Autowired private ServiceDao serviceDao;
 	@Autowired private SessionFactory sessionFactory;
 	
-	private static final String PARSE_ERROR = "Your RDF could not be parsed.";
+	private static final String PARSE_ERROR = "Your RDF could not be parsed";
 		
 	@Override
 	@Transactional(readOnly=false, rollbackFor=Exception.class)
@@ -145,14 +145,12 @@ public class DescriptionBoImpl implements DescriptionBo {
 			
 			// Index
 			rdfIndexer.indexOrUpdateService(description);
-		} catch (IOException | ParseException | JenaException ex) {			
-			
-			// These three exceptions are only thrown if the description cannot be parsed by the RdfIndexer.
-			// When the indexer cannot index the service, the description cannot be attached to the Store.
-			// Because of this, the we have set the rollbackFor parameter
-			String errorMessage = ex instanceof IOException ? ex.getMessage() : PARSE_ERROR;
-			throw new ValidationException("url", errorMessage);
-			
+		} catch (ParseException ex) {
+			throw new ValidationException("url", PARSE_ERROR + ": " + ex.getMessage());
+		} catch (IOException ex) {
+			throw new ValidationException("url", ex.getMessage());
+		} catch (JenaException ex) {
+			throw new ValidationException("url", PARSE_ERROR + ".");
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -291,10 +289,12 @@ public class DescriptionBoImpl implements DescriptionBo {
 			// Update the description
 			descriptionDao.update(descriptionToBeUpdated);
 			
-		} catch (IOException | ParseException | JenaException ex) {			
-			String errorMessage = ex instanceof IOException ? ex.getMessage() : PARSE_ERROR;
-			throw new ValidationException("url", errorMessage);
-			
+		} catch (ParseException ex) {
+			throw new ValidationException("url", PARSE_ERROR + ": " + ex.getMessage());
+		} catch (IOException ex) {
+			throw new ValidationException("url", ex.getMessage());
+		} catch (JenaException ex) {
+			throw new ValidationException("url", PARSE_ERROR + ".");			
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
