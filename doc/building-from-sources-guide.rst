@@ -4,7 +4,7 @@ Building from Sources
 
 This document explains how a user can obtain the WMarket sources to compile it
 and generate a customized WAR that can be run in an Application Server (i.e. 
-Tomcat,...)
+Tomcat...)
 
 .. note::
 
@@ -29,7 +29,7 @@ offered by your operating system.
 Obtaining the Source Code
 -------------------------
 
-Once that you have installed the minimun requirements, you are able to obtain
+Once that you have installed the minimum requirements, you are able to obtain
 the source code. To do it, execute the following command:
 
 ::
@@ -48,7 +48,7 @@ customize your WMarket instance. In this way, you will be able to:
 * Modify the folder where the indexes are stored
 * Select the authorization system (local or external (i.e. IdM))
 * Modify the folder used for media files and their maximum size
-* Modfify the period used to update descriptions
+* Modify the period used to update descriptions
 
 You can find a full explanation of all these configurations at 
 :ref:`WMarket Configuration <wmarket_configuration>`

@@ -7,7 +7,7 @@ administrate the necessary software on a server so that it can run
 WMarket.
 
 WMarket itself is a Java Web Application, packaged in a WAR file and
-relys on a SQL database.
+relies on a SQL database.
 
 -------------------
 System Requirements
@@ -167,7 +167,7 @@ order to retrieve some information. Specifically:
     Cleaning up...
 
 -  **Database Configuration**: the script creates a database called
-   ``marketplace``. To perfom this action, MySQL credentials with 
+   ``marketplace``. To perform this action, MySQL credentials with 
    administrative permission are required. For this reason, you will see the
    following lines:
 
@@ -205,7 +205,7 @@ order to retrieve some information. Specifically:
 
 -  **Authentication Configuration**: WMarket can work with a local
    authentication system or using an external IdM. The script will ask you what
-   authentication system do you prefer. If you opt for an external IdM,
+   authentication system you prefer. If you opt for an external IdM,
    some configuration details will be required as can be seen in the
    following example:
 
@@ -248,8 +248,8 @@ Using docker-componse
 ---------------------
 
 You can install WMarket automatically if you have `docker-compose` installed in
-your machine. To do so, you must create a folder to place a new file file 
-called ``docker-compose.yml`` that should include the following content:
+your machine. To do so, you must create a folder to place a new file called 
+``docker-compose.yml`` that should include the following content:
 
 ::
 
@@ -409,7 +409,7 @@ Index
 '''''
 
 WMarket uses index files to provide better search results. These files
-must me stored in some folder of your file system. You can specify this
+must be stored in some folder of your file system. You can specify this
 folder by editing the property ``lucene.IndexPath`` included in the file
 ``WMarket.war/WEB-INF/classes/properties/marketplace.properties``.
 
@@ -530,7 +530,7 @@ End to End testing
 Although one End to End testing must be associated to the Integration
 Test, we can show here a quick testing to check that everything is up
 and running. The first test step involves registering a new user. The
-second test step tests if its possible to authenticate against the
+second test step tests if it is possible to authenticate against the
 WMarket.
 
 **Step 1: Registering a new user**

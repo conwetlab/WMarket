@@ -1,6 +1,6 @@
-===========================
-Users and Programmers Guide
-===========================
+=========================
+User and Programmer Guide
+=========================
 
 This guide involves all the processes that can be performed by final users and
 programmers. 
@@ -9,15 +9,15 @@ This guide is related to the version 4.4.3 of WMarket, released in September
 2015.
 
 
------------
-Users Guide
------------
+----------
+User Guide
+----------
 
 WMarket is a software that eases the users the process of looking for the best
 offering in different Stores since it aggregates them and all their offerings 
 so users can find what they need more easily.
 
-The users guide is divided into two parts: one related to consumers (users 
+The user guide is divided into two parts: one related to consumers (users 
 interested in acquiring offerings) and another one related to providers (users
 interested in acquiring and publishing offerings).
 
@@ -31,7 +31,7 @@ Users Management
 Registering and Logging In
 ``````````````````````````
 
-The first step to access WMarket is to create a new user account. This proccess
+The first step to access WMarket is to create a new user account. This process
 may vary depending on the authentication system selected by the WMarket admin. 
 
 If the WMarket instance you are accessing uses an external authentication
@@ -60,17 +60,17 @@ and click the **Sign in** button (the one indicated by the blue arrow).
 
 To create a new account, you will be required to introduce some details: 
 
-* **Full Name:** your complete full name. It must contain between 3 an 30 
-  characteres. Only letters and spaces are accepted.
+* **Full Name:** your complete full name. It must contain between 3 and 30 
+  characters. Only letters and spaces are accepted.
 * **Email:** your email address. It must be a valid email address according
   to the email pattern. Two users cannot use the same email address.
 * **Password:** password to access your account. It must contain between 8 and
-  30 characteres. It must contain one number, one letter and one special 
+  30 characters. It must contain one number, one letter and one special 
   character (``!``, ``#``, ``$``, ``%``, ``&`` and ``?``).
 
 .. note::
   If the user cannot be created because one or more fields are invalid, these
-  fields will be highlighted in red color and a message will be attached to 
+  fields will be highlighted in red colour and a message will be attached to 
   every invalid field so the user can understand why these fields are invalid.
 
 Once that you have introduced these details, just click **Create**.
@@ -297,7 +297,7 @@ The comparison will show you:
 Browsing Stores
 ---------------
 
-Appart from retrieving all the registered offerings, you can also get the 
+Apart from retrieving all the registered offerings, you can also get the 
 offerings that are included in a certain Store. To do so, click the menu button
 that is next to the **WMarket** text on the left upper corner (as can be seen
 in the following image) and click on one of the registered stores.
@@ -397,10 +397,10 @@ Introduce the following content:
 
 .. note::
   If the store cannot be created because one or more fields are invalid, these
-  fields will be highlighted in red color and a message will be attached to 
+  fields will be highlighted in red colour and a message will be attached to 
   every invalid field so the user can understand why these fields are invalid.
 
-If your have introduced these fields correctly, you will be redirected to the
+If you have introduced these fields correctly, you will be redirected to the
 main page of the Store, where you will be able to manage it. 
 
 .. image:: /images/user-guide/store_main_provider.png
@@ -439,7 +439,7 @@ store, you have to confirm the operation in the following dialog:
    :align: center
 
 .. note::
-  When you delete an store, all its descriptions, offerings and reviews will be
+  When you delete a store, all its descriptions, offerings and reviews will be
   deleted. 
 
 Descriptions Management
@@ -458,7 +458,7 @@ by the green arrow).
 .. image:: /images/user-guide/contextual_menu_provider.png
    :align: center
 
-Once that you hace clicked the button, you will be redirected to the following
+Once that you have clicked the button, you will be redirected to the following
 page:
 
 .. image:: /images/user-guide/register_description.png
@@ -478,7 +478,7 @@ To create the description, set the following details:
 
 .. note::
   If the description cannot be created because one or more fields are invalid,
-  these fields will be highlighted in red color and a message will be attached 
+  these fields will be highlighted in red colour and a message will be attached 
   to every invalid field so the user can understand why these fields are 
   invalid.
 
@@ -540,9 +540,9 @@ confirm the action with a dialog similar to the following one:
   been included. 
 
 
------------------
-Programmers Guide
------------------
+----------------
+Programmer Guide
+----------------
 
 You can check the API Reference on
 `Apiary <http://docs.fiwaremarketplace.apiary.io>`__
