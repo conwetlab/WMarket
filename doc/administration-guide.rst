@@ -21,18 +21,18 @@ you have to do is to access the IdM. Then, identify the WMarket application
 among all the available applications. You will be redirected to the application
 management page where you have to click the **Manage Roles** button.
 
-.. image:: /images/administration-guide/manage_roles_button.png
+.. image:: images/administration-guide/manage_roles_button.png
    :align: center
 
 Once that you are in the page to manage roles, you have to create a new one. To
 do so, click the **+** button as shown in the following image.
 
-.. image:: /images/administration-guide/create_new_role_button.png
+.. image:: images/administration-guide/create_new_role_button.png
    :align: center
 
 Then, type the name of the new role. You can choose any name.
 
-.. image:: /images/administration-guide/create_new_role_dialog.png
+.. image:: images/administration-guide/create_new_role_dialog.png
    :align: center
 
 When the new role is created, you have to modify the WMarket preferences so it
@@ -46,20 +46,20 @@ providers. To achieve this, access the IdM and click on the WMarket
 application. Then, click the **Authorize** button as shown in the following
 image. 
 
-.. image:: /images/administration-guide/authorize-button.png
+.. image:: images/administration-guide/authorize-button.png
    :align: center
 
 A new dialog will be opened. Just write the name of the user to which you want
 to assign the provider role. Then, click the **+** button.
 
-.. image:: /images/administration-guide/look_for_user.png
+.. image:: images/administration-guide/look_for_user.png
    :align: center
 
 The user will be moved to the **Authorized users** section. Finally, click on
 the **No Roles** button and assign the provider role as displayed in this
 image.
 
-.. image:: /images/administration-guide/assing_provider_role.png
+.. image:: images/administration-guide/assing_provider_role.png
    :align: center
 
 Then click **Save**.
@@ -78,11 +78,11 @@ providers since they can do it by themselves in a very easy way by editing
 their preferences. To do so, users should click on their name and then
 click the **Settings** button.
 
-.. image:: /images/administration-guide/user_settings_button.png
+.. image:: images/administration-guide/user_settings_button.png
    :align: center
 
 After this they will be redirected to the user settings management page where
 a button to become provider can be found. 
 
-.. image:: /images/administration-guide/user_settings_become_provider.png
+.. image:: images/administration-guide/user_settings_become_provider.png
    :align: center

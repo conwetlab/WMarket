@@ -43,14 +43,14 @@ credentials. Once that you have introduced your credentials, click **Sign in**
 yet, you can create a new one by clicking the **Sign up** button (the one 
 indicated the by the green arrow).
 
-.. image:: /images/user-guide/login-idm.png
+.. image:: images/user-guide/login-idm.png
    :align: center
 
 On the other hand, if you are using the local authentication system, when you
 access the instance and you are not logged in, a log in dialog will be 
 displayed. 
 
-.. image:: /images/user-guide/login.png
+.. image:: images/user-guide/login.png
    :align: center
 
 If it is your first time in this instance, you have to create a new account.
@@ -75,7 +75,7 @@ To create a new account, you will be required to introduce some details:
 
 Once that you have introduced these details, just click **Create**.
 
-.. image:: /images/user-guide/register_user.png
+.. image:: images/user-guide/register_user.png
    :align: center
 
 .. note::
@@ -92,7 +92,7 @@ profile, just click in your user name on the upper right corner (the button
 indicated by the blue arrow) and then click the **Settings** button (the one 
 indicated by the green arrow).
 
-.. image:: /images/user-guide/user_settings_button.png
+.. image:: images/user-guide/user_settings_button.png
    :align: center
 
 .. note::
@@ -102,7 +102,7 @@ indicated by the green arrow).
 When you click on **Settings**, you are redirected to the profile management 
 page.
 
-.. image:: /images/user-guide/profile_management.png
+.. image:: images/user-guide/profile_management.png
    :align: center
 
 If the instance is using the local authentication system, this page will allow
@@ -127,7 +127,7 @@ become a provider** button located within the green box. If you are already a
 provider and you just want to be a simple consumer, just click the **I don't
 want to be a provider anymore** button.
 
-.. image:: /images/user-guide/become_a_consumer.png
+.. image:: images/user-guide/become_a_consumer.png
    :align: center
 
 To change your password, click the **Credentials** button (the one indicated by
@@ -136,7 +136,7 @@ you to change your password. In this page, just write your old password and
 type twice your new password. If your old password is correct and the new
 password fits the password requirements, your password will be changed.
 
-.. image:: /images/user-guide/change_password.png
+.. image:: images/user-guide/change_password.png
    :align: center
 
 .. note::
@@ -147,7 +147,7 @@ Finally, you can also deleted your account. To do so, just click the **Delete
 account** button (the one indicated by the red button). You will be required to
 confirm the operation as can be seen in the following image.
 
-.. image:: /images/user-guide/delete_user_dialog.png
+.. image:: images/user-guide/delete_user_dialog.png
    :align: center
 
 .. note::
@@ -159,7 +159,7 @@ Browsing Offerings
 
 When you access WMarket, you are redirected to the main page. 
 
-.. image:: /images/user-guide/main.png
+.. image:: images/user-guide/main.png
    :align: center
 
 This page is divided into three parts:
@@ -176,7 +176,7 @@ Offering Details
 
 You can click any offering to view its details. 
 
-.. image:: /images/user-guide/offering_main.png
+.. image:: images/user-guide/offering_main.png
    :align: center
 
 This page is divided in different zones:
@@ -194,13 +194,13 @@ This page is divided in different zones:
 To view all the price plans included in an offering, just click the **Price 
 Plans** button. 
 
-.. image:: /images/user-guide/offering_price_plans.png
+.. image:: images/user-guide/offering_price_plans.png
    :align: center
 
 To view all the services included in an offering, just click the **Services** 
 button.
 
-.. image:: /images/user-guide/offering_services.png
+.. image:: images/user-guide/offering_services.png
    :align: center
 
 Reviewing Offerings
@@ -214,7 +214,7 @@ click on the appropriate star according to your thoughts.
 Once that you have clicked a star, a new dialog will be opened asking for an
 extended review as can be seen in the following picture.
 
-.. image:: /images/user-guide/new_review.png
+.. image:: images/user-guide/new_review.png
    :align: center
 
 In this dialog you can change the number of stars and add a brief comment to 
@@ -225,7 +225,7 @@ Once that you have reviewed an offering, you can edit or delete your review.
 To do so, just click one of the stars contained in the black box. A new dialog
 will be opened with your review. 
 
-.. image:: /images/user-guide/update_review.png
+.. image:: images/user-guide/update_review.png
    :align: center
 
 To update your previous review, just modify the number of stars and type a new
@@ -240,20 +240,20 @@ To add an offering to your bookmarks, just click the **Add bookmark** button
 (contained in the green box). The button will change to **Remove bookmark** so
 you will be able remove this offering from your bookmarks.
 
-.. image:: /images/user-guide/remove_bookmark.png
+.. image:: images/user-guide/remove_bookmark.png
    :align: center
 
 To view the list of bookmarked offerings, you can click the menu button that is
 next to the **WMarket** text on the left upper corner as can be seen in the 
 following image.
 
-.. image:: /images/user-guide/contextual_menu.png
+.. image:: images/user-guide/contextual_menu.png
    :align: center
 
 Then click the **My Bookmarks** button (the one indicated by the blue arrow).
 A screen similar to the following one will be displayed.
 
-.. image:: /images/user-guide/bookmarks.png
+.. image:: images/user-guide/bookmarks.png
    :align: center
 
 You can click any offering to obtain extended details about the offering.
@@ -266,12 +266,12 @@ button that is next to the **WMarket** text on the left upper corner (as can be
 seen in the following image) and click the **Compare offerings** button (the
 one indicated by the green arrow).
 
-.. image:: /images/user-guide/contextual_menu.png
+.. image:: images/user-guide/contextual_menu.png
    :align: center
 
 You will be redirected to a new page that will allow you to create comparisons.
 
-.. image:: /images/user-guide/comparisons.png
+.. image:: images/user-guide/comparisons.png
    :align: center
 
 To compare offerings, just look for the offerings that you want to compare in
@@ -302,13 +302,13 @@ offerings that are included in a certain Store. To do so, click the menu button
 that is next to the **WMarket** text on the left upper corner (as can be seen
 in the following image) and click on one of the registered stores.
 
-.. image:: /images/user-guide/contextual_menu.png
+.. image:: images/user-guide/contextual_menu.png
    :align: center
 
 Once that you click on one store, you will see a screen similar to the 
 following one:
 
-.. image:: /images/user-guide/store_main_consumer.png
+.. image:: images/user-guide/store_main_consumer.png
    :align: center
 
 The area rounded by the green rectangle contains all the offering registered in
@@ -318,7 +318,7 @@ To retrieve the details about the Store and its review, just click the **About
 & reviews** button (the one indicated by the blue arrow). You will be 
 redirected to the following page.
 
-.. image:: /images/user-guide/store_details.png
+.. image:: images/user-guide/store_details.png
    :align: center
 
 The **General Information** box (the one rounded with the red rectangle) 
@@ -337,7 +337,7 @@ click on the appropriate star according to your thoughts.
 Once that you have clicked a star, a new dialog will be opened asking for an
 extended review as can be seen in the following picture.
 
-.. image:: /images/user-guide/new_review.png
+.. image:: images/user-guide/new_review.png
    :align: center
 
 In this dialog you can change the number of stars and add a brief comment to 
@@ -348,7 +348,7 @@ Once that you have reviewed the store, you can edit or delete your review.
 To do so, just click one of the stars contained in the blue box. A new dialog
 will be opened with your review. 
 
-.. image:: /images/user-guide/update_review.png
+.. image:: images/user-guide/update_review.png
    :align: center
 
 To update your previous review, just modify the number of stars and type a new
@@ -375,12 +375,12 @@ To register a new store, click in the menu button that is next to the
 image) and click on the **Register a new store** button (the one indicated by
 the blue arrow). 
 
-.. image:: /images/user-guide/contextual_menu_provider.png
+.. image:: images/user-guide/contextual_menu_provider.png
    :align: center
 
 The following screen will be opened:
 
-.. image:: /images/user-guide/register_store.png
+.. image:: images/user-guide/register_store.png
    :align: center
 
 Introduce the following content:
@@ -403,7 +403,7 @@ Introduce the following content:
 If you have introduced these fields correctly, you will be redirected to the
 main page of the Store, where you will be able to manage it. 
 
-.. image:: /images/user-guide/store_main_provider.png
+.. image:: images/user-guide/store_main_provider.png
    :align: center
 
 Managing Existing Stores
@@ -413,7 +413,7 @@ To view all the descriptions that you have uploaded to the Store, click the
 **My descriptions** button (the one indicated by a green arrow). A screen 
 similar to the following one will be displayed:
 
-.. image:: /images/user-guide/store_my_descriptions.png
+.. image:: images/user-guide/store_my_descriptions.png
    :align: center
 
 You can click on the name of the description to manage it as will be explained
@@ -423,7 +423,7 @@ To edit the details of your store, just click the **About & reviews** button
 (the one indicated by a blue arrow). Only store creators can edit its details. 
 When you click this button, the following screen will be shown:
 
-.. image:: /images/user-guide/store_details_provider.png
+.. image:: images/user-guide/store_details_provider.png
    :align: center
 
 The area rounded by the red rectangle is the one that you should use to modify
@@ -435,7 +435,7 @@ To delete your store, click the **Delete Store** button (the one indicated by
 the red arrow). Only the store creator can delete it. Before deleting the 
 store, you have to confirm the operation in the following dialog:
 
-.. image:: /images/user-guide/delete_store_dialog.png
+.. image:: images/user-guide/delete_store_dialog.png
    :align: center
 
 .. note::
@@ -455,13 +455,13 @@ To register a new description, click in the menu button that is next to the
 image) and click on the **Upload a new description** button (the one indicated
 by the green arrow). 
 
-.. image:: /images/user-guide/contextual_menu_provider.png
+.. image:: images/user-guide/contextual_menu_provider.png
    :align: center
 
 Once that you have clicked the button, you will be redirected to the following
 page:
 
-.. image:: /images/user-guide/register_description.png
+.. image:: images/user-guide/register_description.png
    :align: center
 
 To create the description, set the following details:
@@ -486,7 +486,7 @@ Once that you have completed the form, the description will be created and all
 the contained offerings will be loaded into the corresponding store and you 
 will be redirected to the page that contains all the offerings of this store.
 
-.. image:: /images/user-guide/store_main_provider.png
+.. image:: images/user-guide/store_main_provider.png
    :align: center
 
 Managing Existing Descriptions
@@ -496,7 +496,7 @@ To manage all the descriptions that you have upload to this store, you can
 click the **My Descriptions** button (the one indicated by a green label). A
 screen similar to the following one will be shown:
 
-.. image:: /images/user-guide/store_my_descriptions.png
+.. image:: images/user-guide/store_my_descriptions.png
    :align: center
 
 For each description a box similar to the blue one will appear. As you can see,
@@ -510,7 +510,7 @@ the description click on its name (the button indicated by the green arrow).
 
 When you click on the name, you will see a page similar to the following one:
 
-.. image:: /images/user-guide/description_main.png
+.. image:: images/user-guide/description_main.png
    :align: center
 
 If you want to edit the description details, you can use the form contained in
@@ -521,14 +521,14 @@ To view all the offerings contained in the offering, click the **Offerings**
 button (the one indicated by a green arrow). You will be displayed a screen
 similar to the following one:
 
-.. image:: /images/user-guide/description_offerings.png
+.. image:: images/user-guide/description_offerings.png
    :align: center
 
 Finally, if you want to delete a description, just click the **Delete 
 description** button. Before deleting the description, you will be required to
 confirm the action with a dialog similar to the following one:
 
-.. image:: /images/user-guide/delete_description_dialog.png
+.. image:: images/user-guide/delete_description_dialog.png
    :align: center
 
 .. note::
