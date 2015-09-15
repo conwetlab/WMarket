@@ -544,5 +544,211 @@ confirm the action with a dialog similar to the following one:
 Programmer Guide
 ----------------
 
-You can check the API Reference on
-`Apiary <http://docs.fiwaremarketplace.apiary.io>`__
+
+API
+===
+
+If you are not a normal user but a programmer, you may be interested in using
+the API to interact with the Marketplace, so you can build your own apps based
+on it. You can check the API Reference or:
+
+* `Apiary <http://docs.fiwaremarketplace.apiary.io>`__
+* `GitHub Pages <http://conwetlab.github.io/WMarket>`__
+
+Please, note that all the requests againts the Marketplace **must** be 
+authenticated. Each instance can be configured to work with a different 
+authentication system.
+
+If the instance you are working with is using an external IdM, you must include 
+the OAuth2 header to authenticate the user:
+
+::
+
+  Authentication: Bearer OAUTH2_TOKEN
+
+On the other hand, if the instance is using the local authentication system,
+you can use the Basic header to authenticate the user:
+
+:: 
+
+  Authentication: Basic BASIC_TOKEN
+
+where ``BASIC_TOKEN`` is a String that can be constructed as follows:
+
+#. Username and password are combined into a string "username:password". (ex:
+   ``aitor:1234``)
+#. The resulting string is then encoded the RFC2045-MIME variant of Base64 (ex: 
+   ``YWl0b3I6MTIzNA==``)
+
+
+Offerings Descriptions (Linked USDL)
+====================================
+
+As stated before, Linked USDL files are those files used to describe the 
+offerings published in WMarket. One Linked USDL file can contain one or more
+offerings. These files are written in RDF.
+
+WMarket is fully integrated with 
+`WStore <https://github.com/conwetlab/wstore>`__ so you do not have to worry
+about creating Linked USDL files to upload your offerings to WMarket since
+WStore will create and upload them for you. 
+
+However, in some cases you can be interested in uploading your offerings to 
+WMarket without using WStore. To do so, you have just to create the Linked USDL
+file that describe your offerings. This tutorial will guide you in creating
+these files in a very easy way.
+
+.. note::
+  All the examples given in the following sections are written using the XML
+  representation of RDF.
+
+Headers
+-------
+
+The first thing that you have to do is to create the header of the file to 
+include all the vocabularies that will be used to describe the different 
+offerings. So, your header should be similar to the following one:
+
+::
+
+  <?xml version="1.0"?>
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+      xmlns:foaf="http://xmlns.com/foaf/0.1/" 
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+      xmlns:dcterms="http://purl.org/dc/terms/" 
+      xmlns:usdl="http://www.linked-usdl.org/ns/usdl-core#"
+      xmlns:pav="http://purl.org/pav/" 
+      xmlns:price="http://www.linked-usdl.org/ns/usdl-pricing#" 
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
+      xmlns:skos="http://www.w3.org/2004/02/skos/core#" 
+      xmlns:gr="http://purl.org/goodrelations/v1#">
+
+      ...
+
+  </rdf:RDF>
+
+Service Offering
+----------------
+
+Once that you have included all the required vocabularies, you are ready to
+create the offerings. As stated before, a Linked USDL can contain one or more
+offerings. Each offering is represented by a ``usdl:ServiceOffering`` as 
+follows:
+
+::
+
+  <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://repo.fiware/inputboxwidget">
+      <dcterms:title xml:lang="en">Input Box Widget</dcterms:title>
+      <dcterms:description xml:lang="en">A simple widget with an input box.</dcterms:description>
+      <pav:version>1.0</pav:version>
+      <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__InputBoxWidget__1.0/catalogue.png" />
+      <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/inputboxwidget/1.0"/>
+  </usdl:ServiceOffering>
+
+For each offering, you are required to include **at least** the following 
+tags:
+
+* ``dcterms:title``: The title of your offering
+* ``dcters:description``: A brief description for your offering
+* ``pav:version``: The version of your offering
+* ``foaf:depiction``: The URL of the image that identifies your offering. This
+  image will be displayed in the GUI 
+* ``gr:availableDeliveryMethods``: The URL where consumer must be redirected to
+  acquire the offering
+
+However, this information can be not enough for WMarket consumers. For this 
+reason you can also include extra tags to specify the price plans and the 
+services included in your offering.
+
+Price Plans
+```````````
+
+One Offering (``usdl:ServiceOffering``) can contain zero or more price plans.
+To include one price plan in your offering, just add the price plan tag 
+(``usdl:hasPricePlan``) to your ``usdl:ServiceOffering`` as follow:
+
+:: 
+
+  <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://repo.fiware/inputboxwidget">
+    ...
+    <usdl:hasPricePlan rdf:nodeID="priceplan1"/>
+  </usdl:ServiceOffering>
+
+As can be seen, the node refers to the specific price plan included in the 
+offering. Each price plan is a node (``price:PricePlan``) that must be embedded
+in the same file and should look similar to the following one:
+
+::
+
+  <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="priceplan1">
+      <dcterms:title xml:lang="en">Single Payment</dcterms:title>
+      <dcterms:description xml:lang="en">This offering needs a single payment to be acquired</dcterms:description>
+      <price:hasPriceComponent rdf:nodeID="pricecomponent1"/>
+  </price:PricePlan>
+
+Price Plans (``price:PricePlan``) include zero (for free offerings) or more 
+Price Components tagged as ``price:hasPriceComponent``. As with Price Plans,
+these Price Components are nodes (``price:PriceComponent``) which must be 
+embedded in the same file and follow this structure:
+
+::
+
+  <price:PriceComponent rdf:nodeID="pricecomponent1">
+    <rdfs:label xml:lang="en">Single payment</rdfs:label>
+    <dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
+    <price:hasPrice rdf:nodeID="pricespec1"/>
+  </price:PriceComponent>
+
+  <gr:PriceSpecification rdf:nodeID="pricespec1">
+    <gr:hasCurrencyValue>1.0</gr:hasCurrencyValue>
+    <gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
+    <gr:hasCurrency>EUR</gr:hasCurrency>
+  </gr:PriceSpecification>
+
+The name and description of the Price Component can be set in the 
+``price:PriceComponent`` node while the pricing details (currency, units and 
+value) must be set in a separate node with type ``gr:PriceSpecification`` as
+stated in the given example.
+
+Services
+````````
+
+An Offering (``usdl:ServiceOffering``) can also contain zero or more services.
+Serives are the products (APIs, widgets, datasets, files, etc.) that you attach
+to the offering. To include one service in your offering, just add the service
+tag (``usdl:includes``) to your ``usdl:ServiceOffering`` as follow:
+
+::
+
+  <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://repo.fiware/inputboxwidget">
+    ...
+    <usdl:includes rdf:resource="http://repo.fiware/inputboxwidget#service1"/>
+  </usdl:ServiceOffering>
+
+The node refers to the specific sevice included in the offering. Each service
+is a node (``usdl:Service``) that mus be embedded in the same file. It will be
+similar to the following one:
+
+::
+
+  <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://repo.fiware/inputboxwidget#service1">
+      <dcterms:title xml:lang="en">Input Box Widget</dcterms:title>
+      <dcterms:description xml:lang="en">A widget with a simple input box that can be use to request data</dcterms:description>
+      <usdl:hasClassification rdf:nodeID="classification1" />
+  </usdl:Service>
+
+As can be seen, we can set the name and the description of the service. 
+Additionally, we can also specify a set of categories that can be used to 
+categorize and identify the service easily. To to it, just add the node
+``usdl:hasClassification`` that will refer to a category (``skos:Concept``) 
+embedded in the same file. Use the node ``rdfs:label`` to set the name of the
+catgory.
+
+::
+
+  <skos:Concept xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="classification1">
+      <rdfs:label>Wirecloud widget</rdfs:label>
+  </skos:Concept>
+
+.. note::
+  Offerings are categorized based on the categories of their services.
