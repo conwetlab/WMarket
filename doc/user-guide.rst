@@ -591,7 +591,7 @@ offerings. These files are written in RDF.
 WMarket is fully integrated with 
 `WStore <https://github.com/conwetlab/wstore>`__ so you do not have to worry
 about creating Linked USDL files to upload your offerings to WMarket since
-WStore will create and upload them for you. 
+WStore will create and upload them for you.
 
 However, in some cases you can be interested in uploading your offerings to 
 WMarket without using WStore. To do so, you have just to create the Linked USDL
@@ -601,9 +601,6 @@ these files in a very easy way.
 .. note::
   All the examples given in the following sections are written using the XML
   representation of RDF.
-
-Headers
--------
 
 The first thing that you have to do is to create the header of the file to 
 include all the vocabularies that will be used to describe the different 
@@ -661,7 +658,7 @@ reason you can also include extra tags to specify the price plans and the
 services included in your offering.
 
 Price Plans
-```````````
+-----------
 
 One Offering (``usdl:ServiceOffering``) can contain zero or more price plans.
 To include one price plan in your offering, just add the price plan tag 
@@ -694,15 +691,15 @@ embedded in the same file and follow this structure:
 ::
 
   <price:PriceComponent rdf:nodeID="pricecomponent1">
-    <rdfs:label xml:lang="en">Single payment</rdfs:label>
-    <dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
-    <price:hasPrice rdf:nodeID="pricespec1"/>
+      <rdfs:label xml:lang="en">Single payment</rdfs:label>
+      <dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
+      <price:hasPrice rdf:nodeID="pricespec1"/>
   </price:PriceComponent>
 
   <gr:PriceSpecification rdf:nodeID="pricespec1">
-    <gr:hasCurrencyValue>1.0</gr:hasCurrencyValue>
-    <gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
-    <gr:hasCurrency>EUR</gr:hasCurrency>
+      <gr:hasCurrencyValue>1.0</gr:hasCurrencyValue>
+      <gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
+      <gr:hasCurrency>EUR</gr:hasCurrency>
   </gr:PriceSpecification>
 
 The name and description of the Price Component can be set in the 
@@ -711,7 +708,7 @@ value) must be set in a separate node with type ``gr:PriceSpecification`` as
 stated in the given example.
 
 Services
-````````
+--------
 
 An Offering (``usdl:ServiceOffering``) can also contain zero or more services.
 Serives are the products (APIs, widgets, datasets, files, etc.) that you attach
@@ -721,8 +718,8 @@ tag (``usdl:includes``) to your ``usdl:ServiceOffering`` as follow:
 ::
 
   <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://repo.fiware/inputboxwidget">
-    ...
-    <usdl:includes rdf:resource="http://repo.fiware/inputboxwidget#service1"/>
+      ...
+      <usdl:includes rdf:resource="http://repo.fiware/inputboxwidget#service1"/>
   </usdl:ServiceOffering>
 
 The node refers to the specific sevice included in the offering. Each service
@@ -752,3 +749,8 @@ catgory.
 
 .. note::
   Offerings are categorized based on the categories of their services.
+
+Example
+-------
+
+You can find the example :download:`here <example/programmers-guide/example.rdf>`..
