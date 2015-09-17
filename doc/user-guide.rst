@@ -753,4 +753,4 @@ catgory.
 Example
 -------
 
-You can find the example :download:`here <example/programmers-guide/example.rdf>`..
+You can find the example :download:`here <examples/programmers-guide/example.rdf>`.
