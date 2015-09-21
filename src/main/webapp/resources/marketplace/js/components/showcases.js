@@ -448,7 +448,7 @@
                 list.$items.splice(currentPosition, 1);
             }
 
-            if (index == 2) { // CATEGORIES
+            if (index == 3) { // CATEGORIES
                 updateCategoryList.call(this, this.offeringList[currentPosition].info.categories, list);
             }
 
