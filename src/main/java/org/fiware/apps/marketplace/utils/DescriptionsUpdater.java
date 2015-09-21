@@ -36,46 +36,52 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 
-public class DescriptionUpdaterServlet extends HttpServlet {
+@Component
+@Scope("singleton")
+public class DescriptionsUpdater {
 	
-	private static final long serialVersionUID = 1L;
-	private static Logger logger = LoggerFactory.getLogger(DescriptionUpdaterServlet.class);
+	// Spring references
+	@Value("${descriptions.updatePeriod}") private int updatePeriod;
+	@Autowired private DescriptionBo descriptionBo;
 	
-	private static ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+	// Executor
+	private ScheduledExecutorService executor;
 	
-	@Override
-	public void init() throws ServletException {
+	private static Logger logger = LoggerFactory.getLogger(DescriptionsUpdater.class);
+	
+	@PostConstruct
+	public void init() {
 		
-		super.init();
-		
-		int period = new Integer(PropertiesUtil.getProperty("descriptions.updatePeriod")).intValue();
-		
+		this.executor = Executors.newScheduledThreadPool(1);
+				
 		executor.scheduleAtFixedRate(new Runnable() {
 			
 			@Override
 			public void run() {
-				try {					
+				try {
 					// Call update all offerings method
-					((DescriptionBo) ApplicationContextProvider.getApplicationContext().getBean("descriptionBo"))
-							.updateAllDescriptions();;
+					descriptionBo.updateAllDescriptions();
 				} catch (Exception e) {
 					logger.warn("Unexpected error", e);
 				}
 			}
-		}, 0, period, TimeUnit.SECONDS);
+		}, 0, updatePeriod, TimeUnit.SECONDS);
 	}
 	
-	@Override
+	@PreDestroy
 	public void destroy() {
-		super.destroy();
 		executor.shutdown();
 	}
 
