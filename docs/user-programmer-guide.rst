@@ -555,7 +555,7 @@ on it. You can check the API Reference at:
 * `Apiary <http://docs.fiwaremarketplace.apiary.io>`__
 * `GitHub Pages <http://conwetlab.github.io/WMarket>`__
 
-Please, note that all the requests againts the Marketplace **must** be 
+Please, note that all the requests against the Marketplace **must** be 
 authenticated (except for the one to create users). Each instance can be 
 configured to work with a different authentication system.
 
@@ -715,7 +715,7 @@ Services
 ````````
 
 An Offering (``usdl:ServiceOffering``) can also contain zero or more services.
-Serives are the products (APIs, widgets, datasets, files, etc.) that you attach
+Services are the products (APIs, widgets, datasets, files, etc.) that you attach
 to the offering. To include one service in your offering, just add the service
 tag (``usdl:includes``) to your ``usdl:ServiceOffering`` as follow:
 
@@ -726,8 +726,8 @@ tag (``usdl:includes``) to your ``usdl:ServiceOffering`` as follow:
       <usdl:includes rdf:resource="http://repo.fiware/inputboxwidget#service1"/>
   </usdl:ServiceOffering>
 
-The node refers to the specific sevice included in the offering. Each service
-is a node (``usdl:Service``) that mus be embedded in the same file. It will be
+The node refers to the specific service included in the offering. Each service
+is a node (``usdl:Service``) that must be embedded in the same file. It will be
 similar to the following one:
 
 ::
@@ -743,7 +743,7 @@ Additionally, we can also specify a set of categories that can be used to
 categorize and identify the service easily. To to it, just add the node
 ``usdl:hasClassification`` that will refer to a category (``skos:Concept``) 
 embedded in the same file. Use the node ``rdfs:label`` to set the name of the
-catgory.
+category.
 
 ::
 
@@ -758,11 +758,11 @@ Example
 -------
 
 You can find the previous example 
-:download:`here <examples/programmers-guide/example.rdf>`. This example is very
+:download:`here <examples/programmer-guide/example.rdf>`. This example is very
 simple. Please, keep in mind that:
 
 * A description file can contain more than one offering
 * An offering can contain more than one price plan
 * A price plan can contain more than one price component
 * An offering can contain more than one service
-* More than one category can be attached to one service
+* More than one category can be attached to a service

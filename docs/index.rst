@@ -33,7 +33,7 @@ Index
   based on the source code. This section also explains how to
   you can execute the existing tests. 
 
-:doc:`user-guide`
+:doc:`user-programmer-guide`
   The guide for people who will be using a WMarket site through its web 
   interface, explains how to use the web interface and its features. 
 
