@@ -627,8 +627,8 @@ offerings. So, your header should be similar to the following one:
 
   </rdf:RDF>
 
-Service Offering
-````````````````
+Service Offerings
+`````````````````
 
 Once that you have included all the required vocabularies, you are ready to
 create the offerings. As stated before, a Linked USDL can contain one or more
