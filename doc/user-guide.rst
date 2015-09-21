@@ -550,14 +550,14 @@ API
 
 If you are not a normal user but a programmer, you may be interested in using
 the API to interact with the Marketplace, so you can build your own apps based
-on it. You can check the API Reference or:
+on it. You can check the API Reference at:
 
 * `Apiary <http://docs.fiwaremarketplace.apiary.io>`__
 * `GitHub Pages <http://conwetlab.github.io/WMarket>`__
 
 Please, note that all the requests againts the Marketplace **must** be 
-authenticated. Each instance can be configured to work with a different 
-authentication system.
+authenticated (except for the one to create users). Each instance can be 
+configured to work with a different authentication system.
 
 If the instance you are working with is using an external IdM, you must include 
 the OAuth2 header to authenticate the user:
@@ -575,10 +575,10 @@ you can use the Basic header to authenticate the user:
 
 where ``BASIC_TOKEN`` is a String that can be constructed as follows:
 
-#. Username and password are combined into a string "username:password". (ex:
+#. Username and password are combined into a string ``username:password``. (ex:
    ``aitor:1234``)
-#. The resulting string is then encoded the RFC2045-MIME variant of Base64 (ex: 
-   ``YWl0b3I6MTIzNA==``)
+#. The resulting string is then encoded usign the RFC2045-MIME variant of Base64
+   (ex: ``YWl0b3I6MTIzNA==``)
 
 
 Offerings Descriptions (Linked USDL)
@@ -602,7 +602,10 @@ these files in a very easy way.
   All the examples given in the following sections are written using the XML
   representation of RDF.
 
-The first thing that you have to do is to create the header of the file to 
+Structure
+---------
+
+The first thing that you have to do is to create the main node of the file to 
 include all the vocabularies that will be used to describe the different 
 offerings. So, your header should be similar to the following one:
 
@@ -625,7 +628,7 @@ offerings. So, your header should be similar to the following one:
   </rdf:RDF>
 
 Service Offering
-----------------
+````````````````
 
 Once that you have included all the required vocabularies, you are ready to
 create the offerings. As stated before, a Linked USDL can contain one or more
@@ -654,11 +657,11 @@ tags:
   acquire the offering
 
 However, this information can be not enough for WMarket consumers. For this 
-reason you can also include extra tags to specify the price plans and the 
+reason you can also include extra nodes to specify the price plans and the 
 services included in your offering.
 
 Price Plans
------------
+```````````
 
 One Offering (``usdl:ServiceOffering``) can contain zero or more price plans.
 To include one price plan in your offering, just add the price plan tag 
@@ -705,10 +708,11 @@ embedded in the same file and follow this structure:
 The name and description of the Price Component can be set in the 
 ``price:PriceComponent`` node while the pricing details (currency, units and 
 value) must be set in a separate node with type ``gr:PriceSpecification`` as
-stated in the given example.
+stated in the given example. A Price Component **must** contain just one Price 
+Specification.
 
 Services
---------
+````````
 
 An Offering (``usdl:ServiceOffering``) can also contain zero or more services.
 Serives are the products (APIs, widgets, datasets, files, etc.) that you attach
@@ -753,4 +757,12 @@ catgory.
 Example
 -------
 
-You can find the example :download:`here <examples/programmers-guide/example.rdf>`.
+You can find the previous example 
+:download:`here <examples/programmers-guide/example.rdf>`. This example is very
+simple. Please, keep in mind that:
+
+* A description file can contain more than one offering
+* An offering can contain more than one price plan
+* A price plan can contain more than one price component
+* An offering can contain more than one service
+* More than one category can be attached to one service
