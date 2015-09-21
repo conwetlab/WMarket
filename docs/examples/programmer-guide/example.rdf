@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:usdl="http://www.linked-usdl.org/ns/usdl-core#"
+    xmlns:pav="http://purl.org/pav/"
+    xmlns:price="http://www.linked-usdl.org/ns/usdl-pricing#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:gr="http://purl.org/goodrelations/v1#">
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://repo.fiware/inputboxwidget">
+        <dcterms:title xml:lang="en">Input Box Widget</dcterms:title>
+        <dcterms:description xml:lang="en">A simple widget with an input box.</dcterms:description>
+        <pav:version>1.0</pav:version>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__InputBoxWidget__1.0/catalogue.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/inputboxwidget/1.0"/>
+        <usdl:hasPricePlan rdf:nodeID="priceplan1"/>
+        <usdl:includes rdf:resource="http://repo.fiware/inputboxwidget#service1"/>
+    </usdl:ServiceOffering>
+
+    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="priceplan1">
+        <dcterms:title xml:lang="en">Single Payment</dcterms:title>
+        <dcterms:description xml:lang="en">This offering needs a single payment to be acquired</dcterms:description>
+        <price:hasPriceComponent rdf:nodeID="pricecomponent1"/>
+    </price:PricePlan>
+
+    <price:PriceComponent rdf:nodeID="pricecomponent1">
+        <rdfs:label xml:lang="en">Single payment</rdfs:label>
+        <dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
+        <price:hasPrice rdf:nodeID="pricespec1"/>
+    </price:PriceComponent>
+
+    <gr:PriceSpecification rdf:nodeID="pricespec1">
+        <gr:hasCurrencyValue>1.0</gr:hasCurrencyValue>
+        <gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
+        <gr:hasCurrency>EUR</gr:hasCurrency>
+    </gr:PriceSpecification>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://repo.fiware/inputboxwidget#service1">
+        <dcterms:title xml:lang="en">Input Box Widget</dcterms:title>
+        <dcterms:description xml:lang="en">A widget with a simple input box that can be use to request data</dcterms:description>
+        <usdl:hasClassification rdf:nodeID="classification1" />
+    </usdl:Service>
+
+    <skos:Concept xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="classification1">
+        <rdfs:label>Wirecloud widget</rdfs:label>
+    </skos:Concept>
+
+</rdf:RDF>
