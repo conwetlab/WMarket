@@ -47,5 +47,5 @@ Index
    installation-guide
    administration-guide
    building-from-sources-guide
-   user-guide
+   user-programmer-guide
    
