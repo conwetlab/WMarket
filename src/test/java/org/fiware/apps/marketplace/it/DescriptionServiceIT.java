@@ -77,7 +77,7 @@ public class DescriptionServiceIT extends AbstractIT {
 	
 	private final static String MESSAGE_NAME_IN_USE = "This name is already in use in this Store.";
 	private final static String MESSAGE_URL_IN_USE = "This URL is already in use in this Store.";
-	private final static String MESSAGE_INVALID_RDF = "Your RDF could not be parsed.";
+	private final static String MESSAGE_INVALID_RDF = "Your RDF could not be parsed";
 	private final static String MESSAGE_DESCRIPTION_NOT_FOUND = "Description %s not found in Store %s";
 
 	@Before
@@ -128,6 +128,10 @@ public class DescriptionServiceIT extends AbstractIT {
 		// Get offering from the list
 		int index = offerings.indexOf(offering);
 		Offering receivedOffering = offerings.get(index);
+		assertThat(receivedOffering.getDisplayName()).isEqualTo(offering.getDisplayName());
+		assertThat(receivedOffering.getDescription()).isEqualTo(offering.getDescription());
+		assertThat(receivedOffering.getImageUrl()).isEqualTo(offering.getImageUrl());
+		assertThat(receivedOffering.getAcquisitionUrl()).isEqualTo(offering.getAcquisitionUrl());
 		assertThat(receivedOffering.getPricePlans()).isEqualTo(offering.getPricePlans());
 		assertThat(offerings.get(index).getCategories()).isEqualTo(offering.getCategories());
 

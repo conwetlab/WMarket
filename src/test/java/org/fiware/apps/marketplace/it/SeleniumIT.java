@@ -786,8 +786,9 @@ public class SeleniumIT extends AbstractIT {
 		fillField(formElement, "displayName", "FI");
 		formElement = submitFormExpectError(formElement, "displayName", String.format(MIN_LENGTH, 3));
 
-		fillField(formElement, "displayName", "FIWARE Store extra chars");
-		formElement = submitFormExpectError(formElement, "displayName", String.format(MAX_LENGTH, 20));
+		fillField(formElement, "displayName", "1234567890123456789012345678901234567890123456789012345678901234567"
+				+ "8901234567890123456789012345678901");
+		formElement = submitFormExpectError(formElement, "displayName", String.format(MAX_LENGTH, 100));
 
 		fillField(formElement, "displayName", "FIWARE $invalid");
 		formElement = submitFormExpectError(formElement, "displayName", "This field must contain alphanumerics (and -,_,.).");

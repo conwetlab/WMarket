@@ -1,10 +1,10 @@
-package org.fiware.apps.marketplace.controllers.rest;
+package org.fiware.apps.marketplace.utils;
 
 /*
  * #%L
  * FiwareMarketplace
  * %%
- * Copyright (C) 2012 SAP
+ * Copyright (C) 2015 CoNWeT Lab, Universidad Politécnica de Madrid
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,34 +32,57 @@ package org.fiware.apps.marketplace.controllers.rest;
  * #L%
  */
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import org.fiware.apps.marketplace.bo.SearchBo;
-import org.fiware.apps.marketplace.model.SearchResult;
-import org.fiware.apps.marketplace.utils.ApplicationContextProvider;
-import org.springframework.context.ApplicationContext;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+import org.fiware.apps.marketplace.bo.DescriptionBo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+
 @Component
-@Path("/search")
-public class SearchService {
-
-	ApplicationContext appContext = ApplicationContextProvider.getApplicationContext();
-	SearchBo searchBo = (SearchBo) appContext.getBean("searchBo");
-
-	@GET
-	@Produces({ "application/xml", "application/json" })
-	@Path("/offerings/fulltext/{searchstring}")
-	public SearchResult findStore(@PathParam("searchstring") String searchstring) {
-		SearchResult searchresult = searchBo.searchByKeyword(searchstring);
-		if (searchresult == null) {
-			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Something went wrong").build());
-		}
-		return searchresult;
+@Scope("singleton")
+public class DescriptionsUpdater {
+	
+	// Spring references
+	@Value("${descriptions.updatePeriod}") private int updatePeriod;
+	@Autowired private DescriptionBo descriptionBo;
+	
+	// Executor
+	private ScheduledExecutorService executor;
+	
+	private static Logger logger = LoggerFactory.getLogger(DescriptionsUpdater.class);
+	
+	@PostConstruct
+	public void init() {
+		
+		this.executor = Executors.newScheduledThreadPool(1);
+				
+		executor.scheduleAtFixedRate(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					// Call update all offerings method
+					descriptionBo.updateAllDescriptions();
+				} catch (Exception e) {
+					logger.warn("Unexpected error", e);
+				}
+			}
+		}, 0, updatePeriod, TimeUnit.SECONDS);
 	}
+	
+	@PreDestroy
+	public void destroy() {
+		executor.shutdown();
+	}
+
 }

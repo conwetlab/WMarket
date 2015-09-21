@@ -41,10 +41,7 @@ import org.fiware.apps.marketplace.model.ServiceNominalAttributeType;
 import org.fiware.apps.marketplace.model.ServiceOrdinalAttributeType;
 import org.fiware.apps.marketplace.model.ServiceRatioAttributeType;
 import org.fiware.apps.marketplace.rdf.RdfHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  * Class to resolve attribute types in service description or vocabulary files.
@@ -55,29 +52,32 @@ import com.hp.hpl.jena.rdf.model.Model;
 @Service("attributeTypeResolver")
 public class AttributeTypeResolver {
 	
-	@Autowired private RdfHelper rdfHelper;
-
+	// FIXME: The code is not tested. It has been adapted to the new RdfHelper implementation
+	
 	/**
 	 * Resolves all service attribute types that are contained under the given uri.
 	 * @param uri
 	 * @return
 	 */
 	public List<ServiceAttributeType> resolveAttributeTypesFromUri(String uri) {
-		Model model = rdfHelper.getModelFromUri(uri);
-		if (model == null)
+				
+		try {
+			RdfHelper helper = new RdfHelper(uri);
+			
+			List<ServiceAttributeType> types = new ArrayList<ServiceAttributeType>();
+			StringBuilder queryTypes = new StringBuilder();
+			queryTypes.append("SELECT DISTINCT ?x WHERE { ");
+			queryTypes.append("?x a skos:Concept . ");
+			queryTypes.append("{ { ?x rdfs:subClassOf gr:QualitativeValue } UNION { ?x rdfs:subClassOf gr:QuantitativeValue } } } ");
+			
+			for (String typeUri : helper.queryUris(queryTypes.toString(), "x")) {
+				types.add(createAttributeType(typeUri, helper));
+			}
+			
+			return types;
+		} catch (Exception e) {
 			return Collections.emptyList();
-
-		List<ServiceAttributeType> types = new ArrayList<ServiceAttributeType>();
-		StringBuilder queryTypes = new StringBuilder(RdfHelper.getQueryPrefixes());
-		queryTypes.append("SELECT DISTINCT ?x WHERE { ");
-		queryTypes.append("?x a skos:Concept . ");
-		queryTypes.append("{ { ?x rdfs:subClassOf gr:QualitativeValue } UNION { ?x rdfs:subClassOf gr:QuantitativeValue } } } ");
-		
-		for (String typeUri : rdfHelper.queryUris(model, queryTypes.toString(), "x")) {
-			types.add(createAttributeType(typeUri, model));
 		}
-		
-		return types;
 	}
 
 	/**
@@ -86,15 +86,15 @@ public class AttributeTypeResolver {
 	 * @param model
 	 * @return Returns null if more than two parent classes have been found or the contained type is unknown. 
 	 */
-	protected ServiceAttributeType createAttributeType(String typeUri, Model model) {
-		List<String> baseTypeUris = rdfHelper.getObjectUris(model, typeUri, "rdfs:subClassOf");
+	protected ServiceAttributeType createAttributeType(String typeUri, RdfHelper helper) {
+		List<String> baseTypeUris = helper.getObjectUris(typeUri, "rdfs:subClassOf");
 		if (baseTypeUris.size() > 2) {
 			System.out.println(AttributeTypeResolver.class.getName() + " - Too many base type uris: " + typeUri);
 			return null;
 		}
 
-		String rightSiblingUri = rdfHelper.getObjectUri(model, typeUri, "genVoc:hasRightSibling");
-		String leftSiblingUri = rdfHelper.getObjectUri(model, typeUri, "genVoc:hasLeftSibling");
+		String rightSiblingUri = helper.getObjectUri(typeUri, "genVoc:hasRightSibling");
+		String leftSiblingUri = helper.getObjectUri(typeUri, "genVoc:hasLeftSibling");
 
 		ServiceAttributeType attributeType = null;
 		if (isRatioAttributeType(baseTypeUris))
@@ -109,10 +109,10 @@ public class AttributeTypeResolver {
 		}
 
 		attributeType.setUri(typeUri);
-		attributeType.setPreferedLabel(rdfHelper.getLiteral(model, typeUri, "skos:prefLabel"));
-		attributeType.setDescription(rdfHelper.getLiteral(model, typeUri, "dcterms:description"));
-		attributeType.setBroaderTypeUri(rdfHelper.getObjectUri(model, typeUri, "skos:broader"));
-		for (String narrowerTypeUri : rdfHelper.getObjectUris(model, typeUri, "skos:narrower")) {
+		attributeType.setPreferedLabel(helper.getLiteral(typeUri, "skos:prefLabel"));
+		attributeType.setDescription(helper.getLiteral(typeUri, "dcterms:description"));
+		attributeType.setBroaderTypeUri(helper.getObjectUri(typeUri, "skos:broader"));
+		for (String narrowerTypeUri : helper.getObjectUris(typeUri, "skos:narrower")) {
 			attributeType.addNarrowerTypeUri(narrowerTypeUri);
 		}
 		for (String baseTypeUri : baseTypeUris) {

@@ -65,13 +65,13 @@
 
 .rotating-showcase > h4 {
     position: absolute;
-    width: 120px;
+    width: 150px;
     left: 0;
     top: 0;
 }
 
 .rotating-showcase > .row-rotating {
-    margin-left: 120px;
+    margin-left: 150px;
 }
 
 .row-rotating {

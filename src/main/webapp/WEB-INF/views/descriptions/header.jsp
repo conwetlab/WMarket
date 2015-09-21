@@ -66,7 +66,7 @@
     <div class="modal-content">
       <div class="modal-heading">
         <button type="button" class="btn-close" data-cancel>&times;</button>
-        <span class="modal-title">Delete store</span>
+        <span class="modal-title">Delete description</span>
       </div>
       <div class="modal-body">
         <form name="description_delete_form" method="post" action="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }/delete">

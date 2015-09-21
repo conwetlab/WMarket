@@ -1,4 +1,4 @@
-package org.fiware.apps.marketplace.utils;
+package org.fiware.apps.marketplace.exceptions;
 
 /*
  * #%L
@@ -32,51 +32,12 @@ package org.fiware.apps.marketplace.utils;
  * #L%
  */
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+public class ParseException extends Exception {
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
-import org.fiware.apps.marketplace.bo.DescriptionBo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-public class DescriptionUpdaterServlet extends HttpServlet {
-	
 	private static final long serialVersionUID = 1L;
-	private static Logger logger = LoggerFactory.getLogger(DescriptionUpdaterServlet.class);
 	
-	private static ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-	
-	@Override
-	public void init() throws ServletException {
-		
-		super.init();
-		
-		int period = new Integer(PropertiesUtil.getProperty("descriptions.updatePeriod")).intValue();
-		
-		executor.scheduleAtFixedRate(new Runnable() {
-			
-			@Override
-			public void run() {
-				try {					
-					// Call update all offerings method
-					((DescriptionBo) ApplicationContextProvider.getApplicationContext().getBean("descriptionBo"))
-							.updateAllDescriptions();;
-				} catch (Exception e) {
-					logger.warn("Unexpected error", e);
-				}
-			}
-		}, 0, period, TimeUnit.SECONDS);
-	}
-	
-	@Override
-	public void destroy() {
-		super.destroy();
-		executor.shutdown();
+	public ParseException(String message) {
+		super(message);
 	}
 
 }

@@ -67,7 +67,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 		List<?> list = getSession()
 				.createQuery("from Store where name = :name")
 				.setParameter("name", name)
-				.list();	
+				.list();
 		
 		if (list.isEmpty()){
 			throw new StoreNotFoundException("Store " + name + " not found");

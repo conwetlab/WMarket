@@ -5,7 +5,8 @@
     xmlns:msm="http://cms-wg.sti2.org/ns/minimal-service-model#" 
     xmlns:owl="http://www.w3.org/2002/07/owl#" 
     xmlns:dcterms="http://purl.org/dc/terms/" 
-    xmlns:usdl="http://www.linked-usdl.org/ns/usdl-core#" 
+    xmlns:usdl="http://www.linked-usdl.org/ns/usdl-core#"
+    xmlns:pav="http://purl.org/pav/" 
     xmlns:legal="http://www.linked-usdl.org/ns/usdl-legal#" 
     xmlns:price="http://www.linked-usdl.org/ns/usdl-pricing#" 
     xmlns:sla="http://www.linked-usdl.org/ns/usdl-sla#" 
@@ -323,11 +324,12 @@
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service1"/>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service2"/>
         <dcterms:title xml:lang="en">OrionStarterKit</dcterms:title>
-        <usdl:hasPricePlan rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#NMTecgiP49qlfU90V"/>
-        <usdl:hasPricePlan rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#NMTecgiP49qlfU90W"/>
+        <usdl:hasPricePlan rdf:nodeID="priceplan1"/>
+        <usdl:hasPricePlan rdf:nodeID="priceplan2"/>
         <usdl:hasServiceLevelProfile rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#KmhtiqmYXHT7L0vlu"/>
-        <foaf:thumbnail rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png" />
+        <pav:version>1.0</pav:version>
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/orionstarterkit/1.0"/>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#inputboxwidget">
@@ -339,8 +341,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service3"/>
         <dcterms:title xml:lang="en">InputBoxWidget</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/CoNWeT__InputBoxWidget__1.0/catalogue.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__InputBoxWidget__1.0/catalogue.png" />
+        <pav:version>1.0</pav:version>
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/inputboxwidget/1.0"/>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#wcuguide">
@@ -356,8 +359,9 @@
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service7"/>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service8"/>
         <dcterms:title xml:lang="en">WireCloudUserGuide</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/CoNWeT__WireCloudUserGuide__1.0/wirecloud_logo.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__WireCloudUserGuide__1.0/wirecloud_logo.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/wireclouduserguide/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#kurento">
@@ -371,8 +375,9 @@
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service10"/>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service11"/>
         <dcterms:title xml:lang="en">KurentoStarterKit</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/CoNWeT__KurentoStarterKit__1.0/catalogue.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__KurentoStarterKit__1.0/catalogue.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/kurentostarterkit/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#chart">
@@ -385,8 +390,9 @@
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service12"/>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service13"/>
         <dcterms:title xml:lang="en">ChartStarterKit</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/CoNWeT__ChartsStarterKit__1.0/catalogue.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__ChartsStarterKit__1.0/catalogue.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/chartstarterkit/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#led">
@@ -398,8 +404,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service14"/>
         <dcterms:title xml:lang="en">Led Panel</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/karsten-meier__LED%20Panel__0.5/ledpanelpreview.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/karsten-meier__LED%20Panel__0.5/ledpanelpreview.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/ledpanel/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#valencia">
@@ -411,8 +418,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service15"/>
         <dcterms:title xml:lang="en">Valencia carga eléctrica</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/andres-leiva-araos__Valencia%20carga%20electrica__2.0/ckan.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/andres-leiva-araos__Valencia%20carga%20electrica__2.0/ckan.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/valenciacargaelectrica/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#geowidgets">
@@ -426,8 +434,9 @@
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service17"/>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service18"/>
         <dcterms:title xml:lang="en">GeoWidgets</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/CoNWeT__GeoWidgets__1.0/geoWidgets.jpg" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__GeoWidgets__1.0/geoWidgets.jpg" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/geowidgets/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#multimedia">
@@ -442,8 +451,9 @@
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service21"/>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service22"/>
         <dcterms:title xml:lang="en">MultimediaPack</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/CoNWeT__MultimediaPack__1.0.1/multimedia.jpg" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__MultimediaPack__1.0.1/multimedia.jpg" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/multimediapack/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#madpass">
@@ -455,8 +465,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service23"/>
         <dcterms:title xml:lang="en">Madrid Public Transport Pass Price Evolution - FIWARE Developers Week</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/CoNWeT__Madrid%20Public%20Transport%20Pass%20Price%20Evolution%20-%20FIWARE%20Developers%20Weeks__1.0/abono%20transporte%20-%20logo%20store.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__Madrid%20Public%20Transport%20Pass%20Price%20Evolution%20-%20FIWARE%20Developers%20Weeks__1.0/abono%20transporte%20-%20logo%20store.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/madridpublictransportpasspriceevolutionfiwaredevelopersweeks/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#accesible">
@@ -468,8 +479,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service24"/>
         <dcterms:title xml:lang="en">Accesible Places</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/juan-jose-bilbao__Accessible%20Places%20by%20EsAccesible%20App__1.0/ckan.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/juan-jose-bilbao__Accessible%20Places%20by%20EsAccesible%20App__1.0/ckan.png" />
+       <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/accesibeplacesesaccesibleapp/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#passs">
@@ -482,8 +494,9 @@
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service25"/>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service26"/>
         <dcterms:title xml:lang="en">Evolution of Madrid Transport Pass Visualization</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/fdelavega__EvolutionOfMadridTrasportPassVisualization__1.0/bus-logo.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/fdelavega__EvolutionOfMadridTrasportPassVisualization__1.0/bus-logo.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/evolutionofmadridtransportpassvisualization/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#pharmaciesfrance">
@@ -495,8 +508,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service27"/>
         <dcterms:title xml:lang="en">Pharmacies en Ile de France</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/leroy-1__Pharmacies%20en%20Ile%20de%20France__14.4.22.0.0/ckan.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/leroy-1__Pharmacies%20en%20Ile%20de%20France__14.4.22.0.0/ckan.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/pharmacieseniledefrance/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#madridtransport">
@@ -508,8 +522,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service28"/>
         <dcterms:title xml:lang="en">Madrid Transport Evolution</dcterms:title>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/sergio-garcia__Madrid%20Transport%20Evolution__1.0/ckan.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/sergio-garcia__Madrid%20Transport%20Evolution__1.0/ckan.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/madridtransportevolution/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#CB">
@@ -521,8 +536,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service29"/>
         <dcterms:title xml:lang="en">Orion Context Broker</dcterms:title>
-        <foaf:thumbnail rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/orion.png?itok=-HUw3RZx" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/orion.png?itok=-HUw3RZx" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/orion/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#wstore">
@@ -534,8 +550,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service30"/>
         <dcterms:title xml:lang="en">WStore</dcterms:title>
-        <foaf:thumbnail rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_small/public/WStore_v1.png?itok=TI9JqgRB" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_small/public/WStore_v1.png?itok=TI9JqgRB" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/wstore/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#wstore">
@@ -547,8 +564,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service30"/>
         <dcterms:title xml:lang="en">WStore</dcterms:title>
-        <foaf:thumbnail rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/WStore_v1.png?itok=TI9JqgRB" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/WStore_v1.png?itok=TI9JqgRB" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/wstore/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#spagobi">
@@ -560,8 +578,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service31"/>
         <dcterms:title xml:lang="en">Spago BI</dcterms:title>
-        <foaf:thumbnail rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/spagobi_logo.png?itok=JFwj0xEW" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/spagobi_logo.png?itok=JFwj0xEW" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/spagobi/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#cosmos">
@@ -573,8 +592,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service32"/>
         <dcterms:title xml:lang="en">Cosmos</dcterms:title>
-        <foaf:thumbnail rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/cosmos_logo.png?itok=KmgRiZKE" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/cosmos_logo.png?itok=KmgRiZKE" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/cosmos/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#idesigner">
@@ -586,8 +606,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service33"/>
         <dcterms:title xml:lang="en">Interface Designed</dcterms:title>
-        <foaf:thumbnail rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/meshmoon-163x163_0.png?itok=Ca9is0RN" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/meshmoon-163x163_0.png?itok=Ca9is0RN" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/interfacedesigner/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#wmarket">
@@ -599,8 +620,9 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service34"/>
         <dcterms:title xml:lang="en">WMarket</dcterms:title>
-        <foaf:thumbnail rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/marketplace.png?itok=kTuhoqh6" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/marketplace.png?itok=kTuhoqh6" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/wmarket/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#tundra">
@@ -612,54 +634,75 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service35"/>
         <dcterms:title xml:lang="en">Tundra</dcterms:title>
-        <foaf:thumbnail rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/xml3d-logo.png?itok=2zRHEhW3" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/xml3d-logo.png?itok=2zRHEhW3" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/tundra/1.0"/>
+        <pav:version>1.0</pav:version>
     </usdl:ServiceOffering>
 
-    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#NMTecgiP49qlfU90W">
+    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="priceplan1">
         <dcterms:title xml:lang="en">Single Payment</dcterms:title>
         <dcterms:description xml:lang="en">This offering needs a single payment to be acquired</dcterms:description>
-        <price:hasPriceComponent rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/BicisSevillaStat#7jnovpSvDceyPlJxE"/>
-        <price:hasPriceComponent rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/BicisSevillaStat#7jnovpSvDceyPlJxF"/>
+        <price:hasPriceComponent rdf:nodeID="pricecomponent1"/>
+        <price:hasPriceComponent rdf:nodeID="pricecomponent2"/>
     </price:PricePlan>
 
-    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#NMTecgiP49qlfU90V">
+    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="priceplan2">
         <dcterms:title xml:lang="en">Pay Per Use</dcterms:title>
         <dcterms:description xml:lang="en">You'll be charged based on your consumption</dcterms:description>
-        <price:hasPriceComponent rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/BicisSevillaStat#7jnovpSvDceyPlJxG"/>
-        <price:hasPriceComponent rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/BicisSevillaStat#7jnovpSvDceyPlJxH"/>
+        <price:hasPriceComponent rdf:nodeID="pricecomponent3"/>
+        <price:hasPriceComponent rdf:nodeID="pricecomponent4"/>
     </price:PricePlan>
     
-    <price:PriceComponent rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/BicisSevillaStat#7jnovpSvDceyPlJxE">
-		<dcterms:title xml:lang="en">Single payment</dcterms:title>
-		<gr:hasCurrency>EUR</gr:hasCurrency>
-		<gr:hasCurrencyValue rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.0</gr:hasCurrencyValue>
-		<gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
+    <price:PriceComponent rdf:nodeID="pricecomponent1">
+		<rdfs:label xml:lang="en">Single payment</rdfs:label>
 		<dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
+    	<price:hasPrice rdf:nodeID="pricespec1"/>
 	</price:PriceComponent>
 
-    <price:PriceComponent rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/BicisSevillaStat#7jnovpSvDceyPlJxF">
-		<dcterms:title xml:lang="en">Single payment</dcterms:title>
+	<rdf:Description rdf:nodeID="pricespec1">
+		<rdf:type rdf:resource="http://purl.org/goodrelations/v1#PriceSpecification"/>
+		<gr:hasCurrencyValue>1.0</gr:hasCurrencyValue>
+		<gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
+		<gr:hasCurrency>EUR</gr:hasCurrency>
+	</rdf:Description>
+
+    <price:PriceComponent rdf:nodeID="pricecomponent2">
+		<rdfs:label xml:lang="en">Single payment</rdfs:label>
+		<dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
+		<price:hasPrice rdf:nodeID="pricespec2"/>
+	</price:PriceComponent>
+	
+	<rdf:Description rdf:nodeID="pricespec2">
+		<rdf:type rdf:resource="http://purl.org/goodrelations/v1#PriceSpecification"/>
 		<gr:hasCurrency>EUR</gr:hasCurrency>
 		<gr:hasCurrencyValue rdf:datatype="http://www.w3.org/2001/XMLSchema#float">8.0</gr:hasCurrencyValue>
 		<gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
-		<dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
+	</rdf:Description>
+	
+    <price:PriceComponent rdf:nodeID="pricecomponent3">
+		<rdfs:label xml:lang="en">Subscription</rdfs:label>
+		<dcterms:description xml:lang="en">You'll pay a fixed amount of money every month</dcterms:description>
+    	<price:hasPrice rdf:nodeID="pricespec3"/>
 	</price:PriceComponent>
-
-    <price:PriceComponent rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/BicisSevillaStat#7jnovpSvDceyPlJxG">
-		<dcterms:title xml:lang="en">Subscription</dcterms:title>
+	
+	<rdf:Description rdf:nodeID="pricespec3">
+		<rdf:type rdf:resource="http://purl.org/goodrelations/v1#PriceSpecification"/>
 		<gr:hasCurrency>EUR</gr:hasCurrency>
 		<gr:hasCurrencyValue rdf:datatype="http://www.w3.org/2001/XMLSchema#float">7.0</gr:hasCurrencyValue>
 		<gr:hasUnitOfMeasurement>month</gr:hasUnitOfMeasurement>
-		<dcterms:description xml:lang="en">You'll pay a fixed amount of money every month</dcterms:description>
+	</rdf:Description>
+	
+    <price:PriceComponent rdf:nodeID="pricecomponent4">
+		<rdfs:label xml:lang="en">Pay-Per-Use</rdfs:label>
+		<dcterms:description xml:lang="en">Additionally, you'll pay based on the amount of MB that you have consumed.</dcterms:description>
+    	<price:hasPrice rdf:nodeID="pricespec1"/>
 	</price:PriceComponent>
-
-    <price:PriceComponent rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/BicisSevillaStat#7jnovpSvDceyPlJxH">
-		<dcterms:title xml:lang="en">Pay-Per-Use</dcterms:title>
+		
+	<rdf:Description rdf:nodeID="pricespec4">
+		<rdf:type rdf:resource="http://purl.org/goodrelations/v1#PriceSpecification"/>
 		<gr:hasCurrency>EUR</gr:hasCurrency>
 		<gr:hasCurrencyValue rdf:datatype="http://www.w3.org/2001/XMLSchema#float">8.0</gr:hasCurrencyValue>
 		<gr:hasUnitOfMeasurement>MB</gr:hasUnitOfMeasurement>
-		<dcterms:description xml:lang="en">Additionally, you'll pay based on the amount of MB that you have consumed.</dcterms:description>
-	</price:PriceComponent>
+	</rdf:Description>
     
 </rdf:RDF>

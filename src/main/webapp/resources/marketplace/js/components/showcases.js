@@ -364,7 +364,7 @@
                     this.$listWidth = list.$items.length * this.$itemWidth;
                 }
                 list.$list.css({width: this.$listWidth, left: 0});
-                if (index == 4) {
+                if (index == 5) {
                     list.$items.forEach(function ($subList) {
                         $subList.css({width: this.$listWidth});
                     }, this);
@@ -412,7 +412,7 @@
 
     };
 
-    var offeringDetailList = ["OFFERING", "DESCRIPTION", "CATEGORIES", /*"ADDITIONAL INFORMATION",*/ "PRICE PLANS", "SERVICES"];
+    var offeringDetailList = ["OFFERING", "ACQUISITION LINK", "DESCRIPTION", "CATEGORIES", "PRICE PLANS", "SERVICES"];
 
     function appendList(title, index) {
         var $list = $('<div class="row-sliding">'),
@@ -430,7 +430,7 @@
             $list: $list
         });
 
-        if (index == 4) {
+        if (index == 5) { // SERVICES
             this.serviceRow = new ns.OfferingServiceComparison($list);
         }
 
@@ -441,14 +441,14 @@
 
         this.lists.forEach(function (list, index) {
 
-            if (index == 4) {
+            if (index == 5) { // SERVICES
                 this.serviceRow.removeCol(currentPosition);
             } else {
                 list.$items[currentPosition].remove();
                 list.$items.splice(currentPosition, 1);
             }
 
-            if (index == 2) { // CATEGORIES
+            if (index == 3) { // CATEGORIES
                 updateCategoryList.call(this, this.offeringList[currentPosition].info.categories, list);
             }
 
@@ -510,11 +510,20 @@
             $panelHeading.append($thumbnail, $title);
             $panel.append($panelHeading);
             break;
-        case 1:
+        case 1: // ACQUISITION URL
+            var $btn = $('<a class="btn btn-primary">')
+                .attr('target', "_blank")
+                .attr('href', offering.info.acquisitionUrl)
+                .append($('<span class="btn-icon fa fa-shopping-cart">'));
+
+            $panel.addClass('text-center');
+            $panel.append($btn);
+            break;
+        case 2: // DESCRIPTION
             $panel.addClass("auto-scroll-x");
             $panel.text(offering.info.description);
             break;
-        case 2: // CATEGORIES
+        case 3: // CATEGORIES
             if (!offering.info.categories.length) {
                 $panel.append(app.createAlert('warning', "No category available"))
                 break;
@@ -539,7 +548,7 @@
             list.$items.unshift($panel);
             refreshCategories.call(this, list);
             return;
-        case 3:
+        case 4:
             offering.info.pricePlans
             .sort(function (a, b) {
                 return orderByAlphabeticOrNumeric('title', a, b);

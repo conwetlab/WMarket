@@ -43,11 +43,9 @@ import org.fiware.apps.marketplace.model.ServiceManifestation;
 import org.fiware.apps.marketplace.model.ServiceQualitativeAttribute;
 import org.fiware.apps.marketplace.model.ServiceQuantitativeAttribute;
 import org.fiware.apps.marketplace.rdf.RdfHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.rdf.model.Model;
 import com.mysql.jdbc.StringUtils;
 
 /**
@@ -59,8 +57,6 @@ import com.mysql.jdbc.StringUtils;
 @Service("serviceManifestationResolver")
 public class ServiceManifestationResolver {
 	
-	@Autowired private RdfHelper rdfHelper;
-
 	/**
 	 * Creates a list of service manifestations from the given collection of offerings
 	 * 
@@ -85,12 +81,12 @@ public class ServiceManifestationResolver {
 	 * @return Returns an empty list if list of offerings is null or empty.
 	 */
 	public List<ServiceManifestation> resolveServiceManifestations(Offering offering) {
-		if (offering == null)
+		/*if (offering == null)
 			return Collections.emptyList();
 
 		Model model = rdfHelper.getModelFromUri(offering.getUri());
 		if (model == null)
-			return Collections.emptyList();
+			return Collections.emptyList();*/
 
 		List<ServiceManifestation> serviceManifestations = new ArrayList<ServiceManifestation>();
 		/*for (String pricePlanUri : offering.getPricePlanUris()) {
@@ -119,9 +115,9 @@ public class ServiceManifestationResolver {
 	 * @param model
 	 * @return
 	 */
-	protected String getPricePlanTitle(String pricePlanUri, Model model) {
-		String query = RdfHelper.getQueryPrefixes() + "SELECT ?x WHERE { <" + pricePlanUri + "> dcterms:title ?x . } ";
-		return rdfHelper.queryLiteral(model, query, "x");
+	protected String getPricePlanTitle(String pricePlanUri, RdfHelper helper) {
+		String query = "SELECT ?x WHERE { <" + pricePlanUri + "> dcterms:title ?x . } ";
+		return helper.queryLiteral(query, "x");
 	}
 
 	/**
@@ -131,8 +127,8 @@ public class ServiceManifestationResolver {
 	 * @param model
 	 * @return
 	 */
-	protected List<String> getPriceComponentUris(String pricePlanUri, Model model) {
-		return rdfHelper.getObjectUris(model, pricePlanUri, "price:hasPriceComponent");
+	protected List<String> getPriceComponentUris(String pricePlanUri, RdfHelper helper) {
+		return helper.getObjectUris(pricePlanUri, "price:hasPriceComponent");
 	}
 
 	/**
@@ -142,10 +138,10 @@ public class ServiceManifestationResolver {
 	 * @param model
 	 * @return
 	 */
-	protected List<ServiceAttribute> getServiceAttributes(ServiceManifestation serviceManifestation, Model model) {
+	protected List<ServiceAttribute> getServiceAttributes(ServiceManifestation serviceManifestation, RdfHelper helper) {
 		List<String> attributeUris = new ArrayList<String>();
 		for (String priceComponentUri : serviceManifestation.getPriceComponentUris()) {
-			for (String attributeUri : rdfHelper.getObjectUris(model, priceComponentUri, "price:isLinkedTo")) {
+			for (String attributeUri : helper.getObjectUris(priceComponentUri, "price:isLinkedTo")) {
 				if (!attributeUris.contains(attributeUri))
 					attributeUris.add(attributeUri);
 			}
@@ -154,7 +150,7 @@ public class ServiceManifestationResolver {
 			String query = RdfHelper.getQueryPrefixes() + "SELECT ?x WHERE { { <" + serviceUri
 					+ "> gr:quantitativeProductOrServiceProperty ?x } " + "UNION { <" + serviceUri
 					+ "> gr:qualitativeProductOrServiceProperty ?x } } ";
-			for (String attributeUri : rdfHelper.queryUris(model, query, "x")) {
+			for (String attributeUri : helper.queryUris(query, "x")) {
 				if (!attributeUris.contains(attributeUri))
 					attributeUris.add(attributeUri);
 			}
@@ -162,7 +158,7 @@ public class ServiceManifestationResolver {
 
 		List<ServiceAttribute> attributes = new ArrayList<ServiceAttribute>();
 		for (String attributeUri : attributeUris) {
-			ServiceAttribute attr = createServiceAttribute(attributeUri, model);
+			ServiceAttribute attr = createServiceAttribute(attributeUri, helper);
 			if (attr != null)
 				attributes.add(attr);
 		}
@@ -177,10 +173,10 @@ public class ServiceManifestationResolver {
 	 * @param model
 	 * @return Returns null if attribute or attribute type uri is null or empty.
 	 */
-	protected ServiceAttribute createServiceAttribute(String attributeUri, Model model) {
+	protected ServiceAttribute createServiceAttribute(String attributeUri, RdfHelper helper) {
 		if (StringUtils.isNullOrEmpty(attributeUri))
 			return null;
-		if (null == model)
+		if (null == helper)
 			return null;
 
 		StringBuilder queryAttributeData = new StringBuilder(RdfHelper.getQueryPrefixes());
@@ -192,7 +188,7 @@ public class ServiceManifestationResolver {
 		queryAttributeData.append("OPTIONAL { <" + attributeUri + "> gr:hasMaxValue ?max . } ");
 		queryAttributeData.append("OPTIONAL { <" + attributeUri + "> gr:hasUnitOfMeasurement ?unit . } } } ");
 
-		List<QuerySolution> solutions = rdfHelper.query(model, queryAttributeData.toString());
+		List<QuerySolution> solutions = helper.query( queryAttributeData.toString());
 		if (solutions.size() != 1) {
 			System.out.println(ServiceManifestationResolver.class.getName() + " - Too many/few query solutions: " + attributeUri);
 			return null;
@@ -221,7 +217,7 @@ public class ServiceManifestationResolver {
 		attribute.setLabel(label);
 		attribute.setTypeUri(typeUri);
 		attribute.setUri(attributeUri);
-		attribute.setReferencedAttributes(getReferencedAttributes(attribute, model));
+		attribute.setReferencedAttributes(getReferencedAttributes(attribute, helper));
 		return attribute;
 	}
 
@@ -251,8 +247,8 @@ public class ServiceManifestationResolver {
 	 * @param model
 	 * @return
 	 */
-	protected List<ServiceAttribute> getReferencedAttributes(ServiceAttribute attribute, Model model) {
-		if (attribute == null || model == null)
+	protected List<ServiceAttribute> getReferencedAttributes(ServiceAttribute attribute, RdfHelper helper) {
+		if (attribute == null || helper == null)
 			return Collections.emptyList();
 		if (StringUtils.isNullOrEmpty(attribute.getUri()))
 			return Collections.emptyList();
@@ -276,7 +272,7 @@ public class ServiceManifestationResolver {
 		List<ServiceAttribute> referencedAttributes = new ArrayList<ServiceAttribute>();
 		HashMap<String, ServiceAttribute> firstLevelRefs = new HashMap<String, ServiceAttribute>();
 
-		for (QuerySolution solution : rdfHelper.query(model, query.toString())) {
+		for (QuerySolution solution : helper.query(query.toString())) {
 			String refTypeUri = solution.getResource("refType") != null ? solution.getResource("refType").getURI() : null;
 			String refString = solution.getResource("ref") == null ? null : solution.getResource("ref").toString();
 			String refLabel = solution.getLiteral("refLabel") == null ? null : solution.getLiteral("refLabel").getLexicalForm();

@@ -18,6 +18,12 @@
     <t:insertTemplate template="/WEB-INF/views/core/rating.jsp">
       <t:putAttribute name="selector" value=".modal-rating" />
     </t:insertTemplate>
+    <div class="offering-url">
+      <a class="btn btn-primary" href="${ offering.acquisitionUrl }" target="_blank">
+        <span class="btn-icon fa fa-shopping-cart"></span>
+        <span class="btn-text">Acquire</span>
+      </a>
+    </div>
   </div>
   <div class="panel-body">
     <div class="tab-group tab-group-vertical">

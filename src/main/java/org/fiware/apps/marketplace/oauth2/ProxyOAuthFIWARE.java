@@ -62,7 +62,8 @@ public class ProxyOAuthFIWARE extends ProxyOAuth20ServiceImpl {
 
     @Override
     public Token getAccessToken(final Token requestToken, final Verifier verifier) {
-        final OAuthRequest request = new ProxyOAuthRequest(this.api.getAccessTokenVerb(),
+        
+    	final OAuthRequest request = new ProxyOAuthRequest(this.api.getAccessTokenVerb(),
                                                            this.api.getAccessTokenEndpoint(), this.connectTimeout,
                                                            this.readTimeout, this.proxyHost, this.proxyPort);
         

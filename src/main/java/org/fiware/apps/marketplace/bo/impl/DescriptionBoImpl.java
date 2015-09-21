@@ -1,5 +1,7 @@
 package org.fiware.apps.marketplace.bo.impl;
 
+import java.io.IOException;
+
 /*
  * #%L
  * FiwareMarketplace
@@ -33,7 +35,6 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -48,6 +49,7 @@ import org.fiware.apps.marketplace.dao.ServiceDao;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.ParseException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
@@ -87,7 +89,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 	@Autowired private ServiceDao serviceDao;
 	@Autowired private SessionFactory sessionFactory;
 	
-	private static final String JENA_ERROR = "Your RDF could not be parsed.";
+	private static final String PARSE_ERROR = "Your RDF could not be parsed";
 		
 	@Override
 	@Transactional(readOnly=false, rollbackFor=Exception.class)
@@ -143,20 +145,12 @@ public class DescriptionBoImpl implements DescriptionBo {
 			
 			// Index
 			rdfIndexer.indexOrUpdateService(description);
-		} catch (MalformedURLException | JenaException ex) {
-			
-			// These two exceptions are only thrown if the description cannot be parsed by the RdfIndexer
-			// When the indexer cannot index the service, the description cannot be attached to the Store
-			// Because of this, the we have set the rollbackFor parameter
-			
-			String errorMessage;
-			if (ex instanceof JenaException) {
-				errorMessage = JENA_ERROR;
-			} else {
-				errorMessage = ex.getMessage();
-			}
-			
-			throw new ValidationException("url", errorMessage);
+		} catch (ParseException ex) {
+			throw new ValidationException("url", PARSE_ERROR + ": " + ex.getMessage());
+		} catch (IOException ex) {
+			throw new ValidationException("url", ex.getMessage());
+		} catch (JenaException ex) {
+			throw new ValidationException("url", PARSE_ERROR + ".");
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -184,9 +178,9 @@ public class DescriptionBoImpl implements DescriptionBo {
 		}
 	}
 
-	private void update(String storeName, String descriptionName, Description updatedDescription, boolean checkRights) 
-			throws NotAuthorizedException, 
-			ValidationException, StoreNotFoundException, DescriptionNotFoundException {
+	private void update(String storeName, String descriptionName, Description updatedDescription,
+			boolean checkRights) throws NotAuthorizedException, ValidationException, StoreNotFoundException, 
+			DescriptionNotFoundException {
 		
 		try {
 			Description descriptionToBeUpdated = descriptionDao.findByNameAndStore(storeName, descriptionName);
@@ -295,10 +289,12 @@ public class DescriptionBoImpl implements DescriptionBo {
 			// Update the description
 			descriptionDao.update(descriptionToBeUpdated);
 			
-		} catch (MalformedURLException ex) {
+		} catch (ParseException ex) {
+			throw new ValidationException("url", PARSE_ERROR + ": " + ex.getMessage());
+		} catch (IOException ex) {
 			throw new ValidationException("url", ex.getMessage());
 		} catch (JenaException ex) {
-			throw new ValidationException("url", JENA_ERROR);			
+			throw new ValidationException("url", PARSE_ERROR + ".");			
 		} catch (UserNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -469,6 +465,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 		
 		List<Description> descriptions = descriptionDao.getAllDescriptions();
 		for (Description description: descriptions) {
+			
 			Description updatedDescription = new Description();
 			updatedDescription.setUrl(description.getUrl());
 			String descriptionName = description.getName();
