@@ -9,7 +9,12 @@ set -e
 # Donwload the last version
 
 if [ ! -f "WMarket.war" ]; then
-    wget https://github.com/conwetlab/WMarket/releases/download/v4.3.3/WMarket.war
+    # Use GitHub API to get latest release
+    #   1.- Check GitHub API
+    #   2.- Get browser_download_url
+    #   3.- Remove json field, quotes, colons and white spaces
+    export URL_DOWNLOAD_LATEST=`curl https://api.github.com/repos/conwetlab/WMarket/releases/latest 2>/dev/null | grep browser_download_url | sed 's/"browser_download_url"://' | sed 's/[ "]//g'`
+    wget $URL_DOWNLOAD_LATEST
 fi
 
 # Check the system distribution
