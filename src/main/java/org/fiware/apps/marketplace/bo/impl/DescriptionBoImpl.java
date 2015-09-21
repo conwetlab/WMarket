@@ -178,9 +178,9 @@ public class DescriptionBoImpl implements DescriptionBo {
 		}
 	}
 
-	private void update(String storeName, String descriptionName, Description updatedDescription, boolean checkRights) 
-			throws NotAuthorizedException, 
-			ValidationException, StoreNotFoundException, DescriptionNotFoundException {
+	private void update(String storeName, String descriptionName, Description updatedDescription,
+			boolean checkRights) throws NotAuthorizedException, ValidationException, StoreNotFoundException, 
+			DescriptionNotFoundException {
 		
 		try {
 			Description descriptionToBeUpdated = descriptionDao.findByNameAndStore(storeName, descriptionName);
@@ -465,6 +465,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 		
 		List<Description> descriptions = descriptionDao.getAllDescriptions();
 		for (Description description: descriptions) {
+			
 			Description updatedDescription = new Description();
 			updatedDescription.setUrl(description.getUrl());
 			String descriptionName = description.getName();
