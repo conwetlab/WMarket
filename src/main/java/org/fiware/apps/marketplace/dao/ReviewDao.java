@@ -39,6 +39,15 @@ import org.fiware.apps.marketplace.model.ReviewableEntity;
 
 public interface ReviewDao {
 	
+	/**
+	 * Returns a sublist of all the reviews of a given entity
+	 * @param entity The entity whose reviews want to be retrieved
+	 * @param offset The first review to be retrieved
+	 * @param max The max number of reviews to be returned
+	 * @param orderBy The field that will be used to order the returned reviews
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the reviews of the given entity
+	 */
 	public List<Review> getReviewsPage(ReviewableEntity entity, int offset, int max, String orderBy, boolean desc);
 
 }

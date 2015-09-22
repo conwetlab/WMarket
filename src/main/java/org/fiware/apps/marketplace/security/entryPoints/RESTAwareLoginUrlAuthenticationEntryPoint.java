@@ -41,6 +41,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
+/**
+ * By default, clients attempts to log in users when they access a protected resource without credentials. However,
+ * this behavior is not appropriate when the API is being used, since developers expect a 401 HTTP error when the user
+ * is not authenticated. This class changes this behavior to work as expected by developers:
+ * <ul>
+ * <li>401 is returned when an unauthenticated users attempts to access a protected resource in the API</li>
+ * <li>Users are redirected to the login page when they try to access a protected resource outside the API</li>
+ * </ul>
+ * @author aitor
+ *
+ */
 public class RESTAwareLoginUrlAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
 	
 	public RESTAwareLoginUrlAuthenticationEntryPoint(String loginFormUrl) {

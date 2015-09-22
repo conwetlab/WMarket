@@ -37,8 +37,18 @@ import org.fiware.apps.marketplace.model.Service;
 
 public interface ServiceDao {
 	
+	/**
+	 * Deletes an existing service
+	 * @param service The service to be deleted
+	 */
 	public void delete(Service service);
 	
+	/**
+	 * Returns a service based on its URI
+	 * @param uri The URI of the service to be retrieved
+	 * @return The service with the given URI
+	 * @throws ServiceNotFoundException If it does not exist a service with the given URI
+	 */
 	public Service findByURI(String uri) throws ServiceNotFoundException;
 
 }

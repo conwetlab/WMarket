@@ -55,7 +55,7 @@ public abstract class AbstractAuth<T> {
 	/**
 	 * Method to know if the logged user is the owner of the entity
 	 * @param entity The entity to check. 
-	 * @returns true if the logged user is the owner of the entity. False otherwise.
+	 * @return true if the logged user is the owner of the entity. False otherwise.
 	 */
 	protected boolean isOwner(T entity) {
 		boolean canAccess = false;
@@ -77,7 +77,7 @@ public abstract class AbstractAuth<T> {
 	/**
 	 * Method to know if the user is logged in
 	 * @param entity The entity to check.
-	 * @returns true if the user is logged in. False otherwise.
+	 * @return true if the user is logged in. False otherwise.
 	 */
 	protected boolean isLoggedIn(T entity)  {
 		User loggedUser = null;
@@ -92,8 +92,8 @@ public abstract class AbstractAuth<T> {
 	}
 	
 	/**
-	 * @return By default it returns True if the user is logged in
-	 * @returns true if the user is allowed to create a entity. False otherwise.
+	 * @param entity The entity that is going to be created
+	 * @return true if the user is allowed to create a entity. False otherwise.
 	 */
 	public boolean canCreate(T entity) {
 		return this.isLoggedIn(entity);
@@ -101,7 +101,7 @@ public abstract class AbstractAuth<T> {
 
 	/**
 	 * @param entity The entity that is going to be updated
-	 * @returns true if the user is allowed to update a entity. False otherwise.
+	 * @return true if the user is allowed to update a entity. False otherwise.
 	 */
 	public boolean  canUpdate(T entity) {
 		return this.isOwner(entity);
@@ -109,7 +109,7 @@ public abstract class AbstractAuth<T> {
 
 	/**
 	 * @param entity The entity that is going to be deleted
-	 * @returns true if the user is allowed to delete a entity. False otherwise.
+	 * @return true if the user is allowed to delete a entity. False otherwise.
 	 */
 	public boolean canDelete(T entity) {
 		return this.isOwner(entity);
@@ -117,7 +117,7 @@ public abstract class AbstractAuth<T> {
 
 	/**
 	 * @param entity The entity that is going to be got
-	 * @returns true if the user is allowed to retrieve an entity. False otherwise.
+	 * @return true if the user is allowed to retrieve an entity. False otherwise.
 	 */
 	public boolean canGet(T entity) {
 		return true;
@@ -125,7 +125,7 @@ public abstract class AbstractAuth<T> {
 
 	/**
 	 * @return By default, it returns True
-	 * @returns true if the user is allowed to list the entities. False otherwise.
+	 * @return true if the user is allowed to list the entities. False otherwise.
 	 */
 	public boolean canList() {
 		return true;
