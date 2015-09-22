@@ -66,7 +66,7 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 
 	private String headerName;
 	private FIWAREClient client;
-	
+
 	private static final Pattern AUTHORIZATION_PATTERN = 
 			Pattern.compile("^bearer ([^\\s]+)$", Pattern.CASE_INSENSITIVE);
 
@@ -94,27 +94,27 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request,
 			HttpServletResponse response) throws AuthenticationException,
-			IOException, ServletException {
+	IOException, ServletException {
 
 		Authentication auth = null;
 		String authHeader = request.getHeader(headerName);
 		Matcher matcher = AUTHORIZATION_PATTERN.matcher(authHeader);
-				
+
 		try {
-			
+
 			// We only have one possible match
 			if (matcher.find()) {
 				String authToken = matcher.group(1);
-				
+
 				// This method can return an exception when the Token is invalid
 				// In this case, the exception is caught and the correct exceptions is thrown...
 				UserProfile profile = client.getUserProfile(authToken);
 
 				// Define authorities
 				Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		        for (String role: profile.getRoles()) {
-		            authorities.add(new SimpleGrantedAuthority(role));
-		        }
+				for (String role: profile.getRoles()) {
+					authorities.add(new SimpleGrantedAuthority(role));
+				}
 
 				// new token with credentials (like previously) and user profile and authorities
 				OAuthCredentials credentials = new OAuthCredentials(null, authToken, "", client.getName());
@@ -182,7 +182,7 @@ public class FIWAREHeaderAuthenticationFilter extends AbstractAuthenticationProc
 				}
 				url = sb.toString();
 			}
-			
+
 			return url.startsWith(baseUrl) && authHeader != null && 
 					AUTHORIZATION_PATTERN.matcher(authHeader).matches();
 		}

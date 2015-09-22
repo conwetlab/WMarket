@@ -44,7 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository("userDao")
 public class UserDaoImpl extends MarketplaceHibernateDao implements UserDao {
-	
+
 	private static final String TABLE_NAME = User.class.getName();
 
 	@Override
@@ -76,14 +76,14 @@ public class UserDaoImpl extends MarketplaceHibernateDao implements UserDao {
 				.createQuery(query)
 				.setParameter("userName", userName)
 				.list();
-		
+
 		if (list.isEmpty()) {
 			throw new UserNotFoundException("User " + userName + " not found");
 		} else {
 			return (User) list.get(0);
 		}
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public User findByEmail(String email) throws UserNotFoundException{
@@ -92,41 +92,41 @@ public class UserDaoImpl extends MarketplaceHibernateDao implements UserDao {
 				.createQuery(query)
 				.setParameter("email", email)
 				.list();
-		
+
 		if (list.isEmpty()) {
 			throw new UserNotFoundException("User with email" + email + " not found");
 		} else {
 			return (User) list.get(0);
 		}
 	}
-	
+
 	@Override
 	public boolean isUserNameAvailable(String userName) {
-		
+
 		boolean available = false;
-		
+
 		try {
 			findByName(userName);
 		} catch (UserNotFoundException e) {
 			available = true;
 		}
-		
+
 		return available;
 	}
-	
-    @Override
-    @Transactional(readOnly = true)
-    public boolean isEmailAvailable(String email) {
-        String query = String.format("from %s where email=:email", TABLE_NAME);
 
-        List<?> list = getSession()
-                .createQuery(query)
-                .setParameter("email", email)
-                .list();
+	@Override
+	@Transactional(readOnly = true)
+	public boolean isEmailAvailable(String email) {
+		String query = String.format("from %s where email=:email", TABLE_NAME);
 
-        return list.isEmpty();
-    }
-	
+		List<?> list = getSession()
+				.createQuery(query)
+				.setParameter("email", email)
+				.list();
+
+		return list.isEmpty();
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly = true)

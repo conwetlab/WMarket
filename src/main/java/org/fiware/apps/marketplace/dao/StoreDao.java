@@ -39,7 +39,7 @@ import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Store;
 
 public interface StoreDao {
-	
+
 	////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// CRUD ///////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
@@ -49,19 +49,19 @@ public interface StoreDao {
 	 * @param store The store to be created
 	 */
 	public void save(Store store);
-	
+
 	/**
 	 * Updates an existing store
 	 * @param store The updated store
 	 */
 	public void update(Store store);
-	
+
 	/**
 	 * Deletes an existing store
 	 * @param store The store to be deleted
 	 */
 	public void delete(Store store);
-	
+
 	/**
 	 * Returns a store based on its name
 	 * @param name The name of the store to be retrieved
@@ -80,30 +80,30 @@ public interface StoreDao {
 	 * @return true if the name is not in use. false otherwise
 	 */
 	public boolean isNameAvailable(String name);
-	
+
 	/**
 	 * Checks if a given display name is in use
 	 * @param displayName The display name to be checked
 	 * @return true if the display name is not in use. false otherwise
 	 */
-    public boolean isDisplayNameAvailable(String displayName);
-    
-    /**
-     * Checks if a given URL is in use
-     * @param url The URL to be checked
-     * @return true if the URL is not in use. false otherwise
-     */
-    public boolean isURLAvailable(String url);
+	public boolean isDisplayNameAvailable(String displayName);
 
-    
+	/**
+	 * Checks if a given URL is in use
+	 * @param url The URL to be checked
+	 * @return true if the URL is not in use. false otherwise
+	 */
+	public boolean isURLAvailable(String url);
+
+
 	////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// LIST ///////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Returns all the stores contained in the database
-     * @return All the stores contained in the database
-     */
+	/**
+	 * Returns all the stores contained in the database
+	 * @return All the stores contained in the database
+	 */
 	public List<Store> getAllStores();
 
 	/**
@@ -114,6 +114,6 @@ public interface StoreDao {
 	 * @param desc true to sort results in reverse order
 	 * @return A sublist of all the stores contained in the database
 	 */
-    public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc);
+	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc);
 
 }

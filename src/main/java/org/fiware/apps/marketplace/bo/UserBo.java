@@ -53,7 +53,7 @@ public interface UserBo {
 	 * @throws ValidationException If the given user is invalid
 	 */
 	public void save(User user) throws NotAuthorizedException, ValidationException;
-	
+
 	/**
 	 * Updates an existing user
 	 * @param userName The name of the user to be updated
@@ -62,18 +62,18 @@ public interface UserBo {
 	 * @throws ValidationException If the updated user is invalid
 	 * @throws UserNotFoundException If it does not exist a user with the given user name
 	 */
-	public void update(String userName, User updatedUser) throws NotAuthorizedException,
-			ValidationException, UserNotFoundException;
-	
+	public void update(String userName, User updatedUser) 
+			throws NotAuthorizedException, ValidationException, UserNotFoundException;
+
 	/**
 	 * Deletes an existing user
 	 * @param userName The name of the user to be deleted
 	 * @throws NotAuthorizedException If the current user is not authorized to delete the given user
 	 * @throws UserNotFoundException If it does not exist a user with the given user name
 	 */
-	public void delete(String userName) throws NotAuthorizedException,
-			UserNotFoundException;
-	
+	public void delete(String userName) 
+			throws NotAuthorizedException, UserNotFoundException;
+
 	/**
 	 * Swaps the provider status of a user:
 	 * <ul>
@@ -85,9 +85,9 @@ public interface UserBo {
 	 * given user
 	 * @throws UserNotFoundException If it does not exist a user with the given user name
 	 */
-	public void changeProviderStatus(String userName) throws NotAuthorizedException, 
-			UserNotFoundException;
-	
+	public void changeProviderStatus(String userName) 
+			throws NotAuthorizedException, UserNotFoundException;
+
 	/**
 	 * Returns a user based on its user name
 	 * @param userName The user name of the user to be returned
@@ -95,9 +95,9 @@ public interface UserBo {
 	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the user
 	 * @throws UserNotFoundException If it does not exist a user with the given user name
 	 */
-	public User findByName(String userName) throws NotAuthorizedException, 
-			UserNotFoundException;
-	
+	public User findByName(String userName) 
+			throws NotAuthorizedException,  UserNotFoundException;
+
 	/**
 	 * Returns a user based on its email
 	 * @param email The email of the user to be returned
@@ -105,31 +105,31 @@ public interface UserBo {
 	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the user
 	 * @throws UserNotFoundException If it does not exist a user with the given email
 	 */
-	public User findByEmail(String email) throws NotAuthorizedException,
-			UserNotFoundException;
+	public User findByEmail(String email) 
+			throws NotAuthorizedException, UserNotFoundException;
 
-	
+
 	////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// LIST ///////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
-	
+
 	/**
-     * Returns all the users stored in the database
-     * @return All the users stored in the database
+	 * Returns all the users stored in the database
+	 * @return All the users stored in the database
 	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of existing users
 	 */
 	public List<User> getAllUsers() throws NotAuthorizedException;
-	
+
 	/**
-     * Returns a sublist of all the users stored in the database
-     * @param offset The first user to be retrieved
-     * @param max The max number of users to be returned
-     * @return A sublist of all the users stored in the database
+	 * Returns a sublist of all the users stored in the database
+	 * @param offset The first user to be retrieved
+	 * @param max The max number of users to be returned
+	 * @return A sublist of all the users stored in the database
 	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of existing users
 	 */
 	public List<User> getUsersPage(int offset, int max) throws NotAuthorizedException;
 
-	
+
 	////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// EXTRA //////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
@@ -140,8 +140,8 @@ public interface UserBo {
 	 * @throws UserNotFoundException If the current user is not registered in the database (it should never happen)
 	 */
 	public User getCurrentUser() throws UserNotFoundException;
-	
-	
+
+
 	////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////// VERIFICATIONS ///////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////

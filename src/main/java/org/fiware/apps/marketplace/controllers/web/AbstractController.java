@@ -49,74 +49,74 @@ import org.springframework.web.servlet.ModelAndView;
 
 public abstract class AbstractController {
 
-    @Autowired private UserBo userBo;
-    @Autowired private StoreBo storeBo;
-    @Autowired private DescriptionBo descriptionBo;
+	@Autowired private UserBo userBo;
+	@Autowired private StoreBo storeBo;
+	@Autowired private DescriptionBo descriptionBo;
 
-    private String applicationName = "WMarket";
+	private String applicationName = "WMarket";
 
-    protected ModelAndView buildErrorView(Status status, String content) {
+	protected ModelAndView buildErrorView(Status status, String content) {
 
-        ModelMap model = new ModelMap();
+		ModelMap model = new ModelMap();
 
-        // Add the view title
-        model.addAttribute("title", getContextName());
+		// Add the view title
+		model.addAttribute("title", getContextName());
 
-        // Add the HTTP status
-        model.addAttribute("statusCode", status.getStatusCode());
-        model.addAttribute("reasonPhrase", status.getReasonPhrase());
+		// Add the HTTP status
+		model.addAttribute("statusCode", status.getStatusCode());
+		model.addAttribute("reasonPhrase", status.getReasonPhrase());
 
-        // Add the truly reason
-        model.addAttribute("content", content);
+		// Add the truly reason
+		model.addAttribute("content", content);
 
-        return new ModelAndView("core.error", model);
-    }
+		return new ModelAndView("core.error", model);
+	}
 
-    protected String getContextName() {
-        return applicationName;
-    }
+	protected String getContextName() {
+		return applicationName;
+	}
 
-    protected User getCurrentUser() throws UserNotFoundException {
-        return userBo.getCurrentUser();
-    }
+	protected User getCurrentUser() throws UserNotFoundException {
+		return userBo.getCurrentUser();
+	}
 
-    protected UserBo getUserBo() {
-        return userBo;
-    }
+	protected UserBo getUserBo() {
+		return userBo;
+	}
 
-    protected StoreBo getStoreBo() {
-        return storeBo;
-    }
+	protected StoreBo getStoreBo() {
+		return storeBo;
+	}
 
-    protected DescriptionBo getDescriptionBo() {
-        return descriptionBo;
-    }
+	protected DescriptionBo getDescriptionBo() {
+		return descriptionBo;
+	}
 
-    protected void checkPasswordConfirmation(String password, String passwordConfirm) throws ValidationException {
-    	if (!password.equals(passwordConfirm)) {
-    		throw new ValidationException("passwordConfirm", "Passwords do not match.");
-    	}
-    }
+	protected void checkPasswordConfirmation(String password, String passwordConfirm) throws ValidationException {
+		if (!password.equals(passwordConfirm)) {
+			throw new ValidationException("passwordConfirm", "Passwords do not match.");
+		}
+	}
 
-    protected void addFlashMessage(HttpServletRequest request, ModelMap model) {
-        HttpSession session = request.getSession();
+	protected void addFlashMessage(HttpServletRequest request, ModelMap model) {
+		HttpSession session = request.getSession();
 
-        synchronized (session) {
-            String flashMessage = (String) session.getAttribute("flashMessage");
+		synchronized (session) {
+			String flashMessage = (String) session.getAttribute("flashMessage");
 
-            if (flashMessage != null) {
-                model.addAttribute("message", flashMessage);
-                session.removeAttribute("flashMessage");
-            }
-        }
-    }
+			if (flashMessage != null) {
+				model.addAttribute("message", flashMessage);
+				session.removeAttribute("flashMessage");
+			}
+		}
+	}
 
-    protected void setFlashMessage(HttpServletRequest request, String message) {
-        HttpSession session = request.getSession();
+	protected void setFlashMessage(HttpServletRequest request, String message) {
+		HttpSession session = request.getSession();
 
-        synchronized (session) {
-            session.setAttribute("flashMessage", message);
-        }
-    }
+		synchronized (session) {
+			session.setAttribute("flashMessage", message);
+		}
+	}
 
 }

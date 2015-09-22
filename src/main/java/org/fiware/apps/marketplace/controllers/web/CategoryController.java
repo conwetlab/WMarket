@@ -48,8 +48,8 @@ public class CategoryController extends AbstractController {
 			Category category = categoryBo.findByName(categoryName);
 
 			model.addAttribute("title", category.getDisplayName() +  " - Category - " + getContextName());
-            model.addAttribute("category", category);
-            model.addAttribute("viewName", "FilterByCategory");
+			model.addAttribute("category", category);
+			model.addAttribute("viewName", "FilterByCategory");
 
 			addFlashMessage(request, model);
 

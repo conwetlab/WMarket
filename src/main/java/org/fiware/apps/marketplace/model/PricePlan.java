@@ -62,21 +62,21 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @XmlRootElement(name = "pricePlan")
 @IgnoreMediaTypes("application/*+json")
 public class PricePlan {
-	
+
 	// Hibernate
 	private int id;
 	private Offering offering;
-	
+
 	private String title;
 	private String comment;
 	private Set<PriceComponent> priceComponents;
-	
+
 	/**
 	 * Empty constructor for Hibernate
 	 */
 	public PricePlan() {
 	}
-	
+
 	/**
 	 * Creates a Price Plan from a raw price plan extracted from RDF
 	 * @param rawPricePlan The raw price plan
@@ -84,14 +84,14 @@ public class PricePlan {
 	 * @throw ParseException When the raw price plan does is not valid
 	 */
 	public PricePlan(Map<String, List<Object>> rawPricePlan, Offering offering) throws ParseException {
-		
+
 		List<Object> titles = rawPricePlan.get("title");
 		String title = (titles == null || titles.isEmpty()) ? "" : (String) titles.get(0);
 		if (title.isEmpty()) {
 			throw new ParseException("Offering " + offering.getDisplayName() + 
 					" contains a price plan without title");
 		}
-		
+
 		this.title = title;
 		List<Object> ppDescriptions = rawPricePlan.get("description");
 		this.comment = (ppDescriptions != null && ppDescriptions.size() == 1) ? (String) ppDescriptions.get(0) : "";
@@ -143,7 +143,7 @@ public class PricePlan {
 	}
 
 	@XmlElement(name = "priceComponent")
-    @JsonProperty("priceComponents")
+	@JsonProperty("priceComponents")
 	@OneToMany(mappedBy = "pricePlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	public Set<PriceComponent> getPriceComponents() {
 		return priceComponents;
@@ -170,21 +170,21 @@ public class PricePlan {
 
 	@Override
 	public boolean equals(Object obj) {
-		
+
 		if (this == obj) {
 			return true;
 		}
-		
+
 		if (obj instanceof PricePlan) {
-		
+
 			PricePlan other = (PricePlan) obj;
 			return this.title.equals(other.title) && 
 					this.comment.equals(other.comment) &&
 					this.priceComponents.equals(other.priceComponents);		
 		}
-		
+
 		return false;
 	}
-	
-	
+
+
 }

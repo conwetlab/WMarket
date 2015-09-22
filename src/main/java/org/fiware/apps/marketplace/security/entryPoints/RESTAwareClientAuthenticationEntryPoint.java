@@ -26,7 +26,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
  *
  */
 public class RESTAwareClientAuthenticationEntryPoint implements AuthenticationEntryPoint, InitializingBean {
-	
+
 	private ClientAuthenticationEntryPoint entryPoint = new ClientAuthenticationEntryPoint();
 
 	@Override
@@ -37,20 +37,20 @@ public class RESTAwareClientAuthenticationEntryPoint implements AuthenticationEn
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
-		
+
 		if (request.getServletPath().startsWith("/api/")) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 		} else {
 			entryPoint.commence(request, response, authException);
 		}
-		
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Client<Credentials, UserProfile> getClient() {
 		return entryPoint.getClient();
 	}
-	
+
 	public void setClient(final Client<Credentials, UserProfile> client) {
 		entryPoint.setClient(client);
 	}

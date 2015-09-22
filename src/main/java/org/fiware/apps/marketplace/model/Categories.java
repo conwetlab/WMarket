@@ -44,25 +44,25 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @XmlRootElement(name = "categories")
 @IgnoreMediaTypes("application/*+json")
 public class Categories {
-	
-    private List<Category> categories = null;
-    
-    public Categories() {
-    	this.setCategories(new ArrayList<Category>());
-    }
-    
-    public Categories(List<Category> categories) {
-    	this.setCategories(categories);
-    }
- 
-    @XmlElement(name = "category")
-    @JsonProperty("categories")
-    public List<Category> getCategories() {
-        return this.categories;
-    }
- 
-    public void setCategories(List<Category> categories) {
-    	this.categories = categories;
-    }
+
+	private List<Category> categories = null;
+
+	public Categories() {
+		this.setCategories(new ArrayList<Category>());
+	}
+
+	public Categories(List<Category> categories) {
+		this.setCategories(categories);
+	}
+
+	@XmlElement(name = "category")
+	@JsonProperty("categories")
+	public List<Category> getCategories() {
+		return this.categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
 
 }

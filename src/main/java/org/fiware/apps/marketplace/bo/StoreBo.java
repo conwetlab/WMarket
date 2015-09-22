@@ -44,7 +44,7 @@ import org.fiware.apps.marketplace.model.Store;
 
 
 public interface StoreBo {
-	
+
 	////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// CRUD ///////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ public interface StoreBo {
 	 * @throws ValidationException If the given store is not valid
 	 */
 	public void save(Store store) throws NotAuthorizedException, ValidationException;
-	
+
 	/**
 	 * Updates an existing store
 	 * @param name The name of the store to be updated
@@ -65,9 +65,9 @@ public interface StoreBo {
 	 * @throws ValidationException If the given updated store is not valid
 	 * @throws StoreNotFoundException If it does not exist a store with the given name
 	 */
-	public void update(String name, Store updatedStore) throws NotAuthorizedException, ValidationException, 
-			StoreNotFoundException;
-	
+	public void update(String name, Store updatedStore) 
+			throws NotAuthorizedException, ValidationException, StoreNotFoundException;
+
 	/**
 	 * Deletes an existing store
 	 * @param storeName The name of the store to be deleted
@@ -75,7 +75,7 @@ public interface StoreBo {
 	 * @throws StoreNotFoundException If it does not exist a store with the given name
 	 */
 	public void delete(String storeName) throws NotAuthorizedException, StoreNotFoundException;
-	
+
 	/**
 	 * Returns a store based on its name
 	 * @param name The name of the store to be retrieved
@@ -83,21 +83,21 @@ public interface StoreBo {
 	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the store with the given name
 	 * @throws StoreNotFoundException If it does not exist a store with the given name
 	 */
-	public Store findByName(String name) throws NotAuthorizedException, 
-			StoreNotFoundException;
-	
+	public Store findByName(String name) 
+			throws NotAuthorizedException, StoreNotFoundException;
+
 
 	////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// LIST ///////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
 
 	/**
-     * Returns all the stores contained in the database
-     * @return All the stores contained in the database
+	 * Returns all the stores contained in the database
+	 * @return All the stores contained in the database
 	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of existing stores
 	 */
 	public List <Store> getAllStores() throws NotAuthorizedException;
-	
+
 	/**
 	 * Returns a sublist of all the stores contained in the database
 	 * @param offset The first store to be retrieved
@@ -109,8 +109,8 @@ public interface StoreBo {
 	 */
 	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc)
 			throws NotAuthorizedException;
-	
-	
+
+
 	////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////// REVIEWS /////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
@@ -123,9 +123,9 @@ public interface StoreBo {
 	 * @throws StoreNotFoundException If it does not exit a store with the given name
 	 * @throws ValidationException If the given review is not valid
 	 */
-	public void createReview(String storeName, Review review) throws NotAuthorizedException, 
-			StoreNotFoundException, ValidationException;
-	
+	public void createReview(String storeName, Review review) 
+			throws NotAuthorizedException, StoreNotFoundException, ValidationException;
+
 	/**
 	 * Updates a store review
 	 * @param storeName The name of the store whose review is going to be updated
@@ -136,9 +136,9 @@ public interface StoreBo {
 	 * @throws ReviewNotFoundException If it does not exist a review with the given ID for the given store
 	 * @throws ValidationException If the updated review is not valid
 	 */
-	public void updateReview(String storeName, int reviewId, Review review) throws NotAuthorizedException, 
-			StoreNotFoundException, ReviewNotFoundException, ValidationException;
-	
+	public void updateReview(String storeName, int reviewId, Review review) 
+			throws NotAuthorizedException, StoreNotFoundException, ReviewNotFoundException, ValidationException;
+
 	/**
 	 * Returns a specific store review
 	 * @param storeName The name of the store whose review is going to be retrieved
@@ -148,9 +148,9 @@ public interface StoreBo {
 	 * @throws StoreNotFoundException If it does not exist a store with the given name
 	 * @throws ReviewNotFoundException If it does not exist a review with the given ID for the given store
 	 */
-	public Review getReview(String storeName, int reviewId) throws NotAuthorizedException, StoreNotFoundException,
-			ReviewNotFoundException;
-	
+	public Review getReview(String storeName, int reviewId) 
+			throws NotAuthorizedException, StoreNotFoundException, ReviewNotFoundException;
+
 	/**
 	 * Deletes a store review
 	 * @param storeName The name of the store whose review is going to be deleted
@@ -159,9 +159,9 @@ public interface StoreBo {
 	 * @throws StoreNotFoundException If it does not exist a store with the given name
 	 * @throws ReviewNotFoundException If it does not exist a review with the given ID for the given store
 	 */
-	public void deleteReview(String storeName, int reviewId) throws NotAuthorizedException, StoreNotFoundException,
-			ReviewNotFoundException;
-	
+	public void deleteReview(String storeName, int reviewId) 
+			throws NotAuthorizedException, StoreNotFoundException, ReviewNotFoundException;
+
 	/**
 	 * Returns all the reviews of a given store
 	 * @param storeName The name of the store whose reviews want to be retrieved
@@ -170,7 +170,7 @@ public interface StoreBo {
 	 * @throws StoreNotFoundException If it does not exist a store with the given name
 	 */
 	public List<Review> getReviews(String storeName) throws NotAuthorizedException, StoreNotFoundException;
-	
+
 	/**
 	 * Returns a sublist of all the reviews of a given store
 	 * @param storeName The name of the store whose reviews want to be retrieved
@@ -184,5 +184,5 @@ public interface StoreBo {
 	 */
 	public List<Review> getReviewsPage(String storeName, int offset, int max, String orderBy, boolean desc) 
 			throws NotAuthorizedException, StoreNotFoundException;
-	
+
 }
