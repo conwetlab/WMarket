@@ -1,4 +1,4 @@
-WMarket
+WMarket [![Build Status](https://build.conwet.fi.upm.es/jenkins/buildStatus/icon?job=WMarket)](https://build.conwet.fi.upm.es/jenkins/job/WMarket/)
 =======
 WMarket is the reference implementation of the FIWARE Marketplace Generic Enabler. The Marketplace provides functionality necessary for bringing together offering and demand for making business. These functions include basic services for registering business entities, publishing and retrieving offerings and demands, search and discover offerings according to specific consumer requirements as well as lateral functions like review, rating and recommendation. Besides the core functions, the Marketplace may offer value because of its "knowledge" about the market in terms of market intelligence services, pricing support, advertising, information subscription and more.
 
