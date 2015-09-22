@@ -454,7 +454,7 @@ written in seconds.
 ::
 
     # Update rate
-    descriptions.updatePeriod = [PERIOD_TO_UPDATE_DESCRIPTIONS_IN_SECONDS]
+    descriptions.updatePeriod=[PERIOD_TO_UPDATE_DESCRIPTIONS_IN_SECONDS]
 
 OAuth2
 ''''''
