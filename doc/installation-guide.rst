@@ -413,6 +413,11 @@ must be stored in some folder of your file system. You can specify this
 folder by editing the property ``lucene.IndexPath`` included in the file
 ``WMarket.war/WEB-INF/classes/properties/marketplace.properties``.
 
+::
+
+    # Lucene
+    lucene.IndexPath=[FOLDER_TO_STORE_INDEX]
+
 .. note::
   Ensure that tomcat user can read and write new files in this directory.
 
@@ -445,6 +450,11 @@ descriptions and the offerings that they contain. To do it, set the preference
 ``WMarket.war/WEB-INF/classes/properties/marketplace.properties``) with the 
 period that should be used to update the descriptions. The value must be 
 written in seconds.
+
+::
+
+    # Update rate
+    descriptions.updatePeriod = [PERIOD_TO_UPDATE_DESCRIPTIONS_IN_SECONDS]
 
 OAuth2
 ''''''
