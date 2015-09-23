@@ -254,7 +254,6 @@ in your machine. To do so, you must create a folder to place a new file called
 ::
 
     wmarket_db:
-        restart: always
         image: mysql:latest
         volumes:
              - /var/lib/mysql
@@ -263,14 +262,14 @@ in your machine. To do so, you must create a folder to place a new file called
             - MYSQL_DATABASE=marketplace
 
     wmarket:
-        restart: always
         image: conwetlab/wmarket
         volumes:
-            - /WMarket/static
+            - /WMarket
         ports:
             - "80:8080"
         links:
             - wmarket_db
+        command: bash -c 'sleep 15 && catalina.sh run'
 
 Once that you have created the file, run the following command:
 
@@ -308,7 +307,7 @@ will be used to access the service*):
 
 ::
 
-    docker run --name wmarket -v /WMarket/static -p PORT:8080 --link wmarket_db -d conwetlab/wmarket
+    docker run --name wmarket -v /WMarket -p PORT:8080 --link wmarket_db -d conwetlab/wmarket
 
 Once that you have run these commands, WMarket should be up and running in 
 ``http://YOUR_HOST:PORT/WMarket`` replacing ``YOUR_HOST`` by the host of your 
