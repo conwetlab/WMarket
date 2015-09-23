@@ -8,7 +8,6 @@ You can install WMarket automatically if you have `docker-compose` installed in 
 
 ```
 wmarket_db:
-    restart: always
     image: mysql:latest
     volumes:
          - /var/lib/mysql
@@ -17,14 +16,14 @@ wmarket_db:
         - MYSQL_DATABASE=marketplace
 
 wmarket:
-    restart: always
     image: conwetlab/wmarket
     volumes:
-        - /WMarket/static
+        - /WMarket
     ports:
         - "80:8080"
     links:
         - wmarket_db
+    command: bash -c 'sleep 15 && catalina.sh run'
 ```
 
 Once that you have created the file, run the following command:
@@ -52,7 +51,7 @@ docker run --name wmarket_db -e MYSQL_ROOT_PASSWORD=my-secret-pw -e MYSQL_DATABA
 Once that the database is configured, you can deploy the image by running the following command (*replace `PORT` by the port of your local machine that will be used to access the service*):
 
 ```
-docker run --name wmarket -v /WMarket/static -p PORT:8080 --link wmarket_db -d conwetlab/wmarket
+docker run --name wmarket -v /WMarket -p PORT:8080 --link wmarket_db -d conwetlab/wmarket
 ```
 
 Once that you have run these commands, WMarket should be up and running in `http://YOUR_HOST:PORT/WMarket` replacing `YOUR_HOST` by the host of your machine and `PORT` by the port selected in the previous step. 
