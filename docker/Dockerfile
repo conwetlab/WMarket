@@ -14,7 +14,7 @@ WORKDIR /wmarket
 RUN apt-get update && apt-get install -y zip
 
 # Get the last WAR file
-RUN wget `curl https://api.github.com/repos/conwetlab/WMarket/releases/latest 2>/dev/null | grep browser_download_url | sed 's/"browser_download_url"://' | sed 's/[ "]//g'`
+RUN wget `curl https://api.github.com/repos/conwetlab/WMarket/releases/latest 2>/dev/null | grep browser_download_url | sed 's/.*"browser_download_url": "\(.*\)".*/\1/'`
 
 # Unzip the file
 RUN unzip $WMARKET_FILE -d WMarket

@@ -13,7 +13,7 @@ if [ ! -f "WMarket.war" ]; then
     #   1.- Check GitHub API
     #   2.- Get browser_download_url
     #   3.- Remove json field, quotes, colons and white spaces
-    export URL_DOWNLOAD_LATEST=`curl https://api.github.com/repos/conwetlab/WMarket/releases/latest 2>/dev/null | grep browser_download_url | sed 's/"browser_download_url"://' | sed 's/[ "]//g'`
+    export URL_DOWNLOAD_LATEST=`curl https://api.github.com/repos/conwetlab/WMarket/releases/latest 2>/dev/null | grep browser_download_url | sed 's/.*"browser_download_url": "\(.*\)".*/\1/'`
     wget $URL_DOWNLOAD_LATEST
 fi
 
