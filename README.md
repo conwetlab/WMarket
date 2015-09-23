@@ -74,7 +74,7 @@ For an extended documentation, you can check the API REference available at:
 
 ## Testing
 
-### End-To-End test
+### End-To-End tests
 
 To execute the end-to-end tests, just run:
 
@@ -82,7 +82,7 @@ To execute the end-to-end tests, just run:
 mvn integration-test
 ```
 
-### Unit test
+### Unit tests
 
 To execute the unit tests, just run:
 
