@@ -7,6 +7,7 @@
  * [Build and Install](#build-and-install)
  * [API Overview](#api-overview)
  * [Testing](#testing)
+ * [Advanced Topics](#advanced-topics)
 
 
 ## Introduction
