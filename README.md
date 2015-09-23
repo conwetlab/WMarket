@@ -28,11 +28,13 @@ WMarket provides functionality necessary for bringing together offering and dema
 
 ## Build and Install
 
-Build and Install documentation for WMarket can be found at [the Installation Guide](http://wmarket.readthedocs.org/en/latest/installation-guide.html). You can install the software in three different ways:
+The instructions to install WMarket can be found at [the Installation Guide](http://wmarket.readthedocs.org/en/latest/installation-guide.html). You can install the software in three different ways:
 
 * With the provided script (included in the `utils` folder)
 * With a [Docker Container](https://hub.docker.com/r/conwetlab/wmarket/)
 * Manually
+ 
+If you opt for building WMarket, you can refer to [the Building from Sources Guide](http://wmarket.readthedocs.org/en/latest/building-from-sources-guide.html)
 
 
 ## API Overview
