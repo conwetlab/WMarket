@@ -1,18 +1,98 @@
-WMarket [![Build Status](https://build.conwet.fi.upm.es/jenkins/buildStatus/icon?job=WMarket)](https://build.conwet.fi.upm.es/jenkins/job/WMarket/)
-=======
-WMarket is the reference implementation of the FIWARE Marketplace Generic Enabler. The Marketplace provides functionality necessary for bringing together offering and demand for making business. These functions include basic services for registering business entities, publishing and retrieving offerings and demands, search and discover offerings according to specific consumer requirements as well as lateral functions like review, rating and recommendation. Besides the core functions, the Marketplace may offer value because of its "knowledge" about the market in terms of market intelligence services, pricing support, advertising, information subscription and more.
+# WMarket
+
+ [![Build Status](https://build.conwet.fi.upm.es/jenkins/buildStatus/icon?job=WMarket)](https://build.conwet.fi.upm.es/jenkins/job/WMarket/)
+ 
+ * [Introduction](#introduction)
+ * [GEi overall description](#gei-overall-description)
+ * [Build and Install](#build-and-install)
+ * [API Overview](#api-overview)
+ * [Testing](#testing)
+
+
+## Introduction
+
+This is the code repository for WMarket, the reference implementation of the Marketplace.
 
 This project is part of [FIWARE](http://www.fiware.org). Check also the [FIWARE Catalogue entry for WMarket](http://catalogue.fiware.org/enablers/marketplace-wmarket)!
 
-Documentation
---------------
-You can find the documentation of this project on [ReadTheDocs](http://wmarket.readthedocs.org)
+Any feedback is highly welcome, including bugs, typos or things you think should be included but aren't. You can use [github issues](https://github.com/conwetlab/WMarket/issues/new) to provide feedback.
 
-Docker
-------
-If you want to install WMarket by using a Docker image, you can find the installing instructions on [Docker Hub](https://hub.docker.com/r/conwetlab/wmarket/)
+You can find the User & Programmer's Manual and the Administration Guide on [readthedocs.org](https://wmarket.readthedocs.org)
 
-API Reference
--------------
+ 
+## GEi overall description
+
+WMarket provides functionality necessary for bringing together offering and demand for making business. These functions include basic services for registering business entities, publishing and retrieving offerings and demands, search and discover offerings according to specific consumer requirements as well as lateral functions like review, rating and recommendation. Besides the core functions, the Marketplace may offer value because of its "knowledge" about the market in terms of market intelligence services, pricing support, advertising, information subscription and more.
+
+
+## Build and Install
+
+Build and Install documentation for WMarket can be found at [the Installation Guide](http://wmarket.readthedocs.org/en/latest/installation-guide.html). You can install the software in three different ways:
+
+* With the provided script (included in the `utils` folder)
+* With a [Docker Container](https://hub.docker.com/r/conwetlab/wmarket/)
+* Manually
+
+
+## API Overview
+
+WMarket API is very easy. The API is available under the `/api/v2/` path and the available resources are:
+
+* Users: `/api/v2/user`
+* Stores: `/api/v2/store`
+* Descriptions: `/api/v2/store/STORE_NAME/description`
+* Offerings: `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME/offering`
+
+The API is fully RESTful so:
+
+* You can use `POST` requests to create resources.
+ * Create a user making a `POST` request to `/api/v2/user`
+ * Create a store making a `POST` request to `/api/v2/store`
+ * Create a description making a `POST` request to `/api/v2/store/STORE_NAME/description`
+* You can use `POST` requests to update resources partially.
+ * Update a user making a `POST` request to `/api/v2/user/USER_NAME`
+ * Update a store making a `POST` request to `/api/v2/store/STORE_NAME`
+ * Update a description making a `POST` request to `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME`
+* You can use `GET` requests to retrieve an entity.
+ * Retrieve a user making a `GET` request to `/api/v2/user/USER_NAME`
+ * Retrieve a store making a `GET` request to `/api/v2/store/STORE_NAME`
+ * Retrieve a description making a `GET` request to `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME`
+ * Retrieve an offering making a `GET` request to `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME/offering/OFFERING_NAME`
+* You can use `DELETE` requests to delete an entity.
+ * Delete a user marking a `DELETE` request to `/api/v2/user/USER_NAME`
+ * Delete a store making a `DELETE` request to `/api/v2/store/STORE_NAME`
+ * Delete a description making a `DELETE` request to `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME`
+
+For an extended documentation, you can check the API REference available at:
+
 * [Apiary](http://docs.fiwaremarketplace.apiary.io)
 * [GitHub Pages](http://conwetlab.github.io/WMarket)
+
+
+## Testing
+
+### End-To-End test
+
+To execute the end-to-end tests, just run:
+
+```
+mvn integration-test
+```
+
+### Unit test
+
+To execute the unit tests, just run:
+
+```
+mvn test
+```
+
+
+## Advanced Topics
+
+* [User & Programmers Manual](doc/user-programmer-guide.rst)
+* [Installation Guide](doc/installation-guide.rst)
+* [Administration Guide](doc/administration-guide.rst)
+* [Building from Sources Guide](doc/building-from-sources-guide.rst)
+
+You can also find this documentation on [ReadTheDocs](http://wmarket.readthedocs.org)
