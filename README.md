@@ -16,7 +16,7 @@ This is the code repository for WMarket, the reference implementation of the Mar
 
 This project is part of [FIWARE](http://www.fiware.org). Check also the [FIWARE Catalogue entry for WMarket](http://catalogue.fiware.org/enablers/marketplace-wmarket)!
 
-Any feedback is highly welcome, including bugs, typos or things you think should be included but aren't. You can use [github issues](https://github.com/conwetlab/WMarket/issues/new) to provide feedback.
+Any feedback is highly welcome, including bugs, typos or things you think should be included but aren't. You can use [GitHub Issues](https://github.com/conwetlab/WMarket/issues/new) to provide feedback.
 
 You can find the User & Programmer's Manual and the Administration Guide on [readthedocs.org](https://wmarket.readthedocs.org)
 
@@ -66,7 +66,7 @@ The API is fully RESTful so:
  * Delete a store making a `DELETE` request to `/api/v2/store/STORE_NAME`
  * Delete a description making a `DELETE` request to `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME`
 
-For an extended documentation, you can check the API REference available at:
+For an extended documentation, you can check the API Reference available at:
 
 * [Apiary](http://docs.fiwaremarketplace.apiary.io)
 * [GitHub Pages](http://conwetlab.github.io/WMarket)
