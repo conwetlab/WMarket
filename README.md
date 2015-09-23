@@ -70,7 +70,7 @@ The API is fully RESTful so:
 
 ## API Reference
 
-For an extended documentation, you can check the API Reference available at:
+For further documentation, you can check the API Reference available at:
 
 * [Apiary](http://docs.fiwaremarketplace.apiary.io)
 * [GitHub Pages](http://conwetlab.github.io/WMarket)
