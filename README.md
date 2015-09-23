@@ -6,6 +6,7 @@
  * [GEi overall description](#gei-overall-description)
  * [Build and Install](#build-and-install)
  * [API Overview](#api-overview)
+ * [API Reference](#api-reference)
  * [Testing](#testing)
  * [Advanced Topics](#advanced-topics)
 
@@ -65,6 +66,9 @@ The API is fully RESTful so:
  * Delete a user marking a `DELETE` request to `/api/v2/user/USER_NAME`
  * Delete a store making a `DELETE` request to `/api/v2/store/STORE_NAME`
  * Delete a description making a `DELETE` request to `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME`
+
+
+## API Reference
 
 For an extended documentation, you can check the API Reference available at:
 
