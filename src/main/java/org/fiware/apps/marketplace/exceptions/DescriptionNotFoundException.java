@@ -32,6 +32,11 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
+/**
+ * To be thrown when a description is not found in the database
+ * @author aitor
+ *
+ */
 public class DescriptionNotFoundException extends Exception {
 	
 	private static final long serialVersionUID = 1L;

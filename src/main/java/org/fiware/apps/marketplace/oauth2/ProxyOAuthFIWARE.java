@@ -49,61 +49,63 @@ import org.scribe.oauth.ProxyOAuth20ServiceImpl;
  * @author jortiz
  */
 public class ProxyOAuthFIWARE extends ProxyOAuth20ServiceImpl {
-    
-    public ProxyOAuthFIWARE(DefaultApi20 api, OAuthConfig config, int connectTimeout, int readTimeout, 
-    		String proxyHost, int proxyPort) {
-        super(api, config, connectTimeout, readTimeout, proxyHost, proxyPort);
-    }
 
-    public ProxyOAuthFIWARE(DefaultApi20 api, OAuthConfig config, int connectTimeout, int readTimeout, 
-    		String proxyHost, int proxyPort, boolean getParameter, boolean addGrantType) {
-        super(api, config, connectTimeout, readTimeout, proxyHost, proxyPort, getParameter, addGrantType);
-    }
+	public ProxyOAuthFIWARE(DefaultApi20 api, OAuthConfig config, int connectTimeout, int readTimeout, 
+			String proxyHost, int proxyPort) {
+		
+		super(api, config, connectTimeout, readTimeout, proxyHost, proxyPort);
+	}
 
-    @Override
-    public Token getAccessToken(final Token requestToken, final Verifier verifier) {
-        
-    	final OAuthRequest request = new ProxyOAuthRequest(this.api.getAccessTokenVerb(),
-                                                           this.api.getAccessTokenEndpoint(), this.connectTimeout,
-                                                           this.readTimeout, this.proxyHost, this.proxyPort);
-        
-        // Send client ID and client secret in the Authorization header
-        String oauth2Credentials = this.config.getApiKey() + ":" + this.config.getApiSecret();
-        request.addHeader("Authorization", "Basic " + Base64.encodeBase64String(oauth2Credentials.getBytes()));
-        
-        if (this.getParameter) {
-            
-        	request.addQuerystringParameter(OAuthConstants.CLIENT_ID, this.config.getApiKey());
-            request.addQuerystringParameter(OAuthConstants.CLIENT_SECRET, this.config.getApiSecret());
-            request.addQuerystringParameter(OAuthConstants.CODE, verifier.getValue());
-            request.addQuerystringParameter(OAuthConstants.REDIRECT_URI, this.config.getCallback());
-            
-            if (this.config.hasScope()) {
-                request.addQuerystringParameter(OAuthConstants.SCOPE, this.config.getScope());
-            }
-            
-            if (this.addGrantType) {
-                request.addQuerystringParameter("grant_type", "authorization_code");
-            }
-            
-        } else {
-           
-        	request.addBodyParameter(OAuthConstants.CLIENT_ID, this.config.getApiKey());
-            request.addBodyParameter(OAuthConstants.CLIENT_SECRET, this.config.getApiSecret());
-            request.addBodyParameter(OAuthConstants.CODE, verifier.getValue());
-            request.addBodyParameter(OAuthConstants.REDIRECT_URI, this.config.getCallback());
-            
-            if (this.config.hasScope()) {
-                request.addBodyParameter(OAuthConstants.SCOPE, this.config.getScope());
-            }
-            
-            if (this.addGrantType) {
-                request.addBodyParameter("grant_type", "authorization_code");
-            }
-        }
-        
-        final Response response = request.send();
-        return this.api.getAccessTokenExtractor().extract(response.getBody());
-    }
-    
+	public ProxyOAuthFIWARE(DefaultApi20 api, OAuthConfig config, int connectTimeout, int readTimeout, 
+			String proxyHost, int proxyPort, boolean getParameter, boolean addGrantType) {
+		
+		super(api, config, connectTimeout, readTimeout, proxyHost, proxyPort, getParameter, addGrantType);
+	}
+
+	@Override
+	public Token getAccessToken(final Token requestToken, final Verifier verifier) {
+
+		final OAuthRequest request = new ProxyOAuthRequest(this.api.getAccessTokenVerb(),
+				this.api.getAccessTokenEndpoint(), this.connectTimeout,
+				this.readTimeout, this.proxyHost, this.proxyPort);
+
+		// Send client ID and client secret in the Authorization header
+		String oauth2Credentials = this.config.getApiKey() + ":" + this.config.getApiSecret();
+		request.addHeader("Authorization", "Basic " + Base64.encodeBase64String(oauth2Credentials.getBytes()));
+
+		if (this.getParameter) {
+
+			request.addQuerystringParameter(OAuthConstants.CLIENT_ID, this.config.getApiKey());
+			request.addQuerystringParameter(OAuthConstants.CLIENT_SECRET, this.config.getApiSecret());
+			request.addQuerystringParameter(OAuthConstants.CODE, verifier.getValue());
+			request.addQuerystringParameter(OAuthConstants.REDIRECT_URI, this.config.getCallback());
+
+			if (this.config.hasScope()) {
+				request.addQuerystringParameter(OAuthConstants.SCOPE, this.config.getScope());
+			}
+
+			if (this.addGrantType) {
+				request.addQuerystringParameter("grant_type", "authorization_code");
+			}
+
+		} else {
+
+			request.addBodyParameter(OAuthConstants.CLIENT_ID, this.config.getApiKey());
+			request.addBodyParameter(OAuthConstants.CLIENT_SECRET, this.config.getApiSecret());
+			request.addBodyParameter(OAuthConstants.CODE, verifier.getValue());
+			request.addBodyParameter(OAuthConstants.REDIRECT_URI, this.config.getCallback());
+
+			if (this.config.hasScope()) {
+				request.addBodyParameter(OAuthConstants.SCOPE, this.config.getScope());
+			}
+
+			if (this.addGrantType) {
+				request.addBodyParameter("grant_type", "authorization_code");
+			}
+		}
+
+		final Response response = request.send();
+		return this.api.getAccessTokenExtractor().extract(response.getBody());
+	}
+
 }

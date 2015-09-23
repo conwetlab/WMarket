@@ -1,5 +1,4 @@
 wmarket_db:
-    restart: always
     image: mysql:latest
     volumes:
          - /var/lib/mysql
@@ -8,11 +7,14 @@ wmarket_db:
         - MYSQL_DATABASE=marketplace
 
 wmarket:
-    restart: always
     image: conwetlab/wmarket
     volumes:
-        - /WMarket/static
+        - /WMarket
     ports:
         - "80:8080"
     links:
         - wmarket_db
+    # Database is created when the WAR is deployed, so we 
+    # cannot deploy the WAR until MYSQL is up and running
+    # or the system will fail. 
+    command: bash -c 'sleep 15 && catalina.sh run'

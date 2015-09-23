@@ -44,24 +44,24 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @XmlRootElement(name = "users")
 @IgnoreMediaTypes("application/*+json")
 public class Users {
-	
-    private List<User> users = null;
-    
-    public Users() {
-    	this.setUsers(new ArrayList<User>());
-    }
-    
-    public Users(List<User> users) {
-    	this.setUsers(users);
-    }
- 
-    @XmlElement(name = "user")
-    @JsonProperty("users")
-    public List<User> getUsers() {
-        return this.users;
-    }
- 
-    public void setUsers(List<User> users) {
-    	this.users = users;
-    }
+
+	private List<User> users = null;
+
+	public Users() {
+		this.setUsers(new ArrayList<User>());
+	}
+
+	public Users(List<User> users) {
+		this.setUsers(users);
+	}
+
+	@XmlElement(name = "user")
+	@JsonProperty("users")
+	public List<User> getUsers() {
+		return this.users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
 }

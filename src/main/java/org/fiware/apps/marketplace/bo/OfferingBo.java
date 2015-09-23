@@ -46,61 +46,300 @@ import org.fiware.apps.marketplace.model.Review;
 
 public interface OfferingBo {
 	
-	// Save, update, delete
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// CRUD ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Creates an offering 
+	 * @param offering The offering to be created
+	 * @throws NotAuthorizedException If the current user is not authorized to create the offering
+	 */
 	public void save(Offering offering) throws NotAuthorizedException;
+	
+	/**
+	 * Updates an existing offering
+	 * @param offering The updated offering 
+	 * @throws NotAuthorizedException If the current user is not authorized to update the offering
+	 */
 	public void update(Offering offering) throws NotAuthorizedException;
+	
+	/**
+	 * Deletes an existing offering
+	 * @param offering The offering to be deleted
+	 * @throws NotAuthorizedException If the current user is not authorized to delete the offering
+	 */
 	public void delete(Offering offering) throws NotAuthorizedException;
 	
-	// Find 
+	/**
+	 * Returns an offering based on its URI
+	 * @param uri The URI of the offering to be retrieved
+	 * @return The offering with the given URI
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the offering
+	 */
 	public Offering findByUri(String uri) throws NotAuthorizedException;
+	
+	/**
+	 * Returns an offering based on its name and the description that contains it (a description is defined by
+	 * its name and the store that contains it)
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description that contains the offering
+	 * @param offeringName The name of the offering to be retrieved
+	 * @return The offering with the given name contained in the provided description
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the offering
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the provided
+	 * store
+	 * @throws OfferingNotFoundException If it does not exit an offering with the given name in the provided 
+	 * description
+	 */
 	public Offering findOfferingByNameStoreAndDescription(String storeName, 
 			String descriptionName, String offeringName) throws NotAuthorizedException,
-			OfferingNotFoundException, StoreNotFoundException, 
-			DescriptionNotFoundException;
+			StoreNotFoundException, DescriptionNotFoundException, OfferingNotFoundException;
 	
-	// Get all or a sublist based on some criteria
+	
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// LIST ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+	
 	// public List<Offering> getAllOfferings() throws NotAuthorizedException;
+	
+	/**
+	 * Returns a sublist of all the offerings stored in the database
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @param orderBy The field that will be used to order the returned offerings
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the offerings stored in the database
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of offerings
+	 */
 	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc) 
 			throws NotAuthorizedException;
+	
 	// public List<Offering> getAllStoreOfferings(String storeName) 
 	// 		throws StoreNotFoundException, NotAuthorizedException;
+	
+	/**
+	 * Returns a sublist of all the offerings contained in a given store
+	 * @param storeName The name of the store that contains the offerings to be retrieved
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @param orderBy The field that will be used to order the returned offerings
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the offerings contained in the given store
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of offerings
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 */
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max, String orderBy, boolean desc) 
-			throws StoreNotFoundException, NotAuthorizedException;
+			throws NotAuthorizedException, StoreNotFoundException;
+	
 	// public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName) 
 	// 		throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException;
+	
+	/**
+	 * Returns a sublist of all the offerings contained in a given description
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description that contains the offerings to be retrieved
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @param orderBy The field that will be used to order the returned offerings
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the offerings contained in the given description 
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of offerings
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the provided
+	 * store
+	 */
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
 			int offset, int max, String orderBy, boolean desc) throws NotAuthorizedException, StoreNotFoundException, 
 			DescriptionNotFoundException;	
 	
-	// Bookmarking
+
+	////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////// BOOKMARKING ///////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Swaps the bookmarking state of an offering for a given user:
+	 * <ul>
+	 * <li>If the offering has been bookmarked by the user, the offering will be unbookmarked</li>
+	 * <li>If the offering has not been bookmarked by the user, the offering will be bookmarked</li>
+	 * </ul>
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description that contains the offering
+	 * @param offeringName The name of the offering to be (un)bookmarked
+	 * @throws NotAuthorizedException If the current user is not authorized to (un)bookmark the offering
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the provided
+	 * store
+	 * @throws OfferingNotFoundException If it does not exit an offering with the given name in the provided 
+	 * description
+	 */
 	public void bookmark(String storeName, String descriptionName, String offeringName) 
-			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
-			DescriptionNotFoundException;
+			throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException,
+			OfferingNotFoundException;
+	
+	/**
+	 * Return all the offerings bookmarked by the current user
+	 * @return All the offerings bookmarked by the current user
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of bookmaked offerings
+	 */
 	public List<Offering> getAllBookmarkedOfferings() throws NotAuthorizedException;
+	
+	/**
+	 * Return a sublist of all the offerings bookmarked by the current user
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @param orderBy The field that will be used to order the returned offerings
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the offerings bookmarked by the current user
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of bookmaked offerings
+	 */
 	public List<Offering> getBookmarkedOfferingsPage(int offset, int max, String orderBy, boolean desc) 
 			throws NotAuthorizedException;
 	
-	// Get viewed offerings
+
+	////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////// VIEWED OFFERIGNS /////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Returns a sublist of all the offerings viewed by the current user
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @return A sublist of all the offerings viewed by the current user
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of offering viewed
+	 * by themselves
+	 */
 	public List<Offering> getLastViewedOfferingsPage(int offset, int max) throws NotAuthorizedException;
+	
+	/**
+	 * Returns a sublist of all the offerings viewed by other users (ordered by view date)
+	 * @param max The max number of offerings to be returned
+	 * @return A sublist of all the offerings viewed by other users
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of offerings viewed
+	 * by other users
+	 */
 	public List<Offering> getOfferingsViewedByOtherUsers(int max) throws NotAuthorizedException;
 	
-	// Review
+	
+	////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////// REVIEWS /////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Creates an offering review
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description that contains the offering
+	 * @param offeringName The name of the offering to be reviewed
+	 * @param review The review itself
+	 * @throws NotAuthorizedException If the current user is not authorized to review the offering
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the provided
+	 * store
+	 * @throws OfferingNotFoundException If it does not exit an offering with the given name in the provided 
+	 * description
+	 * @throws ValidationException If the given review is not valid
+	 */
 	public void createReview(String storeName, String descriptionName, String offeringName, Review review) 
-			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
-			DescriptionNotFoundException, ValidationException;
+			throws NotAuthorizedException, StoreNotFoundException,
+			DescriptionNotFoundException, OfferingNotFoundException, ValidationException;
+	
+	/**
+	 * Updates an existing offering review
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description that contains the offering
+	 * @param offeringName The name of the offering whose review is going to be updated
+	 * @param reviewId The ID of the review that is going to be updated
+	 * @param review The updated review
+	 * @throws NotAuthorizedException If the current user is not authorized to update the review
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the provided
+	 * store
+	 * @throws OfferingNotFoundException If it does not exit an offering with the given name in the provided 
+	 * description
+	 * @throws ReviewNotFoundException If it does not exist a review with the given ID for the given offering
+	 * @throws ValidationException If the updated review is not valid
+	 */
 	public void updateReview(String storeName, String descriptionName, String offeringName, int reviewId, 
 			Review review) throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
 			DescriptionNotFoundException, ReviewNotFoundException, ValidationException;	
+	
+	/**
+	 * Returns an existing offering review
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description that contains the offering
+	 * @param offeringName The name of the offering whose review is going to be retrieved
+	 * @param reviewId The ID of the review that is going to be returned
+	 * @return The offering review with the given ID
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the review
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the provided
+	 * store
+	 * @throws OfferingNotFoundException If it does not exit an offering with the given name in the provided 
+	 * description
+	 * @throws ReviewNotFoundException If it does not exist a review with the given ID for the given offering
+	 */
+	public Review getReview(String storeName, String descriptionName, String offeringName, int reviewId) throws 
+			NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException, OfferingNotFoundException,
+			ReviewNotFoundException;
+	
+	/**
+	 * Deletes an existing offering review
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description that contains the offering
+	 * @param offeringName The name of the offering whose review is going to be deleted
+	 * @param reviewId The ID of the review that is going to be returned
+	 * @throws NotAuthorizedException If the current user is not authorized to delete the review
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the provided
+	 * store
+	 * @throws OfferingNotFoundException If it does not exit an offering with the given name in the provided 
+	 * description
+	 * @throws ReviewNotFoundException If it does not exist a review with the given ID for the given offering
+	 */
+	public void deleteReview(String storeName, String descriptionName, String offeringName, int reviewId) 
+			throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException, 
+			OfferingNotFoundException, ReviewNotFoundException;
+	
+	/**
+	 * Returns all the reviews of a given offering
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description that contains the offering
+	 * @param offeringName The name of the offering whose reviews want to be retrieved
+	 * @return All the reviews of the given offering
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the reviews of the given 
+	 * offering
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the provided
+	 * store
+	 * @throws OfferingNotFoundException If it does not exit an offering with the given name in the provided 
+	 * description
+	 */
 	public List<Review> getReviews(String storeName, String descriptionName, String offeringName) throws 
-			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException;
+			NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException, OfferingNotFoundException;
+	
+
+	/**
+	 * Returns a sublist of all the reviews of a given offering
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description that contains the offering
+	 * @param offeringName The name of the offering whose reviews want to be retrieved
+	 * @param offset The first review to be retrieved
+	 * @param max The max number of reviews to be returned
+	 * @param orderBy The field that will be used to order the returned reviews
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the reviews of the given offering
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the reviews of the given 
+	 * offering
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the provided
+	 * store
+	 * @throws OfferingNotFoundException If it does not exit an offering with the given name in the provided 
+	 * description
+	 */
 	public List<Review> getReviewsPage(String storeName, String descriptionName, String offeringName, 
 			int offset, int max, String orderBy, boolean desc) throws NotAuthorizedException, 
-			OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException;
-	public Review getReview(String storeName, String descriptionName, String offeringName, int reviewId) throws 
-			NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException, DescriptionNotFoundException,
-			ReviewNotFoundException;
-	public void deleteReview(String storeName, String descriptionName, String offeringName, int reviewId) 
-			throws NotAuthorizedException, OfferingNotFoundException, StoreNotFoundException,
-			DescriptionNotFoundException, ReviewNotFoundException;	
-
+			StoreNotFoundException, DescriptionNotFoundException, OfferingNotFoundException;
+	
 }

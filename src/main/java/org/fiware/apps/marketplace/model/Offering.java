@@ -74,14 +74,14 @@ public class Offering extends ReviewableEntity {
 	private String imageUrl;
 	private String acquisitionUrl;
 	private int views;
-		
+
 	// Price Plans & Services
 	private Set<PricePlan> pricePlans;
 	private Set<Service> services;
-	
+
 	// Offering categories depends on the attached services
 	private Set<Category> categories;
-	
+
 	private List<User> usersBookmarkedMe;
 	private List<ViewedOffering> usersViewedMe;
 
@@ -125,13 +125,13 @@ public class Offering extends ReviewableEntity {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	@XmlElement
 	@Column(name = "version")
 	public String getVersion() {
 		return version;
 	}
-	
+
 	public void setVersion(String version) {
 		this.version = version;
 	}
@@ -157,7 +157,7 @@ public class Offering extends ReviewableEntity {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	
+
 	@XmlElement
 	@Column(name = "acquisition_url", length = 2048)
 	public String getAcquisitionUrl() {
@@ -179,7 +179,7 @@ public class Offering extends ReviewableEntity {
 	}
 
 	@XmlElement(name = "pricePlan")
-    @JsonProperty("pricePlans")
+	@JsonProperty("pricePlans")
 	@OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	public Set<PricePlan> getPricePlans() {
 		return pricePlans;
@@ -188,13 +188,13 @@ public class Offering extends ReviewableEntity {
 	public void setPricePlans(Set<PricePlan> pricePlans) {
 		this.pricePlans = pricePlans;
 	}
-	
+
 	@XmlElement(name = "service")
 	@JsonProperty("services")
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)	// Not many services are supposed to be attached
 	@JoinTable(name = "offerings_services", 
-			joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
-			inverseJoinColumns = {@JoinColumn(name = "service_id", referencedColumnName = "id")})
+	joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+	inverseJoinColumns = {@JoinColumn(name = "service_id", referencedColumnName = "id")})
 	public Set<Service> getServices() {
 		return services;
 	}
@@ -202,13 +202,13 @@ public class Offering extends ReviewableEntity {
 	public void setServices(Set<Service> services) {
 		this.services = services;
 	}
-	
+
 	@XmlElement(name = "category")
 	@JsonProperty("categories")
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "offerings_categories",
-			joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
-			inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
+	joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+	inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
 	public Set<Category> getCategories() {
 		return categories;
 	}
@@ -216,13 +216,13 @@ public class Offering extends ReviewableEntity {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
-	
+
 	// So cascade will work
 	@XmlTransient
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "bookmarks", 
-    		joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
-    		inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
+	joinColumns = {@JoinColumn(name = "offering_id", referencedColumnName = "id")},
+	inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
 	public List<User> getUsersBookmarkedMe() {
 		return usersBookmarkedMe;
 	}
@@ -230,7 +230,7 @@ public class Offering extends ReviewableEntity {
 	public void setUsersBookmarkedMe(List<User> usersBookmarkedMe) {
 		this.usersBookmarkedMe = usersBookmarkedMe;
 	}
-	
+
 	@XmlTransient
 	@OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public List<ViewedOffering> getUsersViewedMe() {
@@ -253,27 +253,27 @@ public class Offering extends ReviewableEntity {
 
 	@Override
 	public boolean equals(Object obj) {
-		
+
 		if (this == obj) {
 			return true;
 		} 
-		
+
 		if (obj instanceof Offering) {
 			Offering other = (Offering) obj;
-			
+
 			// Avoid null pointer exceptions...
 			if (this.uri == null || this.describedIn == null) {
 				return false;
 			}
-			
+
 			if (this.uri.equals(other.uri) && this.describedIn.equals(other.describedIn)) {
 				return true;
 			}
 		}
-						
+
 		return false;
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("%s (Description: %s, Store: %s)", name, describedIn.getName(), 

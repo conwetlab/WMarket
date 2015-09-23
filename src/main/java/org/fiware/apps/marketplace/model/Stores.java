@@ -44,24 +44,24 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @XmlRootElement(name = "stores")
 @IgnoreMediaTypes("application/*+json")
 public class Stores {
-	
-    private List<Store> stores = null;
-    
-    public Stores() {
-    	this.setStores(new ArrayList<Store>());
-    }
-    
-    public Stores(List<Store> stores) {
-    	this.setStores(stores);
-    }
- 
-    @XmlElement(name = "store")
-    @JsonProperty("stores")
-    public List<Store> getStores() {
-        return this.stores;
-    }
- 
-    public void setStores(List<Store> stores) {
-    	this.stores = stores;
-    }
+
+	private List<Store> stores = null;
+
+	public Stores() {
+		this.setStores(new ArrayList<Store>());
+	}
+
+	public Stores(List<Store> stores) {
+		this.setStores(stores);
+	}
+
+	@XmlElement(name = "store")
+	@JsonProperty("stores")
+	public List<Store> getStores() {
+		return this.stores;
+	}
+
+	public void setStores(List<Store> stores) {
+		this.stores = stores;
+	}
 }

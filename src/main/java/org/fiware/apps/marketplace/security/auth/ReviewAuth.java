@@ -55,6 +55,12 @@ public class ReviewAuth extends AbstractAuth<Review>{
 		throw new UnsupportedOperationException();
 	}
 	
+	/**
+	 * Checks if a given user can review a given entity
+	 * @param entity The entity that is going to be reviewed
+	 * @param review The review itself
+	 * @return true if the current user has not reviewed the entity yet. false otherwise
+	 */
 	public boolean canCreate(ReviewableEntity entity, Review review) {
 		
 		boolean canCreate = false;

@@ -47,7 +47,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * This class creates a thread that update periodically all the offerings contained in all the stored descriptions
+ * based on the update time specified in the configuration file.
+ * @author aitor
+ *
+ */
 @Component
 @Scope("singleton")
 public class DescriptionsUpdater {
@@ -74,7 +79,7 @@ public class DescriptionsUpdater {
 					// Call update all offerings method
 					descriptionBo.updateAllDescriptions();
 				} catch (Exception e) {
-					logger.warn("Unexpected error", e);
+					logger.warn("Unexpected error when autoupdating descriptions", e);
 				}
 			}
 		}, 0, updatePeriod, TimeUnit.SECONDS);

@@ -32,6 +32,11 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
+/**
+ * To be thrown when a RDF file cannot be parsed
+ * @author aitor
+ *
+ */
 public class ParseException extends Exception {
 
 	private static final long serialVersionUID = 1L;

@@ -43,48 +43,137 @@ import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Description;
 
 public interface DescriptionBo {
-	
-	// Save, Update, Delete
-	public void save(String storeName, Description description) throws NotAuthorizedException, 
-			ValidationException, StoreNotFoundException;
+
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// CRUD ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Creates a new description in an existing store
+	 * @param storeName The name of the store that will contain the description
+	 * @param description The description itself
+	 * @throws NotAuthorizedException If the current user is not authorized to create the given description
+	 * @throws ValidationException If the given description is not valid
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 */
+	public void save(String storeName, Description description) 
+			throws NotAuthorizedException, ValidationException, StoreNotFoundException;
+
+	/**
+	 * Updates a description contained in a given store
+	 * @param storeName The name of the store that contains the description 
+	 * @param descriptionName The name of the description to be updated
+	 * @param updatedDescription The updated description
+	 * @throws NotAuthorizedException If the current user is not authorized to update the given description 
+	 * @throws ValidationException If the updated description is not valid
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the store
+	 */
 	public void update(String storeName, String descriptionName, Description updatedDescription) 
-			throws NotAuthorizedException, ValidationException,
-			StoreNotFoundException, DescriptionNotFoundException;
-	public void delete(String storeName, String descriptionName) throws NotAuthorizedException, 
-			StoreNotFoundException, DescriptionNotFoundException;
-	
-	// Find
+			throws NotAuthorizedException, ValidationException, StoreNotFoundException, DescriptionNotFoundException;
+
+	/**
+	 * Deletes a description contained in a given store
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description to be deleted
+	 * @throws NotAuthorizedException If the current user is not authorized to delete the given description 
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the store
+	 */
+	public void delete(String storeName, String descriptionName) 
+			throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException;
+
+	/**
+	 * Returns a description contained in a given store
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description to be retrieved
+	 * @return The description contained in the given store
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the given description 
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given name in the store
+	 */
 	public Description findByNameAndStore(String storeName, String descriptionName) 
-			throws DescriptionNotFoundException, StoreNotFoundException, 
-			NotAuthorizedException;
-	public Description findById(Integer id) throws DescriptionNotFoundException, 
-			NotAuthorizedException;
-	
-	// Get all or a sublist
+			throws NotAuthorizedException, StoreNotFoundException, DescriptionNotFoundException;
+
+	/**
+	 * Returns a description based on its ID
+	 * @param id The ID of the description to be retrieved
+	 * @return The description with the given ID
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the requested description
+	 * @throws DescriptionNotFoundException If it does not exist a description with the given ID
+	 */
+	public Description findById(Integer id) throws NotAuthorizedException, DescriptionNotFoundException;
+
+
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// LIST ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Returns all the descriptions created by the current user
+	 * @return All the descriptions created by the current user
+	 */
 	public List<Description> getCurrentUserDescriptions();
+
+	/**
+	 * Returns all the descriptions
+	 * @return All the descriptions
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of descriptions
+	 */
 	public List<Description> getAllDescriptions() throws NotAuthorizedException;
+
+	/**
+	 * Returns a sublist of all the stored descriptions
+	 * @param offset The first description to be retrieved
+	 * @param max The max number of descriptions to be returned
+	 * @return A sublist of all the stored descriptions
+	 * @throws NotAuthorizedException If the current user is not authorized to retrieve the list of descriptions
+	 */
 	public List<Description> getDescriptionsPage(int offset, int max) 
 			throws NotAuthorizedException;
+
+	/**
+	 * Return all the descriptions contained in a given store
+	 * @param storeName The name of the store whose descriptions want to be retrieved
+	 * @return All the descriptions contained in the given store
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws NotAuthorizedException IF the current user is not authorized to retrieve the list of descriptions
+	 */
 	public List<Description> getStoreDescriptions(String storeName) 
 			throws StoreNotFoundException, NotAuthorizedException;
+
+	/**
+	 * Returns a sublist of all the descriptions contained in a given store
+	 * @param storeName The name of the store whose descriptions want to be retrieved
+	 * @param offset The first description to be retrieved
+	 * @param max The max number of descriptions to be returned
+	 * @return A sublist of all the descriptions contained in the given store
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws NotAuthorizedException IF the current user is not authorized to retrieve the list of descriptions
+	 */
 	public List<Description> getStoreDescriptionsPage(String storeName, 
 			int offset, int max) throws StoreNotFoundException, NotAuthorizedException;
 
-    /**
-     * Get the current list of descriptions created by a user in one specific store.
-     *
-     * @param userName
-     * @param storeName
-     *
-     * @throws UserNotFoundException If there is not a User with the userName given.
-     * @throws StoreNotFoundException If there is not a Store with the storeName given.
-     *
-     * @return The list of descriptions.
-     */
-    public List<Description> getUserDescriptionsInStore(String userName, String storeName)
-            throws UserNotFoundException, StoreNotFoundException;
-    
-    // Internal
-    public void updateAllDescriptions();
+	/**
+	 * Returns the list of descriptions created by a given user in a given store
+	 * @param userName The user that created the descriptions
+	 * @param storeName The name of the store whose descriptions want to be retrieved
+	 * @return The list of descriptions created by the given user in the given store
+	 * @throws UserNotFoundException If it does not exist a user with the given name
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 */
+	public List<Description> getUserDescriptionsInStore(String userName, String storeName)
+			throws UserNotFoundException, StoreNotFoundException;
+
+
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// EXTRA //////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Retrieves all the descriptions stored in the database and update all their offerings
+	 * This method <strong>MUST NOT</strong> be exposed as an API. It is just for internal usage.
+	 */
+	public void updateAllDescriptions();
 
 }

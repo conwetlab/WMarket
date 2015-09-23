@@ -39,22 +39,81 @@ import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.model.Store;
 
 public interface StoreDao {
-	
-	// Save, update & delete
+
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// CRUD ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Creates a new store in the database
+	 * @param store The store to be created
+	 */
 	public void save(Store store);
+
+	/**
+	 * Updates an existing store
+	 * @param store The updated store
+	 */
 	public void update(Store store);
+
+	/**
+	 * Deletes an existing store
+	 * @param store The store to be deleted
+	 */
 	public void delete(Store store);
-	
-	// Find by name
+
+	/**
+	 * Returns a store based on its name
+	 * @param name The name of the store to be retrieved
+	 * @return The store with the given name
+	 * @throws StoreNotFoundException If it does not exist an store with the given name
+	 */
 	public Store findByName(String name) throws StoreNotFoundException;
 
-    // Validation
-    public boolean isNameAvailable(String name);
-    public boolean isDisplayNameAvailable(String displayName);
-    public boolean isURLAvailable(String url);
+	////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////// VERIFICATIONS ///////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
 
-	// Get all or a sublist
-	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc);
+	/**
+	 * Checks if a given name is in use
+	 * @param name The name to be checked
+	 * @return true if the name is not in use. false otherwise
+	 */
+	public boolean isNameAvailable(String name);
+
+	/**
+	 * Checks if a given display name is in use
+	 * @param displayName The display name to be checked
+	 * @return true if the display name is not in use. false otherwise
+	 */
+	public boolean isDisplayNameAvailable(String displayName);
+
+	/**
+	 * Checks if a given URL is in use
+	 * @param url The URL to be checked
+	 * @return true if the URL is not in use. false otherwise
+	 */
+	public boolean isURLAvailable(String url);
+
+
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// LIST ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Returns all the stores contained in the database
+	 * @return All the stores contained in the database
+	 */
 	public List<Store> getAllStores();
+
+	/**
+	 * Returns a sublist of all the stores contained in the database
+	 * @param offset The first store to be retrieved
+	 * @param max The max number of stores to be returned
+	 * @param orderBy The field that will be used to order the returned stores
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the stores contained in the database
+	 */
+	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc);
 
 }

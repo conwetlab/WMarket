@@ -39,22 +39,82 @@ import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.model.User;
 
 public interface UserDao {
-	
-	// Save, update & delete
+
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// CRUD ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Creates a new user in the database
+	 * @param user The user to be created
+	 */
 	public void save(User user);
+
+	/**
+	 * Updates an existing user
+	 * @param user The user to be updated
+	 */
 	public void update(User user);
+
+	/**
+	 * Deletes an existing user
+	 * @param user The user to be deleted
+	 */
 	public void delete(User user);
-	
-	// Find
+
+	/**
+	 * Returns a user based on its user name
+	 * @param userName The user name of the user to be returned
+	 * @return The user with the given user name
+	 * @throws UserNotFoundException If it does not exist a user with the given user name
+	 */
 	public User findByName(String userName) throws UserNotFoundException;
+
+	/**
+	 * Returns a user based on its email
+	 * @param email The email of the user to be returned
+	 * @return The user with the given email
+	 * @throws UserNotFoundException If it does not exist a user with the given email
+	 */
 	public User findByEmail(String email) throws UserNotFoundException;
 
-    // For validations...
-	public boolean isUserNameAvailable(String userName);
-    public boolean isEmailAvailable(String email);
 
-	// Get all or a sublist
-	public List<User> getUsersPage(int offset, int max);
+	////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////// VERIFICATIONS ///////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Checks if a user name is in use
+	 * @param userName The user name to be checked
+	 * @return true if the given user name is not in use. false otherwise
+	 */
+	public boolean isUserNameAvailable(String userName);
+
+	/**
+	 * Checks if an email is in use
+	 * @param email The email to be checked
+	 * @return true if the given email is not in use. false otherwise
+	 */
+	public boolean isEmailAvailable(String email);
+
+
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// LIST ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Returns all the users stored in the database
+	 * @return All the users stored in the database
+	 */
 	public List<User> getAllUsers();
-	
+
+	/**
+	 * Returns a sublist of all the users stored in the database
+	 * @param offset The first user to be retrieved
+	 * @param max The max number of users to be returned
+	 * @return A sublist of all the users stored in the database
+	 */
+	public List<User> getUsersPage(int offset, int max);
+
+
 }

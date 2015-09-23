@@ -32,22 +32,40 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
+/**
+ * To be thrown when an entity is not valid
+ * @author aitor
+ *
+ */
 public class ValidationException extends Exception {
 	
 	private static final long serialVersionUID = 1L;
 	private String fieldName;
 	private String fieldError;
 
-	public ValidationException(String name, String message) {
+	/**
+	 * Default constructor
+	 * @param fieldName The name of the field with an invalid value
+	 * @param message A message to explain why the specified field is invalid
+	 */
+	public ValidationException(String fieldName, String message) {
 		super(message);
-		this.fieldName = name;
+		this.fieldName = fieldName;
 		this.fieldError = message;
 	}
 
+	/**
+	 * Returns the invalid field 
+	 * @return The invalid field
+	 */
 	public String getFieldName() {
 		return this.fieldName;
 	}
 
+	/**
+	 * Returns a message that explains why the field is invalid
+	 * @return A message what explains why the field is invalid
+	 */
 	public String getFieldError() {
 		return this.fieldError;
 	}

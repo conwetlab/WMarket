@@ -39,13 +39,59 @@ import org.fiware.apps.marketplace.model.ViewedOffering;
 
 public interface ViewedOfferingDao {
 	
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// CRUD ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Creates a viewed offering in the database
+	 * @param viewedOffering The viewed offering to be created
+	 */
 	public void save(ViewedOffering viewedOffering);
+	
+	/**
+	 * Updates an existing viewed offering 
+	 * @param viewedOffering The updated viewed offering
+	 */
 	public void update(ViewedOffering viewedOffering);
+	
+	/**
+	 * Deletes an existing viewed offering
+	 * @param viewedOffering The viewed offering to be deleted
+	 */
 	public void delete(ViewedOffering viewedOffering);
 	
+	
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// LIST ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Returns all the offerings viewed by a given user
+	 * @param userName The user whose viewed offerings want to be retrieved
+	 * @return All the offering viewed by the given user
+	 * @throws UserNotFoundException If it does not exist a user with the given user name
+	 */
 	public List<ViewedOffering> getUserViewedOfferings(String userName) throws UserNotFoundException;
+	
+	/**
+	 * Returns a sublist of all the offerings viewed by a given user
+	 * @param userName The user whose viewed offerings want to be retrieved
+	 * @param offset The first viewed offering to be retrieved
+	 * @param max The max number of viewed offerings to be returned
+	 * @return A sublist of all the offerings viewed by a given user
+	 * @throws UserNotFoundException If it does not exist a user with the given user name
+	 */
 	public List<ViewedOffering> getUserViewedOfferingsPage(String userName, int offset, int max) 
 			throws UserNotFoundException;
+	
+	/**
+	 * Returns a sublist of all the offerings viewed by other users (ordered by view date)
+	 * @param userName The user to be excluded
+	 * @param max The max number of offerings to be returned
+	 * @return A sublist of all the offerings viewed by other users
+	 * @throws UserNotFoundException If it does not exist a user with the given user name
+	 */
 	public List<ViewedOffering> getOfferingsViewedByOtherUsers(String userName, int max) throws UserNotFoundException;
 
 }
