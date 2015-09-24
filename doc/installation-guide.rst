@@ -557,9 +557,9 @@ instructions given in this guide.
 
 **Step 2: Authenticating your user and becoming a provider**
 
-Go to ``http://[WMARKET_HOST]:[WMARKET_PORT]/`` and introduce the
-authentication details according to the user that you have created in
-the previous step. Then, become a provider as explained in the
+Go to ``http://[WMARKET_HOST]:[WMARKET_PORT]/WMarket`` and introduce
+the authentication details according to the user that you have created
+in the previous step. Then, become a provider as explained in the
 :doc:`administration-guide`.
 
 **Step 3: Creating a Store**
