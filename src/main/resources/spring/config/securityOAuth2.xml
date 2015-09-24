@@ -33,6 +33,9 @@
 		<security:intercept-url pattern="/api/v2/user/**" method="PUT" access="denyAll" />
 		<security:intercept-url pattern="/api/v2/user/**" method="DELETE" access="denyAll" />
 		<security:intercept-url pattern="/api/v2/user/**" method="GET" access="hasRole('ROLE_USER')" />
+		
+		<!-- Resources can be accessed by all the users -->
+		<security:intercept-url pattern="/resources/**" access="hasRole('ROLE_ANONYMOUS') or hasRole('ROLE_USER')" />
 
 		<!-- Security rule for the rest of URLs -->
 		<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
@@ -40,7 +43,7 @@
 
 	<!-- entry points -->
 	<bean id="fiwareEntryPoint"
-		class="org.pac4j.springframework.security.web.ClientAuthenticationEntryPoint">
+		class="org.fiware.apps.marketplace.security.entryPoints.RESTAwareClientAuthenticationEntryPoint">
 		<property name="client" ref="fiwareClient" />
 	</bean>
 
@@ -49,6 +52,7 @@
 		<property name="serverURL" value="${oauth2.server}" />
 		<property name="key" value="${oauth2.key}" />
 		<property name="secret" value="${oauth2.secret}" />
+		<property name="offeringProviderRole" value="${oauth2.providerRole}" />
 	</bean>
 
 	<bean id="clients" class="org.pac4j.core.client.Clients">

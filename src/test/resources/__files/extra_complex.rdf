@@ -1,0 +1,708 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+    xmlns:foaf="http://xmlns.com/foaf/0.1/" 
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+    xmlns:msm="http://cms-wg.sti2.org/ns/minimal-service-model#" 
+    xmlns:owl="http://www.w3.org/2002/07/owl#" 
+    xmlns:dcterms="http://purl.org/dc/terms/" 
+    xmlns:usdl="http://www.linked-usdl.org/ns/usdl-core#"
+    xmlns:pav="http://purl.org/pav/" 
+    xmlns:legal="http://www.linked-usdl.org/ns/usdl-legal#" 
+    xmlns:price="http://www.linked-usdl.org/ns/usdl-pricing#" 
+    xmlns:sla="http://www.linked-usdl.org/ns/usdl-sla#" 
+    xmlns:sec="http://www.linked-usdl.org/ns/usdl-sec#" 
+    xmlns:blueprint="http://bizweb.sap.com/TR/blueprint#" 
+    xmlns:vcard="http://www.w3.org/2006/vcard/ns#" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
+    xmlns:ctag="http://commontag.org/ns#" 
+    xmlns:org="http://www.w3.org/ns/org#" 
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#" 
+    xmlns:time="http://www.w3.org/2006/time#" 
+    xmlns:gr="http://purl.org/goodrelations/v1#" 
+    xmlns:doap="http://usefulinc.com/ns/doap#">
+
+    <skos:Concept xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="classification1">
+        <rdfs:label>WireCloud Component</rdfs:label>
+    </skos:Concept>
+
+    <skos:Concept xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="classification2">
+        <rdfs:label>DataSet</rdfs:label>
+    </skos:Concept>
+
+    <skos:Concept xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="classification3">
+        <rdfs:label>Cloud Instance</rdfs:label>
+    </skos:Concept>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service1">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">OrionStarterKit</dcterms:title>
+        <dcterms:description xml:lang="en">Offering composed of three mashable application components: ngsi-source, ngsientity2poi and ngsi-updater. Those components are provided as the base tools/examples for making application mashups using WireCloud and the Orion Context Broker. Those resources can be used for example for showing entities coming from an Orion server inside the Map Viewer widget or browsing and updating the attributes of those entities.</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service2">
+        <usdl:hasClassification rdf:nodeID="classification2" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Dataset</dcterms:title>
+        <dcterms:description xml:lang="en">This is cool dataset with all the information that you are going to need</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service3">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Input box Widget</dcterms:title>
+        <dcterms:description xml:lang="en">A simple widget with an input box</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service4">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Map Viewer</dcterms:title>
+        <dcterms:description xml:lang="en">Place things on map! Explore the world, trace routes... Don't carry a paper map again...</dcterms:description>
+        <usdl:versionInfo>2.5.3</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service5">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">History Module to Linear Graph</dcterms:title>
+        <dcterms:description xml:lang="en">Produces data from Historical Mod to feed a line graph.</dcterms:description>
+        <usdl:versionInfo>2.3.2</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service6">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Linear Graph</dcterms:title>
+        <dcterms:description xml:lang="en">Generic linear graph.</dcterms:description>
+        <usdl:versionInfo>2.3.2</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service7">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">NGSI Entity To PoI Widget</dcterms:title>
+        <dcterms:description xml:lang="en">This operator transforms NGSI entities (as the ones coming from the NGSI source operator) to Points of Interest. To be able to do so, those entities should contain an attribute containing the coordinate of the entity. Also, take into account the fact this operator is generic, so market bubbles will be a simple composition of the pairs attribute/value.</dcterms:description>
+        <usdl:versionInfo>3.0.3</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service8">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">NGSI Source Widget</dcterms:title>
+        <dcterms:description xml:lang="en">This operator allows you to use any NGSI server as source of data. This will be acomplished by creating a subscription to the NGSI server to obtain real time notifications about changes on the entities of interest.</dcterms:description>
+        <usdl:versionInfo>3.0.4</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service9">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Kurento one2one widget</dcterms:title>
+        <dcterms:description xml:lang="en">This kurento One2One widget is a WireCloud widget usable for adding videoconference support to your dashboards in a simple way.</dcterms:description>
+        <usdl:versionInfo>1.1.2</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service10">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Kurento Crowd Detector Widget</dcterms:title>
+        <dcterms:description xml:lang="en">This widget provide an easy way for use a video and detect people in the areas selected in your dashboard.</dcterms:description>
+        <usdl:versionInfo>0.3.2</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service11">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Crowd detector mashup example</dcterms:title>
+        <dcterms:description xml:lang="en">This is a simple mashup showing the crowd detection capabilities available through Kurento.</dcterms:description>
+        <usdl:versionInfo>1.1</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service12">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Google Charts Widget</dcterms:title>
+        <dcterms:description xml:lang="en">This widget allows you to create any chart/graph supported by Google Charts. See https://developers.google.com/chart/interactive/docs/gallery for more info about what kind of graphics you can obtain using this widget.</dcterms:description>
+        <usdl:versionInfo>1.0.1</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service13">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">FlotR2 widget</dcterms:title>
+        <dcterms:description xml:lang="en">Wirecloud widget to show graphs using the FlotR2 library.</dcterms:description>
+        <usdl:versionInfo>0.98.2</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service14">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Led Panel</dcterms:title>
+        <dcterms:description xml:lang="en">display a row of green LEDs, accepts input from 0 to 10.</dcterms:description>
+        <usdl:versionInfo>0.5</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service15">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <usdl:hasClassification rdf:nodeID="classification2" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Valencia Carga Eléctrica</dcterms:title>
+        <dcterms:description xml:lang="en">Copia de Valencia Carga Eléctrica para pruebas</dcterms:description>
+        <usdl:versionInfo>2.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service16">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">GeoRSS Mashup</dcterms:title>
+        <dcterms:description xml:lang="en">Mashup that displays the information from GeoRSS Services and its locations in the map. It allows the user to display the Weather information for the locations of the GeoRSS results. Mashup composed of: Weather Widget Example, Web Map Service, Web Browser, GeoRSS Reader, OGC Service Registry. Wirecloud Mashup composed of: OGC Service Registry, Web Browser, Weather Widget Example, GeoRSS Reader, Web Map Service</dcterms:description>
+        <usdl:versionInfo>1.2</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service17">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">CartoCiudad Mashup</dcterms:title>
+        <dcterms:description xml:lang="en">Mashup for querying CartoCiudad Services in different Nomenclator widgets. It allows to make different querys and display the results in the map. The available CartoCiudad services in this mashup are: CartoCiudad Inspire, CartoCiudad Municipio (Township), CartoCiudad Distrito Censal (Census District) and CartoCiudad Codigo Postal (Zip code). Composed of: Nomenclator, Nomenclator, Nomenclator, Nomenclator, OGC Service Registry, Web Map Service. Wirecloud Mashup composed of: OGC Service Registry, Nomenclator, Nomenclator, Nomenclator, Nomenclator, Web Map Service.</dcterms:description>
+        <usdl:versionInfo>1.2</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service18">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Nomenclator Mashup</dcterms:title>
+        <dcterms:description xml:lang="en">This mashup allows the user to query different Nomenclator services simultaneously. This mashups uses the services Nomenclator Conciso, Nomenclator Inspire and GeoNames. In order to query the three of them, the query must be done in the first one (Nomenclator Conciso). Selecting any result allows displaying this location in the map, and selecting results in the GeoNames Nomenclator will display the wikipedia page of that entity. Mashup composed of the widgets: Web Map Service, Nomenclator, Geonames Nomenclator, Web Browser, Nomenclator, OGC Service Registry. Wirecloud Mashup composed of: Web Browser, OGC Service Registry, Geonames Nomenclator, Nomenclator, Nomenclator, Web Map Service.</dcterms:description>
+        <usdl:versionInfo>1.2</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service19">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Wikipedia widget</dcterms:title>
+        <dcterms:description xml:lang="en">A widget for displaying Wikipedia pages</dcterms:description>
+        <usdl:versionInfo>2.4.1</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service20">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Flickr</dcterms:title>
+        <dcterms:description xml:lang="en">A Widget for using Flickr</dcterms:description>
+        <usdl:versionInfo>2.7</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service21">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Youtube Browser Widget</dcterms:title>
+        <dcterms:description xml:lang="en">A widget for browsing Youtube.</dcterms:description>
+        <usdl:versionInfo>2.99</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service22">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Multimedia Viewer Widget</dcterms:title>
+        <dcterms:description xml:lang="en">A widget for viewing photos and videos.</dcterms:description>
+        <usdl:versionInfo>1.0.2</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service23">
+        <usdl:hasClassification rdf:nodeID="classification2" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Madrid Public Transport Pass Price Evolution CSV</dcterms:title>
+        <dcterms:description xml:lang="en">Evolution of Madrid Public Transport Pass Price in CSV</dcterms:description>
+        <usdl:versionInfo>1.1.1</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service24">
+        <usdl:hasClassification rdf:nodeID="classification2" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Accessible Places by EsAccesible App</dcterms:title>
+        <dcterms:description xml:lang="en">EsAccesible App / It'sAccessible, la aplicación para móviles con la que definir y compartir la accesibilidad física de lugares (bares, restaurantes,...) y así compartir con los usuarios la accesibilidad de su entorno. Para gente con dificultades de movilidad y/o usuarios de sillas de ruedas</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service25">
+        <usdl:hasClassification rdf:nodeID="classification2" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Evolution of the transport pass price</dcterms:title>
+        <dcterms:description xml:lang="en">Evolution of transport pass prices</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service26">
+        <usdl:hasClassification rdf:nodeID="classification1" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">CKAN Visualization mashup</dcterms:title>
+        <dcterms:description xml:lang="en">A mashup for visualizing CKAN dataset</dcterms:description>
+        <usdl:versionInfo>1.1</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service27">
+        <usdl:hasClassification rdf:nodeID="classification2" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Pharmacies en Ile de France</dcterms:title>
+        <dcterms:description xml:lang="en">Pharmacies en Ile de France. Producteur : région Ile de France ; 16/3/2014. Créateur : FINESS ; 16/3/2014. Diffusion : Idutaip</dcterms:description>
+        <usdl:versionInfo>14.4.22.0.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service28">
+        <usdl:hasClassification rdf:nodeID="classification2" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Madrid Transport Evolution</dcterms:title>
+        <dcterms:description xml:lang="en">Evolution of Madrid Transport</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service29">
+        <usdl:hasClassification rdf:nodeID="classification3" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Orion Context Broker instance</dcterms:title>
+        <dcterms:description xml:lang="en">A Virtual Machine in the Cloud with a ready-to-use instance of the Orion Context Broker</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service30">
+        <usdl:hasClassification rdf:nodeID="classification3" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">WStore instance</dcterms:title>
+        <dcterms:description xml:lang="en">A Virtual Machine in the Cloud with a ready-to-use instance of the WStore</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service31">
+        <usdl:hasClassification rdf:nodeID="classification3" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">SpagoBI</dcterms:title>
+        <dcterms:description xml:lang="en">A Virtual Machine in the Cloud with a ready-to-use instance of SpagoBI</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service32">
+        <usdl:hasClassification rdf:nodeID="classification3" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Cosmos</dcterms:title>
+        <dcterms:description xml:lang="en">A Virtual Machine in the Cloud with a ready-to-use instance of Cosmos</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service33">
+        <usdl:hasClassification rdf:nodeID="classification3" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Interface Designer</dcterms:title>
+        <dcterms:description xml:lang="en">A Virtual Machine in the Cloud with a ready-to-use instance of the Interface Designer</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service34">
+        <usdl:hasClassification rdf:nodeID="classification3" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">WMarket</dcterms:title>
+        <dcterms:description xml:lang="en">A Virtual Machine in the Cloud with a ready-to-use instance of the WMarket</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:Service xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service35">
+        <usdl:hasClassification rdf:nodeID="classification3" />
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png"/>
+        <dcterms:title xml:lang="en">Tundra</dcterms:title>
+        <dcterms:description xml:lang="en">A Virtual Machine in the Cloud with a ready-to-use instance of Tundra</dcterms:description>
+        <usdl:versionInfo>1.0</usdl:versionInfo>
+    </usdl:Service>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#starterkit">
+        <dcterms:description xml:lang="en">Offering composed of three mashable application components: ngsi-source, ngsientity2poi and ngsi-updater. Those components are provided as the base tools/examples for making application mashups using WireCloud and the Orion Context Broker. Those resources can be used for example for showing entities coming from an Orion server inside the Map Viewer widget or browsing and updating the attributes of those entities.</dcterms:description>
+        <dcterms:abstract xml:lang="en">Offering composed of three mashable application components: ngsi-source, ngsientity2poi and ngsi-updater. Those components are provided as the base tools/examples for making application mashups using WireCloud and the Orion Context Broker. Those resources can be used for example for showing entities coming from an Orion server inside the Map Viewer widget or browsing and updating the attributes of those entities.</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service1"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service2"/>
+        <dcterms:title xml:lang="en">OrionStarterKit</dcterms:title>
+        <usdl:hasPricePlan rdf:nodeID="priceplan1"/>
+        <usdl:hasPricePlan rdf:nodeID="priceplan2"/>
+        <usdl:hasServiceLevelProfile rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#KmhtiqmYXHT7L0vlu"/>
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png" />
+        <pav:version>1.0</pav:version>
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/orionstarterkit/1.0"/>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#inputboxwidget">
+        <dcterms:description xml:lang="en">A simple widget with an input box.</dcterms:description>
+        <dcterms:abstract xml:lang="en">A simple widget with an input box.</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service3"/>
+        <dcterms:title xml:lang="en">InputBoxWidget</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__InputBoxWidget__1.0/catalogue.png" />
+        <pav:version>1.0</pav:version>
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/inputboxwidget/1.0"/>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#wcuguide">
+        <dcterms:description xml:lang="en">This offering contains all the widgets and operators used in the WireCloud User and Programmer guide (see https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Application_Mashup_-_Wirecloud_-_User_and_Programmer_Guide#Building_a_new_mashup for more info)</dcterms:description>
+        <dcterms:abstract xml:lang="en">This offering contains all the widgets and operators used in the WireCloud User and Programmer guide (see https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Application_Mashup_-_Wirecloud_-_User_and_Programmer_Guide#Building_a_new_mashup for more info)</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service4"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service5"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service6"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service7"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service8"/>
+        <dcterms:title xml:lang="en">WireCloudUserGuide</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__WireCloudUserGuide__1.0/wirecloud_logo.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/wireclouduserguide/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#kurento">
+        <dcterms:description xml:lang="en">Offering composed of several kurento mashable application components. Those components are provided as the base tools/examples for making application mashups using WireCloud and Kurento services. Basically, those widgets are the client part of some of the examples provided by the Kurento team (See http://demo.kurento.com/ for more details). Take a look into the provided mashups for getting a better idea of how to use them.</dcterms:description>
+        <dcterms:abstract xml:lang="en">Offering composed of several kurento mashable application components. Those components are provided as the base tools/examples for making application mashups using WireCloud and Kurento services. Basically, those widgets are the client part of some of the examples provided by the Kurento team (See http://demo.kurento.com/ for more details). Take a look into the provided mashups for getting a better idea of how to use them.</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service9"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service10"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service11"/>
+        <dcterms:title xml:lang="en">KurentoStarterKit</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__KurentoStarterKit__1.0/catalogue.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/kurentostarterkit/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#chart">
+        <dcterms:description xml:lang="en">Offering composed of several chart mashable application components. Those components are provided as the base tools/examples for making application mashups using WireCloud and showing charts and graphs. Those resources can be used for displaying data coming from several sources (e.g. the Orion context broker or CKAN), take a look into the provided mashups for a better idea of how to use them.</dcterms:description>
+        <dcterms:abstract xml:lang="en">Offering composed of several chart mashable application components. Those components are provided as the base tools/examples for making application mashups using WireCloud and showing charts and graphs. Those resources can be used for displaying data coming from several sources (e.g. the Orion context broker or CKAN), take a look into the provided mashups for a better idea of how to use them.</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service12"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service13"/>
+        <dcterms:title xml:lang="en">ChartStarterKit</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__ChartsStarterKit__1.0/catalogue.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/chartstarterkit/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#led">
+        <dcterms:description xml:lang="en">A Widget for WireCloud-Dashboards. Display a row of green LEDs, accepts input from 0 to 10.</dcterms:description>
+        <dcterms:abstract xml:lang="en">A Widget for WireCloud-Dashboards. Display a row of green LEDs, accepts input from 0 to 10.</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service14"/>
+        <dcterms:title xml:lang="en">Led Panel</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/karsten-meier__LED%20Panel__0.5/ledpanelpreview.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/ledpanel/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#valencia">
+        <dcterms:description xml:lang="en">Copia de Valencia Carga Eléctrica para pruebas</dcterms:description>
+        <dcterms:abstract xml:lang="en">Copia de Valencia Carga Eléctrica para pruebas</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service15"/>
+        <dcterms:title xml:lang="en">Valencia carga eléctrica</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/andres-leiva-araos__Valencia%20carga%20electrica__2.0/ckan.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/valenciacargaelectrica/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#geowidgets">
+        <dcterms:description xml:lang="en">Set of Wirecloud widgets and mashups for displaying geospatial information from web services that follow OGC standards (WMS, WMS-C, WMTS, CSW, GeoRSS, WFS).</dcterms:description>
+        <dcterms:abstract xml:lang="en">Set of Wirecloud widgets and mashups for displaying geospatial information from web services that follow OGC standards (WMS, WMS-C, WMTS, CSW, GeoRSS, WFS).</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service16"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service17"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service18"/>
+        <dcterms:title xml:lang="en">GeoWidgets</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__GeoWidgets__1.0/geoWidgets.jpg" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/geowidgets/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#multimedia">
+        <dcterms:description xml:lang="en">A pack of multimedia Wirecloud widgets</dcterms:description>
+        <dcterms:abstract xml:lang="en">A pack of multimedia Wirecloud widgets</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service19"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service20"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service21"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service22"/>
+        <dcterms:title xml:lang="en">MultimediaPack</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__MultimediaPack__1.0.1/multimedia.jpg" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/multimediapack/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#madpass">
+        <dcterms:description xml:lang="en">A pack of multimedia Wirecloud widgets</dcterms:description>
+        <dcterms:abstract xml:lang="en">A pack of multimedia Wirecloud widgets</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service23"/>
+        <dcterms:title xml:lang="en">Madrid Public Transport Pass Price Evolution - FIWARE Developers Week</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__Madrid%20Public%20Transport%20Pass%20Price%20Evolution%20-%20FIWARE%20Developers%20Weeks__1.0/abono%20transporte%20-%20logo%20store.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/madridpublictransportpasspriceevolutionfiwaredevelopersweeks/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#accesible">
+        <dcterms:description xml:lang="en">EsAccesible App / It'sAccessible, la aplicación para móviles con la que definir y compartir la accesibilidad física de lugares (bares, restaurantes,...) y así compartir con los usuarios la accesibilidad de su entorno. Para gente con dificultades de movilidad y/o usuarios de sillas de ruedas</dcterms:description>
+        <dcterms:abstract xml:lang="en">EsAccesible App / It'sAccessible, la aplicación para móviles con la que definir y compartir la accesibilidad física de lugares (bares, restaurantes,...) y así compartir con los usuarios la accesibilidad de su entorno. Para gente con dificultades de movilidad y/o usuarios de sillas de ruedas</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service24"/>
+        <dcterms:title xml:lang="en">Accesible Places</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/juan-jose-bilbao__Accessible%20Places%20by%20EsAccesible%20App__1.0/ckan.png" />
+       <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/accesibeplacesesaccesibleapp/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#passs">
+        <dcterms:description xml:lang="en">This offering contains the access to a datset describing the evolution of the price in Madrid transport passes and a WireCloud mashup for the visualization of the data</dcterms:description>
+        <dcterms:abstract xml:lang="en">This offering contains the access to a datset describing the evolution of the price in Madrid transport passes and a WireCloud mashup for the visualization of the data</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service25"/>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service26"/>
+        <dcterms:title xml:lang="en">Evolution of Madrid Transport Pass Visualization</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/fdelavega__EvolutionOfMadridTrasportPassVisualization__1.0/bus-logo.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/evolutionofmadridtransportpassvisualization/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#pharmaciesfrance">
+        <dcterms:description xml:lang="en">Pharmacies en Ile de France Producteur : région Ile de France ; 16/3/2014 Créateur : FINESS ; 16/3/2014 Diffusion : Idutaip</dcterms:description>
+        <dcterms:abstract xml:lang="en">Pharmacies en Ile de France Producteur : région Ile de France ; 16/3/2014 Créateur : FINESS ; 16/3/2014 Diffusion : Idutaip</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service27"/>
+        <dcterms:title xml:lang="en">Pharmacies en Ile de France</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/leroy-1__Pharmacies%20en%20Ile%20de%20France__14.4.22.0.0/ckan.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/pharmacieseniledefrance/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#madridtransport">
+        <dcterms:description xml:lang="en">Evolution of Madrid Transport</dcterms:description>
+        <dcterms:abstract xml:lang="en">Evolution of Madrid Transport</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service28"/>
+        <dcterms:title xml:lang="en">Madrid Transport Evolution</dcterms:title>
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/sergio-garcia__Madrid%20Transport%20Evolution__1.0/ckan.png" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/madridtransportevolution/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#CB">
+        <dcterms:description xml:lang="en">Instance in the FIWARE Cloud of Orion Context Broker</dcterms:description>
+        <dcterms:abstract xml:lang="en">Instance in the FIWARE Cloud of Orion Context Broker</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service29"/>
+        <dcterms:title xml:lang="en">Orion Context Broker</dcterms:title>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/orion.png?itok=-HUw3RZx" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/orion/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#wstore">
+        <dcterms:description xml:lang="en">Instance in the FIWARE Cloud of WStore</dcterms:description>
+        <dcterms:abstract xml:lang="en">Instance in the FIWARE Cloud of WStore</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service30"/>
+        <dcterms:title xml:lang="en">WStore</dcterms:title>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_small/public/WStore_v1.png?itok=TI9JqgRB" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/wstore/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#wstore">
+        <dcterms:description xml:lang="en">Instance in the FIWARE Cloud of WStore</dcterms:description>
+        <dcterms:abstract xml:lang="en">Instance in the FIWARE Cloud of WStore</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service30"/>
+        <dcterms:title xml:lang="en">WStore</dcterms:title>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/WStore_v1.png?itok=TI9JqgRB" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/wstore/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#spagobi">
+        <dcterms:description xml:lang="en">Instance in the FIWARE Cloud of SpagoBI</dcterms:description>
+        <dcterms:abstract xml:lang="en">Instance in the FIWARE Cloud of SpagoBI</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service31"/>
+        <dcterms:title xml:lang="en">Spago BI</dcterms:title>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/spagobi_logo.png?itok=JFwj0xEW" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/spagobi/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#cosmos">
+        <dcterms:description xml:lang="en">Instance in the FIWARE Cloud of Cosmos</dcterms:description>
+        <dcterms:abstract xml:lang="en">Instance in the FIWARE Cloud of Cosmos</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service32"/>
+        <dcterms:title xml:lang="en">Cosmos</dcterms:title>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/cosmos_logo.png?itok=KmgRiZKE" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/cosmos/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#idesigner">
+        <dcterms:description xml:lang="en">Instance in the FIWARE Cloud of Interface Designer</dcterms:description>
+        <dcterms:abstract xml:lang="en">Instance in the FIWARE Cloud of Interface Designer</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service33"/>
+        <dcterms:title xml:lang="en">Interface Designed</dcterms:title>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/meshmoon-163x163_0.png?itok=Ca9is0RN" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/interfacedesigner/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#wmarket">
+        <dcterms:description xml:lang="en">Instance in the FIWARE Cloud of WMarket</dcterms:description>
+        <dcterms:abstract xml:lang="en">Instance in the FIWARE Cloud of WMarket</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service34"/>
+        <dcterms:title xml:lang="en">WMarket</dcterms:title>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/marketplace.png?itok=kTuhoqh6" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/wmarket/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#tundra">
+        <dcterms:description xml:lang="en">Instance in the FIWARE Cloud of Tundra</dcterms:description>
+        <dcterms:abstract xml:lang="en">Instance in the FIWARE Cloud of Tundra</dcterms:abstract>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:created>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime">2014-09-17 04:42:36.195281</dcterms:modified>
+        <usdl:validFrom rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validFrom>
+        <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
+        <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#service35"/>
+        <dcterms:title xml:lang="en">Tundra</dcterms:title>
+        <foaf:depiction rdf:resource="http://catalogue.fiware.org/sites/default/files/styles/enabler_icon_large/public/xml3d-logo.png?itok=2zRHEhW3" />
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/tundra/1.0"/>
+        <pav:version>1.0</pav:version>
+    </usdl:ServiceOffering>
+
+    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="priceplan1">
+        <dcterms:title xml:lang="en">Single Payment</dcterms:title>
+        <dcterms:description xml:lang="en">This offering needs a single payment to be acquired</dcterms:description>
+        <price:hasPriceComponent rdf:nodeID="pricecomponent1"/>
+        <price:hasPriceComponent rdf:nodeID="pricecomponent2"/>
+    </price:PricePlan>
+
+    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="priceplan2">
+        <dcterms:title xml:lang="en">Pay Per Use</dcterms:title>
+        <dcterms:description xml:lang="en">You'll be charged based on your consumption</dcterms:description>
+        <price:hasPriceComponent rdf:nodeID="pricecomponent3"/>
+        <price:hasPriceComponent rdf:nodeID="pricecomponent4"/>
+    </price:PricePlan>
+    
+    <price:PriceComponent rdf:nodeID="pricecomponent1">
+		<rdfs:label xml:lang="en">Single payment</rdfs:label>
+		<dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
+    	<price:hasPrice rdf:nodeID="pricespec1"/>
+	</price:PriceComponent>
+
+	<rdf:Description rdf:nodeID="pricespec1">
+		<rdf:type rdf:resource="http://purl.org/goodrelations/v1#PriceSpecification"/>
+		<gr:hasCurrencyValue>1.0</gr:hasCurrencyValue>
+		<gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
+		<gr:hasCurrency>EUR</gr:hasCurrency>
+	</rdf:Description>
+
+    <price:PriceComponent rdf:nodeID="pricecomponent2">
+		<rdfs:label xml:lang="en">Single payment</rdfs:label>
+		<dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
+		<price:hasPrice rdf:nodeID="pricespec2"/>
+	</price:PriceComponent>
+	
+	<rdf:Description rdf:nodeID="pricespec2">
+		<rdf:type rdf:resource="http://purl.org/goodrelations/v1#PriceSpecification"/>
+		<gr:hasCurrency>EUR</gr:hasCurrency>
+		<gr:hasCurrencyValue rdf:datatype="http://www.w3.org/2001/XMLSchema#float">8.0</gr:hasCurrencyValue>
+		<gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
+	</rdf:Description>
+	
+    <price:PriceComponent rdf:nodeID="pricecomponent3">
+		<rdfs:label xml:lang="en">Subscription</rdfs:label>
+		<dcterms:description xml:lang="en">You'll pay a fixed amount of money every month</dcterms:description>
+    	<price:hasPrice rdf:nodeID="pricespec3"/>
+	</price:PriceComponent>
+	
+	<rdf:Description rdf:nodeID="pricespec3">
+		<rdf:type rdf:resource="http://purl.org/goodrelations/v1#PriceSpecification"/>
+		<gr:hasCurrency>EUR</gr:hasCurrency>
+		<gr:hasCurrencyValue rdf:datatype="http://www.w3.org/2001/XMLSchema#float">7.0</gr:hasCurrencyValue>
+		<gr:hasUnitOfMeasurement>month</gr:hasUnitOfMeasurement>
+	</rdf:Description>
+	
+    <price:PriceComponent rdf:nodeID="pricecomponent4">
+		<rdfs:label xml:lang="en">Pay-Per-Use</rdfs:label>
+		<dcterms:description xml:lang="en">Additionally, you'll pay based on the amount of MB that you have consumed.</dcterms:description>
+    	<price:hasPrice rdf:nodeID="pricespec1"/>
+	</price:PriceComponent>
+		
+	<rdf:Description rdf:nodeID="pricespec4">
+		<rdf:type rdf:resource="http://purl.org/goodrelations/v1#PriceSpecification"/>
+		<gr:hasCurrency>EUR</gr:hasCurrency>
+		<gr:hasCurrencyValue rdf:datatype="http://www.w3.org/2001/XMLSchema#float">8.0</gr:hasCurrencyValue>
+		<gr:hasUnitOfMeasurement>MB</gr:hasUnitOfMeasurement>
+	</rdf:Description>
+    
+</rdf:RDF>

@@ -8,6 +8,9 @@
     <t:insertTemplate template="/WEB-INF/views/offerings/header.jsp" />
   </div>
   <div class="col-sm-10 col-md-6 col-lg-7">
+    <c:choose>
+    <c:when test="${ not empty offering.pricePlans }">
+
     <div class="payment-plan-group">
       <c:forEach var="pricePlan" items="${ offering.pricePlans }">
 
@@ -24,13 +27,13 @@
             <div class="list-group">
               <c:forEach items="${ pricePlan.priceComponents }" var="priceComponent">
 
-              <div
+              <div data-title="${ priceComponent.comment }"
                 <c:choose>
                 <c:when test="${ f:toLowerCase(priceComponent.unit) == 'single payment' }">
-                  class="list-group-item list-group-item-info text-center"
+                  class="list-group-item list-group-item-info text-center tooltip"
                 </c:when>
                 <c:otherwise>
-                  class="list-group-item list-group-item-warning text-center"
+                  class="list-group-item list-group-item-warning text-center tooltip"
                 </c:otherwise>
                 </c:choose>
               >
@@ -65,5 +68,15 @@
 
       </c:forEach>
     </div>
+
+    </c:when>
+    <c:otherwise>
+
+    <div class="alert alert-warning">
+      <span class="fa fa-exclamation-circle"></span> Sorry, no price plan available for this offering.
+    </div>
+
+    </c:otherwise>
+    </c:choose>
   </div>
 </div>

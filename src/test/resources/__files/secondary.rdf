@@ -6,6 +6,7 @@
     xmlns:owl="http://www.w3.org/2002/07/owl#" 
     xmlns:dcterms="http://purl.org/dc/terms/" 
     xmlns:usdl="http://www.linked-usdl.org/ns/usdl-core#" 
+    xmlns:pav="http://purl.org/pav/"
     xmlns:legal="http://www.linked-usdl.org/ns/usdl-legal#" 
     xmlns:price="http://www.linked-usdl.org/ns/usdl-pricing#" 
     xmlns:sla="http://www.linked-usdl.org/ns/usdl-sla#" 
@@ -54,11 +55,11 @@
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#bUvq9oTgNStSwDnuT"/>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#bUvq9oTgNStSwDnuU"/>
         <dcterms:title xml:lang="en">OrionStarterKit</dcterms:title>
-        <usdl:hasPricePlan rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#NMTecgiP49qlfU90V"/>
+        <usdl:hasPricePlan rdf:nodeID="OrionStarterKitPricePlan"/>
         <usdl:hasServiceLevelProfile rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#KmhtiqmYXHT7L0vlu"/>
-        <foaf:thumbnail rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
-
+        <foaf:depiction rdf:resource="https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png" />
+        <pav:version>1.0</pav:version>
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/orionstarterkit/1.0"/>
     </usdl:ServiceOffering>
 
     <usdl:ServiceOffering xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/CkanStarterKit#GHbnf7dsubc19ebx4fmfgH">
@@ -70,32 +71,37 @@
         <usdl:validThrough rdf:datatype="http://www.w3.org/2001/XMLSchema#datetime"></usdl:validThrough>
         <usdl:includes rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#bUvq9oTgNStSwDnuT"/>
         <dcterms:title xml:lang="en">CKAN starter Kit</dcterms:title>
-        <usdl:hasPricePlan rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/CkanStarterKit#NMTecgiP49qlfU90V"/>
+        <usdl:hasPricePlan rdf:nodeID="CkanStarterKitPricePlan"/>
         <usdl:hasServiceLevelProfile rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#KmhtiqmYXHT7L0vlu"/>
-        <foaf:thumbnail rdf:resource="https://store.lab.fiware.org/media/CoNWeT__CKANStarterKit__1.2/logo-ckan_170x80.png" />
-        <usdl:versionInfo>1.0</usdl:versionInfo>
-
+        <foaf:depiction rdf:resource="https://store.lab.fiware.org/media/CoNWeT__CKANStarterKit__1.2/logo-ckan_170x80.png" />
+        <pav:version>1.0</pav:version>
+        <gr:availableDeliveryMethods rdf:resource="http://store.lab.fiware.org/offering/user/ckanstarterkit/1.0"/>
     </usdl:ServiceOffering>
 
     
-    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/CkanStarterKit#NMTecgiP49qlfU90V">
+    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="CkanStarterKitPricePlan">
         <dcterms:title xml:lang="en">Free use</dcterms:title>
         <dcterms:description xml:lang="en">This offering can be acquired for free</dcterms:description>
     </price:PricePlan>
     
-    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#NMTecgiP49qlfU90V">
+    <price:PricePlan xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:nodeID="OrionStarterKitPricePlan">
         <dcterms:title xml:lang="en">Single Payment</dcterms:title>
         <dcterms:description xml:lang="en">This offering needs a single payment to be acquired</dcterms:description>
-        <price:hasPriceComponent rdf:resource="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#7jnovpSvDceyPlJxE"/>
+        <price:hasPriceComponent rdf:nodeID="OrionStarterKitPriceComponent"/>
     </price:PricePlan>
     
-    <price:PriceComponent rdf:about="http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/OrionStarterKit#7jnovpSvDceyPlJxE">
-		<dcterms:title xml:lang="en">Single payment</dcterms:title>
-		<gr:hasCurrency>EUR</gr:hasCurrency>
-		<gr:hasCurrencyValue rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.0</gr:hasCurrencyValue>
-		<gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
+    <price:PriceComponent rdf:nodeID="OrionStarterKitPriceComponent">
+		<rdfs:label xml:lang="en">Single payment</rdfs:label>
 		<dcterms:description xml:lang="en">This component defines a single payment</dcterms:description>
+    	<price:hasPrice rdf:nodeID="pricespec1"/>
 	</price:PriceComponent>
+	
+	<rdf:Description rdf:nodeID="pricespec1">
+		<rdf:type rdf:resource="http://purl.org/goodrelations/v1#PriceSpecification"/>
+		<gr:hasCurrencyValue>1.0</gr:hasCurrencyValue>
+		<gr:hasUnitOfMeasurement>single payment</gr:hasUnitOfMeasurement>
+		<gr:hasCurrency>EUR</gr:hasCurrency>
+	</rdf:Description>
     
 
     

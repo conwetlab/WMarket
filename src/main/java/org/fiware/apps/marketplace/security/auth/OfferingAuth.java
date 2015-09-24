@@ -74,10 +74,26 @@ public class OfferingAuth extends AbstractAuth<Offering> {
 	}
 	
 	/**
-	 * Check if an user can list the offering that they have bookmarked
+	 * Check if an user can list the offerings that they have bookmarked
 	 * @return true if the user is allowed to list his/her bookmarked offerings
 	 */
 	public boolean canListBookmarked() {
+		return true;
+	}
+	
+	/**
+	 * Check if an user can list the offerings that they have visited
+	 * @return true if the user is allowed to list his/her last visited offerings
+	 */
+	public boolean canListLastViewed() {
+		return true;
+	}
+	
+	/**
+	 * Check if an user can list the offerings viewed by others
+	 * @return true if the user is allowed to list the last offerings viewed by others
+	 */
+	public boolean canListLastViewedByOthers() {
 		return true;
 	}
 

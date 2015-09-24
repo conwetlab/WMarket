@@ -37,7 +37,11 @@ import java.util.Enumeration;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-
+/**
+ * This manually unregisters JDBC driver, which prevents memory leaks
+ * @author aitor
+ *
+ */
 public class ContextFinalizer implements ServletContextListener {
 
 	@Override
@@ -53,7 +57,7 @@ public class ContextFinalizer implements ServletContextListener {
 			
 		}
 		
-		// This manually deregisters JDBC driver, which prevents Tomcat 7 from complaining about memory leaks
+		// This manually unregisters JDBC driver, which prevents Tomcat 7 from complaining about memory leaks
 		Enumeration<java .sql.Driver> drivers = java.sql.DriverManager.getDrivers();
 		while (drivers.hasMoreElements()) {
 			java.sql.Driver driver = drivers.nextElement();

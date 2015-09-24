@@ -32,6 +32,11 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
+/**
+ * To be thrown when a user is not authorized to access a resource
+ * @author aitor
+ *
+ */
 public class NotAuthorizedException extends Exception {
 
 	private static final long serialVersionUID = 1L;

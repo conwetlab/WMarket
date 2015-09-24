@@ -1,0 +1,1596 @@
+FORMAT: 1A
+HOST: https://marketplace.lab.fiware.org/
+TITLE: FIWARE Marketplace v2 Open API Specification
+DATE: 30 September 2015
+VERSION: v2
+PREVIOUS_VERSION: v1
+APIARY_PROJECT: fiwaremarketplace
+
+# FIWARE Marketplace
+
+WMarket is the reference implementation of the FIWARE Marketplace Generic Enabler. 
+The Marketplace provides functionality necessary for bringing together offering and 
+demand for making business. These functions include basic services for registering 
+business entities, publishing and retrieving offerings and demands, search and discover 
+offerings according to specific consumer requirements as well as lateral functions 
+like review, rating and recommendation. Besides the core functions, the Marketplace 
+may offer value because of its "knowledge" about the market in terms of market 
+intelligence services, pricing support, advertising, information subscription and 
+more.
+
+## Editors
+
+  + Aitor Magán García, Universidad Politécnica de Madrid
+
+## Acknowledgements
+
+The editors would like to express their gratitude to the following people who actively 
+contributed to this specification: Francisco de la Vega and Álvaro Arranz García 
+
+## Status
+
+This is a work in progress and is changing on a daily basis. You can check the latest
+available version on: https://github.com/conwetlab/WMarket/tree/develop. 
+Please send your comments to wmarket@conwet.com.
+
+This specification is licensed under the [FIWARE Open Specification License](https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/FI-WARE_Open_Specification_Legal_Notice_%28implicit_patents_license%29)
+
+
+## Copyright
+
+* Copyright © 2015 by Universidad Politécnica de Madrid
+
+## Specification
+
+### Authentication
+
+Each HTTP request against the Marketplace API requires the inclusion of specific 
+authentication credentials. The specific implementation of this API may support 
+multiple authentication schemes (OAuth, Basic Auth, Token) and will be determined by 
+the specific provider that implements the GE. Please contact the provider to determine 
+the best way to authenticate against this API. Remember that some authentication 
+schemes may require that the API operates using SSL over HTTP (HTTPS).
+
+WMarket provides support for Basic, Cookie and OAuth2 authentication being OAuth2 the 
+default in FIWARE Lab.
+
+### Synchronous Faults
+
+Error responses will be encoded using the most appropriated <code>Content-Type</code> 
+in base to the <code>Accept</code> header of the request.
+
+JSON Example
+
+    {
+        "error": {
+            "type": "NOT_FOUND",
+            "message": "User no_user not found"
+        }
+    }
+
+
+XML Example
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <error>
+        <message>User no_user not found</message>
+        <type>NOT_FOUND</type>
+    </error>
+    
+
+### HTTP Codes
+
+| HTTP Code | Type | Description |
+|-----------|------|------------ |
+| 200 | OK   | Your request has been completed properly |
+| 201 | Created | Your resource has been created. The `Location` header will contain the final URL that users can use to access this resource |
+| 204 | No content | Your request has been processed, but a response is not available. Generally used when deleting entities or bookmarking offerings |
+| 400 | Bad Request | The content of your request is not correct (e.g. there is already a resource with the specified name) |
+| 400 | Validation Error | One or more fields of your content is not valid. The field `field` indicates the first field with a validation error |
+| 403 | Forbidden | You have no rights to perform the query |
+| 404 | Not found | The resource does not exist |
+| 500 | Internal server error | There was an internal error in the system so your request cannot be completed |
+
+
+## Group Users
+
+API to create, retrieve, edit and delete user accounts.
+
+When you are creating or updating a user, you can set the following fields:
+
++ displayName - The display name of the user (the one used in the UI). This field will be used to automatically generate the userName
++ email - The user's email account. This field is hidden and it will not be returned in GET requests. Used for logging purposes
++ password - The user's password.  This field is hidden and it will not be returned in GET requests
++ company - (optional) The user's company
+
+However, some additional fields will be automatically generated for you:
+
++ userName - unique user identifier based on user's display name. Users can also use this field to identify themselves
++ imageUrl - link to Gravatar based on user's mail
++ createdAt - Date of creation
+
+
+## Creating and/or Listing Users [/api/v2/user/{?offset}{?max}]
+
+### Create a new User [POST]
+
++ Request (application/json)
+    + Headers
+            
+            Accept: application/json
+
+    + Body
+
+            {
+                "displayName": "Example Display Name",
+                "email": "example@example.com",
+                "password": "example_complex_password",
+                "company": "Example Company"
+            }
+        
++ Response 201
+    + Headers
+        
+            Location: http://marketplace.lab.fiware.org/api/v2/user/example-display-name
+
++ Response 400 (application/json)
+    
+        {
+            "error": {
+                "message": "This field must be a valid email.",
+                "type": "VALIDATION_ERROR",
+                "field": "email"
+            }
+        }
+
+### List existing Users [GET]
+
++ Parameters
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+    
++ Request
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+
++ Response 200 (application/json)
+        
+        {
+            "users": [
+                {
+                    "userName": "aitor",
+                    "displayName": "Aitor",
+                    "imageUrl": "https://secure.gravatar.com/avatar/149dd094923c17d1fce7231c45296357?d=identicon",
+                    "createdAt": 1436170938000
+                }
+            ]
+        }
+
+
+## Managing an existing User [/api/v2/user/{user_id}]
+
++ Parameters
+    + user_id: aitor (required, string) - ID of the User
+
+### Get User Details [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+        
+        {
+            "userName": "aitor",
+            "displayName": "Aitor",
+            "imageUrl": "https://secure.gravatar.com/avatar/149dd094923c17d1fce7231c45296357?d=identicon",
+            "createdAt": 1436170938000
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "User aitor not found",
+                "type": "NOT_FOUND"
+            }
+        }
+
+### Update an existing User [POST]
+
++ Request (application/json)
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+    
+            {
+                "displayName": "Example Display Name",
+                "email": "example@example.com",
+                "password": "example_complex_password",
+                "company": "Example Company"
+            }
+        
++ Response 200
+
++ Response 400 (application/json)
+    
+        {
+            "error": {
+                "message": "This field must be a valid email.",
+                "type": "VALIDATION_ERROR",
+                "field": "email"
+            }
+        }
+
++ Response 403 (application/json) 
+
+        {
+            "error": {
+                "message": "You are not authorized to update user aitor",
+                "type": "FORBIDDEN"
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "User aitor not found",
+                "type": "NOT_FOUND"
+            }
+        }
+
+### Delete an existing User [DELETE]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 204
+
++ Response 403 (application/json) 
+
+        {
+            "error": {
+                "message": "You are not authorized to delete user aitor",
+                "type": "FORBIDDEN"
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "User aitor not found",
+                "type": "NOT_FOUND"
+            }
+        }
+
+
+
+## Group Stores
+
+API to create, retrieve, edit and delete Stores.
+
+When you are creating or updating a store, you can set the following fields:
+
++ displayName - The display name of the Store (the one used in the User Interface). This field will be used to automatically generate the store identifier (name)
++ url - The URL where the store is located
++ comment - (optional) Additional information about the Store
++ imageBase64 - (optional) You can add an image to your store by coding it in Base64
+
+However, some additional fields will be automatically generated for you:
+
++ name - Unique store identifier based on the display name of the Store
++ imagePath - The relative path that can be used to retrieve the image of the Store
++ createdAt - Date of creation
++ creator - The user that created the Store
++ lastEditor - The last user that updated the Store
++ averageScore - Based on the reviews made by users
+
+
+## Creating and/or Listing Stores [/api/v2/store/{?offset}{?max}]
+
+### Create a new Store [POST]
+
++ Request (application/json)
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+
+            {
+                "displayName": "WStore",
+                "url": "http://example.com",
+                "comment": "Example comment",
+                "imageBase64": "PNG_IMAGE_IN_BASE64"
+            }
+        
++ Response 201
+    + Headers
+            
+            Location: http://marketplace.lab.fiware.org/api/v2/store/wstore
+            
++ Response 400 (application/json)
+
+        {
+            "error": {
+                "field": "name",
+                "type": "VALIDATION_ERROR",
+                "message": "This name is already in use."
+            }
+        }
+
+### List existing Stores [GET]
+
++ Parameters
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+    
++ Request
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+
++ Response 200 (application/json)
+        
+        {
+            "stores": [
+                {
+                    "averageScore": 3.7,
+                    "url": "http://example.com",
+                    "displayName": "WStore",
+                    "name": "wstore",
+                    "comment": "Example Comment",
+                    "createdAt": 1437390486000,
+                    "lasteditor": "USER_NAME",
+                    "creator": "USER_NAME",
+                    "imagePath": "media/store/STORE_NAME.png"
+                }
+            ]
+        }
+
+
+## Managing an existing Store [/api/v2/store/{store_name}]
+
++ Parameters
+    + store_name: wstore (required, string) - ID of the Store
+
+### Get Store Details [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+        
+        {
+            "averageScore": 3.7,
+            "url": "http://example.com",
+            "displayName": "WStore",
+            "name": "wstore",
+            "comment": "Example Comment",
+            "createdAt": 1437390486000,
+            "lasteditor": "USER_NAME",
+            "creator": "USER_NAME",
+            "imagePath": "media/store/STORE_NAME.png"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Store wstore not found",
+                "type": "NOT_FOUND"
+            }
+        }
+
+### Update an existing Store [POST]
+
++ Request (application/json)
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+    
+            {
+                "displayName": "WStore",
+                "url": "http://example.com",
+                "comment": "Example comment",
+                "imageBase64": "PNG_IMAGE_IN_BASE64"
+            }
+        
++ Response 200
+
++ Response 400 (application/json)
+
+        {
+            "error": {
+                "field": "name",
+                "type": "VALIDATION_ERROR",
+                "message": "This name is already in use."
+            }
+        }
+
++ Response 403 (application/json) 
+
+        {
+            "error": {
+                "message": "You are not authorized to update store wstore",
+                "type": "FORBIDDEN"
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Store wstore not found",
+                "type": "NOT_FOUND"
+            }
+        }
+
+### Delete an existing Store [DELETE]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 204
+
++ Response 403 (application/json) 
+
+        {
+            "error": {
+                "message": "You are not authorized to delete store wstore",
+                "type": "FORBIDDEN"
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Store wstore not found",
+                "type": "NOT_FOUND"
+            }
+        }
+
+
+## Creating and/or Listing Store Reviews [/api/v2/store/{store_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]
+
+Stores can be reviewed so other users can easily know which stores can be trusted. One user can only review one store once. To review a store,
+the user should send the following fields:
+
++ score: 3 (required, int) - a number between 1 or 5 where 1 means "I really hate this Store" and 5 means "I really like this Store"
++ comment: Example (optional, string) - A brief explanation for your score
+
++ Parameters
+    + store_name: wstore (required, string) - The ID of the store to be reviewed
+
+### Review a Store [POST]
+
++ Request (application/json)
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+    
+            {
+                "score": 5,
+                "comment": "Example Comment"
+            }
+
++ Response 201
+    + Headers
+            
+            Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/review/0
+
++ Response 400 (application/json)
+    + Body
+    
+            {
+                "error": {
+                    "field": "score",
+                    "type": "VALIDATION_ERROR",
+                    "message": "Score should be an integer between 1 and 5."
+                }
+            }
+            
+
++ Response 403 (application/json)
+    + Body
+    
+            {
+                "error": {
+                    "type": "FORBIDDEN",
+                    "message": "You are not authorized to review Store. An entity can only be reviewed once"
+                }
+            }
+            
++ Response 404 (application/json)
+    + Body
+    
+            {
+                "error": {
+                    "type": "NOT_FOUND",
+                    "message": "Store wstore not found"
+                }
+            }
+            
+### List existing Store Reviews [GET]
+
++ Parameters
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+    + orderBy: id (optional, string) - Order used to retrieve the reviews
+    + desc: false (optional, boolean) - Use descending order
+    + detailed: false (optional, boolean) - If true, the user fields won't contain the user name but all the user's information (email, displayName...)
+    
++ Request
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "reviews": [
+                {
+                    "id": 1,
+                    "score": 5,
+                    "user": "USER_NAME",
+                    "comment": "Example Comment",
+                    "createdAt": 1435248117000,
+                    "updatedAt": 1435248117000
+                }
+            ]
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "type": "NOT_FOUND",
+                "message": "Store wstore not found"
+            }
+        }
+
+
+## Managing an existing Store Review [/api/v2/store/{store_name}/review/{review_id}{?detailed}]
+
++ Parameters
+    + store_name: wstore (required, string) - The ID of the store to which the review belongs
+    + review_id: 0 (required, int) - The ID of the review to be managed
+    
+### Get Review Details [GET]
+
++ Parameters
+    + detailed: false (optional, boolean) - If true, the user filed won't contain the user name but all the user's information (email, displayName...)
+
++ Request
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "score": 5,
+            "user": "USER_NAME",
+            "comment": "Example Comment",
+            "createdAt": 1435248117000,
+            "updatedAt": 1435248117000
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Review 0 not found in Store wstore",
+                "type": "NOT_FOUND"
+            }
+        }
+        
+### Update an existing Store Review [POST]
+
++ Request (application/json)
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+    
+            {
+                "score": 5,
+                "comment": "Example Comment"
+            }
+            
++ Response 200
+
++ Response 400 (application/json)
+
+    + Body
+    
+            {
+                "error": {
+                    "field": "score",
+                    "type": "VALIDATION_ERROR",
+                    "message": "Score should be an integer between 1 and 5."
+                }
+            }
+            
+
++ Response 403 (application/json)
+    + Body
+    
+            {
+                "error": {
+                    "message": "You are not authorized to update review 0 in Store wstore",
+                    "type": "FORBIDDEN"
+                }
+            }
+            
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Review 0 not found in Store wstore",
+                "type": "NOT_FOUND"
+            }
+        }
+
+### Delete an existing Store Review [DELETE]
+
++ Request
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 204 (application/json)
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Review 0 not found in Store wstore",
+                "type": "NOT_FOUND"
+            }
+        }
+
+
+
+# Group Descriptions
+
+API to create, retrieve, edit and delete Descriptions.
+
+When you are creating or updating a description, you can set the following fields:
+
++ displayName - the display name of the Description (the one used in the User Interface). This field will be used to automatically generate the description identifier (name)
++ url - The URL where the description is located. This URL must be accessible by the server and should point to a RDF file
++ comment - (optional) Additional information about the Description
+
+However, some additional fields will be automatically generated for you:
+
++ name - Description identifier based on the display name of the Description. One store **cannot** host two descriptions with the same name, but two different stores **can** host two descriptions with the same name
++ createdAt - Date of creation
++ updatedAt - Date of the last update
++ creator - The user that created the Description
++ lastEditor - The last user that updated the Description
+
+
+## Creating and/or Listing Descriptions in a Store [/api/v2/store/{store_name}/description/{?offset}{?max}]
+
++ Parameters
+    + store_name: wstore (required, string) - The ID of the Store where the description will be created
+
+### Create a new Description [POST]
+
++ Request (application/json)
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+
+            {
+                "displayName": "Offerings1",
+                "url": "http://example.com/some.rdf",
+                "comment": "Example comment"
+            }
+        
++ Response 201
+    + Headers
+            
+            Location: http://marketplace.lab.fiware.org/api/v2/store/wstore/description/offering-1
+            
++ Response 400 (application/json)
+
+        {
+            "error": {
+                "field": "url",
+                "type": "VALIDATION_ERROR",
+                "message": "Your RDF could not be parsed."
+            }
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "type": "NOT_FOUND",
+                "message": "Store wstore not found"
+            }
+        }
+
+### List existing Descriptions in a Store [GET]
+
++ Parameters
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+    
++ Request
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+
++ Response 200 (application/json)
+        
+        {
+            "descriptions": [
+                {
+                    "id": 5,
+                    "url": "http://example.com/some.rdf",
+                    "name": "offerings1",
+                    "displayName": "Offerings1",
+                    "createdAt": 1437398271000,
+                    "updatedAt": 1437398936000,
+                    "store": "wstore",
+                    "lasteditor": "aitor",
+                    "creator": "aitor",
+                    "offerings": []
+                }
+            ]
+        }
+
+
+## Managing an existing Description [/api/v2/store/{store_name}/description/{description_name}]
+
++ Parameters
+    + store_name: wstore (required, string) - The ID of the Store to which the description belongs
+    + description_name: offerings1 (required, string) - The ID of the description to be managed
+    
+### Get Description Details [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+        
+        {
+            "id": 5,
+            "url": "http://example.com/some.rdf",
+            "name": "offering-1",
+            "displayName": "Offering 1",
+            "createdAt": 1437398271000,
+            "updatedAt": 1437398936000,
+            "store": "wstore",
+            "lasteditor": "aitor",
+            "creator": "aitor",
+            "offerings": []
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Description offerings1 not found",
+                "type": "NOT_FOUND"
+            }
+        }
+
+### Update an existing Description [POST]
+
++ Request (application/json)
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+    
+            {
+                "displayName": "Offerings1",
+                "url": "http://example.com/some.rdf",
+                "comment": "Example comment"
+            }
+        
++ Response 200
+
++ Response 400 (application/json)
+
+        {
+            "error": {
+                "field": "url",
+                "type": "VALIDATION_ERROR",
+                "message": "Your RDF could not be parsed."
+            }
+        }
+
++ Response 403 (application/json) 
+
+        {
+            "error": {
+                "message": "You are not authorized to update description offerings1",
+                "type": "FORBIDDEN"
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Description offerings1 not found in Store wstore",
+                "type": "NOT_FOUND"
+            }
+        }
+
+### Delete an existing Description [DELETE]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 204
+
++ Response 403 (application/json) 
+
+        {
+            "error": {
+                "message": "You are not authorized to delete description offerings1",
+                "type": "FORBIDDEN"
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Description offerings1 not found in Store wstore",
+                "type": "NOT_FOUND"
+            }
+        }
+        
+
+## Listing all the Descriptions [/api/v2/description{?offset}{?max}]
+
+In some cases, users can be interested in retrieving all the descriptions which have been registered into the MaketPlace without
+taking into account the store used to register these descriptions. 
+
++ Parameters
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+    
+### List all the Descriptions [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "descriptions": [
+                {
+                    "id": 5,
+                    "url": "http://example.com/some.rdf",
+                    "name": "offerings1",
+                    "displayName": "Offerings1",
+                    "createdAt": 1437398271000,
+                    "updatedAt": 1437398936000,
+                    "store": "wstore",
+                    "lasteditor": "aitor",
+                    "creator": "aitor",
+                    "offerings": []
+                }
+            ]
+        }
+
+
+
+# Group Offerings
+
+When descriptions are correctly created and the contained USDL is parsed, the offerings contained in this USDL file will be accessible through
+a REST API. At this point, users will be able to interact with these offerings to obtain their details and much more (bookmarking, reviewing...). 
+
+Here is the list with all the information that is gathered from an offering:
+
++ displayName - The display name of the Offering (the one used in the User Interface).
++ name - Offering identifier based on the display name of the Offering. One description **cannot** contain two offerings with the same name, but two descriptions **can** contain two offerings with same name
++ description - Additional information about the Offering
++ uri - The URI to identify the offering within the USDL
++ describedIn - The description where the offering is contained
++ imageUrl - URL which points to an image that will help to identify the offering more easily
++ acqusitionUrl - URL which points to the Store page where the offering can be acquired
++ views - Number of times which the offering has been viewed
++ averageScore - Based on the reviews made by users
++ describedIn - The description where the offering is described
++ pricePlans - The price plans that can be used to acquire the offerings. Each price plan can contain zero or more price components
++ services - All the services included in the offering
++ categories - Based on the categories of the services included in the offering
+
+
+## Listing all the offerings contained in a Description [/api/v2/store/{store_name}/description/{description_name}/offering]
+
++ Parameters
+    + store_name: wstore (required, string) - The ID of the Store to which the description belongs
+    + description_name: offerings1 (required, string) - The ID of the description whose offerings want to be retrieved
+
+### List all the offerings contained in a Description  [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "offerings": [
+                {
+                    "averageScore": 0,
+                    "name": "offering1",
+                    "displayName": "Offering1",
+                    "uri": "http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/offering1#off",
+                    "description": "Example Description",
+                    "version": "1.0",
+                    "describedIn": {
+                        "name": "offerings1",
+                        "store": "wstore"
+                    },
+                    "imageUrl": "IMAGE_URL",
+                    "acquisitionUrl": "ACQUISITION_URL",
+                    "views": 1,
+                    "pricePlans": [],
+                    "services": [],
+                    "categories": []
+                }
+            ]
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Description offerings1 not found in Store wstore",
+                "type": "NOT_FOUND"
+            }
+        }
+
+
+## Getting Offering Details [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}]
+
+Users can also retrieve details of a specific offering.
+
++ Parameters
+    + store_name: wstore (required, string) - The ID of the Store to which the offering belongs
+    + description_name: offerings1 (required, string) - The ID of the description to which the offering belongs
+    + offering_name: offering1 (required, string) - The specific offering to be retrieved
+
+### Get Offering Details [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "averageScore": 0,
+            "name": "offering1",
+            "displayName": "Offering1",
+            "uri": "http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/offering1#off",
+            "description": "Example Description",
+            "version": "1.0",
+            "describedIn": {
+                "name": "offerings1",
+                "store": "wstore"
+            },
+            "imageUrl": "IMAGE_URL",
+            "acquisitionUrl": "ACQUISITION_URL",
+            "views": 1,
+            "pricePlans": [
+                {
+                    "title": "Price Plan Title",
+                    "comment": "Price Plan Comment",
+                    "priceComponents": [
+                        {
+                            "title": "Price Component Title",
+                            "comment": "Price Component Comment",
+                            "value": 8,
+                            "currency": "Price Component Currency",
+                            "unit": "Price Component Unit"
+                        }
+                    ]
+                }
+            ],
+            "services": [
+                {
+                    "displayName": "Service Name",
+                    "comment": "Service Description",
+                    "categories": [
+                        {
+                            "name": "category-name",
+                            "displayName": "Category Name"
+                        }
+                    ]
+                }
+            ],
+            "categories": [
+                {
+                    "name": "category-name",
+                    "displayName": "Category Name"
+                }
+            ]
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Offering offering1 not found in description offerings1 (Store: wstore)",
+                "type": "NOT_FOUND"
+            }
+        }
+
+
+## Bookmarking Offerings [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/bookmark]
+
+Users can bookmark offerings so they can access their favourite ones in a very easy way. This endpoint can be used to both
+bookmark and unbookmark a specific offering depending on its previous state: if the offering is already bookmarked, it will be 
+unbookmarked; if the offerings is not bookmarked, it will be bookmarked.
+
++ Parameters
+    + store_name: wstore (required, string) - The ID of the Store to which the offering belongs
+    + description_name: offerings1 (required, string) - The ID of the description to which the offering belongs
+    + offering_name: offering1 (required, string) - The specific offering to be (un)bookmarked
+    
+# Bookmark and Unbookmark an Offering [POST]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 204
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Offering offering1 not found in description offerings1 (Store: wstore)",
+                "type": "NOT_FOUND"
+            }
+        }
+
+
+## Getting Bookmarked Offerings [/api/v2/offering/bookmark{?offset}{?max}{?orderBy}{?desc}]
+
++ Parameters
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+    + orderBy: id (optional, string) - Order used to retrieve the offerings
+    + desc: false (optional, boolean) - Use descending order
+
+### Get bookmarked Offerings [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "offerings": [
+                {
+                    "averageScore": 0,
+                    "name": "offering1",
+                    "displayName": "Offering1",
+                    "uri": "http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/offering1#off",
+                    "description": "Example Description",
+                    "version": "1.0",
+                    "describedIn": {
+                        "name": "offerings1",
+                        "store": "wstore"
+                    },
+                    "imageUrl": "IMAGE_URL",
+                    "acquisitionUrl": "ACQUISITION_URL",
+                    "views": 1,
+                    "pricePlans": [],
+                    "services": [],
+                    "categories": []
+                }
+            ]
+        }
+
+
+## Creating and/or Listing Offering Reviews [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review{?offset}{?max}{?orderBy}{?desc}{?detailed}]
+
+Offerings, as stores, can be reviewed. One user can only review an offering once. To review an offering,
+the user should send the following fields:
+
++ score: 3 (required, int) - a number between 1 or 5 where 1 means "I really hate this Offering" and 5 means "I really like this Offering"
++ comment: Example (optional, string) - A brief explanation for your score
+
++ Parameters
+    + store_name: wstore (required, string) - The ID of the Store to which the offering belongs
+    + description_name: offerings1 (required, string) - The ID of the description to which the offering belongs
+    + offering_name: offering1 (required, string) - The specific offering to be reviewed
+
+### Review an Offering [POST]
+
++ Request (application/json)
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+    
+            {
+                "score": 5,
+                "comment": "Example Comment"
+            }
+
++ Response 201 (application/json)
+    + Headers
+            
+            Location: http://marketplace.lab.fiware.org/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review/0
+
++ Response 400 (application/json)
+    + Body
+    
+            {
+                "error": {
+                    "field": "score",
+                    "type": "VALIDATION_ERROR",
+                    "message": "Score should be an integer between 1 and 5."
+                }
+            }
+            
+
++ Response 403 (application/json)
+    + Body
+    
+            {
+                "error": {
+                    "type": "FORBIDDEN",
+                    "message": "You are not authorized to review Offering. An entity can only be reviewed once"
+                }
+            }
+            
++ Response 404 (application/json)
+    + Body
+    
+            {
+                "error": {
+                    "type": "NOT_FOUND",
+                    "message": "Offering offering-1 not found"
+                }
+            }
+            
+### List existing Offering Reviews [GET]
+
++ Parameters
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+    + orderBy: id (optional, string) - Order used to retrieve the reviews
+    + desc: false (optional, boolean) - Use descending order
+    + detailed: false (optional, boolean) - If true, the user fields won't contain the user name but all the user's information (email, displayName...)
+    
++ Request
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "reviews": [
+                {
+                    "id": 1,
+                    "score": 5,
+                    "user": "USER_NAME",
+                    "comment": "Example Comment",
+                    "createdAt": 1435248117000,
+                    "updatedAt": 1435248117000
+                }
+            ]
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "type": "NOT_FOUND",
+                "message": "Offering offering-1 not found"
+            }
+        }
+
+
+## Managing an existing Offering Review [/api/v2/store/{store_name}/description/{description_name}/offering/{offering_name}/review/{review_id}{?detailed}]
+
++ Parameters
+    + store_name: wstore (required, string) - The ID of the Store to which the offering belongs
+    + description_name: offerings1 (required, string) - The ID of the description to which the offering belongs
+    + offering_name: offering1 (required, string) - The specific offering whose review has to be managed
+    + review_id: 0 (required, int) - The ID of the review to be managed
+    
+### Get Review Details [GET]
+
++ Parameters
+    + detailed: false (optional, boolean) - If true, the user filed won't contain the user name but all the user's information (email, displayName...)
+
+
++ Request
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "score": 5,
+            "user": "USER_NAME",
+            "comment": "Example Comment",
+            "createdAt": 1435248117000,
+            "updatedAt": 1435248117000
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Review 0 not found in Offering offering1 (Description: offerings1, Store: wstore)",
+                "type": "NOT_FOUND"
+            }
+        }
+        
+### Update an existing Offering Review [POST]
+
++ Request (application/json)
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
+    + Body
+    
+            {
+                "score": 5,
+                "comment": "Example Comment"
+            }
+            
++ Response 200
+
++ Response 400 (application/json)
+
+    + Body
+    
+            {
+                "error": {
+                    "field": "score",
+                    "type": "VALIDATION_ERROR",
+                    "message": "Score should be an integer between 1 and 5."
+                }
+            }
+            
+
++ Response 403 (application/json)
+    + Body
+    
+            {
+                "error": {
+                    "message": "You are not authorized to update review 0 in Offering offering1 (Description: offerings1, Store: wstore)",
+                    "type": "FORBIDDEN"
+                }
+            }
+            
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Review 0 not found in Offering offering1 (Description: offerings1, Store: wstore)",
+                "type": "NOT_FOUND"
+            }
+        }
+
+### Delete an existing Offering Review [DELETE]
+
++ Request
+    + Headers
+            
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 204
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Review 0 not found in Offering offering1 (Description: offerings1, Store: wstore)",
+                "type": "NOT_FOUND"
+            }
+        }
+        
+
+## Listing all the Offerings [/api/v2/offering{?offset}{?max}{?orderBy}{?desc}]
+
+In some cases, users can be interested in retrieving all the offerings which have been registered into the MaketPlace without
+taking into account the store and/or the description used to register these offerings. 
+
++ Parameters
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+    + orderBy: id (optional, string) - Order used to retrieve the offerings
+    + desc: false (optional, boolean) - Use descending order
+    
+### List all the Offerings [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "offerings": [
+                {
+                    "averageScore": 0,
+                    "name": "offering1",
+                    "displayName": "Offering1",
+                    "uri": "http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/offering1#off",
+                    "description": "Example Description",
+                    "version": "1.0",
+                    "describedIn": {
+                        "name": "offerings1",
+                        "store": "wstore"
+                    },
+                    "imageUrl": "IMAGE_URL",
+                    "acquisitionUrl": "ACQUISITION_URL",
+                    "views": 1,
+                    "pricePlans": [],
+                    "services": [],
+                    "categories": []
+                }
+            ]
+        }
+
+
+## Listing Viewed Offerings [/api/v2/offering/lastViewed{?offset}{?max}{?orderBy}{?desc}]
+
+The system register the last 10 offerings viewed by each user and these offerings can be retrieved using an API.
+
++ Parameters
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+    + orderBy: id (optional, string) - Order used to retrieve the offerings
+    + desc: false (optional, boolean) - Use descending order
+
+    
+### List Last Viewed Offerings [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "offerings": [
+                {
+                    "averageScore": 0,
+                    "name": "offering1",
+                    "displayName": "Offering1",
+                    "uri": "http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/offering1#off",
+                    "description": "Example Description",
+                    "version": "1.0",
+                    "describedIn": {
+                        "name": "offerings1",
+                        "store": "wstore"
+                    },
+                    "imageUrl": "IMAGE_URL",
+                    "acquisitionUrl": "ACQUISITION_URL",
+                    "views": 1,
+                    "pricePlans": [],
+                    "services": [],
+                    "categories": []
+                }
+            ]
+        }
+        
+
+## Listing What Other Users Are Looking At Right Now [/api/v2/offering/viewedByOthers{?max}]
+
+Based on the offerings viewed by other users, the system can return the list of offerings that are trending now
+because there are users are interested in them. This data is anonymized, so other users cannot retrieve the list of
+offerings viewed by a specific user.
+
++ Parameters
+    + max: 20 (optional, int) - The number of elements to be retrieved
+
+### List Last Offerings Viewed by Others [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "offerings": [
+                {
+                    "averageScore": 0,
+                    "name": "offering1",
+                    "displayName": "Offering1",
+                    "uri": "http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/offering1#off",
+                    "description": "Example Description",
+                    "version": "1.0",
+                    "describedIn": {
+                        "name": "offerings1",
+                        "store": "wstore"
+                    },
+                    "imageUrl": "IMAGE_URL",
+                    "acquisitionUrl": "ACQUISITION_URL",
+                    "views": 1,
+                    "pricePlans": [],
+                    "services": [],
+                    "categories": []
+                }
+            ]
+        }
+
+
+
+# Group Categories
+
+Offerings have some attached categories. The service will allow users to retrieve all the categories that have been created and all the offerings
+that belong to each existing category. Based on this, users can retrieve a list of suggestions for each category according to the reviews made by other users.
+
+Each category contains the following information:
++ displayName: The display name of the category (the one that will be used in the GUI)
++ name: Unique identifier for the category. It is based on the display name
+
+
+## Listing all the Categories [/api/v2/category{?offset}{?max}]
+
++ Parameters
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+
+### List all the existing Categories [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "categories": [
+                {
+                    "name": "dataset",
+                    "displayName": "Dataset"
+                }
+            ]
+        }
+        
+
+## Listing all the Offerings that belong to a Category [/api/v2/category/{category_name}/offering{?offset}{?max}{?orderBy}{?desc}]
+
++ Parameters
+    + category_name: dataset (required, string) - The category whose offerings want to be retrieved
+    + offset: 0 (optional, int) - The first element to be retrieved
+    + max: 100 (optional, int) - The number of elements to be retrieved
+    + orderBy: averageScore (optional, string) - Order used to retrieve the offerings
+    + desc: true (optional, boolean) - Use descending order
+
+### List all the Offerings that belong to a Category [GET]
+    
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer YOUR_OAUTH2_TOKEN
+
++ Response 200 (application/json)
+
+        {
+            "offerings": [
+                {
+                    "averageScore": 0,
+                    "name": "offering1",
+                    "displayName": "Offering1",
+                    "uri": "http://130.206.81.113/FiwareRepository/v1/storeOfferingCollection/offering1#off",
+                    "description": "Example Description",
+                    "version": "1.0",
+                    "describedIn": {
+                        "name": "offerings1",
+                        "store": "wstore"
+                    },
+                    "imageUrl": "IMAGE_URL",
+                    "acquisitionUrl": "ACQUISITION_URL",
+                    "views": 1,
+                    "pricePlans": [],
+                    "services": [],
+                    "categories": []
+                }
+            ]
+        }
+
++ Response 404 (application/json)
+
+        {
+            "error": {
+                "message": "Category dataset not found",
+                "type": "NOT_FOUND"
+            }
+        }
+
+
+

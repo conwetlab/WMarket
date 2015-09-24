@@ -50,9 +50,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "services")

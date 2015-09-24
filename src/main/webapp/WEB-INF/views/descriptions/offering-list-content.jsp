@@ -11,10 +11,11 @@
 
     <div class="panel panel-default-lighter offering-item">
       <div class="panel-heading text-center">
-        <span class="image-thumbnail">
-          <img class="image image-rounded image-bordered offering-image" src="${ offering.imageUrl }" />
-        </span>
-        <a class="panel-title" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">${ offering.displayName }</a>
+        <a class="image-thumbnail thumbnail-bordered" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">
+          <img class="image offering-image" src="${ offering.imageUrl }" />
+          <span class="rating-value rating-value-lighter"><span class="fa fa-star"></span> ${ offering.averageScore }</span>
+        </a>
+        <h4><a class="panel-title text-truncate" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">${ offering.displayName }</a></h4>
       </div>
       <div class="panel-body">
         <a class="offering-store" href="${ pageContext.request.contextPath }/stores/${ description.store.name }/offerings">Web Store</a>

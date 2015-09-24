@@ -70,7 +70,7 @@ public class StoreValidator {
 			
 			// Name does not changes, so it should only be checked on creation
 			if (!storeDao.isNameAvailable(store.getName())) {
-	            throw new ValidationException("name", "This name is already in use.");
+	            throw new ValidationException("displayName", "This name is already in use.");
 			}
 		}
 
@@ -129,8 +129,10 @@ public class StoreValidator {
 	 * @throws ValidationException It the updated store is not valid
 	 */
 	public void validateUpdatedStore(Store oldStore, Store updatedStore) throws ValidationException {
-		boolean checkExistingDisplayName = !oldStore.getDisplayName().equals(updatedStore.getDisplayName());
-		boolean checkExistingURL = !oldStore.getUrl().equals(updatedStore.getUrl());
+		boolean checkExistingDisplayName = updatedStore.getDisplayName() == null ? false :
+				!oldStore.getDisplayName().toLowerCase().equals(updatedStore.getDisplayName().toLowerCase());
+		boolean checkExistingURL = updatedStore.getUrl() == null ? false : 
+				!oldStore.getUrl().toLowerCase().equals(updatedStore.getUrl().toLowerCase());
 		
 		this.validateStore(updatedStore, false, checkExistingDisplayName, checkExistingURL);
 	}

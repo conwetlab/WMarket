@@ -55,8 +55,8 @@ import org.springframework.stereotype.Component;
 public class MediaContentController {
 
 	@Value("${media.folder}") private String mediaFolder;
-	
-    private static Logger logger = LoggerFactory.getLogger(MediaContentController.class);
+
+	private static Logger logger = LoggerFactory.getLogger(MediaContentController.class);
 
 	@GET
 	@Path("{fileName: .*}")
@@ -68,23 +68,23 @@ public class MediaContentController {
 			String filePath = mediaFolder + "/" + fileName;
 			String normalizedPath = new URI(filePath).normalize().getPath();
 			File imageFile = new File(normalizedPath);
-	
+
 			// Check that the new path starts with the URL where media is supposed to be stored
 			if (normalizedPath.startsWith(mediaFolder) && imageFile.exists()) {
-				
+
 				BufferedImage image = ImageIO.read(imageFile);
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				ImageIO.write(image, "png", baos);		// Only PNG is accepted
 				byte[] imageData = baos.toByteArray();
-	
+
 				// Return the image
 				return Response.ok().entity(imageData).build();
-				
+
 			} else {
 				logger.warn("File Not found or Directory traversal attack");
 				return Response.status(Status.NOT_FOUND).build();
 			}
-		
+
 		} catch (Exception ex) {
 			logger.warn("Not expected expection", ex);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();

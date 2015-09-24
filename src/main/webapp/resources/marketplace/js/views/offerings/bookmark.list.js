@@ -10,10 +10,7 @@
     ns.offeringList = $('.offering-group');
 
     app.requests.attach('stores:collection', 'read', {
-        namespace: "offerings:collection",
-        queryString: {
-            bookmarked: true
-        },
+        namespace: "offerings:bookmark_collection",
         container: ns.offeringList,
         alert: app.createAlert('warning', "No bookmark available.", 'col-sm-10'),
         onSuccess: function (collection, container) {

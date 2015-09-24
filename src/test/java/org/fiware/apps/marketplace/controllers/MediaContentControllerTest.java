@@ -50,67 +50,67 @@ import org.junit.rules.TemporaryFolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class MediaContentControllerTest {
-	
-    // Controller
+
+	// Controller
 	private MediaContentController controller = new MediaContentController();
-	
+
 	// Temporary Folders
-    @Rule public TemporaryFolder mediaFolder = new TemporaryFolder();
-    @Rule public TemporaryFolder unaccesibleFolder = new TemporaryFolder();
-	
-    // Static content
+	@Rule public TemporaryFolder mediaFolder = new TemporaryFolder();
+	@Rule public TemporaryFolder unaccesibleFolder = new TemporaryFolder();
+
+	// Static content
 	private static final String IMAGE_NAME = "image.png";
 	private static final String IMAGE_PATH = "src/test/resources";
-	
+
 	// AUXILIAR FUNCTION
 	private void copyImageIntoTemporaryFolder(TemporaryFolder folder) throws IOException {
 		Files.copy(Paths.get(IMAGE_PATH, IMAGE_NAME), 
 				Paths.get(folder.getRoot().getAbsolutePath(), IMAGE_NAME));
 	}
-	
+
 	@Before
 	public void setUp() throws IOException {
 
 		// Put an image into the media folder
 		copyImageIntoTemporaryFolder(mediaFolder);
-		
+
 		// Set the folder where the media is stored
 		ReflectionTestUtils.setField(controller, "mediaFolder", 
 				mediaFolder.getRoot().getAbsolutePath());
 	}
-	
+
 	@Test
 	public void testGetExistingImage() throws IOException {
 		Response response = controller.getImage(IMAGE_NAME);
-		
+
 		// Read the image and check that the content returned by the 
 		BufferedImage image = ImageIO.read(Paths.get(IMAGE_PATH, IMAGE_NAME).toFile());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ImageIO.write(image, "png", baos);		// Only PNG is accepted
 		byte[] imageData = baos.toByteArray();
-		
+
 		// Assertions: Status == OK, Entity == Image data
 		assertThat(response.getStatus()).isEqualTo(200);
 		assertThat(response.getEntity()).isEqualTo(imageData);
 
 	}
-	
+
 	@Test
 	public void testGetNonExistingImage() {
 		Response response = controller.getImage("A" + IMAGE_NAME);
 		assertThat(response.getStatus()).isEqualTo(404);	
 	}
-	
+
 	@Test
 	public void testDirectoryTraversalAttack() throws IOException {
 		// Copy the image into the other directory
 		copyImageIntoTemporaryFolder(unaccesibleFolder);
-		
+
 		// Try to get the image
 		Response response = controller.getImage("../" +unaccesibleFolder.getRoot().getName() + "/" + IMAGE_NAME);
-		
+
 		// 404 should be returned (even if the image exists)
 		assertThat(response.getStatus()).isEqualTo(404);
-		
+
 	}
 }

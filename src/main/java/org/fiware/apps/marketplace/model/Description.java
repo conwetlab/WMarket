@@ -75,6 +75,7 @@ public class Description {
 	private String displayName;
 	private String comment;
 	private Date createdAt;
+	private Date updatedAt;
 	private Store store;
 	private User lasteditor;	
 	private User creator;
@@ -122,7 +123,7 @@ public class Description {
 	}
 
 	@XmlElement
-	@Column(name = "url", nullable = false)
+	@Column(name = "url", nullable = false, length = 2048)
 	public String getUrl() {
 		return url;
 	}
@@ -186,7 +187,17 @@ public class Description {
 	public void setCreatedAt(Date registrationDate) {
 		this.createdAt = registrationDate;
 	}
+	
+	@XmlElement
+	@Column(name = "updated_at")
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
 
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+	
     @XmlElement(name = "offering")
     @JsonProperty("offerings")
 	@OneToMany(mappedBy = "describedIn", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

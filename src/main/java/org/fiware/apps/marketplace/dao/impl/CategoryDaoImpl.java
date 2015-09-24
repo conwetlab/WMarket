@@ -49,6 +49,11 @@ public class CategoryDaoImpl extends MarketplaceHibernateDao implements Category
 	private final static String OFFERINGS_TABLE_NAME = Offering.class.getName();
 	
 	@Override
+	public void delete(Category category) {
+		getSession().delete(category);
+	}
+	
+	@Override
 	public boolean isNameAvailable(String name) {
 		
 		boolean exists = false;

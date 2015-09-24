@@ -11,7 +11,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading text-center">
-          <span class="panel-title">Personal Information</span>
+          <h4 class="panel-title">Personal Information</h4>
         </div>
         <div class="panel-body">
           <div class="dl-group">
@@ -29,7 +29,7 @@
             </dl>
             <dl>
               <dt>OAuth2</dt>
-              <dd>Logged in through 'Identity Manager'</dd>
+              <dd>Logged in through <strong>Identity Manager</strong></dd>
             </dl>
           </div>
         </div>
@@ -40,7 +40,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading text-center">
-          <span class="panel-title">Personal Information</span>
+          <h4 class="panel-title">Personal Information</h4>
         </div>
         <div class="panel-body">
           <form class="col-md-8 col-md-offset-1" name="account_update_form" method="post" action="${ pageContext.request.contextPath }/account">
@@ -52,6 +52,61 @@
           </form>
         </div>
       </div>
+      
+      <c:if test="${ user.oauth2 eq false }">
+        <div class="panel panel-default">
+          <div class="panel-heading text-center">
+            <h4 class="panel-title">Provider</h4>
+          </div>
+          <div class="panel-body">
+          	<div class="col-md-8 col-md-offset-1">
+              <p class="text-justify">
+              When you are registered as provider, the user interface will show you the options to create Stores and Descriptions.
+              These extra functions are only useful when you are an offering provider. Otherwise, we recommend you to keep your
+              consumer role.
+              </p>
+              <p class="text-justify">
+                <strong>Current Status: </strong> You are registered as <strong>
+                <c:choose>
+                  <c:when test="${ user.provider }">
+                  	provider
+                  </c:when>
+                  <c:otherwise>
+                  	consumer
+                  </c:otherwise>
+                </c:choose>
+                </strong>
+              </p>
+              <div class="form-options">
+              <form method="post" action="${ pageContext.request.contextPath }/account/provider">
+                <button type="submit" 
+                  <c:choose>
+                    <c:when test="${ user.provider }">
+                      class="btn btn-danger"
+                    </c:when>
+                    <c:otherwise>
+                      class="btn btn-success"
+                    </c:otherwise>
+                  </c:choose>
+                >
+                  <span class="btn-text btn-text-not-truncated">                  
+                  	<c:choose>
+                  	  <c:when test="${ user.provider }">
+                  		I don't want to be a provider anymore
+                  	  </c:when>
+                  	  <c:otherwise>
+                  	  	I want to to become a provider
+                  	  </c:otherwise>
+                  	</c:choose>
+                  </span>
+                </button>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </c:if>
+      
 
       </c:otherwise>
     </c:choose>

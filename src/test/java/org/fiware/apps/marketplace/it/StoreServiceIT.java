@@ -200,7 +200,7 @@ public class StoreServiceIT extends AbstractIT {
 		
 		// name is based on display name and name is checked before display name...
 		testCreationFieldAlreayExists(displayName, displayName, "https://store.com", "http://market.com", 
-				"name", MESSAGE_NAME_IN_USE);
+				"displayName", MESSAGE_NAME_IN_USE);
 	}
 	
 	@Test
@@ -395,8 +395,8 @@ public class StoreServiceIT extends AbstractIT {
 		//Update store with the new user
 		Response updateStoreResponse = updateStore(newUserName, PASSWORD, storeName, "new display", null, 
 				null, null);
-		checkAPIError(updateStoreResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "update store"), 
-				ErrorType.FORBIDDEN);	
+		checkAPIError(updateStoreResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "update store " 
+				+ storeName), ErrorType.FORBIDDEN);	
 
 	}
 	
@@ -462,8 +462,8 @@ public class StoreServiceIT extends AbstractIT {
 		
 		//Delete user
 		Response deleteStoreResponse = deleteStore(newUserName, PASSWORD, storeName);
-		checkAPIError(deleteStoreResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "delete store"), 
-				ErrorType.FORBIDDEN);	
+		checkAPIError(deleteStoreResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "delete store " 
+				+ storeName), ErrorType.FORBIDDEN);	
 
 	}
 	
@@ -898,5 +898,51 @@ public class StoreServiceIT extends AbstractIT {
 			Store store = stores.getStores().get(i);
 			assertThat(store.getDisplayName()).isEqualTo(storeNames[nStores - i - 1]);
 		}
+	}
+	
+	/**
+	 * Test if this bug has been fixed:
+	 * When a user is deleted, and this used has reviewed one or more entities, the average
+	 * score of these entities is not recalculated. In addition, the system throws an 
+	 * unexpected exception under certain circumstances.
+	 */
+	@Test
+	public void testDeleteUserWithReviews() {
+		
+		String storeName = "store";
+		String storeUrl = "http://store.lab.fiware.org";
+		int firstUserScore = 5;
+		String comment = "Basic comment";
+		
+		int reviewId = createStoreAndReview(storeName, storeUrl, firstUserScore, comment);
+		checkStoreReview(USER_NAME, PASSWORD, storeName, reviewId, firstUserScore, comment);
+
+		// Create a new user and review the store with this user
+		String userName = "userforrating";
+		String email = "rating@example.com";
+		Response createUserRes = createUser(userName, email, PASSWORD);
+		assertThat(createUserRes.getStatus()).isEqualTo(201);
+		
+		// Review the store with the new user
+		int secondUserScore = 3;
+		Response createReviewRes = createStoreReview(userName, PASSWORD, storeName, secondUserScore, comment);
+		assertThat(createReviewRes.getStatus()).isEqualTo(201);
+		
+		// Check the average score
+		Response getStoreRes = getStore(USER_NAME, PASSWORD, storeName);
+		assertThat(getStoreRes.getStatus()).isEqualTo(200);
+		Store store = getStoreRes.readEntity(Store.class);
+		double averageScore = (((double) firstUserScore) + ((double) secondUserScore)) / 2D;
+		assertThat(store.getAverageScore()).isEqualTo(averageScore);
+		
+		// Remove the user
+		Response deleteUserRes = deleteUser(userName, PASSWORD, userName);
+		assertThat(deleteUserRes.getStatus()).isEqualTo(204);
+		
+		// Get store
+		getStoreRes = getStore(USER_NAME, PASSWORD, storeName);
+		assertThat(getStoreRes.getStatus()).isEqualTo(200);
+		store = getStoreRes.readEntity(Store.class);
+		assertThat(store.getAverageScore()).isEqualTo(firstUserScore);
 	}
 }

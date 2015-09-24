@@ -2,8 +2,29 @@
 	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	
-	<display-name>Fiware Marketplace</display-name>
+	<display-name>WMarket</display-name>
+	
+	<!-- Error Handlers -->
+	<error-page>
+    	<error-code>401</error-code>
+    	<location>/WEB-INF/views/errormessages/401.jsp</location>
+	</error-page>
+	
+	<error-page>
+    	<error-code>403</error-code>
+    	<location>/WEB-INF/views/errormessages/403.jsp</location>
+	</error-page>
+	
+	<error-page>
+    	<error-code>404</error-code>
+    	<location>/WEB-INF/views/errormessages/404.jsp</location>
+	</error-page>
 
+	<error-page>
+    	<error-code>500</error-code>
+    	<location>/WEB-INF/views/errormessages/500.jsp</location>
+	</error-page>
+	
 	<!-- Spring Security -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>

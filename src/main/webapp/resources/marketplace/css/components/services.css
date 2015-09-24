@@ -14,23 +14,23 @@
     margin: 0px 0px 10px;
 }
 
-.service-name {
+.service-group .service-name {
     font-size: 16px;
     font-weight: 700;
 }
 
 @media (min-width: 768px /* Tablets */) {
 
-    .service-name {
+    .service-group .service-name {
         display: table-cell;
         min-width: 150px;
         max-width: 150px;
         padding: 10px;
         text-align: right;
-        vertical-align: middle;
+        vertical-align: top;
     }
 
-    .service-name span {
+    .service-group .service-name span {
         display: block;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -41,12 +41,12 @@
 
 @media (min-width: 992px /* Desktops */) {
 
-    .service-name {
+    .service-group .service-name {
         min-width: 175px;
         max-width: 175px;
     }
 
-    .service-name span {
+    .service-group .service-name span {
         display: inline;
         white-space: normal;
     }
@@ -55,31 +55,61 @@
 
 @media (min-width: 1200px /* Large Desktops */) {
 
-    .service-name {
+    .service-group .service-name {
         min-width: 200px;
         max-width: 200px;
     }
 
-    .service-name span {
+    .service-group .service-name span {
         display: inline;
         white-space: normal;
     }
 
 }
 
-.service-content {
+.service-group .service-content {
     display: block;
     margin: 0px 0px 0px 30px;
     padding: 10px;
-    border-left: 1px solid rgb(230, 220, 230);
+    border-left: 1px solid rgb(190, 200, 210);
 }
 
 @media (min-width: 768px /* Tablets, Desktops and Large Desktops */) {
 
-    .service-content {
+    .service-group .service-content {
         display: table-cell;
         margin-left: 0px;
         width: 100%;
     }
 
+}
+
+.rotating-item.service-item {
+    padding: 10px;
+    background-color: rgb(250, 250, 250);
+    border: solid 1px rgb(230, 220, 230);
+    border-radius: 4px;
+}
+
+.rotating-item.service-item .service-name {
+    margin: 0 0 10px;
+    padding-right: 20px;
+}
+
+.rotating-item.service-item .service-name .btn-collapse {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.rotating-item.service-item .service-categories {
+    margin: 0 0 5px;
+}
+
+.rotating-item.service-item .service-comment {
+    display: none;
+}
+
+.rotating-item.service-item.expanded .service-comment {
+    display: block;
 }

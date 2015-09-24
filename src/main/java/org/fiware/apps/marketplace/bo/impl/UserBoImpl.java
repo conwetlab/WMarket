@@ -36,11 +36,14 @@ package org.fiware.apps.marketplace.bo.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
+import org.fiware.apps.marketplace.exceptions.ReviewNotFoundException;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
+import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.UserValidator;
 import org.fiware.apps.marketplace.security.auth.UserAuth;
@@ -58,6 +61,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("userBo")
 public class UserBoImpl implements UserBo {
 
+	@Autowired private ReviewBo reviewBo;
 	@Autowired private UserDao userDao;
 	@Autowired private UserAuth userAuth;
 	@Autowired private UserValidator userValidator;
@@ -112,7 +116,7 @@ public class UserBoImpl implements UserBo {
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!userAuth.canUpdate(userToBeUpdated)) {
-			throw new NotAuthorizedException("update user");
+			throw new NotAuthorizedException("update user " + userName);
 		}
 		
 		// Exception is risen if the user is not valid
@@ -153,8 +157,20 @@ public class UserBoImpl implements UserBo {
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!userAuth.canDelete(user)) {
-			throw new NotAuthorizedException("delete user");
-		}		
+			throw new NotAuthorizedException("delete user " + userName);
+		}
+		
+		// Delete reviews manually so average score is recalculated
+		// This also avoid unexpected Hibernate exceptions
+		List<Review> userReviews = user.getReviews();
+		for (Review review: userReviews) {
+			try {
+				reviewBo.deleteReview(review.getReviewableEntity(), review.getId());
+			} catch (ReviewNotFoundException ex) {
+				// Not expected
+			}
+		}
+		
 		userDao.delete(user);
 	}
 
@@ -231,5 +247,21 @@ public class UserBoImpl implements UserBo {
 	public boolean checkCurrentUserPassword(String password) throws UserNotFoundException{
 		User user = getCurrentUser();
 		return encoder.matches(password, user.getPassword());
+	}
+
+	@Override
+	@Transactional
+	public void changeProviderStatus(String userName) throws NotAuthorizedException,
+			UserNotFoundException {
+		
+		User userToBeUpdated = userDao.findByName(userName);
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!userAuth.canUpdate(userToBeUpdated)) {
+			throw new NotAuthorizedException("update user");
+		}
+		
+		// Method is transactional so the instance is automatically updated
+		userToBeUpdated.setProvider(!userToBeUpdated.isProvider());
 	}
 }

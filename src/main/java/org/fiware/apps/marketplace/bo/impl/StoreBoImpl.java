@@ -83,9 +83,9 @@ public class StoreBoImpl implements StoreBo{
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Gets the relative path where the image is located. This path can be used both to obtain the
-	 * path where the image is stored and to get the final URL used by external users to retrieve
-	 * the image using the web service. It depends on the prefix you use. 
+	 * Returns the relative path where stores images are located. You can use it calculate both
+	 * the path where the image is stored or the URL that can be used by external users to retrieve
+	 * the image. 
 	 * @param store The store whose image name wants to be retrieved
 	 * @return Relative path where the image is located.
 	 */
@@ -94,12 +94,23 @@ public class StoreBoImpl implements StoreBo{
 	}
 	
 	/**
-	 * Gets the file system path where the image is stored (or where it must be stored)
+	 * Returns the file system path where the image is stored (or where it must be stored)
 	 * @param store The store whose image path wants to be retrieved
 	 * @return The file system path where the image is stored
 	 */
 	private String getFileSystemImagePath(Store store) {
+		// File system: we use the media folder as prefix
 		return mediaFolder + "/" + getRelativeImagePath(store);
+	}
+	
+	/**
+	 * Returns the URL that can be used by externals users to retrieve the store image
+	 * @param store The store whose image URL wants to be retrieved
+	 * @return The URL that can be used to retrieve the image
+	 */
+	private String getImageURL(Store store) {
+		// URL: we use the URL base as prefix
+		return MEDIA_BASE_URL + "/" + getRelativeImagePath(store);
 	}
 	
 	/**
@@ -134,7 +145,7 @@ public class StoreBoImpl implements StoreBo{
 	private void setImageURL(Store store) {
 		// Image URL is set only if the store has one image attached
 		if (new File(getFileSystemImagePath(store)).exists()) {
-			store.setImagePath(MEDIA_BASE_URL + "/" + getRelativeImagePath(store));
+			store.setImagePath(getImageURL(store));
 		}
 	}
 	
@@ -207,7 +218,7 @@ public class StoreBoImpl implements StoreBo{
 			
 			// Check rights and raise exception if user is not allowed to perform this action
 			if (!storeAuth.canUpdate(storeToBeUpdate)) {
-				throw new NotAuthorizedException("update store");
+				throw new NotAuthorizedException("update store " + storeName);
 			}
 			
 			// Exception is risen if the store is not valid
@@ -251,7 +262,7 @@ public class StoreBoImpl implements StoreBo{
 		
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!storeAuth.canDelete(store)) {
-			throw new NotAuthorizedException("delete store");
+			throw new NotAuthorizedException("delete store " + storeName);
 		}
 		
 		// When the store is deleted, its image must be deleted

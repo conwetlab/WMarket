@@ -8,9 +8,8 @@
     ns.Review = function Review(data) {
 
         var authorAvatar = $('<div class="author-avatar">').append(
-            $('<span class="image-thumbnail image-thumbnail-sm">').append(
-                $('<span class="image image-circle image-primary-ligther">').append(
-                  $('<span class="fa fa-user fa-inverse"></span>'))));
+            $('<span class="image-thumbnail image-thumbnail-sm thumbnail-circle">').append(
+                $('<img class="image">').attr('src', data.user.imageUrl)));
 
         var reviewAuthor = $('<div class="review-author">').append(
             $('<div class="author-name">').text(data.user.displayName),

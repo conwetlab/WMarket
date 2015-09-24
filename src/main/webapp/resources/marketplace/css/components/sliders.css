@@ -8,21 +8,25 @@
 
 .slider-showcase {
     position: relative;
-    height: 252px;
     margin: 0px 30px;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .row-sliding {
     position: relative;
     display: block;
     height: 100%;
+    transition: left .25s ease-in-out;
 }
 
 .row-sliding:after {
     content: "";
     display: table;
     clear: both;
+}
+
+.row-sliding > .slider-item {
+    margin-bottom: 0px;
 }
 
 .slider-control {
@@ -44,7 +48,48 @@
     border-bottom-left-radius: 0;
 }
 
-.category-title {
-    font-size: 24px;
-    line-height: 26px;
+.rotating-control {
+    min-width: 80px;
+}
+
+.rotating-control:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.rotating-control:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px;
+}
+
+.rotating-showcase > h4 {
+    position: absolute;
+    width: 150px;
+    left: 0;
+    top: 0;
+}
+
+.rotating-showcase > .row-rotating {
+    margin-left: 150px;
+}
+
+.row-rotating {
+    position: relative;
+    overflow-x: hidden;
+}
+
+.rotating-item {
+    position: relative;
+    width: 200px;
+    float: left;
+    margin: 0px 5px;
+}
+
+.rotating-item > :last-child {
+    margin-bottom: 0;
+}
+
+.auto-scroll-x {
+    overflow-x: auto;
 }

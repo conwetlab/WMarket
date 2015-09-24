@@ -44,6 +44,11 @@ import org.springframework.stereotype.Repository;
 public class ServiceDaoImpl extends MarketplaceHibernateDao implements ServiceDao {
 	
 	private final static String TABLE_NAME = Service.class.getName();
+	
+	@Override
+	public void delete(Service service) {
+		getSession().delete(service);
+	}
 
 	@Override
 	public Service findByURI(String uri) throws ServiceNotFoundException {

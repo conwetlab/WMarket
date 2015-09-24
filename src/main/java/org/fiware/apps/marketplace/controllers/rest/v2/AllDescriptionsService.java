@@ -51,7 +51,7 @@ import org.springframework.stereotype.Component;
 import org.slf4j.LoggerFactory;
 
 @Component
-@Path("/api/v2/descriptions")	
+@Path("/api/v2/description")	
 public class AllDescriptionsService {
 		
 	// OBJECT ATTRIBUTES //

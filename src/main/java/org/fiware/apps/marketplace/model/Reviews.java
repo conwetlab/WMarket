@@ -44,26 +44,26 @@ import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
 @XmlRootElement(name = "reviews")
 @IgnoreMediaTypes("application/*+json")
 public class Reviews {
-	
-    private List<Review> reviews = null;
-    
-    public Reviews() {
-    	this.setReviews(new ArrayList<Review>());
-    }
-    
-    public Reviews(List<Review> reviews) {
-    	this.setReviews(reviews);
-    }
- 
-    @XmlElement(name = "review")
-    @JsonProperty("reviews")
-    public List<Review> getReviews() {
-        return this.reviews;
-    }
- 
-    public void setReviews(List<Review> reviews) {
-    	this.reviews = reviews;
-    }
+
+	private List<Review> reviews = null;
+
+	public Reviews() {
+		this.setReviews(new ArrayList<Review>());
+	}
+
+	public Reviews(List<Review> reviews) {
+		this.setReviews(reviews);
+	}
+
+	@XmlElement(name = "review")
+	@JsonProperty("reviews")
+	public List<Review> getReviews() {
+		return this.reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
 
 
 }

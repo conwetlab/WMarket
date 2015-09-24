@@ -15,7 +15,6 @@
     font-size: 12px;
     font-weight: 700;
     line-height: 20px;
-    color: rgb(255, 255, 255);
     white-space: nowrap;
     vertical-align: middle;
     border-radius: 4px;
@@ -23,5 +22,11 @@
 }
 
 .label-success {
+    color: rgb(255, 255, 255);
     background-color: rgb(90, 180, 90);
+}
+
+.label-group-stacked > .label {
+    display: block;
+    margin: 0 0 5px;
 }

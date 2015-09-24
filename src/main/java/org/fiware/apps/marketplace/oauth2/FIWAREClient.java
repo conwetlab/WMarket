@@ -33,6 +33,7 @@ package org.fiware.apps.marketplace.oauth2;
  */
 
 import java.util.Date;
+import java.util.Iterator;
 
 import org.fiware.apps.marketplace.dao.UserDao;
 import org.fiware.apps.marketplace.exceptions.UserNotFoundException;
@@ -49,6 +50,7 @@ import org.scribe.model.SignatureType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
@@ -57,9 +59,10 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 
 	private String scopeValue = "";
 	private String serverURL;
+	private String offeringProviderRole;
 
 	/**
-	 * Method to get the FIWARE IdM that is being in used
+	 * Method to get the FIWARE IdM proxy that is being in used
 	 * @return The FIWARE IdM that is being used to authenticate the users
 	 */
 	public String getServerURL() {
@@ -74,6 +77,22 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 		this.serverURL = serverURL;
 	}
 
+	/**
+	 * Method to get the role used to identify offerings providers
+	 * @return The role attached to offerings providers
+	 */
+	public String getOfferingProviderRole() {
+		return offeringProviderRole;
+	}
+
+	/**
+	 * Method to set the role that will be used to identify offerings providers
+	 * @param offeringProviderRole The role attached to offerings providers
+	 */
+	public void setOfferingProviderRole(String offeringProviderRole) {
+		this.offeringProviderRole = offeringProviderRole;
+	}
+
 	@Override
 	protected void internalInit() {
 		super.internalInit();
@@ -84,8 +103,8 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 						this.callbackUrl,
 						SignatureType.Header,
 						this.scopeValue, null),
-						this.connectTimeout, this.readTimeout, this.proxyHost,
-						this.proxyPort, false, true);
+				this.connectTimeout, this.readTimeout, this.proxyHost,
+				this.proxyPort, false, true);
 	}
 
 	@Override
@@ -96,48 +115,81 @@ public class FIWAREClient extends BaseOAuth20Client<FIWAREProfile>{
 	@Override
 	protected FIWAREProfile extractUserProfile(String body) {
 
-		FIWAREProfile profile = new FIWAREProfile();
-
-		if (body != null) {
-			
-			final JsonNode json = JsonHelper.getFirstNode(body);
-			profile.setId(JsonHelper.get(json, "id"));
-			for (final String attribute : new FIWAREAttributesDefinition().getPrincipalAttributes()) {
-				profile.addAttribute(attribute, JsonHelper.get(json, attribute));
-			}
-
-			// FIXME: By default, we are adding the default Role...
-			profile.addRole("ROLE_USER");
-
-			// User information should be stored in the local users table
-			User user;
-			String username = (String) profile.getUsername();
-			String email = (String) profile.getEmail();
-			String displayName = (String) profile.getDisplayName();
-
-			try {
-				// Modify the existing user
-				user = userDao.findByName(username);
-			} catch (UserNotFoundException e) {
-				// Create a new user
-				user = new User();
-				user.setCreatedAt(new Date());
-			}
-
-			// Set field values
-			user.setUserName(username);
-			user.setEmail(email);
-			user.setPassword("");	// Password cannot be NULL
-			user.setDisplayName(displayName);
-			user.setOauth2(true);
-
-			// Save the new user
-			userDao.save(user);
-
-			return profile;
-		} else {
+		// The method is not executed when the body is null
+		if (body == null) {
 			return null;
 		}
+
+		FIWAREProfile profile = new FIWAREProfile();
+		JsonNode json = JsonHelper.getFirstNode(body);
+		
+		// Profile ID is based on the ID given by the IdM
+		profile.setId(JsonHelper.get(json, "id"));
+		
+		// Set the rest of attributes
+		for (final String attribute : new FIWAREAttributesDefinition().getPrincipalAttributes()) {
+			profile.addAttribute(attribute, JsonHelper.get(json, attribute));
+		}
+
+		// FIXME: By default, we are adding the default Role...
+		profile.addRole("ROLE_USER");
+
+		// Get profile parameters
+		String username = (String) profile.getUsername();
+		String email = (String) profile.getEmail();
+		String displayName = (String) profile.getDisplayName();
+
+		// Get current User since some default values will be required
+		User user;
+
+		try {
+			// Modify the existing user
+			user = userDao.findByName(username);
+		} catch (UserNotFoundException e) {
+			// Create a new user
+			user = new User();
+			user.setCreatedAt(new Date());
+			user.setProvider(false);
+		}
+
+		// Determine if the user is a provider or not. Provider can only be updated when the user OAuth2 token
+		// is valid for the Marketplace application. Otherwise, the provider status will be kept (based on its
+		// previous value)
+		String requestAppId = (String) JsonHelper.get(json, "app_id");
+		ArrayNode roles = (ArrayNode) JsonHelper.get(json, "roles");
+		boolean provider = user.isProvider();
+
+		if (requestAppId.equals(key)) {
+
+			boolean providerRoleFound = false;
+			Iterator<JsonNode> iterator = roles.iterator();
+
+			// Look for the provider role
+			while (iterator.hasNext() && !providerRoleFound) {
+
+				JsonNode role = iterator.next();
+				if (role.get("name").asText().toLowerCase().equals(offeringProviderRole.toLowerCase())) {
+					providerRoleFound = true;
+				}
+			}
+
+			// Update provider status. The user will become provider if the provider role is found.
+			// Otherwise, the user will become consumer.
+			provider = providerRoleFound;
+		}
+
+		// Set field values
+		user.setUserName(username);
+		user.setDisplayName(displayName);
+		user.setEmail(email);
+		user.setPassword("");	// Password cannot be NULL
+		user.setOauth2(true);
+		user.setProvider(provider);
+
+		// Create/Update the user with the new details obtained from the OAuth2 Server
+		userDao.save(user);
+
+		return profile;
 	}
 
 	@Override

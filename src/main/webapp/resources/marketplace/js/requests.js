@@ -9,7 +9,8 @@
 
     var endpoints = {
         offerings: {
-            collection: "/offerings/",
+            collection: "/offering/",
+            bookmark_collection: "/offering/bookmark",
             store_collection: "/store/%(name)s/offering/",
             entry_bookmark: "/store/%(storeName)s/description/%(descriptionName)s/offering/%(offeringName)s/bookmark"
         },

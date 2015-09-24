@@ -41,13 +41,46 @@ import org.fiware.apps.marketplace.model.Offering;
 
 public interface CategoryBo {
 	
+	/**
+	 * Checks if a given category name exists
+	 * @param name The category name to be checked
+	 * @return true if the category name does not exist. false otherwise
+	 */
 	public boolean isNameAvailable(String name);
+	
+	/**
+	 * Returns a category based on its name
+	 * @param name The name of the category to be retrieved
+	 * @return The category with the given name
+	 * @throws CategoryNotFoundException If it does not exist a category with the given name
+	 */
 	public Category findByName(String name) throws CategoryNotFoundException;
+	
+	/**
+	 * Returns a sublist of the offerings contained in the category defined by the given category name
+	 * @param categoryName The name of the category whose offerings want to be retrieved
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @param orderBy The field that will be used to order the returned offerings
+	 * @param desc true to sort results in reverse order 
+	 * @return The list of offerings contained in the given category
+	 * @throws CategoryNotFoundException If a category with the given name does not exist
+	 */
 	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, int offset, int max, 
 			String orderBy, boolean desc) throws CategoryNotFoundException;
 	
+	/**
+	 * Returns a sublist of all the stored categories
+	 * @param offset The first category to be retrieved
+	 * @param max The max number of categories to be returned
+	 * @return A sublist of all the stored categories
+	 */
 	public List<Category> getCategoriesPage(int offset, int max);
+	
+	/**
+	 * Returns all the stored categories
+	 * @return All the stored categories
+	 */
 	public List<Category> getAllCategories();
 	
-
 }

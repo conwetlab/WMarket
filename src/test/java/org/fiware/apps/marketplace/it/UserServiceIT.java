@@ -375,8 +375,8 @@ public class UserServiceIT extends AbstractIT {
 		
 		// Update user with another user should fail
 		Response updateUserResponse = updateUser(userName2, password2, userName1, displayName1, email1, password1);
-		checkAPIError(updateUserResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "update user"), 
-				ErrorType.FORBIDDEN);
+		checkAPIError(updateUserResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "update user " 
+				+ userName1), ErrorType.FORBIDDEN);
 	}
 	
 	
@@ -440,8 +440,8 @@ public class UserServiceIT extends AbstractIT {
 		
 		// Delete user with another user should fail
 		Response deleteUserResponse = deleteUser(userName2, password2, userName1);
-		checkAPIError(deleteUserResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "delete user"), 
-				ErrorType.FORBIDDEN);
+		checkAPIError(deleteUserResponse, 403, null, String.format(MESSAGE_NOT_AUTHORIZED, "delete user " 
+				+ userName1), ErrorType.FORBIDDEN);
 		
 		// Check that the user already exists
 		checkUser(userName1, displayName1, null);

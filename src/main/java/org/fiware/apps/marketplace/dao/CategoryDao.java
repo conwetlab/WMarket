@@ -41,12 +41,52 @@ import org.fiware.apps.marketplace.model.Offering;
 
 public interface CategoryDao {
 	
+	/**
+	 * Deletes an existing category
+	 * @param category The category to be deleted
+	 */
+	public void delete(Category category);
+	
+	/**
+	 * Returns true if there is a category with the given name
+	 * @param name The name of the category to be checked
+	 * @return true if the database contains a category with the provided name. false otherwise
+	 */
 	public boolean isNameAvailable(String name);
+	
+	/**
+	 * Returns a category given its name
+	 * @param categoryName The name of the category
+	 * @return The category based on the provided name
+	 * @throws CategoryNotFoundException If a category with the given name does not exist
+	 */
 	public Category findByName(String categoryName) throws CategoryNotFoundException;
+	
+	/**
+	 * Returns a sublist of the offerings contained in the category defined by the given category name
+	 * @param categoryName The name of the category whose offerings want to be retrieved
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @param orderBy The field that will be used to order the returned offerings
+	 * @param desc true to sort results in reverse order 
+	 * @return The list of offerings contained in the given category
+	 * @throws CategoryNotFoundException If a category with the given name does not exist
+	 */
 	public List<Offering> getCategoryOfferingsSortedBy(String categoryName, int offset, int max, 
 			String orderBy, boolean desc) throws CategoryNotFoundException;
 	
+	/**
+	 * Returns a sublist of all the stored categories
+	 * @param offset The first category to be retrieved
+	 * @param max The max number of categories to be returned
+	 * @return A sublist of all the stored categories
+	 */
 	public List<Category> getCategoriesPage(int offset, int max);
+	
+	/**
+	 * Returns all the stored categories
+	 * @return All the stored categories
+	 */
 	public List<Category> getAllCategories();
 	
 	

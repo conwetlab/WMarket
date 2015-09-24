@@ -57,8 +57,6 @@ import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.Stores;
-import org.fiware.apps.marketplace.model.validators.StoreValidator;
-import org.fiware.apps.marketplace.security.auth.StoreAuth;
 import org.hibernate.HibernateException;
 import org.hibernate.QueryException;
 import org.slf4j.LoggerFactory;
@@ -72,8 +70,6 @@ public class StoreService {
 
 	// OBJECT ATTRIBUTES //
 	@Autowired private StoreBo storeBo;
-	@Autowired private StoreAuth storeAuth;
-	@Autowired private StoreValidator storeValidator;
 
 	// CLASS ATTRIBUTES //
 	private static final ErrorUtils ERROR_UTILS = new ErrorUtils(

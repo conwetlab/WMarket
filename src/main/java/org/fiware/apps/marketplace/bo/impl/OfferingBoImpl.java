@@ -32,6 +32,9 @@ package org.fiware.apps.marketplace.bo.impl;
  * #L%
  */
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.fiware.apps.marketplace.bo.DescriptionBo;
@@ -40,6 +43,7 @@ import org.fiware.apps.marketplace.bo.ReviewBo;
 import org.fiware.apps.marketplace.bo.StoreBo;
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.dao.OfferingDao;
+import org.fiware.apps.marketplace.dao.ViewedOfferingDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.OfferingNotFoundException;
@@ -52,6 +56,7 @@ import org.fiware.apps.marketplace.model.Offering;
 import org.fiware.apps.marketplace.model.Review;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
+import org.fiware.apps.marketplace.model.ViewedOffering;
 import org.fiware.apps.marketplace.security.auth.OfferingAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,8 +65,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("offeringBo")
 public class OfferingBoImpl implements OfferingBo {
 	
+	private static final int N_LAST_VIEWED = 10;
+	private static final int HOURS_BETWEEN_VIEWS = 24;
+	private static final int MAX_OFFERINGS_VIEWED_BY_OTHER_USERS = 20;
+	
 	@Autowired private OfferingAuth offeringAuth;
 	@Autowired private OfferingDao offeringDao;
+	@Autowired private ViewedOfferingDao viewedOfferingDao;
 	@Autowired private UserBo userBo;
 	@Autowired private StoreBo storeBo;
 	@Autowired private DescriptionBo descriptionBo;
@@ -117,6 +127,60 @@ public class OfferingBoImpl implements OfferingBo {
 		// Check rights and raise exception if user is not allowed to perform this action
 		if (!offeringAuth.canGet(offering)) {
 			throw new NotAuthorizedException("find offering");
+		}
+		
+		// Include the offering into the list of offerings viewed by the user
+		try {
+			User user = userBo.getCurrentUser();
+			List<ViewedOffering> lastViewedOfferings = viewedOfferingDao.getUserViewedOfferings(user.getUserName());
+						
+			boolean found = false;
+			Iterator<ViewedOffering> lastViewedOfferingsIt = lastViewedOfferings.iterator();
+			
+			while (lastViewedOfferingsIt.hasNext() && !found) {
+				ViewedOffering viewedOffering = lastViewedOfferingsIt.next();
+				
+				if (viewedOffering.getOffering().equals(offering)) {
+					
+					Date now = new Date();
+					Date lastViewDate = viewedOffering.getDate();
+					
+					long difference = now.getTime() - lastViewDate.getTime();
+					long millisecondsBetweenViews = HOURS_BETWEEN_VIEWS * 3600 * 1000;
+					
+					// Increase offerings views number only if the user has viewed this
+					// offering more than one day ago
+					if (difference > millisecondsBetweenViews) {
+						offering.setViews(offering.getViews() + 1);
+					}
+					
+					viewedOffering.setDate(new Date());
+					found = true;
+				}
+			}
+						
+			if (!found) {
+				ViewedOffering viewedOffering = new ViewedOffering();
+				viewedOffering.setUser(user);
+				viewedOffering.setOffering(offering);
+				viewedOffering.setDate(new Date());
+				
+				viewedOfferingDao.save(viewedOffering);
+			
+				// Only the last 10 viewed offerings are stored, so when there are
+				// more than 10 offerings stored, they should be removed.
+				// We have added one element to the list by calling "save", for 
+				// this reason we subtract 1 in this loop
+				for (int i = N_LAST_VIEWED - 1; i < lastViewedOfferings.size(); i++) {
+					viewedOfferingDao.delete(lastViewedOfferings.get(i));
+				}
+				
+				// Increase offerings views number
+				offering.setViews(offering.getViews() + 1);
+			}
+			
+		} catch (UserNotFoundException e) {
+			// Not supposed to happen
 		}
 		
 		return offering;
@@ -260,11 +324,67 @@ public class OfferingBoImpl implements OfferingBo {
 		
 		try {
 			User user = userBo.getCurrentUser();
-			return offeringDao.getUserBookmarkedOfferings(user.getUserName(), offset, max, orderBy, desc);
+			return offeringDao.getBookmarkedOfferingsPage(user.getUserName(), offset, max, orderBy, desc);
 		} catch (UserNotFoundException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@Override
+	@Transactional
+	public List<Offering> getLastViewedOfferingsPage(int offset, int max) throws NotAuthorizedException {
 		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canListLastViewed()) {
+			throw new NotAuthorizedException("list viewed offerings");
+		}
+		
+		try {
+			
+			List<Offering> lastViewed = new ArrayList<>();
+			List<ViewedOffering> orderedViewedOfferings = viewedOfferingDao
+					.getUserViewedOfferingsPage(userBo.getCurrentUser().getUserName(), offset, max);
+			
+			for (ViewedOffering viewedOffering: orderedViewedOfferings) {
+				lastViewed.add(viewedOffering.getOffering());
+			}
+			
+			return lastViewed;
+			
+		} catch (UserNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	@Transactional
+	public List<Offering> getOfferingsViewedByOtherUsers(int max) throws NotAuthorizedException {
+		
+		if (max > MAX_OFFERINGS_VIEWED_BY_OTHER_USERS) {
+			throw new IllegalArgumentException("max cannot be higher than " + 
+					MAX_OFFERINGS_VIEWED_BY_OTHER_USERS + ".");
+		}
+		
+		// Check rights and raise exception if user is not allowed to perform this action
+		if (!offeringAuth.canListLastViewedByOthers()) {
+			throw new NotAuthorizedException("list offerings viewed by other users");
+		}
+		
+		try {
+			
+			List<Offering> lastViewed = new ArrayList<>();
+			List<ViewedOffering> orderedViewedOfferings = viewedOfferingDao
+					.getOfferingsViewedByOtherUsers(userBo.getCurrentUser().getUserName(), max);
+			
+			for (ViewedOffering viewedOffering: orderedViewedOfferings) {
+				lastViewed.add(viewedOffering.getOffering());
+			}
+			
+			return lastViewed;
+			
+		} catch (UserNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

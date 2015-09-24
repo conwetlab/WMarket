@@ -18,8 +18,8 @@ body {
     margin: 0px;
     padding: 57px 0px 0px;
     font: normal 400 14px/20px Helvetica, Arial, sans-serif;
-    color: rgb(50, 50, 50);
-    background-color: rgb(240, 240, 245);
+    color: rgb(80, 80, 80);
+    background-color: rgb(245, 245, 250);
 }
 
 label, p {
@@ -28,15 +28,31 @@ label, p {
     margin: 0px 0px 10px;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
+    position: relative;
     display: block;
-    color: rgb(70, 70, 70);
-    margin: 10px 0px;
+    margin: 0 0 10px;
+    font-weight: 400;
+}
+
+h1 {
+    font-size: 36px;
+    line-height: 42px;
 }
 
 h2 {
+    font-size: 30px;
+    line-height: 36px;
+}
+
+h3 {
     font-size: 24px;
-    line-height: 24px;
+    line-height: 32px;
+}
+
+h4 {
+    font-size: 16px;
+    line-height: 19px;
 }
 
 /***************************************************************************************
@@ -46,9 +62,10 @@ h2 {
 a {
     cursor: pointer;
     color: rgb(100, 150, 250);
-    font: normal 400 14px/20px Helvetica, Arial, sans-serif;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
     text-decoration: none;
-    background-color: transparent;
 }
 
 a:hover {

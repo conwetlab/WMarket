@@ -4,21 +4,16 @@
 
 <c:forEach var="description" items="${ descriptions }">
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <span class="image-thumbnail">
-      <span class="image image-circle image-default-darker">
+  <div class="panel-heading text-center">
+    <span class="image-thumbnail thumbnail-circle">
+      <span class="image image-avatar image-default-darker">
         <span class="fa fa-archive fa-inverse"></span>
       </span>
     </span>
+    <h4><a class="panel-title" href="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }">${ description.displayName }</a></h4>
   </div>
   <div class="panel-body">
     <div class="dl-group">
-      <dl>
-        <dt>Name</dt>
-        <dd>
-          <a href="${ pageContext.request.contextPath }/stores/${ description.store.name }/descriptions/${ description.name }">${ description.displayName }</a>
-        </dd>
-      </dl>
       <dl>
         <dt>Store</dt>
         <dd>
@@ -26,30 +21,27 @@
         </dd>
       </dl>
       <dl>
-        <dt>URL to Linked USDL file</dt>
-        <dd>${ description.url }</dd>
-      </dl>
-      <dl>
-        <dt>Upload date</dt>
-        <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy" value="${ description.createdAt }" /></dd>
+        <dt>Registered at</dt>
+        <dd class="date"><fmt:formatDate pattern="MMM dd, yyyy HH:mm:ss" value="${ description.createdAt }" /></dd>
       </dl>
     </div>
-    <p class="text-bold">Offerings</p>
+    <p class="text-bold">Included offerings</p>
     <div class="description-offerings">
       <div class="row-sliding" style="width: ${ fn:length(description.offerings) * 210 }px;">
       <c:forEach var="offering" items="${ description.offerings }">
 
-      <a class="offering-item" href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }">
-        <span class="offering-heading">
-          <span class="image-thumbnail image-thumbnail-sm">
-            <img class="image image-rounded" src="${ offering.imageUrl }" />
-          </span>
-        </span>
-        <span class="offering-body">
-          <span class="offering-name">${ offering.displayName }</span>
-          <span class="offering-version">${ offering.version }</span>
-        </span>
-      </a>
+        <div class="panel panel-default-lighter offering-item">
+          <div class="panel-heading text-center">
+            <a href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }" class="image-thumbnail thumbnail-bordered">
+              <img class="image offering-image" src="${ offering.imageUrl }" />
+              <span class="rating-value rating-value-lighter"><span class="fa fa-star"></span> ${ offering.averageScore }</span>
+            </a>
+            <h4><a href="${ pageContext.request.contextPath }/offerings/${ description.store.name }/${ description.name }/${ offering.name }" class="panel-title text-truncate">${ offering.displayName }</a></h4>
+          </div>
+          <div class="panel-body">
+            <div class="offering-description">${ offering.description }</div>
+          </div>
+        </div>
 
       </c:forEach>
       </div>

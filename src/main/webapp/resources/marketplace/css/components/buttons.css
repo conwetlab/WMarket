@@ -21,6 +21,9 @@ button {
     border: solid 1px transparent;
     border-radius: 4px;
     vertical-align: middle;
+    -webkit-user-select: none; /* Chrome all / Safari all */
+       -moz-user-select: none; /* Firefox all */
+        -ms-user-select: none; /* IE 10+ */
 }
 
 .btn:focus,
@@ -44,6 +47,10 @@ button {
     white-space: nowrap;
     overflow: hidden;
     vertical-align: bottom;
+}
+
+.btn-text-not-truncated {
+	max-width: initial;
 }
 
 .btn-file > .btn-icon + .btn-text {
@@ -165,4 +172,14 @@ button {
     pointer-events: none;
     cursor: not-allowed;
     opacity: 0.7;
+}
+
+
+.btn-link {
+    cursor: pointer;
+    color: rgb(100, 100, 100);
+}
+
+.btn-link:hover {
+    color: rgb(50, 50, 50);
 }

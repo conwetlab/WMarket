@@ -51,7 +51,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 	public void save(Store store) {
 		getSession().saveOrUpdate(store);	
 	}
-	
+
 	@Override
 	public void update(Store store) {
 		getSession().update(store);
@@ -67,53 +67,53 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 		List<?> list = getSession()
 				.createQuery("from Store where name = :name")
 				.setParameter("name", name)
-				.list();	
-		
+				.list();
+
 		if (list.isEmpty()){
 			throw new StoreNotFoundException("Store " + name + " not found");
 		} else {
 			return (Store) list.get(0);
 		}
-			
+
 	}
-	
-    @Override
-    public boolean isNameAvailable(String name) {
+
+	@Override
+	public boolean isNameAvailable(String name) {
 		List<?> list = getSession()
 				.createQuery("from Store where name = :name")
 				.setParameter("name", name)
 				.list();
-		
+
 		return list.isEmpty();
-    }
-    
-    @Override
-    public boolean isDisplayNameAvailable(String displayName) {
+	}
+
+	@Override
+	public boolean isDisplayNameAvailable(String displayName) {
 		List<?> list = getSession()
 				.createQuery("from Store where displayName = :displayName")
 				.setParameter("displayName", displayName)
 				.list();
-		
+
 		return list.isEmpty();
-    }
-    
+	}
+
 	@Override
 	public boolean isURLAvailable(String url) {
 		List<?> list = getSession()
 				.createQuery("from Store where url = :url")
 				.setParameter("url", url)
 				.list();
-		
+
 		return list.isEmpty();
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Store> getStoresPage(int offset, int max, String orderBy, boolean desc) {
-		
+
 		Order order = desc ? Order.desc(orderBy) : Order.asc(orderBy);
-		
+
 		return getSession()
 				.createCriteria(Store.class)
 				.setFirstResult(offset)
@@ -123,7 +123,7 @@ public class StoreDaoImpl extends MarketplaceHibernateDao implements StoreDao {
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)		// Avoid duplicates
 				.list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List <Store> getAllStores() {

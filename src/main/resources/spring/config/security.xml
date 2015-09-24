@@ -6,7 +6,7 @@
                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
                            http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
-	<http auto-config="true">
+	<http auto-config="true" entry-point-ref="restAwareLoginUrlAuthenticationEntryPoint">
 		<!-- Login -->
 		<form-login login-page="/login" username-parameter="username"
 			password-parameter="password" default-target-url="/"
@@ -32,6 +32,10 @@
 	</http>
 
 	<beans:bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<beans:bean id="restAwareLoginUrlAuthenticationEntryPoint" class="org.fiware.apps.marketplace.security.entryPoints.RESTAwareLoginUrlAuthenticationEntryPoint">
+		<beans:constructor-arg value="/login" />
+	</beans:bean>
 
 	<authentication-manager>
 		<authentication-provider user-service-ref="userManagementService">

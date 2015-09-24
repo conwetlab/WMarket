@@ -5,26 +5,26 @@
 
 <div class="panel panel-default">
   <div class="panel-heading text-center">
-    <span class="image-thumbnail image-thumbnail-lg">
+    <span class="image-thumbnail thumbnail-bordered thumbnail-lg">
       <c:choose>
       <c:when test="${ not empty store.imagePath }">
 
-        <img class="image image-circle" src="${ pageContext.request.contextPath }/${ store.imagePath }">
+      <img class="image" src="${ pageContext.request.contextPath }/${ store.imagePath }">
 
       </c:when>
       <c:otherwise>
 
-        <span class="image image-circle image-default-darker">
-          <span class="fa fa-building fa-inverse"></span>
-        </span>
+      <span class="image image-avatar image-default-darker">
+        <span class="fa fa-building fa-inverse"></span>
+      </span>
 
       </c:otherwise>
       </c:choose>
-      <span class="rating-value rating-value-lg rating-overall">
+      <span class="rating-value rating-value-lighter rating-overall">
         <span class="fa fa-star">${ store.averageScore }</span>
       </span>
     </span>
-    <span class="panel-title store-displayname">${ store.displayName }</span>
+    <h4 class="panel-title store-displayname">${ store.displayName }</h4>
     <t:insertTemplate template="/WEB-INF/views/core/rating.jsp">
       <t:putAttribute name="selector" value=".modal-rating" />
     </t:insertTemplate>
@@ -48,21 +48,23 @@
         </a>
       </div><!-- /.tab -->
 
+      <c:if test="${ user.provider }">
       <div
-        <c:choose>
-          <c:when test="${ viewName == 'descriptionList' }">
-            class="tab active"
-          </c:when>
-          <c:otherwise>
-            class="tab"
-          </c:otherwise>
-        </c:choose>
-      >
-        <a href="${ pageContext.request.contextPath }/stores/${ store.name }/descriptions">
-          <span class="fa fa-archive"></span>
-          <span class="hidden-sm">My descriptions</span>
-        </a>
-      </div><!-- /.tab -->
+          <c:choose>
+            <c:when test="${ viewName == 'descriptionList' }">
+              class="tab active"
+            </c:when>
+            <c:otherwise>
+              class="tab"
+            </c:otherwise>
+          </c:choose>
+        >
+          <a href="${ pageContext.request.contextPath }/stores/${ store.name }/descriptions">
+            <span class="fa fa-archive"></span>
+            <span class="hidden-sm">My descriptions</span>
+          </a>
+        </div><!-- /.tab -->
+      </c:if>
 
       <div
         <c:choose>
@@ -76,7 +78,7 @@
       >
         <a href="${ pageContext.request.contextPath }/stores/${ store.name }/about">
           <span class="fa fa-newspaper-o"></span>
-          <span class="hidden-sm">About & reviews</span>
+          <span class="hidden-sm">About &amp; reviews</span>
         </a>
       </div><!-- /.tab -->
 

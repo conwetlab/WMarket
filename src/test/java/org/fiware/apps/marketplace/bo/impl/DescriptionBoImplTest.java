@@ -36,21 +36,29 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.fiware.apps.marketplace.bo.UserBo;
 import org.fiware.apps.marketplace.bo.impl.DescriptionBoImpl;
+import org.fiware.apps.marketplace.dao.CategoryDao;
 import org.fiware.apps.marketplace.dao.DescriptionDao;
+import org.fiware.apps.marketplace.dao.ServiceDao;
 import org.fiware.apps.marketplace.dao.StoreDao;
 import org.fiware.apps.marketplace.exceptions.DescriptionNotFoundException;
 import org.fiware.apps.marketplace.exceptions.NotAuthorizedException;
 import org.fiware.apps.marketplace.exceptions.StoreNotFoundException;
 import org.fiware.apps.marketplace.exceptions.ValidationException;
 import org.fiware.apps.marketplace.helpers.OfferingResolver;
+import org.fiware.apps.marketplace.model.Category;
 import org.fiware.apps.marketplace.model.Description;
 import org.fiware.apps.marketplace.model.Offering;
+import org.fiware.apps.marketplace.model.PricePlan;
+import org.fiware.apps.marketplace.model.Service;
 import org.fiware.apps.marketplace.model.Store;
 import org.fiware.apps.marketplace.model.User;
 import org.fiware.apps.marketplace.model.validators.DescriptionValidator;
@@ -63,6 +71,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.hp.hpl.jena.shared.JenaException;
 
@@ -76,6 +86,8 @@ public class DescriptionBoImplTest {
 	@Mock private OfferingResolver offeringResolverMock;
 	@Mock private RdfIndexer rdfIndexerMock;
 	@Mock private SessionFactory sessionFactory;
+	@Mock private CategoryDao categoryDao;
+	@Mock private ServiceDao serviceDao;
 	@InjectMocks private DescriptionBoImpl descriptionBo;
 
 	private static final String STORE_NAME = "store";
@@ -117,8 +129,27 @@ public class DescriptionBoImplTest {
 		offering.setDescription(description);
 		offering.setImageUrl(imageUrl);
 		offering.setVersion(version);
+		offering.setCategories(new HashSet<Category>());
+		offering.setServices(new HashSet<Service>());
+		offering.setPricePlans(new HashSet<PricePlan>());
 
 		return offering;
+	}
+	
+	private Category generateCategory(String categoryName) {
+		Category category = new Category();
+		category.setName(categoryName);
+		category.setServices(new HashSet<Service>());
+		
+		return category;
+	}
+	
+	private Service generateService(String uri) {
+		Service service = new Service();
+		service.setUri(uri);
+		service.setCategories(new HashSet<Category>());
+		
+		return service;
 	}
 
 	
@@ -229,7 +260,7 @@ public class DescriptionBoImplTest {
 				// RdfIndexer has been called
 				try {
 					verify(rdfIndexerMock).indexOrUpdateService(description);
-				} catch (MalformedURLException ex) {
+				} catch (IOException ex) {
 					// It should not happen
 				}
 				
@@ -408,6 +439,9 @@ public class DescriptionBoImplTest {
 		assertThat(offering1.getName()).isEqualTo(offering2.getName());
 		assertThat(offering1.getImageUrl()).isEqualTo(offering2.getImageUrl());
 		assertThat(offering1.getVersion()).isEqualTo(offering2.getVersion());
+		assertThat(offering1.getServices()).isEqualTo(offering2.getServices());
+		assertThat(offering1.getPricePlans()).isEqualTo(offering2.getPricePlans());
+		assertThat(offering1.getCategories()).isEqualTo(offering2.getCategories());
 
 	}
 
@@ -477,6 +511,7 @@ public class DescriptionBoImplTest {
 		testUpdateDescriptionURL(storedOfferingURI, newOfferingURI);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testUpdateComplexOffering() throws Exception {
 
@@ -486,37 +521,92 @@ public class DescriptionBoImplTest {
 		// Create the description stored in the Database
 		Description storedDescription = generateDescription(new ArrayList<Offering>());
 
+		// Create the offering that will be included into the description
 		Offering storedOffering = generateOffering(repeatedOfferingURI, storedDescription, "offering-1", 
 				"Offering 1", "Example Description", "http://marketplace.com/link_to_img.jpg", "1.0");
-		storedOffering.setId(1); 	// Stored offerings contain an ID
+		storedOffering.setId(1); 	// Stored offerings contains an ID
+		
+		// Add two categories... One should be deleted because it won't be included in the new offerings
+		final Category catA = generateCategory("CATEGORY_A");
+		final Category catB = generateCategory("CATEGORY_B");
+		Set<Category> categoriesOldOffering = new HashSet<Category>();
+		categoriesOldOffering.add(catA);
+		categoriesOldOffering.add(catB);
+		storedOffering.setCategories(categoriesOldOffering);
+		
+		// Add two services... One should be deleted because it won't be included in the new offerings
+		final Service serA = generateService("uri1");
+		final Service serB = generateService("uri2");
+		Set<Service> servicesOldOffering = new HashSet<Service>();
+		servicesOldOffering.add(serA);
+		servicesOldOffering.add(serB);
+		storedOffering.setServices(servicesOldOffering);
 
+		// Add the offering to the description
 		storedDescription.addOffering(storedOffering);
 
 		// New description
 		Description updatedDescription = generateDescription(new ArrayList<Offering>());
 
 		// Offerings contained in the new URL
-		Offering newOffering1 = generateOffering(repeatedOfferingURI, storedDescription, "cool-offering", 
+		Offering repeatedOffering = generateOffering(repeatedOfferingURI, storedDescription, "cool-offering", 
 				"Cool Offering", "New Description", "http://marketplace.com/link_to_new_img.jpg", "1.2");
-		Offering newOffering2 = generateOffering(nonRepeatedOfferingURI, storedDescription, "my-new-offering", 
-				"My New Offering", "New Description 2", "http://marketplace.com/link_to_new_img2.jpg", "1.1");		
+		Offering newOffering = generateOffering(nonRepeatedOfferingURI, storedDescription, "my-new-offering", 
+				"My New Offering", "New Description 2", "http://marketplace.com/link_to_new_img2.jpg", "1.1");	
+		
+		// Set one price plan for the repeated offering
+		PricePlan pricePlan = new PricePlan();
+		pricePlan.setOffering(repeatedOffering);
+		Set<PricePlan> pricePlans = new HashSet<>();
+		pricePlans.add(pricePlan);
+		repeatedOffering.setPricePlans(pricePlans);
+		
+		// Include serA in one offering, so setA should not be deleted and serA should be deleted.
+		Set<Service> servicesRepeatedOffering = new HashSet<>();
+		servicesRepeatedOffering.add(serA);
+		repeatedOffering.setServices(servicesRepeatedOffering);
+		
+		// Include catB in one offering, so catA should be deleted and catB should not be deleted.
+		Set<Category> categoriesNewOffering = new HashSet<>();
+		categoriesNewOffering.add(catB);
+		newOffering.setCategories(categoriesNewOffering);
 
 		List<Offering> newOfferings = new ArrayList<Offering>();
-		newOfferings.add(newOffering1);
-		newOfferings.add(newOffering2);
+		newOfferings.add(repeatedOffering);
+		newOfferings.add(newOffering);
 
 		// Configure the mocks
 		doReturn(storedDescription).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
 		when(descriptionAuthMock.canUpdate(storedDescription)).thenReturn(true);	// User can update
 		when(offeringResolverMock.resolveOfferingsFromServiceDescription(storedDescription))
 				.thenReturn(newOfferings);
+		
+		Session session = mock(Session.class);
+		doAnswer(new Answer() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				
+				Set<Offering> noOfferings = mock(Set.class);
+				when(noOfferings.size()).thenReturn(0);
+				Set<Offering> oneOffering = mock(Set.class);
+				when(oneOffering.size()).thenReturn(1);
+				
+				catA.setOfferings(noOfferings);
+				catB.setOfferings(oneOffering);
+				serA.setOfferings(oneOffering);
+				serB.setOfferings(noOfferings);
+				
+				return null;
+			}
+			
+		}).when(session).flush();
+		when(sessionFactory.getCurrentSession()).thenReturn(session);
 
 		// Call the method
 		descriptionBo.update(STORE_NAME, NAME, updatedDescription);
 
-		// Verify that the database has been updated
-		verify(descriptionDaoMock).update(storedDescription);
-		
 		// Verify that the database has been updated
 		verify(descriptionDaoMock).update(storedDescription);
 
@@ -528,11 +618,25 @@ public class DescriptionBoImplTest {
 
 		// Check first offering (it previously exist in the system so they're the same instance)
 		Offering updatedOffering = storedDescription.getOfferings().get(0);
-		compareOfferings(updatedOffering, newOffering1);
+		compareOfferings(updatedOffering, repeatedOffering);
+		assertThat(updatedOffering).isSameAs(storedOffering);
+		assertThat(updatedOffering).isNotSameAs(repeatedOffering);
+		
+		// Check that price plans offering has been updated for this offering
+		for (PricePlan storedPricePlan: updatedOffering.getPricePlans()) {
+			assertThat(storedPricePlan.getOffering()).isSameAs(storedOffering);
+			assertThat(storedPricePlan.getOffering()).isNotSameAs(repeatedOffering);
+		}
 
 		// Check second offering (it does not exist in the system so they are not the same instance)
 		updatedOffering = storedDescription.getOfferings().get(1);
-		compareOfferings(updatedOffering, newOffering2);
+		compareOfferings(updatedOffering, newOffering);
+		
+		// Check that catA has been removed while catB has not.
+		verify(categoryDao).delete(catA);
+		verify(categoryDao, never()).delete(catB);
+		verify(serviceDao, never()).delete(serA);
+		verify(serviceDao).delete(serB);
 	}
 	
 	private void testUpdateRdfError(Exception indexerException) {
@@ -556,7 +660,7 @@ public class DescriptionBoImplTest {
 						
 			try {
 				verify(rdfIndexerMock).indexOrUpdateService(storedDescription);
-			} catch (MalformedURLException e) {
+			} catch (IOException e) {
 				// Not expected
 			}
 			
@@ -651,26 +755,77 @@ public class DescriptionBoImplTest {
 		
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testDelete() throws Exception {
 		
-		Description description = mock(Description.class);
+		Description description = new Description();
 		Store store = mock(Store.class);
+		Offering offering = generateOffering("uri1", description, "offering1", "Offering 1", "DESC", "uri2", "1.0");
 		
-		// Configure mock
+		// Add two categories... One should be deleted because it won't be included in other offerings
+		final Category catA = generateCategory("CATEGORY_A");
+		final Category catB = generateCategory("CATEGORY_B");
+		Set<Category> categoriesOldOffering = new HashSet<Category>();
+		categoriesOldOffering.add(catA);
+		categoriesOldOffering.add(catB);
+		offering.setCategories(categoriesOldOffering);
+		
+		// Add two services... One should be deleted because it won't be included in other offerings
+		final Service serA = generateService("uri1");
+		final Service serB = generateService("uri2");
+		Set<Service> servicesOldOffering = new HashSet<Service>();
+		servicesOldOffering.add(serA);
+		servicesOldOffering.add(serB);
+		offering.setServices(servicesOldOffering);
+
+		// Add the offering to the description
+		description.addOffering(offering);
+		
+		// Configure mocks
 		String storeName = "store";
 		String descriptionName = "description";
 		doReturn(store).when(storeDaoMock).findByName(storeName);
-		doReturn(description).when(descriptionDaoMock).findByNameAndStore(storeName, descriptionName);
+		when(descriptionDaoMock.findByNameAndStore(storeName, descriptionName)).thenReturn(description);
 		when(descriptionAuthMock.canGet(description)).thenReturn(true);
 		when(descriptionAuthMock.canDelete(description)).thenReturn(true);
+		
+		Session session = mock(Session.class);
+		doAnswer(new Answer() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				
+				Set<Offering> noOfferings = mock(Set.class);
+				when(noOfferings.size()).thenReturn(0);
+				Set<Offering> oneOffering = mock(Set.class);
+				when(oneOffering.size()).thenReturn(1);
+				
+				catA.setOfferings(noOfferings);
+				catB.setOfferings(oneOffering);
+				serA.setOfferings(oneOffering);
+				serB.setOfferings(noOfferings);
+				
+				return null;
+			}
+			
+		}).when(session).flush();
+		when(sessionFactory.getCurrentSession()).thenReturn(session);
 		
 		// Call the method
 		descriptionBo.delete(storeName, descriptionName);
 		
-		// Verify that the method has been called
+		// Verify that the description has been removed from the description
 		verify(store).removeDescription(description);
 		verify(storeDaoMock).update(store);
+		
+		// Verify that unused categories and services has been removed
+		verify(categoryDao).delete(catA);
+		verify(categoryDao, never()).delete(catB);
+		verify(serviceDao, never()).delete(serA);
+		verify(serviceDao).delete(serB);
+
 	}
 	
 	

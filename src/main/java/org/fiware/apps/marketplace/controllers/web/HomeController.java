@@ -55,51 +55,51 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("/")
 public class HomeController extends AbstractController {
 
-    private static Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    public Response homeView(
-            @Context HttpServletRequest request) {
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public Response homeView(
+			@Context HttpServletRequest request) {
 
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
-        User user;
+		ModelAndView view;
+		ModelMap model = new ModelMap();
+		ResponseBuilder builder;
+		User user;
 
-        try {
-            user = getCurrentUser();
+		try {
+			user = getCurrentUser();
 
-            model.addAttribute("user", user);
-            model.addAttribute("title", "Catalogue - " + getContextName());
-            model.addAttribute("viewName", "GroupByCategory");
+			model.addAttribute("user", user);
+			model.addAttribute("title", "Catalogue - " + getContextName());
+			model.addAttribute("viewName", "GroupByCategory");
 
-            addFlashMessage(request, model);
+			addFlashMessage(request, model);
 
-            view = new ModelAndView("offering.list", model);
-            builder = Response.ok();
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
+			view = new ModelAndView("offering.list", model);
+			builder = Response.ok();
+		} catch (UserNotFoundException e) {
+			logger.warn("User not found", e);
 
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError();
-        }
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError();
+		}
 
-        return builder.entity(view).build();
-    }
+		return builder.entity(view).build();
+	}
 
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("login")
-    public Response loginView(
-            @Context HttpServletRequest request) {
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	@Path("login")
+	public Response loginView(
+			@Context HttpServletRequest request) {
 
-        ModelMap model = new ModelMap();
+		ModelMap model = new ModelMap();
 
-        model.addAttribute("title", "Sign In - " + getContextName());
-        this.addFlashMessage(request, model);
+		model.addAttribute("title", "Sign In - " + getContextName());
+		this.addFlashMessage(request, model);
 
-        return Response.ok().entity(new ModelAndView("core.login", model)).build();
-    }
+		return Response.ok().entity(new ModelAndView("core.login", model)).build();
+	}
 
 }

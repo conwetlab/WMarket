@@ -42,31 +42,110 @@ import org.fiware.apps.marketplace.model.Offering;
 
 public interface OfferingDao {
 	
-	// Save, update & delete
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// CRUD ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Creates a new offering in the data base
+	 * @param offering The offering to be created
+	 */
 	public void save(Offering offering);
+	
+	/**
+	 * Updates an existing offering
+	 * @param offering The updated offering
+	 */
 	public void update(Offering offering);
+	
+	/**
+	 * Deletes an existing offering
+	 * @param offering The offering to be deleted
+	 */
 	public void delete(Offering offering);
 	
-	// Find
+	/**
+	 * Returns an offering based on its name and the description that contains it (a description is defined by
+	 * its name and the store that contains it)
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description that contains the offering
+	 * @param offeringName The name of the offering to be retrieved
+	 * @return An offering with the given name contained in the provided description (a description is defined
+	 * by its name and the store that contains it)
+	 * @throws StoreNotFoundException It it does not exist a store with the provided name
+	 * @throws DescriptionNotFoundException If it does not exist a description in the given store with the 
+	 * provided name
+	 * @throws OfferingNotFoundException If it does not exist an offering in the given description with the 
+	 * provided name
+	 */
 	public Offering findByNameStoreAndDescription(String storeName, String descriptionName, 
 			String offeringName) throws StoreNotFoundException, DescriptionNotFoundException, 
 			OfferingNotFoundException;
 	
-	// Get offerings
+	
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// LIST ///////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+	
 	// public List<Offering> getAllOfferings();
+	
+	/**
+	 * Returns a sublist of all the offerings stored in the database 
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @param orderBy The field that will be used to order the returned offerings
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the offerings stored in the database
+	 */
 	public List<Offering> getOfferingsPage(int offset, int max, String orderBy, boolean desc);
+	
 	// public List<Offering> getAllStoreOfferings(String storeName) 
 	//	 	throws StoreNotFoundException;
+	
+	/**
+	 * Returns a sublist of all the offerings contained in a given store
+	 * @param storeName The name of the store that contains the offerings to be retrieved
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @param orderBy The field that will be used to order the returned offerings
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the offerings contained in the given store
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 */
 	public List<Offering> getStoreOfferingsPage(String storeName, int offset, int max, String orderBy, boolean desc) 
 			throws StoreNotFoundException;
+	
 	// public List<Offering> getAllDescriptionOfferings(String storeName, String descriptionName)
 	// 		throws StoreNotFoundException, DescriptionNotFoundException;
+	
+	/**
+	 * Returns a sublist of all the offerings contained in a given description
+	 * @param storeName The name of the store that contains the description
+	 * @param descriptionName The name of the description whose offerings want to be retrieved
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @param orderBy The field that will be used to order the returned offerings
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the offerings contained in the given description 
+	 * @throws StoreNotFoundException If it does not exist a store with the given name
+	 * @throws DescriptionNotFoundException If it does not exist a description in the given store with the 
+	 * provided name
+	 */
 	public List<Offering> getDescriptionOfferingsPage(String storeName, String descriptionName, 
 			int offset, int max, String orderBy, boolean desc) throws StoreNotFoundException, 
 			DescriptionNotFoundException;
 	
-	public List<Offering> getUserBookmarkedOfferings(String userName, int offset, int max, String orderBy, 
+	/**
+	 * Returns a sublist of all the offerings bookmarked by a given user
+	 * @param userName The name of the user which bookmarked the offerings
+	 * @param offset The first offering to be retrieved
+	 * @param max The max number of offerings to be returned
+	 * @param orderBy The field that will be used to order the returned offerings
+	 * @param desc true to sort results in reverse order
+	 * @return A sublist of all the offerings bookmarked by the given user
+	 * @throws UserNotFoundException If it does not exist a user with the given user name
+	 */
+	public List<Offering> getBookmarkedOfferingsPage(String userName, int offset, int max, String orderBy, 
 			boolean desc) throws UserNotFoundException;
-	
 
 }

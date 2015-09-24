@@ -5,7 +5,7 @@
 	<groupId>org.fiware.apps.marketplace</groupId>
 	<artifactId>WMarket</artifactId>
 	<packaging>war</packaging>
-	<version>4.3.3-SNAPSHOT</version>
+	<version>4.4.3-SNAPSHOT</version>
 	<name>WMarket</name>
 	<url>http://maven.apache.org</url>
 

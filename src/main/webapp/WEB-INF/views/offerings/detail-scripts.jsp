@@ -15,4 +15,4 @@
 </script>
 </c:if>
 <script src="${ pageContext.request.contextPath }/resources/marketplace/js/views/offerings/detail.js"></script>
-<script src="${ pageContext.request.contextPath }/resources/marketplace/js/plugins/ratings.js"></script>
+<script src="${ pageContext.request.contextPath }/resources/marketplace/js/plugins/reviews.js"></script>

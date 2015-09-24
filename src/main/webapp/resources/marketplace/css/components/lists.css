@@ -100,11 +100,10 @@
 }
 
 .list-group .list-group-heading {
-    display: block;
     margin-bottom: 5px;
     padding: 5px;
-    font: normal 700 14px/20px Helvetica, Arial, sans-serif;
     color: rgb(120, 160, 170);
+    font-weight: 700;
     border-bottom: solid 1px rgb(215, 225, 225);
 }
 

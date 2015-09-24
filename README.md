@@ -1,689 +1,105 @@
-WMarket
-=======
-WMarket is the reference implementation of the FIWARE Marketplace Generic Enabler. The Marketplace provides functionality necessary for bringing together offering and demand for making business. These functions include basic services for registering business entities, publishing and retrieving offerings and demands, search and discover offerings according to specific consumer requirements as well as lateral functions like review, rating and recommendation. Besides the core functions, the Marketplace may offer value because of its "knowledge" about the market in terms of market intelligence services, pricing support, advertising, information subscription and more.
+# WMarket
 
-This project is part of [FIWARE](http://www.fiware.org). Check it out in the [Catalogue](http://catalogue.fiware.org/enablers/marketplace-wmarket)!
+ [![Build Status](https://build.conwet.fi.upm.es/jenkins/buildStatus/icon?job=WMarket)](https://build.conwet.fi.upm.es/jenkins/job/WMarket/)
+ 
+ * [Introduction](#introduction)
+ * [GEi overall description](#gei-overall-description)
+ * [Build and Install](#build-and-install)
+ * [API Overview](#api-overview)
+ * [API Reference](#api-reference)
+ * [Testing](#testing)
+ * [Advanced Topics](#advanced-topics)
 
-Prerequisites
--------------
-For running WMarket in your system, you need to install the following requisites. You have to install them according to your system:
-* Tomcat 8
-* MySQL
-* Java 8
-* Maven
 
-Installation
-------------
-You can install WMarket by following these steps:
+## Introduction
 
-1. Install the prerequisites
-2. Create a database for the MarketPlace. By default, WMarket uses the database `marketplace`. 
-3. Update `src/main/resources/properties/database.properties` to set the preferences of your database.
-4. Update `src/main/resources/properties/marketplace.properties` according to your preferences.
-5. Configure the security
- 1. If you want to use the FIWARE IdM to manage the users, ensure that the file `securityOAuth2.xml` is imported in the beans location file (`src/main/resources/spring/config/BeansLocation.xml`) and modify `src/main/resources/properties/marketplace.properties` to set your OAuth2 configuration
- 2. If you want to use local authorization, ensure that the file `security.xml` is imported in the beans location file (`src/main/resources/spring/config/BeansLocation.xml`).
-6. Run `mvn package` to generate the WAR file.
-7. Copy the generated WAR file into the `webapps` folder of your Tomcat instance.
+This is the code repository for WMarket, the reference implementation of the Marketplace.
 
-API Reference
--------------
-Here you have a basic reference of all the status codes that you can get when you are dealing with WMarket API:
+This project is part of [FIWARE](http://www.fiware.org). Check also the [FIWARE Catalogue entry for WMarket](http://catalogue.fiware.org/enablers/marketplace-wmarket)!
 
-| HTTP Code | Type | Description |
-|-----------|------|------------ |
-| 200 | OK   | Your request has been properly completed |
-| 201 | Created | Your resource has been created. The `Location` header will contain the final URL of the new created resource |
-| 204 | Deleted | Your resource has been properly deleted |
-| 400 | Bad Request | The content of your request is not correct (e.g. there is already a resource with the specified name) |
-| 400 | Validation Error | One or more fields of your content is not valid. The field `field` indicates the first field with a validation error |
-| 403 | Forbidden | You have no rights to perform the query |
-| 500 | Internal server error | There was an internal error in the system so your request cannot be completed |
+Any feedback is highly welcome, including bugs, typos or things you think should be included but aren't. You can use [GitHub Issues](https://github.com/conwetlab/WMarket/issues/new) to provide feedback.
 
-### Users Management API
+You can find the User & Programmer's Manual and the Administration Guide on [readthedocs.org](https://wmarket.readthedocs.org)
 
-#### Create a user
+ 
+## GEi overall description
 
-* **Path**: `/api/v2/user`
-* **Method**: POST
-* **Content-Type**: `application/json` or `application/xml`
-* **Body**:
+WMarket provides functionality necessary for bringing together offering and demand for making business. These functions include basic services for registering business entities, publishing and retrieving offerings and demands, search and discover offerings according to specific consumer requirements as well as lateral functions like review, rating and recommendation. Besides the core functions, the Marketplace may offer value because of its "knowledge" about the market in terms of market intelligence services, pricing support, advertising, information subscription and more.
+
+
+## Build and Install
+
+The instructions to install WMarket can be found at [the Installation Guide](http://wmarket.readthedocs.org/en/latest/installation-guide.html). You can install the software in three different ways:
+
+* With the provided script (included in the `utils` folder)
+* With a [Docker Container](https://hub.docker.com/r/conwetlab/wmarket/)
+* Manually
+ 
+If you opt for building WMarket, you can refer to [the Building from Sources Guide](http://wmarket.readthedocs.org/en/latest/building-from-sources-guide.html)
+
+
+## API Overview
+
+WMarket API is very easy. The API is available under the `/api/v2/` path and the available resources are:
+
+* Users: `/api/v2/user`
+* Stores: `/api/v2/store`
+* Descriptions: `/api/v2/store/STORE_NAME/description`
+* Offerings: `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME/offering`
+
+The API is fully RESTful so:
+
+* You can use `POST` requests to create resources.
+ * Create a user making a `POST` request to `/api/v2/user`
+ * Create a store making a `POST` request to `/api/v2/store`
+ * Create a description making a `POST` request to `/api/v2/store/STORE_NAME/description`
+* You can use `POST` requests to update resources partially.
+ * Update a user making a `POST` request to `/api/v2/user/USER_NAME`
+ * Update a store making a `POST` request to `/api/v2/store/STORE_NAME`
+ * Update a description making a `POST` request to `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME`
+* You can use `GET` requests to retrieve an entity.
+ * Retrieve a user making a `GET` request to `/api/v2/user/USER_NAME`
+ * Retrieve a store making a `GET` request to `/api/v2/store/STORE_NAME`
+ * Retrieve a description making a `GET` request to `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME`
+ * Retrieve an offering making a `GET` request to `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME/offering/OFFERING_NAME`
+* You can use `DELETE` requests to delete an entity.
+ * Delete a user marking a `DELETE` request to `/api/v2/user/USER_NAME`
+ * Delete a store making a `DELETE` request to `/api/v2/store/STORE_NAME`
+ * Delete a description making a `DELETE` request to `/api/v2/store/STORE_NAME/description/DESCRIPTION_NAME`
+
+
+## API Reference
+
+For further documentation, you can check the API Reference available at:
+
+* [Apiary](http://docs.fiwaremarketplace.apiary.io)
+* [GitHub Pages](http://conwetlab.github.io/WMarket)
+
+
+## Testing
+
+### End-To-End tests
+
+To execute the end-to-end tests, just run:
+
 ```
-{
- "displayName": "Example Display Name",
- "email": "example@example.com",
- "password": "example_complex_password",
- "company": "Example Company"
-}
-```
-
-#### Update a user
-
-* **Path**: `/api/v2/user/{USER_NAME}`
-* **Method**: POST
-* **Content-Type**: `application/json` or `application/xml`
-* **Body**:
-```
-{
- "displayName": "Example Display Name",
- "email": "example@example.com",
- "password": "example_complex_password",
- "company": "Example Company"
-}
-```
-
-#### Delete a user
-
-* **Path**: `/api/v2/user/{USER_NAME}`
-* **Method**: DELETE
-
-#### Get a user
-
-* **Path**: `/api/v2/user/{USER_NAME}`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Content**:
-```
-{
- "userName": "example-display-name",
- "displayName": "Example Display Name",
- "createdAt": 1,
- "company": "Example Company"
-}
+mvn integration-test
 ```
 
-#### List users
+### Unit tests
 
-* **Path**: `/api/v2/user`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **limit**: The amount of elements to be retrieved
- * **offset**: The first element to be retrieved
-* **Content**:
+To execute the unit tests, just run:
+
 ```
-{
- "users": [
-  {
-   "userName": "example-display-name",
-   "displayName": "Example Display Name",
-   "createdAt": 1,
-   "company": "Example Company"
-  },
-  {
-   "userName": "example-display-name-2",
-   "displayName": "Example Display Name 2",
-   "createdAt": 2,
-   "company": "Example Company 2"
-  },
-  [...]
- ]
-}
-```
-
-### Stores Management API
-
-#### Create a store
-
-* **Path**: `/api/v2/store`
-* **Method**: POST
-* **Content-Type**: `application/json` or `application/xml`
-* **Body**:
-```
-{
- "displayName": "Example Store",
- "url": "https://store.lab.fiware.org",
- "comment": "Example comment",
- "imageBase64": "PNG_IMAGE_IN_BASE64"
-}
-```
-
-#### Update a store
-
-* **Path**: `/api/v2/store/{STORE_NAME}`
-* **Method**: POST
-* **Content-Type**: `application/json` or `application/xml`
-* **Body**:
-```
-{
- "displayName": "Example Store",
- "url": "https://store.lab.fiware.org",
- "comment": "Example comment",
- "imageBase64": "PNG_IMAGE_IN_BASE64"
-}
-```
-
-#### Delete a store
-
-* **Path**: `/api/v2/store/{STORE_NAME}`
-* **Method**: DELETE
-
-#### Get a store
-
-* **Path**: `/api/v2/store/{STORE_NAME}`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Content**:
-```
-{
- "name": "example-store",
- "displayName": "Example Store",
- "url": "https://store.lab.fiware.org",
- "createdAt": 1,
- "comment": "Example comment",
- "creator": "user-1",
- "lasteditor": "user-1",
- "imagePath": "media/store/example-store.png",
- "averageScore": 3.5
-}
-```
-
-#### List stores
-
-* **Path**: `/api/v2/store`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **limit**: The amount of elements to be retrieved
- * **offset**: The first element to be retrieved
- * **orderBy**: Order used to retrieve the stores (by default: `id`) 
- * **desc**: Descending order (by default: `false`) 
-* **Content**:
-```
-{
- "stores": [
-  {
-   "name": "example-store",
-   "displayName": "Example Store",
-   "url": "https://store.lab.fiware.org",
-   "createdAt": 1,
-   "comment": "Example comment",
-   "creator": "user-1",
-   "lasteditor": "user-1",
-   "imagePath": "media/store/example-store.png",
-   "averageScore": 3.5
-  },
-  {
-   "name": "example-store-2",
-   "displayName": "Example Store 2",
-   "url": "https://store2.lab.fiware.org",
-   "createdAt": 2,
-   "comment": "Example comment 2",
-   "creator": "user-2",
-   "lasteditor": "user-2",
-   "imagePath": "media/store/example-store.png"
-   "averageScore": 2.1
-  },
-  [...]
- ]
-}
-```
-
-#### Review store
-
-* **Path**: `/api/v2/store/{STORE_NAME}/review`
-* **Method**: POST
-* **Accept**: `application/json` or `application/xml`
-* **Body**:
-```
-{
- "score": 5,
- "comment": "Example Comment"
-}
-```
-
-#### Update Store Review
-
-* **Path**: `/api/v2/store/{STORE_NAME}/review/{REVIEW_ID}`
-* **Method**: POST
-* **Accept**: `application/json` or `application/xml`
-* **Body**:
-```
-{
- "score": 5,
- "comment": "Example Comment"
-}
-```
-
-#### Delete Store Review
-
-* **Path**: `/api/v2/store/{STORE_NAME}/review/{REVIEW_ID}`
-* **Method**: DELETE
-
-#### Get Store Review
-
-* **Path**: `/api/v2/store/{STORE_NAME}/review/{REVIEW_ID}`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
-* **Content**:
-```
-{
- "id": 1
- "score": 5,
- "user": "fran",
- "comment": "Example Comment",
- "createdAt": 1435248117000,
- "updatedAt": 1435248117000
-}
-```
-
-#### Get Store Reviews
-
-* **Path**: `/api/v2/store/{STORE_NAME}/review/`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
-* **Content**:
-```
-{
- "reviews": [
-  {
-   "id": 1
-   "score": 5,
-   "user": "fran",
-   "comment": "Example Comment",
-   "createdAt": 1435248117000,
-   "updatedAt": 1435248117000
-  },
-  {
-   "id": 1
-   "score": 2,
-   "user": "aitor",
-   "comment": "Comment #2",
-   "createdAt": 1435248118000,
-   "updatedAt": 1435248119000
-  },
-  [...]
- ]
-}
+mvn test
 ```
 
 
-### Descriptions Management API
+## Advanced Topics
 
-Descriptions is the way of creating offerings in a Store. A description is just an URL pointing to an Linked USDL file that contains all the offerings that you want to include in the Store. [You can check more about Linked USDL by clicking here](http://linked-usdl.org/).
+* [User & Programmers Manual](doc/user-programmer-guide.rst)
+* [Installation Guide](doc/installation-guide.rst)
+* [Administration Guide](doc/administration-guide.rst)
+* [Building from Sources Guide](doc/building-from-sources-guide.rst)
 
-#### Create a description
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description`
-* **Method**: POST
-* **Content-Type**: `application/json` or `application/xml`
-* **Body**:
-```
-{
- "displayName": "Example Description",
- "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-}
-```
-
-#### Update a description
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
-* **Method**: POST
-* **Content-Type**: `application/json` or `application/xml`
-* **Body**:
-```
-{
- "displayName": "Example Description",
- "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-}
-```
-
-#### Delete a description
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
-* **Method**: DELETE
-
-#### Get a description
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Content**:
-```
-{
- "name": "example-description",
- "displayName": "Example Description",
- "store": "example-store",
- "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
- "createdAt": 1,
- "creator": "user-1",
- "lasteditor": "user-1",
- "offerings": [...]
-}
-```
-
-#### List descriptions in a Store
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **limit**: The amount of elements to be retrieved
- * **offset**: The first element to be retrieved
-* **Content**:
-```
-{
- "descriptions": [
-  {
-   "name": "example-description",
-   "displayName": "Example Description",
-   "store": "example-store",
-   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-   "createdAt": 1,
-   "creator": "user-1",
-   "lasteditor": "user-1",
-   "offerings": [...]
-  },
-  {
-   "name": "example-description-2",
-   "displayName": "Example Description 2",
-   "store": "example-store",
-   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
-   "createdAt": 2,
-   "creator": "user-2",
-   "lasteditor": "user-2",
-   "offerings": [...]
-  }
-  [...]
- ]
-}
-```
-
-#### List all descriptions
-
-* **Path**: `/api/v2/descriptions`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **limit**: The amount of elements to be retrieved
- * **offset**: The first element to be retrieved
-* **Content**:
-```
-{
- "descriptions": [
-  {
-   "name": "example-description",
-   "displayName": "Example Description",
-   "store": "example-store",
-   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl.rdf",
-   "createdAt": 1,
-   "creator": "user-1",
-   "lasteditor": "user-1",
-   "offerings": [...]
-  },
-  {
-   "name": "example-description-2",
-   "displayName": "Example Description 2",
-   "store": "example-store-1",
-   "url": "https://repository.lab.fiware.org/pointer_to_linked_usdl2.rdf",
-   "createdAt": 2,
-   "creator": "user-2",
-   "lasteditor": "user-2",
-   "offerings": [...]
-  }
-  [...]
- ]
-}
-```
-
-### Offerings API
-
-Each descriptions contains one or more offerings, so you are provided APIs to retrieve the offerings contained in a description.
-
-#### Get an offering
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Content**:
-```
-{
- "name": "example-offering"
- "displayName": "Example Offering",
- "uri": "https://store.lab.fiware.org/offerings/offering/offering1",
- "description": "Example offering description",
- "version": "1.0",
- "describedIn": {
-   "name": "example-description",
-   "store": "example-store"
- },
- "imageUrl": "https://store.lab.fiware.org/static/img/offering/offering1.png",
- "averageScore": 3.5,
- "pricePlans": [
-  {
-   "title": "PRICE_PLAN_NAME",
-   "comment": "PRICE_PLAN_DESCRIPTION",
-   "priceComponents": [
-    {
-     "title": "Single payment",
-     "comment": "This component defines a single payment",
-     "value": 1,
-     "currency": "EUR",
-     "unit": "single payment"
-    },
-    [...]
-   ],
-  },
-  [...]
- ],
- "services": [
-  {
-   "displayName": "SERVICE_NAME",
-   "comment": "SERVICE_DESCRIPTION",
-   "category": [
-    {
-     "name": "wirecloud-component",
-     "displayName": "WireCloud Component"
-    },
-    [...]
-   ]
-  },
-  [...]
- ],
- "categories": [
-  {
-   "name": "data-set",
-   "displayName": "Data set"
-  },
-  [...]
- ]
-}
-```
-
-#### Bookmark/Unbookmark an offering
-
-Changes the state of the bookmark: if the offering has already been bookmarked by the user, the offering will be unbookmarked. Otherwise, the offering will be bookmarked.
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/bookmark`
-* **Method**: POST
-
-#### List offerings in a description
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **limit**: The amount of elements to be retrieved
- * **offset**: The first element to be retrieved
- * **orderBy**: Order used to retrieve the stores (by default: `id`) 
- * **desc**: Descending order (by default: `false`) 
-* **Content**:
-```
-{ 
- "offerings": [
-  {OFFERING 1},
-  {OFFERING 2},
-  [...]
- ]
-}
-```
-
-#### List offerings in a Store
-
-* **Path**: `/api/v2/store/{STORE_NAME}/offering`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **limit**: The amount of elements to be retrieved
- * **offset**: The first element to be retrieved
- * **orderBy**: Order used to retrieve the stores (by default: `id`) 
- * **desc**: Descending order (by default: `false`) 
-* **Content**:
-```
-{ 
- "offerings": [
-  {OFFERING 1},
-  {OFFERING 2},
-  [...]
- ]
-}
-```
-
-#### List all offerings
-
-* **Path**: `/api/v2/offerings`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **limit**: The amount of elements to be retrieved
- * **offset**: The first element to be retrieved
- * **orderBy**: Order used to retrieve the stores (by default: `id`) 
- * **desc**: Descending order (by default: `false`)
- * **bookmarked**: Set to `true` to only retrieve the offerings bookmarked by the logged user.
-* **Content**:
-```
-{ 
- "offerings": [
-  {OFFERING 1},
-  {OFFERING 2},
-  [...]
- ]
-}
-```
-
-#### Review Offering
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review`
-* **Method**: POST
-* **Accept**: `application/json` or `application/xml`
-* **Body**:
-```
-{
- "score": 5,
- "comment": "Example Comment"
-}
-```
-
-#### Update Offering Review
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/{REVIEW_ID}`
-* **Method**: POST
-* **Accept**: `application/json` or `application/xml`
-* **Body**:
-```
-{
- "score": 5,
- "comment": "Example Comment"
-}
-```
-
-#### Delete Offering Review
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/{REVIEW_ID}`
-* **Method**: DELETE
-
-#### Get Offering Review
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/{REVIEW_ID}`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
-* **Content**:
-```
-{
- "id": 1
- "score": 5,
- "user": "fran",
- "comment": "Example Comment",
- "createdAt": 1435248117000,
- "updatedAt": 1435248117000
-}
-```
-
-#### Get Offering Reviews
-
-* **Path**: `/api/v2/store/{STORE_NAME}/description/{DESCRIPTION_NAME}/offering/{OFFERING_NAME}/review/`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **detailed**: Set to `true` if you want to retrieve all the information about the user that created the review in just one request (`userName`, `displayName`,...) (by default: `false`)
-* **Content**:
-```
-{
- "reviews": [
-  {
-   "id": 1
-   "score": 5,
-   "user": "fran",
-   "comment": "Example Comment",
-   "createdAt": 1435248117000,
-   "updatedAt": 1435248117000
-  },
-  {
-   "id": 1
-   "score": 2,
-   "user": "aitor",
-   "comment": "Comment #2",
-   "createdAt": 1435248118000,
-   "updatedAt": 1435248119000
-  },
-  [...]
- ]
-}
-```
-
-### Categories Management API
-
-Once that some offerings have been created, the system will provide an API to access the different categories of offerings.
-
-#### Get all the Categories
-* **Path**: `/api/v2/category`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Content**:
-```
-{
- "categories": [
-  {
-   "name": "data-set",
-   "displayName": "Data set"
-  },
-  [...]
- ]
-}
-```
-
-#### Get offerings contained in a category
-* **Path**: `/api/v2/category/{CATEGORY_NAME}/offering`
-* **Method**: GET
-* **Accept**: `application/json` or `application/xml`
-* **Params**:
- * **limit**: The amount of elements to be retrieved
- * **offset**: The first element to be retrieved
- * **orderBy**: Order used to retrieve the stores (by default: `averageScore`) 
- * **desc**: Descending order (by default: `true`) 
-* **Content**:
-```
-{ 
- "offerings": [
-  {OFFERING 1},
-  {OFFERING 2},
-  [...]
- ]
-}
-```
+You can also find this documentation on [ReadTheDocs](http://wmarket.readthedocs.org)

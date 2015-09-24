@@ -32,6 +32,11 @@ package org.fiware.apps.marketplace.exceptions;
  * #L%
  */
 
+/**
+ * To be thrown when a category is not found in the databse
+ * @author aitor
+ *
+ */
 public class CategoryNotFoundException extends Exception {
 	
 	private static final long serialVersionUID = 1L;

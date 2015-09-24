@@ -38,7 +38,11 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.client.Client;
@@ -70,6 +74,7 @@ public abstract class AbstractIT {
 	protected String serverUrl;
 	protected String defaultUSDLPath;
 	protected String secondaryUSDLPath;
+	protected String complexDescriptionUSDLPath;
 	
 	// Mock server
 	@Rule public WireMockRule wireMock = new WireMockRule(0);
@@ -95,6 +100,9 @@ public abstract class AbstractIT {
 
 	protected final Offering FIRST_OFFERING = new Offering();
 	protected final Offering SECOND_OFFERING = new Offering();
+	
+	// Description URL - List of attached offerings
+	protected final Map<String, List<Offering>> DESCRIPTIONS_OFFERINGS = new HashMap<>();
 
 	private void initOfferings() {
 		// WARN: This properties depends on the RDF files stored in "src/test/resources/__files" so if these files
@@ -178,6 +186,7 @@ public abstract class AbstractIT {
 		FIRST_OFFERING.setDisplayName("OrionStarterKit");
 		FIRST_OFFERING.setImageUrl(
 				"https://store.lab.fi-ware.org/media/CoNWeT__OrionStarterKit__1.2/catalogue.png");
+		FIRST_OFFERING.setAcquisitionUrl("http://store.lab.fiware.org/offering/user/orionstarterkit/1.0");
 		FIRST_OFFERING.setDescription("Offering composed of three mashable application components: "
 				+ "ngsi-source, ngsientity2poi and ngsi-updater. Those components are provided as the base "
 				+ "tools/examples for making application mashups using WireCloud and the Orion Context Broker. "
@@ -191,6 +200,7 @@ public abstract class AbstractIT {
 				+ "#GHbnf7dsubc19ebx4fmfgH");
 		SECOND_OFFERING.setDisplayName("CKAN starter Kit");
 		SECOND_OFFERING.setName("ckan-starter-kit");
+		SECOND_OFFERING.setAcquisitionUrl("http://store.lab.fiware.org/offering/user/ckanstarterkit/1.0");
 		SECOND_OFFERING.setImageUrl(
 				"https://store.lab.fiware.org/media/CoNWeT__CKANStarterKit__1.2/logo-ckan_170x80.png");
 		SECOND_OFFERING.setDescription("Offering composed of several mashable application components that compose "
@@ -222,6 +232,12 @@ public abstract class AbstractIT {
 		environment.stop();
 	}
 
+	/**
+	 * Mock server is not started by default. Every test should call this method
+	 * to start the mock server. When the mock server is started, some attributes
+	 * will be initialized: <code>serverUrl</code>, <code>defaultUSDLPath</code>, 
+	 * <code>secondaryUSDLPath</code> and <code>DESCRIPTIONS_OFFERINGS</code>
+	 */
 	protected void startMockServer() {
 		stubFor(get(urlMatching("/default[0-9]*.rdf"))
 				.willReturn(aResponse()
@@ -240,6 +256,16 @@ public abstract class AbstractIT {
 		serverUrl = "http://127.0.0.1:" + wireMock.port();
 		defaultUSDLPath = serverUrl + "/default.rdf";
 		secondaryUSDLPath = serverUrl + "/secondary.rdf";
+		complexDescriptionUSDLPath = serverUrl + "/extra_complex.rdf";
+		
+		List<Offering> defaultUSDLPathOfferings = new ArrayList<>();
+		defaultUSDLPathOfferings.add(FIRST_OFFERING);
+		List<Offering> secondaryUSDLPathOfferings = new ArrayList<>();
+		secondaryUSDLPathOfferings.add(FIRST_OFFERING);
+		secondaryUSDLPathOfferings.add(SECOND_OFFERING);
+		
+		DESCRIPTIONS_OFFERINGS.put(defaultUSDLPath, defaultUSDLPathOfferings);
+		DESCRIPTIONS_OFFERINGS.put(secondaryUSDLPath, secondaryUSDLPathOfferings);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -268,7 +294,7 @@ public abstract class AbstractIT {
 				
 		APIError error = response.readEntity(APIError.class);
 		assertThat(error.getField()).isEqualTo(field);
-		assertThat(error.getErrorMessage()).isEqualTo(message);
+		assertThat(error.getErrorMessage()).contains(message);
 		assertThat(error.getErrorType()).isEqualTo(errorType);
 
 	}

@@ -23,22 +23,17 @@
             'offerings']
         .join('/'));
 
-        var thumbnailElement = $('<span class="image-thumbnail image-thumbnail-sm">');
+        var thumbnailElement = $('<span class="image-thumbnail thumbnail-circle image-thumbnail-sm">');
 
         if (this.imagePath) {
-            thumbnailElement.append($('<img class="image image-rounded">').attr('src', [
+            thumbnailElement.append($('<img class="image">').attr('src', [
                 app.contextPath, this.imagePath
             ].join('/')));
         } else {
             thumbnailElement.append(
-                $('<span class="image image-circle image-default-darker">').append(
+                $('<span class="image image-avatar image-default-darker">').append(
                         $('<span class="fa fa-building fa-inverse">')));
         }
-
-        var ratingValue = $('<span>')
-            .addClass('rating-value rating-value-sm rating-value-lighter')
-            .append($('<span>').addClass('fa fa-star'), " " + this.averageScore.toFixed(1));
-        thumbnailElement.append(ratingValue);
 
         var storeHeading = $('<div class="store-heading">').append(
             thumbnailElement);

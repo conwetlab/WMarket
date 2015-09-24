@@ -126,6 +126,10 @@ public class UserValidator {
 	 * @throws ValidationException If the updated user is not valid
 	 */
 	public void validateUpdatedUser(User oldUser, User updatedUser) throws ValidationException {
-		validateUser(updatedUser, false, !oldUser.getEmail().equals(updatedUser.getEmail()));
+		boolean checkMail = updatedUser.getEmail() == null ? false : 
+			!oldUser.getEmail().toLowerCase().equals(updatedUser.getEmail().toLowerCase());
+		
+		
+		validateUser(updatedUser, false, checkMail);
 	}
 }

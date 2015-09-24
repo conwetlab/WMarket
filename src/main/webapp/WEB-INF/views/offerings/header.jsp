@@ -3,13 +3,13 @@
 
 <div class="panel panel-default">
   <div class="panel-heading text-center">
-    <span class="image-thumbnail image-thumbnail-lg">
-      <img class="image image-rounded image-bordered" src="${ offering.imageUrl }">
-      <span class="rating-value rating-value-lg rating-overall">
+    <div class="image-thumbnail thumbnail-bordered thumbnail-lg">
+      <img class="image" src="${ offering.imageUrl }">
+      <span class="rating-value rating-value-lighter rating-overall">
         <span class="fa fa-star">${ offering.averageScore }</span>
       </span>
-    </span>
-    <div class="panel-title">${ offering.displayName }</div>
+    </div>
+    <h4 class="panel-title">${ offering.displayName }</h4>
     <div class="panel-subtitle offering-categories">
     <c:forEach var="category" items="${ offering.categories }">
       <span class="label label-success">${ category.displayName }</span>
@@ -18,6 +18,12 @@
     <t:insertTemplate template="/WEB-INF/views/core/rating.jsp">
       <t:putAttribute name="selector" value=".modal-rating" />
     </t:insertTemplate>
+    <div class="offering-url">
+      <a class="btn btn-primary" href="${ offering.acquisitionUrl }" target="_blank">
+        <span class="btn-icon fa fa-shopping-cart"></span>
+        <span class="btn-text">Acquire</span>
+      </a>
+    </div>
   </div>
   <div class="panel-body">
     <div class="tab-group tab-group-vertical">
@@ -48,7 +54,7 @@
       >
         <a href="${ pageContext.request.contextPath }/offerings/${ offering.describedIn.store.name }/${ offering.describedIn.name }/${ offering.name }/priceplans">
           <span class="fa fa-credit-card"></span>
-          <span class="hidden-sm">Payment plans</span>
+          <span class="hidden-sm">Price plans</span>
         </a>
       </div>
       <div

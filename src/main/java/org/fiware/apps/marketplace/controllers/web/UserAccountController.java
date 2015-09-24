@@ -66,236 +66,280 @@ import org.springframework.web.servlet.ModelAndView;
 @Path("account")
 public class UserAccountController extends AbstractController {
 
-    private static Logger logger = LoggerFactory.getLogger(UserAccountController.class);
+	private static Logger logger = LoggerFactory.getLogger(UserAccountController.class);
 
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    public Response detailView(
-            @Context HttpServletRequest request) {
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public Response detailView(
+			@Context HttpServletRequest request) {
 
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
+		ModelAndView view;
+		ModelMap model = new ModelMap();
+		ResponseBuilder builder;
 
-        try {
-            model.addAttribute("title", "Account Settings - " + getContextName());
-            model.addAttribute("user", getCurrentUser());
-            model.addAttribute("currentView", "detail");
+		try {
+			model.addAttribute("title", "Account Settings - " + getContextName());
+			model.addAttribute("user", getCurrentUser());
+			model.addAttribute("currentView", "detail");
 
-            addFlashMessage(request, model);
+			addFlashMessage(request, model);
 
-            view = new ModelAndView("user.detail", model);
-            builder = Response.ok();
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
+			view = new ModelAndView("user.detail", model);
+			builder = Response.ok();
+		} catch (UserNotFoundException e) {
+			logger.warn("User not found", e);
 
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError();
-        }
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError();
+		}
 
-        return builder.entity(view).build();
-    }
+		return builder.entity(view).build();
+	}
 
-    @POST
-    @Produces(MediaType.TEXT_HTML)
-    public Response updateView(
-            @Context UriInfo uri,
-            @Context HttpServletRequest request,
-            @FormParam("userName") String userName,
-            @FormParam("displayName") String displayName,
-            @FormParam("email") String email,
-            @FormParam("company") String company) {
+	@POST
+	@Produces(MediaType.TEXT_HTML)
+	public Response updateView(
+			@Context UriInfo uri,
+			@Context HttpServletRequest request,
+			@FormParam("userName") String userName,
+			@FormParam("displayName") String displayName,
+			@FormParam("email") String email,
+			@FormParam("company") String company) {
 
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
-        User user = new User();
-        User currentUser;
-        URI redirectURI;
+		ModelAndView view;
+		ModelMap model = new ModelMap();
+		ResponseBuilder builder;
+		User user = new User();
+		User currentUser;
+		URI redirectURI;
 
-        try {
-            currentUser = getCurrentUser();
-            model.addAttribute("user", currentUser);
-            model.addAttribute("title", "Account Settings - " + getContextName());
+		try {
+			currentUser = getCurrentUser();
+			model.addAttribute("user", currentUser);
+			model.addAttribute("title", "Account Settings - " + getContextName());
 
-            user.setDisplayName(displayName);
-            user.setEmail(email);
+			user.setDisplayName(displayName);
+			user.setEmail(email);
 
-            if (!company.isEmpty()) {
-                user.setCompany(company);
-            }
+			if (!company.isEmpty()) {
+				user.setCompany(company);
+			}
 
-            getUserBo().update(userName, user);
+			getUserBo().update(userName, user);
 
-            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("account").build();
-            setFlashMessage(request, "Your profile was updated successfully.");
+			redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("account").build();
+			setFlashMessage(request, "Your profile was updated successfully.");
 
-            builder = Response.seeOther(redirectURI);
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
+			builder = Response.seeOther(redirectURI);
+		} catch (UserNotFoundException e) {
+			logger.warn("User not found", e);
 
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError().entity(view);
-        } catch (NotAuthorizedException e) {
-            logger.info("User unauthorized", e);
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError().entity(view);
+		} catch (NotAuthorizedException e) {
+			logger.info("User unauthorized", e);
 
-            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
-            builder = Response.status(Status.UNAUTHORIZED).entity(view);
-        } catch (ValidationException e) {
-            logger.info("A form field is not valid", e);
+			view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+			builder = Response.status(Status.UNAUTHORIZED).entity(view);
+		} catch (ValidationException e) {
+			logger.info("A form field is not valid", e);
 
-            Map<String, String> formInfo = new HashMap<String, String>();
+			Map<String, String> formInfo = new HashMap<String, String>();
 
-            formInfo.put("userName", userName);
-            formInfo.put("displayName", displayName);
-            formInfo.put("email", email);
-            formInfo.put("company", company);
+			formInfo.put("userName", userName);
+			formInfo.put("displayName", displayName);
+			formInfo.put("email", email);
+			formInfo.put("company", company);
 
-            model.addAttribute("form_data", formInfo);
-            model.addAttribute("form_error", e);
+			model.addAttribute("form_data", formInfo);
+			model.addAttribute("form_error", e);
 
-            view = new ModelAndView("user.detail", model);
-            builder = Response.status(Status.BAD_REQUEST).entity(view);
-        }
+			view = new ModelAndView("user.detail", model);
+			builder = Response.status(Status.BAD_REQUEST).entity(view);
+		}
 
-        return builder.build();
-    }
+		return builder.build();
+	}
 
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("password")
-    public Response credentialsView(
-            @Context HttpServletRequest request) {
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	@Path("password")
+	public Response credentialsView(
+			@Context HttpServletRequest request) {
 
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
+		ModelAndView view;
+		ModelMap model = new ModelMap();
+		ResponseBuilder builder;
 
-        try {
-            model.addAttribute("title", "Credentials - " + getContextName());
-            model.addAttribute("user", getCurrentUser());
-            model.addAttribute("currentView", "credentials");
+		try {
+			model.addAttribute("title", "Credentials - " + getContextName());
+			model.addAttribute("user", getCurrentUser());
+			model.addAttribute("currentView", "credentials");
 
-            addFlashMessage(request, model);
+			addFlashMessage(request, model);
 
-            view = new ModelAndView("user.credentials", model);
-            builder = Response.ok();
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
+			view = new ModelAndView("user.credentials", model);
+			builder = Response.ok();
+		} catch (UserNotFoundException e) {
+			logger.warn("User not found", e);
 
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError();
-        }
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError();
+		}
 
-        return builder.entity(view).build();
-    }
+		return builder.entity(view).build();
+	}
 
-    @POST
-    @Produces(MediaType.TEXT_HTML)
-    @Path("password")
-    public Response updatePasswordView(
-            @Context UriInfo uri,
-            @Context HttpServletRequest request,
-            @FormParam("oldPassword") String oldPassword,
-            @FormParam("password") String password,
-            @FormParam("passwordConfirm") String passwordConfirm) {
+	@POST
+	@Produces(MediaType.TEXT_HTML)
+	@Path("password")
+	public Response updatePasswordView(
+			@Context UriInfo uri,
+			@Context HttpServletRequest request,
+			@FormParam("oldPassword") String oldPassword,
+			@FormParam("password") String password,
+			@FormParam("passwordConfirm") String passwordConfirm) {
 
-        HttpSession session;
-        ModelAndView view;
-        ModelMap model = new ModelMap();
-        ResponseBuilder builder;
-        User user = new User();
-        User currentUser;
-        URI redirectURI;
+		HttpSession session;
+		ModelAndView view;
+		ModelMap model = new ModelMap();
+		ResponseBuilder builder;
+		User user = new User();
+		User currentUser;
+		URI redirectURI;
 
-        try {
-            currentUser = getCurrentUser();
-            model.addAttribute("user", currentUser);
-            model.addAttribute("title", "Credentials - " + getContextName());
+		try {
+			currentUser = getCurrentUser();
+			model.addAttribute("user", currentUser);
+			model.addAttribute("title", "Credentials - " + getContextName());
 
-            user.setPassword(password);
+			user.setPassword(password);
 
-            // Validate old password
-            if (!getUserBo().checkCurrentUserPassword(oldPassword)) {
-            	throw new ValidationException("oldPassword", "The password given is not valid.");
-            }
+			// Validate old password
+			if (!getUserBo().checkCurrentUserPassword(oldPassword)) {
+				throw new ValidationException("oldPassword", "The password given is not valid.");
+			}
 
-            // Exception risen if passwords don't match
-            checkPasswordConfirmation(password, passwordConfirm);
+			// Exception risen if passwords don't match
+			checkPasswordConfirmation(password, passwordConfirm);
 
-            getUserBo().update(currentUser.getUserName(), user);
+			getUserBo().update(currentUser.getUserName(), user);
 
-            session = request.getSession();
+			session = request.getSession();
 
-            // TODO: Invalidate all the user's session
-            synchronized (session) {
-                session.invalidate();
-            }
+			// TODO: Invalidate all the user's session
+			synchronized (session) {
+				session.invalidate();
+			}
 
-            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login")
-                    .queryParam("out", 3).build();
-            builder = Response.seeOther(redirectURI);
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
+			redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login")
+					.queryParam("out", 3).build();
+			builder = Response.seeOther(redirectURI);
+		} catch (UserNotFoundException e) {
+			logger.warn("User not found", e);
 
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError().entity(view);
-        } catch (NotAuthorizedException e) {
-            logger.info("User unauthorized", e);
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError().entity(view);
+		} catch (NotAuthorizedException e) {
+			logger.info("User unauthorized", e);
 
-            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
-            builder = Response.status(Status.UNAUTHORIZED).entity(view);
-        } catch (ValidationException e) {
-            logger.info("A form field is not valid", e);
+			view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+			builder = Response.status(Status.UNAUTHORIZED).entity(view);
+		} catch (ValidationException e) {
+			logger.info("A form field is not valid", e);
 
-            model.addAttribute("form_error", e);
+			model.addAttribute("form_error", e);
 
-            view = new ModelAndView("user.credentials", model);
-            builder = Response.status(Status.BAD_REQUEST).entity(view);
-        }
+			view = new ModelAndView("user.credentials", model);
+			builder = Response.status(Status.BAD_REQUEST).entity(view);
+		}
 
-        return builder.build();
-    }
+		return builder.build();
+	}
 
-    @POST
-    @Produces(MediaType.TEXT_HTML)
-    @Path("delete")
-    public Response deleteView(
-            @Context HttpServletRequest request,
-            @Context UriInfo uri) {
+	@POST
+	@Produces(MediaType.TEXT_HTML)
+	@Path("delete")
+	public Response deleteView(
+			@Context HttpServletRequest request,
+			@Context UriInfo uri) {
 
-        HttpSession session;
-        ModelAndView view;
-        ResponseBuilder builder;
-        URI redirectURI;
+		HttpSession session;
+		ModelAndView view;
+		ResponseBuilder builder;
+		URI redirectURI;
 
-        try {
-            User user = getCurrentUser();
-            getUserBo().delete(user.getUserName());
+		try {
+			User user = getCurrentUser();
+			getUserBo().delete(user.getUserName());
 
-            session = request.getSession();
+			session = request.getSession();
 
-            // TODO: Delete all the user's session
-            synchronized (session) {
-                session.invalidate();
-            }
+			// TODO: Delete all the user's session
+			synchronized (session) {
+				session.invalidate();
+			}
 
-            redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login")
-                    .queryParam("out", 2).build();
-            builder = Response.seeOther(redirectURI);
-        } catch (UserNotFoundException e) {
-            logger.warn("User not found", e);
+			redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("login")
+					.queryParam("out", 2).build();
+			builder = Response.seeOther(redirectURI);
+		} catch (UserNotFoundException e) {
+			logger.warn("User not found", e);
 
-            view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
-            builder = Response.serverError().entity(view);
-        } catch (NotAuthorizedException e) {
-            logger.info("User unauthorized", e);
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError().entity(view);
+		} catch (NotAuthorizedException e) {
+			logger.info("User unauthorized", e);
 
-            view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
-            builder = Response.status(Status.UNAUTHORIZED).entity(view);
-        } 
+			view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+			builder = Response.status(Status.UNAUTHORIZED).entity(view);
+		} 
 
-        return builder.build();
-    }
+		return builder.build();
+	}
+
+	@POST
+	@Path("provider")
+	public Response changeProviderStatus(
+			@Context UriInfo uri,
+			@Context HttpServletRequest request) {
+
+		ModelAndView view;
+		ResponseBuilder builder;
+		User currentUser;
+		URI redirectURI;
+
+		try {
+			currentUser = getCurrentUser();
+			boolean wasProvider = currentUser.isProvider();
+			getUserBo().changeProviderStatus(currentUser.getUserName());
+
+			redirectURI = UriBuilder.fromUri(uri.getBaseUri()).path("account").build();
+
+			String flashMessage;
+			if (wasProvider) {
+				flashMessage = "You are <strong>not</strong> a provider anymore.";
+			} else {
+				flashMessage = "You are a provider now.";
+			}
+
+			setFlashMessage(request, flashMessage);
+
+			builder = Response.seeOther(redirectURI);
+		} catch (UserNotFoundException e) {
+			logger.warn("User not found", e);
+
+			view = buildErrorView(Status.INTERNAL_SERVER_ERROR, e.getMessage());
+			builder = Response.serverError().entity(view);
+		} catch (NotAuthorizedException e) {
+			logger.info("User unauthorized", e);
+
+			view = buildErrorView(Status.UNAUTHORIZED, e.getMessage());
+			builder = Response.status(Status.UNAUTHORIZED).entity(view);
+		}
+
+		return builder.build();
+
+	}
 
 }

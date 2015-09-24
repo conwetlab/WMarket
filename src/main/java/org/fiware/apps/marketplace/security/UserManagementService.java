@@ -53,15 +53,15 @@ public class UserManagementService implements UserDetailsService {
 	@Autowired private Assembler assembler;
 
 	@Override
-    public UserDetails loadUserByUsername(String userName)
-    	     throws UsernameNotFoundException, DataAccessException {
-				
+	public UserDetails loadUserByUsername(String userName)
+			throws UsernameNotFoundException, DataAccessException {
+
 		try {
 			boolean isMail = GenericValidator.isEmail(userName);	
 			User user = isMail ? userDao.findByEmail(userName) : userDao.findByName(userName);	
-	        return assembler.buildUserFromUserEntity(user);
+			return assembler.buildUserFromUserEntity(user);
 		} catch (UserNotFoundException ex) {
-        	throw new UsernameNotFoundException("user not found");
+			throw new UsernameNotFoundException("user not found");
 		}
 	}
 
