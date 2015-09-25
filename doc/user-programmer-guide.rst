@@ -367,6 +367,8 @@ upload offerings to WMarket. To become a provider, you can refer to the
 Stores Management
 -----------------
 
+.. _creating_stores:
+
 Creating Stores
 ```````````````
 
@@ -447,6 +449,8 @@ Descriptions Management
 
 Descriptions are the definitions of your offerings. These descriptions are 
 written in `Linked USDL <http://linked-usdl.org/>`__.
+
+.. _creating_descriptions:
 
 Creating Descriptions
 `````````````````````

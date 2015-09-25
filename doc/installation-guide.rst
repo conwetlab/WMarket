@@ -555,12 +555,36 @@ correctly. If you receive an error check that you have complete all the
 fields in an appropriate way and that you have follow all the
 instructions given in this guide.
 
-**Step 2: Authenticating your user**
+**Step 2: Authenticating your user and becoming a provider**
 
-Go to \`\ ``http://[WMARKET_HOST]:[WMARKET_PORT]/`` and introduce the
-authentication details according to the user that you have created in
-the previous step. If you don't obtain any error, the WMarket is
-correctly deployed. Congratulations!!
+Go to ``http://[WMARKET_HOST]:[WMARKET_PORT]/WMarket`` and introduce
+the authentication details according to the user that you have created
+in the previous step. Then, become a provider as explained in the
+:doc:`administration-guide`.
+
+**Step 3: Creating a Store**
+
+Once that you are provider, you should check that you are able to 
+create a new Store. To do so, follow the steps provided 
+:ref:`here <creating_stores>`. You will be required to introduce
+the Store details such as the name and the URL. You can introduce
+any name and any valid URL.
+
+**Step 4: Registering a Description**
+
+Finally, you should check that you are able to register a description.
+Just follow the steps provided :ref:`here <creating_descriptions>`.
+You will be asked for a name and an URL. Please, note that the URL
+must be a link to a valid USDL. If you do not have a valid USDL hosted
+in a HTTP Server, you can use the following URL:
+
+::
+
+    http://wmarket.readthedocs.org/en/latest/_downloads/example.rdf
+
+
+If you don't obtain any error, the WMarket is correctly deployed. 
+Congratulations!!
 
 List of Running Processes
 =========================

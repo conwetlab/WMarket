@@ -78,13 +78,9 @@ For further documentation, you can check the API Reference available at:
 
 ## Testing
 
-### End-To-End tests
+### End-to-End tests
 
-To execute the end-to-end tests, just run:
-
-```
-mvn integration-test
-```
+End-to-End tests are described in the [Installation Guide](http://wmarket.readthedocs.org/en/latest/installation-guide.html#end-to-end-testing)
 
 ### Unit tests
 
@@ -92,6 +88,14 @@ To execute the unit tests, just run:
 
 ```
 mvn test
+```
+
+### Integration tests
+
+To execute the integration tests, just run:
+
+```
+mvn integration-test
 ```
 
 
