@@ -933,4 +933,19 @@ public class OfferingResolverTest {
 				"Offering %s contains a price component with an invalid currency value");
 	}
 	
+	// Test for empty descriptions (Issue #12)
+	@Test
+	public void testEmptyDescription() {
+		
+		// Call the function
+		Description description = mock(Description.class);
+		when(description.getUrl()).thenReturn(DESCRIPTION_URI);
+		
+		try {
+			offeringResolver.resolveOfferingsFromServiceDescription(description);
+			failBecauseExceptionWasNotThrown(ParseException.class);
+		} catch (ParseException ex) {
+			assertThat(ex.getMessage()).isEqualTo("Offerings URLs cannot be retrieved");
+		} 
+	}
 }
