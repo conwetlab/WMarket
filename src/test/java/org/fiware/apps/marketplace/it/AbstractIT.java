@@ -74,6 +74,7 @@ public abstract class AbstractIT {
 	protected String serverUrl;
 	protected String defaultUSDLPath;
 	protected String secondaryUSDLPath;
+	protected String emptyUSDLPath;
 	protected String complexDescriptionUSDLPath;
 	
 	// Mock server
@@ -248,7 +249,11 @@ public abstract class AbstractIT {
 				.willReturn(aResponse()
 						.withStatus(200)
 						.withBodyFile("secondary.rdf")));
-
+		
+		stubFor(get(urlMatching("/empty.rdf"))
+				.willReturn(aResponse()
+						.withStatus(200)
+						.withBodyFile("empty.rdf")));
 		// Start up server
 		wireMock.start();
 
@@ -256,6 +261,7 @@ public abstract class AbstractIT {
 		serverUrl = "http://127.0.0.1:" + wireMock.port();
 		defaultUSDLPath = serverUrl + "/default.rdf";
 		secondaryUSDLPath = serverUrl + "/secondary.rdf";
+		emptyUSDLPath = serverUrl + "/empty.rdf";
 		complexDescriptionUSDLPath = serverUrl + "/extra_complex.rdf";
 		
 		List<Offering> defaultUSDLPathOfferings = new ArrayList<>();

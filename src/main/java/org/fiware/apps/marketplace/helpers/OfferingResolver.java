@@ -379,7 +379,7 @@ public class OfferingResolver {
 			List<String> offeringUris = getOfferingUris(rdfHelper);
 			List<Offering> offerings = new ArrayList<Offering>();
 			
-			if (offeringUris == null) {
+			if (offeringUris == null || offeringUris.size() == 0) {
 				throw new ParseException("Offerings URLs cannot be retrieved");
 			}
 

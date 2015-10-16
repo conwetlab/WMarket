@@ -12,9 +12,9 @@
             label: "Name",
             minlength: 3,
             maxlength: 100,
-            regexp: new RegExp("^[A-Z]+[\\w.-]*( [\\w.-]+)*$", "i"),
+            regexp: new RegExp("^[a-zA-Z0-9. -]+$", "i"),
             errorMessages: {
-                invalid: "This field must contain alphanumerics (and -,_,.)."
+                invalid: "This field only accepts letters, numbers, white spaces, dots and hyphens."
             }
         }),
         new app.fields.URLField('url', {

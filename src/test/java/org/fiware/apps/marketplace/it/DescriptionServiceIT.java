@@ -261,6 +261,14 @@ public class DescriptionServiceIT extends AbstractIT {
 		testCreation(secondaryUSDLPath);
 	}
 	
+	@Test
+	public void testCreationEmptyUSDL() {
+		Response response = createDescription(USER_NAME, PASSWORD, FIRST_STORE_NAME, "description-1", 
+				emptyUSDLPath, "");
+		checkAPIError(response, 400, "url", "Your RDF could not be parsed: Offerings URLs cannot be retrieved", 
+				ErrorType.VALIDATION_ERROR);
+	}
+	
 	private void testCreationInvalidField(String displayName, String url, String comment, String invalidField,
 			String message) {
 

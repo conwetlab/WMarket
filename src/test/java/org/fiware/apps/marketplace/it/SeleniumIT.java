@@ -791,7 +791,8 @@ public class SeleniumIT extends AbstractIT {
 		formElement = submitFormExpectError(formElement, "displayName", String.format(MAX_LENGTH, 100));
 
 		fillField(formElement, "displayName", "FIWARE $invalid");
-		formElement = submitFormExpectError(formElement, "displayName", "This field must contain alphanumerics (and -,_,.).");
+		formElement = submitFormExpectError(formElement, "displayName", 
+				"This field only accepts letters, numbers, white spaces, dots and hyphens.");
 
 		fillField(formElement, "displayName", descriptionDisplayName);
 		fillField(formElement, "url", defaultUSDLPath);
