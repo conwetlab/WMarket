@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="util" uri="http://fiware.org/functions" %>
 
 <script> app.view.storeName = "${ store.name }"; </script>
 <c:if test="${ not empty review }">
@@ -24,7 +25,7 @@
     <script>
       app.view.storeForm
       <c:forEach var="field" items="${ form_data }">
-        .addInitialValue("${ field.key }", "${ field.value }")
+        .addInitialValue("${ field.key }", "${ util:escapeJS(field.value) }")
       </c:forEach>
         .addErrorMessage("${ form_error.fieldName }", "${ form_error.fieldError }")
     </script>
@@ -32,9 +33,9 @@
   <c:when test="${ not empty store }">
     <script>
       app.view.storeForm
-        .addInitialValue("displayName", "${ store.displayName }")
-        .addInitialValue("url", "${ store.url }")
-        .addInitialValue("comment", "${ store.comment }")
+      	.addInitialValue("displayName", "${ util:escapeJS(store.displayName) }")
+      	.addInitialValue("url", "${ util:escapeJS(store.url) }")
+      	.addInitialValue("comment", "${ util:escapeJS(util:unescapeHTML(store.comment)) }")
     </script>
   </c:when>
   </c:choose>
