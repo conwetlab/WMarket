@@ -42,6 +42,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.util.HtmlUtils;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -154,7 +155,7 @@ public class RdfHelper {
 		List<QuerySolution> solutions = this.query(query);
 		
 		for (QuerySolution solution: solutions) {
-			literals.add(solution.getLiteral(queriedVar).getLexicalForm());
+			literals.add(HtmlUtils.htmlEscape(solution.getLiteral(queriedVar).getLexicalForm()));
 		}
 		
 		return literals;

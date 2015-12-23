@@ -56,6 +56,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.fiware.apps.marketplace.exceptions.ParseException;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
+import org.springframework.web.util.HtmlUtils;
 
 @Entity
 @Table(name = "price_plans")
@@ -92,9 +93,10 @@ public class PricePlan {
 					" contains a price plan without title");
 		}
 
-		this.title = title;
+		this.title = HtmlUtils.htmlEscape(title);
 		List<Object> ppDescriptions = rawPricePlan.get("description");
-		this.comment = (ppDescriptions != null && ppDescriptions.size() == 1) ? (String) ppDescriptions.get(0) : "";
+		this.comment = (ppDescriptions != null && ppDescriptions.size() == 1) ? 
+				HtmlUtils.htmlEscape((String) ppDescriptions.get(0)) : "";
 		this.offering = offering;
 		this.priceComponents = new HashSet<>();
 	}

@@ -70,6 +70,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
 import com.hp.hpl.jena.shared.JenaException;
 
@@ -120,6 +121,9 @@ public class DescriptionBoImpl implements DescriptionBo {
 			
 			// Set the name based on the display name
 			description.setName(NameGenerator.getURLName(description.getDisplayName()));
+			
+			// Escape HTML	
+			description.setComment(HtmlUtils.htmlEscape(description.getComment()));
 			
 			// Exception is risen if the description is not valid
 			descriptionValidator.validateNewDescription(description);
@@ -275,7 +279,7 @@ public class DescriptionBoImpl implements DescriptionBo {
 			}
 			
 			if (updatedDescription.getComment() != null) {
-				descriptionToBeUpdated.setComment(updatedDescription.getComment());
+				descriptionToBeUpdated.setComment(HtmlUtils.htmlEscape(updatedDescription.getComment()));
 			}
 			
 			// If the action is automatically performed by the system, last editor field

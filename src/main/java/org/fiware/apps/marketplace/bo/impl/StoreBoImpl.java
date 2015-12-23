@@ -61,6 +61,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
 @Service("storeBo")
 public class StoreBoImpl implements StoreBo{
@@ -183,6 +184,9 @@ public class StoreBoImpl implements StoreBo{
 			// Set default name based on the display name
 			store.setName(NameGenerator.getURLName(store.getDisplayName()));
 			
+			// Escape HTML
+			store.setComment(HtmlUtils.htmlEscape(store.getComment()));
+			
 			// Set average score to zero
 			store.setAverageScore(0);
 	
@@ -231,7 +235,7 @@ public class StoreBoImpl implements StoreBo{
 			}
 
 			if (updatedStore.getComment() != null) {
-				storeToBeUpdate.setComment(updatedStore.getComment());
+				storeToBeUpdate.setComment(HtmlUtils.htmlEscape(updatedStore.getComment()));
 			}
 
 			if (updatedStore.getDisplayName() != null) {
