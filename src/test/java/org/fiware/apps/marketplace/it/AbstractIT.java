@@ -206,7 +206,7 @@ public abstract class AbstractIT {
 				"https://store.lab.fiware.org/media/CoNWeT__CKANStarterKit__1.2/logo-ckan_170x80.png");
 		SECOND_OFFERING.setDescription("Offering composed of several mashable application components that compose "
 				+ "the base tools/examples for making application mashups using WireCloud and CKAN. Those resources "
-				+ "can be used for example for showing data coming from CKAN's dataset inside the Map Viewer widget "
+				+ "can be used for example for showing data coming from CKAN&#39;s dataset inside the Map Viewer widget "
 				+ "or inside a graph widget or for browsing data inside a table widget.");	
 		SECOND_OFFERING.setPricePlans(pricePlansOff2);
 		SECOND_OFFERING.setServices(servicesOff2);

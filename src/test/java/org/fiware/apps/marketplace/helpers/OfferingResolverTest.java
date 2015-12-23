@@ -334,7 +334,7 @@ public class OfferingResolverTest {
 		String pricePlanTitle = "price plan";
 		String pricePlanDesc = "a description for the price plan";
 		String priceComponentTitle = "price component";
-		String priceComponentCurrency = "EUR (€)";
+		String priceComponentCurrency = "EUR";
 		String priceComponentUnit = "bytes/month";
 		float priceComponentValue = 1.23F;
 
