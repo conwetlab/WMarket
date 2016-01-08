@@ -64,6 +64,7 @@ import org.fiware.apps.marketplace.utils.NameGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.util.HtmlUtils;
 
 import com.hp.hpl.jena.shared.JenaException;
 
@@ -112,7 +113,8 @@ public class OfferingResolver {
 	 */
 	private String cleanRdfUrl(String url) {
 		// Remove '<' from the beginning and '>' from the end
-		return url != null ? url.substring(1, url.length() - 1) : "";
+		// Additionally, the URL is escaped in case it contains HTML...
+		return url != null ? HtmlUtils.htmlEscape(url.substring(1, url.length() - 1)) : "";
 	}
 	
 	

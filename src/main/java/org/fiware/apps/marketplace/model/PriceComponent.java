@@ -50,6 +50,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.fiware.apps.marketplace.exceptions.ParseException;
 import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
+import org.springframework.web.util.HtmlUtils;
 
 @Entity
 @Table(name = "price_components")
@@ -142,7 +143,7 @@ public class PriceComponent {
 	 * @return The first element as String. If the list is empty or null, an empty string is returned
 	 */
 	private static String getFirstStringFromObjectList(List<Object> list) {
-		return (list == null || list.isEmpty()) ? "" : (String) list.get(0);
+		return HtmlUtils.htmlEscape((list == null || list.isEmpty()) ? "" : (String) list.get(0));
 	}
 	
 	@Id

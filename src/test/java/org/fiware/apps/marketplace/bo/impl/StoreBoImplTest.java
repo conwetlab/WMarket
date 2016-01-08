@@ -61,10 +61,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.util.HtmlUtils;
 
 public class StoreBoImplTest {
 	
@@ -206,6 +208,26 @@ public class StoreBoImplTest {
 		testSave(false);
 	}
 	
+	@Test
+	public void testHtmlIsEscapedWhenCreating() throws Exception {
+		
+		String html = "<img src=\"http://fiware.org/logo.png\">";
+		
+		Store store = mock(Store.class);
+		when(store.getName()).thenReturn(NAME);
+		when(store.getDisplayName()).thenReturn(DISPLAY_NAME);
+		when(store.getComment()).thenReturn(html);
+		when(storeAuthMock.canCreate(store)).thenReturn(true);
+		
+		InOrder order = inOrder(store, storeDaoMock);
+		
+		storeBo.save(store);
+
+		order.verify(store).setComment(HtmlUtils.htmlEscape(html));
+		order.verify(storeDaoMock).save(store);
+		
+	}
+	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// UPDATE ////////////////////////////////////////
@@ -324,6 +346,10 @@ public class StoreBoImplTest {
 			
 			// Assert that last modifier has changed
 			assertThat(store.getLasteditor()).isEqualTo(user);
+			
+			// Check that the store has been modified in the data base
+			verify(storeDaoMock).update(store);
+			
 		} catch (Exception ex) {
 			// It's not supposed to happen
 			fail("Exception " + ex + " is not supposed to happen");
@@ -356,6 +382,33 @@ public class StoreBoImplTest {
 		Store newStore = new Store();
 		newStore.setImageBase64(IMAGE_BASE64);
 		testUpdateStoreField(newStore);
+	}
+	
+	@Test
+	public void testHtmlIsEscapedWhenUpdating() throws Exception {
+		
+		
+		String html = "<img src=\"http://fiware.org/logo.png\">";
+		
+		Store updatedStore = mock(Store.class);
+		when(updatedStore.getComment()).thenReturn(html);
+		
+		Store storeToBeUpdated = mock(Store.class);
+		
+		// Mock
+		doReturn(storeToBeUpdated).when(storeDaoMock).findByName(NAME);
+		when(storeAuthMock.canUpdate(storeToBeUpdated)).thenReturn(true);
+		
+		InOrder order = inOrder(storeToBeUpdated, storeDaoMock);
+		
+		// Call the method
+		storeBo.update(NAME, updatedStore);
+
+		// Verify that the html has been escaped before inserting it 
+		// in the database
+		order.verify(storeToBeUpdated).setComment(HtmlUtils.htmlEscape(html));
+		order.verify(storeDaoMock).update(storeToBeUpdated);
+		
 	}
 	
 	
