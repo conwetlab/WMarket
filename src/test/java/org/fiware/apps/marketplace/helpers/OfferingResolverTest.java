@@ -63,6 +63,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.util.HtmlUtils;
 
 import com.hp.hpl.jena.shared.JenaException;
 
@@ -77,6 +78,7 @@ public class OfferingResolverTest {
 
 	@Before 
 	public void setUp() {
+		
 		MockitoAnnotations.initMocks(this);
 		this.offeringResolver = spy(offeringResolver);
 		
@@ -102,11 +104,13 @@ public class OfferingResolverTest {
 	}
 
 	private void checkPricePlan(PricePlan pricePlan, String title, String description) {
+		
 		assertThat(pricePlan.getTitle()).isEqualTo(title);
 		assertThat(pricePlan.getComment()).isEqualTo(description);
 	}
 
 	private void checkService(Service service, String title, String description) {
+		
 		assertThat(service.getDisplayName()).isEqualTo(title);
 		assertThat(service.getComment()).isEqualTo(description);
 	}
@@ -128,6 +132,7 @@ public class OfferingResolverTest {
 	}
 
 	private void checkServiceInSet(Set<Service> services, String displayName, String description) {
+		
 		boolean found = false;
 		Iterator<Service> iterator = services.iterator();
 
@@ -142,8 +147,9 @@ public class OfferingResolverTest {
 		assertThat(found).isTrue();
 	}
 
-	private void checkPriceComponent(PriceComponent priceComponent, String currency, String title, String unit,
-			float value) {
+	private void checkPriceComponent(PriceComponent priceComponent, String currency, 
+			String title, String unit, float value) {
+		
 		assertThat(priceComponent.getCurrency()).isEqualTo(currency);
 		assertThat(priceComponent.getTitle()).isEqualTo(title);
 		assertThat(priceComponent.getUnit()).isEqualTo(unit);
@@ -252,6 +258,7 @@ public class OfferingResolverTest {
 	}
 	
 	private void initPricePlan(String offeringUri, String title, String description) {
+		
 		initPricePlan(offeringUri, title, description, new ArrayList<PriceComponent>());
 	}
 
@@ -267,17 +274,22 @@ public class OfferingResolverTest {
 		servicesUris.add(contexServiceUri);	
 
 		try {
+			
 			if (existingService) {
+				
 				Service service = new Service();
 				service.setDisplayName(title);
 				service.setComment(description);
 				service.setUri(serviceUri);
 				Set<Category> classifications = new HashSet<>();
 				service.setCategories(classifications);
+				
 				when(serviceBoMock.findByURI(serviceUri)).thenReturn(service);
+			
 			} else {
 				doThrow(new ServiceNotFoundException("service not found")).when(serviceBoMock).findByURI(serviceUri);
 			}
+			
 		} catch (ServiceNotFoundException e) {
 			fail("Exception not expected", e);
 			// Not expected...
@@ -439,6 +451,7 @@ public class OfferingResolverTest {
 	public void testOfferingWithTwoPricePlans() {
 		
 		try {
+			
 			String offeringTitle = "cool offering";
 			String offeringUri = "https://store.lab.fiware.org/offerings/offering1";
 			String offeringDesc = "a very long long description for the best offering";
@@ -473,7 +486,9 @@ public class OfferingResolverTest {
 	}
 
 	private void testOfferingWithTwoServices(boolean existingService) {
+		
 		try {
+		
 			String offeringTitle = "cool offering";
 			String offeringUri = "https://store.lab.fiware.org/offerings/offering1";
 			String offeringDesc = "a very long long description for the best offering";
@@ -523,6 +538,7 @@ public class OfferingResolverTest {
 			boolean existingClassification) {
 		
 		try {
+			
 			String offeringTitle = "cool offering";
 			String offeringUri = "https://store.lab.fiware.org/offerings/offering1";
 			String offeringDesc = "a very long long description for the best offering";
@@ -566,6 +582,7 @@ public class OfferingResolverTest {
 
 	@Test
 	public void testOfferingTwoClassificationsDiffClassificationsNonExisting() {
+		
 		// displayName == name
 		String classification1 = "class1";
 		String classification2 = "class2";
@@ -579,6 +596,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingTwoClassificationsDiffClassificationsExisting() {
+		
 		// displayName == name
 		String classification1 = "class1";
 		String classification2 = "class2";
@@ -592,6 +610,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingTwoClassificationsSameClassificationsNonExisting() {
+		
 		// displayName == name
 		String classification = "class1";
 
@@ -604,6 +623,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingTwoClassificationsSameClassificationsExisting() {
+		
 		// displayName == name
 		String classification = "class1";
 
@@ -615,6 +635,7 @@ public class OfferingResolverTest {
 	}
 	
 	private void testException(Exception exception, String expectedMessage) {
+		
 		// Configure mock
 		try {
 			doThrow(exception).when(offeringResolver).getRdfHelper(any(Description.class));
@@ -634,16 +655,19 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testUSDLNotFound() {
+		
 		testException(new FileNotFoundException(), "The file does not exist"); 
 	}
 	
 	@Test
 	public void testHostUnreachable() {
+		
 		testException(new ConnectException(), "The host cannot be reached"); 
 	}
 	
 	@Test
 	public void testInvalidRDF() {
+		
 		testException(new JenaException(), "The file does not contains a valid USDL file"); 
 	}
 	
@@ -667,22 +691,28 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingNameNotFound() {
+		
 		String url = "http://fiware.org";		
+		
 		testOfferingInvalid(url, "", "", "", "", "Name for entity " + url + " cannot be retrieved");
 	}
 	
 	@Test
 	public void testOfferingVersionNotFound() {
+		
 		String url = "http://fiware.org";
 		String offeringName = "Offering Name";
+		
 		testOfferingInvalid(url, offeringName, "", "", "", "Version for offering " + offeringName
 				+ " cannot be retrieved");
 	}
 	
 	@Test
 	public void testOfferingImageURLNotFound() {
+		
 		String url = "http://fiware.org";
 		String offeringName = "Offering Name";
+		
 		testOfferingInvalid(url, offeringName, "1.0", "", "", "Image URL for offering " + offeringName
 				+ " cannot be retrieved");
 	}
@@ -718,12 +748,14 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPricePlanNameNotIncluded() {
+		
 		testOfferingPricePlanInvalid(new HashMap<String, List<Object>>(), "Offering %s contains a price plan "
 				+ "without title");
 	}
 	
 	@Test
 	public void testOfferingPricePlanNameEmpty() {
+		
 		// Configure price plan
 		Map<String, List<Object>> pricePlan = new HashMap<String, List<Object>>();
 		List<Object> titles = new ArrayList<>();
@@ -735,6 +767,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPricePlanNameBlank() {
+		
 		// Configure price plan
 		Map<String, List<Object>> pricePlan = new HashMap<String, List<Object>>();
 		List<Object> titles = new ArrayList<>();
@@ -746,6 +779,7 @@ public class OfferingResolverTest {
 	}
 	
 	private void testOfferingPriceComponentInvalid(Map<String, List<Object>> priceComponent, String message) {
+		
 		// Configure price plan
 		Map<String, List<Object>> pricePlan = new HashMap<String, List<Object>>();
 		
@@ -763,12 +797,14 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentLabelMissing() {		
+		
 		testOfferingPriceComponentInvalid(new HashMap<String, List<Object>>(), "Offering %s contains a price "
 				+ "component without title");
 	}
 	
 	@Test
 	public void testOfferingPriceComponentLabelEmpty() {
+		
 		// Configure price component
 		Map<String, List<Object>> priceComponent = new HashMap<>();
 		List<Object> labels = new ArrayList<>();
@@ -780,6 +816,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentLabelBkank() {
+		
 		Map<String, List<Object>> priceComponent = new HashMap<>();
 		List<Object> labels = new ArrayList<>();
 		labels.add("");
@@ -791,6 +828,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentSpecificationMissing() {
+		
 		Map<String, List<Object>> priceComponent = new HashMap<>();
 		List<Object> labels = new ArrayList<>();
 		labels.add("a");
@@ -803,6 +841,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentSpecificationEmpty() {
+		
 		Map<String, List<Object>> priceComponent = new HashMap<>();
 		List<Object> labels = new ArrayList<>();
 		labels.add("a");
@@ -837,18 +876,21 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentCurrencyMissing() {		
+		
 		testOfferingPriceComponentInvalidSpecification(null, null, null, 
 				"Offering %s contains a price component without currency");
 	}
 	
 	@Test
 	public void testOfferingPriceComponentEmptyCurrency() {		
+		
 		testOfferingPriceComponentInvalidSpecification(new ArrayList<>(), null, null, 
 				"Offering %s contains a price component without currency");
 	}
 	
 	@Test
 	public void testOfferingPriceComponentBlankCurrency() {
+		
 		List<Object> currencies = new ArrayList<>();
 		currencies.add("");
 		
@@ -858,6 +900,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentMissingUnit() {
+		
 		List<Object> currencies = new ArrayList<>();
 		currencies.add("EUR");
 		
@@ -867,6 +910,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentEmptyUnit() {
+		
 		List<Object> currencies = new ArrayList<>();
 		currencies.add("EUR");
 		
@@ -876,6 +920,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentBlankUnit() {
+		
 		List<Object> currencies = new ArrayList<>();
 		currencies.add("EUR");
 		List<Object> units = new ArrayList<>();
@@ -887,6 +932,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentValueMissing() {
+		
 		List<Object> currencies = new ArrayList<>();
 		currencies.add("EUR");
 		List<Object> units = new ArrayList<>();
@@ -898,6 +944,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentValueEmpty() {
+		
 		List<Object> currencies = new ArrayList<>();
 		currencies.add("EUR");
 		List<Object> units = new ArrayList<>();
@@ -909,6 +956,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentValueBlank() {
+		
 		List<Object> currencies = new ArrayList<>();
 		currencies.add("EUR");
 		List<Object> units = new ArrayList<>();
@@ -922,6 +970,7 @@ public class OfferingResolverTest {
 	
 	@Test
 	public void testOfferingPriceComponentInvalidValue() {
+		
 		List<Object> currencies = new ArrayList<>();
 		currencies.add("EUR");
 		List<Object> units = new ArrayList<>();
@@ -947,5 +996,24 @@ public class OfferingResolverTest {
 		} catch (ParseException ex) {
 			assertThat(ex.getMessage()).isEqualTo("Offerings URLs cannot be retrieved");
 		} 
+	}
+	
+	@Test
+	public void testUrisAreEscaped() throws ParseException {
+		
+		String offeringUri = "<offering_1>";
+		
+		initOffering(offeringUri, "offering", "desc", "1.0", 
+				"https://store.lab.fiware.org/static/img1.png", 
+				"http://store.lab.fiware.org/offering/user/offering/1.0");
+
+		Description description = mock(Description.class);
+		when(description.getUrl()).thenReturn(DESCRIPTION_URI);
+		
+		List<Offering> offerings = offeringResolver.resolveOfferingsFromServiceDescription(description);
+		
+		assertThat(offerings).hasSize(1);
+		assertThat(offerings.get(0).getUri()).isEqualTo(HtmlUtils.htmlEscape(offeringUri));
+		
 	}
 }
