@@ -68,11 +68,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.web.util.HtmlUtils;
 
 import com.hp.hpl.jena.shared.JenaException;
 
@@ -109,6 +111,7 @@ public class DescriptionBoImplTest {
 	}
 
 	private Description generateDescription(List<Offering> offerings) {
+		
 		Description description = new Description();
 		// description.setName(DESCRIPTION_NAME);
 		description.setDisplayName(DESCRIPTION_DISPLAY_NAME);
@@ -119,8 +122,10 @@ public class DescriptionBoImplTest {
 		return description;
 	}
 
-	private Offering generateOffering(String url, Description describedIn, String name, String displayName,
-			String description, String imageUrl, String version) {
+	private Offering generateOffering(String url, Description describedIn, 
+			String name, String displayName, String description, String imageUrl, 
+			String version) {
+		
 		Offering offering = new Offering();
 		offering.setUri(url);
 		offering.setDescribedIn(describedIn);
@@ -137,6 +142,7 @@ public class DescriptionBoImplTest {
 	}
 	
 	private Category generateCategory(String categoryName) {
+		
 		Category category = new Category();
 		category.setName(categoryName);
 		category.setServices(new HashSet<Service>());
@@ -145,6 +151,7 @@ public class DescriptionBoImplTest {
 	}
 	
 	private Service generateService(String uri) {
+		
 		Service service = new Service();
 		service.setUri(uri);
 		service.setCategories(new HashSet<Category>());
@@ -178,7 +185,9 @@ public class DescriptionBoImplTest {
 
 	@Test
 	public void testSaveNotAuthorized() throws Exception {
+		
 		try {
+			
 			Description description = generateDescription(new ArrayList<Offering>());
 			when(descriptionAuthMock.canCreate(description)).thenReturn(false);
 
@@ -187,8 +196,11 @@ public class DescriptionBoImplTest {
 
 			// If the exception is not risen, the method is not properly working
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+			
 		} catch (NotAuthorizedException ex) {
-			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "create description"));
+			
+			assertThat(ex.getMessage()).isEqualTo(
+					String.format(NOT_AUTHORIZED_BASE, "create description"));
 		}
 	}
 
@@ -196,8 +208,9 @@ public class DescriptionBoImplTest {
 	public void testSaveInvalidDescription() throws Exception {
 
 		Description description = generateDescription(new ArrayList<Offering>());
-		doThrow(new ValidationException("a field", "invalid")).when(descriptionValidatorMock)
-		.validateNewDescription(description);
+		doThrow(new ValidationException("a field", "invalid"))
+				.when(descriptionValidatorMock)
+				.validateNewDescription(description);
 		when(descriptionAuthMock.canCreate(description)).thenReturn(true);
 
 		// Call the method and check that DAO is not called
@@ -218,10 +231,12 @@ public class DescriptionBoImplTest {
 			when(storeDaoMock.findByName(STORE_NAME)).thenReturn(store);
 			when(descriptionAuthMock.canCreate(description)).thenReturn(true);
 			when(descriptionDaoMock.findByNameAndStore(STORE_NAME, NAME))
-			.thenReturn(descriptionWithId);
+					.thenReturn(descriptionWithId);
 			
 			if (indexerException != null) {
-				doThrow(indexerException).when(rdfIndexerMock).indexOrUpdateService(description);
+				
+				doThrow(indexerException).when(rdfIndexerMock)
+						.indexOrUpdateService(description);
 			}
 
 			descriptionBo.save(STORE_NAME, description);
@@ -264,8 +279,9 @@ public class DescriptionBoImplTest {
 					// It should not happen
 				}
 				
-				// When an exception is thrown rollback is done so the Store is not updated with
-				// the new description
+				// When an exception is thrown rollback is done so the Store
+				// is not updated with the new description
+				
 			} else {
 				fail("Exception not expected", e);
 			}
@@ -277,6 +293,7 @@ public class DescriptionBoImplTest {
 
 	@Test
 	public void testSaveDescriptionNoParsingErros() {
+		
 		Description description = generateDescription(new ArrayList<Offering>());
 
 		// Save & check
@@ -285,6 +302,7 @@ public class DescriptionBoImplTest {
 
 	@Test
 	public void testSaveDescriptionMalformedUrlException() {
+		
 		Description description = generateDescription(new ArrayList<Offering>());
 
 		// Save & check
@@ -294,11 +312,40 @@ public class DescriptionBoImplTest {
 
 	@Test
 	public void testSaveDescriptionJenaException() {
+		
 		Description description = generateDescription(new ArrayList<Offering>());
 
 		// Save & check
 		testSave(description, new JenaException());
 
+	}
+	
+	@Test
+	public void testHtmlIsEscapedWhenCreating() throws Exception {
+		
+		Description descriptionWithId = mock(Description.class);
+		when(descriptionDaoMock.findByNameAndStore(STORE_NAME, NAME))
+				.thenReturn(descriptionWithId);
+		
+		Store store = mock(Store.class);
+		when(storeDaoMock.findByName(STORE_NAME)).thenReturn(store);
+		
+		String html = "<img src=\"http://fiware.org/logo.png\">";
+
+		Description description = mock(Description.class);
+		when(description.getName()).thenReturn(NAME);
+		when(description.getDisplayName()).thenReturn(DESCRIPTION_DISPLAY_NAME);
+		when(description.getComment()).thenReturn(html);
+		when(descriptionAuthMock.canCreate(description)).thenReturn(true);
+
+		
+		InOrder order = inOrder(description, storeDaoMock);
+		
+		descriptionBo.save(STORE_NAME, description);
+
+		order.verify(description).setComment(HtmlUtils.htmlEscape(html));
+		order.verify(storeDaoMock).update(store);
+		
 	}
 
 	
@@ -313,7 +360,9 @@ public class DescriptionBoImplTest {
 		try {
 			descriptionBo.update(storeName, descriptionName, updatedDescription);
 			fail("Exception expected");
+			
 		} catch (Exception e) {
+			
 			verify(descriptionDaoMock, never()).update(any(Description.class));
 			throw e;
 		}
@@ -339,8 +388,10 @@ public class DescriptionBoImplTest {
 		Description updatedDescription = mock(Description.class);
 		
 		// Configure mocks
-		doReturn(descriptionToUpdate).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
-		doThrow(new ValidationException("a field", "not valid")).when(descriptionValidatorMock)
+		doReturn(descriptionToUpdate).when(descriptionDaoMock)
+				.findByNameAndStore(STORE_NAME, NAME);
+		doThrow(new ValidationException("a field", "not valid"))
+				.when(descriptionValidatorMock)
 				.validateUpdatedDescription(descriptionToUpdate, updatedDescription);
 		when(descriptionAuthMock.canUpdate(descriptionToUpdate)).thenReturn(true);
 		
@@ -350,13 +401,17 @@ public class DescriptionBoImplTest {
 	
 	@Test
 	public void testUpdateNotAuthorized() throws Exception {
+		
 		try {
+			
 			Description descriptionToUpdate = mock(Description.class);
 			Description updatedDescription = mock(Description.class);
 			
 			// Configure mocks
-			doReturn(descriptionToUpdate).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
-			when(descriptionAuthMock.canUpdate(descriptionToUpdate)).thenReturn(false);
+			doReturn(descriptionToUpdate).when(descriptionDaoMock)
+					.findByNameAndStore(STORE_NAME, NAME);
+			when(descriptionAuthMock.canUpdate(descriptionToUpdate))
+					.thenReturn(false);
 			
 			// Execute the function an check that DAO has not been called
 			testUpdateException(STORE_NAME, NAME, updatedDescription);
@@ -365,11 +420,14 @@ public class DescriptionBoImplTest {
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
 
 		} catch (NotAuthorizedException ex) {
-			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "update description"));
+			
+			assertThat(ex.getMessage()).isEqualTo(String.format(
+					NOT_AUTHORIZED_BASE, "update description"));
 		}
 	}
 
 	private void testUpdateDescriptionField(Description newDescription) {
+		
 		try {
 
 			User user = mock(User.class);
@@ -378,8 +436,10 @@ public class DescriptionBoImplTest {
 
 			// Mock
 			doReturn(user).when(userBoMock).getCurrentUser();
-			doReturn(description).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
-			when(descriptionAuthMock.canUpdate(description)).thenReturn(true);
+			doReturn(description).when(descriptionDaoMock)
+					.findByNameAndStore(STORE_NAME, NAME);
+			when(descriptionAuthMock.canUpdate(description))
+					.thenReturn(true);
 
 			// Get the 
 			String previousName = description.getName();
@@ -394,10 +454,12 @@ public class DescriptionBoImplTest {
 			assertThat(description.getName()).isEqualTo(previousName);
 
 			// New values
-			String newStoreName = newDescription.getName() != null ? newDescription.getName() : description.getName();
+			String newStoreName = newDescription.getName() != null ? 
+					newDescription.getName() : description.getName();
 			assertThat(description.getName()).isEqualTo(newStoreName);
 
-			String newStoreUrl = newDescription.getUrl() != null ? newDescription.getUrl() : description.getUrl();
+			String newStoreUrl = newDescription.getUrl() != null ? 
+					newDescription.getUrl() : description.getUrl();
 			assertThat(description.getUrl()).isEqualTo(newStoreUrl);
 
 			String newStoreDescription = newDescription.getComment() != null ? 
@@ -405,7 +467,7 @@ public class DescriptionBoImplTest {
 			assertThat(description.getComment()).isEqualTo(newStoreDescription);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			
 			// It's not supposed to happen
 			fail("Exception " + ex + " is not supposed to happen");
 		}
@@ -413,22 +475,28 @@ public class DescriptionBoImplTest {
 
 	@Test
 	public void testUpdateDescriptionName() {
+		
 		Description newDescription = new Description();
 		newDescription.setDisplayName("new_name");
+		
 		testUpdateDescriptionField(newDescription);
 	}
 
 	@Test
 	public void testUpdateDescriptionUrl() {
+		
 		Description newDescription = new Description();
 		newDescription.setUrl(DESCRIPTION_URL + "a");
+		
 		testUpdateDescriptionField(newDescription);
 	}
 
 	@Test
 	public void testUpdateDescriptionDescription() {
+		
 		Description newDescription = new Description();
 		newDescription.setComment("New Description");
+		
 		testUpdateDescriptionField(newDescription);
 	}
 
@@ -452,8 +520,9 @@ public class DescriptionBoImplTest {
 			// Create the description stored in the Database
 			Description storedDescription = generateDescription(new ArrayList<Offering>());
 
-			Offering storedOffering = generateOffering(storedOfferingURI, storedDescription, "offering-1", 
-					"Offering 1", "Example Description", "http://marketplace.com/link_to_img.jpg", "1.0");
+			Offering storedOffering = generateOffering(storedOfferingURI, 
+					storedDescription, "offering-1", "Offering 1", "Example Description", 
+					"http://marketplace.com/link_to_img.jpg", "1.0");
 			storedOffering.setId(1); 	// Stored offerings contain an ID
 
 			storedDescription.addOffering(storedOffering);
@@ -462,17 +531,21 @@ public class DescriptionBoImplTest {
 			Description updatedDescription = generateDescription(new ArrayList<Offering>());
 
 			// Descriptions returned by offeringResolver when the updatedDescription is parsed
-			Offering newOffering = generateOffering(newOfferingURI, storedDescription, "cool-offering", 
-					"Cool Offering", "New Description", "http://marketplace.com/link_to_new_img.jpg", "1.2");
+			Offering newOffering = generateOffering(newOfferingURI, storedDescription, 
+					"cool-offering", "Cool Offering", "New Description", 
+					"http://marketplace.com/link_to_new_img.jpg", "1.2");
 
 			List<Offering> newOfferings = new ArrayList<Offering>();
 			newOfferings.add(newOffering);
 
 			// Configure the mocks
-			doReturn(storedDescription).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
-			when(descriptionAuthMock.canUpdate(storedDescription)).thenReturn(true);	// User can update
-			when(offeringResolverMock.resolveOfferingsFromServiceDescription(storedDescription))
-			.thenReturn(newOfferings);
+			doReturn(storedDescription).when(descriptionDaoMock)
+					.findByNameAndStore(STORE_NAME, NAME);
+			when(descriptionAuthMock.canUpdate(storedDescription))
+					.thenReturn(true);	// User can update
+			when(offeringResolverMock
+					.resolveOfferingsFromServiceDescription(storedDescription))
+					.thenReturn(newOfferings);
 
 			// Call the method
 			descriptionBo.update(STORE_NAME, NAME, updatedDescription);
@@ -494,20 +567,25 @@ public class DescriptionBoImplTest {
 			compareOfferings(updatedOffering, newOffering);
 
 		} catch (Exception ex) {
+			
 			fail("Exception not expected", ex);
 		}
 	}
 
 	@Test
 	public void testUpdateDescriptionOfferingExist() throws Exception {
+		
 		String offeringURI = "http://store.lab.fiware.org/OFFERING_URI";
+		
 		testUpdateDescriptionURL(offeringURI, offeringURI);
 	}
 
 	@Test
 	public void testUpdateDescriptionOfferingNotExist() throws Exception {
+		
 		String storedOfferingURI = "http://store.lab.fiware.org/OFFERING_URI";
 		String newOfferingURI = "http://store.lab.fiware.org/NEW_OFFERING_URI";
+		
 		testUpdateDescriptionURL(storedOfferingURI, newOfferingURI);
 	}
 
@@ -522,11 +600,13 @@ public class DescriptionBoImplTest {
 		Description storedDescription = generateDescription(new ArrayList<Offering>());
 
 		// Create the offering that will be included into the description
-		Offering storedOffering = generateOffering(repeatedOfferingURI, storedDescription, "offering-1", 
-				"Offering 1", "Example Description", "http://marketplace.com/link_to_img.jpg", "1.0");
+		Offering storedOffering = generateOffering(repeatedOfferingURI, storedDescription, 
+				"offering-1", "Offering 1", "Example Description", 
+				"http://marketplace.com/link_to_img.jpg", "1.0");
 		storedOffering.setId(1); 	// Stored offerings contains an ID
 		
-		// Add two categories... One should be deleted because it won't be included in the new offerings
+		// Add two categories... One should be deleted because it won't 
+		// be included in the new offerings
 		final Category catA = generateCategory("CATEGORY_A");
 		final Category catB = generateCategory("CATEGORY_B");
 		Set<Category> categoriesOldOffering = new HashSet<Category>();
@@ -534,7 +614,8 @@ public class DescriptionBoImplTest {
 		categoriesOldOffering.add(catB);
 		storedOffering.setCategories(categoriesOldOffering);
 		
-		// Add two services... One should be deleted because it won't be included in the new offerings
+		// Add two services... One should be deleted because it won't 
+		// be included in the new offerings
 		final Service serA = generateService("uri1");
 		final Service serB = generateService("uri2");
 		Set<Service> servicesOldOffering = new HashSet<Service>();
@@ -549,10 +630,12 @@ public class DescriptionBoImplTest {
 		Description updatedDescription = generateDescription(new ArrayList<Offering>());
 
 		// Offerings contained in the new URL
-		Offering repeatedOffering = generateOffering(repeatedOfferingURI, storedDescription, "cool-offering", 
-				"Cool Offering", "New Description", "http://marketplace.com/link_to_new_img.jpg", "1.2");
-		Offering newOffering = generateOffering(nonRepeatedOfferingURI, storedDescription, "my-new-offering", 
-				"My New Offering", "New Description 2", "http://marketplace.com/link_to_new_img2.jpg", "1.1");	
+		Offering repeatedOffering = generateOffering(repeatedOfferingURI, storedDescription, 
+				"cool-offering", "Cool Offering", "New Description",
+				"http://marketplace.com/link_to_new_img.jpg", "1.2");
+		Offering newOffering = generateOffering(nonRepeatedOfferingURI, storedDescription, 
+				"my-new-offering", "My New Offering", "New Description 2", 
+				"http://marketplace.com/link_to_new_img2.jpg", "1.1");	
 		
 		// Set one price plan for the repeated offering
 		PricePlan pricePlan = new PricePlan();
@@ -647,9 +730,12 @@ public class DescriptionBoImplTest {
 		try {
 					
 			// Configure mocks
-			doReturn(storedDescription).when(descriptionDaoMock).findByNameAndStore(STORE_NAME, NAME);
-			when(descriptionAuthMock.canUpdate(storedDescription)).thenReturn(true);	// User can update
-			doThrow(indexerException).when(rdfIndexerMock).indexOrUpdateService(storedDescription);
+			doReturn(storedDescription).when(descriptionDaoMock)
+					.findByNameAndStore(STORE_NAME, NAME);
+			when(descriptionAuthMock.canUpdate(storedDescription))
+					.thenReturn(true);	// User can update
+			doThrow(indexerException).when(rdfIndexerMock)
+					.indexOrUpdateService(storedDescription);
 			
 			// Call the method
 			descriptionBo.update(STORE_NAME, NAME, updatedDescription);
@@ -677,26 +763,57 @@ public class DescriptionBoImplTest {
 			assertThat(ex.getMessage()).isEqualTo(expectedMessage);
 
 		} catch (Exception ex) {
+			
 			fail("Exception not expected", ex);
 		}
 	}
 	
 	@Test
 	public void testUpdateJenaException() {
+		
 		testUpdateRdfError(new JenaException());
 	}
 	
 	@Test
 	public void testUpdateMalformedURLException() {
+		
 		testUpdateRdfError(new MalformedURLException());
 	}
 	
+	@Test
+	public void testHtmlIsEscapedWhenUpdating() throws Exception {
+		
+		String html = "<img src=\"http://fiware.org/logo.png\">";
+		
+		Description updatedDescription = mock(Description.class);
+		when(updatedDescription.getComment()).thenReturn(html);
+		
+		Description descriptionToBeUpdated = mock(Description.class);
+		
+		// Mock
+		doReturn(descriptionToBeUpdated).when(descriptionDaoMock)
+				.findByNameAndStore(STORE_NAME, NAME);
+		when(descriptionAuthMock.canUpdate(descriptionToBeUpdated))
+				.thenReturn(true);
+		
+		InOrder order = inOrder(descriptionToBeUpdated, descriptionDaoMock);
+		
+		// Call the method
+		descriptionBo.update(STORE_NAME, NAME, updatedDescription);
+
+		// Verify that the html has been escaped before inserting it 
+		// in the database
+		order.verify(descriptionToBeUpdated).setComment(HtmlUtils.htmlEscape(html));
+		order.verify(descriptionDaoMock).update(descriptionToBeUpdated);
+		
+	}	
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// DELETE ////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	private void testDeleteException(String storeName, String descriptionName) throws Exception {
+	private void testDeleteException(String storeName, 
+			String descriptionName) throws Exception {
 		
 		Store store = mock(Store.class);
 		doReturn(store).when(storeDaoMock).findByName(storeName);
@@ -716,8 +833,10 @@ public class DescriptionBoImplTest {
 	}
 	
 	private void testDeleteDescriptionNotFoundException(Exception ex) throws Exception {
+		
 		String storeName = "store";
 		String descriptionName = "description";
+		
 		doThrow(ex).when(descriptionDaoMock).findByNameAndStore(storeName, descriptionName);
 		
 		testDeleteException(storeName, descriptionName);
@@ -725,21 +844,26 @@ public class DescriptionBoImplTest {
 	
 	@Test(expected=DescriptionNotFoundException.class)
 	public void testDeleteDescriptionDescriptionNotFoundException() throws Exception {
+		
 		testDeleteDescriptionNotFoundException(new DescriptionNotFoundException("descriptionNotFound"));		
 	}
 	
 	@Test(expected=StoreNotFoundException.class)
 	public void testDeleteDescriptionStoreNotFoundException() throws Exception {
+		
 		testDeleteDescriptionNotFoundException(new StoreNotFoundException("descriptionNotFound"));		
 	}
 	
 	
 	@Test
 	public void testDeleteNotAuthorizedException() throws Exception {
+		
 		try {
+			
 			Description description = mock(Description.class);
 			String storeName = "store";
 			String descriptionName = "description";
+			
 			doReturn(description).when(descriptionDaoMock).findByNameAndStore(storeName, descriptionName);
 			when(descriptionAuthMock.canGet(description)).thenReturn(true);
 			when(descriptionAuthMock.canDelete(description)).thenReturn(false);
@@ -748,8 +872,11 @@ public class DescriptionBoImplTest {
 			
 			// If the exception is not risen, the method is not properly working
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+			
 		} catch (NotAuthorizedException ex) {
-			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "delete description"));
+			
+			assertThat(ex.getMessage()).isEqualTo(String.format(
+					NOT_AUTHORIZED_BASE, "delete description"));
 		}
 
 		
@@ -761,7 +888,8 @@ public class DescriptionBoImplTest {
 		
 		Description description = new Description();
 		Store store = mock(Store.class);
-		Offering offering = generateOffering("uri1", description, "offering1", "Offering 1", "DESC", "uri2", "1.0");
+		Offering offering = generateOffering("uri1", description, "offering1", 
+				"Offering 1", "DESC", "uri2", "1.0");
 		
 		// Add two categories... One should be deleted because it won't be included in other offerings
 		final Category catA = generateCategory("CATEGORY_A");
@@ -786,7 +914,8 @@ public class DescriptionBoImplTest {
 		String storeName = "store";
 		String descriptionName = "description";
 		doReturn(store).when(storeDaoMock).findByName(storeName);
-		when(descriptionDaoMock.findByNameAndStore(storeName, descriptionName)).thenReturn(description);
+		when(descriptionDaoMock.findByNameAndStore(storeName, descriptionName))
+				.thenReturn(description);
 		when(descriptionAuthMock.canGet(description)).thenReturn(true);
 		when(descriptionAuthMock.canDelete(description)).thenReturn(true);
 		
@@ -834,6 +963,7 @@ public class DescriptionBoImplTest {
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	private void testFindByNameNotFoundException(Exception ex) throws Exception {
+		
 		String storeName = "store";
 		String descriptionName = "description";
 		doThrow(ex).when(descriptionDaoMock).findByNameAndStore(storeName, descriptionName);
@@ -843,32 +973,38 @@ public class DescriptionBoImplTest {
 	
 	@Test(expected=DescriptionNotFoundException.class)
 	public void testFindByNameDescriptionNotFoundException() throws Exception {
+		
 		testFindByNameNotFoundException(new DescriptionNotFoundException("description not found"));
 	}
 	
 	@Test(expected=StoreNotFoundException.class)
 	public void testFindByNameStorenNotFoundException() throws Exception {
+		
 		testFindByNameNotFoundException(new StoreNotFoundException("store not found"));
 	}
 	
 	
 	
 	private void testFindByStoreAndName(boolean authorized) throws Exception {
+		
 		String storeName = "store";
 		String descriptionName = "descriptionName";
 
 		Description description = mock(Description.class);
 		
 		// Set up mocks
-		when(descriptionDaoMock.findByNameAndStore(storeName, descriptionName)).thenReturn(description);
+		when(descriptionDaoMock.findByNameAndStore(storeName, descriptionName))
+				.thenReturn(description);
 		when(descriptionAuthMock.canGet(description)).thenReturn(authorized);
 		
 		// Call the function
 		try {
-			Description returnedDescription = descriptionBo.findByNameAndStore(storeName, descriptionName);
+			Description returnedDescription = descriptionBo
+					.findByNameAndStore(storeName, descriptionName);
 
 			// If an exception is risen, this check is not executed
 			assertThat(returnedDescription).isEqualTo(description);
+		
 		} catch (Exception ex) {
 			throw ex;
 		}
@@ -878,17 +1014,23 @@ public class DescriptionBoImplTest {
 	public void testFinByNameNotAuthorized() throws Exception{
 		
 		try {
+			
 			testFindByStoreAndName(false);
+			
 			// If the exception is not risen, the method is not properly working
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+		
 		} catch (NotAuthorizedException ex) {
-			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "find description"));
+			
+			assertThat(ex.getMessage()).isEqualTo(String.format(
+					NOT_AUTHORIZED_BASE, "find description"));
 		}
 
 	}
 
 	@Test
 	public void testFindByName() throws Exception {
+		
 		testFindByStoreAndName(true);
 	}
 	
@@ -899,13 +1041,16 @@ public class DescriptionBoImplTest {
 		
 	@Test(expected=DescriptionNotFoundException.class)
 	public void testFindByIDDescriptionNotFoundException() throws Exception {
+		
 		int id = 2;
-		doThrow(new DescriptionNotFoundException("not found")).when(descriptionDaoMock).findById(id);
+		doThrow(new DescriptionNotFoundException("not found"))
+				.when(descriptionDaoMock).findById(id);
 		
 		descriptionBo.findById(id);
 	}
 	
 	private void testFindById(boolean authorized) throws Exception {
+		
 		int id = 2;
 
 		Description description = mock(Description.class);
@@ -929,10 +1074,14 @@ public class DescriptionBoImplTest {
 	public void testFinByIdNotAuthorized() throws Exception{
 		
 		try {
+			
 			testFindById(false);
+			
 			// If the exception is not risen, the method is not properly working
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
+		
 		} catch (NotAuthorizedException ex) {
+			
 			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "find description"));
 		}
 
@@ -940,6 +1089,7 @@ public class DescriptionBoImplTest {
 
 	@Test
 	public void testFindById() throws Exception {
+		
 		testFindById(true);
 	}
 	
@@ -980,7 +1130,6 @@ public class DescriptionBoImplTest {
 	
 	@Test
 	public void testGetAllDescriptions() throws Exception {
-		
 		
 		@SuppressWarnings("unchecked")
 		List<Description> descriptions = mock(List.class);		
@@ -1059,6 +1208,7 @@ public class DescriptionBoImplTest {
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
 			
 		} catch (NotAuthorizedException ex) {
+			
 			// Check exception message
 			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, "list descriptions"));
 		}
@@ -1071,7 +1221,6 @@ public class DescriptionBoImplTest {
 	
 	@Test
 	public void testGetStoreDescriptions() throws Exception {
-		
 		
 		@SuppressWarnings("unchecked")
 		List<Description> descriptions = mock(List.class);
@@ -1112,6 +1261,7 @@ public class DescriptionBoImplTest {
 			failBecauseExceptionWasNotThrown(NotAuthorizedException.class);
 			
 		} catch (NotAuthorizedException ex) {
+			
 			// Check exception message
 			assertThat(ex.getMessage()).isEqualTo(String.format(NOT_AUTHORIZED_BASE, 
 					"list descriptions in store " + storeName));
@@ -1125,7 +1275,6 @@ public class DescriptionBoImplTest {
 	
 	@Test
 	public void testGetStoreDescriptionspAGE() throws Exception {
-		
 		
 		@SuppressWarnings("unchecked")
 		List<Description> descriptions = mock(List.class);
