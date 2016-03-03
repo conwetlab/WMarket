@@ -1,7 +1,7 @@
 # WMarket
 
- [![Build Status](https://build.conwet.fi.upm.es/jenkins/buildStatus/icon?job=WMarket)](https://build.conwet.fi.upm.es/jenkins/job/WMarket/)
- 
+ [![License](https://img.shields.io/badge/license-BSD%203%20Clause-blue.svg?style=flat)](https://opensource.org/licenses/BSD-3-Clause) [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://wmarket.readthedocs.org/en/latest/)  [![Docker](https://img.shields.io/docker/pulls/fiware/wmarket.svg)](https://hub.docker.com/r/fiware/wmarket) [![Support](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](https://ask.fiware.org) [![Build Status](https://build.conwet.fi.upm.es/jenkins/buildStatus/icon?job=WMarket)](https://build.conwet.fi.upm.es/jenkins/job/WMarket/)
+
  * [Introduction](#introduction)
  * [GEi overall description](#gei-overall-description)
  * [Build and Install](#build-and-install)
@@ -21,7 +21,7 @@ Any feedback is highly welcome, including bugs, typos or things you think should
 
 You can find the User & Programmer's Manual and the Administration Guide on [readthedocs.org](https://wmarket.readthedocs.org)
 
- 
+
 ## GEi overall description
 
 WMarket provides functionality necessary for bringing together offering and demand for making business. These functions include basic services for registering business entities, publishing and retrieving offerings and demands, search and discover offerings according to specific consumer requirements as well as lateral functions like review, rating and recommendation. Besides the core functions, the Marketplace may offer value because of its "knowledge" about the market in terms of market intelligence services, pricing support, advertising, information subscription and more.
@@ -34,7 +34,7 @@ The instructions to install WMarket can be found at [the Installation Guide](htt
 * With the provided script (included in the `utils` folder)
 * With a [Docker Container](https://hub.docker.com/r/conwetlab/wmarket/)
 * Manually
- 
+
 If you opt for building WMarket, you can refer to [the Building from Sources Guide](http://wmarket.readthedocs.org/en/latest/building-from-sources-guide.html)
 
 
